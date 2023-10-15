@@ -1,0 +1,526 @@
+@import url(http://fonts.googleapis.com/css?family=Laila:400,700);
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, 	, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  outline: none;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+html { overflow-y: scroll; }
+body {
+  font-family: Arial, Tahoma, sans-serif;
+  font-size: 62.5%;
+  line-height: 1;
+  padding-top: 40px;
+}
+
+br { display: block; line-height: 1.6em; } 
+
+input, textarea { 
+  -webkit-font-smoothing: antialiased;
+  outline: none; 
+}
+
+strong, b { font-weight: bold; }
+em, i { font-style: italic; }
+
+h1 {
+  display: block;
+  font-size: 3.1em;
+  line-height: 1.45em;
+  font-family: 'Laila', serif;
+  text-align: center;
+  font-weight: bold;
+  color: #555;
+  text-shadow: 1px 1px 0 #fff;
+}
+h2 {
+	font-size:30px;
+	padding-bottom:24px
+    color: #555;
+}
+
+h3 {
+	font-size:24px;
+	padding-bottom:15px;
+	line-height:28px;
+	font-weight:600;
+    color: #555;
+
+} 
+
+h4 {
+	font-size:18px;
+	padding-bottom:10px;
+	font-weight:600;
+	line-height:22px;
+}  
+
+h5 {
+	font-size:16px;
+	font-weight:600;
+	padding-bottom:3px;
+}
+
+h6 {
+	font-size:14px;
+}
+
+h7 {
+	font-size:14px;
+	line-height:1.2em;
+	padding-bottom:12px;
+	color:#343434;
+	font-family: 'Open Sans', sans-serif;
+	font-weight:bold;
+}
+
+/** hack **/
+h8 {
+	font-size:14px;
+	line-height:1.2em;
+	padding-bottom:12px;
+	color:#FFFFFF;
+	font-family:"Courier New", Courier, monospace;
+	border: none; 
+	background-attachment: fixed;
+}
+
+/** form field **/
+form {
+  display: block;
+  margin: 30px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e4e4e4;
+  border-radius: 5px;
+  font-size: 0;
+}
+
+form > div > label {
+  display: block;
+  padding: 20px 20px 10px;
+  vertical-align: top;
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #939393;
+  cursor: pointer;
+}
+
+form > div.switch {
+  padding: 16px 20px 13px;
+}  
+}
+
+input[type='checkbox']{
+	padding=20px 20px 10px;
+}
+
+.col-header, .col-1, .col-2, .col-3, .col-4 { 
+  border: 1px solid #e4e4e4;
+}
+
+.col-header{
+  background-color:#CCC;
+}
+
+.col-header > label{
+  color:#FFFFFF;	
+}
+
+form > div > .col-4 {
+  height: 86px;
+}
+
+input[readonly]
+{
+    background-color:#E5E5E5;
+}
+
+label > input {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  height: 27px;
+  line-height: 27px;
+  margin: 5px -5px 0;
+  padding: 7px 5px 3px;
+  border: none;
+  outline: none;
+  color: #555;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-weight: bold;
+  font-size: 14px;
+  opacity: .6;
+  transition: all linear .3s;
+}
+
+.boundaries{
+  white-space:normal;
+  position: relative
+}
+
+table{
+    display: block;
+    color: #7D7D7D;
+    line-height: 27px;
+    width: 100%;
+	padding: 20px 20px 10px;
+	vertical-align: top;
+	font-size: 13px;
+	font-weight: bold;
+	text-transform: uppercase;
+	color: #939393;	
+}
+
+#table-wrapper {
+  position:relative;
+}
+
+#table-wrapper table {
+  width:100%;
+  border: ;    
+  /** overflow-x:auto;	 **/
+}
+
+.nowraptable{
+	font-weight:normal;
+	overflow-y:visible !important;
+	overflow-x:visible !important;
+}
+
+.nowraptable th{
+	font-weight:bold;
+}
+
+.nowraptable th {
+    padding: 10px;
+	margin: 10px;
+    text-align:center;
+	vertical-align:middle;
+    white-space: nowrap; 
+}
+
+.nowraptable td {
+    padding: 10px;
+	margin: 10px;
+    text-align:center;
+	vertical-align:middle;
+    white-space: nowrap; 
+}
+
+table.nowraptable tbody td .table-button {
+	horizontal-align: middle;
+	display: block;
+}
+
+table.nowraptable .hidden {
+	visibility:collapse;
+}
+
+.nowraptable tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+.paragraph{
+	line-height: 20px;	
+}
+
+.sortablefixed{
+	font-weight:normal;
+	table-layout: fixed;
+}
+
+.sortablefixed th{
+	font-weight:bold;
+	cursor: pointer;
+ 	background-color:#eee;
+    color:#666666;	
+}
+
+.sortablefixed th {
+    padding: 10px;
+	margin: 10px;
+    text-align:center;
+	vertical-align:middle;
+    white-space: nowrap; 
+}
+
+.sortablefixed td {
+    padding: 10px;
+	margin: 10px;
+    text-align:center;
+	vertical-align:middle;
+	word-wrap:normal;	
+	white-space:normal;
+}
+
+table.sortablefixed tbody td .table-button {
+	horizontal-align: middle;
+	display: block;
+}
+
+.sortablefixed tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+.sortable{
+	font-weight:normal;
+
+}
+
+.sortable th{
+	font-weight:bold;
+	cursor: pointer;
+ 	background-color:#eee;
+    color:#666666;	
+}
+
+.sortable th {
+    padding: 10px;
+	margin: 10px;
+    text-align:center;
+	vertical-align:middle;
+    white-space: nowrap; 
+}
+
+.sortable td {
+    padding: 10px;
+	margin: 10px;
+    text-align:center;
+	vertical-align:middle;
+    white-space: nowrap; 
+}
+
+table.sortable tbody td .table-button {
+	horizontal-align: middle;
+	display: block;
+}
+
+.sortable tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+.sortable{
+	font-weight:normal;
+
+}
+
+.sortable th{
+	font-weight:bold;
+	cursor: pointer;
+ 	background-color:#eee;
+    color:#666666;	
+}
+
+.sortable th {
+    padding: 10px;
+	margin: 10px;
+    text-align:center;
+	vertical-align:middle;
+    white-space: nowrap; 
+}
+
+.sortable td {
+    padding: 10px;
+	margin: 10px;
+    text-align:center;
+	vertical-align:middle;
+    white-space: nowrap; 
+}
+
+table.sortable tbody td .table-button {
+	horizontal-align: middle;
+	display: block;
+}
+
+.sortable tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
+#table-wrapper table thead th .text {
+  position:absolute;   
+  z-index:2;
+  height:20px;
+  width:100%; 
+  white-space: nowrap; 
+  
+}
+
+#table-scroll {
+	/**overflow:auto;  **/
+  	margin-top:20px;
+}
+
+.wrapper1, .wrapper2{width: 100%; border: none 0px RED;
+overflow-x: scroll;}
+.wrapper1{height: 20px; }
+.wrapper2{height: 600px; }
+.div1 {width:1000px; height: 20px; }
+.div2 {width:1000px; height: 600px; }
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+::-webkit-scrollbar:vertical {
+    width: 12px;
+}
+
+::-webkit-scrollbar:horizontal {
+    height: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, .5);
+    border-radius: 10px;
+    border: 2px solid #ffffff;
+}
+
+::-webkit-scrollbar-track {
+    border-radius: 10px;  
+    background-color: #ffffff; 
+}
+
+.col-submit {
+  text-align: center;
+  padding: 10px;
+}
+	
+.col-hack {
+  text-align: center;
+  padding: 10px;
+  font:"Courier New", Courier, monospace;
+}
+
+label > input:focus, label > select:focus {
+  opacity: 1;
+}
+
+label > select {
+  display: block;
+  width: 100%;
+  padding: 0;
+  color: #555;
+  margin: 16px 0 6px;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  transition: all linear .3s;
+}
+
+label > select:disabled{
+	opacity: .4;
+}
+
+/** button design based on http://codepen.io/guvootes/pen/eyDAb **/
+button {
+  width: 100%;
+  height: 35px;
+  border: none;
+  border-radius: 4px;
+  margin: 0 0 15px 0;
+  font-size: 14px;
+  color: #fff;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+  overflow: hidden;
+  outline: none;
+  cursor: pointer;
+}
+
+button.submitbtn {
+  background-image: -moz-linear-gradient(#97c16b, #8ab959);
+  background-image: -webkit-linear-gradient(#97c16b, #8ab959);
+  background-image: linear-gradient(#97c16b, #8ab959);
+  border-bottom: 1px solid #648c3a;
+  cursor: pointer;
+  color: #fff;
+}
+button.submitbtn[disabled]{
+	color:#CCC;	
+}
+button.submitbtn:hover {
+  background-image: -moz-linear-gradient(#8ab959, #7eaf4a);
+  background-image: -webkit-linear-gradient(#8ab959, #7eaf4a);
+  background-image: linear-gradient(#8ab959, #7eaf4a);
+}
+button.submitbtn:active {
+  height: 34px;
+  border-bottom: 0;
+  margin: 1px 0 0 0;
+  background-image: -moz-linear-gradient(#7eaf4a, #8ab959);
+  background-image: -webkit-linear-gradient(#7eaf4a, #8ab959);
+  background-image: linear-gradient(#7eaf4a, #8ab959);
+  -moz-box-shadow: inset 0 1px 3px 1px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: inset 0 1px 3px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 1px 3px 1px rgba(0, 0, 0, 0.3);
+}
+
+button.more {
+  background-image: -moz-linear-gradient(#97c16b, #8ab959);
+  background-image: -webkit-linear-gradient(#97c16b, #8ab959);
+  background-image: linear-gradient(#97c16b, #8ab959);
+  border-bottom: 1px solid #648c3a;
+  cursor: pointer;
+  color: #fff;
+  margin: 1px 0 0 0;
+  
+}
+button.more:hover {
+  background-image: -moz-linear-gradient(#8ab959, #7eaf4a);
+  background-image: -webkit-linear-gradient(#8ab959, #7eaf4a);
+  background-image: linear-gradient(#8ab959, #7eaf4a);
+}
+button.more:active {
+  height: 34px;
+  border-bottom: 0;
+  margin: 1px 0 0 0;
+  background-image: -moz-linear-gradient(#7eaf4a, #8ab959);
+  background-image: -webkit-linear-gradient(#7eaf4a, #8ab959);
+  background-image: linear-gradient(#7eaf4a, #8ab959);
+  -moz-box-shadow: inset 0 1px 3px 1px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: inset 0 1px 3px 1px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 1px 3px 1px rgba(0, 0, 0, 0.3);
+}
+
+td.territory{
+  text-align:left;	
+}
+
+/** responsive design **/
+@media(min-width: 850px){
+  form > div { display: inline-block; }
+  .col-submit { display: block; }
+  .col-hack { display: block; }
+  
+  .col-header, .col-1, .col-2, .col-3, .col-4 { box-shadow: 1px 1px #e4e4e4; border: none; }
+  
+  .col-header { width: 100% }
+  .col-1 { width: 100% }
+  .col-2 { width: 50% }
+  .col-2a { width: 75% }
+  .col-2b { width: 25% }
+  .col-3 { width: 33.3333333333% }
+  .col-4 { width: 25% }
+  
+  .col-submit button { width: 30%; margin-left:10px;}
+  .col-hack button { width: 30%; margin-left:10px;}
+  
+  input[type="radio"] {
+    margin-left:10px;
+  }
+}

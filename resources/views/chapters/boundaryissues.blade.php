@@ -1,0 +1,126 @@
+@extends('layouts.coordinator_theme')
+
+@section('content')
+ <!-- Content Header (Page header) -->
+ <section class="content-header">
+      <h1>
+        M2M Donation
+       <small>Edit</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        <li class="active">Boundary</li>
+      </ol>
+    </section>
+    <!-- Main content -->
+    <form method="POST" action='{{ route("chapter.boundaryissues",$chapterList[0]->id) }}'>
+
+    @csrf
+   <section class="content">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="box card">
+            <div class="box-header with-border">
+              <h3 class="box-title">Chapter</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+              <!-- /.form group -->
+              <div class="col-sm-4 col-xs-12">
+              <div class="form-group">
+                <label>MOMS Club of</label>
+                <input type="text" name="ch_name" class="form-control my-colorpicker1" maxlength="200" required value="{{ $chapterList[0]->name }}" onchange="PreviousNameReminder()" disabled>
+              </div>
+              </div>
+               <!-- /.form group -->
+            <div class="col-sm-4 col-xs-12">
+              <div class="form-group">
+                <label>State</label>
+                <select id="ch_state" name="ch_state" class="form-control select2" style="width: 100%;" required disabled >
+                  <option value="">Select State</option>
+                    @foreach($stateArr as $state)
+                      <option value="{{$state->id}}" {{$chapterList[0]->state == $state->id  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
+                    @endforeach
+                </select>
+                <input type="hidden" name="ch_hid_state" value="{{ $chapterList[0]->state }}">
+              </div>
+              </div>
+              <div class="col-sm-4 col-xs-12">
+              <div class="form-group">
+                <label>Region</label> <span class="field-required">*</span>
+                <select id="ch_region" name="ch_region" class="form-control select2" style="width: 100%;" required disabled >
+                  <option value="">Select Region</option>
+                    @foreach($regionList as $rl)
+                      <option value="{{$rl->id}}" {{$chapterList[0]->region == $rl->id  ? 'selected' : ''}} >{{$rl->long_name}} </option>
+                    @endforeach
+                </select>
+                <input type="hidden" name="ch_hid_region" value="{{ $chapterList[0]->region }}">
+              </div>
+              </div>
+              <div class="col-sm-12 col-xs-12">
+              <div class="form-group">
+                <label>Current boundaires in MIMI</label>
+                <input type="text" name="ch_territory" class="form-control my-colorpicker1" value="{{ $chapterList[0]->territory }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" disabled >
+			</div>
+			</div>
+			
+			<div class="col-sm-12 col-xs-12">
+              <div class="form-group">
+                <label>Boundary Issues Reported by Chapter</label>
+                <input type="text" name="ch_issue" class="form-control my-colorpicker1" value="{{ $chapterList[0]->boundary_issue_notes }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" disabled >
+			</div>
+			</div>
+			<div class="radio-chk">
+                <div class="col-sm-12 col-xs-12">
+                  <div class="form-group">
+                    <label>Boundary Issues Resolved</label>
+                    <label style="display: block;"><input type="checkbox" name="ch_resolved" id="" class="ios-switch green bigswitch" {{$chapterList[0]->boundary_issue_resolved == '1'  ? 'checked' : ''}} /><div><div></div></div>
+                                </label>
+                  </div>
+                  </div>
+<div class="box-header with-border mrg-t-10">
+                <h3 class="box-title">International MOMS Club Coordinators</h3>
+              </div>
+                            <div class="box-body">
+               
+              <!-- /.form group -->
+
+                    <div class="col-md-6 float-left">
+						<input  type="hidden" id="pcid" value="{{ $chapterList[0]->primary_coordinator_id}}">
+						<div id="display_corlist">
+						</div>
+                        
+                    </div>    
+                    </div>    
+                </div>
+              </div>
+              </div>
+              
+
+              <div class="box-body text-center">
+              <button type="submit" class="btn btn-themeBlue margin">Save</button>
+              <a href="{{ route('report.m2mdonation') }}" class="btn btn-themeBlue margin">Back</a>
+        
+              </div>
+              </div>
+              </div>
+              </div>
+              </div>
+              </div>
+    </section>
+    </form>
+    @endsection
+@section('customscript')
+<script>
+$(document).ready(function(){
+	$(".txt-num").keypress(function (e) {
+        var key = e.charCode || e.keyCode || 0;
+		// only numbers
+		if (key < 48 || key > 58) {
+			return false;
+		}
+	});
+});
+    
+</script>
+@endsection
