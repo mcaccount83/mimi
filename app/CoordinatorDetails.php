@@ -8,10 +8,12 @@ class CoordinatorDetails extends Model
 {
     //
     public $timestamps = false;
+
     protected $fillable = [
 
-        'name'
+        'name',
 
     ];
-	protected $table = 'coordinator_details';
+
+    protected $table = 'coordinator_details';
 }

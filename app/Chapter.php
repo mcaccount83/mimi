@@ -8,10 +8,10 @@ class Chapter extends Model
 {
     //
     public $timestamps = false;
+
     protected $fillable = [
 
-        'name'
+        'name',
 
     ];
-
 }
