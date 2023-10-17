@@ -29,11 +29,11 @@ class User extends Authenticatable
 
     public function CoordinatorDetails()
     {
-        return $this->hasOne('App\CoordinatorDetails');
+        return $this->hasOne(\App\CoordinatorDetails::class);
     }
 
     public function BoardDetails()
     {
-        return $this->hasOne('App\BoardDetails');
+        return $this->hasOne(\App\BoardDetails::class);
     }
 }
