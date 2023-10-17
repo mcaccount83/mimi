@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\Support\Arr;
 use App\Http\Controllers\Controller;
 use Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -54,7 +55,7 @@ class LoginController extends Controller
     protected function credentials(Request $request)
     {
         $credentials = $request->only($this->username(), 'password');
-        $credentials = array_add($credentials, 'is_active', '1');
+        $credentials = Arr::add($credentials, 'is_active', '1');
 
         return $credentials;
     }
