@@ -9,13 +9,13 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Chapter;
 use App\Coordinator;
 use App\User;
 use App\FinancialReport;
-use Mail;
-use Session;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 
 use Kunnu\Dropbox\Dropbox;
 use Kunnu\Dropbox\DropboxApp;
@@ -25,7 +25,7 @@ class ChapterController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('preventBackHistory'); 
+        $this->middleware('preventBackHistory');
         $this->middleware('auth')->except('logout','chapterLinks');
     }
 
@@ -49,7 +49,7 @@ class ChapterController extends Controller
                             ->orderBy('st.state_short_name','ASC')
                             ->orderBy('chapters.name','ASC')
                             ->get();
-        if($_GET['check'] == 'yes')                         
+        if($_GET['check'] == 'yes')
             $checkBoxStatus = "checked";
         else
             $checkBoxStatus = "";
@@ -67,7 +67,7 @@ class ChapterController extends Controller
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
-        
+
         $stateArr = DB::table('state')
                     ->select('state.*')
                     ->orderBy('id','ASC')
@@ -75,12 +75,12 @@ class ChapterController extends Controller
         $countryArr = DB::table('country')
                     ->select('country.*')
                     ->orderBy('id','ASC')
-                    ->get();    
+                    ->get();
         $regionList = DB::table('region')
                     ->select('id','long_name')
                     ->where('conference_id', '=', $corConfId)
                     ->orderBy('long_name','ASC')
-                    ->get();                 
+                    ->get();
         $primaryCoordinatorList = DB::table('coordinator_details as cd')
                                     ->select('cd.coordinator_id as cid','cd.first_name as cor_f_name','cd.last_name as cor_l_name','cp.short_title as pos')
                                     ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
@@ -89,9 +89,9 @@ class ChapterController extends Controller
                                     ->where('cd.position_id', '>=', '1')
                                     ->where('cd.is_active', '=', '1')
                                     ->orderBy('cd.first_name','ASC')
-                                    ->get();    
-        
-        $foundedMonth = ['1'=>'JAN','2'=>'FEB','3'=>'MAR','4'=>'APR','5'=>'MAY','6'=>'JUN','7'=>'JUL','8'=>'AUG','9'=>'SEP','10'=>'OCT','11'=>'NOV','12'=>'DEC'];                   
+                                    ->get();
+
+        $foundedMonth = ['1'=>'JAN','2'=>'FEB','3'=>'MAR','4'=>'APR','5'=>'MAY','6'=>'JUN','7'=>'JUL','8'=>'AUG','9'=>'SEP','10'=>'OCT','11'=>'NOV','12'=>'DEC'];
         $currentMonth = date('m');
         $firstCharacter = $currentMonth[0];
         if($firstCharacter == '0')
@@ -99,7 +99,7 @@ class ChapterController extends Controller
 
         $currentYear = date('Y');
         $data=array('currentMonth'=>$currentMonth,'currentYear'=>$currentYear,'regionList'=>$regionList,'primaryCoordinatorList'=>$primaryCoordinatorList,'stateArr'=>$stateArr,'countryArr'=>$countryArr,'foundedMonth'=>$foundedMonth);
-        
+
         return view('chapters.create')->with($data);
     }
     /**
@@ -112,11 +112,11 @@ class ChapterController extends Controller
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
-        $input = request()->all(); 
-  
+        $input = request()->all();
+
         if(isset($input['ch_linkstatus']))
             $input['ch_linkstatus'];
-        else    
+        else
             $input['ch_linkstatus'] = 0;
 
         DB::beginTransaction();
@@ -146,8 +146,8 @@ class ChapterController extends Controller
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => date('Y-m-d H:i:s'),
                     'is_active' => 1]
-            ); 
-        
+            );
+
             //President Info
             if(isset($input['ch_pre_fname']) && isset($input['ch_pre_lname']) && isset($input['ch_pre_email']))
             {
@@ -159,14 +159,14 @@ class ChapterController extends Controller
                     'user_type' => 'board',
                     'is_active' => 1]
                 );
-            
+
                 $boardIdArr = DB::table('board_details')
                                     ->select('board_details.board_id')
                                     ->orderBy('board_details.board_id','DESC')
                                     ->limit(1)
                                     ->get();
                 $boardId = $boardIdArr[0]->board_id + 1;
-                       
+
                 $board = DB::table('board_details')->insert(
                     ['user_id' => $userId,
                     'board_id' => $boardId,
@@ -188,7 +188,7 @@ class ChapterController extends Controller
                     'is_active' => 1]
                 );
             }
-        
+
             //AVP Info
             if(isset($input['ch_avp_fname']) && isset($input['ch_avp_lname']) && isset($input['ch_avp_email']))
             {
@@ -207,7 +207,7 @@ class ChapterController extends Controller
                                     ->limit(1)
                                     ->get();
                 $boardId = $boardIdArr[0]->board_id + 1;
-                        
+
                 $board = DB::table('board_details')->insert(
                     ['user_id' => $userId,
                     'board_id' => $boardId,
@@ -247,7 +247,7 @@ class ChapterController extends Controller
                                     ->limit(1)
                                     ->get();
                 $boardId = $boardIdArr[0]->board_id + 1;
-                        
+
                 $board = DB::table('board_details')->insert(
                     ['user_id' => $userId,
                     'board_id' => $boardId,
@@ -268,7 +268,7 @@ class ChapterController extends Controller
                     'last_updated_date' => date('Y-m-d H:i:s'),
                     'is_active' => 1]
                 );
-            } 
+            }
             //TREASURER Info
             if(isset($input['ch_trs_fname']) && isset($input['ch_trs_lname']) && isset($input['ch_trs_email']))
             {
@@ -287,7 +287,7 @@ class ChapterController extends Controller
                                     ->limit(1)
                                     ->get();
                 $boardId = $boardIdArr[0]->board_id + 1;
-                        
+
                 $board = DB::table('board_details')->insert(
                     ['user_id' => $userId,
                     'board_id' => $boardId,
@@ -308,7 +308,7 @@ class ChapterController extends Controller
                     'last_updated_date' => date('Y-m-d H:i:s'),
                     'is_active' => 1]
                 );
-            }  
+            }
             //Secretary Info
             if(isset($input['ch_sec_fname']) && isset($input['ch_sec_lname']) && isset($input['ch_sec_email']))
             {
@@ -327,7 +327,7 @@ class ChapterController extends Controller
                                     ->limit(1)
                                     ->get();
                 $boardId = $boardIdArr[0]->board_id + 1;
-                        
+
                 $board = DB::table('board_details')->insert(
                     ['user_id' => $userId,
                     'board_id' => $boardId,
@@ -371,19 +371,19 @@ class ChapterController extends Controller
                     'cor_lname' => $cordInfo[0]->last_name,
                     'updated_by' => date('Y-m-d H:i:s'),
             ];
-            
+
             Mail::send('emails.chapteradd', $mailData,function($message) use ($to_email)
-            {   
-                $message->to($to_email, 'MOMS Club')->subject('New Chapter Added'); 
+            {
+                $message->to($to_email, 'MOMS Club')->subject('New Chapter Added');
             });
             DB::commit();
         }
         catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
-            
+
             return redirect('/home')->with('fail', 'Something went wrong, Please try again..');
-        }      
+        }
         return redirect('/home')->with('success', 'Chapter created successfully');
     }
 
@@ -399,7 +399,7 @@ class ChapterController extends Controller
             }
            else{
             $reviewComplete= NULL;
-           }     
+           }
         $chapterList = DB::table('chapters as ch')
                             ->select('ch.*','bd.first_name','bd.last_name','bd.email as bd_email','bd.board_position_id','bd.street_address','bd.city','bd.zip','bd.phone','bd.state as bd_state','bd.user_id as user_id')
                             ->leftJoin('board_details as bd', 'ch.id', '=', 'bd.chapter_id')
@@ -415,7 +415,7 @@ class ChapterController extends Controller
                             ->where('bd.board_position_id', '=', '2')
                             ->get();
         if(sizeof($AVPDetails) == 0){
-                $AVPDetails[0] = array('avp_fname' =>'','avp_lname' =>'','avp_email' =>'','avp_addr' =>'','avp_city' =>'','avp_zip' =>'','avp_phone' =>'','avp_state' =>'','user_id' =>''); 
+                $AVPDetails[0] = array('avp_fname' =>'','avp_lname' =>'','avp_email' =>'','avp_addr' =>'','avp_city' =>'','avp_zip' =>'','avp_phone' =>'','avp_state' =>'','user_id' =>'');
                 $AVPDetails = json_decode(json_encode($AVPDetails));
         }
 
@@ -425,7 +425,7 @@ class ChapterController extends Controller
                             ->where('bd.board_position_id', '=', '3')
                             ->get();
         if(sizeof($MVPDetails) == 0){
-            $MVPDetails[0] = array('mvp_fname' =>'','mvp_lname' =>'','mvp_email' =>'','mvp_addr' =>'','mvp_city' =>'','mvp_zip' =>'','mvp_phone' =>'','mvp_state' =>'','user_id' =>''); 
+            $MVPDetails[0] = array('mvp_fname' =>'','mvp_lname' =>'','mvp_email' =>'','mvp_addr' =>'','mvp_city' =>'','mvp_zip' =>'','mvp_phone' =>'','mvp_state' =>'','user_id' =>'');
             $MVPDetails = json_decode(json_encode($MVPDetails));
         }
 
@@ -435,17 +435,17 @@ class ChapterController extends Controller
                             ->where('bd.board_position_id', '=', '4')
                             ->get();
         if(sizeof($TRSDetails) == 0){
-            $TRSDetails[0] = array('trs_fname' =>'','trs_lname' =>'','trs_email' =>'','trs_addr' =>'','trs_city' =>'','trs_zip' =>'','trs_phone' =>'','trs_state' =>'','user_id' =>''); 
+            $TRSDetails[0] = array('trs_fname' =>'','trs_lname' =>'','trs_email' =>'','trs_addr' =>'','trs_city' =>'','trs_zip' =>'','trs_phone' =>'','trs_state' =>'','user_id' =>'');
             $TRSDetails = json_decode(json_encode($TRSDetails));
         }
-        
+
         $SECDetails = DB::table('board_details as bd')
                             ->select('bd.first_name as sec_fname','bd.last_name as sec_lname','bd.email as sec_email','bd.board_position_id','bd.street_address as sec_addr','bd.city as sec_city','bd.zip as sec_zip','bd.phone as sec_phone','bd.state as sec_state','bd.user_id as user_id')
                             ->where('bd.chapter_id', '=', $id )
                             ->where('bd.board_position_id', '=', '5')
                             ->get();
         if(sizeof($SECDetails) == 0){
-            $SECDetails[0] = array('sec_fname' =>'','sec_lname' =>'','sec_email' =>'','sec_addr' =>'','sec_city' =>'','sec_zip' =>'','sec_phone' =>'','sec_state' =>'','user_id' =>''); 
+            $SECDetails[0] = array('sec_fname' =>'','sec_lname' =>'','sec_email' =>'','sec_addr' =>'','sec_city' =>'','sec_zip' =>'','sec_phone' =>'','sec_state' =>'','user_id' =>'');
             $SECDetails = json_decode(json_encode($SECDetails));
         }
 
@@ -456,18 +456,18 @@ class ChapterController extends Controller
         $countryArr = DB::table('country')
                     ->select('country.*')
                     ->orderBy('id','ASC')
-                    ->get();    
+                    ->get();
         $regionList = DB::table('region')
                     ->select('id','long_name')
                     ->where('conference_id', '=', $corConfId)
                     ->orderBy('long_name','ASC')
                     ->get();
-        
+
 
         $chapterEmailList = DB::table('board_details as bd')
                     ->select('bd.email as bor_email')
                     ->where('bd.chapter_id', '=', $id)
-                    ->get();  
+                    ->get();
         $emailListCord="";
         foreach($chapterEmailList as $val){
             $email = $val->bor_email;
@@ -477,9 +477,9 @@ class ChapterController extends Controller
             }
             else{
                 $emailListCord .= ";" . $escaped_email;
-            } 
-        } 
-        
+            }
+        }
+
         $cc_string="";
         $reportingList = DB::table('coordinator_reporting_tree')
                             ->select('*')
@@ -488,7 +488,7 @@ class ChapterController extends Controller
             foreach($reportingList as $key => $value)
             {
                 $reportingList[$key] = (array) $value;
-            }   
+            }
             $filterReportingList = array_filter($reportingList[0]);
             unset($filterReportingList['id']);
             unset($filterReportingList['layer0']);
@@ -509,7 +509,7 @@ class ChapterController extends Controller
                             $down_line_email = $corList[0]->cord_email;
                         else
                             $down_line_email .= ";" . $corList[0]->cord_email;
-                    }            
+                    }
                 }
             }
         $cc_string = "?cc=" . $down_line_email;
@@ -522,15 +522,15 @@ class ChapterController extends Controller
                     ->where('cd.position_id', '>=', '1')
                     ->where('cd.is_active', '=', '1')
                     ->orderBy('cd.first_name','ASC')
-                    ->get();                
-       
-        $foundedMonth = ['1'=>'JAN','2'=>'FEB','3'=>'MAR','4'=>'APR','5'=>'MAY','6'=>'JUN','7'=>'JUL','8'=>'AUG','9'=>'SEP','10'=>'OCT','11'=>'NOV','12'=>'DEC'];                   
+                    ->get();
+
+        $foundedMonth = ['1'=>'JAN','2'=>'FEB','3'=>'MAR','4'=>'APR','5'=>'MAY','6'=>'JUN','7'=>'JUL','8'=>'AUG','9'=>'SEP','10'=>'OCT','11'=>'NOV','12'=>'DEC'];
         $currentMonth = $chapterList[0]->start_month_id;
-        
+
         $data=array('positionid' => $positionid,'corId'=>$corId,'reviewComplete'=>$reviewComplete,'emailListCord'=>$emailListCord,'cc_string'=>$cc_string,'currentMonth'=>$currentMonth,'SECDetails'=>$SECDetails,'TRSDetails'=>$TRSDetails,'MVPDetails'=>$MVPDetails,'AVPDetails'=>$AVPDetails,'chapterList' => $chapterList,'regionList'=>$regionList,'primaryCoordinatorList'=>$primaryCoordinatorList,'stateArr'=>$stateArr,'countryArr'=>$countryArr,'foundedMonth'=>$foundedMonth);
         return view('chapters.edit')->with($data);
     }
-    
+
 //chapterupdate
     public function update(Request $request, $id)
     {
@@ -605,7 +605,7 @@ class ChapterController extends Controller
             $ch_month = $request->get('ch_hid_founddate');
             $ch_foundyear = $request->get('ch_hid_foundyear');
         }
-      
+
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
         $chapter = Chapter::find($chapterId);
         DB::beginTransaction();
@@ -620,7 +620,7 @@ class ChapterController extends Controller
             $chapter->additional_info = $request->get('ch_addinfo');
             $chapter->website_url = $request->get('ch_website');
             $chapter->website_link_status = $request->get('ch_linkstatus');
-            $chapter->email = $request->get('ch_email');                       
+            $chapter->email = $request->get('ch_email');
             $chapter->inquiries_contact = $request->get('ch_inqemailcontact');
             $chapter->inquiries_note = $request->get('ch_inqnote');
             $chapter->egroup = $request->get('ch_onlinediss');
@@ -630,20 +630,20 @@ class ChapterController extends Controller
             $chapter->former_name = $request->get('ch_preknown');
             $chapter->sistered_by = $request->get('ch_sistered');
             $chapter->start_month_id = $ch_month;
-            $chapter->start_year = $ch_foundyear;        
+            $chapter->start_year = $ch_foundyear;
            // $chapter->next_renewal_year = $request->get('ch_foundyear')+1;
-            $chapter->primary_coordinator_id = $ch_pcid; 
+            $chapter->primary_coordinator_id = $ch_pcid;
             //$chapter->founders_name = $request->get('ch_pre_fname').' '.$request->get('ch_pre_lname');
             $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');                
-        
+            $chapter->last_updated_date = date('Y-m-d H:i:s');
+
             $chapter->save();
 
             $financial_report_array = FinancialReport::find($chapterId);
             if(!empty($financial_report_array))
             {
                 DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [null,$chapterId]);
-            } 
+            }
 
             //President Info
             if($request->get('ch_pre_fname') !='' && $request->get('ch_pre_lname') !='' && $request->get('ch_pre_email') !='')
@@ -660,10 +660,10 @@ class ChapterController extends Controller
                     $user = User::find($userId);
                     $user->first_name = $request->get('ch_pre_fname');
                     $user->last_name = $request->get('ch_pre_lname');
-                    $user->email = $request->get('ch_pre_email');            
+                    $user->email = $request->get('ch_pre_email');
                     $user->updated_at = date('Y-m-d H:i:s');
                     $user->save();
-                   
+
                     DB::table('board_details')
                             ->where('board_id', $boardId)
                             ->update(['first_name' => $request->get('ch_pre_fname'),
@@ -677,7 +677,7 @@ class ChapterController extends Controller
                                         'phone' => $request->get('ch_pre_phone'),
                                         'last_updated_by' => $lastUpdatedBy,
                                         'last_updated_date' => date('Y-m-d H:i:s')]);
-                }      
+                }
             }
             //AVP Info
             // if($request->get('ch_avp_fname') !='' && $request->get('ch_avp_lname') !='' && $request->get('ch_avp_email') !='')
@@ -698,13 +698,13 @@ class ChapterController extends Controller
                         //Delete Details of Board memebers from users table
                         DB::table('users')
                             ->where('id',$userId)
-                            ->delete();        
-                    } 
+                            ->delete();
+                    }
                     else{
                         $user = User::find($userId);
                         $user->first_name = $request->get('ch_avp_fname');
                         $user->last_name = $request->get('ch_avp_lname');
-                        $user->email = $request->get('ch_avp_email');            
+                        $user->email = $request->get('ch_avp_email');
                         $user->updated_at = date('Y-m-d H:i:s');
                         $user->save();
 
@@ -721,7 +721,7 @@ class ChapterController extends Controller
                                             'phone' => $request->get('ch_avp_phone'),
                                             'last_updated_by' => $lastUpdatedBy,
                                             'last_updated_date' => date('Y-m-d H:i:s')]);
-                    }                        
+                    }
                 }
                 else{
                     if($request->get('AVPVacant') != 'on'){
@@ -733,14 +733,14 @@ class ChapterController extends Controller
                             'user_type' => 'board',
                             'is_active' => 1]
                         );
-        
+
                         $boardIdArr = DB::table('board_details')
                                             ->select('board_details.board_id')
                                             ->orderBy('board_details.board_id','DESC')
                                             ->limit(1)
                                             ->get();
                         $boardId = $boardIdArr[0]->board_id + 1;
-                            
+
                         $board = DB::table('board_details')->insert(
                             ['user_id' => $userId,
                             'board_id' => $boardId,
@@ -761,8 +761,8 @@ class ChapterController extends Controller
                             'last_updated_date' => date('Y-m-d H:i:s'),
                             'is_active' => 1]
                         );
-                    }    
-                }      
+                    }
+                }
            // }
             //MVP Info
             //if($request->get('ch_mvp_fname') !='' && $request->get('ch_mvp_lname') !='' && $request->get('ch_mvp_email') !='')

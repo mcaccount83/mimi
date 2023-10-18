@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use PDF;
+//use PDF;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class PDFController extends Controller
 {

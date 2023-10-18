@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Coordinator;
 use App\FinancialReport;
 use App\User;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 
 class CoordinatorController extends Controller
 {
@@ -507,45 +507,45 @@ class CoordinatorController extends Controller
 
         /***Query For Report To in Frst Section */
         if ($region_id > 0 && $position_id < 6) {
-            $primaryCoordinatorList = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos 
-                                        FROM coordinator_details as cd 
-                                        INNER JOIN coordinator_position as cp ON cd.position_id=cp.id 
-                                        WHERE (cd.conference_id = $conference_id AND cd.position_id > $position_id AND cd.position_id > 1 AND cd.region_id = $region_id AND cd.is_active=1) 
-                                        OR (cd.position_id = 6 AND cd.conference_id = $conference_id AND cd.is_active=1) 
-                                        OR (cd.position_id = 25 AND cd.conference_id = $conference_id AND cd.is_active=1) 
+            $primaryCoordinatorList = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
+                                        FROM coordinator_details as cd
+                                        INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
+                                        WHERE (cd.conference_id = $conference_id AND cd.position_id > $position_id AND cd.position_id > 1 AND cd.region_id = $region_id AND cd.is_active=1)
+                                        OR (cd.position_id = 6 AND cd.conference_id = $conference_id AND cd.is_active=1)
+                                        OR (cd.position_id = 25 AND cd.conference_id = $conference_id AND cd.is_active=1)
                                         ORDER BY cd.position_id,cd.first_name, cd.last_name"));
         } elseif ($conference_id > 0) {
-            $primaryCoordinatorList = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos 
-                                        FROM coordinator_details as cd 
-                                        INNER JOIN coordinator_position as cp ON cd.position_id=cp.id 
-                                        WHERE (cd.position_id > 1 AND cd.conference_id = $conference_id AND cd.is_active=1) 
+            $primaryCoordinatorList = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
+                                        FROM coordinator_details as cd
+                                        INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
+                                        WHERE (cd.position_id > 1 AND cd.conference_id = $conference_id AND cd.is_active=1)
                                         /*OR (cd.position_id = 7 AND cd.is_active=1)*/
                                         ORDER BY cd.position_id,cd.first_name, cd.last_name"));
         } else {
-            $primaryCoordinatorList = DB::select(DB::raw('SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos 
-                                        FROM coordinator_details as cd 
-                                        INNER JOIN coordinator_position as cp ON cd.position_id=cp.id 
-                                        WHERE cd.is_active=1 
+            $primaryCoordinatorList = DB::select(DB::raw('SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
+                                        FROM coordinator_details as cd
+                                        INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
+                                        WHERE cd.is_active=1
                                         ORDER BY cd.position_id,cd.first_name, cd.last_name'));
         }
 
         if ($region_id > 0) {
-            $directReportTo = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos 
-                                        FROM coordinator_details as cd 
-                                        INNER JOIN coordinator_position as cp ON cd.position_id=cp.id 
-                                        WHERE (cd.region_id = $region_id AND cd.position_id < $position_id AND cd.is_active=1) 
+            $directReportTo = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
+                                        FROM coordinator_details as cd
+                                        INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
+                                        WHERE (cd.region_id = $region_id AND cd.position_id < $position_id AND cd.is_active=1)
                                         ORDER BY cd.first_name, cd.last_name"));
         } elseif ($conference_id > 0) {
-            $directReportTo = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos 
-                                        FROM coordinator_details as cd 
-                                        INNER JOIN coordinator_position as cp ON cd.position_id=cp.id 
-                                        WHERE (cd.conference_id = $conference_id AND cd.is_active=1) 
+            $directReportTo = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
+                                        FROM coordinator_details as cd
+                                        INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
+                                        WHERE (cd.conference_id = $conference_id AND cd.is_active=1)
                                         ORDER BY cd.position_id,cd.first_name, cd.last_name"));
         } else {
-            $directReportTo = DB::select(DB::raw('SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos 
-                                        FROM coordinator_details as cd 
-                                        INNER JOIN coordinator_position as cp ON cd.position_id=cp.id 
-                                        WHERE cd.is_active=1 
+            $directReportTo = DB::select(DB::raw('SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
+                                        FROM coordinator_details as cd
+                                        INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
+                                        WHERE cd.is_active=1
                                         ORDER BY cd.position_id,cd.first_name, cd.last_name'));
         }
 
@@ -968,25 +968,25 @@ class CoordinatorController extends Controller
         $region_id = $_GET['reg_id'];
 
         if ($region_id > 0 && $position_id < 6) {
-            $reportCoordinatorList = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos 
-                                        FROM coordinator_details as cd 
-                                        INNER JOIN coordinator_position as cp ON cd.position_id=cp.id 
-                                        WHERE (cd.conference_id = $conference_id AND cd.position_id > $position_id AND cd.position_id > 1 AND cd.region_id = $region_id AND cd.is_active=1) 
-                                        OR (cd.position_id = 6 AND cd.conference_id = $conference_id AND cd.is_active=1) 
-                                        OR (cd.position_id = 25 AND cd.conference_id = $conference_id AND cd.is_active=1)  
+            $reportCoordinatorList = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
+                                        FROM coordinator_details as cd
+                                        INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
+                                        WHERE (cd.conference_id = $conference_id AND cd.position_id > $position_id AND cd.position_id > 1 AND cd.region_id = $region_id AND cd.is_active=1)
+                                        OR (cd.position_id = 6 AND cd.conference_id = $conference_id AND cd.is_active=1)
+                                        OR (cd.position_id = 25 AND cd.conference_id = $conference_id AND cd.is_active=1)
                                         ORDER BY cd.position_id,cd.first_name, cd.last_name"));
         } elseif ($conference_id > 0) {
-            $reportCoordinatorList = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos 
-                                        FROM coordinator_details as cd 
-                                        INNER JOIN coordinator_position as cp ON cd.position_id=cp.id 
-                                        WHERE (cd.position_id > 1 AND cd.conference_id = $conference_id AND cd.is_active=1) 
+            $reportCoordinatorList = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
+                                        FROM coordinator_details as cd
+                                        INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
+                                        WHERE (cd.position_id > 1 AND cd.conference_id = $conference_id AND cd.is_active=1)
                                         /*OR (cd.position_id = 7 AND cd.is_active=1)*/
                                         ORDER BY cd.position_id,cd.first_name, cd.last_name"));
         } else {
-            $reportCoordinatorList = DB::select(DB::raw('SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos 
-                                        FROM coordinator_details as cd 
-                                        INNER JOIN coordinator_position as cp ON cd.position_id=cp.id 
-                                        WHERE cd.is_active=1 
+            $reportCoordinatorList = DB::select(DB::raw('SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
+                                        FROM coordinator_details as cd
+                                        INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
+                                        WHERE cd.is_active=1
                                         ORDER BY cd.position_id,cd.first_name, cd.last_name'));
         }
         $html = '<option value=""></option>';
@@ -1004,22 +1004,22 @@ class CoordinatorController extends Controller
         $region_id = $_GET['reg_id'];
 
         if ($region_id > 0) {
-            $directReportTo = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos 
-                                FROM coordinator_details as cd 
+            $directReportTo = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
+                                FROM coordinator_details as cd
                                 INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
-                                WHERE (cd.region_id = $region_id AND cd.position_id < $position_id AND cd.is_active=1) 
+                                WHERE (cd.region_id = $region_id AND cd.position_id < $position_id AND cd.is_active=1)
                                 ORDER BY cd.first_name, cd.last_name"));
         } elseif ($conference_id > 0) {
-            $directReportTo = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos 
-                                FROM coordinator_details as cd 
-                                INNER JOIN coordinator_position as cp ON cd.position_id=cp.id 
-                                WHERE (cd.conference_id = $conference_id AND cd.is_active=1) 
+            $directReportTo = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
+                                FROM coordinator_details as cd
+                                INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
+                                WHERE (cd.conference_id = $conference_id AND cd.is_active=1)
                                 ORDER BY cd.position_id,cd.first_name, cd.last_name"));
         } else {
-            $directReportTo = DB::select(DB::raw('SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos 
-                                FROM coordinator_details as cd 
-                                INNER JOIN coordinator_position as cp ON cd.position_id=cp.id 
-                                WHERE cd.is_active=1 
+            $directReportTo = DB::select(DB::raw('SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
+                                FROM coordinator_details as cd
+                                INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
+                                WHERE cd.is_active=1
                                 ORDER BY cd.position_id,cd.first_name, cd.last_name'));
         }
 

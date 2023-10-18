@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Chapter;
 use App\Coordinator;
 use App\User;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Session;
+use Illuminate\Support\Facades\Session;
 
 class ReportController extends Controller
 {
@@ -1226,13 +1227,13 @@ class ReportController extends Controller
             $conference_clause = '';
         }
         $resultOne = DB::select(DB::raw('SELECT coordinator_details.coordinator_id AS id, coordinator_details.first_name, coordinator_details.last_name, pos1.short_title AS position_title, pos2.short_title AS sec_position_title, coordinator_details.layer_id, coordinator_details.report_id, coordinator_details.report_id AS tree_id, region.short_name AS region
-                    FROM coordinator_details 
-                    INNER JOIN coordinator_position pos1 ON pos1.id=coordinator_details.position_id 
-                    LEFT JOIN coordinator_position pos2 ON pos2.id=coordinator_details.sec_position_id 
-                    INNER JOIN region ON coordinator_details.region_id = region.id 
+                    FROM coordinator_details
+                    INNER JOIN coordinator_position pos1 ON pos1.id=coordinator_details.position_id
+                    LEFT JOIN coordinator_position pos2 ON pos2.id=coordinator_details.sec_position_id
+                    INNER JOIN region ON coordinator_details.region_id = region.id
                     WHERE coordinator_details.on_leave = 0 '.
             $conference_clause.
-            ' AND coordinator_details.is_active = 1 
+            ' AND coordinator_details.is_active = 1
                     ORDER BY coordinator_details.region_id, coordinator_details.position_id DESC'));
         foreach ($resultOne as $key => $value) {
             $resultOne[$key]->chapter_list = '';
@@ -1398,11 +1399,11 @@ class ReportController extends Controller
         if (isset($_GET['check'])) {
             if ($_GET['check'] == 'yes') {
                 $checkBoxStatus = 'checked';
-                $chapterList = DB::select(DB::raw("SELECT ch.id as chap_id,ch.primary_coordinator_id as primary_coordinator_id, ch.name as name, ch.financial_report_received as financial_report_received, ch.financial_report_complete as report_complete, cd.coordinator_id AS cord_id, cd.first_name as fname, cd.last_name as lname, st.state_short_name as state, fr.review_complete as review_complete, fr.post_balance as post_balance 
-						FROM chapters as ch 
-						INNER JOIN state as st ON ch.state=st.id 
-						LEFT JOIN financial_report as fr ON fr.chapter_id=ch.id 
-						LEFT JOIN coordinator_details as cd ON cd.coordinator_id = fr.reviewer_id 
+                $chapterList = DB::select(DB::raw("SELECT ch.id as chap_id,ch.primary_coordinator_id as primary_coordinator_id, ch.name as name, ch.financial_report_received as financial_report_received, ch.financial_report_complete as report_complete, cd.coordinator_id AS cord_id, cd.first_name as fname, cd.last_name as lname, st.state_short_name as state, fr.review_complete as review_complete, fr.post_balance as post_balance
+						FROM chapters as ch
+						INNER JOIN state as st ON ch.state=st.id
+						LEFT JOIN financial_report as fr ON fr.chapter_id=ch.id
+						LEFT JOIN coordinator_details as cd ON cd.coordinator_id = fr.reviewer_id
 						WHERE ch.created_at <=  date('$year-06-30') and ch.is_active=1 and fr.reviewer_id =$corId"));
             }
 
@@ -1413,11 +1414,11 @@ class ReportController extends Controller
         if (isset($_GET['check2'])) {
             if ($_GET['check2'] == 'yes') {
                 $checkBox2Status = 'checked';
-                $chapterList = DB::select(DB::raw("SELECT ch.id as chap_id,ch.primary_coordinator_id as primary_coordinator_id, ch.name as name, ch.financial_report_received as financial_report_received, ch.financial_report_complete as report_complete, cd.coordinator_id AS cord_id, cd.first_name as fname, cd.last_name as lname, st.state_short_name as state, fr.review_complete as review_complete, fr.post_balance as post_balance 
-						FROM chapters as ch 
-						INNER JOIN state as st ON ch.state=st.id 
-						LEFT JOIN financial_report as fr ON fr.chapter_id=ch.id 
-						LEFT JOIN coordinator_details as cd ON cd.coordinator_id = fr.reviewer_id 
+                $chapterList = DB::select(DB::raw("SELECT ch.id as chap_id,ch.primary_coordinator_id as primary_coordinator_id, ch.name as name, ch.financial_report_received as financial_report_received, ch.financial_report_complete as report_complete, cd.coordinator_id AS cord_id, cd.first_name as fname, cd.last_name as lname, st.state_short_name as state, fr.review_complete as review_complete, fr.post_balance as post_balance
+						FROM chapters as ch
+						INNER JOIN state as st ON ch.state=st.id
+						LEFT JOIN financial_report as fr ON fr.chapter_id=ch.id
+						LEFT JOIN coordinator_details as cd ON cd.coordinator_id = fr.reviewer_id
 						WHERE ch.created_at <=  date('$year-06-30') and ch.is_active=1 and ch.primary_coordinator_id =$corId"));
             }
 

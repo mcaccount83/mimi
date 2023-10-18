@@ -7,10 +7,10 @@ use App\Coordinator;
 //use Illuminate\Support\Facades\Response;
 use App\CoordinatorDetails;
 use App\User;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Response;
+use Illuminate\Support\Facades\Response;
 
 class ExportController extends Controller
 {

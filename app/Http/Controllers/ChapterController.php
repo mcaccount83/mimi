@@ -6,15 +6,15 @@ use App\Chapter;
 use App\Coordinator;
 use App\FinancialReport;
 use App\User;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Kunnu\Dropbox\Dropbox;
 use Kunnu\Dropbox\DropboxApp;
 use Kunnu\Dropbox\DropboxFile;
-use Mail;
-use Session;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 
 class ChapterController extends Controller
 {
@@ -2670,7 +2670,7 @@ class ChapterController extends Controller
                 ON chapters.state=state.id
                 INNER JOIN db_month
                 ON chapters.start_month_id=db_month.id
-                WHERE (chapters.next_renewal_year < $currentYear 
+                WHERE (chapters.next_renewal_year < $currentYear
                 OR (chapters.next_renewal_year = $currentYear AND chapters.start_month_id <= $currentMonth))".
                 $conference_clause.' '.
                 ' AND chapters.is_active = 1
@@ -2684,7 +2684,7 @@ class ChapterController extends Controller
                 ON chapters.state=state.id
                 INNER JOIN db_month
                 ON chapters.start_month_id=db_month.id
-                WHERE (chapters.next_renewal_year < $currentYear 
+                WHERE (chapters.next_renewal_year < $currentYear
                 OR (chapters.next_renewal_year = $currentYear AND chapters.start_month_id <= $currentMonth))".
                 $conference_clause.' '.
                 " AND chapters.region = $region_id
@@ -4484,7 +4484,7 @@ class ChapterController extends Controller
         $link_array_usa_q = DB::select("SELECT chapters.id, chapters.state, chapters.intl_state, chapters.country, chapters.name, chapters.status, chapters.website_link_status, chapters.website_url, state.state_short_name, state.state_long_name
                     FROM chapters
                     INNER JOIN state
-                    ON chapters.state=state.id                  
+                    ON chapters.state=state.id
                     WHERE chapters.state<>52
                     AND is_active ='1'
                     ORDER BY chapters.state, chapters.name");
