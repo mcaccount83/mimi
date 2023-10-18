@@ -2,9 +2,8 @@
 
 namespace App;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -27,13 +26,14 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
-	
-	public function CoordinatorDetails()
+
+    public function CoordinatorDetails()
     {
-        return $this->hasOne('App\CoordinatorDetails');
+        return $this->hasOne(\App\CoordinatorDetails::class);
     }
+
     public function BoardDetails()
     {
-        return $this->hasOne('App\BoardDetails');
+        return $this->hasOne(\App\BoardDetails::class);
     }
 }

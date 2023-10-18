@@ -34,7 +34,7 @@ class ResetPasswordController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('preventBackHistory'); 
+        $this->middleware('preventBackHistory');
         $this->middleware('guest');
     }
 }

@@ -29,7 +29,6 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param  \Exception  $exception
      * @return void
      */
     public function report(Exception $exception)
@@ -43,22 +42,22 @@ class Handler extends ExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
     public function render($request, Exception $exception)
     {
-		if ($this->isHttpException($exception))
-		{
-			if ($exception->getStatusCode() == 404)
-			   return redirect('/login');
+        if ($this->isHttpException($exception)) {
+            if ($exception->getStatusCode() == 404) {
+                return redirect('/login');
+            }
 
-			if ($exception->getStatusCode() == 500)
-			   return redirect('/login');
-		}
-		else
-			return parent::render($request, $exception);
-		//return redirect('/login');
+            if ($exception->getStatusCode() == 500) {
+                return redirect('/login');
+            }
+        } else {
+            return parent::render($request, $exception);
+        }
+        //return redirect('/login');
         //return parent::render($request, $exception);
     }
 }

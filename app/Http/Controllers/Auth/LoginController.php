@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-
-use Illuminate\Http\Request;
-use Session;
 use Auth;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Session;
 
 class LoginController extends Controller
 {
@@ -23,13 +23,13 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
-    
+
     protected function authenticated(Request $request, $user)
     {
         Session::regenerate();
+
         return redirect()->intended($this->redirectTo);
     }
-
 
     /**
      * Where to redirect users after login.
@@ -48,24 +48,23 @@ class LoginController extends Controller
         $this->middleware('preventBackHistory');
         $this->middleware('guest')->except('logout');
     }
-    
+
     /**
      * Default method overriding for check user is active ot not
      */
     protected function credentials(Request $request)
     {
-       $credentials = $request->only($this->username(), 'password');
-       $credentials = array_add($credentials, 'is_active', '1');
-       return $credentials;
-    }
-    
+        $credentials = $request->only($this->username(), 'password');
+        $credentials = Arr::add($credentials, 'is_active', '1');
 
-    public function logout(Request $request) 
+        return $credentials;
+    }
+
+    public function logout(Request $request)
     {
         Auth::logout(); // logout user
         Session::flush();
+
         return redirect('/login');
     }
-
-
 }
