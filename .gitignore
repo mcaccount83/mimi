@@ -7,7 +7,6 @@ storage
 /storage/*.key
 vendor
 /vendor
-config/*
 .env
 .env.backup
 .env.production
