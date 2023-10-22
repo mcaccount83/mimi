@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Exception;
 use App\Chapter;
 use App\Coordinator;
 use App\User;
-use Illuminate\Support\Facades\DB;
+use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 
