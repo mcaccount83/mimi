@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 use Kunnu\Dropbox\Dropbox;
 use Kunnu\Dropbox\DropboxApp;
 use Kunnu\Dropbox\DropboxFile;
@@ -460,6 +461,9 @@ class ChapterController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
+
+            // Log the error
+            Log::error($e);
 
             return redirect('/chapter/list')->with('fail', 'Something went wrong, Please try again..');
         }
@@ -1448,6 +1452,9 @@ class ChapterController extends Controller
             exit();
             DB::rollback();
 
+            // Log the error
+            Log::error($e);
+
             return redirect('/chapter/list')->with('fail', 'Something went wrong, Please try again..');
         }
 
@@ -1524,6 +1531,9 @@ class ChapterController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
+
+            // Log the error
+            Log::error($e);
 
             return redirect('/yearreports/boundaryissue')->with('fail', 'Something went wrong, Please try again.');
         }
@@ -2598,6 +2608,9 @@ class ChapterController extends Controller
             // Rollback Transaction
             DB::rollback();
 
+            // Log the error
+            Log::error($e);
+
             return redirect('/reports/m2mdonation')->with('fail', 'Something went wrong, Please try again.');
         }
 
@@ -2739,6 +2752,9 @@ class ChapterController extends Controller
             // Rollback Transaction
             DB::rollback();
 
+            // Log the error
+            Log::error($e);
+
             return redirect('/chapter/re-registration')->with('fail', 'Something went wrong, Please try again.');
         }
 
@@ -2808,6 +2824,9 @@ class ChapterController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
+
+            // Log the error
+            Log::error($e);
 
             return redirect('/chapter/re-registration')->with('fail', 'Something went wrong, Please try again.');
         }
@@ -3199,6 +3218,9 @@ class ChapterController extends Controller
             // Rollback Transaction
             DB::rollback();
 
+            // Log the error
+            Log::error($e);
+
             return redirect('/yearreports/chapterawards')->with('fail', 'Something went wrong, Please try again.');
         }
 
@@ -3561,6 +3583,9 @@ class ChapterController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
+
+            // Log the error
+            Log::error($e);
 
             return redirect('/chapter/list')->with('fail', 'Something went wrong, Please try again.');
         }
@@ -4386,6 +4411,9 @@ class ChapterController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
 
+            // Log the error
+            Log::error($e);
+
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
 
@@ -4471,6 +4499,9 @@ class ChapterController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
+
+            // Log the error
+            Log::error($e);
 
             return redirect('/yearreports/eoystatus')->with('fail', 'Something went wrong, Please try again.');
         }

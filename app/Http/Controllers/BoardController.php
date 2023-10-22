@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 use Kunnu\Dropbox\Dropbox;
 use Kunnu\Dropbox\DropboxApp;
 use Kunnu\Dropbox\DropboxFile;
@@ -682,6 +683,9 @@ class BoardController extends Controller
             // Rollback Transaction
             DB::rollback();
 
+            // Log the error
+            Log::error($e);
+
             return redirect('/home')->with('fail', 'Something went wrong, Please try again');
         }
 
@@ -782,6 +786,9 @@ class BoardController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
+
+            // Log the error
+            Log::error($e);
 
             return redirect('/home')->with('fail', 'Something went wrong, Please try again');
         }
@@ -1189,6 +1196,9 @@ class BoardController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
+
+            // Log the error
+            Log::error($e);
 
             return redirect('/home')->with('fail', 'Something went wrong, Please try again');
         }

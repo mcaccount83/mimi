@@ -7,6 +7,8 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Arr;
+
 
 class LoginController extends Controller
 {
@@ -44,13 +46,17 @@ class LoginController extends Controller
      *Verify that user is active.
      *
      */
-    protected function authenticated(Request $request, $user)
+    protected function credentials(Request $request)
     {
-        if (!$user->active) {
-            Auth::logout();
-            return back()->with('error', 'Your account is not active. Please contact your coordinator for assistance.');
-        }
+        $credentials = $request->only($this->username(), 'password');
+        $credentials = Arr::add($credentials, 'is_active', '1');
 
-        return redirect()->intended($this->redirectPath());
+        return $credentials;
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout(); // logout user
+        return redirect('/login')->with('error', 'Your account is not active. Please contact your coordinator for assistance.');
     }
 }

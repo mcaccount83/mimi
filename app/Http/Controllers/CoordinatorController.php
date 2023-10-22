@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+
 
 class CoordinatorController extends Controller
 {
@@ -317,6 +319,9 @@ class CoordinatorController extends Controller
             DB::rollback();
             echo $e->getMessage();
             exit;
+
+            // Log the error
+            Log::error($e);
 
             return redirect('/coordinatorlist')->with('fail', 'Something went wrong, Please try again..');
         }
@@ -669,6 +674,9 @@ class CoordinatorController extends Controller
                 // Rollback Transaction
                 DB::rollback();
 
+                // Log the error
+                Log::error($e);
+
                 return redirect('/coordinatorlist')->with('fail', 'Something went wrong, Please try again.');
             }
         }
@@ -764,6 +772,9 @@ class CoordinatorController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
+
+            // Log the error
+            Log::error($e);
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
@@ -1363,6 +1374,9 @@ class CoordinatorController extends Controller
                     // Rollback Transaction
                     DB::rollback();
 
+                    // Log the error
+                    Log::error($e);
+
                     return redirect('/reports/appreciation')->with('fail', 'Something went wrong, Please try again.');
                 }
             }
@@ -1477,6 +1491,9 @@ class CoordinatorController extends Controller
                     // Rollback Transaction
                     DB::rollback();
 
+                    // Log the error
+                    Log::error($e);
+
                     return redirect('/reports/birthday')->with('fail', 'Something went wrong, Please try again.');
                 }
             }
@@ -1581,6 +1598,9 @@ class CoordinatorController extends Controller
                 // Rollback Transaction
                 DB::rollback();
 
+                // Log the error
+                Log::error($e);
+
                 return redirect('/coordinator/dashboard')->with('fail', 'Something went wrong, Please try again.');
             }
         }
@@ -1683,6 +1703,9 @@ class CoordinatorController extends Controller
                 } catch (\Exception $e) {
                     // Rollback Transaction
                     DB::rollback();
+
+                    // Log the error
+                    Log::error($e);
 
                     return redirect('/coordinator/profile')->with('fail', 'Something went wrong, Please try again.');
                 }
