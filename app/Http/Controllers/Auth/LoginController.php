@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Auth;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Session;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -24,19 +23,12 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
-    protected function authenticated(Request $request, $user)
-    {
-        Session::regenerate();
-
-        return redirect()->intended($this->redirectTo);
-    }
-
     /**
      * Where to redirect users after login.
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
      * Create a new controller instance.
@@ -45,26 +37,20 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('preventBackHistory');
         $this->middleware('guest')->except('logout');
     }
 
     /**
-     * Default method overriding for check user is active ot not
+     *Verify that user is active.
+     *
      */
-    protected function credentials(Request $request)
+    protected function authenticated(Request $request, $user)
     {
-        $credentials = $request->only($this->username(), 'password');
-        $credentials = Arr::add($credentials, 'is_active', '1');
+        if (!$user->active) {
+            Auth::logout();
+            return back()->with('error', 'Your account is not active. Please contact your coordinator for assistance.');
+        }
 
-        return $credentials;
-    }
-
-    public function logout(Request $request)
-    {
-        Auth::logout(); // logout user
-        Session::flush();
-
-        return redirect('/login');
+        return redirect()->intended($this->redirectPath());
     }
 }
