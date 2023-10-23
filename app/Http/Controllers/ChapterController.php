@@ -1294,7 +1294,7 @@ class ChapterController extends Controller
 
             ];
             $mailData = array_merge($mailDataPres);
-            if (count($AVPInfoUpd) > 0) {
+            if ($AVPInfoUpd !== null && count($AVPInfoUpd) > 0) {
                 $mailDataAvp = ['avpfnameUpd' => $AVPInfoUpd[0]->bor_f_name,
                     'avplnameUpd' => $AVPInfoUpd[0]->bor_l_name,
                     'avpemailUpd' => $AVPInfoUpd[0]->bor_email, ];
@@ -1305,7 +1305,7 @@ class ChapterController extends Controller
                     'avpemailUpd' => '', ];
                 $mailData = array_merge($mailData, $mailDataAvp);
             }
-            if (count($MVPInfoUpd) > 0) {
+            if ($MVPInfoUpd !== null && count($MVPInfoUpd) > 0) {
                 $mailDataMvp = ['mvpfnameUpd' => $MVPInfoUpd[0]->bor_f_name,
                     'mvplnameUpd' => $MVPInfoUpd[0]->bor_l_name,
                     'mvpemailUpd' => $MVPInfoUpd[0]->bor_email, ];
@@ -1316,7 +1316,7 @@ class ChapterController extends Controller
                     'mvpemailUpd' => '', ];
                 $mailData = array_merge($mailData, $mailDataMvp);
             }
-            if (count($tresInfoUpd) > 0) {
+           if ($tresInfoUpd !== null && count($tresInfoUpd) > 0) {
                 $mailDatatres = ['tresfnameUpd' => $tresInfoUpd[0]->bor_f_name,
                     'treslnameUpd' => $tresInfoUpd[0]->bor_l_name,
                     'tresemailUpd' => $tresInfoUpd[0]->bor_email, ];
@@ -1327,7 +1327,7 @@ class ChapterController extends Controller
                     'tresemailUpd' => '', ];
                 $mailData = array_merge($mailData, $mailDatatres);
             }
-            if (count($secInfoUpd) > 0) {
+            if ($secInfoUpd !== null && count($secInfoUpd) > 0) {
                 $mailDataSec = ['secfnameUpd' => $secInfoUpd[0]->bor_f_name,
                     'seclnameUpd' => $secInfoUpd[0]->bor_l_name,
                     'secemailUpd' => $secInfoUpd[0]->bor_email, ];
@@ -1338,7 +1338,7 @@ class ChapterController extends Controller
                     'secemailUpd' => '', ];
                 $mailData = array_merge($mailData, $mailDataSec);
             }
-            if (count($AVPInfoPre) > 0) {
+            if ($AVPInfoPre !== null && count($AVPInfoPre) > 0) {
                 $mailDataAvpp = ['avpfnamePre' => $AVPInfoPre[0]->bor_f_name,
                     'avplnamePre' => $AVPInfoPre[0]->bor_l_name,
                     'avpemailPre' => $AVPInfoPre[0]->bor_email, ];
@@ -1349,7 +1349,7 @@ class ChapterController extends Controller
                     'avpemailPre' => '', ];
                 $mailData = array_merge($mailData, $mailDataAvpp);
             }
-            if (count($MVPInfoPre) > 0) {
+            if ($MVPInfoPre !== null && count($MVPInfoPre) > 0) {
                 $mailDataMvpp = ['mvpfnamePre' => $MVPInfoPre[0]->bor_f_name,
                     'mvplnamePre' => $MVPInfoPre[0]->bor_l_name,
                     'mvpemailPre' => $MVPInfoPre[0]->bor_email, ];
@@ -1360,7 +1360,7 @@ class ChapterController extends Controller
                     'mvpemailPre' => '', ];
                 $mailData = array_merge($mailData, $mailDataMvpp);
             }
-            if (count($tresInfoPre) > 0) {
+            if ($tresInfoPre !== null && count($tresInfoPre) > 0) {
                 $mailDatatresp = ['tresfnamePre' => $tresInfoPre[0]->bor_f_name,
                     'treslnamePre' => $tresInfoPre[0]->bor_l_name,
                     'tresemailPre' => $tresInfoPre[0]->bor_email, ];
@@ -1371,7 +1371,7 @@ class ChapterController extends Controller
                     'tresemailPre' => '', ];
                 $mailData = array_merge($mailData, $mailDatatresp);
             }
-            if (count($secInfoPre) > 0) {
+            if ($secInfoPre !== null && count($secInfoPre) > 0) {
                 $mailDataSecp = ['secfnamePre' => $secInfoPre[0]->bor_f_name,
                     'seclnamePre' => $secInfoPre[0]->bor_l_name,
                     'secemailPre' => $secInfoPre[0]->bor_email, ];
