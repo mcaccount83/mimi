@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -13,8 +12,7 @@ class ChapersUpdatePrimaryCoor extends Mailable
 
     public $mailData; // Create a property to store the mail data
 
-        // Add properties for other variables...
-
+    // Add properties for other variables...
 
     /**
      * Create a new message instance.
