@@ -5,16 +5,16 @@ namespace App\Http\Controllers;
 use App\Chapter;
 use App\Coordinator;
 use App\FinancialReport;
+use App\Mail\ChapersUpdateListAdmin;
+use App\Mail\ChapersUpdatePrimaryCoor;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\ChapersUpdateListAdmin;
-use App\Mail\ChapersUpdatePrimaryCoor;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use Kunnu\Dropbox\Dropbox;
 use Kunnu\Dropbox\DropboxApp;
 use Kunnu\Dropbox\DropboxFile;
@@ -1318,7 +1318,7 @@ class ChapterController extends Controller
                     'mvpemailUpd' => '', ];
                 $mailData = array_merge($mailData, $mailDataMvp);
             }
-           if ($tresInfoUpd !== null && count($tresInfoUpd) > 0) {
+            if ($tresInfoUpd !== null && count($tresInfoUpd) > 0) {
                 $mailDatatres = ['tresfnameUpd' => $tresInfoUpd[0]->bor_f_name,
                     'treslnameUpd' => $tresInfoUpd[0]->bor_l_name,
                     'tresemailUpd' => $tresInfoUpd[0]->bor_email, ];
@@ -1385,23 +1385,20 @@ class ChapterController extends Controller
                 $mailData = array_merge($mailData, $mailDataSecp);
             }
 
-
             //Primary Coordinator Notification//
             $to_email = $presInfoUpd[0]->cor_email;
 
             Mail::to($to_email, 'MOMS Club')
                 ->send(new ChapersUpdatePrimaryCoor($mailData));
 
+            //List Admin Notification//
+            $to_email2 = 'listadmin@momsclub.org';
 
-             //List Admin Notification//
-             $to_email2 = 'listadmin@momsclub.org';
+            if ($presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
 
-             if ($presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
-
-                 Mail::to($to_email2, 'MOMS Club')
-                     ->send(new ChapersUpdateListAdmin($mailData));
-             }
-
+                Mail::to($to_email2, 'MOMS Club')
+                    ->send(new ChapersUpdateListAdmin($mailData));
+            }
 
             //website notifications//
             $cor_details = db::table('coordinator_details')
@@ -1452,9 +1449,8 @@ class ChapterController extends Controller
                 }
             }
 
-
             DB::commit();
-            } catch (\Exception $e) {
+        } catch (\Exception $e) {
             // Rollback Transaction
             echo $e->getMessage();
             exit();
