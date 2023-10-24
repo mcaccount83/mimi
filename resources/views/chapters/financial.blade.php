@@ -6,13 +6,13 @@
 <div>
 	@if ($message = Session::get('success'))
 		<div class="alert alert-success">
-			<button type="button" class="close" data-dismiss="alert">×</button>	
+			<button type="button" class="close" data-dismiss="alert">×</button>
          <p>{{ $message }}</p>
 		</div>
     @endif
 	@if ($message = Session::get('fail'))
 		<div class="alert alert-danger">
-			<button type="button" class="close" data-dismiss="alert">×</button>	
+			<button type="button" class="close" data-dismiss="alert">×</button>
          <p>{{ $message }}</p>
 		</div>
     @endif
@@ -27,7 +27,7 @@
                 <?php $selectedReviewer = $pcl['cname']; ?>
             <?php endif; ?>
         <?php endforeach; ?>
-        
+
         <?php if ($selectedReviewer !== null): ?>
             <label for="AssignedReviewer" style="display: inline; font-weight: normal;">Assigned Reviewer: <?= $selectedReviewer ?></label>
         <?php else: ?>
@@ -41,7 +41,7 @@
 
 
 	<h4 class="hide-on-print">Have some questions about reviewing this?  <a href="https://momsclub.org/reviewing-reports-faq/"   target="_blank">Check out our FAQ!</a></h4>
-    
+
     <div class="row">
 		<div class="col-md-12">
 			<form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST"  action='{{ route("chapter.storefinancial",$chapterid) }}' novalidate>
@@ -52,7 +52,7 @@
             <div class="accordion js-accordion">
 				<!------Start Step 1 ------>
 				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] <='1') echo "active";?>">
-					<div class="accordion-header js-accordion-header">Section 1 - Chapter Dues</div> 
+					<div class="accordion-header js-accordion-header">Section 1 - Chapter Dues</div>
 					<div class="accordion-body js-accordion-body">
 						<section>
 						<div class="form-row">
@@ -108,7 +108,7 @@
 									</div>
 								</div>
 							</div>
-							
+
 							<div class="col-md-6 form-row mar_bot_20">
 								<div class="col-md-12">
 									<label for="">
@@ -123,7 +123,7 @@
 											<span class="form-check-sign"></span>
 											No
 										</label>
-										
+
 									</div>
 								</div>
 
@@ -137,16 +137,16 @@
 									</div>
 								</div>
 							</div>
-						</div>	
+						</div>
 						<!--<hr>
 							<div class="" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['roster_path']) echo "style=\"display: none;\"";} else echo "style=\"display: none;\""; ?>>
 							<div class="col-md-12">
 								<label class="control-label" for="RosterLink">Chapter Roster</label>
 								<div>
 									<p class="form-control-static"><a href="<?php echo $financial_report_array['roster_path']; ?>" target="_blank">Chapter Roster</a></p>
-								
+
 								</div>
-								
+
 							</div>
 						</div>
 						<input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $financial_report_array['roster_path']; ?>">-->
@@ -187,7 +187,7 @@
 									</div>
 								</div>
 							</div>
-							
+
 							<div class="col-md-6">
                                 <div class="form-group">
                                     <label for="MemberDues" id="lblMemberDues">
@@ -239,7 +239,7 @@
                                     </div>
                                 </div>
                             </div>
-							
+
 							<div class="col-md-12" id="ifMembersNoDues" style="display:none">
 								<div class="form-row">
 								<div class="col-md-6">
@@ -248,7 +248,7 @@
 										<input type="number" class="form-control" name="MembersNoDues" id="MembersNoDues"  min="0" oninput="ChangeMemberCount()" min=0 value="<?php if(!empty($financial_report_array)) echo $financial_report_array['members_who_paid_no_dues'] ?>" disabled>
 									</div>
 								</div>
-								
+
 								<div class="col-md-6">
 									<div class="form-group">
 									<label for="TotalPartialDuesMembers">Total Members Who Paid Partial Dues</label>
@@ -284,8 +284,8 @@ chapter did have Associate Members this year, how many Associate Members did you
 								</div>
 							</div>
 							</div>
-							
-							
+
+
 							<div class="col-md-6 float-left">
 								<div class="form-group">
 									<label for="TotalMembers">Total Members</label>
@@ -307,7 +307,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 									<label for="AnnualRegistrationFee">Annual Chapter Registration Fee paid to International MOMS Club:<br><i>(Brought over from Step 5)</i></label>
 									<div class="input-group">
 									<span class="input-group-addon">$</span>
-									<input type="number" class="form-control"  min="0"  step="0.01" readonly value="<?php if(!empty($financial_report_array)) echo $financial_report_array['annual_registration_fee'] ?>">				
+									<input type="number" class="form-control"  min="0"  step="0.01" readonly value="<?php if(!empty($financial_report_array)) echo $financial_report_array['annual_registration_fee'] ?>">
 									</div>
 								</div>
 							</div>
@@ -327,15 +327,15 @@ chapter did have Associate Members this year, how many Associate Members did you
 									</div>
 								</div>
 								<input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $financial_report_array['roster_path']; ?>">
-									
+
 								<div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['roster_path']) echo "style=\"display: none;\"";} ?>>
 									<div class="col-md-12" >
 										<div>
 										   <p class="form-control-static"><a href="<?php echo $financial_report_array['roster_path']; ?>" target="_blank">Chapter Roster</a></p>
 									</div>
 
-									<div class="col-md-6"> 
-										<button type="button" class="btn btn-info btn-primary btn-sm hide-on-print" onclick="ReplaceRoster()">Replace</button>										
+									<div class="col-md-6">
+										<button type="button" class="btn btn-info btn-primary btn-sm hide-on-print" onclick="ReplaceRoster()">Replace</button>
 									</div>
 </div>
 								</div>
@@ -387,7 +387,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								</div>
 
 
-								<div class="col-md-12 mar_bot_20"> 
+								<div class="col-md-12 mar_bot_20">
 									<div class="col-md-12">
 										<label for="Step1_Log">Notes Logged for this Step (these are not visible to the chapter):</label>
 									</div>
@@ -396,7 +396,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 									</div>
 								</div>
 
-								<div class="col-md-12 mar_bot_20"> 
+								<div class="col-md-12 mar_bot_20">
 									<div class="col-md-12">
 										<label for="Step1_Note">Note:</label>
 									</div>
@@ -405,16 +405,16 @@ chapter did have Associate Members this year, how many Associate Members did you
 									</div>
 								</div>
 
-								<div class="col-md-12 mar_bot_20"> 
+								<div class="col-md-12 mar_bot_20">
 									<div class="col-md-12">
-										<button type="button" id="AddNote1" class="btn btn-large btn-success" onclick="AddNote(1)" disabled>Add Note to Log</button> 
+										<button type="button" id="AddNote1" class="btn btn-large btn-success" onclick="AddNote(1)" disabled>Add Note to Log</button>
 									</div>
 								</div>
 
 							</div>
 						</div>
-						<!-- end:report_review --> 
-									
+						<!-- end:report_review -->
+
 						<div class="form-row form-group">
 							<div class="card-body">
 								<div class="col-md-12 text-center">
@@ -426,10 +426,10 @@ chapter did have Associate Members this year, how many Associate Members did you
 					</div>
 				</div>
 				<!------End Step 1 ------>
-				
+
 				<!------Start Step 2 ------>
 				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='2') echo "active";?>">
-					<div class="accordion-header js-accordion-header">Section 2 - Monthly Meeting Expenses</div> 
+					<div class="accordion-header js-accordion-header">Section 2 - Monthly Meeting Expenses</div>
 					<div class="accordion-body js-accordion-body">
 						<section>
 							<div class="form-row form-group">
@@ -469,7 +469,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								<hr>
 							</div>
 							<div class="form-row form-group">
-								<div class="col-md-12"><p>Use this section to list individually any Children’s Room expenses. Examples include craft supplies and snacks.</p></div>         
+								<div class="col-md-12"><p>Use this section to list individually any Children’s Room expenses. Examples include craft supplies and snacks.</p></div>
 								<div class="col-md-6 float-left">
 									<div class="form-group">
 										<label for="PaidBabySitters">Paid Babysitter Expenses (if any)</label>
@@ -512,23 +512,23 @@ chapter did have Associate Members this year, how many Associate Members did you
 												echo "<td>
 												<div class=\"form-group\">
 												<p class=\"form-group\" name=\"ChildrensRoomDesc" . $row . "\" id=\"ChildrensRoomDesc" . $row . "\" readonly>" . $childrens_room[$row]['childrens_room_desc'] . "</p>
-												
+
 												</div>
 												</td>";
 
 												echo "<td>
 												<div class=\"form-group\">
 												<div class=\"input-group\">";
-												echo "<span class = \"input-group-addon\">$</span>";							
+												echo "<span class = \"input-group-addon\">$</span>";
 												echo "<input type=\"number\" class=\"form-control\" min=\"0\"  step=\"0.01\"  name=\"ChildrensRoomSupplies" . $row . "\" id=\"ChildrensRoomSupplies" . $row . "\" oninput=\"ChangeChildrensRoomExpenses()\" readonly value=\"" . $childrens_room[$row]['childrens_room_supplies'] . "\">";
 												echo "</div>
 												</div>
 												</td>";
-												
+
 												echo "<td>
 												<div class=\"form-group\">
 												<div class=\"input-group\">";
-												echo "<span class = \"input-group-addon\">$</span>";							
+												echo "<span class = \"input-group-addon\">$</span>";
 												echo "<input type=\"number\" class=\"form-control\" min=\"0\"  step=\"0.01\" name=\"ChildrensRoomOther" . $row . "\" id=\"ChildrensRoomOther" . $row . "\" oninput=\"ChangeChildrensRoomExpenses()\" readonly value=\"" . $childrens_room[$row]['childrens_room_other'] . "\">";
 												echo "</div>
 												</div>
@@ -537,11 +537,11 @@ chapter did have Associate Members this year, how many Associate Members did you
 												echo "</tr>";
 											}
 										?>
-										
+
 										</tbody>
 									</table>
 								</div>
-								
+
 								<div class="col-md-6 float-left">
 									<div>
 										<label for="ChildrensRoomTotal">
@@ -553,7 +553,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 										</div>
 									</div>
 								</div>
-								          
+
 							</div>
 							<input type="hidden" name="ChildrensExpenseRowCount" id="ChildrensExpenseRowCount" value="<?php echo $ChildrensExpenseRowCount; ?>" />
 
@@ -566,7 +566,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 									</div>
 									<div class="form-row">
 										<div class="clearfix"></div>
-										<div class="col-md-12 mar_bot_20"> 
+										<div class="col-md-12 mar_bot_20">
 											<div class="col-md-12">
 												<label for="Step2_Log">Notes Logged for this Step (these are not visible to the chapter):</label>
 											</div>
@@ -575,7 +575,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 											</div>
 										</div>
 
-										<div class="col-md-12 mar_bot_20"> 
+										<div class="col-md-12 mar_bot_20">
 											<div class="col-md-12">
 												<label for="Step2_Note">Note:</label>
 											</div>
@@ -584,7 +584,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 											</div>
 										</div>
 
-										<div class="col-md-12 mar_bot_20"> 
+										<div class="col-md-12 mar_bot_20">
 											<div class="col-md-12">
 												<button type="button" id="AddNote2" class="btn btn-large btn-success" onclick="AddNote(2)" disabled>Add Note to Log</button>
 											</div>
@@ -604,10 +604,10 @@ chapter did have Associate Members this year, how many Associate Members did you
 					</div>
 				</div>
 				<!------End Step 2 ------>
-				
+
 				<!------Start Step 3 ------>
 				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='3') echo "active";?>">
-					<div class="accordion-header js-accordion-header">Section 3 - Service Projects</div> 
+					<div class="accordion-header js-accordion-header">Section 3 - Service Projects</div>
 					<div class="accordion-body js-accordion-body">
 					<section>
 						<div class="form-row form-group">
@@ -631,8 +631,8 @@ chapter did have Associate Members this year, how many Associate Members did you
 								  <td width="16%">M2M & Sustaining Chapter Donation</td>
 								</tr>
 								</thead>
-								<tbody>  
-								<?php 	
+								<tbody>
+								<?php
 										$service_projects = null;
 										if(isset($financial_report_array['service_project_array'])){
 											$service_projects=unserialize(base64_decode($financial_report_array['service_project_array']));
@@ -648,14 +648,14 @@ chapter did have Associate Members this year, how many Associate Members did you
 											echo "<td>
 											<div class=\"form-group\">
 											<p class=\"form-group\" name=\"ServiceProjectDesc" . $row . "\" id=\"ServiceProjectDesc" . $row . "\" readonly>" . $service_projects[$row]['service_project_desc'] . "</p>
-											
+
 											</div>
 											</td>";
 
 											echo "<td>
 											<div class=\"form-group\">
 											<div class=\"input-group\">";
-											echo "<span class = \"input-group-addon\">$</span>";							
+											echo "<span class = \"input-group-addon\">$</span>";
 											echo "<input type=\"number\" class=\"form-control\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectIncome" . $row . "\" id=\"ServiceProjectIncome" . $row . "\" oninput=\"ChangeServiceProjectExpenses()\" readonly value=\"" . ltrim(rtrim($service_projects[$row]['service_project_income'])) . "\">";
 											echo "</div>
 											</div>
@@ -664,16 +664,16 @@ chapter did have Associate Members this year, how many Associate Members did you
 											echo "<td>
 											<div class=\"form-group\">
 											<div class=\"input-group\">";
-											echo "<span class = \"input-group-addon\">$</span>";							
+											echo "<span class = \"input-group-addon\">$</span>";
 											echo "<input type=\"number\" class=\"form-control\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectSupplies" . $row . "\" id=\"ServiceProjectSupplies" . $row . "\" oninput=\"ChangeServiceProjectExpenses()\" readonly value=\"" . ltrim(rtrim($service_projects[$row]['service_project_supplies'])) . "\">";
 											echo "</div>
 											</div>
 											</td>";
-											
+
 											echo "<td>
 											<div class=\"form-group\">
 											<div class=\"input-group\">";
-											echo "<span class = \"input-group-addon\">$</span>";							
+											echo "<span class = \"input-group-addon\">$</span>";
 											echo "<input type=\"number\" class=\"form-control\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectDonatedCharity" . $row . "\" id=\"ServiceProjectDonatedCharity" . $row . "\" oninput=\"ChangeServiceProjectExpenses()\" readonly value=\"" . ltrim(rtrim($service_projects[$row]['service_project_charity'])) . "\">";
 											echo "</div>
 											</div>
@@ -682,7 +682,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 											echo "<td>
 											<div class=\"form-group\">
 											<div class=\"input-group\">";
-											echo "<span class = \"input-group-addon\">$</span>";							
+											echo "<span class = \"input-group-addon\">$</span>";
 											echo "<input type=\"number\" class=\"form-control\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectDonatedM2M" . $row . "\" id=\"ServiceProjectDonatedM2M" . $row . "\" oninput=\"ChangeServiceProjectExpenses()\" readonly value=\"" . ltrim(rtrim($service_projects[$row]['service_project_m2m'])) . "\">";
 											echo "</div>
 											</div>
@@ -693,7 +693,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								</tbody>
 							</table>
 						</div>
-						
+
 						<div class="col-md-6 float-left">
 							<div class="form-group">
 								<label for="ServiceProjectIncomeTotal">
@@ -739,7 +739,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								</div>
 							</div>
 						</div>
-						
+
 					</div>
 					<input type="hidden" name="ServiceProjectRowCount" id="ServiceProjectRowCount" value="<?php echo $ServiceProjectRowCount; ?>" />
 					<hr>
@@ -794,7 +794,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								<!--<div class="col-md-6 mar_bot_20">
 									<div class="col-md-12">
 										<label for="">
-											Donation to MOMS Club General Fund (sustaining chapter): 
+											Donation to MOMS Club General Fund (sustaining chapter):
 										</label>
 									</div>
 									<div class="col-md-6">
@@ -818,7 +818,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 									</div>
 								</div>-->
 
-								<div class="col-md-12 mar_bot_20"> 
+								<div class="col-md-12 mar_bot_20">
 									<div class="col-md-12">
 										<label for="Step3_Log">Notes Logged for this Step (these are not visible to the chapter):</label>
 									</div>
@@ -827,7 +827,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 									</div>
 								</div>
 
-								<div class="col-md-12 mar_bot_20"> 
+								<div class="col-md-12 mar_bot_20">
 									<div class="col-md-12">
 										<label for="Step3_Note">Note:</label>
 									</div>
@@ -836,14 +836,14 @@ chapter did have Associate Members this year, how many Associate Members did you
 									</div>
 								</div>
 
-								<div class="col-md-12 mar_bot_20"> 
+								<div class="col-md-12 mar_bot_20">
 									<div class="col-md-12">
 										<button type="button" id="AddNote3" class="btn btn-large btn-success" onclick="AddNote(3)" disabled>Add Note to Log</button>
 									</div>
 								</div>
 							</div>
 						</div>
-						<!-- end:report_review --> 
+						<!-- end:report_review -->
 
 					<div class="form-row form-group">
 						<div class="card-body">
@@ -852,14 +852,14 @@ chapter did have Associate Members this year, how many Associate Members did you
 						</div>
 						</div>
 					</div>
-				</section>  
+				</section>
 				</div>
 				</div>
 				<!------End Step 3 ------>
-				
+
 				<!------Start Step 4 ------>
 				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='4') echo "active";?>">
-				<div class="accordion-header js-accordion-header">Section 4 - Parties and Member Benefits</div> 
+				<div class="accordion-header js-accordion-header">Section 4 - Parties and Member Benefits</div>
 				<div class="accordion-body js-accordion-body">
 				<section>
 					<div class="form-row form-group">
@@ -883,7 +883,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 							</tr>
 							</thead>
 							<tbody>
-							<?php 	
+							<?php
 								$party_expenses = null;
 								if(isset($financial_report_array['party_expense_array'])){
 									$party_expenses=unserialize(base64_decode($financial_report_array['party_expense_array']));
@@ -893,40 +893,40 @@ chapter did have Associate Members this year, how many Associate Members did you
 								else{
 									$PartyExpenseRowCount = 1;
 								}
-							
+
 								for ($row = 0; $row < $PartyExpenseRowCount; $row++){
 									echo "<tr>";
 									echo "<td>
 									<div class=\"form-group\">
-									
+
 									<p class=\"form-group\" name=\"PartyDesc" . $row . "\" id=\"PartyDesc" . $row . "\" readonly>" . $party_expenses[$row]['party_expense_desc'] . "</p>
 									</div>
 									</td>";
-									
+
 									echo "<td>
 									<div class=\"form-group\">
 									<div class=\"input-group\">";
-									echo "<span class = \"input-group-addon\">$</span>";							
+									echo "<span class = \"input-group-addon\">$</span>";
 									echo "<input type=\"number\" class=\"form-control\" min=\"0\"  step=\"0.01\" name=\"PartyIncome" . $row . "\" id=\"PartyIncome" . $row . "\" oninput=\"ChangePartyExpenses()\" readonly value=\"" . $party_expenses[$row]['party_expense_income'] . "\">";
 									echo "</div>
 									</div>
 									</td>";
-									
+
 									echo "<td>
 									<div class=\"form-group\">
 									<div class=\"input-group\">";
-									echo "<span class = \"input-group-addon\">$</span>";							
+									echo "<span class = \"input-group-addon\">$</span>";
 									echo "<input type=\"number\" class=\"form-control\" min=\"0\"  step=\"0.01\" name=\"PartyExpenses" . $row . "\" id=\"PartyExpenses" . $row . "\" oninput=\"ChangePartyExpenses()\" readonly value=\"" . $party_expenses[$row]['party_expense_expenses'] . "\">";
 									echo "</div>
 									</div>
 									</td>";
-									
+
 									echo "</tr>";
 								}
 							?>
 							</tbody>
                         </table>
-						
+
 						<div class="col-md-12">
 							<h4>Party/Member Benefit</h4>
 						</div>
@@ -952,7 +952,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								</div>
 							</div>
 						</div>
-						
+
 					</div>
 					<input type="hidden" name="PartyExpenseRowCount" id="PartyExpenseRowCount" value="<?php echo $PartyExpenseRowCount; ?>" />
 					<hr>
@@ -1018,7 +1018,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								</div>
 							</div>
 
-							<div class="col-md-12 mar_bot_20"> 
+							<div class="col-md-12 mar_bot_20">
 								<div class="col-md-12">
 									<label for="Step4_Log">Notes Logged for this Step (these are not visible to the chapter):</label>
 								</div>
@@ -1027,7 +1027,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								</div>
 							</div>
 
-							<div class="col-md-12 mar_bot_20"> 
+							<div class="col-md-12 mar_bot_20">
 								<div class="col-md-12">
 									<label for="Step4_Note">Note:</label>
 								</div>
@@ -1036,7 +1036,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								</div>
 							</div>
 
-							<div class="col-md-12 mar_bot_20"> 
+							<div class="col-md-12 mar_bot_20">
 								<div class="col-md-12">
 									<button type="button" id="AddNote4" class="btn btn-large btn-success" onclick="AddNote(4)" disabled>Add Note to Log</button>
 								</div>
@@ -1056,10 +1056,10 @@ chapter did have Associate Members this year, how many Associate Members did you
 				</div>
 				</div>
 				<!------End Step 4 ------>
-				
+
 				<!------Start Step 5 ------>
 			    <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='5') echo "active";?>">
-				<div class="accordion-header js-accordion-header">Section 5 - Office and Operating Expenses</div> 
+				<div class="accordion-header js-accordion-header">Section 5 - Office and Operating Expenses</div>
 				<div class="accordion-body js-accordion-body">
 				<div class="form-row form-group">
 				  <div class="col-md-12">
@@ -1113,8 +1113,8 @@ chapter did have Associate Members this year, how many Associate Members did you
 					  <td>Expenses</td>
 					</tr>
 					</thead>
-					<tbody>  
-					<?php 	
+					<tbody>
+					<?php
 						$other_office_expenses = null;
 						if(isset($financial_report_array['office_other_expenses'])){
 							$other_office_expenses=unserialize(base64_decode($financial_report_array['office_other_expenses']));
@@ -1135,7 +1135,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 							echo "<td>
 							<div class=\"form-group\">
 							<div class=\"input-group\">";
-							echo "<span class = \"input-group-addon\">$</span>";							
+							echo "<span class = \"input-group-addon\">$</span>";
 							echo "<input type=\"number\" class=\"form-control\" min=\"0\"  step=\"0.01\" name=\"OfficeExpenses" . $row . "\" id=\"OfficeExpenses" . $row . "\" oninput=\"ChangeOfficeExpenses()\" readonly value=\"" . ltrim(rtrim($other_office_expenses[$row]['office_other_expense'])) . "\">";
 							echo "</div>
 							</div>
@@ -1147,7 +1147,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 					</tbody>
                 </table>
                 </div>
-			
+
 				<div class="col-md-4 float-left">
 					<div class="form-group">
 						<label for="OfficeExpenseTotal">
@@ -1185,9 +1185,9 @@ chapter did have Associate Members this year, how many Associate Members did you
 						  <td>Income</td>
 						  <td>Expenses</td>
 						</tr>
-					</thead>	
-                    <tbody>  
-					<?php 	
+					</thead>
+                    <tbody>
+					<?php
 						$international_event_array = null;
 						if(isset($financial_report_array['international_event_array'])){
 							$international_event_array=unserialize(base64_decode($financial_report_array['international_event_array']));
@@ -1202,7 +1202,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 							echo "<tr>";
 							echo "<td>
 							<div class=\"form-group\">
-							
+
 							<p class=\"form-group\" name=\"InternationalEventDesc" . $row . "\" id=\"InternationalEventDesc" . $row . "\" readonly>" . $international_event_array[$row]['intl_event_desc'] . "</p>
 							</div>
 							</td>";
@@ -1210,7 +1210,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 							echo "<td>
 							<div class=\"form-group\">
 							<div class=\"input-group\">";
-							echo "<span class = \"input-group-addon\">$</span>";							
+							echo "<span class = \"input-group-addon\">$</span>";
 							echo "<input type=\"number\" class=\"form-control\" min=\"0\"  step=\"0.01\" name=\"InternationalEventIncome" . $row . "\" id=\"InternationalEventIncome" . $row . "\" oninput=\"ChangeInternationalEventExpense()\" readonly value=\"" . $international_event_array[$row]['intl_event_income'] . "\">";
 							echo "</div>
 							</div>
@@ -1219,7 +1219,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 							echo "<td>
 							<div class=\"form-group\">
 							<div class=\"input-group\">";
-							echo "<span class = \"input-group-addon\">$</span>";							
+							echo "<span class = \"input-group-addon\">$</span>";
 							echo "<input type=\"number\" class=\"form-control\" min=\"0\"  step=\"0.01\" name=\"InternationalEventExpense" . $row . "\" id=\"InternationalEventExpense" . $row . "\" oninput=\"ChangeInternationalEventExpense()\" readonly value=\"" . $international_event_array[$row]['intl_event_expenses'] . "\">";
 							echo "</div>
 							</div>
@@ -1228,12 +1228,12 @@ chapter did have Associate Members this year, how many Associate Members did you
 							echo "</tr>";
 						}
 					?>
-					</tbody>               
+					</tbody>
                 </table>
             </div>
 			<hr>
 			</div>
-			
+
 			<div class="form-row form-group">
 			<div class="col-md-4 float-left">
 				<div class="form-group">
@@ -1277,7 +1277,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 					</div>
 				</div>
 			</div>
-			
+
 			</div>
 
 			<hr>
@@ -1289,13 +1289,13 @@ chapter did have Associate Members this year, how many Associate Members did you
 					</div>
 
 					<div class="form-row">
-						
 
 
-						
 
 
-						<div class="col-md-12 mar_bot_20"> 
+
+
+						<div class="col-md-12 mar_bot_20">
 							<div class="col-md-12">
 								<label for="Step5_Log">Notes Logged for this Step (these are not visible to the chapter):</label>
 							</div>
@@ -1304,7 +1304,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 							</div>
 						</div>
 
-						<div class="col-md-12 mar_bot_20"> 
+						<div class="col-md-12 mar_bot_20">
 							<div class="col-md-12">
 								<label for="Step5_Note">Note:</label>
 							</div>
@@ -1313,7 +1313,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 							</div>
 						</div>
 
-						<div class="col-md-12 mar_bot_20"> 
+						<div class="col-md-12 mar_bot_20">
 							<div class="col-md-12">
 								<button type="button" id="AddNote5" class="btn btn-large btn-success" onclick="AddNote(5)" disabled>Add Note to Log</button>
 							</div>
@@ -1333,10 +1333,10 @@ chapter did have Associate Members this year, how many Associate Members did you
 			</div><!-- end of accordion body -->
 			</div><!-- end of accordion item -->
 			<!------End Step 5 ------>
-				
+
 			<!------Start Step 6 ------>
 		    <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='6') echo "active";?>">
-				<div class="accordion-header js-accordion-header">Section 6 - Donations to Your Chapter</div> 
+				<div class="accordion-header js-accordion-header">Section 6 - Donations to Your Chapter</div>
 				<div class="accordion-body js-accordion-body">
 				<section>
 				<div class="form-row form-group">
@@ -1354,8 +1354,8 @@ chapter did have Associate Members this year, how many Associate Members did you
 						  <td>Amount</td>
 						</tr>
 						</thead>
-                        <tbody>  
-							<?php 	
+                        <tbody>
+							<?php
 								$monetary_dontations_to_chapter = null;
 								if(isset($financial_report_array['monetary_donations_to_chapter'])){
 									$monetary_dontations_to_chapter=unserialize(base64_decode($financial_report_array['monetary_donations_to_chapter']));
@@ -1370,15 +1370,15 @@ chapter did have Associate Members this year, how many Associate Members did you
 										echo "<tr>";
 										echo "<td>
 										<div class=\"form-group\">
-										
+
 										<p class=\"form-group\" name=\"DonationDesc" . $row . "\" id=\"DonationDesc" . $row . "\" readonly>" . $monetary_dontations_to_chapter[$row]['mon_donation_desc'] . "</p>
-										
+
 										</div>
 										</td>";
 
 										echo "<td>
 										<div class=\"form-group\">
-										
+
 										<p class=\"form-group\" name=\"DonorInfo" . $row . "\" id=\"DonorInfo" . $row . "\" readonly>" . $monetary_dontations_to_chapter[$row]['mon_donation_info'] . "</p>
 										</div>
 										</td>";
@@ -1392,7 +1392,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 										echo "<td>
 										<div class=\"form-group\">
 										<div class=\"input-group\">";
-										echo "<span class = \"input-group-addon\">$</span>";							
+										echo "<span class = \"input-group-addon\">$</span>";
 										echo "<input type=\"number\" class=\"form-control\" min=\"0\"  step=\"0.01\" name=\"DonationAmount" . $row . "\" id=\"DonationAmount" . $row . "\" oninput=\"ChangeDonationAmount()\" readonly value=\"" . $monetary_dontations_to_chapter[$row]['mon_donation_amount'] . "\">";
 										echo "</div>
 										</div>
@@ -1401,10 +1401,10 @@ chapter did have Associate Members this year, how many Associate Members did you
 										echo "</tr>";
 									}
 							?>
-						</tbody>            
+						</tbody>
 					</table>
 				</div>
-				
+
 					<div class="col-md-4 float-left">
 					<div class="form-group">
 						<label for="DonationTotal">Monetary Donation Total</label>
@@ -1432,7 +1432,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 						</tr>
 						</thead>
                         <tbody>
-							<?php 	
+							<?php
 							$non_monetary_dontations_to_chapter = null;
 							if(isset($financial_report_array['non_monetary_donations_to_chapter'])){
 								$non_monetary_dontations_to_chapter=unserialize(base64_decode($financial_report_array['non_monetary_donations_to_chapter']));
@@ -1447,14 +1447,14 @@ chapter did have Associate Members this year, how many Associate Members did you
 								echo "<tr>";
 								echo "<td>
 								<div class=\"form-group\">
-								
+
 								<p class=\"form-group\" name=\"NonMonDonationDesc" . $row . "\" id=\"NonMonDonationDesc" . $row . "\" readonly>" . $non_monetary_dontations_to_chapter[$row]['nonmon_donation_desc'] . "</p>
 								</div>
 								</td>";
 
 								echo "<td>
 								<div class=\"form-group\">
-								
+
 								<p class=\"form-group\" name=\"NonMonDonorInfo" . $row . "\" id=\"NonMonDonationDesc" . $row . "\" readonly>" . $non_monetary_dontations_to_chapter[$row]['nonmon_donation_info'] . "</p>
 								</div>
 								</td>";
@@ -1468,12 +1468,12 @@ chapter did have Associate Members this year, how many Associate Members did you
 								echo "</tr>";
 							}
 						?>
-						</tbody>	
+						</tbody>
 					</table>
 				</div>
-				
+
 					<input type="hidden" name="NonMonDonationRowCount" id="NonMonDonationRowCount" value="<?php echo $NonMonDonationRowCount; ?>" />
-					
+
 					</div>
 
 					<hr>
@@ -1486,7 +1486,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 
 							<div class="form-row">
 
-								<div class="col-md-12 mar_bot_20"> 
+								<div class="col-md-12 mar_bot_20">
 									<div class="col-md-12">
 										<label for="Step6_Log">Notes Logged for this Step (these are not visible to the chapter):</label>
 									</div>
@@ -1495,7 +1495,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 									</div>
 								</div>
 
-								<div class="col-md-12 mar_bot_20"> 
+								<div class="col-md-12 mar_bot_20">
 									<div class="col-md-12">
 										<label for="Step6_Note">Note:</label>
 									</div>
@@ -1504,7 +1504,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 									</div>
 								</div>
 
-								<div class="col-md-12 mar_bot_20"> 
+								<div class="col-md-12 mar_bot_20">
 									<div class="col-md-12">
 										<button type="button" id="AddNote6" class="btn btn-large btn-success" onclick="AddNote(6)" disabled>Add Note to Log</button>
 									</div>
@@ -1525,15 +1525,15 @@ chapter did have Associate Members this year, how many Associate Members did you
 				</div><!-- end of accordion body -->
 				</div><!-- end of accordion item -->
 				<!------End Step 6 ------>
-				
+
 				<!------Start Step 7 ------>
 				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='7') echo "active";?>">
-					<div class="accordion-header js-accordion-header">Section 7 - Other Income & Expenses</div> 
+					<div class="accordion-header js-accordion-header">Section 7 - Other Income & Expenses</div>
 					<div class="accordion-body js-accordion-body">
 					<section>
 					<div class="form-row form-group">
 						<div class="col-md-12">
-						
+
 						<p>If your chapter had any other income not listed elsewhere, enter those amounts and descriptions here. (<i>If there are multiple entries of one type of income in your books, please group them together as one total for that type of entry below. For example, if local businesses paid for advertising in your newsletter, enter one amount for all the advertising sold by your chapter during the year.</i>)</p>
 						<p>Use this section to list any fundraisers your chapter may have had to benefit the chapter or the members. If your chapter participated in any programs offering rebates, matching contributions or bonus cards, include that information here.</p>
 						<table id="other-office-expenses" width="100%" class="table table-bordered">
@@ -1544,7 +1544,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 							  <td>Expenses</td>
 							</tr>
 							</thead>
-							<?php 	
+							<?php
 								$other_income_and_expenses_array = null;
 								if(isset($financial_report_array['other_income_and_expenses_array'])){
 									$other_income_and_expenses_array=unserialize(base64_decode($financial_report_array['other_income_and_expenses_array']));
@@ -1554,9 +1554,9 @@ chapter did have Associate Members this year, how many Associate Members did you
 								else{
 									$OtherOfficeExpenseRowCount = 2;
 								}
-							?>				
+							?>
 
-							<tbody>  
+							<tbody>
 
 								<tr>
 								<td>
@@ -1568,7 +1568,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								<td>
 								<div class="form-group">
 								<div class="input-group">
-								<span class = "input-group-addon">$</span>							
+								<span class = "input-group-addon">$</span>
 								<input type="number" class="form-control" min="0" step="0.01" name="OtherOfficeIncome0" id="OtherOfficeIncome0" oninput="ChangeOtherOfficeExpenses()" value="<?php echo ltrim(rtrim($other_income_and_expenses_array[0]['other_income']));?>" readonly>
 								</div>
 								</div>
@@ -1577,21 +1577,21 @@ chapter did have Associate Members this year, how many Associate Members did you
 								<td>
 								<div class="form-group">
 								<div class="input-group">
-								<span class = "input-group-addon">$</span>							
+								<span class = "input-group-addon">$</span>
 								<input type="number" class="form-control" min="0" step="0.01" name="OtherOfficeExpenses0" id="OtherOfficeExpenses0" oninput="ChangeOtherOfficeExpenses()" value="<?php echo ltrim(rtrim($other_income_and_expenses_array[0]['other_expenses']));?>" readonly>
 								</div>
 								</div>
 								</td>
 
 								</tr>
-	
-								<?php 	
+
+								<?php
 
 										for ($row = 1; $row < $OtherOfficeExpenseRowCount; $row++){
 											echo "<tr>";
 											echo "<td>
 											<div class=\"form-group\">
-											
+
 											<p class=\"form-group\" name=\"OtherOfficeDesc" . $row . "\" id=\"OtherOfficeDesc" . $row . "\" readonly>" . $other_income_and_expenses_array[$row]['other_desc'] . "</p>
 											</div>
 											</td>";
@@ -1599,7 +1599,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 											echo "<td>
 											<div class=\"form-group\">
 											<div class=\"input-group\">";
-											echo "<span class = \"input-group-addon\">$</span>";							
+											echo "<span class = \"input-group-addon\">$</span>";
 											echo "<input type=\"number\" class=\"form-control\" min=\"0\"  step=\"0.01\" name=\"OtherOfficeIncome" . $row . "\" id=\"OtherOfficeIncome" . $row . "\" oninput=\"ChangeOtherOfficeExpenses()\" readonly value=\"" . ltrim(rtrim($other_income_and_expenses_array[$row]['other_income'])) . "\">";
 											echo "</div>
 											</div>
@@ -1608,7 +1608,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 											echo "<td>
 											<div class=\"form-group\">
 											<div class=\"input-group\">";
-											echo "<span class = \"input-group-addon\">$</span>";							
+											echo "<span class = \"input-group-addon\">$</span>";
 											echo "<input type=\"number\" class=\"form-control\" min=\"0\"  step=\"0.01\" name=\"OtherOfficeExpenses" . $row . "\" id=\"OtherOfficeExpenses" . $row . "\" oninput=\"ChangeOtherOfficeExpenses()\" readonly value=\"" . ltrim(rtrim($other_income_and_expenses_array[$row]['other_expenses'])) . "\">";
 											echo "</div>
 											</div>
@@ -1616,12 +1616,12 @@ chapter did have Associate Members this year, how many Associate Members did you
 
 											echo "</tr>";
 										}
-				
+
 								?>
 							</tbody>
                         </table>
                     </div>
-						
+
 						<div class="col-md-6 float-left">
 							<div class="form-group">
 								<label for="OtherOfficeIncomeTotal">
@@ -1645,7 +1645,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 							</div>
 					   </div>
 					   <input type="hidden" name="OtherOfficeExpenseRowCount" id="OtherOfficeExpenseRowCount" value="<?php echo $OtherOfficeExpenseRowCount; ?>" />
-						
+
 					</div>
 
 					<hr>
@@ -1658,7 +1658,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 
 						<div class="form-row">
 
-							<div class="col-md-12 mar_bot_20"> 
+							<div class="col-md-12 mar_bot_20">
 								<div class="col-md-12">
 									<label for="Step7_Log">Notes Logged for this Step (these are not visible to the chapter):</label>
 								</div>
@@ -1667,7 +1667,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								</div>
 							</div>
 
-							<div class="col-md-12 mar_bot_20"> 
+							<div class="col-md-12 mar_bot_20">
 								<div class="col-md-12">
 									<label for="Step7_Note">Note:</label>
 								</div>
@@ -1676,7 +1676,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								</div>
 							</div>
 
-							<div class="col-md-12 mar_bot_20"> 
+							<div class="col-md-12 mar_bot_20">
 								<div class="col-md-12">
 									<button type="button" id="AddNote7" class="btn btn-large btn-success" onclick="AddNote(7)" disabled>Add Note to Log</button>
 								</div>
@@ -1697,10 +1697,10 @@ chapter did have Associate Members this year, how many Associate Members did you
 			  </div><!-- end of accordion body -->
 			  </div><!-- end of accordion item -->
 				<!------End Step 7 ------>
-				
+
 				<!------Start Step 8 ------>
 				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='8') echo "active";?>">
-					<div class="accordion-header js-accordion-header">Section 8 - Bank Reconciliation</div> 
+					<div class="accordion-header js-accordion-header">Section 8 - Bank Reconciliation</div>
 					<div class="accordion-body js-accordion-body">
 					<section>
 					<div class="form-row form-group">
@@ -1769,9 +1769,9 @@ chapter did have Associate Members this year, how many Associate Members did you
 							  <td>Deposit Amount</td>
 							</tr>
 						</thead>
-						<tbody>  
-							
-						<?php 	
+						<tbody>
+
+						<?php
 							$bank_rec_array = null;
 							if(isset($financial_report_array['bank_reconciliation_array'])){
 								$bank_rec_array=unserialize(base64_decode($financial_report_array['bank_reconciliation_array']));
@@ -1805,7 +1805,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 									echo "<td>
 									<div class=\"form-group\">
 									<div class=\"input-group\">";
-									echo "<span class = \"input-group-addon\">$</span>";							
+									echo "<span class = \"input-group-addon\">$</span>";
 									echo "<input type=\"number\" class=\"form-control\" min=\"0\"  step=\"0.01\" name=\"BankRecPaymentAmount" . $row . "\" id=\"BankRecPaymentAmount" . $row . "\" oninput=\"ChangeBankRec()\" readonly value=\"" . $bank_rec_array[$row]['bank_rec_payment_amount'] . "\">";
 									echo "</div>
 									</div>
@@ -1814,7 +1814,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 									echo "<td>
 									<div class=\"form-group\">
 									<div class=\"input-group\">";
-									echo "<span class = \"input-group-addon\">$</span>";							
+									echo "<span class = \"input-group-addon\">$</span>";
 									echo "<input type=\"number\" class=\"form-control\" min=\"0\"  step=\"0.01\" name=\"BankRecDepositAmount" . $row . "\" id=\"BankRecDepositAmount" . $row . "\" oninput=\"ChangeBankRec()\" readonly value=\"" . $bank_rec_array[$row]['bank_rec_desposit_amount'] . "\">";
 									echo "</div>
 									</div>
@@ -1822,12 +1822,12 @@ chapter did have Associate Members this year, how many Associate Members did you
 
 									echo "</tr>";
 								}
-		
+
 						?>
-						</tbody>	
+						</tbody>
                     </table>
                 </div>
-				
+
 					<div class="col-md-6 float-left">
 						<div class="form-group">
 							<label for="ReconciledBankBalance">
@@ -1839,9 +1839,9 @@ chapter did have Associate Members this year, how many Associate Members did you
 							</div>
 						</div>
 					</div>
-					
+
 					<input type="hidden" name="BankRecRowCount" id="BankRecRowCount" value="<?php echo $BankRecRowCount; ?>" />
-					
+
 				</div>
 
 				<hr>
@@ -1852,7 +1852,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 					<div class="col-md-12">
 						<h2>Annual Report Review</h2>
 					</div>
-						
+
 									<div class="form-row">
 								<div class="col-md-12 mar_bot_20" id="StatementBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['bank_statement_included_path']) echo "style=\"display: none;\"";} ?>>
 									<div class="col-md-12">
@@ -1861,20 +1861,20 @@ chapter did have Associate Members this year, how many Associate Members did you
 									</div>
 								</div>
 								<input type="hidden" name="StatementPath" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
-									
+
 								<div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['bank_statement_included_path']) echo "style=\"display: none;\"";} ?>>
 									<div class="col-md-12" >
-										<div>	
+										<div>
 										<p class="form-control-static"><a href="<?php echo $financial_report_array['bank_statement_included_path']; ?>" target="_blank">Primary Bank Statement</a></p>
 										</div>
 									</div>
 
-									<div class="col-md-6 mar_bot_20"> 
-										<button type="button" class="btn btn-info btn-primary btn-sm hide-on-print" onclick="ReplaceStatement1()">Replace</button>										
+									<div class="col-md-6 mar_bot_20">
+										<button type="button" class="btn btn-info btn-primary btn-sm hide-on-print" onclick="ReplaceStatement1()">Replace</button>
 									</div>
 								<div class="clearfix"></div>
 
-						
+
                                 <div class="form-row">
 								<div class="col-md-12 mar_bot_20" id="Statement2Block" <?php if (!empty($financial_report_array)) {if ($financial_report_array['bank_statement_2_included_path']) echo "style=\"display: none;\"";} ?>>
 									<div class="col-md-12">
@@ -1883,7 +1883,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 									</div>
 								</div>
 								<input type="hidden" name="Statement2Path" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
-									
+
 								<div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['bank_statement_2_included_path']) echo "style=\"display: none;\"";} ?>>
 									<div class="col-md-12" >
 										<div>
@@ -1891,13 +1891,13 @@ chapter did have Associate Members this year, how many Associate Members did you
 										</div>
 									</div>
 
-									<div class="col-md-6"> 
-										<button type="button" class="btn btn-info btn-primary btn-sm hide-on-print" onclick="ReplaceStatement2()">Replace</button>										
+									<div class="col-md-6">
+										<button type="button" class="btn btn-info btn-primary btn-sm hide-on-print" onclick="ReplaceStatement2()">Replace</button>
 									</div>
 								</div>
 								<div class="clearfix"></div>
 
-							
+
 						<div class="col-md-6 mar_bot_20">
 							<div class="col-md-12">
 								<label for="">
@@ -1936,7 +1936,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 									<span class="form-check-sign"></span>
 										No
 									</label>
-									
+
 							<label class="form-check-label">
 										<input id="checkBankStatementMatchesYes" name="checkBankStatementMatches" type="radio" value="yes" class="form-check-input" onchange="UpdateRelatedControl('sumcheckBankStatementMatchesYes')" <?php if (!is_null($financial_report_array['check_bank_statement_matches'])) {if ($financial_report_array['check_bank_statement_matches'] == true) echo "checked";} ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
 										<span class="form-check-sign"></span>
@@ -1945,7 +1945,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								</div>
 							</div>
 						</div>
-						
+
 												<div class="col-md-6 mar_bot_20">
 
 						<div class="col-md-12">
@@ -1960,10 +1960,10 @@ chapter did have Associate Members this year, how many Associate Members did you
 						</div>
 							</div>
 							</div>
-																		
 
 
-						<div class="col-md-12 mar_bot_20"> 
+
+						<div class="col-md-12 mar_bot_20">
 							<div class="col-md-12">
 								<label for="Step8_Log">Notes Logged for this Step (these are not visible to the chapter):</label>
 							</div>
@@ -1972,7 +1972,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 							</div>
 						</div>
 
-						<div class="col-md-12 mar_bot_20"> 
+						<div class="col-md-12 mar_bot_20">
 							<div class="col-md-12">
 								<label for="Step8_Note">Note:</label>
 							</div>
@@ -1981,7 +1981,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 							</div>
 						</div>
 
-						<div class="col-md-12 mar_bot_20"> 
+						<div class="col-md-12 mar_bot_20">
 							<div class="col-md-12">
 								<button type="button" id="AddNote8" class="btn btn-large btn-success" onclick="AddNote(8)" disabled>Add Note to Log</button>
 							</div>
@@ -2002,10 +2002,10 @@ chapter did have Associate Members this year, how many Associate Members did you
 			</div><!-- end of accordion body -->
 			</div><!-- end of accordion item -->
 			<!------End Step 8 ------>
-				
+
 			<!------Start Step 9 ------>
 			<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='9') echo "active";?>">
-			<div class="accordion-header js-accordion-header">Section 9 - Tax Exempt & Chapter Questions</div> 
+			<div class="accordion-header js-accordion-header">Section 9 - Tax Exempt & Chapter Questions</div>
 				<div class="accordion-body js-accordion-body">
 				<section>
 				<div class="form-row form-group">
@@ -2030,10 +2030,10 @@ chapter did have Associate Members this year, how many Associate Members did you
 					<div class="col-sm-12 brief_exp" id="divReceiveCompensationExplanation">
 						<label for="ReceiveCompensationExplanation">If yes, briefly explain:</label>
 							<textarea class="form-control" rows="2" name="ReceiveCompensationExplanation" id="ReceiveCompensationExplanation" readonly><?php if (!is_null($financial_report_array)) {echo $financial_report_array['receive_compensation_explanation'];}?></textarea>
-							
+
 						<div class="help-block with-errors"></div>
 					</div>
-					
+
 					<div class="col-sm-12 mar_bot15">
 						<p>2. Did any officer, member or family of a member benefit financially in any way from the member’s position with your chapter?</p>
 						<div class="col-md-4 float-left">
@@ -2064,7 +2064,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								<span class="form-check-sign"></span>
 									  No
 						   </label>
-						 
+
 						   <label class="form-check-label col-md-4">
 								<input type="radio" class="form-check-input" id="InfluencePoliticalYes" name="InfluencePolitical" value="yes" disabled onchange="ToggleInfluencePoliticalExplanation()" <?php if (!is_null($financial_report_array['influence_political'])) {if ($financial_report_array['influence_political'] == true) echo "checked";} ?>>
 								<span class="form-check-sign"></span>
@@ -2077,7 +2077,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 						<label for="InfluencePoliticalExplanation">If yes, briefly explain:</label>
 						<textarea class="form-control" rows="2" name="InfluencePoliticalExplanation" id="InfluencePoliticalExplanation" readonly><?php if (!is_null($financial_report_array)) {echo $financial_report_array['influence_political_explanation'];}?></textarea>
 					</div>
-					
+
 					<div class="col-sm-12 mar_bot15">
 						<p>4. Did your chapter vote on all activities and expenditures during the fiscal year?</p>
 						<div class="col-md-4 float-left">
@@ -2116,31 +2116,28 @@ chapter did have Associate Members this year, how many Associate Members did you
 							  </div>
 						</div>
 					</div>
-					<div class="col-sm-12 brief_exp" id="divBoughtPinsExplanation">
-						<label for="BoughtPinsExplanation">If no, briefly explain:</label>
-						<textarea class="form-control" rows="2" name="BoughtPinsExplanation" id="BoughtPinsExplanation" readonly><?php if (!is_null($financial_report_array)) {echo $financial_report_array['purchase_pins_explanation'];}?></textarea>
-					</div>
 					<div class="col-sm-12 mar_bot15">
-						<p>6. Did you purchase any merchandise from International other than pins? If No, why not?</p>
-						<div class="col-md-4 float-left">
-							<div class="form-check form-check-radio">
-								   <label class="form-check-label col-md-4">
-										<input type="radio" class="form-check-input" disabled id="BoughtMerchNo" name="BoughtMerch" value="" onchange="ToggleBoughtMerchExplanation()" <?php if (!is_null($financial_report_array['bought_merch'])) {if ($financial_report_array['bought_merch'] == false) echo "checked";} ?>>
-										<span class="form-check-sign"></span>
-											  No
-								   </label>
-								   <label class="form-check-label col-md-4">
-										<input type="radio" class="form-check-input" disabled id="BoughtMerchYes" name="BoughtMerch" value="yes" onchange="ToggleBoughtMerchExplanation()" <?php if (!is_null($financial_report_array)['bought_merch']) {if ($financial_report_array['bought_merch'] == true) echo "checked";} ?>> 
-										<span class="form-check-sign"></span>
-											  Yes
-								   </label>
-							</div>
-						</div>
-					</div>
-					<div class="col-sm-12 brief_exp" id="divBoughtMerchExplanation">
-						<label for="BoughtMerchExplanation">If no, briefly explain:</label>
-						<textarea class="form-control" rows="2" name="BoughtMerchExplanation" id="BoughtMerchExplanation" readonly><?php if (!is_null($financial_report_array)) {echo $financial_report_array['bought_merch_explanation'];}?></textarea>
-												
+                        <p>6. Did you purchase any merchandise from International other than pins? If No, why not?</p>
+                        <div class="col-md-4 float-left">
+                            <div class="form-check form-check-radio">
+                                <label class="form-check-label col-md-4">
+                                    <input type="radio" class="form-check-input" disabled id="BoughtMerchNo" name="BoughtMerch" value="" onchange="ToggleBoughtMerchExplanation()" {{ old('bought_merch', $financial_report_array['bought_merch']) == false ? 'checked' : '' }}>
+                                    <span class="form-check-sign"></span>
+                                    No
+                                </label>
+                                <label class="form-check-label col-md-4">
+                                    <input type="radio" class="form-check-input" disabled id="BoughtMerchYes" name="BoughtMerch" value="yes" onchange="ToggleBoughtMerchExplanation()" {{ old('bought_merch', $financial_report_array['bought_merch']) == true ? 'checked' : '' }}>
+                                    <span class="form-check-sign"></span>
+                                    Yes
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 brief_exp" id="divBoughtMerchExplanation">
+                        <label for="BoughtMerchExplanation">If no, briefly explain:</label>
+                        <textarea class="form-control" rows="2" name="BoughtMerchExplanation" id="BoughtMerchExplanation" readonly>{{ old('bought_merch_explanation', $financial_report_array['bought_merch_explanation']) }}</textarea>
+                    </div>
+
 					</div>
 					<div class="col-sm-12 mar_bot15">
 						<p>7. Did you offer or information your members about MOMS Club merchandise?</p>
@@ -2151,7 +2148,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 											<span class="form-check-sign"></span>
 												  No
 									   </label>
-							 
+
 									   <label class="form-check-label col-md-4">
 											<input type="radio" disabled class="form-check-input" id="OfferedMerchYes" name="OfferedMerch" value="yes" onchange="ToggleOfferedMerchExplanation()" <?php if (!is_null($financial_report_array['offered_merch'])) {if ($financial_report_array['offered_merch'] == true) echo "checked";} ?>>
 											<span class="form-check-sign"></span>
@@ -2159,12 +2156,12 @@ chapter did have Associate Members this year, how many Associate Members did you
 									   </label>
 							  </div>
 						</div>
-					</div>	
+					</div>
 					<div class="col-sm-12 brief_exp" id="divOfferedMerchExplanation">
 						<label for="OfferedMerchExplanation">If no, briefly explain:</label>
 						<textarea class="form-control" rows="2" name="OfferedMerchExplanation" id="OfferedMerchExplanation" readonly><?php if (!is_null($financial_report_array)) {echo $financial_report_array['offered_merch_explanation'];}?></textarea>
 					</div>
-					
+
 					<div class="col-sm-12 mar_bot15">
 						<p>8. Did you make the Bylaws and/or manual available for any chapter members that requested them?</p>
 						<div class="col-md-4 float-left">
@@ -2174,7 +2171,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 											<span class="form-check-sign"></span>
 												  No
 									   </label>
-							 
+
 									   <label class="form-check-label col-md-4">
 											<input type="radio" disabled class="form-check-input" id="ByLawsAvailableYes" name="ByLawsAvailable" value="yes" onchange="ToggleByLawsAvailableExplanation()" <?php if (!is_null($financial_report_array['bylaws_available'])) {if ($financial_report_array['bylaws_available'] == true) echo "checked";} ?>>
 											<span class="form-check-sign"></span>
@@ -2196,7 +2193,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 											<span class="form-check-sign"></span>
 												  No
 									   </label>
-							 
+
 									   <label class="form-check-label col-md-4">
 											<input type="radio" disabled class="form-check-input" id="ChildrensRoomYesVol" name="ChildrensRoom" value="yes_vol" <?php if (!is_null($financial_report_array['childrens_room_sitters'])) {if ($financial_report_array['childrens_room_sitters'] == true) echo "checked";} ?>>
 											<span class="form-check-sign"></span>
@@ -2214,7 +2211,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 						<label for="ChildrensRoomExplanation">Briefly explain, if necessary:</label>
 						<textarea class="form-control" rows="2" name="ChildrensRoomExplanation" readonly id="ChildrensRoomExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['childrens_room_sitters_explanation'];}?></textarea>
 					</div>
-					
+
 					<div class="col-sm-12 mar_bot15">
                     <p>10. Did you have playgroups? If so, how were they arranged.<span class="field-required">*</span></p>
                     <div class="col-md-12 float-left">
@@ -2224,13 +2221,13 @@ chapter did have Associate Members this year, how many Associate Members did you
                                         <span class="form-check-sign"></span>
                                               No
                                    </label>
-                          
+
                                    <label class="form-check-label col-md-4">
                                         <input type="radio" disabled class="form-check-input" id="Playgroups2" name="Playgroups" value="yes_byage" <?php if (!is_null($financial_report_array['playgroups'])) {if ($financial_report_array['playgroups'] == true) echo "checked";} ?>>
                                         <span class="form-check-sign"></span>
                                               Yes, arranged by age
                                    </label>
-                          
+
                                    <label class="form-check-label col-md-4">
                                         <input type="radio" disabled class="form-check-input" id="Playgroups3" name="Playgroups" value="yes_multiage" <?php if (!is_null($financial_report_array['playgroups'])) {if ($financial_report_array['playgroups'] == 2) echo "checked";} ?>>
                                         <span class="form-check-sign"></span>
@@ -2243,7 +2240,7 @@ chapter did have Associate Members this year, how many Associate Members did you
                                 <label for="PlaygroupsExplanation">Briefly explain, if necessary:</label>
                                 <textarea class="form-control" rows="2" name="PlaygroupsExplanation" readonly id="PlaygroupsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['had_playgroups_explanation'];}?></textarea>
                         </div>
-					
+
 					<div class="col-sm-12 mar_bot15">
 						<p>11. Did you have any child focused outings or activities? (Ex: zoo, library, pumpkin patch, etc.)</p>
 						<div class="col-md-4 float-left">
@@ -2265,7 +2262,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 						<label for="ChildOutingsExplanation">If no, briefly explain:</label>
 						<textarea class="form-control" rows="2" name="ChildOutingsExplanation" id="ChildOutingsExplanation" readonly><?php if (!is_null($financial_report_array)) {echo $financial_report_array['child_outings_explanation'];}?></textarea>
 					</div>
-					
+
 					<div class="col-sm-12 mar_bot15">
 						<p>12. Did you have any mother focused outings or activities? (Ex: mall walks, art museum, etc.)</p>
 						<div class="col-md-4 float-left">
@@ -2531,7 +2528,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 										<span class="form-check-sign"></span>
 											  No
 								   </label>
-						
+
 								   <label class="form-check-label col-md-4">
 										<input type="radio" disabled class="form-check-input" id="ContributionsNotRegNPYes" name="ContributionsNotRegNP" value="yes" onChange="ToggleContributionsNotRegNPExplanation()" <?php if (!is_null($financial_report_array['contributions_not_registered_charity'])) {if ($financial_report_array['contributions_not_registered_charity'] == true) echo "checked";} ?>>
 										<span class="form-check-sign"></span>
@@ -2610,7 +2607,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 										<span class="form-check-sign"></span>
 											  No
 								   </label>
-						
+
 								   <label class="form-check-label col-md-4">
 										<input type="radio" disabled class="form-check-input" id="FileIRSYes" name="FileIRS" value="yes" onChange="ToggleFileIRSExplanation()" <?php if (!is_null($financial_report_array['file_irs'])) {if ($financial_report_array['file_irs'] == true) echo "checked";} ?>>
 										<span class="form-check-sign"></span>
@@ -2641,7 +2638,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 										<span class="form-check-sign"></span>
 											  No
 								   </label>
-						 
+
 								   <label class="form-check-label col-md-4">
 										<input type="radio" disabled class="form-check-input" id="BankStatementIncludedYes" name="BankStatementIncluded" value="yes" onChange="ToggleBankStatementIncludedExplanation()" <?php if (!is_null($financial_report_array['bank_statement_included'])) {if ($financial_report_array['bank_statement_included'] == true) echo "checked";} ?>>
 										<span class="form-check-sign"></span>
@@ -2662,7 +2659,7 @@ chapter did have Associate Members this year, how many Associate Members did you
   <div>
                             	<p class="form-control-static"><a href="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" target="_blank">Additional Bank Statement</a></p>
                             </div>
-								
+
                        </div>-->
 					<input type="hidden" name="Statement2Path" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
 					<input type="hidden" name="StatementPath" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
@@ -2671,14 +2668,14 @@ chapter did have Associate Members this year, how many Associate Members did you
 					<label for="BankStatementIncludedExplanation">If no, briefly explain:</label>
 					<textarea class="form-control" rows="2" name="BankStatementIncludedExplanation" id="BankStatementIncludedExplanation" readonly><?php if (!is_null($financial_report_array)) {echo $financial_report_array['bank_statement_included_explanation'];}?></textarea>
 					</div>
-					
+
 					<div class="col-sm-12 mar_bot15">
 					<p>24. If your group does not have any bank accounts, where is the chapter money kept?</p>
 					   <div>
 					  <textarea name="WheresTheMoney" readonly id="WheresTheMoney" class="form-control formctrl-h" rows="3" ><?php if (!is_null($financial_report_array)) {echo $financial_report_array['wheres_the_money'];}?></textarea>
 						</div>
 					</div>
-					
+
 				 </div>
 
 				 <hr>
@@ -2689,7 +2686,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 						<h2>Annual Report Review</h2>
 					</div>
 
-					
+
 
 						<div class="col-md-6 mar_bot_20">
 							<div class="col-md-12">
@@ -2837,7 +2834,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 									<span class="form-check-sign"></span>
 										No
 									</label>
-									
+
 								</div>
 							</div>
 
@@ -2873,17 +2870,17 @@ chapter did have Associate Members this year, how many Associate Members did you
 								</div>
 							</div>
 						</div>
-						
+
 							<div class="form-row">
-						
+
 						<div class="col-md-12 mar_bot_20" id="990NBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
 							<div class="col-md-12">
 								<label class="control-label" for="990NFiling">Attach the chapter's 990N filing confirmation (5 MB max):</label>
 								<input name="990NFiling" id="990NFiling" type="file" accept=".pdf, .jpg, .jpeg" class="demo1 form-control" />
 							</div>
 						</div>
-						
-							
+
+
 						<div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
 							<div class="col-md-12" >
 								<label class="control-label" for="990NLink">990N Confirmation:</label>
@@ -2892,17 +2889,17 @@ chapter did have Associate Members this year, how many Associate Members did you
 								</div>
 							</div>
 
-							<div class="col-md-6"> 
-								<button type="button" class="btn btn-info btn-primary btn-sm hide-on-print" onclick="Replace990N()">Replace</button>										
+							<div class="col-md-6">
+								<button type="button" class="btn btn-info btn-primary btn-sm hide-on-print" onclick="Replace990N()">Replace</button>
 							</div>
 
 						</div>
-						
+
 
 						<div class="clearfix"></div>
 
 
-						<div class="col-md-12 mar_bot_20"> 
+						<div class="col-md-12 mar_bot_20">
 							<div class="col-md-12">
 								<label for="Step9_Log">Notes Logged for this Step (these are not visible to the chapter):</label>
 							</div>
@@ -2911,7 +2908,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 							</div>
 						</div>
 
-						<div class="col-md-12 mar_bot_20"> 
+						<div class="col-md-12 mar_bot_20">
 							<div class="col-md-12">
 								<label for="Step9_Note">Note:</label>
 							</div>
@@ -2920,7 +2917,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 							</div>
 						</div>
 
-						<div class="col-md-12 mar_bot_20"> 
+						<div class="col-md-12 mar_bot_20">
 							<div class="col-md-12">
 								<button type="button" id="AddNote9" class="btn btn-large btn-success" onclick="AddNote(9)" disabled>Add Note to Log</button>
 							</div>
@@ -2942,10 +2939,10 @@ chapter did have Associate Members this year, how many Associate Members did you
 		  </div><!-- end of accordion body -->
 		  </div><!-- end of accordion item -->
 			<!------End Step 9 ------>
-				
+
 			<!------Start Step 10 ------>
 		  	<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='10') echo "active";?>">
-				<div class="accordion-header js-accordion-header">Section 10 - Financial Summary</div> 
+				<div class="accordion-header js-accordion-header">Section 10 - Financial Summary</div>
 				<div class="accordion-body js-accordion-body">
 				<section>
 				<div class="form-row form-group">
@@ -3051,7 +3048,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 					  </div>
 						</div>
 					  </div>
-					  
+
 					</div>
             <div class="col-sm-12">
               <div class="box-brd">
@@ -3067,7 +3064,7 @@ chapter did have Associate Members this year, how many Associate Members did you
                                     <input type="number" class="form-control" name="SumMeetingRoomExpense" id="SumMeetingRoomExpense" disabled>
                                     </div>
                                 </div>
-                                
+
                 </div>
                </div>
                 <div class="col-sm-12 nopadding">
@@ -3299,7 +3296,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 							<div class="col-sm-6 float-left">
 							  <label for="">
 								  Treasury Balance Now
-								  
+
 							  </label>
 							</div>
 							<div class="col-sm-6 float-left">
@@ -3312,7 +3309,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 				  </div>
 				  </div>
             </div>
-            
+
          </div>
 
          <hr>
@@ -3362,8 +3359,8 @@ chapter did have Associate Members this year, how many Associate Members did you
 					</div>
 				</div>
 
-				
-				<div class="col-md-12 mar_bot_20"> 
+
+				<div class="col-md-12 mar_bot_20">
 					<div class="col-md-12">
 						<label for="Step10_Log">Notes Logged for this Step (these are not visible to the chapter):</label>
 					</div>
@@ -3372,7 +3369,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 					</div>
 				</div>
 
-				<div class="col-md-12 mar_bot_20"> 
+				<div class="col-md-12 mar_bot_20">
 					<div class="col-md-12">
 						<label for="Step10_Note">Note:</label>
 					</div>
@@ -3381,7 +3378,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 					</div>
 				</div>
 
-				<div class="col-md-12 mar_bot_20"> 
+				<div class="col-md-12 mar_bot_20">
 					<div class="col-md-12">
 						<button type="button" id="AddNote10" class="btn btn-large btn-success" onclick="AddNote(10)" disabled>Add Note to Log</button>
 					</div>
@@ -3402,7 +3399,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 			</div><!-- end of accordion body -->
 			</div><!-- end of accordion item -->
 			<!------End Step 10 ------>
-			
+
 			<!------Start Step 11 ------>
 			<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='11') echo "active";?>">
                 <div class="accordion-header js-accordion-header">Section 11 - Award Nominations</div>
@@ -3413,15 +3410,15 @@ chapter did have Associate Members this year, how many Associate Members did you
 						    <div class="box_brd_title_box">
 								<h4>Instructions for Recognition Entry</h4>
 						    </div>
-							<input type="hidden" id="TotalAwardNominations" name="TotalAwardNominations" value=<?php 
+							<input type="hidden" id="TotalAwardNominations" name="TotalAwardNominations" value=<?php
 							if (!empty($financial_report_array)) {
-								if ($financial_report_array['award_nominations']>0){ 
+								if ($financial_report_array['award_nominations']>0){
 									echo $financial_report_array['award_nominations'];
-								} 
+								}
 								else {
 									echo "0";
 								}
-							} 
+							}
 							else {
 								echo "0";
 							} ?>>
@@ -3453,10 +3450,10 @@ chapter did have Associate Members this year, how many Associate Members did you
 										<li>
 										   <strong>Other Outstanding Award</strong> (any entries not included in categories above)</li>
 									</ul>
-			
+
                             </div>
                             <hr>
-            
+
                         </div>
 						<!-- Award 1 Start -->
 						<div class="box_brd_contentpad" id="Award1Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_nomination_type']==NULL) echo "none;"; else echo "block;";} else echo "none;";?>">
@@ -3480,7 +3477,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								<div class="col-sm-12">
 									<h4>Outstanding Chapter Criteria</h4>
 									<p><label for="OutstandingFollowByLaws1">Did you follow the Bylaws and all instructions from International?</label></p>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingFollowByLaws1Yes" name="OutstandingFollowByLaws1" type="radio" class="form-check-input" disabled value="yes"<?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_outstanding_follow_bylaws'] == true) echo "checked";} ?>>
@@ -3493,11 +3490,11 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								<div class="col-sm-12">
 									<p><label for="OutstandingWellRounded1">Did you run a well-rounded program for your members?</label><br>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings), a variety of outings, playgroups, other activity groups, service projects, parties/member benefits kept under 15% of the dues received -- these are all taken into consideration. A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingWellRounded1Yes" name="OutstandingWellRounded1" disabled type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_outstanding_well_rounded'] == true) echo "checked";} ?>>
@@ -3510,11 +3507,11 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								<div class="col-sm-12">
 									<p><label for="OutstandingCommunicated1">Did you communicate with your Coordinator?</label><br>Did you send in your newsletter regularly? Send updates? Return telephone calls? A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingCommunicated1Yes" name="OutstandingCommunicated1" type="radio" class="form-check-input" disabled value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_outstanding_communicated'] == true) echo "checked";} ?>>
@@ -3527,7 +3524,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								<div class="col-sm-12">
 									<p><label for="OutstandingSupportMomsClub1">Did you support the International MOMS Club? Indications of supporting International MAY include but are not limited to:</label></p>
@@ -3538,7 +3535,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 										<li>Donating to the Mother-to-Mother Fund</li>
 										<li>Participating in Area, State and Regional events.</li>
 									</ul>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingSupportMomsClub1Yes" name="OutstandingSupportMomsClub1" type="radio" disabled class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_outstanding_support_international'] == true) echo "checked";} ?>>
@@ -3551,10 +3548,10 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								</div>
-								
+
 								 <h4>Description</h4>
 								 <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
 								 <div class="form-group">
@@ -3562,7 +3559,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								 </div>
 
 								 <input type="hidden" name="Award1Path" id="Award1Path" value="<?php echo $financial_report_array['award_1_files']; ?>">
-								 
+
 								 <div class="row" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['award_1_files']) echo "style=\"display: none;\"";} ?>>
 									<div class="form-group col-xs-12">
 										<label class="control-label" for="Award1Link">Supporting Award Files:</label>
@@ -3572,10 +3569,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 											$Award1FileCount =0;
 											if(isset($financial_report_array['award_1_files'])){
 												$award_1_files=unserialize(base64_decode($financial_report_array['award_1_files']));
-												//print_r($award_1_files); die;
-												//$Award1FileCount = count($award_1_files);
 												$Award1FileCount = is_array($award_1_files) ? count($award_1_files) : 0;
-
 												for ($row = 1; $row <= $Award1FileCount; $row++){
 													$row_id = $row;
 													echo "<p class=\"form-control-static\"><a href=\"" . $award_1_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
@@ -3585,7 +3579,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 										</div>
 									</div>
 								</div>
-								 
+
 							</div>
 						</div>
 						<!-- Award 1 Stop -->
@@ -3611,7 +3605,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								<div class="col-sm-12">
 									<h4>Outstanding Chapter Criteria</h4>
 									<p><label for="OutstandingFollowByLaws2">Did you follow the Bylaws and all instructions from International?</label></p>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingFollowByLaws2Yes" name="OutstandingFollowByLaws2" type="radio" class="form-check-input" value="yes" disabled <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_2_outstanding_follow_bylaws'] == true) echo "checked";} ?>>
@@ -3624,11 +3618,11 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								<div class="col-sm-12">
 									<p><label for="OutstandingWellRounded2">Did you run a well-rounded program for your members?</label><br>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings), a variety of outings, playgroups, other activity groups, service projects, parties/member benefits kept under 15% of the dues received -- these are all taken into consideration. A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingWellRounded2Yes" name="OutstandingWellRounded2" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_2_outstanding_well_rounded'] == true) echo "checked";} ?> disabled>
@@ -3641,11 +3635,11 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								<div class="col-sm-12">
 									<p><label for="OutstandingCommunicated2">Did you communicate with your Coordinator?</label><br>Did you send in your newsletter regularly? Send updates? Return telephone calls? A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingCommunicated2Yes" name="OutstandingCommunicated2" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_2_outstanding_communicated'] == true) echo "checked";} ?> disabled>
@@ -3658,7 +3652,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								<div class="col-sm-12">
 									<p><label for="OutstandingSupportMomsClub2">Did you support the International MOMS Club? Indications of supporting International MAY include but are not limited to:</label></p>
@@ -3669,7 +3663,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 										<li>Donating to the Mother-to-Mother Fund</li>
 										<li>Participating in Area, State and Regional events.</li>
 									</ul>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingSupportMomsClub2Yes" name="OutstandingSupportMomsClub2" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_2_outstanding_support_international'] == true) echo "checked";} ?> disabled>
@@ -3682,19 +3676,19 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								</div>
-								
+
 								 <h4>Description</h4>
 								 <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
 								 <div class="form-group">
 									<textarea class="form-control" rows="10" id="AwardDesc2" name="AwardDesc2" readonly><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_2_outstanding_project_desc'];}?></textarea>
 								 </div>
 
-								
+
 								 <input type="hidden" name="Award2Path" id="Award2Path" value="<?php echo $financial_report_array['award_2_files']; ?>">
-								 
+
 								 <div class="row" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['award_2_files']) echo "style=\"display: none;\"";} ?>>
 									<div class="form-group col-xs-12">
 										<label class="control-label" for="Award1Link">Supporting Award Files:</label>
@@ -3704,18 +3698,17 @@ chapter did have Associate Members this year, how many Associate Members did you
 											$Award2FileCount =0;
 											if(isset($financial_report_array['award_2_files'])){
 												$award_2_files=unserialize(base64_decode($financial_report_array['award_2_files']));
-												
-												//$Award1FileCount = count($award_1_files);
-												//$Award2FileCount = is_array($award_2_files) ? count($award_2_files) : 0;
-												$row = 2;
+
+                                                $row = 2;
 												$row_id ='';
-												echo "<p class=\"form-control-static\"><a href=\"" . $award_2_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
-												/*for ($row = 2; $row <= $Award2FileCount; $row++){
-													$row_id = $row;
-													echo "<p class=\"form-control-static\"><a href=\"" . $award_2_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
-												}*/
-											}
-										?>
+                                                if (!empty($award_2_files)) {
+                                                    foreach ($award_2_files as $row => $fileInfo) {
+                                                        echo "<p class=\"form-control-static\"><a href=\"" . $award_2_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";                                                    }
+                                                } else {
+                                                    // Handle the case where $award_2_files is empty or null
+                                                }
+                                            }
+    										?>
 										</div>
 									</div>
 								</div>
@@ -3744,7 +3737,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								<div class="col-sm-12">
 									<h4>Outstanding Chapter Criteria</h4>
 									<p><label for="OutstandingFollowByLaws3">Did you follow the Bylaws and all instructions from International?</label></p>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingFollowByLaws3Yes" name="OutstandingFollowByLaws3" type="radio" class="form-check-input" value="yes"<?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_outstanding_follow_bylaws'] == true) echo "checked";} ?> disabled>
@@ -3757,11 +3750,11 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								<div class="col-sm-12">
 									<p><label for="OutstandingWellRounded3">Did you run a well-rounded program for your members?</label><br>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings), a variety of outings, playgroups, other activity groups, service projects, parties/member benefits kept under 15% of the dues received -- these are all taken into consideration. A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingWellRounded3Yes" name="OutstandingWellRounded3" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_2_outstanding_well_rounded'] == true) echo "checked";} ?> disabled>
@@ -3774,14 +3767,14 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								<div class="col-sm-12">
 									<p><label for="OutstandingCommunicated3">Did you communicate with your Coordinator?</label><br>Did you send in your newsletter regularly? Send updates? Return telephone calls? A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
-												<input id="OutstandingCommunicated3Yes" name="OutstandingCommunicated3" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_outstanding_communicated'] == true) echo "checked";} ?> disabled> 
+												<input id="OutstandingCommunicated3Yes" name="OutstandingCommunicated3" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_outstanding_communicated'] == true) echo "checked";} ?> disabled>
 												<span class="form-check-sign"></span>
 													  Yes
 											</label>
@@ -3791,7 +3784,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								<div class="col-sm-12">
 									<p><label for="OutstandingSupportMomsClub3">Did you support the International MOMS Club? Indications of supporting International MAY include but are not limited to:</label></p>
@@ -3802,7 +3795,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 										<li>Donating to the Mother-to-Mother Fund</li>
 										<li>Participating in Area, State and Regional events.</li>
 									</ul>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingSupportMomsClub3Yes" name="OutstandingSupportMomsClub3" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_outstanding_support_international'] == true) echo "checked";} ?> disabled>
@@ -3815,18 +3808,18 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								</div>
-								
+
 								 <h4>Description</h4>
 								 <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
 								 <div class="form-group">
 									<textarea class="form-control" rows="10" id="AwardDesc3" name="AwardDesc3" readonly><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_3_outstanding_project_desc'];}?></textarea>
 								 </div>
-								
+
 								<input type="hidden" name="Award3Path" id="Award3Path" value="<?php echo $financial_report_array['award_3_files']; ?>">
-								 
+
 								 <div class="row" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['award_3_files']) echo "style=\"display: none;\"";} ?>>
 									<div class="form-group col-xs-12">
 										<label class="control-label" for="Award1Link">Supporting Award Files:</label>
@@ -3836,17 +3829,18 @@ chapter did have Associate Members this year, how many Associate Members did you
 											$Award3FileCount =0;
 											if(isset($financial_report_array['award_3_files'])){
 												$award_3_files=unserialize(base64_decode($financial_report_array['award_3_files']));
-												
-												//$Award1FileCount = count($award_1_files);
-												//$Award2FileCount = is_array($award_2_files) ? count($award_2_files) : 0;
+
 												$row = 3;
 												$row_id ='';
-												echo "<p class=\"form-control-static\"><a href=\"" . $award_3_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
-												/*for ($row = 2; $row <= $Award2FileCount; $row++){
-													$row_id = $row;
-													echo "<p class=\"form-control-static\"><a href=\"" . $award_2_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
-												}*/
-											}
+												if (!empty($award_3_files)) {
+                                                    foreach ($award_3_files as $row => $fileInfo) {
+                                                        echo "<p class=\"form-control-static\"><a href=\"" . $award_3_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
+                                                    }
+                                                } else {
+                                                    // Handle the case where $award_2_files is empty or null
+                                                }
+                                            }
+
 										?>
 										</div>
 									</div>
@@ -3876,7 +3870,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								<div class="col-sm-12">
 									<h4>Outstanding Chapter Criteria</h4>
 									<p><label for="OutstandingFollowByLaws4">Did you follow the Bylaws and all instructions from International?</label></p>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingFollowByLaws4Yes" name="OutstandingFollowByLaws4" type="radio" class="form-check-input" value="yes"<?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_outstanding_follow_bylaws'] == true) echo "checked";} ?> disabled>
@@ -3889,11 +3883,11 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								<div class="col-sm-12">
 									<p><label for="OutstandingWellRounded4">Did you run a well-rounded program for your members?</label><br>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings), a variety of outings, playgroups, other activity groups, service projects, parties/member benefits kept under 15% of the dues received -- these are all taken into consideration. A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingWellRounded4Yes" name="OutstandingWellRounded4" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_outstanding_well_rounded'] == true) echo "checked";} ?> disabled>
@@ -3906,11 +3900,11 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								<div class="col-sm-12">
 									<p><label for="OutstandingCommunicated4">Did you communicate with your Coordinator?</label><br>Did you send in your newsletter regularly? Send updates? Return telephone calls? A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingCommunicated4Yes" name="OutstandingCommunicated4" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_outstanding_communicated'] == true) echo "checked";} ?> disabled>
@@ -3923,7 +3917,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								<div class="col-sm-12">
 									<p><label for="OutstandingSupportMomsClub4">Did you support the International MOMS Club? Indications of supporting International MAY include but are not limited to:</label></p>
@@ -3934,7 +3928,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 										<li>Donating to the Mother-to-Mother Fund</li>
 										<li>Participating in Area, State and Regional events.</li>
 									</ul>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingSupportMomsClub4Yes" name="OutstandingSupportMomsClub4" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_outstanding_support_international'] == true) echo "checked";} ?> disabled>
@@ -3947,17 +3941,17 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								</div>
-								
+
 								 <h4>Description</h4>
 								 <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
 								 <div class="form-group">
 									<textarea class="form-control" rows="10" id="AwardDesc4" name="AwardDesc4" readonly><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_4_outstanding_project_desc'];}?></textarea>
-								
+
 								<input type="hidden" name="Award4Path" id="Award4Path" value="<?php echo $financial_report_array['award_4_files']; ?>">
-								 
+
 								 <div class="row" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['award_4_files']) echo "style=\"display: none;\"";} ?>>
 									<div class="form-group col-xs-12">
 										<label class="control-label" for="Award1Link">Supporting Award Files:</label>
@@ -3967,17 +3961,17 @@ chapter did have Associate Members this year, how many Associate Members did you
 											$Award4FileCount =0;
 											if(isset($financial_report_array['award_4_files'])){
 												$award_4_files=unserialize(base64_decode($financial_report_array['award_4_files']));
-												
-												//$Award1FileCount = count($award_1_files);
-												//$Award2FileCount = is_array($award_2_files) ? count($award_2_files) : 0;
+
 												$row = 4;
 												$row_id ='';
-												echo "<p class=\"form-control-static\"><a href=\"" . $award_4_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
-												/*for ($row = 2; $row <= $Award2FileCount; $row++){
-													$row_id = $row;
-													echo "<p class=\"form-control-static\"><a href=\"" . $award_2_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
-												}*/
-											}
+												if (!empty($award_4_files)) {
+                                                    foreach ($award_4_files as $row => $fileInfo) {
+                                                        echo "<p class=\"form-control-static\"><a href=\"" . $award_4_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
+                                                    }
+                                                } else {
+                                                    // Handle the case where $award_2_files is empty or null
+                                                }
+                                            }
 										?>
 										</div>
 									</div>
@@ -4007,7 +4001,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								<div class="col-sm-12">
 									<h4>Outstanding Chapter Criteria</h4>
 									<p><label for="OutstandingFollowByLaws5">Did you follow the Bylaws and all instructions from International?</label></p>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingFollowByLaws5Yes" name="OutstandingFollowByLaws5" type="radio" class="form-check-input" value="yes"<?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_outstanding_follow_bylaws'] == true) echo "checked";} ?> disabled>
@@ -4020,11 +4014,11 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								<div class="col-sm-12">
 									<p><label for="OutstandingWellRounded5">Did you run a well-rounded program for your members?</label><br>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings), a variety of outings, playgroups, other activity groups, service projects, parties/member benefits kept under 15% of the dues received -- these are all taken into consideration. A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingWellRounded5Yes" name="OutstandingWellRounded5" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_outstanding_well_rounded'] == true) echo "checked";} ?> disabled>
@@ -4037,11 +4031,11 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								<div class="col-sm-12">
 									<p><label for="OutstandingCommunicated5">Did you communicate with your Coordinator?</label><br>Did you send in your newsletter regularly? Send updates? Return telephone calls? A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingCommunicated5Yes" name="OutstandingCommunicated5" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_outstanding_communicated'] == true) echo "checked";} ?> disabled>
@@ -4054,7 +4048,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								<div class="col-sm-12">
 									<p><label for="OutstandingSupportMomsClub5">Did you support the International MOMS Club? Indications of supporting International MAY include but are not limited to:</label></p>
@@ -4065,7 +4059,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 										<li>Donating to the Mother-to-Mother Fund</li>
 										<li>Participating in Area, State and Regional events.</li>
 									</ul>
-									
+
 										<div class="form-check form-check-radio">
 											<label class="form-check-label">
 												<input id="OutstandingSupportMomsClub5Yes" name="OutstandingSupportMomsClub5" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_outstanding_support_international'] == true) echo "checked";} ?> disabled>
@@ -4078,10 +4072,10 @@ chapter did have Associate Members this year, how many Associate Members did you
 													  No
 											</label>
 										</div>
-									
+
 								</div>
 								</div>
-								
+
 								 <h4>Description</h4>
 								 <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
 								 <div class="form-group">
@@ -4089,7 +4083,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 								 </div>
 
 								<input type="hidden" name="Award5Path" id="Award5Path" value="<?php echo $financial_report_array['award_5_files']; ?>">
-								 
+
 								 <div class="row" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['award_5_files']) echo "style=\"display: none;\"";} ?>>
 									<div class="form-group col-xs-12">
 										<label class="control-label" for="Award1Link">Supporting Award Files:</label>
@@ -4099,16 +4093,18 @@ chapter did have Associate Members this year, how many Associate Members did you
 											$Award5FileCount =0;
 											if(isset($financial_report_array['award_5_files'])){
 												$award_5_files=unserialize(base64_decode($financial_report_array['award_5_files']));
-												
-												//$Award1FileCount = count($award_1_files);
-												//$Award2FileCount = is_array($award_2_files) ? count($award_2_files) : 0;
+
+
 												$row = 5;
 												$row_id ='';
-												echo "<p class=\"form-control-static\"><a href=\"" . $award_5_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
-												/*for ($row = 2; $row <= $Award2FileCount; $row++){
-													$row_id = $row;
-													echo "<p class=\"form-control-static\"><a href=\"" . $award_2_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
-												}*/
+												if (!empty($award_5_files)) {
+                                                    foreach ($award_5_files as $row => $fileInfo) {
+                                                        echo "<p class=\"form-control-static\"><a href=\"" . $award_5_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
+                                                    }
+                                                } else {
+                                                    // Handle the case where $award_2_files is empty or null
+                                                }
+
 											}
 										?>
 										</div>
@@ -4117,7 +4113,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 							</div>
 						</div>
 						<!-- Award 5 Stop -->
-						
+
 						<div class="box_brd_contentpad" id="AwardSignatureBlock" style="display: none;">
 							  <div class="box_brd_title_box">
 								 <h4>ALL ENTRIES MUST INCLUDE THIS SIGNED AGREEMENT</h4>
@@ -4133,7 +4129,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 									</div>
 								</div>
                             </div>
-							
+
                     </div>
 					<div <?php if(!$submitted) echo "style=\"display:none\""; ?> class="award_acc_con">
                             <!-- start:report_review -->
@@ -4143,11 +4139,11 @@ chapter did have Associate Members this year, how many Associate Members did you
 								</div>
 
 								<div class="form-row">
-                              	
-									
+
+
 									<div class="col-md-12 mar_bot_20" <?php if ($financial_report_array['award_1_nomination_type']==NULL) echo "style=\"display: none;\""; ?> ?>
-									
-										<div class="form-group col-md-6">	
+
+										<div class="form-group col-md-6">
 											<label for="NominationType1">Award #1:</label>
 											<select class="form-control" id="sumcheckNominationType1" name="sumcheckNominationType1" disabled >
 												<option value="" style="display:none" disabled selected>Select an award type</option>
@@ -4160,15 +4156,15 @@ chapter did have Associate Members this year, how many Associate Members did you
 												<option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
 											</select>
 										</div>
-										
-										<div class="form-group col-md-6">	
+
+										<div class="form-group col-md-6">
 											<label class="radio control-label">Award Status:</label>
 											<label class="custom-control custom-radio">
 												<input id="sumcheckAward1ApprovedNo" name="sumcheckAward1Approved" type="radio" value="no" class="custom-control-input" onClick="UpdateRelatedControl('checkAward1ApprovedNo')"  <?php if ($financial_report_array['check_award_1_approved'] == false) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
 												<span class="custom-control-indicator"></span>
 												<span class="custom-control-description">NOT Approved</span>
 											</label>
-											
+
 											<label class="custom-control custom-radio">
 												<input id="sumcheckAward1ApprovedYes" name="sumcheckAward1Approved" type="radio" value="yes" class="custom-control-input" onClick="UpdateRelatedControl('checkAward1ApprovedYes')" <?php if ($financial_report_array['check_award_1_approved'] == true) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
 												<span class="custom-control-indicator"></span>
@@ -4176,10 +4172,10 @@ chapter did have Associate Members this year, how many Associate Members did you
 											</label>
 										</div>
 
-									</div>	
+									</div>
 									<div class="col-md-12 mar_bot_20" <?php if ($financial_report_array['award_2_nomination_type']==NULL) echo "style=\"display: none;\""; ?>>
-									
-										<div class="form-group col-md-6">	
+
+										<div class="form-group col-md-6">
 											<label for="NominationType2">Award #2:</label>
 											<select class="form-control" id="sumcheckNominationType2" name="sumcheckNominationType2" disabled >
 												<option value="" style="display:none" disabled selected>Select an award type</option>
@@ -4192,26 +4188,26 @@ chapter did have Associate Members this year, how many Associate Members did you
 												<option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_2_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
 											</select>
 										</div>
-										
-										<div class="form-group col-md-6">	
+
+										<div class="form-group col-md-6">
 											<label class="radio control-label">Award Status:</label>
 											<label class="custom-control custom-radio">
 												<input id="sumcheckAward2ApprovedNo" name="sumcheckAward2Approved" type="radio" value="no" class="custom-control-input" onClick="UpdateRelatedControl('checkAward2ApprovedNo')"  <?php if ($financial_report_array['check_award_2_approved'] == false) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
 												<span class="custom-control-indicator"></span>
 												<span class="custom-control-description">NOT Approved</span>
 											</label>
-											
+
 											<label class="custom-control custom-radio">
 												<input id="sumcheckAward2ApprovedYes" name="sumcheckAward2Approved" type="radio" value="yes" class="custom-control-input" onClick="UpdateRelatedControl('checkAward2ApprovedYes')" <?php if ($financial_report_array['check_award_2_approved'] == true) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
 												<span class="custom-control-indicator"></span>
 												<span class="custom-control-description">Approved</span>
-											</label>	
+											</label>
 										</div>
 
-									</div>	
+									</div>
 									<div class="col-md-12 mar_bot_20" <?php if ($financial_report_array['award_3_nomination_type']==NULL) echo "style=\"display: none;\""; ?>>
-									
-										<div class="form-group col-md-6">	
+
+										<div class="form-group col-md-6">
 											<label for="NominationType3">Award #3:</label>
 											<select class="form-control" id="sumcheckNominationType3" name="sumcheckNominationType3" disabled >
 												<option value="" style="display:none" disabled selected>Select an award type</option>
@@ -4224,15 +4220,15 @@ chapter did have Associate Members this year, how many Associate Members did you
 												<option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
 											</select>
 										</div>
-										
-										<div class="form-group col-md-6">	
+
+										<div class="form-group col-md-6">
 											<label class="radio control-label">Award Status:</label>
 											<label class="custom-control custom-radio">
 												<input id="sumcheckAward3ApprovedNo" name="sumcheckAward3Approved" type="radio" value="no" class="custom-control-input" onClick="UpdateRelatedControl('checkAward3ApprovedNo')"  <?php if ($financial_report_array['check_award_3_approved'] == false) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
 												<span class="custom-control-indicator"></span>
 												<span class="custom-control-description">NOT Approved</span>
 											</label>
-											
+
 											<label class="custom-control custom-radio">
 												<input id="sumcheckAward3ApprovedYes" name="sumcheckAward3Approved" type="radio" value="yes" class="custom-control-input" onClick="UpdateRelatedControl('checkAward3ApprovedYes')" <?php if ($financial_report_array['check_award_3_approved'] == true) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
 												<span class="custom-control-indicator"></span>
@@ -4240,10 +4236,10 @@ chapter did have Associate Members this year, how many Associate Members did you
 											</label>
 										</div>
 
-									</div>	
+									</div>
 									<div class="col-md-12 mar_bot_20" <?php if ($financial_report_array['award_4_nomination_type']==NULL) echo "style=\"display: none;\""; ?>>
-									
-										<div class="form-group col-md-6">	
+
+										<div class="form-group col-md-6">
 											<label for="NominationType4">Award #4:</label>
 											<select class="form-control" id="sumcheckNominationType4" name="sumcheckNominationType4" disabled >
 												<option value="" style="display:none" disabled selected>Select an award type</option>
@@ -4256,15 +4252,15 @@ chapter did have Associate Members this year, how many Associate Members did you
 												<option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
 											</select>
 										</div>
-										
-										<div class="form-group col-md-6">	
+
+										<div class="form-group col-md-6">
 											<label class="radio control-label">Award Status:</label>
 											<label class="custom-control custom-radio">
 												<input id="sumcheckAward4ApprovedNo" name="sumcheckAward4Approved" type="radio" value="no" class="custom-control-input" onClick="UpdateRelatedControl('checkAward4ApprovedNo')"  <?php if ($financial_report_array['check_award_4_approved'] == false) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
 												<span class="custom-control-indicator"></span>
 												<span class="custom-control-description">NOT Approved</span>
 											</label>
-											
+
 											<label class="custom-control custom-radio">
 												<input id="sumcheckAward4ApprovedYes" name="sumcheckAward4Approved" type="radio" value="yes" class="custom-control-input" onClick="UpdateRelatedControl('checkAward4ApprovedYes')" <?php if ($financial_report_array['check_award_4_approved'] == true) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
 												<span class="custom-control-indicator"></span>
@@ -4272,10 +4268,10 @@ chapter did have Associate Members this year, how many Associate Members did you
 											</label>
 										</div>
 
-									</div>	
+									</div>
 									<div class="col-md-12 mar_bot_20" <?php if ($financial_report_array['award_5_nomination_type']==NULL) echo "style=\"display: none;\""; ?> >
-									
-										<div class="form-group col-md-6">	
+
+										<div class="form-group col-md-6">
 											<label for="NominationType5">Award #5:</label>
 											<select class="form-control" id="sumcheckNominationType5" name="sumcheckNominationType5" disabled >
 												<option value="" style="display:none" disabled selected>Select an award type</option>
@@ -4288,24 +4284,24 @@ chapter did have Associate Members this year, how many Associate Members did you
 												<option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
 											</select>
 										</div>
-										
-										<div class="form-group col-md-6">	
+
+										<div class="form-group col-md-6">
 											<label class="radio control-label">Award Status:</label>
 											<label class="custom-control custom-radio">
 												<input id="sumcheckAward5ApprovedNo" name="sumcheckAward5Approved" type="radio" value="no" class="custom-control-input" onClick="UpdateRelatedControl('checkAward5ApprovedNo')"  <?php if ($financial_report_array['check_award_5_approved'] == false) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
 												<span class="custom-control-indicator"></span>
 												<span class="custom-control-description">NOT Approved</span>
 											</label>
-											
+
 											<label class="custom-control custom-radio">
 												<input id="sumcheckAward5ApprovedYes" name="sumcheckAward5Approved" type="radio" value="yes" class="custom-control-input" onClick="UpdateRelatedControl('checkAward5ApprovedYes')" <?php if ($financial_report_array['check_award_5_approved'] == true) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
 												<span class="custom-control-indicator"></span>
 												<span class="custom-control-description">Approved</span>
-											</label>	
+											</label>
 										</div>
-									</div>	
+									</div>
 									<div class="clearfix"></div>
-									<div class="col-md-12 mar_bot_20"> 
+									<div class="col-md-12 mar_bot_20">
 										<div class="col-md-12">
 											<label for="Step11_Log">Notes Logged for this Step (these are not visible to the chapter):</label>
 										</div>
@@ -4314,7 +4310,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 										</div>
 									</div>
 
-									<div class="col-md-12 mar_bot_20"> 
+									<div class="col-md-12 mar_bot_20">
 										<div class="col-md-12">
 											<label for="Step11_Note">Note:</label>
 										</div>
@@ -4323,7 +4319,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 										</div>
 									</div>
 
-									<div class="col-md-12 mar_bot_20"> 
+									<div class="col-md-12 mar_bot_20">
 										<div class="col-md-12">
 											<button type="button" id="AddNote11" class="btn btn-large btn-success" onclick="AddNote(11)" disabled>Add Note to Log</button>
 										</div>
@@ -4343,10 +4339,10 @@ chapter did have Associate Members this year, how many Associate Members did you
 					</section>
 				</div>
             </div>
-			
+
 			<!------Start Step 12 ------>
 				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='12') echo "active";?>">
-					<div class="accordion-header js-accordion-header">Section 12 - Summary Log</div> 
+					<div class="accordion-header js-accordion-header">Section 12 - Summary Log</div>
 					<div class="accordion-body js-accordion-body">
 						<section>
 							<!-- start:report_review -->
@@ -4437,7 +4433,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 												<span class="form-check-sign"></span>
 													No
 												</label>
-												
+
 											</div>
 										</div>
 
@@ -4472,7 +4468,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 											</div>
 										</div>
 									</div>
-									
+
 									<!--<div class="col-md-6 mar_bot_20">
 										<div class="col-md-12">
 											<label for="">
@@ -4498,9 +4494,9 @@ chapter did have Associate Members this year, how many Associate Members did you
 											</div>
 										</div>
 									</div>-->
-													
-									
-									
+
+
+
 									<div class="col-md-6 float-left">
 										<div class="col-md-12">
 											<div class="form-group">
@@ -4741,9 +4737,9 @@ chapter did have Associate Members this year, how many Associate Members did you
 											</div>
 										</div>
 									</div>
-									
+
 									<div class="clearfix"></div>
-									
+
 									<div class="col-md-12" <?php if (!empty($financial_report_array) || !is_null($financial_report_array)) {if (!$financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} echo "style=\"display: block;\""; ?>>
 											<div class="form-group col-xs-12">
 												<label class="control-label" for="990NLink">990N Filing:</label>
@@ -4843,11 +4839,11 @@ chapter did have Associate Members this year, how many Associate Members did you
 												Award #1 Status:</label>
 											</label>
 										</div>
-									
-									
-							
+
+
+
 										<div class="col-md-12">
-										    
+
 											<div class="form-check form-check-radio">
 												<label class="form-check-label">
 												<input id="checkAward1ApprovedNo" name="checkAward1Approved" type="radio" value="no" class="form-check-input" onchange="UpdateRelatedControl('sumcheckAward1ApprovedNo')" <?php if ($financial_report_array['check_award_1_approved'] == false) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
@@ -4875,7 +4871,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 										</div>
 									</div>
 									<div class="clearfix"></div>
-									
+
 								<div class="col-md-6 mar_bot_20">
 
 										<div class="col-md-12">
@@ -4896,7 +4892,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 													Approved
 												</label>
 											</div>
-												
+
 								<div class="form-group">
 									<select class="form-control" id="NominationType2" name="NominationType2" onClick="ShowOutstandingCriteria(2)" disabled>
 									   <option style="display:none" disabled selected>No Award Selected</option>
@@ -4912,7 +4908,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 							</div>
 										</div>
 									<div class="clearfix"></div>
-									
+
 								<div class="col-md-6 mar_bot_20">
 
 										<div class="col-md-12">
@@ -4948,7 +4944,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 									</div>
 									</div>
 									<div class="clearfix"></div>
-									
+
 								<div class="col-md-6 mar_bot_20">
 
 										<div class="col-md-12">
@@ -4984,9 +4980,9 @@ chapter did have Associate Members this year, how many Associate Members did you
 										</div>
 									</div>
 									<div class="clearfix"></div>
-									
-									
-									
+
+
+
 								<div class="col-md-6 mar_bot_20">
 
 										<div class="col-md-12">
@@ -5023,13 +5019,13 @@ chapter did have Associate Members this year, how many Associate Members did you
 									</div>
 																		<div class="clearfix"></div>
 
-																		
+
 									<div class="col-md-12 mar_bot_20">
 										<label for="Summary_Log">Notes Logged for this Report (these are not visible to the chapter):</label>
 										<textarea class="form-control" rows="20" name="Summary_Log" id="Summary_Log" readonly><?php echo $financial_report_array['step_1_notes_log'] . PHP_EOL . $financial_report_array['step_2_notes_log'] . PHP_EOL . $financial_report_array['step_3_notes_log'] . PHP_EOL . $financial_report_array['step_4_notes_log'] . PHP_EOL . $financial_report_array['step_5_notes_log'] . PHP_EOL . $financial_report_array['step_6_notes_log'] . PHP_EOL . $financial_report_array['step_7_notes_log'] . PHP_EOL . $financial_report_array['step_8_notes_log'] . PHP_EOL . $financial_report_array['step_9_notes_log'] . PHP_EOL . $financial_report_array['step_10_notes_log'] . PHP_EOL . $financial_report_array['step_11_notes_log']; ?></textarea>
-									</div>	
+									</div>
 
-									
+
 								</div>
 								<!-- end:report_review -->
 
@@ -5037,10 +5033,10 @@ chapter did have Associate Members this year, how many Associate Members did you
 								<div class="card-body">
                                     <div class="col-md-12 text-center">
 										<button type="submit" id="btn-step-12" class="btn btn-info margin btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>Save</button>
-										
+
                                     </div>
                                 </div>
-                            
+
                             </div>
 						</section>
 					</div>
@@ -5048,13 +5044,13 @@ chapter did have Associate Members this year, how many Associate Members did you
 				<!------End Step 12 ------>
 				<!------Start Step 13 ------>
 				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='13') echo "active";?>">
-					<div class="accordion-header js-accordion-header">Section 13 - Complete Review</div> 
+					<div class="accordion-header js-accordion-header">Section 13 - Complete Review</div>
 					<div class="accordion-body js-accordion-body">
 						<section>
 						    <div class="col-sm-12">
-                        
+
                     <p>Contact information for the person who completed the report:</p>
-                       
+
                         <div class="col-sm-12">
                        <p>Name:  <?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_name'];}?></p>
                         </div>
@@ -5062,8 +5058,8 @@ chapter did have Associate Members this year, how many Associate Members did you
                            <p>Email:  <a href="mailto:<?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_email'];}?>"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_email'];}?></a></p>
                         </div>
                         </div>
-                        
-									<div class="col-md-4 mar_bot_20">	
+
+									<div class="col-md-4 mar_bot_20">
 										<div class="form-group">
 										<br>
 										<label for="AssignedReviewer">Select a Reviewer:</label>
@@ -5075,7 +5071,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 											</select>
 										</div>
 									</div>
-                                    
+
 						    	<div class="form-row form-group">
 								<div class="card-body">
                                     <div class="col-md-12 text-center">
@@ -5085,7 +5081,7 @@ chapter did have Associate Members this year, how many Associate Members did you
 										<?php
 										if ($financial_report_array['review_complete']!="" && $submitted && (Session::get('positionid') ==5 ||Session::get('positionid') ==6 || Session::get('positionid') ==7)){ ?>
 											<button type="button" class="btn btn-info margin btn-green" id="review-clear" <?php if(!$submitted) echo "disabled"; ?>>Clear Review Complete</button>
-											
+
 										<?php }
 										else{
 											?>
@@ -5095,27 +5091,27 @@ chapter did have Associate Members this year, how many Associate Members did you
 										 <p style="color:red;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></p>
                                     </div>
                                 </div>
-                            
+
                             </div>
 						</section>
 					</div>
 				</div>
 		<!------End Step 13 ------>
-						
+
 			</div><!-- end of accordion -->
 			</form>
-			
+
 		</div>
    	</div>
 </div>
 <div class="box-body text-center">
-            
+
               <!--<a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Financial Report Review - MOMS Club of {{ $chapterDetails[0]->chapter_name }}, {{$chapterDetails[0]->state}}" class="btn btn-themeBlue margin">E-mail Board</a>-->
-           
+
               <a href="{{ route('home') }}" class="btn btn-themeBlue margin">Back</a>
               </div>
 
-							
+
 @endsection
 @section('customscript')
 <script>
@@ -5127,47 +5123,47 @@ chapter did have Associate Members this year, how many Associate Members did you
 <!-- JQUERY STEP -->
 <script>
     var accordion = (function(){
-  
+
   var $accordion = $('.js-accordion');
   var $accordion_header = $accordion.find('.js-accordion-header');
   var $accordion_item = $('.js-accordion-item');
- 
-  // default settings 
+
+  // default settings
   var settings = {
     // animation speed
     speed: 400,
-    
+
     // close all other accordion items if true
     oneOpen: false
   };
-    
+
   return {
     // pass configurable object literal
     init: function($settings) {
       $accordion_header.on('click', function() {
         accordion.toggle($(this));
       });
-      
-      $.extend(settings, $settings); 
-      
+
+      $.extend(settings, $settings);
+
       // ensure only one accordion is active if oneOpen is true
       if(settings.oneOpen && $('.js-accordion-item.active').length > 1) {
         $('.js-accordion-item.active:not(:first)').removeClass('active');
       }
-      
+
       // reveal the active accordion bodies
       $('.js-accordion-item.active').find('> .js-accordion-body').show();
     },
     toggle: function($this) {
-            
+
       if(settings.oneOpen && $this[0] != $this.closest('.js-accordion').find('> .js-accordion-item.active > .js-accordion-header')[0]) {
         $this.closest('.js-accordion')
-               .find('> .js-accordion-item') 
+               .find('> .js-accordion-item')
                .removeClass('active')
                .find('.js-accordion-body')
                .slideUp()
       }
-      
+
       // show/hide the clicked accordion item
       $this.closest('.js-accordion-item').toggleClass('active');
       $this.next().stop().slideToggle(settings.speed);
@@ -5177,25 +5173,25 @@ chapter did have Associate Members this year, how many Associate Members did you
 
 $(document).ready(function(){
 	accordion.init({ speed: 300, oneOpen: true });
-  
+
 	$("#unsubmit").click(function() {
 		var result=confirm("Unsubmitting this report will make it editable by the chapter again and will disable coordinator editing until the chapter has resubmitted - any unsaved changes will be lost.  Do you wish to continue?");
 		if(result){
 			//RemoveRequired();
-			
+
 			$("#submitted").val('');
 			$("#submit_type").val('UnSubmit');
 			$("#FurthestStep").val('13');
 			//return false;
 			$("#financial_report").submit();
-			
+
 		}
 	});
-	
+
 	$("#review-complete").click(function() {
 		var result=confirm("This will finalize this report and flag it as 'review complete'.  Do you wish to continue?");
 		if(result){
-		    
+
 		var post_balance = $('#post_balance').val();
 		if(post_balance == null || post_balance == ''){
 			alert('Please enter Ending Balance in Section 12');
@@ -5212,7 +5208,7 @@ $(document).ready(function(){
 		//	}
 		}
 	});
-	
+
 	$("#review-clear").click(function() {
 		var result=confirm("This will clear the 'review complete' flag and coordinators will be able to edit the report again.  Do you wish to continue?");
 		if(result){
@@ -5220,10 +5216,10 @@ $(document).ready(function(){
 			$("#FurthestStep").val('13');
 			//return false;
 			$("#financial_report").submit();
-			
+
 		}
 	});
-	
+
 	$("#btn-step-1").click(function() {
 		$("#FurthestStep").val('1');
 		$("#financial_report").submit();
@@ -5275,7 +5271,7 @@ $(document).ready(function(){
 			$('#post_balance').focus();
 			return false;
 		}
-		$("#FurthestStep").val('12'); 
+		$("#FurthestStep").val('12');
 		$("#financial_report").submit();
 	});
 	$("#btn-step-13").click(function() {
@@ -5290,7 +5286,7 @@ $(document).ready(function(){
     }
 });
 
-	
+
 });
 </script>
 <script>
@@ -5299,43 +5295,43 @@ $(document).ready(function(){
 
 		document.getElementById("StatementBlock").style.display = 'block';
 		document.getElementById("StatementBlock").style.visibility = 'visible';
-	
+
 	}
-	
+
 		function ReplaceStatement2(){
 
 		document.getElementById("Statement2Block").style.display = 'block';
 		document.getElementById("Statement2Block").style.visibility = 'visible';
-	
+
 	}
 
 	function ReplaceRoster(){
 
 		document.getElementById("RosterBlock").style.display = 'block';
 		document.getElementById("RosterBlock").style.visibility = 'visible';
-	
+
 	}
 
 	function Replace990N(){
 
 		document.getElementById("990NBlock").style.display = 'block';
 		document.getElementById("990NBlock").style.visibility = 'visible';
-	
+
 	}
 
 	function UpdateRelatedControl(RelatedElementName){
-	
+
 		document.getElementById(RelatedElementName).checked = true;
-		
+
 	}
-	
+
 	function EnableNoteLogButton(NoteNumber){
 
 		if(document.getElementById("Step" + NoteNumber + "_Note").value!="")
 			document.getElementById("AddNote" + NoteNumber).disabled = false;
 		else
 			document.getElementById("AddNote" + NoteNumber).disabled = true;
-		
+
 	}
 
 	function AddNote(NoteNumber){
@@ -5344,44 +5340,44 @@ $(document).ready(function(){
 		var d = new Date();
 		var now = "";
 		var SummaryNote="";
-		
+
 		now = d.toString();
-		
+
 		<?php $date = date('m/d/Y'); ?>
-		
+
 		Note=document.getElementById("Step" + NoteNumber + "_Note").value;
 		console.log(Note);
 		Log += "\n" + "Step " + NoteNumber + " Note [<?php echo $date; ?>, <?php echo $loggedInName; ?>] - " + Note;
-		
+
 		document.getElementById("Step" + NoteNumber + "_Log").value += Log;
 		document.getElementById("Step" + NoteNumber + "_Note").value = "";
 		document.getElementById("AddNote" + NoteNumber).disabled = true;
-		
-		
+
+
 		for(i=1;i<12;i++){
 			Note=document.getElementById("Step" + i + "_Log").value;
 			SummaryNote += Note;
 		}
 		document.getElementById("Summary_Log").value = SummaryNote;
 	}
-	
+
 	function ChargeDifferentMembers(ButtonID){
-		
+
 		document.getElementById("chapterid").value=ButtonID;
 		return true;
 
 	}
-	
+
 	function ChapterDuesQuestionsChange(){
-	
+
 		var ChangedMeetingFees=false;
 		var ChargedMembersDifferently=false;
 		var MembersReducedDues=false;
-		
+
 		ChangedMeetingFees = document.getElementById("optChangeDuesYes").checked;
 		ChargedMembersDifferently = document.getElementById("optNewOldDifferentYes").checked;
 		MembersReducedDues = document.getElementById("optNoFullDuesYes").checked;
-		
+
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		if(ChangedMeetingFees){
             document.getElementById("ifChangeDues").style.display = 'block';
@@ -5400,11 +5396,11 @@ $(document).ready(function(){
             document.getElementById("lblTotalNewMembers").innerHTML = "Total New Members (who paid dues)"
             document.getElementById("lblTotalRenewedMembers").innerHTML = "Total Renewed Members (who paid dues)"
         }
-        
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////
         if(ChargedMembersDifferently){
             document.getElementById("ifChangedDuesDifferentPerMemberType").style.display = 'block';
-            
+
             document.getElementById("lblMemberDues").innerHTML  = "Dues collected per New Member"
             document.getElementById("lblNewMemberDues").innerHTML = "Dues collected per New Member (NEW Amount)"
 
@@ -5422,7 +5418,7 @@ $(document).ready(function(){
             document.getElementById("lblNewMemberDues").innerHTML = "Dues collected per Member (NEW Amount)"
 
         }
-		
+
 		////////////////////////////////////////////////////////////////////////////////////////////////////
 		if(MembersReducedDues){
 			document.getElementById("ifMembersNoDues").style.display = 'block';
@@ -5435,29 +5431,29 @@ $(document).ready(function(){
 			document.getElementById("PartialDuesMemberDues").value = 0;
 			document.getElementById("AssociateMemberDues").value = 0;
 		}
-		
+
 		ChangeMemberCount();
 	}
-	
+
 	function ChangeMeetingFees(){
-	
+
 		var ManditoryFees;
 		var VoluntaryFees;
 		var TotalFees;
 
 		ManditoryFees = Number(document.getElementById("ManditoryMeetingFeesPaid").value);
 		VoluntaryFees = Number(document.getElementById("VoluntaryDonationsPaid").value);
-		
+
 		TotalFees = (ManditoryFees + VoluntaryFees).toFixed(2);
-		
+
 		document.getElementById("TotalMeetingRoomExpenses").value = TotalFees;
 		document.getElementById("SumMeetingRoomExpense").value = TotalFees;
-		
+
 		ReCalculateSummaryTotal();
 	}
 
 	function ChangeMemberCount(){
-	
+
 		var ChangedMeetingFees=false;
 		var ChargedMembersDifferently=false;
 		var MembersReducedDues=false;
@@ -5502,47 +5498,47 @@ $(document).ready(function(){
 				+ NewMembers2 * NewMemberDues  // Changed dues
 				+ RenewedMembers2 * NewMemberDuesRenewal
 				+ AssociateMemberDuesCollected + PartalDuesCollected ;  // Associate members or partial dues
-		
+
 		}
 		else{
 			TotalFees = (NewMembers + RenewedMembers) * MemberDues // Normal dues, not changes
 				+ (NewMembers2 + RenewedMembers2) * NewMemberDues  // Changed dues
 				+ AssociateMemberDuesCollected + PartalDuesCollected ;  // Associate members or partial dues
-			
+
 		}
-		
+
 //		else if(ChangedMeetingFees && !ChargedMembersDifferently){
 //			TotalFees = (NewMembers + RenewedMembers) * MemberDues + (NewMembers2 + RenewedMembers2) * NewMemberDues  + AssociateMemberDuesCollected + PartalDuesCollected;
 //		}
 //		else if(!ChangedMeetingFees && ChargedMembersDifferently){
-//			//KAS TO DO 
+//			//KAS TO DO
 //			TotalFees = (NewMembers + RenewedMembers) * MemberDues + (NewMembers2 + RenewedMembers2) * NewMemberDues  + AssociateMemberDuesCollected + PartalDuesCollected;
 //		}
 //		else if(ChangedMeetingFees && ChargedMembersDifferently){
-//			//KAS TO DO 
+//			//KAS TO DO
 //			TotalFees = (NewMembers + RenewedMembers) * MemberDues + (NewMembers2 + RenewedMembers2) * NewMemberDues  + AssociateMemberDuesCollected + PartalDuesCollected;
 //		}
-		
+
 		TotalFees = TotalFees.toFixed(2);
-		
+
 		TotalMembers = NewMembers + RenewedMembers + MembersNoDues + AssociateMembers + PartialDuesMembers + NewMembers2 + RenewedMembers2;
 		document.getElementById("TotalMembers").value = TotalMembers;
-		
-		
+
+
 		document.getElementById("TotalDues").value = TotalFees;
 		document.getElementById("SumMembershipDuesIncome").value = TotalFees;
 		document.getElementById("PartyDuesIncomeReview").value = TotalFees;
 		document.getElementById("sumPartyDuesIncomeReview").value = TotalFees;
 
 		ReCalculateSummaryTotal();
-		
+
 	}
-	
+
 	function ChangeChildrensRoomExpenses(){
 		var SupplyTotal=0;
 		var OtherTotal=0;
 		var TotalOtherFees=0;
-		
+
 		var SumChildrensSuppliesExpense=0;
 		var SumPaidSittersExpense=0;
 		var SumChildrensOtherExpense=0;
@@ -5558,55 +5554,55 @@ $(document).ready(function(){
 			value = Number(row.cells[2].children[0].children[0].children[1].value);
 			OtherTotal += value;
 		}
-				
+
 		TotalOtherFees = (SupplyTotal + OtherTotal).toFixed(2);
-		SupplyTotal	= SupplyTotal.toFixed(2);			
+		SupplyTotal	= SupplyTotal.toFixed(2);
 		OtherTotal	= OtherTotal.toFixed(2);
 
 		document.getElementById("ChildrensRoomTotal").value = TotalOtherFees;
 		document.getElementById("SumChildrensOtherExpense").value = OtherTotal;
-		
+
 		document.getElementById("SumChildrensSuppliesExpense").value = SupplyTotal;
-		
+
 		SumPaidSittersExpense = (Number(document.getElementById("PaidBabySitters").value)).toFixed(2);
 		document.getElementById("SumPaidSittersExpense").value = SumPaidSittersExpense;
-		
+
 		var TotalFees = (Number(TotalOtherFees) + Number(SumPaidSittersExpense)).toFixed(2);
-		
+
 		document.getElementById("SumTotalChildrensRoomExpense").value = TotalFees;
 
 		ReCalculateSummaryTotal();
 	}
 
 	function AddChildrenExpenseRow(){
-	
+
 		var ExpenseCount = document.getElementById("ChildrensExpenseRowCount").value;
 
-		var table=document.getElementById("childrens-room");	
+		var table=document.getElementById("childrens-room");
 		var row = table.insertRow(-1);
-		
+
 		var cell1 = row.insertCell(0);
 		var cell2 = row.insertCell(1);
 		var cell3 = row.insertCell(2);
-		
+
 		cell1.innerHTML = "<div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=ChildrensRoomDesc" + ExpenseCount + " id=ChildrensRoomDesc" + ExpenseCount + "></div>";
 		cell2.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" min=\"0\"  step=\"0.01\" class=\"form-control\" name=\"ChildrensRoomSupplies" + ExpenseCount + "\" id=\"ChildrensRoomSupplies" + ExpenseCount + "\"  oninput=\"ChangeChildrensRoomExpenses()\"></div></div>";
 		cell3.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" min=\"0\"  step=\"0.01\" class=\"form-control\" name=\"ChildrensRoomOther" + ExpenseCount + "\" id=\"ChildrensRoomOther" + ExpenseCount + "\"  oninput=\"ChangeChildrensRoomExpenses()\"></div></div>";
 
 		ExpenseCount++;
-		document.getElementById('ChildrensExpenseRowCount').value = ExpenseCount; 
+		document.getElementById('ChildrensExpenseRowCount').value = ExpenseCount;
 	}
 
 	function DeleteChildrenExpenseRow(){
-	
+
 		var ExpenseCount = document.getElementById("ChildrensExpenseRowCount").value;
 		document.getElementById("childrens-room").deleteRow(ExpenseCount);
-		
+
 		ExpenseCount--; //We removed a row so lower this
 		ChangeChildrensRoomExpenses();
 		ReCalculateSummaryTotal();
-		
-		document.getElementById('ChildrensExpenseRowCount').value = ExpenseCount; 
+
+		document.getElementById('ChildrensExpenseRowCount').value = ExpenseCount;
 	}
 
 	function ChangeServiceProjectExpenses(){
@@ -5614,9 +5610,9 @@ $(document).ready(function(){
 		var IncomeTotal=0;
 		var CharityTotal=0;
 		var M2MTotal=0;
-		
+
 		var TotalFees=0;
-		
+
 		var table=document.getElementById("service-projects");
 
 		for (var i = 1, row; row = table.rows[i]; i++) {
@@ -5634,19 +5630,19 @@ $(document).ready(function(){
 			value = Number(row.cells[4].children[0].children[0].children[1].value);
 			M2MTotal += value;
 		}
-		
-		
-				
+
+
+
 		document.getElementById("ServiceProjectIncomeTotal").value = IncomeTotal.toFixed(2);
-		document.getElementById("SumServiceProjectIncome").value = IncomeTotal.toFixed(2);		
+		document.getElementById("SumServiceProjectIncome").value = IncomeTotal.toFixed(2);
 
 		document.getElementById("ServiceProjectSuppliesTotal").value = SupplyTotal.toFixed(2);
 		document.getElementById("ServiceProjectDonationTotal").value = CharityTotal.toFixed(2);
 		document.getElementById("ServiceProjectM2MDonationTotal").value = M2MTotal.toFixed(2);
-		document.getElementById("SumServiceProjectExpense").value = SupplyTotal.toFixed(2);		
+		document.getElementById("SumServiceProjectExpense").value = SupplyTotal.toFixed(2);
 		document.getElementById("SumDonationExpense").value = CharityTotal.toFixed(2);
 		document.getElementById("SumM2MExpense").value = M2MTotal.toFixed(2);
-		
+
 		TotalFees = (SupplyTotal + CharityTotal + M2MTotal).toFixed(2);
 		document.getElementById("SumTotalServiceProjectExpense").value = TotalFees;
 
@@ -5654,12 +5650,12 @@ $(document).ready(function(){
 	}
 
 	function AddServiceProjectRow(){
-	
+
 		var ExpenseCount = document.getElementById("ServiceProjectRowCount").value;
 
-		var table=document.getElementById("service-projects");	
+		var table=document.getElementById("service-projects");
 		var row = table.insertRow(-1);
-		
+
 		var cell1 = row.insertCell(0);
 		var cell2 = row.insertCell(1);
 		var cell3 = row.insertCell(2);
@@ -5674,18 +5670,18 @@ $(document).ready(function(){
 		cell5.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" min=\"0\"  step=\"0.01\" class=\"form-control\" name=\"ServiceProjectDonatedM2M" + ExpenseCount + "\" id=\"ServiceProjectDonatedM2M" + ExpenseCount + "\"  oninput=\"ChangeServiceProjectExpenses()\"></div></div>";
 
 		ExpenseCount++;
-		document.getElementById('ServiceProjectRowCount').value = ExpenseCount; 
+		document.getElementById('ServiceProjectRowCount').value = ExpenseCount;
 	}
 
 	function DeleteServiceProjectRow(){
-	
+
 		var ExpenseCount = document.getElementById("ServiceProjectRowCount").value;
 		document.getElementById("service-projects").deleteRow(ExpenseCount);
-		
+
 		ExpenseCount--; //We removed a row so lower this
 		ChangeServiceProjectExpenses();
-		
-		document.getElementById('ServiceProjectExpenseCount').value = ExpenseCount; 
+
+		document.getElementById('ServiceProjectExpenseCount').value = ExpenseCount;
 	}
 
 	function ChangePartyExpenses(){
@@ -5703,7 +5699,7 @@ $(document).ready(function(){
 			value = Number(row.cells[2].children[0].children[0].children[1].value);
 			ExpenseTotal += value;
 		}
-				
+
 		document.getElementById("PartyIncomeTotal").value = IncomeTotal.toFixed(2);
 		document.getElementById("PartyExpenseTotal").value = ExpenseTotal.toFixed(2);
 		document.getElementById("SumPartyIncome").value = IncomeTotal.toFixed(2);
@@ -5714,10 +5710,10 @@ $(document).ready(function(){
 
 		document.getElementById("sumPartyIncomeReview").value = IncomeTotal.toFixed(2);
 		document.getElementById("sumPartyExpenseReview").value = ExpenseTotal.toFixed(2);
-		
+
 		//Calculate Party Percent
 		var DuesIncome = Number(document.getElementById("PartyDuesIncomeReview").value);
-		
+
 		if(ExpenseTotal>0)
 			PartyPercent = (((ExpenseTotal-IncomeTotal)/DuesIncome)*100).toFixed(2);
 		else
@@ -5725,7 +5721,7 @@ $(document).ready(function(){
 
 		document.getElementById("PartyExpensePercent").value = PartyPercent;
 		document.getElementById("sumPartyExpensePercent").value = PartyPercent;
-		
+
 		if(PartyPercent>15 && PartyPercent<20){
 			document.getElementById("PartyExpensePercent").style.backgroundColor="yellow"
 			document.getElementById("sumPartyExpensePercent").style.backgroundColor="yellow"
@@ -5734,19 +5730,19 @@ $(document).ready(function(){
 			document.getElementById("PartyExpensePercent").style.backgroundColor="red"
 			document.getElementById("sumPartyExpensePercent").style.backgroundColor="red"
 		}
-		
+
 		ReCalculateSummaryTotal();
 
 	}
 
 
 	function AddPartyExpenseRow(){
-	
+
 		var ExpenseCount = document.getElementById("PartyExpenseRowCount").value;
 
-		var table=document.getElementById("party-expenses");	
+		var table=document.getElementById("party-expenses");
 		var row = table.insertRow(-1);
-		
+
 		var cell1 = row.insertCell(0);
 		var cell2 = row.insertCell(1);
 		var cell3 = row.insertCell(2);
@@ -5757,18 +5753,18 @@ $(document).ready(function(){
 		cell3.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" min=\"0\"  step=\"0.01\" class=\"form-control\" name=\"PartyExpenses" + ExpenseCount + "\" id=\"PartyExpenses" + ExpenseCount + "\"  oninput=\"ChangePartyExpenses()\"></div></div>";
 
 		ExpenseCount++;
-		document.getElementById('PartyExpenseRowCount').value = ExpenseCount; 
+		document.getElementById('PartyExpenseRowCount').value = ExpenseCount;
 	}
 
 	function DeletePartyExpenseRow(){
-	
+
 		var ExpenseCount = document.getElementById("PartyExpenseRowCount").value;
 		document.getElementById("party-expenses").deleteRow(ExpenseCount);
-		
+
 		ExpenseCount--; //We removed a row so lower this
 		ChangePartyExpenses();
-		
-		document.getElementById('PartyExpenseRowCount').value = ExpenseCount; 
+
+		document.getElementById('PartyExpenseRowCount').value = ExpenseCount;
 	}
 
 	function ChangeOfficeExpenses(){
@@ -5792,26 +5788,26 @@ $(document).ready(function(){
 		SumPostageExpense=Number(document.getElementById("PostageCosts").value);
 		SumPinsExpense=Number(document.getElementById("MembershipPins").value);
 
-		
+
 		document.getElementById("SumPrintingExpense").value = SumPrintingExpense.toFixed(2);
 		document.getElementById("SumPostageExpense").value = SumPostageExpense.toFixed(2);
 		document.getElementById("SumPinsExpense").value = SumPinsExpense.toFixed(2);
 		document.getElementById("SumOtherOperatingExpense").value = ExpenseTotal.toFixed(2);
-		
-		ExpenseTotal = ExpenseTotal + SumPrintingExpense + SumPostageExpense + SumPinsExpense 		
+
+		ExpenseTotal = ExpenseTotal + SumPrintingExpense + SumPostageExpense + SumPinsExpense
 		document.getElementById("SumOperatingExpense").value = ExpenseTotal.toFixed(2);
 
 		ReCalculateSummaryTotal();
-		
+
 	}
 
 	function AddOfficeExpenseRow(){
-	
+
 		var ExpenseCount = document.getElementById("OfficeExpenseRowCount").value;
 
-		var table=document.getElementById("office-expenses");	
+		var table=document.getElementById("office-expenses");
 		var row = table.insertRow(-1);
-		
+
 		var cell1 = row.insertCell(0);
 		var cell2 = row.insertCell(1);
 
@@ -5819,21 +5815,21 @@ $(document).ready(function(){
 		cell2.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" min=\"0\"  step=\"0.01\" class=\"form-control\" name=\"OfficeExpenses" + ExpenseCount + "\" id=\"OfficeExpenses" + ExpenseCount + "\"  oninput=\"ChangeOfficeExpenses()\"></div></div>";
 
 		ExpenseCount++;
-		document.getElementById('OfficeExpenseRowCount').value = ExpenseCount; 
+		document.getElementById('OfficeExpenseRowCount').value = ExpenseCount;
 	}
 
 	function DeleteOfficeExpenseRow(){
-	
+
 		var ExpenseCount = document.getElementById("OfficeExpenseRowCount").value;
 		document.getElementById("office-expenses").deleteRow(ExpenseCount);
-		
+
 		ExpenseCount--; //We removed a row so lower this
 		ChangeOfficeExpenses();
-		
-		document.getElementById('OfficeExpenseRowCount').value = ExpenseCount; 
+
+		document.getElementById('OfficeExpenseRowCount').value = ExpenseCount;
 	}
 
-	
+
 	function ChangeDonationAmount(){
 		var IncomeTotal=0;
 
@@ -5845,18 +5841,18 @@ $(document).ready(function(){
 			value = Number(row.cells[3].children[0].children[0].children[1].value);
 			IncomeTotal += value;
 		}
-				
+
 		document.getElementById("DonationTotal").value = IncomeTotal.toFixed(2);
 		document.getElementById("SumMonetaryDonationIncome").value = IncomeTotal.toFixed(2);
 	}
 
 	function AddMonDonationRow(){
-	
+
 		var ExpenseCount = document.getElementById("MonDonationRowCount").value;
 
-		var table=document.getElementById("donation-income");	
+		var table=document.getElementById("donation-income");
 		var row = table.insertRow(-1);
-		
+
 		var cell1 = row.insertCell(0);
 		var cell2 = row.insertCell(1);
 		var cell3 = row.insertCell(2);
@@ -5869,27 +5865,27 @@ $(document).ready(function(){
 		cell4.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" min=\"0\"  step=\"0.01\" class=\"form-control\" name=\"DonationAmount" + ExpenseCount + "\" id=\"DonationAmount" + ExpenseCount + "\" oninput=\"ChangeDonationAmount()\"></div></div>";
 
 		ExpenseCount++;
-		document.getElementById('MonDonationRowCount').value = ExpenseCount; 
+		document.getElementById('MonDonationRowCount').value = ExpenseCount;
 	}
 
 	function DeleteMonDonationRow(){
-	
+
 		var ExpenseCount = document.getElementById("MonDonationRowCount").value;
 		document.getElementById("donation-income").deleteRow(ExpenseCount);
-		
+
 		ExpenseCount--; //We removed a row so lower this
 		ChangeDonationAmount();
-		
-		document.getElementById('MonDonationRowCount').value = ExpenseCount; 
+
+		document.getElementById('MonDonationRowCount').value = ExpenseCount;
 	}
 
 	function AddNonMonDonationRow(){
-	
+
 		var ExpenseCount = document.getElementById("NonMonDonationRowCount").value;
 
-		var table=document.getElementById("donation-goods");	
+		var table=document.getElementById("donation-goods");
 		var row = table.insertRow(-1);
-		
+
 		var cell1 = row.insertCell(0);
 		var cell2 = row.insertCell(1);
 		var cell3 = row.insertCell(2);
@@ -5900,17 +5896,17 @@ $(document).ready(function(){
 		cell3.innerHTML = "<div class=\"form-group\"><input type=\"date\" class=\"form-control\" name=\"NonMonDonationDate" + ExpenseCount + "\" id=\"NonMonDonationDate" + ExpenseCount + "\"></div>";
 
 		ExpenseCount++;
-		document.getElementById('NonMonDonationRowCount').value = ExpenseCount; 
+		document.getElementById('NonMonDonationRowCount').value = ExpenseCount;
 	}
 
 	function DeleteNonMonDonationRow(){
-	
+
 		var ExpenseCount = document.getElementById("NonMonDonationRowCount").value;
 		document.getElementById("donation-goods").deleteRow(ExpenseCount);
-		
+
 		ExpenseCount--; //We removed a row so lower this
-		
-		document.getElementById('NonMonDonationRowCount').value = ExpenseCount; 
+
+		document.getElementById('NonMonDonationRowCount').value = ExpenseCount;
 	}
 
 	function ChangeOtherOfficeExpenses(){
@@ -5929,13 +5925,13 @@ $(document).ready(function(){
 			ExpenseTotal += value;
 
 		}
-				
+
 		document.getElementById("OtherOfficeExpenseTotal").value = ExpenseTotal.toFixed(2);
 		document.getElementById("OtherOfficeIncomeTotal").value = IncomeTotal.toFixed(2);
-		
+
 		document.getElementById("SumOtherIncome").value = IncomeTotal.toFixed(2);
 		document.getElementById("SumOtherExpense").value = ExpenseTotal.toFixed(2);
-		
+
 		ReCalculateSummaryTotal();
 	}
 
@@ -5956,35 +5952,35 @@ $(document).ready(function(){
 			ExpenseTotal += value;
 
 		}
-				
+
 		document.getElementById("InternationalEventIncomeTotal").value = IncomeTotal.toFixed(2);
 		document.getElementById("InternationalEventExpenseTotal").value = ExpenseTotal.toFixed(2);
-		
+
 		document.getElementById("SumInternationalEventIncome").value = IncomeTotal.toFixed(2);
 		document.getElementById("SumInternationalEventExpense").value = ExpenseTotal.toFixed(2);
-		
+
 		ReCalculateSummaryTotal();
-		
+
 	}
 
 	function DeleteInternationalEventRow(){
-	
+
 		var ExpenseCount = document.getElementById("InternationalEventRowCount").value;
 		document.getElementById("international_events").deleteRow(ExpenseCount);
-		
+
 		ExpenseCount--; //We removed a row so lower this
 		ChangeDonationAmount();
-		
-		document.getElementById('InternationalEventExpenseCount').value = ExpenseCount; 
+
+		document.getElementById('InternationalEventExpenseCount').value = ExpenseCount;
 	}
 
 	function AddInternationalEventRow(){
-	
+
 		var ExpenseCount = document.getElementById("InternationalEventRowCount").value;
 
-		var table=document.getElementById("international_events");	
+		var table=document.getElementById("international_events");
 		var row = table.insertRow(-1);
-		
+
 		var cell1 = row.insertCell(0);
 		var cell2 = row.insertCell(1);
 		var cell3 = row.insertCell(2);
@@ -5995,100 +5991,100 @@ $(document).ready(function(){
 		cell3.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" min=\"0\"  step=\"0.01\" class=\"form-control\" name=\"InternationalEventExpense" + ExpenseCount + "\" id=\"InternationalEventExpense" + ExpenseCount + "\" oninput=\"ChangeInternationalEventExpense()\"></div></div>";
 
 		ExpenseCount++;
-		document.getElementById('InternationalEventRowCount').value = ExpenseCount; 
+		document.getElementById('InternationalEventRowCount').value = ExpenseCount;
 	}
 
 	function ChangeReRegistrationExpense(){
-	
+
 		var ReRegistrationFee=0;
-		
+
 		ReRegistrationFee = Number(document.getElementById("AnnualRegistrationFee").value);
-		
+
 		document.getElementById("SumChapterReRegistrationExpense").value = ReRegistrationFee.toFixed(2);
-		
-		ReCalculateSummaryTotal();		
-		
+
+		ReCalculateSummaryTotal();
+
 	}
-	
+
 	function ReCalculateSummaryTotal(){
-		
+
 		var SumOtherIncome=0;
-		
+
 		var SumMeetingRoomExpense=0;
 		var SumTotalChildrensRoomExpense=0;
 		var ServiceIncomeTotal=0;
 		var ServiceExpenseTotal=0;
-		
+
 		var SumOtherExpense=0;
 		var SumOperatingExpense=0;
-		
+
 		var SumTotalExpense=0
 		var SumTotalIncome=0
-		
+
 		var SumPartyExpense=0;
 		var SumPartyIncome=0;
-		
+
 		var SumInternationalEventExpense=0;
 		var SumChapterReRegistrationExpense=0;
-		
+
 		var TreasuryBalance=0;
 		var TreasuryBalanceNow=0;
-		
+
 		SumMeetingRoomExpense = Number(document.getElementById("SumMeetingRoomExpense").value);
 		SumMembershipDuesIncome = Number(document.getElementById("SumMembershipDuesIncome").value);
-		
+
 		SumTotalChildrensRoomExpense=Number(document.getElementById("SumTotalChildrensRoomExpense").value);
 
-		ServiceIncomeTotal = Number(document.getElementById("SumServiceProjectIncome").value);		
+		ServiceIncomeTotal = Number(document.getElementById("SumServiceProjectIncome").value);
 		ServiceExpenseTotal = Number(document.getElementById("SumTotalServiceProjectExpense").value);
 
 		SumPartyIncome = Number(document.getElementById("SumPartyIncome").value);
 		SumPartyExpense = Number(document.getElementById("SumPartyExpense").value);
-		
+
 		SumOtherIncome = Number(document.getElementById("SumOtherIncome").value);
 		SumOtherExpense = Number(document.getElementById("SumOtherExpense").value);
-		
+
 		SumOperatingExpense = Number(document.getElementById("SumOperatingExpense").value);
-		
+
 		SumInternationalEventExpense = Number(document.getElementById("SumInternationalEventExpense").value);
 		SumInternationalEventIncome = Number(document.getElementById("SumInternationalEventIncome").value);
 
 		SumMonetaryDonationIncome = Number(document.getElementById("SumMonetaryDonationIncome").value);
 		SumChapterReRegistrationExpense = Number(document.getElementById("SumChapterReRegistrationExpense").value);
-		
-		
+
+
 		SumTotalExpense = SumTotalChildrensRoomExpense + SumMeetingRoomExpense + ServiceExpenseTotal + SumOtherExpense + SumPartyExpense + SumOperatingExpense + SumInternationalEventExpense + SumChapterReRegistrationExpense;
 		SumTotalIncome = ServiceIncomeTotal + SumOtherIncome + SumPartyIncome + SumMembershipDuesIncome + SumInternationalEventIncome + SumMonetaryDonationIncome ;
-		
+
 		TreasuryBalance = Number(document.getElementById("SumAmountReservedFromPreviousYear").value);
-		
+
 		document.getElementById("SumTotalExpense").value = SumTotalExpense.toFixed(2);
 		document.getElementById("SumTotalIncome").value = SumTotalIncome.toFixed(2);
-		
+
 		document.getElementById("checkTotalIncomeCalc").value = SumTotalIncome.toFixed(2);
 		document.getElementById("sumcheckTotalIncomeCalc").value = SumTotalIncome.toFixed(2);
-		
+
 		if(SumTotalIncome>=50000){
 			document.getElementById("checkTotalIncomeCalc").style.backgroundColor="red";
 			document.getElementById("sumcheckTotalIncomeCalc").style.backgroundColor="red";
 		}
-		
+
 		TreasuryBalanceNow = TreasuryBalance - SumTotalExpense + SumTotalIncome;
-		
+
 		document.getElementById("TreasuryBalanceNow").value = TreasuryBalanceNow.toFixed(2);
 		document.getElementById("SumTreasuryBalanceNow").value = TreasuryBalanceNow.toFixed(2);
 		document.getElementById("checkTreasuryBalanceNow").value = TreasuryBalanceNow.toFixed(2);
-		
+
 		ChangeBankRec();
 	}
 
 	function AddOtherOfficeExpenseRow(){
-	
+
 		var ExpenseCount = document.getElementById("OtherOfficeExpenseRowCount").value;
 
-		var table=document.getElementById("other-office-expenses");	
+		var table=document.getElementById("other-office-expenses");
 		var row = table.insertRow(-1);
-		
+
 		var cell1 = row.insertCell(0);
 		var cell2 = row.insertCell(1);
 		var cell3 = row.insertCell(1);
@@ -6099,20 +6095,20 @@ $(document).ready(function(){
 		cell3.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" min=\"0\"  step=\"0.01\" class=\"form-control\" name=\"OtherOfficeExpenses" + ExpenseCount + "\" id=\"OtherOfficeExpenses" + ExpenseCount + "\"  oninput=\"ChangeOtherOfficeExpenses()\"></div></div>";
 
 		ExpenseCount++;
-		document.getElementById('OtherOfficeExpenseRowCount').value = ExpenseCount; 
+		document.getElementById('OtherOfficeExpenseRowCount').value = ExpenseCount;
 	}
 
 	function DeleteOtherOfficeExpenseRow(){
-	
+
 		var ExpenseCount = document.getElementById("OtherOfficeExpenseRowCount").value;
-		
+
 		if(ExpenseCount>1){
 			document.getElementById("other-office-expenses").deleteRow(ExpenseCount);
-			
+
 			ExpenseCount--; //We removed a row so lower this
 			ChangeOtherOfficeExpenses();
-			
-			document.getElementById('OtherOfficeExpenseRowCount').value = ExpenseCount; 
+
+			document.getElementById('OtherOfficeExpenseRowCount').value = ExpenseCount;
 
 		}
 
@@ -6120,11 +6116,11 @@ $(document).ready(function(){
 
 	function TreasuryBalanceChange(){
 		var TreasuryBalance = Number(document.getElementById("AmountReservedFromLastYear").value);
-		document.getElementById("SumAmountReservedFromPreviousYear").value = TreasuryBalance.toFixed(2); 
-		
+		document.getElementById("SumAmountReservedFromPreviousYear").value = TreasuryBalance.toFixed(2);
+
 		ReCalculateSummaryTotal();
 	}
-	
+
 	function ChangeBankRec(){
 		var PaymentTotal=0;
 		var DepositTotal=0;
@@ -6142,20 +6138,20 @@ $(document).ready(function(){
 			DepositTotal += value;
 		}
 
-		//PettyCash = Number(document.getElementById("PettyCash").value); 
+		//PettyCash = Number(document.getElementById("PettyCash").value);
 		var BankBalanceNow = Number(document.getElementById("BankBalanceNow").value);
-				
+
 		TotalFees = BankBalanceNow - PaymentTotal + DepositTotal;
 		document.getElementById("ReconciledBankBalance").value = TotalFees.toFixed(2);
 	}
 
 	function AddBankRecRow(){
-	
+
 		var ExpenseCount = document.getElementById("BankRecRowCount").value;
 
-		var table=document.getElementById("bank-rec");	
+		var table=document.getElementById("bank-rec");
 		var row = table.insertRow(-1);
-		
+
 		var cell1 = row.insertCell(0);
 		var cell2 = row.insertCell(1);
 		var cell3 = row.insertCell(2);
@@ -6170,20 +6166,20 @@ $(document).ready(function(){
 		cell5.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" min=\"0\"  step=\"0.01\" class=\"form-control\" name=\"BankRecDepositAmount" + ExpenseCount + "\" id=\"BankRecDepositAmount" + ExpenseCount + "\" oninput=\"ChangeBankRec()\"></div></div>";
 
 		ExpenseCount++;
-		document.getElementById('BankRecRowCount').value = ExpenseCount; 
+		document.getElementById('BankRecRowCount').value = ExpenseCount;
 	}
 
 	function DeleteBankRecRow(){
-	
+
 		var ExpenseCount = document.getElementById("BankRecExpenseCount").value;
 		document.getElementById("bank-rec").deleteRow(ExpenseCount);
-		
+
 		ExpenseCount--; //We removed a row so lower this
 		ChangeBankRec();
-		
-		document.getElementById('BankRecRowCount').value = ExpenseCount; 
+
+		document.getElementById('BankRecRowCount').value = ExpenseCount;
 	}
-	
+
 	function ToggleReceiveCompensationExplanation(){
 		// Did they say yes, if so, we need to mark the explanation field as required
 		if (document.getElementById("ReceiveCompensationYes").checked){
@@ -6195,7 +6191,7 @@ $(document).ready(function(){
 			document.getElementById("divReceiveCompensationExplanation").style.display = 'none';
 		}
 	}
-	
+
 	function ToggleFinancialBenefitExplanation(){
 		// Did they say yes, if so, we need to mark the explanation field as required
 		if (document.getElementById("FinancialBenefitYes").checked){
@@ -6206,7 +6202,7 @@ $(document).ready(function(){
 			document.getElementById("FinancialBenefitExplanation").required=false;
 			document.getElementById("divFinancialBenefitExplanation").style.display = 'none';
 		}
-	
+
 	}
 
 	function ToggleInfluencePoliticalExplanation(){
@@ -6220,7 +6216,7 @@ $(document).ready(function(){
 			document.getElementById("divInfluencePoliticalExplanation").style.display = 'none';
 		}
 	}
-	
+
 	function ToggleVoteAllActivitiesExplanation(){
 		// Did they say no, if so, we need to mark the explanation field as required
 		if (document.getElementById("VoteAllActivitiesNo").checked){
@@ -6232,7 +6228,7 @@ $(document).ready(function(){
 			document.getElementById("divVoteAllActivitiesExplanation").style.display = 'none';
 		}
 	}
-	
+
 	function ToggleBoughtPinsExplanation(){
 		// Did they say no, if so, we need to mark the explanation field as required
 		if (document.getElementById("BoughtPinsNo").checked){
@@ -6244,7 +6240,7 @@ $(document).ready(function(){
 			document.getElementById("divBoughtPinsExplanation").style.display = 'none';
 		}
 	}
-	
+
 	function ToggleBoughtMerchExplanation(){
 		// Did they say no, if so, we need to mark the explanation field as required
 		if (document.getElementById("BoughtMerchNo").checked){
@@ -6256,7 +6252,7 @@ $(document).ready(function(){
 			document.getElementById("divBoughtMerchExplanation").style.display = 'none';
 		}
 	}
-	
+
 	function ToggleOfferedMerchExplanation(){
 		// Did they say no, if so, we need to mark the explanation field as required
 		if (document.getElementById("OfferedMerchNo").checked){
@@ -6268,7 +6264,7 @@ $(document).ready(function(){
 			document.getElementById("divOfferedMerchExplanation").style.display = 'none';
 		}
 	}
-	
+
 	function ToggleByLawsAvailableExplanation(){
 		// Did they say no, if so, we need to mark the explanation field as required
 		if (document.getElementById("ByLawsAvailableNo").checked){
@@ -6280,7 +6276,7 @@ $(document).ready(function(){
 			document.getElementById("divByLawsAvailableExplanation").style.display = 'none';
 		}
 	}
-	
+
 	function ToggleChildOutingsExplanation(){
 		// Did they say no, if so, we need to mark the explanation field as required
 		if (document.getElementById("ChildOutingsNo").checked){
@@ -6292,7 +6288,7 @@ $(document).ready(function(){
 			document.getElementById("divChildOutingsExplanation").style.display = 'none';
 		}
 	}
-	
+
 	function ToggleMotherOutingsExplanation(){
 		// Did they say no, if so, we need to mark the explanation field as required
 		if (document.getElementById("MotherOutingsNo").checked){
@@ -6304,7 +6300,7 @@ $(document).ready(function(){
 			document.getElementById("divMotherOutingsExplanation").style.display = 'none';
 		}
 	}
-	
+
 	function ToggleMeetingSpeakersExplanation(){
 		// Did they say no, if so, we need to mark the explanation field as required
 		if (document.getElementById("MeetingSpeakersNo").checked){
@@ -6316,7 +6312,7 @@ $(document).ready(function(){
 			document.getElementById("divMeetingSpeakersExplanation").style.display = 'none';
 		}
 	}
-	
+
 	function ToggleActivityOtherExplanation(){
 		// Did they say no, if so, we need to mark the explanation field as required
 		if (document.getElementById("ActivityOther").checked){
@@ -6328,7 +6324,7 @@ $(document).ready(function(){
 			document.getElementById("divActivityOtherExplanation").style.display = 'none';
 		}
 	}
-	
+
 	function ToggleContributionsNotRegNPExplanation(){
 		// Did they say yes, if so, we need to mark the explanation field as required
 		if (document.getElementById("ContributionsNotRegNPYes").checked){
@@ -6340,7 +6336,7 @@ $(document).ready(function(){
 			document.getElementById("divContributionsNotRegNPExplanation").style.display = 'none';
 		}
 	}
-	
+
 	function TogglePerformServiceProjectExplanation(){
 		// Did they say no, if so, we need to mark the explanation field as required
 		if (document.getElementById("PerformServiceProjectNo").checked){
@@ -6352,7 +6348,7 @@ $(document).ready(function(){
 			document.getElementById("divPerformServiceProjectExplanation").style.display = 'none';
 		}
 	}
-	
+
 	function ToggleFileIRSExplanation(){
 		// Did they say no, if so, we need to mark the explanation field as required
 		if (document.getElementById("FileIRSNo").checked){
@@ -6364,7 +6360,7 @@ $(document).ready(function(){
 			document.getElementById("divFileIRSExplanation").style.display = 'none';
 		}
 	}
-	
+
 	function ToggleBankStatementIncludedExplanation(){
 		// Did they say no, if so, we need to mark the explanation field as required
 		if (document.getElementById("BankStatementIncludedNo").checked){
@@ -6378,7 +6374,7 @@ $(document).ready(function(){
 			document.getElementById("divBankStatementIncludedExplanation").style.display = 'none';
 		}
 	}
-	
+
 	function AddAwardNomination(){
 		// Did they say no, if so, we need to mark the explanation field as required
 		if (document.getElementById("Award1Panel").style.display === 'none'){
@@ -6405,7 +6401,7 @@ $(document).ready(function(){
 			document.getElementById("btnAddAwardNomination").disabled = true;
 			document.getElementById("NominationType5").required = true;
 		}
-		
+
 		document.getElementById("TotalAwardNominations").value = Number(document.getElementById("TotalAwardNominations").value) + 1;
 	}
 
@@ -6452,7 +6448,7 @@ $(document).ready(function(){
 			document.getElementById("btnAddCoordAwardNomination").disabled = true;
 			document.getElementById("checkNominationTypeCoord2").required = true;
 		}
-		
+
 		document.getElementById("TotalCoordAwardNominations").value = Number(document.getElementById("TotalCoordAwardNominations").value) + 1;
 	}
 
@@ -6486,15 +6482,15 @@ $(document).ready(function(){
 		document.getElementById("TotalAwardNominations").value = Number(document.getElementById("TotalAwardNominations").value) - 1;
 
 	}
-	
+
 	function ShowOutstandingCriteria(AwardNumber){
-		
+
 		var NominationElementName="";
 		var CriteriaElementName="";
-		
+
 		NominationElementName = "NominationType" + AwardNumber;
 		CriteriaElementName = "OutstandingCriteria" + AwardNumber;
-		
+
 		if (document.getElementById(NominationElementName).value == 5 || document.getElementById(NominationElementName).value == 6){
 			document.getElementById(CriteriaElementName).style.display = 'block';
 		}
@@ -6504,13 +6500,13 @@ $(document).ready(function(){
 	}
 
 	function ShowOutstandingCriteriaCoord(AwardNumber){
-		
+
 		var NominationElementName="";
 		var CriteriaElementName="";
-		
+
 		NominationElementName = "checkNominationTypeCoord" + AwardNumber;
 		CriteriaElementName = "checkOutstandingCriteriaCoord" + AwardNumber;
-		
+
 		if (document.getElementById(NominationElementName).value == 5 || document.getElementById(NominationElementName).value == 6){
 			document.getElementById(CriteriaElementName).style.display = 'block';
 		}
@@ -6518,42 +6514,42 @@ $(document).ready(function(){
 			document.getElementById(CriteriaElementName).style.display = 'none';
 		}
 	}
-	
+
 	// Initialize tooltip component
 	$(function () {
 	  $('[data-toggle="tooltip"]').tooltip()
 	})
-	
+
 	function UpdateCalculatedValues(){
-		ChangeChildrensRoomExpenses();	
+		ChangeChildrensRoomExpenses();
 		ChangeMemberCount();
 		ChapterDuesQuestionsChange();
-		
+
 		ChangeMeetingFees();
 		ChangeServiceProjectExpenses();
 		ChangePartyExpenses();
-		
+
 		ChangeOfficeExpenses();
 		ChangeInternationalEventExpense();
 		ChangeReRegistrationExpense();
 		ChangeDonationAmount();
 		ChangeOtherOfficeExpenses();
 		ChangeBankRec();
-		TreasuryBalanceChange();		
+		TreasuryBalanceChange();
 	}
 
 
 	function RemoveRequired(){
-	
+
 		var x = document.forms[0];
 		var i;
 		for (i = 0; i < x.length; i++) {
 			x.elements[i].required = false;
-		}		
+		}
 	}
-	
+
 	function SetReadOnly(){
-	
+
 		var x = document.forms[0];
 		var i;
 		for (i = 0; i < x.length; i++) {
@@ -6561,9 +6557,9 @@ $(document).ready(function(){
 				x.elements[i].readOnly = true;
 				x.elements[i].disabled = true;
 			}
-		}		
-	}	
-	
+		}
+	}
+
 	function LoadSteps(){
 		UpdateCalculatedValues();
 		ToggleReceiveCompensationExplanation();
@@ -6582,7 +6578,7 @@ $(document).ready(function(){
 		TogglePerformServiceProjectExplanation();
 		ToggleFileIRSExplanation();
 		ToggleBankStatementIncludedExplanation();
-		
+
 		if(document.getElementById("NominationType1").value==5 || document.getElementById("NominationType1").value==6){
 			ShowOutstandingCriteria(1);
 		}
@@ -6600,9 +6596,9 @@ $(document).ready(function(){
 		}
 
 	}
-	
+
 	function CheckReviewAnswers(){
-		
+
 		if(!document.getElementById("sumcheckRosterAttachedNo").checked && !document.getElementById("sumcheckRosterAttachedYes").checked){
 			alert("You have not verified a roster was attached.");
 			document.getElementById("sumcheckRosterAttachedNo").focus();
@@ -6703,16 +6699,17 @@ $(document).ready(function(){
 			document.getElementById("post_balance").focus();
 			return false;
 		}
-		
+
 		if(document.getElementById("AssignedReviewer").val === null || document.getElementById("AssignedReviewer").val === ''){
 			alert("You have not select a Reviewer");
 			document.getElementById("AssignedReviewer").focus();
 			return false;
 		}
-		
+
 		return true;
-		
+
 	}
-		
-</script>  
-@endsection	
+
+</script>
+@endsection
+

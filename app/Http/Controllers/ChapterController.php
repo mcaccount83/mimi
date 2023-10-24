@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ChapersUpdateListAdmin;
+use App\Mail\ChapersUpdatePrimaryCoor;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
 use Kunnu\Dropbox\Dropbox;
@@ -1192,7 +1194,7 @@ class ChapterController extends Controller
                 });
             }
 
-            //Update Chapter Info Email
+            //Update Chapter MailData//
             $presInfoUpd = DB::table('chapters')
                 ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city', 'bd.zip as zip', 'st.state_short_name as state')
                 ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
@@ -1235,7 +1237,7 @@ class ChapterController extends Controller
                 ->where('bd.board_position_id', '=', '5')
                 ->where('chapters.id', $chapterId)
                 ->get();
-            $to_email = $presInfoUpd[0]->cor_email;
+
             $mailDataPres = [
                 'chapterNameUpd' => $presInfoUpd[0]->name,
                 'chapterStateUpd' => $presInfoUpd[0]->state,
@@ -1383,9 +1385,23 @@ class ChapterController extends Controller
                 $mailData = array_merge($mailData, $mailDataSecp);
             }
 
-            Mail::send('emails.chapterupdate', $mailData, function ($message) use ($to_email) {
-                $message->to($to_email, 'MOMS Club')->subject('Database Update Auto-Notification');
-            });
+
+            //Primary Coordinator Notification//
+            $to_email = $presInfoUpd[0]->cor_email;
+
+            Mail::to($to_email, 'MOMS Club')
+                ->send(new ChapersUpdatePrimaryCoor($mailData));
+
+
+             //List Admin Notification//
+             $to_email2 = 'listadmin@momsclub.org';
+
+             if ($presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
+
+                 Mail::to($to_email2, 'MOMS Club')
+                     ->send(new ChapersUpdateListAdmin($mailData));
+             }
+
 
             //website notifications//
             $cor_details = db::table('coordinator_details')
@@ -1436,17 +1452,9 @@ class ChapterController extends Controller
                 }
             }
 
-            //List Admin Notification//
-            $to_email2 = 'listadmin@momsclub.org';
 
-            if ($presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
-
-                Mail::send('emails.listadminchapterupdate', $mailData, function ($message2) use ($to_email2) {
-                    $message2->to($to_email2, 'MOMS Club')->subject('Chapter Update Request');
-                });
-            }
             DB::commit();
-        } catch (\Exception $e) {
+            } catch (\Exception $e) {
             // Rollback Transaction
             echo $e->getMessage();
             exit();
