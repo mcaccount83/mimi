@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -10,9 +11,7 @@ class ChapersUpdateListAdmin extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $mailData; // Create a property to store the mail data
-
-    // Add properties for other variables...
+    public $mailData;
 
     /**
      * Create a new message instance.
@@ -21,7 +20,7 @@ class ChapersUpdateListAdmin extends Mailable
      */
     public function __construct($mailData)
     {
-        $this->mailData = $mailData; // Assign the mail data to the property
+        $this->mailData = $mailData;
     }
 
     /**
@@ -31,6 +30,8 @@ class ChapersUpdateListAdmin extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.chapterupdate.listadmin');
+        return $this
+            ->('Chapter Update ListAdmin Notice'),
+            ->markdown('emails.chapterupdate.listadmin');
     }
 }

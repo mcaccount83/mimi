@@ -7,6 +7,7 @@ use App\Coordinator;
 use App\FinancialReport;
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdatePrimaryCoor;
+use App\Mail\PaymentsReRegChapterThankYou;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -2806,8 +2807,7 @@ class ChapterController extends Controller
             $chapter->last_updated_date = date('Y-m-d H:i:s');
             $chapter->save();
             if ($request->get('ch_notify') == 'on') {
-                $to_email = $boardPresEmail;
-                $cc_email = $primaryCordEmail;
+
                 $mailData = [
                     'chapterName' => $request->get('ch_name'),
                     'chapterState' => $request->get('ch_state'),
@@ -2819,11 +2819,15 @@ class ChapterController extends Controller
                     'cordConf' => $request->get('ch_pc_confid'),
                 ];
 
-                Mail::send('emails.paymentnotification', $mailData, function ($message) use ($to_email, $cc_email) {
-                    $message->to($to_email, 'MIMI')->cc($cc_email)->subject('Thank You for Your Chapters Re-registration Payment');
-                });
+                //Payment Thank You Email//
+                $to_email = $boardPresEmail;
+                $cc_email = $primaryCordEmail;
 
+                Mail::to($to_email, 'MOMS Club')
+                    ->cc($cc_email)
+                    ->send(new PaymentsReRegChapterThankYou($mailData));
             }
+
             DB::commit();
         } catch (\Exception $e) {
             // Rollback Transaction

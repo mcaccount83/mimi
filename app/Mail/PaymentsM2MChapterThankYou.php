@@ -3,23 +3,22 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ChapersUpdatePrimaryCoor extends Mailable
+class PaymentsM2MChapterThankYou extends Mailable
 {
     use Queueable, SerializesModels;
-
-    public $mailData;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($mailData)
+    public function __construct()
     {
-        $this->mailData = $mailData;
+        //
     }
 
     /**
@@ -29,8 +28,6 @@ class ChapersUpdatePrimaryCoor extends Mailable
      */
     public function build()
     {
-        return $this
-            ->subject('Chapter Update Notification'),
-            ->markdown('emails.chapterupdate.primarycoor');
+        return $this->markdown('emails.payments.m2mchapterthankyou');
     }
 }

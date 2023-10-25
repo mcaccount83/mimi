@@ -2138,7 +2138,6 @@ chapter did have Associate Members this year, how many Associate Members did you
                         <textarea class="form-control" rows="2" name="BoughtMerchExplanation" id="BoughtMerchExplanation" readonly>{{ old('bought_merch_explanation', $financial_report_array['bought_merch_explanation']) }}</textarea>
                     </div>
 
-					</div>
 					<div class="col-sm-12 mar_bot15">
 						<p>7. Did you offer or information your members about MOMS Club merchandise?</p>
 						<div class="col-md-4 float-left">
@@ -2161,7 +2160,6 @@ chapter did have Associate Members this year, how many Associate Members did you
 						<label for="OfferedMerchExplanation">If no, briefly explain:</label>
 						<textarea class="form-control" rows="2" name="OfferedMerchExplanation" id="OfferedMerchExplanation" readonly><?php if (!is_null($financial_report_array)) {echo $financial_report_array['offered_merch_explanation'];}?></textarea>
 					</div>
-
 					<div class="col-sm-12 mar_bot15">
 						<p>8. Did you make the Bylaws and/or manual available for any chapter members that requested them?</p>
 						<div class="col-md-4 float-left">
