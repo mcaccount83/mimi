@@ -8,10 +8,10 @@ use App\FinancialReport;
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdatePrimaryCoor;
 use App\Mail\PaymentsM2MChapterThankYou;
-use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Mail\PaymentsReRegChapterThankYou;
-use App\Mail\PaymentsReRegReminder;
 use App\Mail\PaymentsReRegLate;
+use App\Mail\PaymentsReRegReminder;
+use App\Mail\PaymentsSustainingChapterThankYou;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -2879,7 +2879,7 @@ class ChapterController extends Controller
 
         $chapters = Chapter::select('chapters.name as chapter_name', 'state.state_short_name as chapter_state', 'board_details.email as bor_email',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
-            'board_details.board_position_id' )
+            'board_details.board_position_id')
             ->join('state', 'chapters.state', '=', 'state.id')
             ->join('board_details', 'chapters.id', '=', 'board_details.chapter_id')
             ->whereIn('board_details.board_position_id', [1, 2, 3, 4, 5])
@@ -2905,7 +2905,7 @@ class ChapterController extends Controller
                     $cc_email1 = $this->getCCMail($chapter->pcid);
                     $cc_email1 = array_filter($cc_email1);
 
-                    if (!empty($cc_email1)) {
+                    if (! empty($cc_email1)) {
                         $coordinatorEmails[$chapter->chapter_name] = $cc_email1; // Store coordinator emails by chapter
                     }
                 }
@@ -2916,48 +2916,47 @@ class ChapterController extends Controller
                 }
             }
         }
-            foreach ($chapterEmails as $chapterName => $emailRecipients) {
-                $mailData = [
-                    'chapterName' => $chapterName,
-                    'chapterState' => $sharedChapterState,
-                    'lastYearDate' => $lastYearDateFormatted,
-                    'startMonth' => $monthInWords,
-                    'reRegDate' => $startDateFormatted,
-                    'dueDate' => $dueDateFormatted,
-                ];
+        foreach ($chapterEmails as $chapterName => $emailRecipients) {
+            $mailData = [
+                'chapterName' => $chapterName,
+                'chapterState' => $sharedChapterState,
+                'lastYearDate' => $lastYearDateFormatted,
+                'startMonth' => $monthInWords,
+                'reRegDate' => $startDateFormatted,
+                'dueDate' => $dueDateFormatted,
+            ];
 
-                $cc_email = $coordinatorEmails[$chapterName] ?? []; // Get coordinator emails for this chapter
+            $cc_email = $coordinatorEmails[$chapterName] ?? []; // Get coordinator emails for this chapter
 
-                // Check if chapterChEmails exists before adding it to the email recipients array
-                if (isset($chapterChEmails[$chapterName])) {
-                    $emailRecipients[] = $chapterChEmails[$chapterName];
-                }
-
-                // Re-Registration Reminder Email for this chapter
-                if (!empty($emailRecipients)) {
-                    Mail::to($emailRecipients)
-                        ->cc($cc_email)
-                        ->send(new PaymentsReRegReminder($mailData));
-                }
+            // Check if chapterChEmails exists before adding it to the email recipients array
+            if (isset($chapterChEmails[$chapterName])) {
+                $emailRecipients[] = $chapterChEmails[$chapterName];
             }
 
-            try {
-                DB::commit();
-            } catch (\Exception $e) {
-                // Rollback Transaction
-                echo $e->getMessage();
-                exit();
-
-                // Log the error
-                Log::error($e);
-
-                return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+            // Re-Registration Reminder Email for this chapter
+            if (! empty($emailRecipients)) {
+                Mail::to($emailRecipients)
+                    ->cc($cc_email)
+                    ->send(new PaymentsReRegReminder($mailData));
             }
+        }
 
-            return redirect('/chapter/re-registration')->with('success', 'Re-Registration Reminders have been successfully sent.');
+        try {
+            DB::commit();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            echo $e->getMessage();
+            exit();
+
+            // Log the error
+            Log::error($e);
+
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        }
+
+        return redirect('/chapter/re-registration')->with('success', 'Re-Registration Reminders have been successfully sent.');
 
     }
-
 
     public function lateReRegistration()
     {
@@ -2968,7 +2967,7 @@ class ChapterController extends Controller
 
         $month = date('m');
         $year = date('Y');
-        $startMonth = $month -1;
+        $startMonth = $month - 1;
         $lastMonth = $month - 2;
         $lastYear = $year - 1;
 
@@ -2984,20 +2983,18 @@ class ChapterController extends Controller
         $startMonthInWords = strftime('%B', strtotime("2000-$startMonth-01"));
         $dueMonthInWords = strftime('%B', strtotime("2000-$month-01"));
 
-
         // Format dates as "mm-dd-yyyy"
         $startDateFormatted = date('m-d-Y', strtotime($startDate));
         $lastYearDateFormatted = date('m-d-Y', strtotime($lastYearDate));
 
-
         $chapters = Chapter::select('chapters.name as chapter_name', 'state.state_short_name as chapter_state', 'board_details.email as bor_email',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
-            'board_details.board_position_id' )
+            'board_details.board_position_id')
             ->join('state', 'chapters.state', '=', 'state.id')
             ->join('board_details', 'chapters.id', '=', 'board_details.chapter_id')
             ->whereIn('board_details.board_position_id', [1, 2, 3, 4, 5])
             ->where('chapters.conference', $corConfId)
-            ->where('chapters.start_month_id', $month-1)
+            ->where('chapters.start_month_id', $month - 1)
             ->where('chapters.next_renewal_year', $year)
             ->where('chapters.is_active', 1)
             ->get();
@@ -3018,7 +3015,7 @@ class ChapterController extends Controller
                     $cc_email1 = $this->getCCMail($chapter->pcid);
                     $cc_email1 = array_filter($cc_email1);
 
-                    if (!empty($cc_email1)) {
+                    if (! empty($cc_email1)) {
                         $coordinatorEmails[$chapter->chapter_name] = $cc_email1; // Store coordinator emails by chapter
                     }
                 }
@@ -3030,48 +3027,47 @@ class ChapterController extends Controller
             }
         }
 
-            foreach ($chapterEmails as $chapterName => $emailRecipients) {
-                $mailData = [
-                    'chapterName' => $chapterName,
-                    'chapterState' => $sharedChapterState,
-                    'lastYearDate' => $lastYearDateFormatted,
-                    'reRegDate' => $startDateFormatted,
-                    'startMonth' => $startMonthInWords,
-                    'dueMonth' => $dueMonthInWords,
-                ];
+        foreach ($chapterEmails as $chapterName => $emailRecipients) {
+            $mailData = [
+                'chapterName' => $chapterName,
+                'chapterState' => $sharedChapterState,
+                'lastYearDate' => $lastYearDateFormatted,
+                'reRegDate' => $startDateFormatted,
+                'startMonth' => $startMonthInWords,
+                'dueMonth' => $dueMonthInWords,
+            ];
 
-                $cc_email = $coordinatorEmails[$chapterName] ?? []; // Get coordinator emails for this chapter
+            $cc_email = $coordinatorEmails[$chapterName] ?? []; // Get coordinator emails for this chapter
 
-                // Check if chapterChEmails exists before adding it to the email recipients array
-                if (isset($chapterChEmails[$chapterName])) {
-                    $emailRecipients[] = $chapterChEmails[$chapterName];
-                }
-
-                // Re-Registration Reminder Email for this chapter
-                if (!empty($emailRecipients)) {
-                    Mail::to($emailRecipients)
-                        ->cc($cc_email)
-                        ->send(new PaymentsReRegLate($mailData));
-                }
+            // Check if chapterChEmails exists before adding it to the email recipients array
+            if (isset($chapterChEmails[$chapterName])) {
+                $emailRecipients[] = $chapterChEmails[$chapterName];
             }
 
-            try {
-                DB::commit();
-            } catch (\Exception $e) {
-                // Rollback Transaction
-                echo $e->getMessage();
-                exit();
-
-                // Log the error
-                Log::error($e);
-
-                return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+            // Re-Registration Reminder Email for this chapter
+            if (! empty($emailRecipients)) {
+                Mail::to($emailRecipients)
+                    ->cc($cc_email)
+                    ->send(new PaymentsReRegLate($mailData));
             }
+        }
 
-            return redirect('/chapter/re-registration')->with('success', 'Re-Registration Late Notices have been successfully sent.');
+        try {
+            DB::commit();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            echo $e->getMessage();
+            exit();
+
+            // Log the error
+            Log::error($e);
+
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        }
+
+        return redirect('/chapter/re-registration')->with('success', 'Re-Registration Late Notices have been successfully sent.');
 
     }
-
 
     public function getCCMail($pcid)
     {
