@@ -1,12 +1,13 @@
 @component('mail::message')
-# Introduction
+# MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}
 
-The body of your message.
+Thank you for your group’s Sustaining Chapter donation of ${{$mailData['chapterTotal']}}!
 
-@component('mail::button', ['url' => ''])
-Button Text
-@endcomponent
+Sustaining donations such as your chapter’s make it possible for us to extend the MOMS Club opportunity to more and more mothers, as well as maintain our high quality of support for the MOMS Club chapters, not just in your local area, but across the country and around the world.
 
-Thanks,<br>
-{{ config('app.name') }}
+Your chapter’s support of the International MOMS Club is both generous and most appreciated!
+
+**MCL,**
+International MOMS Club
+<br>
 @endcomponent

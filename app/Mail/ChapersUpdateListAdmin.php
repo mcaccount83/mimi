@@ -31,7 +31,7 @@ class ChapersUpdateListAdmin extends Mailable
     public function build()
     {
         return $this
-            ->('Chapter Update ListAdmin Notice'),
+            ->subject('Chapter Update ListAdmin Notice')
             ->markdown('emails.chapterupdate.listadmin');
     }
 }

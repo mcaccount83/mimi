@@ -85,7 +85,7 @@ Route::get('/chapter/boundaryview/{id}', 'ChapterController@boundaryview')->name
 Route::post('/chapter/updateboundary/{id}', 'ChapterController@updateBoundary')->name('chapter.updateboundary');
 Route::get('/chapter/awardsview/{id}', 'ChapterController@awardsView')->name('chapter.awardsview');
 Route::post('/chapter/updateawards/{id}', 'ChapterController@updateAwards')->name('chapter.updateawards');
-Route::get('/chapter/re-registration/remainder', 'ChapterController@reminderReRegistration')->name('chapter.remainder');
+Route::get('/chapter/re-registration/reminder', 'ChapterController@reminderReRegistration')->name('chapter.reminder');
 Route::get('/chapter/re-registration/latereminder', 'ChapterController@lateReRegistration')->name('chapter.latereminder');
 Route::get('/chapter/statusview/{id}', 'ChapterController@statusView')->name('chapter.statusview');
 Route::post('/chapter/updatestatus/{id}', 'ChapterController@updateStatus')->name('chapter.updatestatus');

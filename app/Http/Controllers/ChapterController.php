@@ -8,6 +8,8 @@ use App\FinancialReport;
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdatePrimaryCoor;
 use App\Mail\PaymentsReRegChapterThankYou;
+use App\Mail\PaymentsReRegReminder;
+use App\Mail\PaymentsReRegLate;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -2848,121 +2850,110 @@ class ChapterController extends Controller
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
-        //load current re-reg reminder list
+
         $month = date('m');
         $year = date('Y');
-        $chapter_array = DB::select(DB::raw("SELECT chapters.name as chapter_name, state.state_short_name as chapter_state, board_details.email as pre_email, chapters.primary_coordinator_id as pcid, chapters.email as ch_email
-                FROM chapters
-                INNER JOIN state
-                ON chapters.state=state.id
-                INNER JOIN board_details
-                ON chapters.id=board_details.chapter_id
-                WHERE board_details.board_position_id=1
-                AND chapters.conference = $corConfId
-                AND chapters.start_month_id=$month AND chapters.next_renewal_year=$year
-                AND chapters.is_active=1"));
+        $lastMonth = $month - 1;
+        $lastYear = $year - 1;
 
-        //dd($chapter_array[pre_email]);
-        //exit;
-        $rowcount = count($chapter_array);
-        //$rowcount = 1;
-        for ($row = 0; $row < $rowcount; $row++) {
-            //Get the list of everyone this goes to
-            $to_email = [$chapter_array[$row]->pre_email, $chapter_array[$row]->ch_email];
-            //dd($chapter_array[$row]->ch_email);
-            //exit;
-            if ($to_email[0] == '' && $to_email[1] != '') {
-                unset($to_email[0]);
-            } elseif ($to_email[0] != '' && $to_email[1] == '') {
-                unset($to_email[1]);
-            }
+        if ($month == 1) {
+            $lastMonth = 12;
+            $lastYear = $year - 1;
+        }
 
-            $cc_email1 = $this->getCCMail($chapter_array[$row]->pcid);
-            foreach ($cc_email1 as $key => $value) {
-                if (! isset($cc_email1[$key]) && $cc_email1[$key] == '') {
-                    unset($cc_email1[$key]);
+        $startDate = \Carbon\Carbon::create($year, $month, 30);
+        $lastYearDate = \Carbon\Carbon::create($lastYear, $lastMonth, 1);
+        $dueDate = \Carbon\Carbon::create($year, $lastMonth, 10);
+
+        // Convert $month to words
+        $monthInWords = strftime('%B', strtotime("2000-$month-01"));
+
+        // Format dates as "mm-dd-yyyy"
+        $startDateFormatted = date('m-d-Y', strtotime($startDate));
+        $lastYearDateFormatted = date('m-d-Y', strtotime($lastYearDate));
+        $dueDateFormatted = date('m-d-Y', strtotime($dueDate));
+
+        $chapters = Chapter::select('chapters.name as chapter_name', 'state.state_short_name as chapter_state', 'board_details.email as bor_email',
+            'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
+            'board_details.board_position_id' )
+            ->join('state', 'chapters.state', '=', 'state.id')
+            ->join('board_details', 'chapters.id', '=', 'board_details.chapter_id')
+            ->whereIn('board_details.board_position_id', [1, 2, 3, 4, 5])
+            ->where('chapters.conference', $corConfId)
+            ->where('chapters.start_month_id', $month)
+            ->where('chapters.next_renewal_year', $year)
+            ->where('chapters.is_active', 1)
+            ->get();
+
+        $cc_email = [];
+        $chapterEmails = []; // Store email addresses for each chapter
+        $coordinatorEmails = []; // Store coordinator email addresses by chapter
+        $chapterChEmails = []; // Store ch_email addresses by chapter
+        $firstChapter = $chapters->first(); // Get the first chapter to fetch the shared data
+
+        if ($firstChapter) {
+            $sharedChapterState = $firstChapter->chapter_state;
+
+            foreach ($chapters as $chapter) {
+                if ($chapter->bor_email) {
+                    $chapterEmails[$chapter->chapter_name][] = $chapter->bor_email; // Store emails by chapter name
+
+                    $cc_email1 = $this->getCCMail($chapter->pcid);
+                    $cc_email1 = array_filter($cc_email1);
+
+                    if (!empty($cc_email1)) {
+                        $coordinatorEmails[$chapter->chapter_name] = $cc_email1; // Store coordinator emails by chapter
+                    }
+                }
+
+                // Check if ch_email is not null before adding it to the chapterChEmails array
+                if ($chapter->ch_email) {
+                    $chapterChEmails[$chapter->chapter_name] = $chapter->ch_email;
                 }
             }
-            //print_r($cc_email1);
-            //die();
-            $cc_email2 = DB::table('coordinator_details as cd')
-                ->select('cd.email as cord_email')
-                ->where('cd.is_active', '=', 1)
-                ->where('cd.position_id', '=', 10)
-                ->orWhere('cd.sec_position_id', '=', 10)
-                ->where('cd.conference_id', '=', $corConfId)
-                ->get();
-            $email_count = count($cc_email2);
-            if ($email_count > 0) {
-                for ($i = 0; $i < $email_count; $i++) {
-                    $cc_email_tmp[] = $cc_email2[$i]->cord_email;
+        }
+            foreach ($chapterEmails as $chapterName => $emailRecipients) {
+                $mailData = [
+                    'chapterName' => $chapterName,
+                    'chapterState' => $sharedChapterState,
+                    'lastYearDate' => $lastYearDateFormatted,
+                    'startMonth' => $monthInWords,
+                    'reRegDate' => $startDateFormatted,
+                    'dueDate' => $dueDateFormatted,
+                ];
+
+                $cc_email = $coordinatorEmails[$chapterName] ?? []; // Get coordinator emails for this chapter
+
+                // Check if chapterChEmails exists before adding it to the email recipients array
+                if (isset($chapterChEmails[$chapterName])) {
+                    $emailRecipients[] = $chapterChEmails[$chapterName];
                 }
-                $cc_email = array_merge($cc_email1, $cc_email_tmp);
-            } else {
-                $cc_email = $cc_email1;
-            }
-            $mail_message = '<p>Your chapter has celebrated another year of offering support to the at-home mothers in your area!</p>';
-            $mail_message .= '<p>This is the reminder that '.date('F').' '.date('Y')." is your chapter's anniversary with the International MOMS Club and it is time to pay the chapter's re-registration fee, if you haven't done so already. </p>";
 
-            $mail_message .= '<h2><p>To calculate your payment:</p></h2>';
-            $mail_message .= '<ul><li>Determine how many people paid dues to your chapter from <b><u>'.date('F').' 1, '.(date('Y') - 1).'</u></b> through ';
-            // Let's figure out the correct month/year combo to use here
-            if (date('m') == 1) {
-                $last_month = 12;
-                $year = date('Y') - 1;
-            } else {
-                $last_month = date('m') - 1;
-                $year = date('Y');
+                // Re-Registration Reminder Email for this chapter
+                if (!empty($emailRecipients)) {
+                    Mail::to($emailRecipients)
+                        ->cc($cc_email)
+                        ->send(new PaymentsReRegReminder($mailData));
+                }
             }
 
-            $month_name = date('F', mktime(0, 0, 0, $last_month, 10));
-            $last_day_of_month = cal_days_in_month(CAL_GREGORIAN, $last_month, date('Y'));
-
-            $mail_message .= '<b><u>'.$month_name.' '.$last_day_of_month.', '.$year.'</u></b></li>';
-            $mail_message .= '<li>Add in any people who paid reduced dues or had their dues waived due to financial hardship</li>';
-            $mail_message .= '<li>If this total amount of members is less than 10, make your check for the amount of $50</li>';
-            $mail_message .= '<li>If this total amount of members is 10 or more, multiply the number by $5.00 to get your total amount due</li>';
-            $mail_message .= '<li>Payments received after the last day of <b>'.date('F').' '.date('Y')."</b> should include a late fee of $10</li></ul>\n";
-
-            $reregistration_url = 'https://momsclub.org/resources/re-registration-payment/';
-            $mail_message .= "<h2><p>You can pay online by clicking here:  <a href='$reregistration_url'>MOMS Club Re-Registration</a></p></h2>";
-            $mail_message .= "<li>Password:  daytime support</li></ul>\n\n";
-
-            $mail_message .= '<h2><p>OR To pay by mail:</p></h2>';
-            $mail_message .= '<p>Be sure your full chapter name, including state abbreviation, is on your check so that the re-registration can be credited properly.</p>';
-            $mail_message .= '<ul><li>Make check payable to MOMS Club</li>';
-            $mail_message .= '<li>Please write "Chapter Re-Registration" in the Memo field of your check</li>';
-            $mail_message .= '<li>As requested with all chapter checks, be sure two Executive Board members sign the check</li>';
-            $mail_message .= '<li>Print this page, fill out the box below and mail the page, along with the re-registration, check to:</li></ul>';
-            $mail_message .= '<p><center>International MOMS Club&reg;<br>';
-            $mail_message .= 'Chapter Re-Registration<br>';
-            $mail_message .= '208 Hewitt Dr., Ste 103 #328<br>';
-            $mail_message .= "Waco, TX 76712</center></p>\n\n";
-
-            $mail_message .= '<table border="1"><tr style="border-bottom:2pt solid black";><td><h1>MOMS Club of '.$chapter_array[$row]->chapter_name.', '.$chapter_array[$row]->chapter_state."</h1>\n";
-            $mail_message .= '<h2>Anniversary Month: '.date('F').' '.date('Y').'</h2></td></tr>';
-            $mail_message .= '<tr><td><p>________ Re-Registration Dues enclosed:   for _______ members</p>';
-            $mail_message .= '<p>________ Late fee included</p>';
-            $mail_message .= "<p>________ Sustaining Chapter:   (Sustaining chapter donations are voluntary and in addition to your chapter's re-registration dues.  At this time, the minimum sustaining chapter donation is $100.  The donation benefits the International MOMS Club, which is a 501 (c)(3) public charity.  Your support to the MOMS Club is a service project for your chapter and should be included in its own line on your chapter's Annual and Financial Reports.  Your donation will help us keep dues low and help new and existing chapters in the U.S. and around the world.)</p></td></tr></table>";
-
-            $mail_message .= "\n\n<p><b>Thank you</b> for your prompt renewal payment and sustaining donation! If you have any questions, please do not hesitate to contact your chapter's Primary Coordinator.</p>";
-
-            $mail_subject = 'MOMS Club Chapter Re-Registration Reminder - '.$chapter_array[$row]->chapter_name.', '.$chapter_array[$row]->chapter_state.' - '.date('F').' '.date('Y');
-
-            $mailData = ['content' => $mail_message];
             try {
-                Mail::send('emails.paymentremainder', $mailData, function ($message) use ($to_email, $cc_email, $mail_subject) {
-                    $message->to($to_email, 'MIMI')->cc($cc_email)->subject($mail_subject);
-                });
+                DB::commit();
             } catch (\Exception $e) {
+                // Rollback Transaction
+                echo $e->getMessage();
+                exit();
+
+                // Log the error
+                Log::error($e);
+
                 return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
             }
 
-        }
-
-        return redirect('/chapter/re-registration')->with('success', 'Re-Registration Reminders have been successfully sent.');
+            return redirect('/chapter/re-registration')->with('success', 'Re-Registration Reminders have been successfully sent.');
 
     }
+
 
     public function lateReRegistration()
     {
@@ -2970,142 +2961,113 @@ class ChapterController extends Controller
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
-        //load current re-reg reminder list
-        $month = date('m') - 1;
+
+        $month = date('m');
         $year = date('Y');
-        $chapter_array = DB::select(DB::raw("SELECT chapters.id as id, chapters.name as chapter_name, state.state_short_name as chapter_state, board_details.email as pre_email, chapters.primary_coordinator_id as pcid, chapters.email as ch_email
-                FROM chapters
-                INNER JOIN state
-                ON chapters.state=state.id
-                INNER JOIN board_details
-                ON chapters.id=board_details.chapter_id
-                WHERE board_details.board_position_id=1
-                AND chapters.conference = $corConfId
-                AND chapters.start_month_id=$month AND chapters.next_renewal_year=$year
-                AND chapters.is_active=1"));
+        $startMonth = $month -1;
+        $lastMonth = $month - 2;
+        $lastYear = $year - 1;
 
-        //dd($chapter_array[pre_email]);
-        //exit;
-        $rowcount = count($chapter_array);
-        //$rowcount = 1;
-        for ($row = 0; $row < $rowcount; $row++) {
-            //Get the list of everyone this goes to
-            $to_email = [$chapter_array[$row]->pre_email, $chapter_array[$row]->ch_email];
-            //dd($chapter_array[$row]->ch_email);
-            //exit;
-            if ($to_email[0] == '' && $to_email[1] != '') {
-                unset($to_email[0]);
-            } elseif ($to_email[0] != '' && $to_email[1] == '') {
-                unset($to_email[1]);
+        if ($month == 1) {
+            $lastMonth = 12;
+            $lastYear = $year - 1;
+        }
+
+        $startDate = \Carbon\Carbon::create($year, $startMonth, 30);
+        $lastYearDate = \Carbon\Carbon::create($lastYear, $lastMonth, 1);
+
+        // Convert $month to words
+        $startMonthInWords = strftime('%B', strtotime("2000-$startMonth-01"));
+        $dueMonthInWords = strftime('%B', strtotime("2000-$month-01"));
+
+
+        // Format dates as "mm-dd-yyyy"
+        $startDateFormatted = date('m-d-Y', strtotime($startDate));
+        $lastYearDateFormatted = date('m-d-Y', strtotime($lastYearDate));
+
+
+        $chapters = Chapter::select('chapters.name as chapter_name', 'state.state_short_name as chapter_state', 'board_details.email as bor_email',
+            'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
+            'board_details.board_position_id' )
+            ->join('state', 'chapters.state', '=', 'state.id')
+            ->join('board_details', 'chapters.id', '=', 'board_details.chapter_id')
+            ->whereIn('board_details.board_position_id', [1, 2, 3, 4, 5])
+            ->where('chapters.conference', $corConfId)
+            ->where('chapters.start_month_id', $month-1)
+            ->where('chapters.next_renewal_year', $year)
+            ->where('chapters.is_active', 1)
+            ->get();
+
+        $cc_email = [];
+        $chapterEmails = []; // Store email addresses for each chapter
+        $coordinatorEmails = []; // Store coordinator email addresses by chapter
+        $chapterChEmails = []; // Store ch_email addresses by chapter
+        $firstChapter = $chapters->first(); // Get the first chapter to fetch the shared data
+
+        if ($firstChapter) {
+            $sharedChapterState = $firstChapter->chapter_state;
+
+            foreach ($chapters as $chapter) {
+                if ($chapter->bor_email) {
+                    $chapterEmails[$chapter->chapter_name][] = $chapter->bor_email; // Store emails by chapter name
+
+                    $cc_email1 = $this->getCCMail($chapter->pcid);
+                    $cc_email1 = array_filter($cc_email1);
+
+                    if (!empty($cc_email1)) {
+                        $coordinatorEmails[$chapter->chapter_name] = $cc_email1; // Store coordinator emails by chapter
+                    }
+                }
+
+                // Check if ch_email is not null before adding it to the chapterChEmails array
+                if ($chapter->ch_email) {
+                    $chapterChEmails[$chapter->chapter_name] = $chapter->ch_email;
+                }
             }
+        }
 
-            $cc_email1 = $this->getCCMail($chapter_array[$row]->pcid);
-            foreach ($cc_email1 as $key => $value) {
-                if (! isset($cc_email1[$key]) && $cc_email1[$key] == '') {
-                    unset($cc_email1[$key]);
+            foreach ($chapterEmails as $chapterName => $emailRecipients) {
+                $mailData = [
+                    'chapterName' => $chapterName,
+                    'chapterState' => $sharedChapterState,
+                    'lastYearDate' => $lastYearDateFormatted,
+                    'reRegDate' => $startDateFormatted,
+                    'startMonth' => $startMonthInWords,
+                    'dueMonth' => $dueMonthInWords,
+                ];
+
+                $cc_email = $coordinatorEmails[$chapterName] ?? []; // Get coordinator emails for this chapter
+
+                // Check if chapterChEmails exists before adding it to the email recipients array
+                if (isset($chapterChEmails[$chapterName])) {
+                    $emailRecipients[] = $chapterChEmails[$chapterName];
+                }
+
+                // Re-Registration Reminder Email for this chapter
+                if (!empty($emailRecipients)) {
+                    Mail::to($emailRecipients)
+                        ->cc($cc_email)
+                        ->send(new PaymentsReRegLate($mailData));
                 }
             }
 
-            $cc_email2 = DB::table('coordinator_details as cd')
-                ->select('cd.email as cord_email')
-                ->where('cd.is_active', '=', 1)
-                ->where('cd.position_id', '=', 10)
-                ->orWhere('cd.sec_position_id', '=', 10)
-                ->where('cd.conference_id', '=', $corConfId)
-                ->get();
-            $email_count = count($cc_email2);
-            if ($email_count > 0) {
-                for ($i = 0; $i < $email_count; $i++) {
-                    $cc_email_tmp[] = $cc_email2[$i]->cord_email;
-                }
-
-                $cc_email = array_merge($cc_email1, $cc_email_tmp);
-            } else {
-                $cc_email = $cc_email1;
-            }
-
-            $current_month = date('m') - 1;
-            $current_month_name = date('F', mktime(0, 0, 0, $current_month, 10));
-            $month = date('m');
-            $month_name = date('F', mktime(0, 0, 0, $month, 10));
-
-            $mail_message = '<p>As of today we have not received your chapter’s re-registration fee. All re-registration fees are due annually on the month of your MOMS Club anniversary. Below is information for how to calculate your payment as well as the different options available to submit payment.</p>';
-            $mail_message .= '<p>If you’ve already submitted your payment, please let us know. Sometimes clerical errors are made and payments do not get applied correctly.</p>';
-            $mail_message .= '<ul><li>If you paid online, please forward the receipt you received via email.</li>';
-            $mail_message .= '<li>If you paid via check, please send a copy of your cleared check.</li>';
-            $mail_message .= '<li>If you paid via check, and it has not cleared yet, please provide us with an approximate mailing date.</li>';
-            $mail_message .= '<li>If there was an error, we’ll be sure to get it corrected as quickly as possible.</li>';
-            $mail_message .= '<li>If you have not submitted your payment, please follow the instructions below and include a $10 late fee when submitting.</li></ul>';
-            $mail_message .= '<p>If payment is not recevied by the last day of <b>'.$month_name.' '.date('Y').'</b> your chapter will be placed on probation.</p>';
-            $mail_message .= '<p>If you have any questions at all, do not hesitate to ask.</p>';
-            $mail_message .= '<p><strong>MCL</strong>,';
-            $mail_message .= 'MIMI Database Administrator</p>';
-            $mail_message .= '<br>';
-            $mail_message .= '<hr>';
-
-            $mail_message .= '<h2><p>To calculate your payment:</p></h2>';
-            $mail_message .= '<ul><li>Determine how many people paid dues to your chapter from <b><u>'.$current_month_name.' 1, '.(date('Y') - 1).'</u></b> through ';
-            // Let's figure out the correct month/year combo to use here
-            if (date('m') == 1) {
-                $last_month = 11;
-                $year = date('Y') - 1;
-            } elseif (date('m') == 2) {
-                $last_month = 12;
-                $year = date('Y') - 1;
-            } else {
-                $last_month = date('m') - 2;
-                $year = date('Y');
-            }
-
-            $month_name = date('F', mktime(0, 0, 0, $last_month, 10));
-            $last_day_of_month = cal_days_in_month(CAL_GREGORIAN, $last_month, date('Y'));
-
-            $mail_message .= '<b><u>'.$month_name.' '.$last_day_of_month.', '.$year.'</u></b></li>';
-            $mail_message .= '<li>Add in any people who paid reduced dues or had their dues waived due to financial hardship</li>';
-            $mail_message .= '<li>If this total amount of members is less than 10, make your check for the amount of $50</li>';
-            $mail_message .= '<li>If this total amount of members is 10 or more, multiply the number by $5.00 to get your total amount due</li>';
-            $mail_message .= '<li>Payments received after the last day of <b>'.$current_month_name.' '.date('Y')."</b> should include a late fee of $10</li></ul>\n";
-
-            $reregistration_url = 'https://momsclub.org/resources/re-registration-payment/';
-            $mail_message .= '<h2><p>You can pay online by clicking here:';
-            $mail_message .= "<center><a href='$reregistration_url'>MOMS Club Re-Registration</a></center></h2>";
-            $mail_message .= "<center>Password:  daytime support</center></p>\n\n";
-
-            $mail_message .= '<h2><p>OR To pay by mail:</p></h2>';
-            $mail_message .= '<p>Be sure your full chapter name, including state abbreviation, is on your check so that the re-registration can be credited properly.</p>';
-            $mail_message .= '<ul><li>Make check payable to MOMS Club</li>';
-            $mail_message .= '<li>Please write "Chapter Re-Registration" in the Memo field of your check</li>';
-            $mail_message .= '<li>As requested with all chapter checks, be sure two Executive Board members sign the check</li>';
-            $mail_message .= '<li>Print this page, fill out the box below and mail the page, along with the re-registration, check to:</li></ul>';
-            $mail_message .= '<p><center>International MOMS Club&reg;<br>';
-            $mail_message .= 'Chapter Re-Registration<br>';
-            $mail_message .= '208 Hewitt Dr., Ste 103 #328<br>';
-            $mail_message .= "Waco, TX 76712</center></p>\n\n";
-
-            $mail_message .= '<table border="1"><tr style="border-bottom:2pt solid black";><td><h1>MOMS Club of '.$chapter_array[$row]->chapter_name.', '.$chapter_array[$row]->chapter_state."</h1>\n";
-            $mail_message .= '<h2>Anniversary Month: '.$current_month_name.' '.date('Y').'</h2></td></tr>';
-            $mail_message .= '<tr><td><p>________ Re-Registration Dues enclosed:   for _______ members</p>';
-            $mail_message .= '<p>________ Late fee included</p>';
-            $mail_message .= "<p>________ Sustaining Chapter:   (Sustaining chapter donations are voluntary and in addition to your chapter's re-registration dues.  At this time, the minimum sustaining chapter donation is $100.  The donation benefits the International MOMS Club, which is a 501 (c)(3) public charity.  Your support to the MOMS Club is a service project for your chapter and should be included in its own line on your chapter's Annual and Financial Reports.  Your donation will help us keep dues low and help new and existing chapters in the U.S. and around the world.)</p></td></tr></table>";
-
-            $mail_message .= "\n\n<p><b>Thank you</b> for your prompt renewal payment and sustaining donation! If you have any questions, please do not hesitate to contact your chapter's Primary Coordinator.</p>";
-
-            $mail_subject = 'MOMS Club Chapter Re-Registration Late Notice - '.$chapter_array[$row]->chapter_name.', '.$chapter_array[$row]->chapter_state.' - '.$current_month_name.' '.date('Y');
-
-            $mailData = ['content' => $mail_message];
             try {
-                Mail::send('emails.latereminder', $mailData, function ($message) use ($to_email, $cc_email, $mail_subject) {
-                    $message->to($to_email, 'MIMI')->cc($cc_email)->subject($mail_subject);
-                });
+                DB::commit();
             } catch (\Exception $e) {
+                // Rollback Transaction
+                echo $e->getMessage();
+                exit();
+
+                // Log the error
+                Log::error($e);
+
                 return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
             }
 
-        }
-
-        return redirect('/chapter/re-registration')->with('success', 'Re-Registration Late Notices have been successfully sent.');
+            return redirect('/chapter/re-registration')->with('success', 'Re-Registration Late Notices have been successfully sent.');
 
     }
+
 
     public function getCCMail($pcid)
     {

@@ -5,11 +5,9 @@ Your chapter's annual re-registration payment for {{$mailData['chapterMembers']}
 
 Thank you for sending it in!
 
-You can view/upate your chpater's details at any time by logging into MIMI at https://momsclub.org/mimi.
+You can view/update your chpater details at any time by logging into MIMI at https://momsclub.org/mimi.
 
-**MCL,**
+**MCL,**<br>
 MIMI Database Administrator
-
-
-
+<br>
 @endcomponent

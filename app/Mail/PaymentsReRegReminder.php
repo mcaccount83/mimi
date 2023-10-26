@@ -3,10 +3,11 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ChapersUpdatePrimaryCoor extends Mailable
+class PaymentsReRegReminder extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -22,6 +23,7 @@ class ChapersUpdatePrimaryCoor extends Mailable
         $this->mailData = $mailData;
     }
 
+
     /**
      * Build the message.
      *
@@ -30,7 +32,8 @@ class ChapersUpdatePrimaryCoor extends Mailable
     public function build()
     {
         return $this
-            ->subject('Chapter Update Notification')
-            ->markdown('emails.chapterupdate.primarycoor');
+            ->subject('Re-Registration Payment Reminder')
+            ->markdown('emails.payments.reregreminder')
+            ->with('mailData', $this->mailData);
     }
 }

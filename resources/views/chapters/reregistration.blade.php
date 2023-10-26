@@ -9,13 +9,13 @@
 </style>
 @if ($message = Session::get('success'))
       <div class="alert alert-success">
-		<button type="button" class="close" data-dismiss="alert">×</button>	
+		<button type="button" class="close" data-dismiss="alert">×</button>
          <p>{{ $message }}</p>
       </div>
     @endif
 	 @if ($message = Session::get('fail'))
       <div class="alert alert-danger">
-		<button type="button" class="close" data-dismiss="alert">×</button>	
+		<button type="button" class="close" data-dismiss="alert">×</button>
          <p>{{ $message }}</p>
       </div>
     @endif
@@ -30,7 +30,7 @@
       </ol>
     </section>
     <!-- Main content -->
-	
+
     <section class="content">
       <div class="row">
 		<div class="col-md-12">
@@ -43,11 +43,11 @@
               </div>
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
-			
+
               <table id="chapterlist_reReg" class="table table-bordered table-hover">
-              <thead> 
+              <thead>
       			    <tr>
           			<th>Payment</th>
           			<th>Notes</th>
@@ -65,7 +65,7 @@
                 $chapterEmailList = DB::table('board_details as bd')
                                           ->select('bd.email as bor_email')
                                           ->where('bd.chapter_id', '=', $list->id)
-                                          ->get();  
+                                          ->get();
                       $emailListCord="";
                       foreach($chapterEmailList as $val){
                         $email = $val->bor_email;
@@ -75,8 +75,8 @@
                         }
                         else{
                             $emailListCord .= ";" . $escaped_email;
-                        } 
-                      } 
+                        }
+                      }
                       $cc_string="";
                      //var_dump($list);die;
                       $reportingList = DB::table('coordinator_reporting_tree')
@@ -86,7 +86,7 @@
                             foreach($reportingList as $key => $value)
                             {
                                 $reportingList[$key] = (array) $value;
-                            }   
+                            }
                             $filterReportingList = array_filter($reportingList[0]);
                             unset($filterReportingList['id']);
                             unset($filterReportingList['layer0']);
@@ -96,7 +96,7 @@
                             $down_line_email="";
                             foreach($filterReportingList as $key =>$val){
                                 //if($corId != $val && $val >1){
-								if($val >1){	
+								if($val >1){
                                     $corList = DB::table('coordinator_details as cd')
                                                     ->select('cd.email as cord_email')
                                                     ->where('cd.coordinator_id', '=', $val)
@@ -110,13 +110,13 @@
                                     if(isset($corList[0]))
                                       $down_line_email .= ";" . $corList[0]->cord_email;
                                   }
-                                   
-                                }    
+
+                                }
                             }
                             $cc_string = "?cc=" . $down_line_email;
                            // var_dump($list);die;
-                           
-                    $reregistration_url = "https://momsclub.org/resources/re-registration-payment/"; 
+
+                    $reregistration_url = "https://momsclub.org/resources/re-registration-payment/";
 
 	                $mail_message = "<br><hr>
                     <b><p>Calculate your payment:</p></b>
@@ -147,12 +147,12 @@
 						<td <?php
 							$due = $list->month_short_name . " " . $list->next_renewal_year;
 							$overdue = (date("Y") * 12 + date("m")) - ($list->next_renewal_year * 12 + $list->start_month_id);
-							if($overdue > 1) 
-								echo " bgcolor=\"#FF0000\" font-color=\"#fff\""; 
-							elseif($overdue == 1) 
+							if($overdue > 1)
+								echo " bgcolor=\"#FF0000\" font-color=\"#fff\"";
+							elseif($overdue == 1)
                                 echo " bgcolor=\"#ffff00\"";?>>{{ $due }}</td>
 						<td>{{ $list->dues_last_paid }}</td>
-                      
+
                     </tr>
                   @endforeach
                   </tbody>
@@ -168,29 +168,29 @@
               </div>
 						 <div class="box-body text-center">
 
-           
-            <?php if((Session::get('positionid') >=6 && Session::get('positionid') <=7) || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>	  
-              <a title="Re-registration reminders will be sent to all unpaid chapters in your conference with renewal dates this month." href="{{ route('chapter.remainder') }}"><button class="btn btn-themeBlue margin"   <?php if($checkBoxStatus) echo "disabled";?>>Send Current Month Reminders</button></a>
+
+            <?php if((Session::get('positionid') >=6 && Session::get('positionid') <=7) || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>
+              <a title="Re-registration reminders will be sent to all unpaid chapters in your conference with renewal dates this month." href="{{ route('chapter.reminder') }}"><button class="btn btn-themeBlue margin"   <?php if($checkBoxStatus) echo "disabled";?>>Send Current Month Reminders</button></a>
 			<?php }?>
-	        <?php if((Session::get('positionid') >=6 && Session::get('positionid') <=7) || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>	 
+	        <?php if((Session::get('positionid') >=6 && Session::get('positionid') <=7) || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>
 			 	<a href="{{route('chapter.latereminder')}}" class="btn btn-themeBlue margin" <?php if($checkBoxStatus) echo "disabled";?>>Send One Month Late Notices</a>
 			<?php }?>
 									     <a href="{{ route('export.rereg')}}"><button class="btn btn-themeBlue margin">Export Overdue Chapter List</button></a>
 
             </div>
             </div>
-           
-          
+
+
             </div>
           <!-- /.box -->
         </div>
       </div>
-    </section>    
-	
+    </section>
+
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection
 @section('customscript')
 <script>
@@ -215,11 +215,11 @@
 		if(result){
 			return true;
 		}
-			
+
 		else{
 			return false;
 		}
-			
+
 	}
 
 </script>

@@ -1,12 +1,15 @@
 @component('mail::message')
-# Introduction
+# MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}
 
-The body of your message.
+Thank you for your group’s contribution of ${{$mailData['chapterAmount']}} to the International MOMS Club’s Mother-To-Mother Fund!
 
-@component('mail::button', ['url' => ''])
-Button Text
-@endcomponent
+Your contribution will be added to the fund for use when a personal or natural disaster strikes MOMS Club members.  Please pass on to your members our congratulations for their generosity and compassion for their MOMS Club sisters.
 
-Thanks,<br>
-{{ config('app.name') }}
+Because of their farsightedness in contributing to the Mother-To-Mother Fund now, emergency assistance will be available should a disaster strike a MOMS Club family in the future.
+
+Thank you again for helping!  Your members should be very proud of themselves!  I know we are very proud of all of you!
+
+**MCL,**
+Mother-To-Mother Fund Committee
+<br>
 @endcomponent
