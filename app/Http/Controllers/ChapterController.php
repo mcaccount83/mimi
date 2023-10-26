@@ -7,6 +7,8 @@ use App\Coordinator;
 use App\FinancialReport;
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdatePrimaryCoor;
+use App\Mail\PaymentsM2MChapterThankYou;
+use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegReminder;
 use App\Mail\PaymentsReRegLate;
@@ -2587,9 +2589,10 @@ class ChapterController extends Controller
                     'cordConf' => $request->get('ch_pc_confid'),
                 ];
 
-                Mail::send('emails.m2mthankyou', $mailData, function ($message) use ($to_email, $cc_email) {
-                    $message->to($to_email, 'MIMI')->cc($cc_email)->subject('Thank You for Your Chapters M2M Fund Donation');
-                });
+                //M2M Donation Thank You Email//
+                Mail::to($to_email)
+                    ->cc($cc_email, 'MOMS Club')
+                    ->send(new PaymentsM2MChapterThankYou($mailData));
             }
 
             if ($request->get('ch_sustaining') == 'on') {
@@ -2605,11 +2608,12 @@ class ChapterController extends Controller
                     'cordConf' => $request->get('ch_pc_confid'),
                 ];
 
-                Mail::send('emails.sustainingthankyou', $mailData, function ($message) use ($to_email, $cc_email) {
-                    $message->to($to_email, 'MIMI')->cc($cc_email)->subject('Thank You for Your Sustaining Chapter Donation');
-                });
-
+                //Sustaining Chapter Thank You Email//
+                Mail::to($to_email)
+                    ->cc($cc_email, 'MOMS Club')
+                    ->send(new PaymentsSustainingChapterThankYou($mailData));
             }
+
             DB::commit();
         } catch (\Exception $e) {
             // Rollback Transaction

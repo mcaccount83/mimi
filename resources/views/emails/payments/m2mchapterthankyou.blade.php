@@ -1,7 +1,7 @@
 @component('mail::message')
 # MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}
 
-Thank you for your group’s contribution of ${{$mailData['chapterAmount']}} to the International MOMS Club’s Mother-To-Mother Fund!
+Thank you for your group’s contribution of <b>${{$mailData['chapterAmount']}}</b> to the International MOMS Club’s Mother-To-Mother Fund!
 
 Your contribution will be added to the fund for use when a personal or natural disaster strikes MOMS Club members.  Please pass on to your members our congratulations for their generosity and compassion for their MOMS Club sisters.
 
@@ -9,7 +9,7 @@ Because of their farsightedness in contributing to the Mother-To-Mother Fund now
 
 Thank you again for helping!  Your members should be very proud of themselves!  I know we are very proud of all of you!
 
-**MCL,**
+**MCL,**<br>
 Mother-To-Mother Fund Committee
 <br>
 @endcomponent

@@ -11,14 +11,16 @@ class PaymentsSustainingChapterThankYou extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $mailData;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($mailData)
     {
-        //
+        $this->mailData = $mailData;
     }
 
     /**
@@ -28,6 +30,8 @@ class PaymentsSustainingChapterThankYou extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.payments.sustainingchapterthankyou');
+        return $this
+            ->subject('Thank You for Your Re-Registration Payment')
+            ->markdown('emails.payments.sustainingchapterthankyou');
     }
 }

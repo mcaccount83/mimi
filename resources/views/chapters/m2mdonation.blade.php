@@ -25,21 +25,21 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                
+
                 <input type="hidden" name="ch_pre_email" value="{{ $chapterList[0]->bor_email }}">
-				<input type="hidden" name="ch_pc_fname" value="{{ $chapterList[0]->cor_fname }}">              
-				<input type="hidden" name="ch_pc_lname" value="{{ $chapterList[0]->cor_lname }}">              
-				<input type="hidden" name="ch_pc_email" value="{{ $chapterList[0]->cor_email }}">              
-				<input type="hidden" name="ch_pc_confid" value="{{ $chapterList[0]->cor_confid }}">              
-				<input type="hidden" name="ch_name" value="{{ $chapterList[0]->name }}">              
-				<input type="hidden" name="ch_state" value="{{ $chapterList[0]->statename }}">         
-                
-                
+				<input type="hidden" name="ch_pc_fname" value="{{ $chapterList[0]->cor_fname }}">
+				<input type="hidden" name="ch_pc_lname" value="{{ $chapterList[0]->cor_lname }}">
+				<input type="hidden" name="ch_pc_email" value="{{ $chapterList[0]->cor_email }}">
+				<input type="hidden" name="ch_pc_confid" value="{{ $chapterList[0]->cor_confid }}">
+				<input type="hidden" name="ch_name" value="{{ $chapterList[0]->name }}">
+				<input type="hidden" name="ch_state" value="{{ $chapterList[0]->statename }}">
+
+
               <!-- /.form group -->
               <div class="col-sm-12 col-xs-12">
               <div class="form-group">
                 <label>Chapter Name</label>
-                <input type="text" name="ch_name" class="form-control my-colorpicker1" maxlength="200" required value="{{ $chapterList[0]->statename }} - {{ $chapterList[0]->name }}"  readonly>
+                <input type="text" name="ch_long_name" class="form-control my-colorpicker1" maxlength="200" required value="{{ $chapterList[0]->statename }} - {{ $chapterList[0]->name }}"  readonly>
               </div>
               </div>
                  <!-- /.form group -->
@@ -81,7 +81,7 @@
                     </div>
 				</div>
               </div>
-                    </div>    
+                    </div>
                     <div class="col-sm-12 col-xs-12">
 			   <div class="radio-chk">
 				<div class="col-sm-12 col-xs-12">
@@ -92,16 +92,16 @@
                     </div>
 				</div>
               </div>
-                    </div> 
+                    </div>
                 </div>
               </div>
               </div>
-              
+
 
               <div class="box-body text-center">
               <button type="submit" class="btn btn-themeBlue margin">Save</button>
               <a href="{{ route('report.m2mdonation') }}" class="btn btn-themeBlue margin">Back</a>
-        
+
               </div>
               </div>
               </div>
@@ -122,6 +122,6 @@ $(document).ready(function(){
 		}
 	});
 });
-    
+
 </script>
 @endsection
