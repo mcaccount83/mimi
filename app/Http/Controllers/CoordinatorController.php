@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Coordinator;
 use App\FinancialReport;
+use App\Mail\ChapersUpdatePrimaryCoor;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,8 +12,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\ChapersUpdatePrimaryCoor;
-
 
 class CoordinatorController extends Controller
 {
@@ -415,7 +414,6 @@ class CoordinatorController extends Controller
                 ->update(['email' => $request->get('cord_email')]);
         }
 
-
         return redirect('/coordinatorlist')->with('success', 'Coordinator email updated successfully.');
     }
 
@@ -613,7 +611,6 @@ class CoordinatorController extends Controller
         return redirect('/coordinator/retired')->with('success', 'Coordinator successfully unretired');
     }
 
-
     /** Coordiantor Retire */
     public function updateRole(Request $request, $id)
     {
@@ -663,8 +660,7 @@ class CoordinatorController extends Controller
                 $to_email = 'jackie.mchenry@momsclub.org';
 
                 Mail::to($to_email, 'MOMS Club')
-                ->send(new ChapersUpdatePrimaryCoor($mailData));
-
+                    ->send(new ChapersUpdatePrimaryCoor($mailData));
 
                 return redirect('/coordinatorlist')->with('success', 'Coordinator retired successfully.');
                 exit;
@@ -1175,7 +1171,6 @@ class CoordinatorController extends Controller
 
         return view('coordinators.retiredinternational')->with($data);
     }
-
 
     /** Coordiantor Appreciation */
     public function appreciation($id)
