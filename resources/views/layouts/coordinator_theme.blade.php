@@ -80,7 +80,7 @@
   </header>
   <!-- Left side column. contains the logo and sidebar -->
  <?php 
-  use App\User;
+  use App\Models\User;
   $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
   $corId = $corDetails['coordinator_id'];
   $positionid = $corDetails['position_id'];

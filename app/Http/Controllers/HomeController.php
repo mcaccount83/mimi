@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Chapter;
-use App\User;
+use App\Models\Chapter;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;

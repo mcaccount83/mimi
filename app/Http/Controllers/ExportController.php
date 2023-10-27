@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Chapter;
-use App\Coordinator;
+use App\Models\Chapter;
+use App\Models\Coordinator;
 //use Illuminate\Support\Facades\Response;
-use App\CoordinatorDetails;
-use App\User;
+use App\Models\CoordinatorDetails;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;

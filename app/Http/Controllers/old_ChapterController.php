@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use App\Chapter;
-use App\Coordinator;
-use App\User;
-use App\FinancialReport;
+use App\Models\Chapter;
+use App\Models\Coordinator;
+use App\Models\User;
+use App\Models\FinancialReport;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 

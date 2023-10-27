@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -29,11 +29,11 @@ class User extends Authenticatable
 
     public function CoordinatorDetails()
     {
-        return $this->hasOne(\App\CoordinatorDetails::class);
+        return $this->hasOne(\App\Models\CoordinatorDetails::class);
     }
 
     public function BoardDetails()
     {
-        return $this->hasOne(\App\BoardDetails::class);
+        return $this->hasOne(\App\Models\BoardDetails::class);
     }
 }

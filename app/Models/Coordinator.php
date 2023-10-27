@@ -1,16 +1,16 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 //use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class Board extends Authenticatable
+class Coordinator extends Authenticatable
 {
     use Notifiable;
 
-    protected $guard = 'board';
+    protected $guard = 'coordinator';
 
     protected $fillable = [
         'name', 'email', 'password',

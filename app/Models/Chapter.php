@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CoordinatorDetails extends Model
+class Chapter extends Model
 {
     //
     public $timestamps = false;
@@ -14,6 +14,4 @@ class CoordinatorDetails extends Model
         'name',
 
     ];
-
-    protected $table = 'coordinator_details';
 }
