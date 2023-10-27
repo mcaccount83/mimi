@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Chapter;
-use App\Coordinator;
-use App\FinancialReport;
+use App\Models\Chapter;
+use App\Models\Coordinator;
+use App\Models\FinancialReport;
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdatePrimaryCoor;
 use App\Mail\PaymentsM2MChapterThankYou;
@@ -12,7 +12,7 @@ use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegLate;
 use App\Mail\PaymentsReRegReminder;
 use App\Mail\PaymentsSustainingChapterThankYou;
-use App\User;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -2162,7 +2162,7 @@ class ChapterController extends Controller
     //Function for checking Email is registerd or not
     public function checkEmail($email)
     {
-        $isExists = \App\User::where('email', $email)->first();
+        $isExists = \App\Models\User::where('email', $email)->first();
         if ($isExists) {
             return response()->json(['exists' => true]);
         }
