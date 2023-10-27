@@ -45,10 +45,9 @@ Route::middleware('preventBackHistory')->group(function () {
 
     // Your other custom routes can be defined here
 
-    });
+});
 
 Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
-
 
 /**
  * Routes for Custom Links
