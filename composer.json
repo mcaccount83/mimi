@@ -10,16 +10,18 @@
     "require": {
         "php": "^7.3|^8.0",
         "barryvdh/laravel-dompdf": "^0.9.0",
+        "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.8",
         "kunalvarma05/dropbox-php-sdk": "^0.2.1",
         "laravel/framework": "^8.83",
+        "laravel/sanctum": "^2.15",
         "laravel/tinker": "^2.5",
-        "laravel/ui": "^3.0",
-        "fruitcake/laravel-cors": "^2.0"
+        "laravel/ui": "^3.4"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
+        "laravel/sail": "^1.25",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^5.10",
         "phpunit/phpunit": "^9.5.10"

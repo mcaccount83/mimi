@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ChapersUpdatePrimaryCoor;
+
 
 class CoordinatorController extends Controller
 {
@@ -400,7 +402,7 @@ class CoordinatorController extends Controller
         return view('coordinators.edit')->with($data);
     }
 
-    /** Coordiantor email/Updated */
+    /** Coordiantor Email Update */
     public function update2(Request $request, $id)
     {
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
@@ -412,12 +414,9 @@ class CoordinatorController extends Controller
                 ->where('coordinator_id', $cordinatorId)
                 ->update(['email' => $request->get('cord_email')]);
         }
-        //DB::table('users')
-        // ->where('first_name', $name)
-        //->where('is_active', 0)
-        //->update(['email' => $request->get('cord_email')]);
 
-        return redirect('/coordinator/retired')->with('success', 'Coordinator email updated successfully.');
+
+        return redirect('/coordinatorlist')->with('success', 'Coordinator email updated successfully.');
     }
 
     public function update(Request $request, $id)
@@ -614,6 +613,7 @@ class CoordinatorController extends Controller
         return redirect('/coordinator/retired')->with('success', 'Coordinator successfully unretired');
     }
 
+
     /** Coordiantor Retire */
     public function updateRole(Request $request, $id)
     {
@@ -662,9 +662,9 @@ class CoordinatorController extends Controller
 
                 $to_email = 'jackie.mchenry@momsclub.org';
 
-                Mail::send('emails.coordinatorretire', $mailData, function ($message) use ($to_email) {
-                    $message->to($to_email, 'MOMS Club')->subject('Coordinator Removal Request');
-                });
+                Mail::to($to_email, 'MOMS Club')
+                ->send(new ChapersUpdatePrimaryCoor($mailData));
+
 
                 return redirect('/coordinatorlist')->with('success', 'Coordinator retired successfully.');
                 exit;
@@ -732,9 +732,7 @@ class CoordinatorController extends Controller
         if ($rowcountCord == 0 && $rowcountChapter == 0) {
 
         }
-        //die;
-        // if($request->get('cord_fname') !='' && $request->get('cord_lname') !='' && $request->get('cord_email') !='')
-        // {
+
         //Assign them to the new report id
         $report_id = $request->get('cord_report');
         $this->ReassignCoordinator($cordinatorId, $report_id, true);
@@ -1098,8 +1096,6 @@ class CoordinatorController extends Controller
                 ->get();
         }
         //Get Coordinator List mapped with login coordinator
-
-        //echo "<pre>"; print_r($coordinatorList);
         $data = ['retiredCoordinatorList' => $retiredCoordinatorList];
 
         return view('coordinators.retired')->with($data);
@@ -1110,14 +1106,10 @@ class CoordinatorController extends Controller
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
-        //$corlayerId = $corDetails['layer_id'];
         $coordinatorDetails = DB::table('coordinator_details as cd')
             ->select('cd.*')
-                            //->where('cd.is_active', '=', '1')
             ->where('cd.coordinator_id', '=', $id)
-                            //->orderBy('bd.board_position_id','ASC')
             ->get();
-        // echo "<pre>"; print_r($coordinatorDetails); die;
         $stateArr = DB::table('state')
             ->select('state.*')
             ->orderBy('id', 'ASC')
@@ -1128,26 +1120,20 @@ class CoordinatorController extends Controller
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
-                    //->where('conference_id', '=', $corConfId)
             ->orderBy('long_name', 'ASC')
             ->get();
         $confList = DB::table('conference')
             ->select('id', 'conference_name')
-                        //->where('conference_id', '=', $corConfId)
             ->orderBy('conference_name', 'ASC')
             ->get();
         $positionList = DB::table('coordinator_position')
             ->select('id', 'long_title')
-                        //->where('conference_id', '=', $corConfId)
             ->orderBy('long_title', 'ASC')
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinator_details as cd')
             ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                    //->where('cd.conference_id', '=', $corConfId)
-                   // ->where('cd.position_id', '<=', '6')
-                    //->where('cd.position_id', '>=', '1')
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.first_name', 'ASC')
             ->get();
@@ -1169,7 +1155,6 @@ class CoordinatorController extends Controller
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.first_name', 'ASC')
             ->get();
-        //echo "<pre>"; print_r($coordinatorList);
         $data = ['intCoordinatorList' => $intCoordinatorList];
 
         return view('coordinators.international')->with($data);
@@ -1185,77 +1170,12 @@ class CoordinatorController extends Controller
             ->where('cd.is_active', '=', '0')
             ->orderBy('cd.zapped_date', 'DESC')
             ->get();
-        //echo "<pre>"; print_r($coordinatorList);
+
         $data = ['intCoordinatorList' => $intCoordinatorList];
 
         return view('coordinators.retiredinternational')->with($data);
     }
 
-    public function addToPrezList($corId)
-    {
-        //Get Coordinator List mapped with login coordinator
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
-        $coordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cor_id', 'cd.conference_id as cor_conf', 'cd.email as cor_email', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cp.long_title as position')
-            ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
-            ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $corId)
-            ->get();
-
-        $conf = $coordinatorList[0]->cor_conf;
-        $email = $coordinatorList[0]->cor_email;
-        $fname = $coordinatorList[0]->cor_fname;
-        $lname = $coordinatorList[0]->cor_lname;
-        $pos = $coordinatorList[0]->position;
-        // $to_email='neha.purwar@otssolutions.com';
-        // $to_email="listadmin@momsclub.org";
-        $to_email = $corDetails['email'];
-        $mailData = [
-            'cordFname' => $fname,
-            'cordLname' => $lname,
-            'cordEmail' => $email,
-            'cordConf' => 'Conference: '.$conf,
-            'cordPos' => 'Position: '.$pos,
-            'content' => 'A request has been received to add the following coordinator to the Prez Only Group:',
-        ];
-
-        Mail::send('emails.coordinatorprezlist', $mailData, function ($message) use ($to_email) {
-            $message->to($to_email, 'MOMS Club')->subject('PrezList Add Request - Coordinator');
-        });
-    }
-
-    public function addToVolList($corId)
-    {
-        //Get Coordinator List mapped with login coordinator
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
-        $coordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cor_id', 'cd.conference_id as cor_conf', 'cd.email as cor_email', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cp.long_title as position')
-            ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
-            ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $corId)
-            ->get();
-
-        $conf = $coordinatorList[0]->cor_conf;
-        $email = $coordinatorList[0]->cor_email;
-        $fname = $coordinatorList[0]->cor_fname;
-        $lname = $coordinatorList[0]->cor_lname;
-        $pos = $coordinatorList[0]->position;
-        $to_email = $corDetails['email'];
-        //  $to_email='neha.purwar@otssolutions.com';
-        //  $to_email="listadmin@momsclub.org";
-        $mailData = [
-            'cordFname' => $fname,
-            'cordLname' => $lname,
-            'cordEmail' => $email,
-            'cordConf' => 'Conference: '.$conf,
-            'cordPos' => 'Position: '.$pos,
-            'content' => 'A request has been received to add the following coordinator to the VolList:',
-        ];
-
-        Mail::send('emails.coordinatorprezlist', $mailData, function ($message) use ($to_email) {
-            $message->to($to_email, 'MOMS Club')->subject('VolList Add Request');
-        });
-    }
 
     /** Coordiantor Appreciation */
     public function appreciation($id)
@@ -1267,7 +1187,6 @@ class CoordinatorController extends Controller
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
             ->where('cd.coordinator_id', '=', $id)
-                            //->orderBy('bd.board_position_id','ASC')
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
@@ -1279,48 +1198,37 @@ class CoordinatorController extends Controller
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
-                    //->where('conference_id', '=', $corConfId)
             ->orderBy('long_name', 'ASC')
             ->get();
         $confList = DB::table('conference')
             ->select('id', 'conference_name')
-                        //->where('conference_id', '=', $corConfId)
             ->orderBy('conference_name', 'ASC')
             ->get();
         $positionList = DB::table('coordinator_position')
             ->select('id', 'long_title')
-                        //->where('conference_id', '=', $corConfId)
             ->orderBy('long_title', 'ASC')
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinator_details as cd')
             ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                    //->where('cd.conference_id', '=', $corConfId)
-                   // ->where('cd.position_id', '<=', '6')
-                    //->where('cd.position_id', '>=', '1')
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.first_name', 'ASC')
             ->get();
         $directReportTo = DB::table('coordinator_details as cd')
             ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                            //->where('cd.conference_id', '=', $corConfId)
-                            // ->where('cd.position_id', '<=', '6')
             ->where('cd.report_id', '=', $id)
             ->where('cd.is_active', '=', '1')
-                            //->orderBy('cd.first_name','ASC')
             ->get();
 
         $directChapterTo = DB::table('chapters as ch')
             ->select('ch.id as ch_id', 'ch.name as ch_name', 'st.state_short_name as st_name')
             ->join('state as st', 'ch.state', '=', 'st.id')
-                        //->where('cd.conference_id', '=', $corConfId)
-                        // ->where('cd.position_id', '<=', '6')
             ->where('ch.primary_coordinator_id', '=', $id)
             ->where('ch.is_active', '=', '1')
-                        //->orderBy('cd.first_name','ASC')
             ->get();
+
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
         $currentMonth = $coordinatorDetails[0]->birthday_month_id;
 
@@ -1395,7 +1303,6 @@ class CoordinatorController extends Controller
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
             ->where('cd.coordinator_id', '=', $id)
-                            //->orderBy('bd.board_position_id','ASC')
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
@@ -1407,48 +1314,37 @@ class CoordinatorController extends Controller
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
-                    //->where('conference_id', '=', $corConfId)
             ->orderBy('long_name', 'ASC')
             ->get();
         $confList = DB::table('conference')
             ->select('id', 'conference_name')
-                        //->where('conference_id', '=', $corConfId)
             ->orderBy('conference_name', 'ASC')
             ->get();
         $positionList = DB::table('coordinator_position')
             ->select('id', 'long_title')
-                        //->where('conference_id', '=', $corConfId)
             ->orderBy('long_title', 'ASC')
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinator_details as cd')
             ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                    //->where('cd.conference_id', '=', $corConfId)
-                   // ->where('cd.position_id', '<=', '6')
-                    //->where('cd.position_id', '>=', '1')
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.first_name', 'ASC')
             ->get();
         $directReportTo = DB::table('coordinator_details as cd')
             ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                            //->where('cd.conference_id', '=', $corConfId)
-                            // ->where('cd.position_id', '<=', '6')
             ->where('cd.report_id', '=', $id)
             ->where('cd.is_active', '=', '1')
-                            //->orderBy('cd.first_name','ASC')
             ->get();
 
         $directChapterTo = DB::table('chapters as ch')
             ->select('ch.id as ch_id', 'ch.name as ch_name', 'st.state_short_name as st_name')
             ->join('state as st', 'ch.state', '=', 'st.id')
-                        //->where('cd.conference_id', '=', $corConfId)
-                        // ->where('cd.position_id', '<=', '6')
             ->where('ch.primary_coordinator_id', '=', $id)
             ->where('ch.is_active', '=', '1')
-                        //->orderBy('cd.first_name','ASC')
             ->get();
+
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
         $currentMonth = $coordinatorDetails[0]->birthday_month_id;
 

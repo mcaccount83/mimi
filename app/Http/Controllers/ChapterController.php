@@ -2870,7 +2870,7 @@ class ChapterController extends Controller
         $dueDate = \Carbon\Carbon::create($year, $lastMonth, 10);
 
         // Convert $month to words
-        $monthInWords = strftime('%B', strtotime("2000-$month-01"));
+        $monthInWords = setlocale('%B', strtotime("2000-$month-01"));
 
         // Format dates as "mm-dd-yyyy"
         $startDateFormatted = date('m-d-Y', strtotime($startDate));
@@ -2980,8 +2980,8 @@ class ChapterController extends Controller
         $lastYearDate = \Carbon\Carbon::create($lastYear, $lastMonth, 1);
 
         // Convert $month to words
-        $startMonthInWords = strftime('%B', strtotime("2000-$startMonth-01"));
-        $dueMonthInWords = strftime('%B', strtotime("2000-$month-01"));
+        $startMonthInWords = setlocale('%B', strtotime("2000-$startMonth-01"));
+        $dueMonthInWords = setlocale('%B', strtotime("2000-$month-01"));
 
         // Format dates as "mm-dd-yyyy"
         $startDateFormatted = date('m-d-Y', strtotime($startDate));

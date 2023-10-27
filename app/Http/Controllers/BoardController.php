@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\ChapersUpdateListAdmin;
+use App\Mail\ChapersUpdatePrimaryCoor;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
@@ -473,7 +475,7 @@ class BoardController extends Controller
             }
             //}
 
-            //Update Chapter Info Email
+            //Update Chapter MailData//
             $presInfoUpd = DB::table('chapters')
                 ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city', 'bd.zip as zip', 'st.state_short_name as state')
                 ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
@@ -516,7 +518,7 @@ class BoardController extends Controller
                 ->where('bd.board_position_id', '=', '5')
                 ->where('chapters.id', $chapterId)
                 ->get();
-            $to_email = $presInfoUpd[0]->cor_email;
+
             $mailDataPres = [
                 'chapterNameUpd' => $presInfoUpd[0]->name,
                 'chapterStateUpd' => $presInfoUpd[0]->state,
@@ -575,7 +577,7 @@ class BoardController extends Controller
 
             ];
             $mailData = array_merge($mailDataPres);
-            if (count($AVPInfoUpd) > 0) {
+            if ($AVPInfoUpd !== null && count($AVPInfoUpd) > 0) {
                 $mailDataAvp = ['avpfnameUpd' => $AVPInfoUpd[0]->bor_f_name,
                     'avplnameUpd' => $AVPInfoUpd[0]->bor_l_name,
                     'avpemailUpd' => $AVPInfoUpd[0]->bor_email, ];
@@ -586,7 +588,7 @@ class BoardController extends Controller
                     'avpemailUpd' => '', ];
                 $mailData = array_merge($mailData, $mailDataAvp);
             }
-            if (count($MVPInfoUpd) > 0) {
+            if ($MVPInfoUpd !== null && count($MVPInfoUpd) > 0) {
                 $mailDataMvp = ['mvpfnameUpd' => $MVPInfoUpd[0]->bor_f_name,
                     'mvplnameUpd' => $MVPInfoUpd[0]->bor_l_name,
                     'mvpemailUpd' => $MVPInfoUpd[0]->bor_email, ];
@@ -597,7 +599,7 @@ class BoardController extends Controller
                     'mvpemailUpd' => '', ];
                 $mailData = array_merge($mailData, $mailDataMvp);
             }
-            if (count($tresInfoUpd) > 0) {
+            if ($tresInfoUpd !== null && count($tresInfoUpd) > 0) {
                 $mailDatatres = ['tresfnameUpd' => $tresInfoUpd[0]->bor_f_name,
                     'treslnameUpd' => $tresInfoUpd[0]->bor_l_name,
                     'tresemailUpd' => $tresInfoUpd[0]->bor_email, ];
@@ -608,7 +610,7 @@ class BoardController extends Controller
                     'tresemailUpd' => '', ];
                 $mailData = array_merge($mailData, $mailDatatres);
             }
-            if (count($secInfoUpd) > 0) {
+            if ($secInfoUpd !== null && count($secInfoUpd) > 0) {
                 $mailDataSec = ['secfnameUpd' => $secInfoUpd[0]->bor_f_name,
                     'seclnameUpd' => $secInfoUpd[0]->bor_l_name,
                     'secemailUpd' => $secInfoUpd[0]->bor_email, ];
@@ -619,7 +621,7 @@ class BoardController extends Controller
                     'secemailUpd' => '', ];
                 $mailData = array_merge($mailData, $mailDataSec);
             }
-            if (count($AVPInfoPre) > 0) {
+            if ($AVPInfoPre !== null && count($AVPInfoPre) > 0) {
                 $mailDataAvpp = ['avpfnamePre' => $AVPInfoPre[0]->bor_f_name,
                     'avplnamePre' => $AVPInfoPre[0]->bor_l_name,
                     'avpemailPre' => $AVPInfoPre[0]->bor_email, ];
@@ -630,7 +632,7 @@ class BoardController extends Controller
                     'avpemailPre' => '', ];
                 $mailData = array_merge($mailData, $mailDataAvpp);
             }
-            if (count($MVPInfoPre) > 0) {
+            if ($MVPInfoPre !== null && count($MVPInfoPre) > 0) {
                 $mailDataMvpp = ['mvpfnamePre' => $MVPInfoPre[0]->bor_f_name,
                     'mvplnamePre' => $MVPInfoPre[0]->bor_l_name,
                     'mvpemailPre' => $MVPInfoPre[0]->bor_email, ];
@@ -641,7 +643,7 @@ class BoardController extends Controller
                     'mvpemailPre' => '', ];
                 $mailData = array_merge($mailData, $mailDataMvpp);
             }
-            if (count($tresInfoPre) > 0) {
+            if ($tresInfoPre !== null && count($tresInfoPre) > 0) {
                 $mailDatatresp = ['tresfnamePre' => $tresInfoPre[0]->bor_f_name,
                     'treslnamePre' => $tresInfoPre[0]->bor_l_name,
                     'tresemailPre' => $tresInfoPre[0]->bor_email, ];
@@ -652,7 +654,7 @@ class BoardController extends Controller
                     'tresemailPre' => '', ];
                 $mailData = array_merge($mailData, $mailDatatresp);
             }
-            if (count($secInfoPre) > 0) {
+            if ($secInfoPre !== null && count($secInfoPre) > 0) {
                 $mailDataSecp = ['secfnamePre' => $secInfoPre[0]->bor_f_name,
                     'seclnamePre' => $secInfoPre[0]->bor_l_name,
                     'secemailPre' => $secInfoPre[0]->bor_email, ];
@@ -664,18 +666,19 @@ class BoardController extends Controller
                 $mailData = array_merge($mailData, $mailDataSecp);
             }
 
-            Mail::send('emails.chapterupdate', $mailData, function ($message) use ($to_email) {
-                $message->to($to_email, 'MOMS Club')->subject('Database Update Auto-Notification');
-            });
+            //Primary Coordinator Notification//
+            $to_email = $presInfoUpd[0]->cor_email;
+
+            Mail::to($to_email, 'MOMS Club')
+                ->send(new ChapersUpdatePrimaryCoor($mailData));
 
             //List Admin Notification//
             $to_email2 = 'listadmin@momsclub.org';
 
             if ($presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
 
-                Mail::send('emails.listadminchapterupdate', $mailData, function ($message2) use ($to_email2) {
-                    $message2->to($to_email2, 'MOMS Club')->subject('Chapter Update Request');
-                });
+                Mail::to($to_email2, 'MOMS Club')
+                    ->send(new ChapersUpdateListAdmin($mailData));
             }
 
             DB::commit();
@@ -1172,25 +1175,6 @@ class BoardController extends Controller
 
                 }
             }
-
-            //Board Report Submitted Notification//
-            //   $to_email= "jackie.mchenry@momsclub.org";
-            //    $mailData = [
-            //            'prefname' => $PREDetails[0]->ch_pre_fname,
-            //            'prelname' => $PREDetails[0]->ch_pre_lname,
-            //            'preemail' => $PREDetails[0]->ch_pre_email,
-            //            'prestreet' => $PREDetails[0]->ch_pre_street,
-            //            'precity' => $PREDetails[0]->ch_pre_city,
-            //            'prestate' => $PREDetails[0]->ch_pre_state,
-            //            'prezip' => $PREDetails[0]->ch_pre_zip,
-            //            'prephone' => $PREDetails[0]->ch_pre_phone,
-            //
-            //
-            //    ];
-            //             Mail::send('emails.boardelectionreport', $mailData,function($message) use ($to_email)
-            //    {
-            //        $message->to($to_email, 'MOMS Club')->subject('Board Election Report Submitted');
-            //    });
 
             DB::commit();
         } catch (\Exception $e) {

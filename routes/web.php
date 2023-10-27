@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\CoordinatorController;
@@ -23,23 +22,33 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-
-    return redirect('/login');
-});
-
-Auth::routes();
+})->name('welcome');
 
 Route::middleware('preventBackHistory')->group(function () {
-    Auth::routes();
-    Route::get('/', function () {
-        //return view('welcome');
-        return redirect('/login');
-    });
-});
+    // Authentication Routes
+    Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+    Route::post('login', 'Auth\LoginController@login');
+    Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
-Route::get('/logout', [Auth\LoginController::class, 'logout']);
-Route::get('/home', [HomeController::class, 'index'])->name('home');
-//Route::get('/home', 'ChapterController@index')->name('chapters.index');
+    // Registration Routes
+    Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+    Route::post('register', 'Auth\RegisterController@register');
+
+    // Password Reset Routes
+    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+    Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+    Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+    Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+
+    // Home Route
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+    // Your other custom routes can be defined here
+
+    });
+
+Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+
 
 /**
  * Routes for Custom Links
