@@ -243,7 +243,7 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
@@ -457,7 +457,7 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
@@ -570,7 +570,7 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
@@ -682,7 +682,7 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
@@ -851,7 +851,7 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
@@ -1022,7 +1022,7 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
@@ -1115,7 +1115,7 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
@@ -1195,7 +1195,7 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
@@ -1294,7 +1294,7 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
@@ -1377,7 +1377,7 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
@@ -1473,7 +1473,7 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
@@ -1559,7 +1559,7 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
@@ -1645,7 +1645,7 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
@@ -1969,7 +1969,7 @@ class ExportController extends Controller
             exit($output);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
@@ -2207,7 +2207,7 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     public function exportChapterAwardList(Request $request)

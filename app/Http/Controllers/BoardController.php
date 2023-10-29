@@ -87,7 +87,7 @@ class BoardController extends Controller
             Auth::logout();
             $request->session()->flush();
 
-            return redirect('/login');
+            return redirect()->to('/login');
         }
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         $chapter = Chapter::find($chapterId);
@@ -691,10 +691,10 @@ class BoardController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect('/home')->with('fail', 'Something went wrong, Please try again');
+            return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
         }
 
-        return Redirect::back()->with('success', 'Chapter has successfully updated');
+        return redirect()->back()->with('success', 'Chapter has successfully updated');
     }
 
     /**
@@ -795,10 +795,10 @@ class BoardController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect('/home')->with('fail', 'Something went wrong, Please try again');
+            return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
         }
 
-        return Redirect::back()->with('success', 'Chapter has successfully updated');
+        return redirect()->back()->with('success', 'Chapter has successfully updated');
     }
 
     /**
@@ -905,7 +905,7 @@ class BoardController extends Controller
             Auth::logout();
             $request->session()->flush();
 
-            return redirect('/login');
+            return redirect()->to('/login');
         }
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         $chapter = Chapter::find($chapter_id);
@@ -1186,10 +1186,10 @@ class BoardController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect('/home')->with('fail', 'Something went wrong, Please try again');
+            return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
         }
 
-        return redirect('/home')->with('success', 'Board Info has been Submitted');
+        return redirect()->to('/home')->with('success', 'Board Info has been Submitted');
 
     }
 
@@ -1230,7 +1230,7 @@ class BoardController extends Controller
             DB::rollBack();
             // Log the error or perform any necessary actions
             // You can also add a flash message to inform the user about the error
-            return redirect('/home');
+            return redirect()->to('/home');
         }
     }
 
@@ -1243,7 +1243,7 @@ class BoardController extends Controller
             Auth::logout();
             $request->session()->flush();
 
-            return redirect('/login');
+            return redirect()->to('/login');
         }
 
         $financial_report_array = FinancialReport::find($chapterId);
@@ -1270,7 +1270,7 @@ class BoardController extends Controller
             Auth::logout();
             $request->session()->flush();
 
-            return redirect('/login');
+            return redirect()->to('/login');
         }
 
         $financial_report_array = FinancialReport::find($chapterId);

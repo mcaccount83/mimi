@@ -1515,15 +1515,15 @@ class ReportController extends Controller
             }
 
             if ($status == 'success') {
-                return redirect('/yearreports/boardinfo')->with('success', 'All Board Info has been successfully activated');
+                return redirect()->to('/yearreports/boardinfo')->with('success', 'All Board Info has been successfully activated');
             } elseif ($status == 'fail') {
-                return redirect('/yearreports/boardinfo')->with('fail', 'Something went wrong, Please try again.');
+                return redirect()->to('/yearreports/boardinfo')->with('fail', 'Something went wrong, Please try again.');
             } elseif ($status == 'empty') {
-                return redirect('/yearreports/boardinfo')->with('success', 'No Incoming Board Members for Activation');
+                return redirect()->to('/yearreports/boardinfo')->with('success', 'No Incoming Board Members for Activation');
             } elseif ($status == 'duplicate') {
-                return redirect('/yearreports/boardinfo')->with('fail', 'Email already used in the system. Please try with new one.');
+                return redirect()->to('/yearreports/boardinfo')->with('fail', 'Email already used in the system. Please try with new one.');
             } else {
-                return redirect('/yearreports/boardinfo')->with('success', 'No Incoming Board Members for Activation');
+                return redirect()->to('/yearreports/boardinfo')->with('success', 'No Incoming Board Members for Activation');
             }
             exit;
         }

@@ -33,7 +33,7 @@ class HomeController extends Controller
             Auth::logout();
             Session::flush();
 
-            return redirect('/login');
+            return redirect()->to('/login');
         }
         //For User Type Coordinator
         if ($user_type == 'coordinator') {
@@ -52,7 +52,7 @@ class HomeController extends Controller
 
             if ($positionId == 12) {
 
-                return redirect('chapter/international');
+                return redirect()->to('chapter/international');
             } elseif ($positionId <= 7 || $positionId == 25) {
                 if ($corId == 25 || $positionId == 25) {
                     //Get Coordinator Reporting Tree
@@ -116,7 +116,7 @@ class HomeController extends Controller
 
                 return view('chapters.index')->with($data);
             } else {
-                return redirect('coordinator/profile/');
+                return redirect()->to('coordinator/profile/');
             }
         }
         //For User Type Board (Chapter)
@@ -201,7 +201,7 @@ class HomeController extends Controller
                 Auth::logout(); // logout user
                 Session::flush();
 
-                return redirect('/login');
+                return redirect()->to('/login');
             }
         }
     }

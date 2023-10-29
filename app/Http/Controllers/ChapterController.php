@@ -475,10 +475,10 @@ class ChapterController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect('/chapter/list')->with('fail', 'Something went wrong, Please try again..');
+            return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again..');
         }
 
-        return redirect('/chapter/list')->with('success', 'Chapter created successfully');
+        return redirect()->to('/chapter/list')->with('success', 'Chapter created successfully');
     }
 
     public function edit(Request $request, $id): View
@@ -1467,10 +1467,10 @@ class ChapterController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect('/chapter/list')->with('fail', 'Something went wrong, Please try again..');
+            return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again..');
         }
 
-        return redirect('/chapter/list')->with('success', 'Chapter has been updated');
+        return redirect()->to('/chapter/list')->with('success', 'Chapter has been updated');
     }
 
     /**
@@ -1547,10 +1547,10 @@ class ChapterController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect('/yearreports/boundaryissue')->with('fail', 'Something went wrong, Please try again.');
+            return redirect()->to('/yearreports/boundaryissue')->with('fail', 'Something went wrong, Please try again.');
         }
 
-        return redirect('/yearreports/boundaryissue')->with('success', 'Boundary issue has been successfully updated');
+        return redirect()->to('/yearreports/boundaryissue')->with('success', 'Boundary issue has been successfully updated');
     }
 
     /**
@@ -2159,7 +2159,7 @@ class ChapterController extends Controller
                 'social3' => $request->get('ch_social3'),
                 'website_notes' => $request->get('ch_notes')]);
 
-        return redirect('/chapter/website')->with('success', 'Chapter Website has been changed successfully.');
+        return redirect()->to('/chapter/website')->with('success', 'Chapter Website has been changed successfully.');
     }
 
     //Function for checking Email is registerd or not
@@ -2446,7 +2446,7 @@ class ChapterController extends Controller
             });
             //$request->session()->flash('success', 'Chapter has been successfully Disband');
             //   DB::commit();
-            return redirect('/chapter/zapped')->with('success', 'Chapter has been successfully Zapped');
+            return redirect()->to('/chapter/zapped')->with('success', 'Chapter has been successfully Zapped');
             //return redirect('/home');
 
             //return;
@@ -2482,7 +2482,7 @@ class ChapterController extends Controller
             ->where('chapter_id', $chapterid)
             ->update(['is_active' => 1]);
 
-        return redirect('/chapter/list')->with('success', 'Chapter has been successfully Unzapped');
+        return redirect()->to('/chapter/list')->with('success', 'Chapter has been successfully Unzapped');
     }
 
     public function updateZappedChapter(Request $request, $id): RedirectResponse
@@ -2525,7 +2525,7 @@ class ChapterController extends Controller
             }
         }
 
-        return redirect('/chapter/zapped')->with('success', 'Chapter has been updated');
+        return redirect()->to('/chapter/zapped')->with('success', 'Chapter has been updated');
     }
 
     public function chapterResetPassword(Request $request)
@@ -2625,10 +2625,10 @@ class ChapterController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect('/reports/m2mdonation')->with('fail', 'Something went wrong, Please try again.');
+            return redirect()->to('/reports/m2mdonation')->with('fail', 'Something went wrong, Please try again.');
         }
 
-        return redirect('/reports/m2mdonation')->with('success', 'Donation has been successfully saved');
+        return redirect()->to('/reports/m2mdonation')->with('success', 'Donation has been successfully saved');
     }
 
     // For Re-Registrations
@@ -2769,10 +2769,10 @@ class ChapterController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect('/chapter/re-registration')->with('fail', 'Something went wrong, Please try again.');
+            return redirect()->to('/chapter/re-registration')->with('fail', 'Something went wrong, Please try again.');
         }
 
-        return redirect('/chapter/re-registration')->with('success', 'Your Re-Regisration Notes have been saved');
+        return redirect()->to('/chapter/re-registration')->with('success', 'Your Re-Regisration Notes have been saved');
     }
 
     public function showPayment($id): View
@@ -2845,10 +2845,10 @@ class ChapterController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect('/chapter/re-registration')->with('fail', 'Something went wrong, Please try again.');
+            return redirect()->to('/chapter/re-registration')->with('fail', 'Something went wrong, Please try again.');
         }
 
-        return redirect('/chapter/re-registration')->with('success', 'Payment has been successfully payment saved');
+        return redirect()->to('/chapter/re-registration')->with('success', 'Payment has been successfully payment saved');
     }
 
     public function reminderReRegistration(Request $request): RedirectResponse
@@ -2957,7 +2957,7 @@ class ChapterController extends Controller
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
 
-        return redirect('/chapter/re-registration')->with('success', 'Re-Registration Reminders have been successfully sent.');
+        return redirect()->to('/chapter/re-registration')->with('success', 'Re-Registration Reminders have been successfully sent.');
 
     }
 
@@ -3068,7 +3068,7 @@ class ChapterController extends Controller
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
 
-        return redirect('/chapter/re-registration')->with('success', 'Re-Registration Late Notices have been successfully sent.');
+        return redirect()->to('/chapter/re-registration')->with('success', 'Re-Registration Late Notices have been successfully sent.');
 
     }
 
@@ -3194,10 +3194,10 @@ class ChapterController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect('/yearreports/chapterawards')->with('fail', 'Something went wrong, Please try again.');
+            return redirect()->to('/yearreports/chapterawards')->with('fail', 'Something went wrong, Please try again.');
         }
 
-        return redirect('/yearreports/chapterawards')->with('success', 'Chapter Awards have been successfully updated');
+        return redirect()->to('/yearreports/chapterawards')->with('success', 'Chapter Awards have been successfully updated');
     }
 
     //For Board Info Received
@@ -3287,9 +3287,9 @@ class ChapterController extends Controller
         if ($request->get('submit_type') == 'activate_board') {
             $status = $this->activateBoard($chapter_id, $lastUpdatedBy);
             if ($status == 'success') {
-                return redirect('/yearreports/boardinfo')->with('success', 'Board Info has been successfully activated');
+                return redirect()->to('/yearreports/boardinfo')->with('success', 'Board Info has been successfully activated');
             } elseif ($status == 'fail') {
-                return redirect('/yearreports/boardinfo')->with('fail', 'Something went wrong, Please try again.');
+                return redirect()->to('/yearreports/boardinfo')->with('fail', 'Something went wrong, Please try again.');
             }/*else{
                 return redirect('/home')->with('fail', 'Email already used in the system. Please try with new one.');
             }
@@ -3560,10 +3560,10 @@ class ChapterController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect('/chapter/list')->with('fail', 'Something went wrong, Please try again.');
+            return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again.');
         }
 
-        return redirect('/chapter/list')->with('success', 'Board Info has been Saved');
+        return redirect()->to('/chapter/list')->with('success', 'Board Info has been Saved');
     }
 
     public function activateBoard($chapter_id, $lastUpdatedBy)
@@ -4476,10 +4476,10 @@ class ChapterController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect('/yearreports/eoystatus')->with('fail', 'Something went wrong, Please try again.');
+            return redirect()->to('/yearreports/eoystatus')->with('fail', 'Something went wrong, Please try again.');
         }
 
-        return redirect('/yearreports/eoystatus')->with('success', 'Report status successfully updated');
+        return redirect()->to('/yearreports/eoystatus')->with('success', 'Report status successfully updated');
     }
 
     public function chapterLinks(): View

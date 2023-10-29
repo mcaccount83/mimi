@@ -41,11 +41,11 @@ class Handler extends ExceptionHandler
     {
         if ($exception instanceof \Symfony\Component\HttpKernel\Exception\HttpException) {
             if ($exception->getStatusCode() == 404) {
-                return redirect('/login');
+                return redirect()->to('/login');
             }
 
             if ($exception->getStatusCode() == 500) {
-                return redirect('/login');
+                return redirect()->to('/login');
             }
         } else {
             return parent::render($request, $exception);

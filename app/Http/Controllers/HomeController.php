@@ -34,7 +34,7 @@ class HomeController extends Controller
             Auth::logout();
             $request->session()->flush();
 
-            return redirect('/login');
+            return redirect()->to('/login');
         }
         //For User Type Coordinator
         if ($user_type == 'coordinator') {
@@ -73,7 +73,7 @@ class HomeController extends Controller
             $inQryStr = rtrim($inQryStr, ',');
             $inQryArr = explode(',', $inQryStr);
 
-            return redirect('coordinator/dashboard');
+            return redirect()->to('coordinator/dashboard');
         }
 
         //For User Type Board (Chapter)
@@ -158,7 +158,7 @@ class HomeController extends Controller
                 Auth::logout(); // logout user
                 $request->session()->flush();
 
-                return redirect('/login');
+                return redirect()->to('/login');
             }
         }
     }

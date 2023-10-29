@@ -326,10 +326,10 @@ class CoordinatorController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect('/coordinatorlist')->with('fail', 'Something went wrong, Please try again..');
+            return redirect()->to('/coordinatorlist')->with('fail', 'Something went wrong, Please try again..');
         }
 
-        return redirect('/coordinatorlist')->with('success', 'Coordinator created successfully.');
+        return redirect()->to('/coordinatorlist')->with('success', 'Coordinator created successfully.');
     }
 
     /** Coordiantor Edit Form */
@@ -417,7 +417,7 @@ class CoordinatorController extends Controller
                 ->update(['email' => $request->get('cord_email')]);
         }
 
-        return redirect('/coordinatorlist')->with('success', 'Coordinator email updated successfully.');
+        return redirect()->to('/coordinatorlist')->with('success', 'Coordinator email updated successfully.');
     }
 
     public function update(Request $request, $id): RedirectResponse
@@ -463,7 +463,7 @@ class CoordinatorController extends Controller
             }
         }
 
-        return redirect('/coordinatorlist')->with('success', 'Coordinator updated successfully.');
+        return redirect()->to('/coordinatorlist')->with('success', 'Coordinator updated successfully.');
     }
 
     /** Coordiantor Change Role Form */
@@ -611,7 +611,7 @@ class CoordinatorController extends Controller
             DB::commit();
         }
 
-        return redirect('/coordinator/retired')->with('success', 'Coordinator successfully unretired');
+        return redirect()->to('/coordinator/retired')->with('success', 'Coordinator successfully unretired');
     }
 
     /** Coordiantor Retire */
@@ -665,7 +665,7 @@ class CoordinatorController extends Controller
                 Mail::to($to_email, 'MOMS Club')
                     ->send(new ChapersUpdatePrimaryCoor($mailData));
 
-                return redirect('/coordinatorlist')->with('success', 'Coordinator retired successfully.');
+                return redirect()->to('/coordinatorlist')->with('success', 'Coordinator retired successfully.');
                 exit;
                 // return true;
             } catch (\Exception $e) {
@@ -675,7 +675,7 @@ class CoordinatorController extends Controller
                 // Log the error
                 Log::error($e);
 
-                return redirect('/coordinatorlist')->with('fail', 'Something went wrong, Please try again.');
+                return redirect()->to('/coordinatorlist')->with('fail', 'Something went wrong, Please try again.');
             }
         }
         if ($submit_type == 'Leave' || $submit_type == 'RemoveLeave') {
@@ -1282,12 +1282,12 @@ class CoordinatorController extends Controller
                     // Log the error
                     Log::error($e);
 
-                    return redirect('/reports/appreciation')->with('fail', 'Something went wrong, Please try again.');
+                    return redirect()->to('/reports/appreciation')->with('fail', 'Something went wrong, Please try again.');
                 }
             }
         }
 
-        return redirect('/reports/appreciation')->with('success', 'Appreciation gifts updated successfully');
+        return redirect()->to('/reports/appreciation')->with('success', 'Appreciation gifts updated successfully');
 
     }
 
@@ -1387,12 +1387,12 @@ class CoordinatorController extends Controller
                     // Log the error
                     Log::error($e);
 
-                    return redirect('/reports/birthday')->with('fail', 'Something went wrong, Please try again.');
+                    return redirect()->to('/reports/birthday')->with('fail', 'Something went wrong, Please try again.');
                 }
             }
         }
 
-        return redirect('/reports/birthday')->with('success', 'Appreciation gifts updated successfully');
+        return redirect()->to('/reports/birthday')->with('success', 'Appreciation gifts updated successfully');
 
     }
 
@@ -1494,11 +1494,11 @@ class CoordinatorController extends Controller
                 // Log the error
                 Log::error($e);
 
-                return redirect('/coordinator/dashboard')->with('fail', 'Something went wrong, Please try again.');
+                return redirect()->to('/coordinator/dashboard')->with('fail', 'Something went wrong, Please try again.');
             }
         }
 
-        return redirect('/coordinator/dashboard')->with('success', 'Coordinator dashboard updated successfully');
+        return redirect()->to('/coordinator/dashboard')->with('success', 'Coordinator dashboard updated successfully');
     }
 
     public function showProfile(Request $request): View
@@ -1600,11 +1600,11 @@ class CoordinatorController extends Controller
                     // Log the error
                     Log::error($e);
 
-                    return redirect('/coordinator/profile')->with('fail', 'Something went wrong, Please try again.');
+                    return redirect()->to('/coordinator/profile')->with('fail', 'Something went wrong, Please try again.');
                 }
             }
         }
 
-        return redirect('/coordinator/profile')->with('success', 'Coordinator profile updated successfully');
+        return redirect()->to('/coordinator/profile')->with('success', 'Coordinator profile updated successfully');
     }
 }
