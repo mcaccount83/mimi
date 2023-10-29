@@ -5,13 +5,13 @@
 <div>
 	@if ($message = Session::get('success'))
 		<div class="alert alert-success">
-			<button type="button" class="close" data-dismiss="alert">×</button>	
+			<button type="button" class="close" data-dismiss="alert">×</button>
          <p>{{ $message }}</p>
 		</div>
     @endif
 	@if ($message = Session::get('fail'))
 		<div class="alert alert-danger">
-			<button type="button" class="close" data-dismiss="alert">×</button>	
+			<button type="button" class="close" data-dismiss="alert">×</button>
          <p>{{ $message }}</p>
 		</div>
     @endif
@@ -20,7 +20,7 @@
         <div class="col-md-12">
             <div class="card card-user">
                 <div class="card-image color_header">
-                    
+
                 </div>
                 <div class="card-body">
                     <div class="author">
@@ -38,15 +38,15 @@
                         </p>
                     </div>
                 <p class="description text-center">
-                       Welcome, <b>{{$borDetails->first_name}} {{$borDetails->last_name}}</b>, to the MOMS Club MOMS information Management Interface (MIMI)! 
+                       Welcome, <b>{{$borDetails->first_name}} {{$borDetails->last_name}}</b>, to the MOMS Club MOMS information Management Interface (MIMI)!
                        </br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
                     </p>
-                  <!--     <p class="description text-center" style="color:red;">All Board Member Information is READ ONLY at this time. 
+                  <!--     <p class="description text-center" style="color:red;">All Board Member Information is READ ONLY at this time.
                     <br>In order to add new board members to MIMI, please complete the Board Election Report.
                    <br>If you need to make updates to your current year officers please contact your Primary Coordinator.
                    </p> -->
                 </div>
-                
+
             </div>
         </div>
         <div class="col-md-12">
@@ -55,69 +55,69 @@
                     <div class="col-md-12 text-center">
                         <div class="col-md-4 float-left">
                        @if($chapterDetails->ein_letter=='1')
-                      <a class="btn btn-info btn-fill" href="{{ $chapterDetails->ein_letter_path }}" target="blank">View/Download EIN Letter</a> 
+                      <a class="btn btn-info btn-fill" href="{{ $chapterDetails->ein_letter_path }}" target="blank">View/Download EIN Letter</a>
                       	@else
-                       <a class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>>No EIN Letter on File</a>  
+                       <a class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>>No EIN Letter on File</a>
                        	@endif
                       </div>
-                      
+
                     <div class="col-md-4 float-left">
 					 @if($chapterDetails->new_board_active=='1')
 								<a class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>><?php echo $a = date('Y'); echo "-"; echo $a+1;?> Board Election Report</a>
 							@else
 							<!--LIVE BUTTON-->
 						            <a class="btn btn-info btn-fill" href="<?php echo url("/boardinfo") ?>"><?php echo $a = date('Y'); echo "-"; echo $a+1;?> Board Election Report</a>
-							<!--DISABLED BUTTON-->	
+							<!--DISABLED BUTTON-->
 									<!--<a class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>><?php echo $a = date('Y'); echo "-"; echo $a+1;?> Board Election Report</a>-->
 
 							@endif
-							
+
 
 					</div>
-					
+
                     <div class="col-md-4 float-left">
                            <!--LIVE BUTTON-->
 					            <a class="btn btn-info btn-fill" href="<?php echo url("/board/financial/{$chapterDetails->id}") ?>"><?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</a>
 					       <!--DISABLED BUTTON-->
 					            <!--<a class="btn btn-info btn-fill" href="#" disabled><?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</a>-->
-					       
-					        
+
+
 
                     </div>
-              
-				 
+
+
                     </div>
                 </div>
-                
+
             <form method="POST" action='{{ route("member.update",$borDetails->chapter_id) }}'>
-				@csrf 			
-				
-				@if($borPositionId == '2')  
+				@csrf
+
+				@if($borPositionId == '2')
                  <div class="card-header">
                     <h4 class="card-title">AVP</h4>
                 </div>
                 @endif
-				
+
 				@if($borPositionId == '3')
                 <div class="card-header">
                     <h4 class="card-title">MVP</h4>
                 </div>
                 @endif
-				
+
 				@if($borPositionId == '4')
                 <div class="card-header">
                     <h4 class="card-title">TREASURER</h4>
                 </div>
                 @endif
-				
+
 				@if($borPositionId == '5')
                 <div class="card-header">
                     <h4 class="card-title">SECRETARY</h4>
                 </div>
         		@endif
-        		
+
         	   <div class="card-body">
-                    
+
                         <div class="row" id="checkRadios">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -179,7 +179,7 @@
                                     <input  type="text" class="form-control" name="bor_phone" id="bor_phone" maxlength="12" value="{{$borDetails->phone}}" required  >
                                 </div>
                             </div>
-                           
+
                         </div>
 						<div class="row">
                             <div class="col-md-6">
@@ -198,7 +198,7 @@
 						<input  type="hidden" name="bor_pswd_cng" id="bor_pswd_cng" value="0">
                     <input  type="hidden" class="form-control" name="bor_positionid" value="{{$borPositionId}}">
                 </div>
-                
+
                 <div class="card-header">
                     <h4 class="card-title">CHAPTER INFORMATION</h4>
                 </div>
@@ -263,13 +263,13 @@
                                 </div>
                             </div>
                         </div>
-                </div>        
-                        
+                </div>
+
               <div class="card-header">
                     <h4 class="card-title">READ ONLY - PLEASE CONTACT PC IF INCORRECT</h4>
                 </div>
                 <div class="card-body">
-                   
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -314,11 +314,11 @@
                                 <div class="form-group">
                                     <label><?php echo date('Y')-1 .'-'.date('Y');?> Financial Report Received</label>
                                     <label style="display: block;"><input  type="checkbox" class="ios-switch green bigswitch" disabled {{$chapterDetails->financial_report_received == '1'  ? 'checked' : ''}}/><div><div></div></div></label>
-                                
+
                                 </div>
                             </div>
                             </div>
-                   
+
                 </div>
                 <div class="card-header">
                     <h4 class="card-title">INTERNATIONAL MOMS CLUB COORDINATORS</h4>
@@ -328,26 +328,26 @@
 						<input  type="hidden" id="pcid" value="{{ $chapterDetails->primary_coordinator_id}}">
 						<div id="display_corlist">
 						</div>
-                        
-                    </div>    
+
+                    </div>
                 </div>
-          
+
 			<div class="card-body card-b"><hr></div>
                    <div class="box-body text-center">
-                    <!--LIVE BUTTON-->   
+                    <!--LIVE BUTTON-->
                         <button type="submit" class="btn btn-info btn-fill" onclick="return PreSaveValidate()">Save</button></div>
-                    <!--DISABLED BUTTON-->    
+                    <!--DISABLED BUTTON-->
                         <!--<button type="submit" class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>>Save</button></div>-->
-                    
+
                     <div class="box-body text-center">
                     <button type="button" class="btn btn-info btn-fill" onclick="window.open('https://groups.google.com/u/1/a/momsclub.org/g/2022-23boardlist')">BoardList Forum</button>
                     <button type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-info btn-fill">eLearning Library</button></div>
                     </div>
                 </div>
-			</form>		
+			</form>
             </div>
 		</div>
-        
+
     </div>
 </div>
 @endsection
@@ -363,7 +363,7 @@
 //    $("#bor_zip").prop("readonly",true);
 //    $("#bor_email").prop("readonly",true);
 //    $("#bor_phone").prop("readonly",true);
-    
+
 
 function isNumber(evt) {
     evt = (evt) ? evt : window.event;
@@ -386,7 +386,7 @@ function isPhone() {
 		alert("Please Enter Number Only");
 		return false;
 	}
-} 
+}
 $( document ).ready(function() {
 	var phoneListArr = ["bor_phone"];
     for (var i = phoneListArr.length - 1; i >= 0; i--) {
@@ -394,7 +394,7 @@ $( document ).ready(function() {
         if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
         var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
         $("#"+phoneListArr[i]).val(reInputValue);
-    } 
+    }
 	$("#bor_phone").keyup(function() {
         this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
     });
@@ -402,7 +402,7 @@ $( document ).ready(function() {
 		if (e.which == 32)
 			return false;
 	});
-	
+
     var pcid = $("#pcid").val();
 	if(pcid !=""){
 		$.ajax({
@@ -421,7 +421,7 @@ $( document ).ready(function() {
 //submit validation function
   function PreSaveValidate(){
           var NewPassword=document.getElementById("bor_pswd").value;
-				
+
 				//They changed their password
 				if(document.getElementById("bor_pswd").value != document.getElementById("bor_pswd").getAttribute("value")){
 					if(document.getElementById("bor_pswd").value != document.getElementById("bor_pswd_cnf").value){  //Make sure the password and confirmation match
@@ -432,20 +432,28 @@ $( document ).ready(function() {
 					// Make sure the password is the right length
 					else if(NewPassword.length < 7){
 						alert("Password must be at least 7 characters.");
-						document.getElementById("bor_pswd").focus(); 
+						document.getElementById("bor_pswd").focus();
 						return false;
 					}
 					else{
 						document.getElementById("bor_pswd_chg").value="1";
 					}
-					
+
 				}
-        //}
-       						
+            var phoneListArr = ["bor_phone"];
+
+                for (var i = 0; i < phoneListArr.length; i++) {
+                    var inputField = document.getElementById(phoneListArr[i]);
+                    var inputValue = inputField.value;
+                    inputValue = inputValue.replace(/-/g, ''); // Remove hyphens
+                    inputValue = inputValue.replace(/\D/g, '').substring(0, 10); // Remove non-digits and limit to 10 digits
+                    inputField.value = inputValue; // Update the input field with the cleaned value
+                }
+
 		//Okay, all validation passed, save the records to the database
 		return true;
 	}
-  
 
-</script>  
+
+</script>
 @endsection

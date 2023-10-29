@@ -30,7 +30,7 @@ class PaymentsSustainingChapterThankYou extends Mailable
     public function build()
     {
         return $this
-            ->subject('Thank You for Your Re-Registration Payment')
+            ->subject('Thank You for Your Sustaining Chapter Payment')
             ->markdown('emails.payments.sustainingchapterthankyou');
     }
 }

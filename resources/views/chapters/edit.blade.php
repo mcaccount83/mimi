@@ -11,7 +11,7 @@
         <li class="active">Chapter List</li>
       </ol>
     </section>
-   
+
     <!-- Main content -->
     <form method="POST" action='{{ route("chapters.update",$chapterList[0]->id) }}'">
     @csrf
@@ -68,7 +68,7 @@
                     @endforeach
 						</select>
 						</div>
-					</div>	
+					</div>
 
               <!-- /.form group -->
               <div class="col-sm-4 col-xs-12">
@@ -84,14 +84,14 @@
               </div>
               </div>
                     <!-- /.form group -->
-       
+
               <div class="col-sm-2 col-xs-12">
               <div class="form-group">
                 <label>EIN</label>
                 <input type="text" id="ch_ein" name="ch_ein" class="form-control my-colorpicker1" value="{{ $chapterList[0]->ein }}" maxlength="10" readonly>
               </div>
               </div>
-              
+
                             <!-- /.form group -->
 
                 <div class="col-sm-2 col-xs-12">
@@ -147,7 +147,7 @@
               </div>
               </div>
               @endif -->
-        
+
               <!-- /.form group -->
               <div class="col-sm-12 col-xs-12">
               <div class="form-group">
@@ -226,7 +226,7 @@
 
               <div class="box-body text-center">
                 <button type="button" class="btn btn-themeBlue margin" id="{{ $chapterList[0]->user_id }}" onclick="return resetPassword(this.id)">Reset Password</button>
-              </div>  
+              </div>
               </div>
               <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">AVP</h3>
@@ -548,7 +548,7 @@
                 <h3 class="box-title">Information</h3>
               </div>
               <div class="box-body">
-              
+
                <!-- /.form group -->
                <div class="col-sm-12 col-xs-12">
               <div class="form-group">
@@ -590,7 +590,7 @@
               <div class="form-group">      <input type="hidden" name="ch_hid_linkstatus" value="{{$chapterList[0]->website_link_status}}">
 </div>
               </div>
-              
+
               <!-- /.form group -->
               <div class="col-sm-12 col-xs-12">
               <div class="form-group">
@@ -647,9 +647,9 @@
                 <input type="text" name="ch_inqnote" class="form-control my-colorpicker1" value="{{ $chapterList[0]->inquiries_note}}" maxlength="50" >
               </div>
               </div>
-              
-              
-              
+
+
+
               <!-- /.form group -->
               <div class="col-sm-12 col-xs-12">
               <div class="form-group">
@@ -659,7 +659,7 @@
               </div>
               </div>
              <div class="box-header with-border mrg-t-10">
-               
+
               </div>
               <div class="box-body">
                <!-- /.form group -->
@@ -703,7 +703,7 @@
                 <label>Re-Registration Dues Paid</label>
                 <input type="text" name="ch_dues" class="form-control my-colorpicker1" value="{{$chapterList[0]->dues_last_paid }}" disabled>
               </div>
-              </div> 
+              </div>
               <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
@@ -718,7 +718,7 @@
                 <input type="text" name="ch_regnotes" class="form-control my-colorpicker1" maxlength="50" value="{{ $chapterList[0]->reg_notes}}" >
               </div>
               </div>
-    
+
                                     <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
@@ -726,7 +726,7 @@
                 <input type="date" name="ch_m2mdate" class="form-control my-colorpicker1" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" value="{{$chapterList[0]->m2m_date }}" disabled>
 
               </div>
-              </div> 
+              </div>
                             <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
@@ -741,7 +741,7 @@
                 <input type="date" name="ch_sustaining_date" class="form-control my-colorpicker1" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" value="{{$chapterList[0]->sustaining_date }}" disabled>
 
               </div>
-              </div> 
+              </div>
               <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
@@ -776,7 +776,7 @@
                   </div>
               </div>
               <!-- /.form group -->
-                
+
                     <div class="radio-chk">
                         <div class="col-sm-3 col-xs-12">
                             <div class="form-group">
@@ -786,7 +786,7 @@
                             </div>
                         </div>
                     </div>
-                
+
 
               <!-- /.form group -->
               <div class="radio-chk">
@@ -799,10 +799,10 @@
                             </div>
                         </div>
                     </div>
-                   <?php if($positionid !=12){?> 
+                   <?php if($positionid !=12){?>
                     <!-- /.LIVE EOY BUTTONS -->
            <div class="box-body text-center">
-            @foreach($chapterList as $list)   
+            @foreach($chapterList as $list)
                <?php if($positionid >=5 && $positionid <=7){?>
 				    <a class="btn btn-themeBlue margin" href="<?php echo url("/chapter/statusview/{$list->id}") ?>">Update Report Status</a>
 				   <?php }?>
@@ -812,14 +812,14 @@
 							    <a class="btn btn-themeBlue margin" href="<?php echo url("/chapter/boardinfo/{$list->id}") ?>"><?php echo $a = date('Y'); echo "-"; echo $a+1;?> Board Election Report</a>
 							@endif
                     <a class="btn btn-themeBlue margin" href="<?php echo url("/chapter/financial/{$list->id}") ?>"><?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</a>
-              
+
             @endforeach
             </div>
                <!-- /.END LIVE BUTTONS -->
 
               <!-- /.DISABLED EOY BUTTONS -->
             <!--     <div class="box-body text-center">
-            @foreach($chapterList as $list)   
+            @foreach($chapterList as $list)
                <?php if($positionid >=5 && $positionid <=7){?>
 				    <a class="btn btn-themeBlue margin" href="#" <?php echo "disabled";?>>Update Report Status</a>
 
@@ -835,12 +835,12 @@
                <!-- /.END DISABLED BUTTONS -->
                <?php }?>
               </div>
-             
+
           <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">International MOMS Club Coordinators</h3>
               </div>
               <div class="box-body">
-               
+
               <!-- /.form group -->
               <div class="col-sm-12 col-xs-12">
               <div class="form-group">
@@ -856,7 +856,7 @@
               <div id="display_corlist"> </div>
               </div>
               </div>
-              
+
               <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title"></h3>
               </div>
@@ -876,10 +876,10 @@
                   </div>
                   </div>
               </div>
-              
+
               </div>
       </div>
-            
+
             <!-- /.box-body -->
             <div class="box-body text-center">
             <?php if (Session::get('positionid') <=7 || Session::get('positionid') == 25) {?>
@@ -893,11 +893,11 @@
                 <?php }?>
               <a href="{{ route('chapter.list') }}" class="btn btn-themeBlue margin">Back</a>
               </div>
-              
+
               <div class="box-body text-center">
                <?php if ((Session::get('positionid') >=6 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>
                 <button type="button" class="btn btn-themeBlue margin" onclick="return UpdateEIN()">Update EIN</button>
-              
+
                 <button type="button" class="btn btn-themeBlue margin" onclick="return EINLetter()">Update EIN Letter</button>
               <?php } ?>
               <?php if ((Session::get('positionid') >=5 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>
@@ -905,14 +905,14 @@
               <?php } ?>
               </div>
 
-             
+
             <!-- /.box-body -->
-            
+
           </div>
           <!-- /.box -->
         </div>
       </div>
-      
+
       <div class="modal fade" id="modal-default">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -959,7 +959,7 @@
               data: { reason:txt,chpaterid:cid, _token: '{{csrf_token()}}' },
               success: function(result) {
                // alert('Chapter has been successfully Zapped');
-               
+
                 window.location.href = "/mimi/home?dis=1";
               },
               error: function (jqXHR, exception) {
@@ -968,7 +968,7 @@
           });
         }
       }
-      
+
   function isNumber(evt) {
     evt = (evt) ? evt : window.event;
     var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -1006,7 +1006,7 @@ function is_url()
           var isChecked2 = $('#not_link').is(':checked');
           if(isChecked == '' || isChecked1 == '' || isChecked2 == ''){
             alert("please select link status");
-            return false; 
+            return false;
           }
         }else{
           $('#link_status').attr('hidden',true);
@@ -1034,8 +1034,8 @@ function is_url()
         if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
         var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
         $("#"+phoneListArr[i]).val(reInputValue);
-    }  
-          
+    }
+
     $("#ch_pre_phone").keyup(function() {
         this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
     });
@@ -1050,8 +1050,8 @@ function is_url()
     });
     $("#ch_sec_phone").keyup(function() {
         this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    }); 
-    
+    });
+
     var selectedCorId = $("select#ch_primarycor option").filter(":selected").val();
     if(selectedCorId !=""){
       $.ajax({
@@ -1076,7 +1076,7 @@ function is_url()
 
             }
         });
-        
+
       }
     var avp = $("#ch_avp_fname").val();
     if(avp ==''){
@@ -1110,7 +1110,7 @@ function is_url()
         $("#ch_trs_zip").prop("readonly",true);
         $("#ch_trs_phone").prop("readonly",true);
         $("#ch_trs_state").prop("disabled",true);
-    } 
+    }
     var sec = $("#ch_sec_fname").val();
     if(sec ==''){
         $("#ch_sec_fname").prop("readonly",true);
@@ -1122,7 +1122,7 @@ function is_url()
         $("#ch_sec_phone").prop("readonly",true);
         $("#ch_sec_state").prop("disabled",true);
     }
-   
+
   });
 
   function ConfirmVacant(checkboxid) {
@@ -1164,8 +1164,8 @@ function is_url()
                 $("#ch_avp_zip").prop("required",true);
                 $("#ch_avp_phone").prop("required",true);
                 $("#ch_avp_state").prop("required",true);
-              }  
-            break; 
+              }
+            break;
           case "MVPVacant":
               if($("#MVPVacant").prop("checked") == true){
                 $("#ch_mvp_fname").prop("readonly",true);
@@ -1202,7 +1202,7 @@ function is_url()
                 $("#ch_mvp_zip").prop("required",true);
                 $("#ch_mvp_phone").prop("required",true);
                 $("#ch_mvp_state").prop("required",true);
-              }  
+              }
             break;
           case "TreasVacant":
               if($("#TreasVacant").prop("checked") == true){
@@ -1240,9 +1240,9 @@ function is_url()
                 $("#ch_trs_zip").prop("required",true);
                 $("#ch_trs_phone").prop("required",true);
                 $("#ch_trs_state").prop("required",true);
-                
-              }  
-            break; 
+
+              }
+            break;
           case "SecVacant":
               if($("#SecVacant").prop("checked") == true){
                 $("#ch_sec_fname").prop("readonly",true);
@@ -1279,10 +1279,10 @@ function is_url()
                 $("#ch_sec_zip").prop("required",true);
                 $("#ch_sec_phone").prop("required",true);
                 $("#ch_sec_state").prop("required",true);
-              }  
-            break;      
-    }      
-    
+              }
+            break;
+    }
+
   }
 
       function ConfirmCancel(element){
@@ -1291,7 +1291,7 @@ function is_url()
             location.reload()
         else
             return false;
-    }     
+    }
   //submit validation function
   function PreSaveValidate(){
     var errMessage="";
@@ -1301,7 +1301,7 @@ function is_url()
             if($("#ch_pre_email").val() == $("#ch_avp_email").val() || $("#ch_pre_email").val() == $("#ch_mvp_email").val() || $("#ch_pre_email").val() == $("#ch_trs_email").val() || $("#ch_pre_email").val() == $("#ch_sec_email").val()) {
               errMessage = "The e-mail address provided for the Chapter President was also provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
             }
-          }  
+          }
           if($("#ch_avp_email").val() != ""){
             if($("#ch_avp_email").val() == $("#ch_mvp_email").val() || $("#ch_avp_email").val() == $("#ch_trs_email").val() || $("#ch_avp_email").val() == $("#ch_sec_email").val()) {
               errMessage = "The e-mail address provided for the Chapter AVP was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
@@ -1312,27 +1312,37 @@ function is_url()
               errMessage = "The e-mail address provided for the Chapter MVP was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
             }
           }
-          if($("#ch_trs_email").val() != ""){  
+          if($("#ch_trs_email").val() != ""){
             if($("#ch_trs_email").val() == $("#ch_sec_email").val()) {
               errMessage = "The e-mail address provided for the Chapter Treasurer was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
             }
           }
-          
+
           if(errMessage.length > 0){
-            alert (errMessage); 
+            alert (errMessage);
             return false;
           }
-        //}
-                                
+
+          var phoneListArr = ["ch_pre_phone", "ch_avp_phone", "ch_mvp_phone", "ch_trs_phone", "ch_sec_phone"];
+
+                for (var i = 0; i < phoneListArr.length; i++) {
+                    var inputField = document.getElementById(phoneListArr[i]);
+                    var inputValue = inputField.value;
+                    inputValue = inputValue.replace(/-/g, ''); // Remove hyphens
+                    inputValue = inputValue.replace(/\D/g, '').substring(0, 10); // Remove non-digits and limit to 10 digits
+                    inputField.value = inputValue; // Update the input field with the cleaned value
+                }
+
                 //Okay, all validation passed, save the records to the database
                 return true;
             }
+
 
       /*function checkDuplicateEmail(email,id){
         var chkid = id+"_chk";
         var oldVal = $("#"+id).val();
         var newVal = $("#"+chkid).val();
-        if(oldVal != newVal){   
+        if(oldVal != newVal){
            $.ajax({
                 url: '/checkemail/'+email,
                 type: "GET",
@@ -1349,8 +1359,8 @@ function is_url()
             });
         }else{
             return false;
-        }           
-    }*/  
+        }
+    }*/
 
     function resetPassword(userid){
         var new_password="";
@@ -1368,7 +1378,7 @@ function is_url()
                   data: { pswd:new_password,user_id:userid, _token: '{{csrf_token()}}' },
                   success: function(result) {
                       alert('Password has been reset successfully');
-                      
+
                   },
                   error: function (jqXHR, exception) {
 
@@ -1377,24 +1387,24 @@ function is_url()
 
                 return true;
                     }
-                }   
+                }
                 else{
           //alert('Not Allowed');
           return false;
         }
-                                
+
             }
 function UpdateEIN(){
                 var ein=document.getElementById("ch_ein").value;
                 var new_ein="";
-                
+
                 if (ein==""){
                     new_ein = prompt("Please enter the EIN for the chapter");
-                    
+
                     if (new_ein != null) {
                         document.getElementById("ch_ein").value = new_ein;
                         return true;
-                    }               
+                    }
                 }
                 else{
                     var result=confirm("This chapter already has an assigned EIN.  Once a chapter has been assigned an EIN it should not be changed.  Are you REALLY sure you want to do this?");
@@ -1403,25 +1413,25 @@ function UpdateEIN(){
                         if (new_ein != null) {
                             document.getElementById("ch_ein").value = new_ein;
                             return true;
-                        }               
+                        }
                     }
                     else{
-                        return false;   
+                        return false;
                     }
                 }
             }
-            
+
     function EINLetter(){
                 var ein=document.getElementById("ch_ein_letter_path").value;
                 var new_ein="";
-                
+
                 if (ein==""){
                     new_ein = prompt("Please enter url path for the chapter's EIN Letter");
-                    
+
                     if (new_ein != null) {
                         document.getElementById("ch_ein_letter_path").value = new_ein;
                         return true;
-                    }               
+                    }
                 }
                 else{
                     var result=confirm("This chapter already has an EIN Letter.  Are you REALLY sure you want to do this?");
@@ -1430,14 +1440,14 @@ function UpdateEIN(){
                         if (new_ein != null) {
                             document.getElementById("ch_ein_letter_path").value = new_ein;
                             return true;
-                        }               
+                        }
                     }
                     else{
-                        return false;   
+                        return false;
                     }
                 }
-            }        
-    
+            }
+
     function addPrezList(val){
     $("#prezListBtn").attr("disabled", true);
           $.ajax({
@@ -1452,13 +1462,13 @@ function UpdateEIN(){
 
             }
         });
-        
-      }     
+
+      }
     function PreviousNameReminder(){
-    
+
         alert("If you are changing the chapter name, please be sure to note the old name.");
         $('#ch_preknown').focus();
-        
-    }  
+
+    }
 </script>
 @endsection

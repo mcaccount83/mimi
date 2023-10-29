@@ -30,7 +30,7 @@ class PaymentsM2MChapterThankYou extends Mailable
     public function build()
     {
         return $this
-            ->subject('Thank You for Your Re-Registration Payment')
+            ->subject('Thank You for Your Mother-to-Mother Fund Payment')
             ->markdown('emails.payments.m2mchapterthankyou');
     }
 }

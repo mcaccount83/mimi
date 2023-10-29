@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\CoordinatorController;
@@ -8,7 +7,9 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,28 +28,31 @@ Route::get('/', function () {
 
 Route::middleware('preventBackHistory')->group(function () {
     // Authentication Routes
-    Route::get('login', [Auth\LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('login', [Auth\LoginController::class, 'login']);
-    Route::post('logout', [Auth\LoginController::class, 'logout'])->name('logout');
+    Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [LoginController::class, 'login']);
+    Route::post('logout', [LoginController::class, 'logout'])->name('user.logout');
 
     // Registration Routes
-    Route::get('register', [Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('register', [Auth\RegisterController::class, 'register']);
+    Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+    Route::post('register', 'Auth\RegisterController@register');
 
     // Password Reset Routes
-    Route::get('password/reset', [Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
-    Route::post('password/email', [Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-    Route::get('password/reset/{token}', [Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
-    Route::post('password/reset', [Auth\ResetPasswordController::class, 'reset']);
+    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+    Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+    Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+    Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 
     // Home Route
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     // Your other custom routes can be defined here
 
-});
+    });
 
-Route::get('/logout', [Auth\LoginController::class, 'logout'])->name('logout');
+    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
+
 
 /**
  * Routes for Custom Links
@@ -149,7 +153,6 @@ Route::get('/export/eoystatus', [ExportController::class, 'exportEOYStatus'])->n
 Route::get('/export/chaptercoordinator', [ExportController::class, 'exportChapterCoordinator'])->name('export.chaptercoordinator');
 Route::get('/export/chapteraward/{id}', [ExportController::class, 'exportChapterAwardList'])->name('export.chapteraward');
 Route::get('/export/appreciation', [ExportController::class, 'exportAppreciation'])->name('export.appreciation');
-
 Route::get('/export/intchapter', [ExportController::class, 'exportInternationalChapter'])->name('export.intchapter');
 Route::get('/export/intzapchapter', [ExportController::class, 'exportInternationalZapChapter'])->name('export.intzapchapter');
 Route::get('/export/intcoordinator', [ExportController::class, 'exportIntCoordinator'])->name('export.intcoordinator');
@@ -157,7 +160,6 @@ Route::get('/export/intretcoordinator', [ExportController::class, 'exportIntRetC
 Route::get('/export/inteinstatus', [ExportController::class, 'exportIntEINStatus'])->name('export.inteinstatus');
 Route::get('/export/intrereg', [ExportController::class, 'exportIntReReg'])->name('export.intrereg');
 Route::get('/export/inteoystatus', [ExportController::class, 'exportIntEOYStatus'])->name('export.inteoystatus');
-
 Route::get('/export/boardelection', [ExportController::class, 'exportBoardElection'])->name('export.boardelection');
 
 /**
@@ -192,22 +194,22 @@ Route::get('/reports/inteinstatus', [ReportController::class, 'intEINstatus'])->
 Route::get('/reports/einstatus', [ReportController::class, 'showEINstatus'])->name('report.einstatus');
 Route::get('/reports/boardlist', [ReportController::class, 'showBoardlist'])->name('report.boardlist');
 Route::get('/reports/socialmedia', [ReportController::class, 'showSocialMedia'])->name('report.socialmedia');
+Route::get('/reports/downloads', [ReportController::class, 'showDownloads'])->name('report.downloads');
 Route::get('/yearreports/review', [ReportController::class, 'showReportToReview'])->name('report.review');
 Route::get('/yearreports/boardinfo', [ReportController::class, 'showReportToBoardInfo'])->name('report.boardinfo');
 Route::get('/yearreports/boardnotification', [ReportController::class, 'boardNotification'])->name('report.boardnotification');
 Route::get('/yearreports/chapteraward', [ReportController::class, 'showReportToBoardInfo'])->name('report.awards');
 Route::get('/yearreports/boundaryissue', [ReportController::class, 'showReportToIssues'])->name('report.issues');
-Route::get('/yearreports/chapterawards', [ReportController::class, 'showChapterAwards'])->name('report.awards');
-//Route::get('/resources','ReportController@resources')->name('resources');
+Route::get('/yearreports/chapterawards', [ReportController::class, 'showChapterAwards'])->name('report.chapterawards');
 Route::get('/yearreports/eoystatus', [ReportController::class, 'showEOYStatus'])->name('report.eoystatus');
-Route::get('/reports/downloads', [ReportController::class, 'showDownloads'])->name('report.downloads');
+Route::get('/yearreports/addawards', [ReportController::class, 'addAwards'])->name('report.addawards');
 Route::get('/adminreports/duplicateuser', [ReportController::class, 'showDuplicate'])->name('report.duplicateuser');
 Route::get('/adminreports/duplicateboardid', [ReportController::class, 'showDuplicateId'])->name('report.duplicateboardid');
 Route::get('/adminreports/multipleboard', [ReportController::class, 'showMultiple'])->name('report.multipleboard');
 Route::get('/adminreports/nopresident', [ReportController::class, 'showNoPresident'])->name('report.nopresident');
-Route::get('/yearreports/addawards', [ReportController::class, 'addAwards'])->name('report.addawards');
 
 /**
  * Routes for PDF
  */
-Route::get('/myPDF', [PDFController::class, 'generatePDF'])->name('myPDF');
+Route::get('/board/financialPDF/{id}', [PDFController::class, 'financialReport'])->name('FinancialReport');
+
