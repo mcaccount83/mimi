@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Request;
 use Closure;
 
 class PreventBackHistory
@@ -12,7 +14,7 @@ class PreventBackHistory
      * @param  \Illuminate\Http\Request  $request
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
         $response = $next($request);
         /*return $response->header('Cache-Control','no-cache, no-store, max-age=0, must-revalidate')
