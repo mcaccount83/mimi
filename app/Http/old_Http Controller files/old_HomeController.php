@@ -89,8 +89,8 @@ class HomeController extends Controller
                         ->where('chapters.is_active', '=', '1')
                         ->where('bd.board_position_id', '=', '1')
                         ->where('chapters.region', '=', '15')
-                        ->orderBy('st.state_short_name', 'ASC')
-                        ->orderBy('chapters.name', 'ASC')
+                        ->orderBy('st.state_short_name')
+                        ->orderBy('chapters.name')
                         ->get();
                 } else {
                     //Get Chapter List mapped with login coordinator
@@ -102,8 +102,8 @@ class HomeController extends Controller
                         ->where('chapters.is_active', '=', '1')
                         ->where('bd.board_position_id', '=', '1')
                         ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-                        ->orderBy('st.state_short_name', 'ASC')
-                        ->orderBy('chapters.name', 'ASC')
+                        ->orderBy('st.state_short_name')
+                        ->orderBy('chapters.name')
                         ->get();
                 }
 
@@ -130,7 +130,7 @@ class HomeController extends Controller
 
             $stateArr = DB::table('state')
                 ->select('state.*')
-                ->orderBy('id', 'ASC')
+                ->orderBy('id')
                 ->get();
 
             $chapterState = DB::table('state')

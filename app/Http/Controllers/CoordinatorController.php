@@ -64,7 +64,7 @@ class CoordinatorController extends Controller
                 ->join('region as rg', 'rg.id', '=', 'cd.region_id')
                 ->where('cd.is_active', '=', '1')
                 ->whereIn('cd.report_id', $inQryArr)
-                ->orderBy('cd.first_name', 'ASC')
+                ->orderBy('cd.first_name')
                 ->get();
         } elseif ($corId == 38) {
             $coordinatorList = DB::table('coordinator_details as cd')
@@ -73,7 +73,7 @@ class CoordinatorController extends Controller
                 ->join('region as rg', 'rg.id', '=', 'cd.region_id')
                 ->where('cd.is_active', '=', '1')
                 ->where('cd.region_id', '=', '15')
-                ->orderBy('cd.first_name', 'ASC')
+                ->orderBy('cd.first_name')
                 ->get();
         } else {
             $coordinatorList = DB::table('coordinator_details as cd')
@@ -83,7 +83,7 @@ class CoordinatorController extends Controller
                 ->where('cd.is_active', '=', '1')
                 ->where('cd.conference_id', '=', $corConfId)
                 ->whereIn('cd.report_id', $inQryArr)
-                ->orderBy('cd.first_name', 'ASC')
+                ->orderBy('cd.first_name')
                 ->get();
         }
 
@@ -111,7 +111,7 @@ class CoordinatorController extends Controller
                     ->join('region as rg', 'rg.id', '=', 'cd.region_id')
                     ->where('cd.is_active', '=', '1')
                     ->where('cd.report_id', $corId)
-                    ->orderBy('cd.first_name', 'ASC')
+                    ->orderBy('cd.first_name')
                     ->get();
                 //Get the e-mail addresses for all the listed coordinators
                 $emailListCord = '';
@@ -145,16 +145,16 @@ class CoordinatorController extends Controller
 
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $countryArr = DB::table('country')
             ->select('country.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
             ->where('conference_id', '=', $corConfId)
-            ->orderBy('long_name', 'ASC')
+            ->orderBy('long_name')
             ->get();
 
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
@@ -189,7 +189,7 @@ class CoordinatorController extends Controller
 
             $cordIdArr = DB::table('coordinator_details')
                 ->select('coordinator_details.coordinator_id')
-                ->orderBy('coordinator_details.coordinator_id', 'DESC')
+                ->orderByDesc('coordinator_details.coordinator_id')
                 ->limit(1)
                 ->get();
             $cordId = $cordIdArr[0]->coordinator_id + 1;
@@ -346,26 +346,26 @@ class CoordinatorController extends Controller
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $countryArr = DB::table('country')
             ->select('country.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
                     //->where('conference_id', '=', $corConfId)
-            ->orderBy('long_name', 'ASC')
+            ->orderBy('long_name')
             ->get();
         $confList = DB::table('conference')
             ->select('id', 'conference_name')
                         //->where('conference_id', '=', $corConfId)
-            ->orderBy('conference_name', 'ASC')
+            ->orderBy('conference_name')
             ->get();
         $positionList = DB::table('coordinator_position')
             ->select('id', 'long_title')
                         //->where('conference_id', '=', $corConfId)
-            ->orderBy('long_title', 'ASC')
+            ->orderBy('long_title')
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinator_details as cd')
@@ -375,7 +375,7 @@ class CoordinatorController extends Controller
                    // ->where('cd.position_id', '<=', '6')
                     //->where('cd.position_id', '>=', '1')
             ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name', 'ASC')
+            ->orderBy('cd.first_name')
             ->get();
         $directReportTo = DB::table('coordinator_details as cd')
             ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
@@ -482,27 +482,27 @@ class CoordinatorController extends Controller
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $countryArr = DB::table('country')
             ->select('country.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
             ->where('conference_id', '=', $corConfId)
-            ->orderBy('long_name', 'ASC')
+            ->orderBy('long_name')
             ->get();
         $confList = DB::table('conference')
             ->select('id', 'conference_name')
             ->where('id', '>=', 0)
-            ->orderBy('conference_name', 'ASC')
+            ->orderBy('conference_name')
             ->get();
         $positionList = DB::table('coordinator_position')
             ->select('id', 'long_title')
                         //->where('conference_id', '=', $corConfId)
-                        //->orderBy('long_title','ASC')
-            ->orderBy('id', 'ASC')
+                        //->orderBy('long_title')
+            ->orderBy('id')
             ->get();
 
         $conference_id = $coordinatorDetails[0]->conference_id;
@@ -559,7 +559,7 @@ class CoordinatorController extends Controller
                 ->join('state as st', 'chapters.state', '=', 'st.id')
                 ->where('chapters.conference', '=', $conference_id)
                 ->where('chapters.is_active', '=', '1')
-                ->orderBy('st.state_short_name', 'ASC')
+                ->orderBy('st.state_short_name')
                 ->get();
         } else {
             $primaryChapterList = DB::table('chapters')
@@ -957,7 +957,7 @@ class CoordinatorController extends Controller
         $regionList = DB::table('region')
             ->select('id', 'long_name')
             ->where('conference_id', '=', $corConfId)
-            ->orderBy('long_name', 'ASC')
+            ->orderBy('long_name')
             ->get();
         $html = '<option value="">Select Region</option><option value="0">None</option>';
         foreach ($regionList as $list) {
@@ -1050,7 +1050,7 @@ class CoordinatorController extends Controller
                 ->join('state as st', 'chapters.state', '=', 'st.id')
                 ->where('chapters.conference', '=', $conference_id)
                 ->where('chapters.is_active', '=', '1')
-                ->orderBy('st.state_short_name', 'ASC')
+                ->orderBy('st.state_short_name')
                 ->get();
         } else {
             $primaryChapterList = DB::table('chapters')
@@ -1083,7 +1083,7 @@ class CoordinatorController extends Controller
                 ->select('cd.coordinator_id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.reason_retired as cor_reason', 'cd.zapped_date as cor_zapdate', 'cp.long_title as position')
                 ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
                 ->where('cd.is_active', '=', '0')
-                ->orderBy('cd.zapped_date', 'DESC')
+                ->orderByDesc('cd.zapped_date')
                 ->get();
         } else {
             $retiredCoordinatorList = DB::table('coordinator_details as cd')
@@ -1091,7 +1091,7 @@ class CoordinatorController extends Controller
                 ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
                 ->where('cd.is_active', '=', '0')
                 ->where('cd.conference_id', $corConfId)
-                ->orderBy('cd.zapped_date', 'DESC')
+                ->orderByDesc('cd.zapped_date')
                 ->get();
         }
         //Get Coordinator List mapped with login coordinator
@@ -1111,30 +1111,30 @@ class CoordinatorController extends Controller
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $countryArr = DB::table('country')
             ->select('country.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
-            ->orderBy('long_name', 'ASC')
+            ->orderBy('long_name')
             ->get();
         $confList = DB::table('conference')
             ->select('id', 'conference_name')
-            ->orderBy('conference_name', 'ASC')
+            ->orderBy('conference_name')
             ->get();
         $positionList = DB::table('coordinator_position')
             ->select('id', 'long_title')
-            ->orderBy('long_title', 'ASC')
+            ->orderBy('long_title')
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinator_details as cd')
             ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name', 'ASC')
+            ->orderBy('cd.first_name')
             ->get();
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
         $currentMonth = $coordinatorDetails[0]->birthday_month_id;
@@ -1152,7 +1152,7 @@ class CoordinatorController extends Controller
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name', 'ASC')
+            ->orderBy('cd.first_name')
             ->get();
         $data = ['intCoordinatorList' => $intCoordinatorList];
 
@@ -1167,7 +1167,7 @@ class CoordinatorController extends Controller
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->where('cd.is_active', '=', '0')
-            ->orderBy('cd.zapped_date', 'DESC')
+            ->orderByDesc('cd.zapped_date')
             ->get();
 
         $data = ['intCoordinatorList' => $intCoordinatorList];
@@ -1188,30 +1188,30 @@ class CoordinatorController extends Controller
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $countryArr = DB::table('country')
             ->select('country.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
-            ->orderBy('long_name', 'ASC')
+            ->orderBy('long_name')
             ->get();
         $confList = DB::table('conference')
             ->select('id', 'conference_name')
-            ->orderBy('conference_name', 'ASC')
+            ->orderBy('conference_name')
             ->get();
         $positionList = DB::table('coordinator_position')
             ->select('id', 'long_title')
-            ->orderBy('long_title', 'ASC')
+            ->orderBy('long_title')
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinator_details as cd')
             ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name', 'ASC')
+            ->orderBy('cd.first_name')
             ->get();
         $directReportTo = DB::table('coordinator_details as cd')
             ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
@@ -1304,30 +1304,30 @@ class CoordinatorController extends Controller
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $countryArr = DB::table('country')
             ->select('country.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
-            ->orderBy('long_name', 'ASC')
+            ->orderBy('long_name')
             ->get();
         $confList = DB::table('conference')
             ->select('id', 'conference_name')
-            ->orderBy('conference_name', 'ASC')
+            ->orderBy('conference_name')
             ->get();
         $positionList = DB::table('coordinator_position')
             ->select('id', 'long_title')
-            ->orderBy('long_title', 'ASC')
+            ->orderBy('long_title')
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinator_details as cd')
             ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name', 'ASC')
+            ->orderBy('cd.first_name')
             ->get();
         $directReportTo = DB::table('coordinator_details as cd')
             ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
@@ -1411,24 +1411,24 @@ class CoordinatorController extends Controller
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $countryArr = DB::table('country')
             ->select('country.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
 
         $regionList = DB::table('region')
             ->select('id', 'long_name')
-            ->orderBy('long_name', 'ASC')
+            ->orderBy('long_name')
             ->get();
         $confList = DB::table('conference')
             ->select('id', 'conference_name')
-            ->orderBy('conference_name', 'ASC')
+            ->orderBy('conference_name')
             ->get();
         $positionList = DB::table('coordinator_position')
             ->select('id', 'long_title')
-            ->orderBy('long_title', 'ASC')
+            ->orderBy('long_title')
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinator_details as cd')
@@ -1514,24 +1514,24 @@ class CoordinatorController extends Controller
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $countryArr = DB::table('country')
             ->select('country.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
 
         $regionList = DB::table('region')
             ->select('id', 'long_name')
-            ->orderBy('long_name', 'ASC')
+            ->orderBy('long_name')
             ->get();
         $confList = DB::table('conference')
             ->select('id', 'conference_name')
-            ->orderBy('conference_name', 'ASC')
+            ->orderBy('conference_name')
             ->get();
         $positionList = DB::table('coordinator_position')
             ->select('id', 'long_title')
-            ->orderBy('long_title', 'ASC')
+            ->orderBy('long_title')
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinator_details as cd')

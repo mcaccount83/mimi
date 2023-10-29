@@ -44,7 +44,7 @@ class BoardController extends Controller
             ->where('chapters.is_Active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->where('chapters.id', $id)
-            ->orderBy('chapters.id', 'DESC')
+            ->orderByDesc('chapters.id')
             ->get();
 
         $AVPInfoPre = DB::table('chapters')
@@ -199,7 +199,7 @@ class BoardController extends Controller
 
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
-                        ->orderBy('board_details.board_id', 'DESC')
+                        ->orderByDesc('board_details.board_id')
                         ->limit(1)
                         ->get();
                     $boardId = $boardIdArr[0]->board_id + 1;
@@ -282,7 +282,7 @@ class BoardController extends Controller
 
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
-                        ->orderBy('board_details.board_id', 'DESC')
+                        ->orderByDesc('board_details.board_id')
                         ->limit(1)
                         ->get();
                     $boardId = $boardIdArr[0]->board_id + 1;
@@ -365,7 +365,7 @@ class BoardController extends Controller
 
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
-                        ->orderBy('board_details.board_id', 'DESC')
+                        ->orderByDesc('board_details.board_id')
                         ->limit(1)
                         ->get();
                     $boardId = $boardIdArr[0]->board_id + 1;
@@ -448,7 +448,7 @@ class BoardController extends Controller
 
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
-                        ->orderBy('board_details.board_id', 'DESC')
+                        ->orderByDesc('board_details.board_id')
                         ->limit(1)
                         ->get();
                     $boardId = $boardIdArr[0]->board_id + 1;
@@ -486,7 +486,7 @@ class BoardController extends Controller
                 ->where('chapters.is_Active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.id', $chapterId)
-                ->orderBy('chapters.id', 'DESC')
+                ->orderByDesc('chapters.id')
                 ->get();
 
             $AVPInfoUpd = DB::table('chapters')
@@ -819,7 +819,7 @@ class BoardController extends Controller
         $chapterDetails = Chapter::find($chapterId);
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
 
         $chapterState = DB::table('state')

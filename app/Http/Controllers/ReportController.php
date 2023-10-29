@@ -62,8 +62,8 @@ class ReportController extends Controller
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
         //->paginate(30);
         if (isset($_GET['check'])) {
@@ -78,8 +78,8 @@ class ReportController extends Controller
                     ->where('chapters.status', '<>', '1')
                     ->where('bd.board_position_id', '=', '1')
                     ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-                    ->orderBy('st.state_short_name', 'ASC')
-                    ->orderBy('chapters.name', 'ASC')
+                    ->orderBy('st.state_short_name')
+                    ->orderBy('chapters.name')
                     ->get();
             }
 
@@ -136,8 +136,8 @@ class ReportController extends Controller
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
 
         $data = ['chapterList' => $chapterList, 'corId' => $corId, 'positionId' => $positionId, 'secPositionId' => $secPositionId];
@@ -189,8 +189,8 @@ class ReportController extends Controller
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
 
         $data = ['chapterList' => $chapterList, 'corId' => $corId];
@@ -234,8 +234,8 @@ class ReportController extends Controller
             ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
 
         $data = ['chapterList' => $chapterList, 'corId' => $corId];
@@ -265,16 +265,16 @@ class ReportController extends Controller
 
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $countryArr = DB::table('country')
             ->select('country.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
             ->where('conference_id', '=', '5')
-            ->orderBy('long_name', 'ASC')
+            ->orderBy('long_name')
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinator_details as cd')
@@ -284,7 +284,7 @@ class ReportController extends Controller
             ->where('cd.position_id', '<=', '6')
             ->where('cd.position_id', '>=', '1')
             ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name', 'ASC')
+            ->orderBy('cd.first_name')
             ->get();
 
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
@@ -408,8 +408,8 @@ class ReportController extends Controller
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
         //->paginate(30);
         if (isset($_GET['check'])) {
@@ -423,8 +423,8 @@ class ReportController extends Controller
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '1')
                     ->where('chapters.primary_coordinator_id', '=', $corId)
-                    ->orderBy('st.state_short_name', 'ASC')
-                    ->orderBy('chapters.name', 'ASC')
+                    ->orderBy('st.state_short_name')
+                    ->orderBy('chapters.name')
                     ->get();
             }
 
@@ -480,8 +480,8 @@ class ReportController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
             ->whereIn('chapters.status', $status)
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
         //->paginate(30);
         if (isset($_GET['check'])) {
@@ -496,8 +496,8 @@ class ReportController extends Controller
                     ->where('chapters.status', '=', '5')
                     ->where('bd.board_position_id', '=', '1')
                     ->where('chapters.primary_coordinator_id', '=', $corId)
-                    ->orderBy('st.state_short_name', 'ASC')
-                    ->orderBy('chapters.name', 'ASC')
+                    ->orderBy('st.state_short_name')
+                    ->orderBy('chapters.name')
                     ->get();
             }
 
@@ -554,8 +554,8 @@ class ReportController extends Controller
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
 
         $data = ['chapterList' => $chapterList, 'corId' => $corId];
@@ -608,8 +608,8 @@ class ReportController extends Controller
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
         //->paginate(30);
         if (isset($_GET['check'])) {
@@ -624,8 +624,8 @@ class ReportController extends Controller
                     ->where('chapters.status', '<>', '1')
                     ->where('bd.board_position_id', '=', '1')
                     ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-                    ->orderBy('st.state_short_name', 'ASC')
-                    ->orderBy('chapters.name', 'ASC')
+                    ->orderBy('st.state_short_name')
+                    ->orderBy('chapters.name')
                     ->get();
             }
 
@@ -675,8 +675,8 @@ class ReportController extends Controller
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
         //->paginate(30);
         if (isset($_GET['check'])) {
@@ -690,8 +690,8 @@ class ReportController extends Controller
                     ->where('chapters.is_active', '=', '1')
                     ->where('chapters.status', '<>', '1')
                     ->where('bd.board_position_id', '=', '1')
-                    ->orderBy('st.state_short_name', 'ASC')
-                    ->orderBy('chapters.name', 'ASC')
+                    ->orderBy('st.state_short_name')
+                    ->orderBy('chapters.name')
                     ->get();
             }
 
@@ -750,8 +750,8 @@ class ReportController extends Controller
                 ->where('chapters.is_active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-                ->orderBy('st.state_short_name', 'ASC')
-                ->orderBy('chapters.name', 'ASC')
+                ->orderBy('st.state_short_name')
+                ->orderBy('chapters.name')
                 ->get();
             //->paginate(30);
 
@@ -766,8 +766,8 @@ class ReportController extends Controller
                         ->where('chapters.is_active', '=', '1')
                         ->where('bd.board_position_id', '=', '1')
                         ->where('chapters.primary_coordinator_id', '=', $corId)
-                        ->orderBy('st.state_short_name', 'ASC')
-                        ->orderBy('chapters.name', 'ASC')
+                        ->orderBy('st.state_short_name')
+                        ->orderBy('chapters.name')
                         ->get();
                 }
 
@@ -830,11 +830,11 @@ class ReportController extends Controller
             ->where('cd.is_active', '=', '1')
                             //->whereIn('cd.report_id', $inQryArr)
             ->whereIn('cd.coordinator_id', $inQryArr)
-                            //  ->orderBy('cd.first_name','ASC')
+                            //  ->orderBy('cd.first_name')
             ->orderByRaw("FIELD(rg.short_name , 'None') DESC")
             ->orderByRaw('rg.short_name', 'ASC')
                             // ->orderBy('rg.short_name','=','None','DESC')
-            ->orderBy('cp.id', 'DESC')
+            ->orderByDesc('cp.id')
             ->get();
         $data = ['coordinatorList' => $coordinatorList];
         // echo '<pre>';print_r($inQryArr);
@@ -887,7 +887,7 @@ class ReportController extends Controller
             ->whereIn('cd.coordinator_id', $inQryArr)
             ->orderByRaw("FIELD(rg.short_name , 'None') DESC")
             ->orderByRaw('rg.short_name', 'ASC')
-            ->orderBy('cp.id', 'DESC')
+            ->orderByDesc('cp.id')
             ->get();
 
         $data = ['coordinatorList' => $coordinatorList];
@@ -943,7 +943,7 @@ class ReportController extends Controller
             ->whereIn('cd.coordinator_id', $inQryArr)
             ->orderByRaw("FIELD(rg.short_name , 'None') DESC")
             ->orderByRaw('rg.short_name', 'ASC')
-            ->orderBy('cp.id', 'DESC')
+            ->orderByDesc('cp.id')
             ->get();
 
         $data = ['coordinatorList' => $coordinatorList];
@@ -979,8 +979,8 @@ class ReportController extends Controller
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
 
         if (count($activeChapterList) > 0) {
@@ -1188,8 +1188,8 @@ class ReportController extends Controller
             ->join('db_month as db', 'cd.birthday_month_id', '=', 'db.id')
             ->where('cd.is_active', '=', '1')
             ->whereIn('cd.coordinator_id', $inQryArr)
-            ->orderBy('cd.birthday_month_id', 'ASC')
-            ->orderBy('cd.birthday_day', 'ASC')
+            ->orderBy('cd.birthday_month_id')
+            ->orderBy('cd.birthday_day')
             ->get();
         $data = ['coordinatorList' => $coordinatorList];
 
@@ -1333,8 +1333,8 @@ class ReportController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->where('created_at', '<=', date('Y-06-30'))
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
         //->paginate(30);
 
@@ -1350,8 +1350,8 @@ class ReportController extends Controller
                     ->where('bd.board_position_id', '=', '1')
                     ->where('created_at', '<=', date('Y-06-30'))
                     ->where('chapters.primary_coordinator_id', '=', $corId)
-                    ->orderBy('st.state_short_name', 'ASC')
-                    ->orderBy('chapters.name', 'ASC')
+                    ->orderBy('st.state_short_name')
+                    ->orderBy('chapters.name')
                     ->get();
 
             }
@@ -1475,8 +1475,8 @@ class ReportController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->where('created_at', '<=', date('Y-06-30'))
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
         //->paginate(30);
 
@@ -1492,8 +1492,8 @@ class ReportController extends Controller
                     ->where('bd.board_position_id', '=', '1')
                     ->where('created_at', '<=', date('Y-06-30'))
                     ->where('chapters.primary_coordinator_id', '=', $corId)
-                    ->orderBy('st.state_short_name', 'ASC')
-                    ->orderBy('chapters.name', 'ASC')
+                    ->orderBy('st.state_short_name')
+                    ->orderBy('chapters.name')
                     ->get();
 
             }
@@ -1540,7 +1540,7 @@ class ReportController extends Controller
         $incomingBoardDetails = DB::table('incoming_board_member')
             ->select('*')
             ->where('chapter_id', '=', $chapter_id)
-            ->orderBy('board_position_id', 'ASC')
+            ->orderBy('board_position_id')
             ->get();
         $countIncomingBoardDetails = count($incomingBoardDetails);
         if ($countIncomingBoardDetails > 0) {
@@ -1597,7 +1597,7 @@ class ReportController extends Controller
 
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
-                        ->orderBy('board_details.board_id', 'DESC')
+                        ->orderByDesc('board_details.board_id')
                         ->limit(1)
                         ->get();
                     $boardId = $boardIdArr[0]->board_id + 1;
@@ -1687,8 +1687,8 @@ class ReportController extends Controller
             ->where('chapters.new_board_submitted', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
         //->paginate(30);
         if (isset($_GET['check'])) {
@@ -1704,8 +1704,8 @@ class ReportController extends Controller
                     ->where('chapters.new_board_submitted', '=', '1')
                     ->where('bd.board_position_id', '=', '1')
                     ->where('chapters.primary_coordinator_id', $corId)
-                    ->orderBy('st.state_short_name', 'ASC')
-                    ->orderBy('chapters.name', 'ASC')
+                    ->orderBy('st.state_short_name')
+                    ->orderBy('chapters.name')
                     ->get();
             }
         } else {
@@ -1801,8 +1801,8 @@ class ReportController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->where('created_at', '<=', date('Y-06-30'))
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
         //->paginate(30);
 
@@ -1819,8 +1819,8 @@ class ReportController extends Controller
                     ->where('bd.board_position_id', '=', '1')
                     ->where('created_at', '<=', date('Y-06-30'))
                     ->where('chapters.primary_coordinator_id', '=', $corId)
-                    ->orderBy('st.state_short_name', 'ASC')
-                    ->orderBy('chapters.name', 'ASC')
+                    ->orderBy('st.state_short_name')
+                    ->orderBy('chapters.name')
                     ->get();
 
             }
@@ -1868,7 +1868,7 @@ class ReportController extends Controller
         $userList = DB::table('board_details')
             ->where('is_active', '=', '1')
             ->whereIn('board_id', $userData)
-            ->orderBy('board_id', 'ASC')
+            ->orderBy('board_id')
             ->get();
 
         $data = ['userList' => $userList];

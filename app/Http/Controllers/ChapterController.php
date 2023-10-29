@@ -83,8 +83,8 @@ class ChapterController extends Controller
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
 
         if (isset($_GET['check'])) {
@@ -98,8 +98,8 @@ class ChapterController extends Controller
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '1')
                     ->where('chapters.primary_coordinator_id', $corId)
-                    ->orderBy('st.state_short_name', 'ASC')
-                    ->orderBy('chapters.name', 'ASC')
+                    ->orderBy('st.state_short_name')
+                    ->orderBy('chapters.name')
                     ->get();
             }
 
@@ -124,16 +124,16 @@ class ChapterController extends Controller
 
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $countryArr = DB::table('country')
             ->select('country.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
             ->where('conference_id', '=', $corConfId)
-            ->orderBy('long_name', 'ASC')
+            ->orderBy('long_name')
             ->get();
         $primaryCoordinatorList = DB::table('coordinator_details as cd')
             ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
@@ -144,7 +144,7 @@ class ChapterController extends Controller
             ->where('cd.is_active', '=', '1')
             ->orWhere('cd.position_id', '=', '25')
             ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name', 'ASC')
+            ->orderBy('cd.first_name')
             ->get();
 
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
@@ -225,7 +225,7 @@ class ChapterController extends Controller
 
                 $boardIdArr = DB::table('board_details')
                     ->select('board_details.board_id')
-                    ->orderBy('board_details.board_id', 'DESC')
+                    ->orderByDesc('board_details.board_id')
                     ->limit(1)
                     ->get();
                 $boardId = $boardIdArr[0]->board_id + 1;
@@ -265,7 +265,7 @@ class ChapterController extends Controller
 
                 $boardIdArr = DB::table('board_details')
                     ->select('board_details.board_id')
-                    ->orderBy('board_details.board_id', 'DESC')
+                    ->orderByDesc('board_details.board_id')
                     ->limit(1)
                     ->get();
                 $boardId = $boardIdArr[0]->board_id + 1;
@@ -304,7 +304,7 @@ class ChapterController extends Controller
 
                 $boardIdArr = DB::table('board_details')
                     ->select('board_details.board_id')
-                    ->orderBy('board_details.board_id', 'DESC')
+                    ->orderByDesc('board_details.board_id')
                     ->limit(1)
                     ->get();
                 $boardId = $boardIdArr[0]->board_id + 1;
@@ -343,7 +343,7 @@ class ChapterController extends Controller
 
                 $boardIdArr = DB::table('board_details')
                     ->select('board_details.board_id')
-                    ->orderBy('board_details.board_id', 'DESC')
+                    ->orderByDesc('board_details.board_id')
                     ->limit(1)
                     ->get();
                 $boardId = $boardIdArr[0]->board_id + 1;
@@ -382,7 +382,7 @@ class ChapterController extends Controller
 
                 $boardIdArr = DB::table('board_details')
                     ->select('board_details.board_id')
-                    ->orderBy('board_details.board_id', 'DESC')
+                    ->orderByDesc('board_details.board_id')
                     ->limit(1)
                     ->get();
                 $boardId = $boardIdArr[0]->board_id + 1;
@@ -544,21 +544,21 @@ class ChapterController extends Controller
 
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $countryArr = DB::table('country')
             ->select('country.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
             ->where('conference_id', '=', $corConfId)
-            ->orderBy('long_name', 'ASC')
+            ->orderBy('long_name')
             ->get();
         $confList = DB::table('conference')
             ->select('id', 'conference_name')
             ->where('id', '>=', 0)
-            ->orderBy('conference_name', 'ASC')
+            ->orderBy('conference_name')
             ->get();
         $chapterEmailList = DB::table('board_details as bd')
             ->select('bd.email as bor_email')
@@ -618,7 +618,7 @@ class ChapterController extends Controller
             ->where('cd.is_active', '=', '1')
             ->orWhere('cd.position_id', '=', '25')
             ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name', 'ASC')
+            ->orderBy('cd.first_name')
             ->get();
 
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
@@ -641,7 +641,7 @@ class ChapterController extends Controller
             ->where('chapters.is_Active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->where('chapters.id', $id)
-            ->orderBy('chapters.id', 'DESC')
+            ->orderByDesc('chapters.id')
             ->get();
 
         $AVPInfoPre = DB::table('chapters')
@@ -835,7 +835,7 @@ class ChapterController extends Controller
 
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
-                        ->orderBy('board_details.board_id', 'DESC')
+                        ->orderByDesc('board_details.board_id')
                         ->limit(1)
                         ->get();
                     $boardId = $boardIdArr[0]->board_id + 1;
@@ -918,7 +918,7 @@ class ChapterController extends Controller
 
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
-                        ->orderBy('board_details.board_id', 'DESC')
+                        ->orderByDesc('board_details.board_id')
                         ->limit(1)
                         ->get();
                     $boardId = $boardIdArr[0]->board_id + 1;
@@ -1001,7 +1001,7 @@ class ChapterController extends Controller
 
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
-                        ->orderBy('board_details.board_id', 'DESC')
+                        ->orderByDesc('board_details.board_id')
                         ->limit(1)
                         ->get();
                     $boardId = $boardIdArr[0]->board_id + 1;
@@ -1084,7 +1084,7 @@ class ChapterController extends Controller
 
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
-                        ->orderBy('board_details.board_id', 'DESC')
+                        ->orderByDesc('board_details.board_id')
                         ->limit(1)
                         ->get();
                     $boardId = $boardIdArr[0]->board_id + 1;
@@ -1179,7 +1179,7 @@ class ChapterController extends Controller
                 $chapterDetails = Chapter::find($chapterId);
                 $stateArr = DB::table('state')
                     ->select('state.*')
-                    ->orderBy('id', 'ASC')
+                    ->orderBy('id')
                     ->get();
 
                 $chapterState = DB::table('state')
@@ -1211,7 +1211,7 @@ class ChapterController extends Controller
                 ->where('chapters.is_Active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.id', $chapterId)
-                ->orderBy('chapters.id', 'DESC')
+                ->orderByDesc('chapters.id')
                 ->get();
 
             $AVPInfoUpd = DB::table('chapters')
@@ -1492,16 +1492,16 @@ class ChapterController extends Controller
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $countryArr = DB::table('country')
             ->select('country.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
             ->where('conference_id', '=', $corConfId)
-            ->orderBy('long_name', 'ASC')
+            ->orderBy('long_name')
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinator_details as cd')
@@ -1513,7 +1513,7 @@ class ChapterController extends Controller
             ->where('cd.is_active', '=', '1')
             ->orWhere('cd.position_id', '=', '25')
             ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name', 'ASC')
+            ->orderBy('cd.first_name')
             ->get();
 
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
@@ -1569,8 +1569,8 @@ class ChapterController extends Controller
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
         $countList = count($intChapterList);
         $data = ['countList' => $countList, 'intChapterList' => $intChapterList];
@@ -1609,7 +1609,7 @@ class ChapterController extends Controller
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                 ->where('chapters.is_active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
-                ->orderBy('st.state_short_name', 'ASC')
+                ->orderBy('st.state_short_name')
                 ->get();
 
         } elseif ($positionId == 6 || $positionId == 25 || $positionId == 8 || $secPositionId == 8) {
@@ -1621,7 +1621,7 @@ class ChapterController extends Controller
                 ->where('chapters.is_active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.conference', '=', $corConfId)
-                ->orderBy('st.state_short_name', 'ASC')
+                ->orderBy('st.state_short_name')
                 ->get();
         } else {
             $inquiriesList = DB::table('chapters')
@@ -1632,7 +1632,7 @@ class ChapterController extends Controller
                 ->where('chapters.is_active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.region', '=', $corRegId)
-                ->orderBy('st.state_short_name', 'ASC')
+                ->orderBy('st.state_short_name')
                 ->get();
         }
 
@@ -1673,7 +1673,7 @@ class ChapterController extends Controller
             ->where('chapters.is_active', '=', '0')
             ->where('bd.board_position_id', '=', '1')
             ->where('chapters.conference', '=', $corConfId)
-            ->orderBy('chapters.zap_date', 'DESC')
+            ->orderByDesc('chapters.zap_date')
             ->get();
 
         $data = ['inquiriesList' => $inquiriesList, 'corConfId' => $corConfId];
@@ -1697,16 +1697,16 @@ class ChapterController extends Controller
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $countryArr = DB::table('country')
             ->select('country.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
             ->where('conference_id', '=', $corConfId)
-            ->orderBy('long_name', 'ASC')
+            ->orderBy('long_name')
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinator_details as cd')
@@ -1718,7 +1718,7 @@ class ChapterController extends Controller
             ->orWhere('cd.position_id', '=', '25')
             ->where('cd.is_active', '=', '1')
             ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name', 'ASC')
+            ->orderBy('cd.first_name')
             ->get();
 
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
@@ -1742,8 +1742,8 @@ class ChapterController extends Controller
                 ->join('state as st', 'chapters.state', '=', 'st.id')
                 ->leftJoin('website_link_status as wb', 'chapters.website_link_status', '=', 'wb.id')
                 ->where('chapters.is_active', '=', '1')
-                ->orderBy('st.state_short_name', 'ASC')
-                ->orderBy('chapters.name', 'ASC')
+                ->orderBy('st.state_short_name')
+                ->orderBy('chapters.name')
                 ->get();
         } elseif ($positionId == 6 || $positionId == 25) {
             $websiteList = DB::table('chapters')
@@ -1752,8 +1752,8 @@ class ChapterController extends Controller
                 ->leftJoin('website_link_status as wb', 'chapters.website_link_status', '=', 'wb.id')
                 ->where('chapters.is_active', '=', '1')
                 ->where('chapters.conference', '=', $corConfId)
-                ->orderBy('st.state_short_name', 'ASC')
-                ->orderBy('chapters.name', 'ASC')
+                ->orderBy('st.state_short_name')
+                ->orderBy('chapters.name')
                 ->get();
         } else {
             $websiteList = DB::table('chapters')
@@ -1762,8 +1762,8 @@ class ChapterController extends Controller
                 ->leftJoin('website_link_status as wb', 'chapters.website_link_status', '=', 'wb.id')
                 ->where('chapters.is_active', '=', '1')
                 ->where('chapters.region', '=', $corRegId)
-                ->orderBy('st.state_short_name', 'ASC')
-                ->orderBy('chapters.name', 'ASC')
+                ->orderBy('st.state_short_name')
+                ->orderBy('chapters.name')
                 ->get();
         }
         $data = ['websiteList' => $websiteList];
@@ -1792,7 +1792,7 @@ class ChapterController extends Controller
                 ->where('chapters.is_active', '=', '0')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.conference', '=', $corConfId)
-                ->orderBy('chapters.zap_date', 'DESC')
+                ->orderByDesc('chapters.zap_date')
                 ->get();
         } else {
             if ($positionId == 7) {
@@ -1804,7 +1804,7 @@ class ChapterController extends Controller
                     ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
                     ->where('chapters.is_active', '=', '0')
                     ->where('bd.board_position_id', '=', '1')
-                    ->orderBy('chapters.zap_date', 'DESC')
+                    ->orderByDesc('chapters.zap_date')
                     ->get();
             } else {
                 $chapterList = DB::table('chapters')
@@ -1816,7 +1816,7 @@ class ChapterController extends Controller
                     ->where('chapters.is_active', '=', '0')
                     ->where('bd.board_position_id', '=', '1')
                     ->where('chapters.region', '=', $corRegId)
-                    ->orderBy('chapters.zap_date', 'DESC')
+                    ->orderByDesc('chapters.zap_date')
                     ->get();
             }
         }
@@ -1843,7 +1843,7 @@ class ChapterController extends Controller
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '0')
             ->where('bd.board_position_id', '=', '1')
-            ->orderBy('chapters.zap_date', 'DESC')
+            ->orderByDesc('chapters.zap_date')
             ->get();
 
         $countList = count($chapterList);
@@ -1912,16 +1912,16 @@ class ChapterController extends Controller
 
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $countryArr = DB::table('country')
             ->select('country.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
             ->where('conference_id', '=', $corConfId)
-            ->orderBy('long_name', 'ASC')
+            ->orderBy('long_name')
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinator_details as cd')
@@ -1933,7 +1933,7 @@ class ChapterController extends Controller
             ->orWhere('cd.position_id', '=', '25')
             ->where('cd.is_active', '=', '1')
             ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name', 'ASC')
+            ->orderBy('cd.first_name')
             ->get();
 
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
@@ -2005,16 +2005,16 @@ class ChapterController extends Controller
 
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $countryArr = DB::table('country')
             ->select('country.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
             ->where('conference_id', '=', $corConfId)
-            ->orderBy('long_name', 'ASC')
+            ->orderBy('long_name')
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinator_details as cd')
@@ -2026,7 +2026,7 @@ class ChapterController extends Controller
             ->where('cd.is_active', '=', '1')
             ->orWhere('cd.position_id', '=', '25')
             ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name', 'ASC')
+            ->orderBy('cd.first_name')
             ->get();
 
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
@@ -2051,16 +2051,16 @@ class ChapterController extends Controller
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $countryArr = DB::table('country')
             ->select('country.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
             ->where('conference_id', '=', $corConfId)
-            ->orderBy('long_name', 'ASC')
+            ->orderBy('long_name')
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinator_details as cd')
@@ -2072,7 +2072,7 @@ class ChapterController extends Controller
             ->where('cd.is_active', '=', '1')
             ->orWhere('cd.position_id', '=', '25')
             ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name', 'ASC')
+            ->orderBy('cd.first_name')
             ->get();
 
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
@@ -2181,7 +2181,7 @@ class ChapterController extends Controller
             ->where('chapters.is_Active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->where('chapters.id', $chapterId)
-            ->orderBy('chapters.id', 'DESC')
+            ->orderByDesc('chapters.id')
             ->get();
         $chapterName = $chapterList[0]->name;
         $chapterState = $chapterList[0]->state;
@@ -2317,7 +2317,7 @@ class ChapterController extends Controller
                 ->where('chapters.is_Active', '=', '0')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.id', $chapterid)
-                ->orderBy('chapters.id', 'DESC')
+                ->orderByDesc('chapters.id')
                 ->get();
 
             $chapterName = $chapterList[0]->name;
@@ -2496,7 +2496,7 @@ class ChapterController extends Controller
             ->where('chapters.is_Active', '=', '0')
             ->where('bd.board_position_id', '=', '1')
             ->where('chapters.id', $id)
-            ->orderBy('chapters.id', 'DESC')
+            ->orderByDesc('chapters.id')
             ->get();
 
         $chapterId = $id;
@@ -3128,16 +3128,16 @@ class ChapterController extends Controller
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $countryArr = DB::table('country')
             ->select('country.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
             ->where('conference_id', '=', $corConfId)
-            ->orderBy('long_name', 'ASC')
+            ->orderBy('long_name')
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinator_details as cd')
@@ -3149,7 +3149,7 @@ class ChapterController extends Controller
             ->where('cd.is_active', '=', '1')
             ->orWhere('cd.position_id', '=', '25')
             ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name', 'ASC')
+            ->orderBy('cd.first_name')
             ->get();
 
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
@@ -3206,7 +3206,7 @@ class ChapterController extends Controller
         $chapterDetails = Chapter::find($chapterId);
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
 
         $chapterState = DB::table('state')
@@ -3573,7 +3573,7 @@ class ChapterController extends Controller
         $incomingBoardDetails = DB::table('incoming_board_member')
             ->select('*')
             ->where('chapter_id', '=', $chapter_id)
-            ->orderBy('board_position_id', 'ASC')
+            ->orderBy('board_position_id')
             ->get();
         $countIncomingBoardDetails = count($incomingBoardDetails);
         if ($countIncomingBoardDetails > 0) {
@@ -3630,7 +3630,7 @@ class ChapterController extends Controller
 
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
-                        ->orderBy('board_details.board_id', 'DESC')
+                        ->orderByDesc('board_details.board_id')
                         ->limit(1)
                         ->get();
                     $boardId = $boardIdArr[0]->board_id + 1;
@@ -4411,11 +4411,11 @@ class ChapterController extends Controller
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $countryArr = DB::table('country')
             ->select('country.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
@@ -4430,7 +4430,7 @@ class ChapterController extends Controller
             ->where('cd.is_active', '=', '1')
             ->orWhere('cd.position_id', '=', '25')
             ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name', 'ASC')
+            ->orderBy('cd.first_name')
             ->get();
 
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];

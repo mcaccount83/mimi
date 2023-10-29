@@ -64,8 +64,8 @@ class ExportController extends Controller
                 ->where('chapters.is_active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-                ->orderBy('chapters.name', 'ASC')
-                ->orderBy('chapters.name', 'ASC')
+                ->orderBy('chapters.name')
+                ->orderBy('chapters.name')
                 ->get();
         } else {
             $activeChapterList = DB::table('chapters')
@@ -78,8 +78,8 @@ class ExportController extends Controller
                 ->where('chapters.is_active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.primary_coordinator_id', '=', $corId)
-                ->orderBy('st.state_short_name', 'ASC')
-                ->orderBy('chapters.name', 'ASC')
+                ->orderBy('st.state_short_name')
+                ->orderBy('chapters.name')
                 ->get();
         }
 
@@ -285,7 +285,7 @@ class ExportController extends Controller
                 ->where('chapters.is_active', '=', '0')
                 ->where('bd.board_position_id', '=', '1')
                 //->where('chapters.conference', '=', $corConfId)
-                ->orderBy('chapters.zap_date', 'DESC')
+                ->orderByDesc('chapters.zap_date')
                 //->orderBy('st.state_short_name','ASC')
                 //->orderBy('chapters.name','ASC')
                 ->get();
@@ -300,7 +300,7 @@ class ExportController extends Controller
                 ->where('chapters.is_active', '=', '0')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.conference', '=', $corConfId)
-                ->orderBy('chapters.zap_date', 'DESC')
+                ->orderByDesc('chapters.zap_date')
                //->orderBy('st.state_short_name','ASC')
                //->orderBy('chapters.name','ASC')
                 ->get();
@@ -497,8 +497,8 @@ class ExportController extends Controller
                 ->orwhere('chapters.is_active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.next_renewal_year', '<', $currentYear)
-                ->orderBy('chapters.next_renewal_year', 'ASC')
-                ->orderBy('chapters.start_month_id', 'ASC')
+                ->orderBy('chapters.next_renewal_year')
+                ->orderBy('chapters.start_month_id')
                 ->get();
 
         } else {
@@ -517,8 +517,8 @@ class ExportController extends Controller
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.next_renewal_year', '<', $currentYear)
                 ->where('chapters.conference', '=', $corConfId)
-                ->orderBy('chapters.next_renewal_year', 'ASC')
-                ->orderBy('chapters.start_month_id', 'ASC')
+                ->orderBy('chapters.next_renewal_year')
+                ->orderBy('chapters.start_month_id')
                 ->get();
         }
 
@@ -610,8 +610,8 @@ class ExportController extends Controller
                 ->orwhere('chapters.is_active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.next_renewal_year', '<', $currentYear)
-                ->orderBy('chapters.next_renewal_year', 'ASC')
-                ->orderBy('chapters.start_month_id', 'ASC')
+                ->orderBy('chapters.next_renewal_year')
+                ->orderBy('chapters.start_month_id')
                 ->get();
 
         } else {
@@ -629,8 +629,8 @@ class ExportController extends Controller
                 ->orwhere('chapters.is_active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.next_renewal_year', '<', $currentYear)
-                ->orderBy('chapters.next_renewal_year', 'ASC')
-                ->orderBy('chapters.start_month_id', 'ASC')
+                ->orderBy('chapters.next_renewal_year')
+                ->orderBy('chapters.start_month_id')
                 ->get();
         }
 
@@ -711,8 +711,8 @@ class ExportController extends Controller
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
 
         if (count($activeChapterList) > 0) {
@@ -880,9 +880,9 @@ class ExportController extends Controller
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '0')
             ->where('bd.board_position_id', '=', '1')
-                //->orderBy('st.state_short_name','ASC')
-                //->orderBy('chapters.name','ASC')
-            ->orderBy('chapters.zap_date', 'DESC')
+                //->orderBy('st.state_short_name')
+                //->orderBy('chapters.name')
+            ->orderByDesc('chapters.zap_date')
             ->get();
 
         if (count($activeChapterList) > 0) {
@@ -1065,8 +1065,8 @@ class ExportController extends Controller
             ->where('chapters.is_active', '=', '1')
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
             ->where('bd.board_position_id', '=', '1')
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
 
         if (count($activeChapterList) > 0) {
@@ -1144,8 +1144,8 @@ class ExportController extends Controller
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
                 //->orderBy('chapters.zap_date','DESC')
             ->get();
 
@@ -1237,8 +1237,8 @@ class ExportController extends Controller
             ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
 
         if (count($activeChapterList) > 0) {
@@ -1321,8 +1321,8 @@ class ExportController extends Controller
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
 
         if (count($activeChapterList) > 0) {
@@ -1422,7 +1422,7 @@ class ExportController extends Controller
                 ->join('region as rg', 'rg.id', '=', 'cd.region_id')
                 ->where('cd.is_active', '=', '1')
                 ->whereIn('cd.report_id', $inQryArr)
-                ->orderBy('cd.first_name', 'ASC')
+                ->orderBy('cd.first_name')
                 ->get();
         } else {
             $exportCoordinatorList = DB::table('coordinator_details as cd')
@@ -1432,7 +1432,7 @@ class ExportController extends Controller
                 ->join('region as rg', 'rg.id', '=', 'cd.region_id')
                 ->where('cd.is_active', '=', '1')
                 ->where('cd.report_id', '=', $corId)
-                ->orderBy('cd.first_name', 'ASC')
+                ->orderBy('cd.first_name')
                 ->get();
         }
         if (count($exportCoordinatorList) > 0) {
@@ -1517,9 +1517,9 @@ class ExportController extends Controller
             ->join('coordinator_details as cds', 'cds.coordinator_id', '=', 'cd.report_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.conference_id', 'ASC')
-            ->orderBy('reg_name', 'ASC')
-            ->orderBy('cd.first_name', 'ASC')
+            ->orderBy('cd.conference_id')
+            ->orderBy('reg_name')
+            ->orderBy('cd.first_name')
             ->get();
 
         if (count($exportCoordinatorList) > 0) {
@@ -1763,7 +1763,7 @@ class ExportController extends Controller
                 ['is_active', '=', 1],
                 ['conference_id', '=', $corConfId],
             ])
-            ->orderBy('coordinator_details.coordinator_start_date', 'ASC')
+            ->orderBy('coordinator_details.coordinator_start_date')
             ->get();
 
         $headers = [
@@ -1867,7 +1867,7 @@ class ExportController extends Controller
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('chapters.name')
             ->get();
         //   echo "a"; die;
         if (count($chapter_array) > 0) {
@@ -2016,8 +2016,8 @@ class ExportController extends Controller
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->where('chapters.conference', '=', $corConfId)
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
 
         if (count($activeChapterList) > 0) {

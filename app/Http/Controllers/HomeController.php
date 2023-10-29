@@ -86,7 +86,7 @@ class HomeController extends Controller
 
             $stateArr = DB::table('state')
                 ->select('state.*')
-                ->orderBy('id', 'ASC')
+                ->orderBy('id')
                 ->get();
 
             $chapterState = DB::table('state')
