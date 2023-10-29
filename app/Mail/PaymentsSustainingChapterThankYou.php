@@ -24,10 +24,8 @@ class PaymentsSustainingChapterThankYou extends Mailable
 
     /**
      * Build the message.
-     *
-     * @return $this
      */
-    public function build()
+    public function build(): static
     {
         return $this
             ->subject('Thank You for Your Sustaining Chapter Payment')

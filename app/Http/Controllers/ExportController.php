@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Chapter;
 use App\Models\Coordinator;
-//use Illuminate\Support\Facades\Response;
 use App\Models\CoordinatorDetails;
+//use Illuminate\Support\Facades\Response;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -1818,7 +1819,7 @@ class ExportController extends Controller
     /**
      * Export Chapter Coordinator List
      */
-    public function exportChapterCoordinator()
+    public function exportChapterCoordinator(): RedirectResponse
     {
 
         // output headers so that the file is downloaded rather than displayed

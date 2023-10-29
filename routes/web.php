@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\CoordinatorController;
@@ -7,9 +9,7 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,26 +33,25 @@ Route::middleware('preventBackHistory')->group(function () {
     Route::post('logout', [LoginController::class, 'logout'])->name('user.logout');
 
     // Registration Routes
-    Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-    Route::post('register', 'Auth\RegisterController@register');
+    Route::get('register', [Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('register', [Auth\RegisterController::class, 'register']);
 
     // Password Reset Routes
-    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-    Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-    Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-    Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+    Route::get('password/reset', [Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('password/email', [Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('password/reset/{token}', [Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('password/reset', [Auth\ResetPasswordController::class, 'reset']);
 
     // Home Route
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
     // Your other custom routes can be defined here
 
-    });
+});
 
-    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-    Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
-
+Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
 
 /**
  * Routes for Custom Links
@@ -212,4 +211,3 @@ Route::get('/adminreports/nopresident', [ReportController::class, 'showNoPreside
  * Routes for PDF
  */
 Route::get('/board/financialPDF/{id}', [PDFController::class, 'financialReport'])->name('FinancialReport');
-

@@ -22,10 +22,8 @@ class EOYElectionReportReminder extends Mailable
 
     /**
      * Build the message.
-     *
-     * @return $this
      */
-    public function build()
+    public function build(): static
     {
         return $this->markdown('emails.endofyear.electionreportreminder');
     }
