@@ -44,7 +44,7 @@ class BoardController extends Controller
             ->where('chapters.is_Active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->where('chapters.id', $id)
-            ->orderBy('chapters.id', 'DESC')
+            ->orderByDesc('chapters.id')
             ->get();
 
         $AVPInfoPre = DB::table('chapters')
@@ -80,14 +80,14 @@ class BoardController extends Controller
             ->get();
 
         $chapterId = $id;
-        $user = Auth::user();
+        $user = $request->user();
         $user_type = $user->user_type;
         $userStatus = $user->is_active;
         if ($userStatus != 1) {
             Auth::logout();
-            Session::flush();
+            $request->session()->flush();
 
-            return redirect('/login');
+            return redirect()->to('/login');
         }
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         $chapter = Chapter::find($chapterId);
@@ -199,7 +199,7 @@ class BoardController extends Controller
 
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
-                        ->orderBy('board_details.board_id', 'DESC')
+                        ->orderByDesc('board_details.board_id')
                         ->limit(1)
                         ->get();
                     $boardId = $boardIdArr[0]->board_id + 1;
@@ -282,7 +282,7 @@ class BoardController extends Controller
 
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
-                        ->orderBy('board_details.board_id', 'DESC')
+                        ->orderByDesc('board_details.board_id')
                         ->limit(1)
                         ->get();
                     $boardId = $boardIdArr[0]->board_id + 1;
@@ -365,7 +365,7 @@ class BoardController extends Controller
 
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
-                        ->orderBy('board_details.board_id', 'DESC')
+                        ->orderByDesc('board_details.board_id')
                         ->limit(1)
                         ->get();
                     $boardId = $boardIdArr[0]->board_id + 1;
@@ -448,7 +448,7 @@ class BoardController extends Controller
 
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
-                        ->orderBy('board_details.board_id', 'DESC')
+                        ->orderByDesc('board_details.board_id')
                         ->limit(1)
                         ->get();
                     $boardId = $boardIdArr[0]->board_id + 1;
@@ -486,7 +486,7 @@ class BoardController extends Controller
                 ->where('chapters.is_Active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.id', $chapterId)
-                ->orderBy('chapters.id', 'DESC')
+                ->orderByDesc('chapters.id')
                 ->get();
 
             $AVPInfoUpd = DB::table('chapters')
@@ -691,10 +691,10 @@ class BoardController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect('/home')->with('fail', 'Something went wrong, Please try again');
+            return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
         }
 
-        return Redirect::back()->with('success', 'Chapter has successfully updated');
+        return redirect()->back()->with('success', 'Chapter has successfully updated');
     }
 
     /**
@@ -795,31 +795,31 @@ class BoardController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect('/home')->with('fail', 'Something went wrong, Please try again');
+            return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
         }
 
-        return Redirect::back()->with('success', 'Chapter has successfully updated');
+        return redirect()->back()->with('success', 'Chapter has successfully updated');
     }
 
     /**
      * Show EOY BoardInfo All Board Members
      */
-    public function showBoardInfo()
+    public function showBoardInfo(Request $request)
     {
-        $borDetails = User::find(Auth::user()->id)->BoardDetails;
+        $borDetails = User::find($request->user()->id)->BoardDetails;
         $borPositionId = $borDetails['board_position_id'];
         $chapterId = $borDetails['chapter_id'];
         $isActive = $borDetails['is_active'];
         // if($isActive !=1)
         //  {
         //      Auth::logout();
-        //       Session::flush();
+        //       $request->session()->flush();
         //       return redirect('/login');
         //   }
         $chapterDetails = Chapter::find($chapterId);
         $stateArr = DB::table('state')
             ->select('state.*')
-            ->orderBy('id', 'ASC')
+            ->orderBy('id')
             ->get();
 
         $chapterState = DB::table('state')
@@ -898,14 +898,14 @@ class BoardController extends Controller
      */
     public function createBoardInfo(Request $request, $chapter_id): RedirectResponse
     {
-        $user = Auth::user();
+        $user = $request->user();
         $user_type = $user->user_type;
         $userStatus = $user->is_active;
         if ($userStatus != 1) {
             Auth::logout();
-            Session::flush();
+            $request->session()->flush();
 
-            return redirect('/login');
+            return redirect()->to('/login');
         }
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         $chapter = Chapter::find($chapter_id);
@@ -1186,26 +1186,26 @@ class BoardController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect('/home')->with('fail', 'Something went wrong, Please try again');
+            return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
         }
 
-        return redirect('/home')->with('success', 'Board Info has been Submitted');
+        return redirect()->to('/home')->with('success', 'Board Info has been Submitted');
 
     }
 
     /**
      * Show EOY Financial Report All Board Members
      */
-    public function showFinancialReport($chapterId)
+    public function showFinancialReport(Request $request, $chapterId)
     {
         try {
-            $borDetails = User::find(Auth::user()->id)->BoardDetails;
+            $borDetails = User::find($request->user()->id)->BoardDetails;
             $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
             $isActive = $borDetails['is_active'];
             //if($isActive != 1)
             // {
             //     Auth::logout();
-            //     Session::flush();
+            //     $request->session()->flush();
             //      return redirect('/login');
             //  }
 
@@ -1230,20 +1230,20 @@ class BoardController extends Controller
             DB::rollBack();
             // Log the error or perform any necessary actions
             // You can also add a flash message to inform the user about the error
-            return redirect('/home');
+            return redirect()->to('/home');
         }
     }
 
-    public function printFinancialReport($chapterId)
+    public function printFinancialReport(Request $request, $chapterId)
     {
-        $borDetails = User::find(Auth::user()->id)->BoardDetails;
+        $borDetails = User::find($request->user()->id)->BoardDetails;
         $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
         $isActive = $borDetails['is_active'];
         if ($isActive != 1) {
             Auth::logout();
-            Session::flush();
+            $request->session()->flush();
 
-            return redirect('/login');
+            return redirect()->to('/login');
         }
 
         $financial_report_array = FinancialReport::find($chapterId);
@@ -1261,16 +1261,16 @@ class BoardController extends Controller
         return view('boards.printfinancial')->with($data);
     }
 
-    public function printFinancialReport2($chapterId)
+    public function printFinancialReport2(Request $request, $chapterId)
     {
-        $borDetails = User::find(Auth::user()->id)->BoardDetails;
+        $borDetails = User::find($request->user()->id)->BoardDetails;
         $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
         $isActive = $borDetails['is_active'];
         if ($isActive != 1) {
             Auth::logout();
-            Session::flush();
+            $request->session()->flush();
 
-            return redirect('/login');
+            return redirect()->to('/login');
         }
 
         $financial_report_array = FinancialReport::find($chapterId);
@@ -1293,12 +1293,12 @@ class BoardController extends Controller
      */
     public function storeFinancialReport(Request $request, $chapter_id): RedirectResponse
     {
-        $borDetails = User::find(Auth::user()->id)->BoardDetails;
+        $borDetails = User::find($request->user()->id)->BoardDetails;
         $isActive = $borDetails['is_active'];
         //if($isActive !=1)
         //{
         //     Auth::logout();
-        //    Session::flush();
+        //    $request->session()->flush();
         //     return redirect('/login');
         // }
         //Basic Settings
@@ -1309,7 +1309,7 @@ class BoardController extends Controller
         $dropboxSecret = 'd3xuzouwlv0p7rm';
         $dropboxToken = '__DhDVdXdTIAAAAAAAAAAQY4Muzhmj5mMaz0k6zXInYJU8CMG8m5HzRxmBI_d27t';
 
-        $input = request()->all();
+        $input = $request->all();
         $chName = $input['ch_name'];
         $chState = $input['ch_state'];
         $chPcid = $input['ch_pcid'];
@@ -2001,7 +2001,7 @@ class BoardController extends Controller
         $chapterDetailsExistArr = DB::table('financial_report')->where('chapter_id', '=', $chapter_id)->get();
         $chapterDetailsExist = $chapterDetailsExistArr->count();
 
-        //  $input = request()->all();
+        //  $input = $request->all();
 
         // Step 1 Fields
         if (isset($input['optChangeDues']) && $input['optChangeDues'] == 'no') {

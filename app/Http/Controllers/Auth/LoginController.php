@@ -57,6 +57,6 @@ class LoginController extends Controller
     {
         Auth::logout(); // logout user
 
-        return redirect('/login')->with('error', 'Your account is not active. Please contact your coordinator for assistance.');
+        return redirect()->to('/login')->with('error', 'Your account is not active. Please contact your coordinator for assistance.');
     }
 }

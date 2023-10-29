@@ -9,7 +9,6 @@ use App\Models\CoordinatorDetails;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 
@@ -24,7 +23,7 @@ class ExportController extends Controller
     /**
      * Export Chapter List
      */
-    public function exportChapter($id)
+    public function exportChapter(Request $request, $id)
     {
         $fileName = 'chapter_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -35,7 +34,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -64,8 +63,8 @@ class ExportController extends Controller
                 ->where('chapters.is_active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-                ->orderBy('chapters.name', 'ASC')
-                ->orderBy('chapters.name', 'ASC')
+                ->orderBy('chapters.name')
+                ->orderBy('chapters.name')
                 ->get();
         } else {
             $activeChapterList = DB::table('chapters')
@@ -78,8 +77,8 @@ class ExportController extends Controller
                 ->where('chapters.is_active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.primary_coordinator_id', '=', $corId)
-                ->orderBy('st.state_short_name', 'ASC')
-                ->orderBy('chapters.name', 'ASC')
+                ->orderBy('st.state_short_name')
+                ->orderBy('chapters.name')
                 ->get();
         }
 
@@ -243,13 +242,13 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
      * Export Zapped Chapter List
      */
-    public function exportZappedChapter()
+    public function exportZappedChapter(Request $request)
     {
         $fileName = 'chapter_zap_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -260,7 +259,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -285,7 +284,7 @@ class ExportController extends Controller
                 ->where('chapters.is_active', '=', '0')
                 ->where('bd.board_position_id', '=', '1')
                 //->where('chapters.conference', '=', $corConfId)
-                ->orderBy('chapters.zap_date', 'DESC')
+                ->orderByDesc('chapters.zap_date')
                 //->orderBy('st.state_short_name','ASC')
                 //->orderBy('chapters.name','ASC')
                 ->get();
@@ -300,7 +299,7 @@ class ExportController extends Controller
                 ->where('chapters.is_active', '=', '0')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.conference', '=', $corConfId)
-                ->orderBy('chapters.zap_date', 'DESC')
+                ->orderByDesc('chapters.zap_date')
                //->orderBy('st.state_short_name','ASC')
                //->orderBy('chapters.name','ASC')
                 ->get();
@@ -457,13 +456,13 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
      * Export Overdue Re-Registration List
      */
-    public function exportReReg()
+    public function exportReReg(Request $request)
     {
         $fileName = 'rereg_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -474,7 +473,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -497,8 +496,8 @@ class ExportController extends Controller
                 ->orwhere('chapters.is_active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.next_renewal_year', '<', $currentYear)
-                ->orderBy('chapters.next_renewal_year', 'ASC')
-                ->orderBy('chapters.start_month_id', 'ASC')
+                ->orderBy('chapters.next_renewal_year')
+                ->orderBy('chapters.start_month_id')
                 ->get();
 
         } else {
@@ -517,8 +516,8 @@ class ExportController extends Controller
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.next_renewal_year', '<', $currentYear)
                 ->where('chapters.conference', '=', $corConfId)
-                ->orderBy('chapters.next_renewal_year', 'ASC')
-                ->orderBy('chapters.start_month_id', 'ASC')
+                ->orderBy('chapters.next_renewal_year')
+                ->orderBy('chapters.start_month_id')
                 ->get();
         }
 
@@ -570,13 +569,13 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
      * Export International Overdue Re-Registration List
      */
-    public function exportIntReReg()
+    public function exportIntReReg(Request $request)
     {
         $fileName = 'int_rereg_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -587,7 +586,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -610,8 +609,8 @@ class ExportController extends Controller
                 ->orwhere('chapters.is_active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.next_renewal_year', '<', $currentYear)
-                ->orderBy('chapters.next_renewal_year', 'ASC')
-                ->orderBy('chapters.start_month_id', 'ASC')
+                ->orderBy('chapters.next_renewal_year')
+                ->orderBy('chapters.start_month_id')
                 ->get();
 
         } else {
@@ -629,8 +628,8 @@ class ExportController extends Controller
                 ->orwhere('chapters.is_active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.next_renewal_year', '<', $currentYear)
-                ->orderBy('chapters.next_renewal_year', 'ASC')
-                ->orderBy('chapters.start_month_id', 'ASC')
+                ->orderBy('chapters.next_renewal_year')
+                ->orderBy('chapters.start_month_id')
                 ->get();
         }
 
@@ -682,13 +681,13 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
      * Export International Chapter List
      */
-    public function exportInternationalChapter()
+    public function exportInternationalChapter(Request $request)
     {
         $fileName = 'int_chapter_'.date('Y-m-d').'.csv';
         $headers = [
@@ -699,7 +698,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -711,8 +710,8 @@ class ExportController extends Controller
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
 
         if (count($activeChapterList) > 0) {
@@ -851,13 +850,13 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
      * Export International Zapped Chapter List
      */
-    public function exportInternationalZapChapter()
+    public function exportInternationalZapChapter(Request $request)
     {
         $fileName = 'int_chapter_zap_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -868,7 +867,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -880,9 +879,9 @@ class ExportController extends Controller
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '0')
             ->where('bd.board_position_id', '=', '1')
-                //->orderBy('st.state_short_name','ASC')
-                //->orderBy('chapters.name','ASC')
-            ->orderBy('chapters.zap_date', 'DESC')
+                //->orderBy('st.state_short_name')
+                //->orderBy('chapters.name')
+            ->orderByDesc('chapters.zap_date')
             ->get();
 
         if (count($activeChapterList) > 0) {
@@ -1022,13 +1021,13 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
      * Export EIN Status List
      */
-    public function exportEINStatus()
+    public function exportEINStatus(Request $request)
     {
         $fileName = 'ein_status_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1039,7 +1038,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1065,8 +1064,8 @@ class ExportController extends Controller
             ->where('chapters.is_active', '=', '1')
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
             ->where('bd.board_position_id', '=', '1')
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
 
         if (count($activeChapterList) > 0) {
@@ -1115,13 +1114,13 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
      * Export International EIN Status List
      */
-    public function exportIntEINStatus()
+    public function exportIntEINStatus(Request $request)
     {
         $fileName = 'int_ein_status_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1132,7 +1131,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1144,8 +1143,8 @@ class ExportController extends Controller
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
                 //->orderBy('chapters.zap_date','DESC')
             ->get();
 
@@ -1195,13 +1194,13 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
      * Export EOY Reports Status List
      */
-    public function exportEOYStatus()
+    public function exportEOYStatus(Request $request)
     {
         $fileName = 'eoy_status_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1212,7 +1211,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1237,8 +1236,8 @@ class ExportController extends Controller
             ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
 
         if (count($activeChapterList) > 0) {
@@ -1294,13 +1293,13 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
      * Export International EOY Reports Status List
      */
-    public function exportIntEOYStatus()
+    public function exportIntEOYStatus(Request $request)
     {
         $fileName = 'int_eoy_status_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1311,7 +1310,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1321,8 +1320,8 @@ class ExportController extends Controller
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
 
         if (count($activeChapterList) > 0) {
@@ -1377,13 +1376,13 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
      * Export Coordinator List
      */
-    public function exportCoordinator($id)
+    public function exportCoordinator(Request $request, $id)
     {
         $fileName = 'coordinator_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1394,7 +1393,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1422,7 +1421,7 @@ class ExportController extends Controller
                 ->join('region as rg', 'rg.id', '=', 'cd.region_id')
                 ->where('cd.is_active', '=', '1')
                 ->whereIn('cd.report_id', $inQryArr)
-                ->orderBy('cd.first_name', 'ASC')
+                ->orderBy('cd.first_name')
                 ->get();
         } else {
             $exportCoordinatorList = DB::table('coordinator_details as cd')
@@ -1432,7 +1431,7 @@ class ExportController extends Controller
                 ->join('region as rg', 'rg.id', '=', 'cd.region_id')
                 ->where('cd.is_active', '=', '1')
                 ->where('cd.report_id', '=', $corId)
-                ->orderBy('cd.first_name', 'ASC')
+                ->orderBy('cd.first_name')
                 ->get();
         }
         if (count($exportCoordinatorList) > 0) {
@@ -1473,13 +1472,13 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
      * Export International Coordinator List
      */
-    public function exportIntCoordinator()
+    public function exportIntCoordinator(Request $request)
     {
         $fileName = 'int_coordinator_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1490,7 +1489,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1517,9 +1516,9 @@ class ExportController extends Controller
             ->join('coordinator_details as cds', 'cds.coordinator_id', '=', 'cd.report_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.conference_id', 'ASC')
-            ->orderBy('reg_name', 'ASC')
-            ->orderBy('cd.first_name', 'ASC')
+            ->orderBy('cd.conference_id')
+            ->orderBy('reg_name')
+            ->orderBy('cd.first_name')
             ->get();
 
         if (count($exportCoordinatorList) > 0) {
@@ -1559,13 +1558,13 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
      * Export International Retired Coordinator List
      */
-    public function exportIntRetCoordinator()
+    public function exportIntRetCoordinator(Request $request)
     {
         $fileName = 'int_coordinator_ret_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1576,7 +1575,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1645,7 +1644,7 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
@@ -1655,7 +1654,7 @@ class ExportController extends Controller
     {
 
         $fileName = 'coordinator_retire_'.date('Y-m-d').'.csv';
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $tasks = CoordinatorDetails::select('*')
@@ -1755,7 +1754,7 @@ class ExportController extends Controller
     {
 
         $fileName = 'coordinator_appreciation_'.date('Y-m-d').'.csv';
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $exportCoordinatorList = CoordinatorDetails::select('*')
@@ -1763,7 +1762,7 @@ class ExportController extends Controller
                 ['is_active', '=', 1],
                 ['conference_id', '=', $corConfId],
             ])
-            ->orderBy('coordinator_details.coordinator_start_date', 'ASC')
+            ->orderBy('coordinator_details.coordinator_start_date')
             ->get();
 
         $headers = [
@@ -1819,7 +1818,7 @@ class ExportController extends Controller
     /**
      * Export Chapter Coordinator List
      */
-    public function exportChapterCoordinator(): RedirectResponse
+    public function exportChapterCoordinator(Request $request): RedirectResponse
     {
 
         // output headers so that the file is downloaded rather than displayed
@@ -1837,7 +1836,7 @@ class ExportController extends Controller
 
         $chapter_array = null;
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1867,7 +1866,7 @@ class ExportController extends Controller
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('chapters.name')
             ->get();
         //   echo "a"; die;
         if (count($chapter_array) > 0) {
@@ -1969,13 +1968,13 @@ class ExportController extends Controller
             exit($output);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
     /**
      * Export Boad Election Report List
      */
-    public function exportBoardElection()
+    public function exportBoardElection(Request $request)
     {
         $fileName = 'board_election_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1986,7 +1985,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $positionid = $corDetails['position_id'];
         $corConfId = $corDetails['conference_id'];
@@ -2016,8 +2015,8 @@ class ExportController extends Controller
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->where('chapters.conference', '=', $corConfId)
-            ->orderBy('st.state_short_name', 'ASC')
-            ->orderBy('chapters.name', 'ASC')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
             ->get();
 
         if (count($activeChapterList) > 0) {
@@ -2207,10 +2206,10 @@ class ExportController extends Controller
             return Response::stream($callback, 200, $headers);
         }
 
-        return redirect('/home');
+        return redirect()->to('/home');
     }
 
-    public function exportChapterAwardList()
+    public function exportChapterAwardList(Request $request)
     {
         // output headers so that the file is downloaded rather than displayed
         header('Content-Type: text/csv; charset=utf-8');
@@ -2222,7 +2221,7 @@ class ExportController extends Controller
         fputcsv($output, ['State', 'Chapter', 'Award', 'Approved']);
         $award_array = null;
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
 
         $coordinator_id = $corDetails['coordinator_id'];
         $conference_id = $corDetails['conference_id'];
