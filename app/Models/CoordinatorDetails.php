@@ -14,6 +14,4 @@ class CoordinatorDetails extends Model
         'name',
 
     ];
-
-    protected $table = 'coordinator_details';
 }
