@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\Chapter;
 use App\Models\Coordinator;
 use App\Models\User;
@@ -19,7 +20,7 @@ class ReportController extends Controller
         $this->middleware('auth')->except('logout');
     }
 
-    public function showChapterStatus()
+    public function showChapterStatus(): View
     {
         //Get Coordinators Details
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
@@ -94,7 +95,7 @@ class ReportController extends Controller
     /**
      * View the Downloads List
      */
-    public function showDownloads()
+    public function showDownloads(): View
     {
         //Get Coordinators Details
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
@@ -147,7 +148,7 @@ class ReportController extends Controller
     /**
      * View the EIN Status
      */
-    public function showEINstatus()
+    public function showEINstatus(): View
     {
         //Get Coordinators Details
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
@@ -200,7 +201,7 @@ class ReportController extends Controller
     /**
      * View the International EIN Status
      */
-    public function intEINstatus()
+    public function intEINstatus(): View
     {
         //Get Coordinators Details
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
@@ -245,7 +246,7 @@ class ReportController extends Controller
     /**
      * View the Zapped chapter list
      */
-    public function showChapterStatusView($id)
+    public function showChapterStatusView($id): View
     {
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -292,7 +293,7 @@ class ReportController extends Controller
         return view('chapters.chapterview')->with($data);
     }
 
-    public function showChapterNew()
+    public function showChapterNew(): View
     {
         //Get Coordinators Details
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
@@ -365,7 +366,7 @@ class ReportController extends Controller
         return view('reports.chapternew')->with($data);
     }
 
-    public function showChapterLarge()
+    public function showChapterLarge(): View
     {
         //Get Coordinators Details
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
@@ -436,7 +437,7 @@ class ReportController extends Controller
         return view('reports.chapterlarge')->with($data);
     }
 
-    public function showChapterProbation()
+    public function showChapterProbation(): View
     {
         //Get Coordinators Details
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
@@ -512,7 +513,7 @@ class ReportController extends Controller
     /**
      * View the Social Media Report
      */
-    public function showSocialMedia()
+    public function showSocialMedia(): View
     {
         //Get Coordinators Details
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
@@ -565,7 +566,7 @@ class ReportController extends Controller
     /**
      * View the M2M Doantions
      */
-    public function showM2Mdonation()
+    public function showM2Mdonation(): View
     {
         //Get Coordinators Details
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
@@ -640,7 +641,7 @@ class ReportController extends Controller
     /**
      * View the International M2M Doantions
      */
-    public function intM2Mdonation()
+    public function intM2Mdonation(): View
     {
         //Get Coordinators Details
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
@@ -706,7 +707,7 @@ class ReportController extends Controller
     /**
      * View the Chapter Coordinators List
      */
-    public function showChapterCoordinators()
+    public function showChapterCoordinators(): View
     {
         try {
             //Get Coordinators Details
@@ -786,7 +787,7 @@ class ReportController extends Controller
     /**
      * View the Volunteer Utilization list
      */
-    public function showChapterVolunteer()
+    public function showChapterVolunteer(): View
     {
         //Get Coordinator Details
 
@@ -843,7 +844,7 @@ class ReportController extends Controller
     /**
      * View the Coordinator ToDo List
      */
-    public function showCoordinatorToDo()
+    public function showCoordinatorToDo(): View
     {
         //Get Coordinator Details
 
@@ -898,7 +899,7 @@ class ReportController extends Controller
     /**
      * View the International Coordinator ToDo List
      */
-    public function showIntCoordinatorToDo()
+    public function showIntCoordinatorToDo(): View
     {
         //Get Coordinator Details
 
@@ -951,7 +952,7 @@ class ReportController extends Controller
 
     }
 
-    public function showBoardlist()
+    public function showBoardlist(): View
     {
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -1088,7 +1089,7 @@ class ReportController extends Controller
     /**
      * View the Volunteer Appreciation list
      */
-    public function showAppreciation()
+    public function showAppreciation(): View
     {
         //Get Coordinator Details
 
@@ -1145,7 +1146,7 @@ class ReportController extends Controller
     /**
      * View the Volunteer Birthday list
      */
-    public function showBirthday()
+    public function showBirthday(): View
     {
         //Get Coordinator Details
 
@@ -1213,7 +1214,7 @@ class ReportController extends Controller
     /**
      * View the Reporting Tree
      */
-    public function showReportingTree()
+    public function showReportingTree(): View
     {
         $coordinator_array = [];
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
@@ -1292,7 +1293,7 @@ class ReportController extends Controller
     /**
      * View the EOY Status list
      */
-    public function showEOYStatus()
+    public function showEOYStatus(): View
     {
         $user = Auth::user();
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
@@ -1368,7 +1369,7 @@ class ReportController extends Controller
     /**
      * View the Financial Reports List
      */
-    public function showReportToReview()
+    public function showReportToReview(): View
     {
         //Get Coordinators Details
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
@@ -1649,7 +1650,7 @@ class ReportController extends Controller
     }
 
     /* Listing for boundaries issues */
-    public function showReportToIssues()
+    public function showReportToIssues(): View
     {
         //Get Coordinators Details
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
@@ -1716,7 +1717,7 @@ class ReportController extends Controller
     }
 
     /** Listing Chpater Awards */
-    public function showChapterAwards()
+    public function showChapterAwards(): View
     {
         //Get Coordinators Details
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
@@ -1759,7 +1760,7 @@ class ReportController extends Controller
     /**
      * Add Chaper Awards
      */
-    public function addAwards()
+    public function addAwards(): View
     {
         $user = Auth::user();
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
@@ -1835,7 +1836,7 @@ class ReportController extends Controller
     }
 
     /** Duplicate User List */
-    public function showDuplicate()
+    public function showDuplicate(): View
     {
 
         $userData = DB::table('users')
@@ -1855,7 +1856,7 @@ class ReportController extends Controller
     }
 
     /** Duplicate Board Id List */
-    public function showDuplicateId()
+    public function showDuplicateId(): View
     {
 
         $userData = DB::table('board_details')
@@ -1876,7 +1877,7 @@ class ReportController extends Controller
     }
 
     /** Multiple Board List */
-    public function showMultiple()
+    public function showMultiple(): View
     {
 
         $userData = DB::table('board_details')
@@ -1896,7 +1897,7 @@ class ReportController extends Controller
     }
 
     /** Board with No President List */
-    public function showNoPresident()
+    public function showNoPresident(): View
     {
 
         $PresId = DB::table('board_details')

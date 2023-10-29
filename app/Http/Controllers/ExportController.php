@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use App\Models\Chapter;
 use App\Models\Coordinator;
 //use Illuminate\Support\Facades\Response;
@@ -1818,7 +1819,7 @@ class ExportController extends Controller
     /**
      * Export Chapter Coordinator List
      */
-    public function exportChapterCoordinator()
+    public function exportChapterCoordinator(): RedirectResponse
     {
 
         // output headers so that the file is downloaded rather than displayed

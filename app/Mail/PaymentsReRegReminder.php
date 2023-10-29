@@ -27,7 +27,7 @@ class PaymentsReRegReminder extends Mailable
      *
      * @return $this
      */
-    public function build()
+    public function build(): static
     {
         return $this
             ->subject('Re-Registration Payment Reminder')

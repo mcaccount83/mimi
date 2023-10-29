@@ -25,7 +25,7 @@ class ChapterAddPrimaryCoor extends Mailable
      *
      * @return $this
      */
-    public function build()
+    public function build(): static
     {
         return $this->markdown('emails.chapterupdate.primarycooraddnotice');
     }

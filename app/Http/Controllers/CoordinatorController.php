@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use App\Mail\ChapersUpdatePrimaryCoor;
 use App\Models\Coordinator;
 use App\Models\FinancialReport;
@@ -22,7 +25,7 @@ class CoordinatorController extends Controller
     }
 
     /** Coordiantor Listing */
-    public function index()
+    public function index(): View
     {
         //Get Coordinator Details
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
@@ -134,7 +137,7 @@ class CoordinatorController extends Controller
     }
 
     /** New Coordiantor Create Form*/
-    public function create()
+    public function create(): View
     {
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -162,7 +165,7 @@ class CoordinatorController extends Controller
     }
 
     /** Coordiantor Create */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -330,7 +333,7 @@ class CoordinatorController extends Controller
     }
 
     /** Coordiantor Edit Form */
-    public function edit($id)
+    public function edit($id): View
     {
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -402,7 +405,7 @@ class CoordinatorController extends Controller
     }
 
     /** Coordiantor Email Update */
-    public function update2(Request $request, $id)
+    public function update2(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -417,7 +420,7 @@ class CoordinatorController extends Controller
         return redirect('/coordinatorlist')->with('success', 'Coordinator email updated successfully.');
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -464,7 +467,7 @@ class CoordinatorController extends Controller
     }
 
     /** Coordiantor Change Role Form */
-    public function showChangeRole($id)
+    public function showChangeRole($id): View
     {
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -589,7 +592,7 @@ class CoordinatorController extends Controller
 
     }
 
-    public function showUnretiredCoordinator($id)
+    public function showUnretiredCoordinator($id): RedirectResponse
     {
         $coordinatorDetails = DB::table('coordinator_details as cd')
             ->select('cd.*')
@@ -949,7 +952,7 @@ class CoordinatorController extends Controller
         }
     }
 
-    public function getRegionList($corConfId)
+    public function getRegionList($corConfId): JsonResponse
     {
         $regionList = DB::table('region')
             ->select('id', 'long_name')
@@ -965,7 +968,7 @@ class CoordinatorController extends Controller
 
     }
 
-    public function getReportingList()
+    public function getReportingList(): JsonResponse
     {
         $conference_id = $_GET['conf_id'];
         $position_id = $_GET['pos_id'];
@@ -1001,7 +1004,7 @@ class CoordinatorController extends Controller
         return response()->json(['html' => $html]);
     }
 
-    public function getDirectReportingList()
+    public function getDirectReportingList(): JsonResponse
     {
         $conference_id = $_GET['conf_id'];
         $position_id = $_GET['pos_id'];
@@ -1035,7 +1038,7 @@ class CoordinatorController extends Controller
         return response()->json(['html' => $html]);
     }
 
-    public function getChapterPrimaryFor()
+    public function getChapterPrimaryFor(): JsonResponse
     {
         $conference_id = $_GET['conf_id'];
         $position_id = $_GET['pos_id'];
@@ -1067,7 +1070,7 @@ class CoordinatorController extends Controller
         return response()->json(['html' => $html]);
     }
 
-    public function showRetiredCoordinator()
+    public function showRetiredCoordinator(): View
     {
         //Get Coordinator Details
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
@@ -1097,7 +1100,7 @@ class CoordinatorController extends Controller
         return view('coordinators.retired')->with($data);
     }
 
-    public function showRetiredCoordinatorView($id)
+    public function showRetiredCoordinatorView($id): View
     {
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -1141,7 +1144,7 @@ class CoordinatorController extends Controller
         return view('coordinators.retiredview')->with($data);
     }
 
-    public function showIntCoordinator()
+    public function showIntCoordinator(): View
     {
         //Get International Coordinator List
         $intCoordinatorList = DB::table('coordinator_details as cd')
@@ -1156,7 +1159,7 @@ class CoordinatorController extends Controller
         return view('coordinators.international')->with($data);
     }
 
-    public function showIntRetCoordinator()
+    public function showIntRetCoordinator(): View
     {
         //Get International Coordinator List
         $intCoordinatorList = DB::table('coordinator_details as cd')
@@ -1173,7 +1176,7 @@ class CoordinatorController extends Controller
     }
 
     /** Coordiantor Appreciation */
-    public function appreciation($id)
+    public function appreciation($id): View
     {
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -1232,7 +1235,7 @@ class CoordinatorController extends Controller
         return view('coordinators.appreciation')->with($data);
     }
 
-    public function updateAppreciation(Request $request, $id)
+    public function updateAppreciation(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -1289,7 +1292,7 @@ class CoordinatorController extends Controller
     }
 
     /** Coordiantor Birthday */
-    public function birthday($id)
+    public function birthday($id): View
     {
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -1348,7 +1351,7 @@ class CoordinatorController extends Controller
         return view('coordinators.birthday')->with($data);
     }
 
-    public function updateBirthday(Request $request, $id)
+    public function updateBirthday(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -1393,7 +1396,7 @@ class CoordinatorController extends Controller
 
     }
 
-    public function showDashboard()
+    public function showDashboard(): View
     {
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $id = $corId = $corDetails['coordinator_id'];
@@ -1445,7 +1448,7 @@ class CoordinatorController extends Controller
         return view('coordinators.dashboard')->with($data);
     }
 
-    public function updateDashboard(Request $request, $id)
+    public function updateDashboard(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -1498,7 +1501,7 @@ class CoordinatorController extends Controller
         return redirect('/coordinator/dashboard')->with('success', 'Coordinator dashboard updated successfully');
     }
 
-    public function showProfile()
+    public function showProfile(): View
     {
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $id = $corId = $corDetails['coordinator_id'];
@@ -1548,7 +1551,7 @@ class CoordinatorController extends Controller
         return view('coordinators.profile')->with($data);
     }
 
-    public function updateProfile(Request $request, $id)
+    public function updateProfile(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];

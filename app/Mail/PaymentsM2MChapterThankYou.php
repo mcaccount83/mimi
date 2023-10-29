@@ -27,7 +27,7 @@ class PaymentsM2MChapterThankYou extends Mailable
      *
      * @return $this
      */
-    public function build()
+    public function build(): static
     {
         return $this
             ->subject('Thank You for Your Mother-to-Mother Fund Payment')

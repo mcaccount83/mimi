@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdatePrimaryCoor;
 use App\Models\Chapter;
@@ -31,7 +33,7 @@ class BoardController extends Controller
     /**
      * Update Board Details President Login
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): RedirectResponse
     {
 
         $presInfoPre = DB::table('chapters')
@@ -698,7 +700,7 @@ class BoardController extends Controller
     /**
      * Update Board Details Board Member Login
      */
-    public function memberUpdate(Request $request, $id)
+    public function memberUpdate(Request $request, $id): RedirectResponse
     {
         DB::beginTransaction();
         try {
@@ -894,7 +896,7 @@ class BoardController extends Controller
     /**
      * Update EOY BoardInfo All Board Members
      */
-    public function createBoardInfo(Request $request, $chapter_id)
+    public function createBoardInfo(Request $request, $chapter_id): RedirectResponse
     {
         $user = Auth::user();
         $user_type = $user->user_type;
@@ -1289,7 +1291,7 @@ class BoardController extends Controller
     /**
      * Save EOY Financial Report All Board Members
      */
-    public function storeFinancialReport(Request $request, $chapter_id)
+    public function storeFinancialReport(Request $request, $chapter_id): RedirectResponse
     {
         $borDetails = User::find(Auth::user()->id)->BoardDetails;
         $isActive = $borDetails['is_active'];
@@ -3180,7 +3182,7 @@ class BoardController extends Controller
         return true;
     }
 
-    public function getRosterfile()
+    public function getRosterfile(): BinaryFileResponse
     {
         $filename = 'roster_template.xlsx';
 
