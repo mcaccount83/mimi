@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Chapter;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -24,21 +25,21 @@ class HomeController extends Controller
     /**
      * Coordinator dashboard with active chapter list related to them.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $user = Auth::user();
+        $user = $request->user();
         $user_type = $user->user_type;
         $userStatus = $user->is_active;
         if ($userStatus != 1) {
             Auth::logout();
-            Session::flush();
+            $request->session()->flush();
 
             return redirect('/login');
         }
         //For User Type Coordinator
         if ($user_type == 'coordinator') {
             //Get Coordinators Details
-            $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+            $corDetails = User::find($request->user()->id)->CoordinatorDetails;
             $corId = $corDetails['coordinator_id'];
             $corConfId = $corDetails['conference_id'];
 
@@ -46,9 +47,9 @@ class HomeController extends Controller
             $sqlLayerId = 'crt.layer'.$corlayerId;
             $positionId = $corDetails['position_id'];
             $secPositionId = $corDetails['sec_position_id'];
-            Session::put('positionid', $positionId);
-            Session::put('secpositionid', $secPositionId);
-            Session::put('corconfid', $corConfId);
+            $request->session()->put('positionid', $positionId);
+            $request->session()->put('secpositionid', $secPositionId);
+            $request->session()->put('corconfid', $corConfId);
 
             if ($positionId == 25) {
                 //Get Coordinator Reporting Tree
@@ -77,12 +78,12 @@ class HomeController extends Controller
 
         //For User Type Board (Chapter)
         if ($user_type == 'board') {
-            $borDetails = User::find(Auth::user()->id)->BoardDetails;
+            $borDetails = User::find($request->user()->id)->BoardDetails;
             $borPositionId = $borDetails['board_position_id'];
             $isActive = $borDetails['is_active'];
             $chapterId = $borDetails['chapter_id'];
             $chapterDetails = Chapter::find($chapterId);
-            Session::put('chapterid', $chapterId);
+            $request->session()->put('chapterid', $chapterId);
 
             $stateArr = DB::table('state')
                 ->select('state.*')
@@ -155,7 +156,7 @@ class HomeController extends Controller
                 return view('boards.members')->with($data);
             } else {
                 Auth::logout(); // logout user
-                Session::flush();
+                $request->session()->flush();
 
                 return redirect('/login');
             }

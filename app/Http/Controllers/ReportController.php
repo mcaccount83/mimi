@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Chapter;
 use App\Models\Coordinator;
 use App\Models\User;
@@ -20,18 +21,18 @@ class ReportController extends Controller
         $this->middleware('auth')->except('logout');
     }
 
-    public function showChapterStatus(): View
+    public function showChapterStatus(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        Session::put('positionid', $positionId);
-        Session::put('secpositionid', $secPositionId);
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
 
         if ($corId == 25 || $positionId == 25) {
             //Get Coordinator Reporting Tree
@@ -95,10 +96,10 @@ class ReportController extends Controller
     /**
      * View the Downloads List
      */
-    public function showDownloads(): View
+    public function showDownloads(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -148,10 +149,10 @@ class ReportController extends Controller
     /**
      * View the EIN Status
      */
-    public function showEINstatus(): View
+    public function showEINstatus(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -201,10 +202,10 @@ class ReportController extends Controller
     /**
      * View the International EIN Status
      */
-    public function intEINstatus(): View
+    public function intEINstatus(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -246,14 +247,14 @@ class ReportController extends Controller
     /**
      * View the Zapped chapter list
      */
-    public function showChapterStatusView($id): View
+    public function showChapterStatusView(Request $request, $id): View
     {
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        Session::put('positionid', $positionId);
-        Session::put('secpositionid', $secPositionId);
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
 
         $chapterList = DB::table('chapters as ch')
             ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state')
@@ -293,10 +294,10 @@ class ReportController extends Controller
         return view('chapters.chapterview')->with($data);
     }
 
-    public function showChapterNew(): View
+    public function showChapterNew(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -366,18 +367,18 @@ class ReportController extends Controller
         return view('reports.chapternew')->with($data);
     }
 
-    public function showChapterLarge(): View
+    public function showChapterLarge(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        Session::put('positionid', $positionId);
-        Session::put('secpositionid', $secPositionId);
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
 
         //Get Coordinator Reporting Tree
         if ($corId == 25 || $positionId == 25) {
@@ -437,18 +438,18 @@ class ReportController extends Controller
         return view('reports.chapterlarge')->with($data);
     }
 
-    public function showChapterProbation(): View
+    public function showChapterProbation(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        Session::put('positionid', $positionId);
-        Session::put('secpositionid', $secPositionId);
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
 
         //Get Coordinator Reporting Tree
         if ($corId == 25 || $positionId == 25) {
@@ -513,10 +514,10 @@ class ReportController extends Controller
     /**
      * View the Social Media Report
      */
-    public function showSocialMedia(): View
+    public function showSocialMedia(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -566,18 +567,18 @@ class ReportController extends Controller
     /**
      * View the M2M Doantions
      */
-    public function showM2Mdonation(): View
+    public function showM2Mdonation(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        Session::put('positionid', $positionId);
-        Session::put('secpositionid', $secPositionId);
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
 
         if ($corId == 25 || $positionId == 25) {
             //Get Coordinator Reporting Tree
@@ -641,18 +642,18 @@ class ReportController extends Controller
     /**
      * View the International M2M Doantions
      */
-    public function intM2Mdonation(): View
+    public function intM2Mdonation(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        Session::put('positionid', $positionId);
-        Session::put('secpositionid', $secPositionId);
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
 
         //Get Coordinator Reporting Tree
         $reportIdList = DB::table('coordinator_reporting_tree as crt')
@@ -707,19 +708,19 @@ class ReportController extends Controller
     /**
      * View the Chapter Coordinators List
      */
-    public function showChapterCoordinators(): View
+    public function showChapterCoordinators(Request $request): View
     {
         try {
             //Get Coordinators Details
-            $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+            $corDetails = User::find($request->user()->id)->CoordinatorDetails;
             $corId = $corDetails['coordinator_id'];
             $corConfId = $corDetails['conference_id'];
             $corlayerId = $corDetails['layer_id'];
             $sqlLayerId = 'crt.layer'.$corlayerId;
             $positionId = $corDetails['position_id'];
             $secPositionId = $corDetails['sec_position_id'];
-            Session::put('positionid', $positionId);
-            Session::put('secpositionid', $secPositionId);
+            $request->session()->put('positionid', $positionId);
+            $request->session()->put('secpositionid', $secPositionId);
 
             //Get Coordinator Reporting Tree
             if ($corId == 25) {
@@ -787,19 +788,19 @@ class ReportController extends Controller
     /**
      * View the Volunteer Utilization list
      */
-    public function showChapterVolunteer(): View
+    public function showChapterVolunteer(Request $request): View
     {
         //Get Coordinator Details
 
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        Session::put('positionid', $positionId);
-        Session::put('secpositionid', $secPositionId);
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
         //Get Coordinator Reporting Tree
         if ($corId == 25 || $positionId == 25) {
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
@@ -844,19 +845,19 @@ class ReportController extends Controller
     /**
      * View the Coordinator ToDo List
      */
-    public function showCoordinatorToDo(): View
+    public function showCoordinatorToDo(Request $request): View
     {
         //Get Coordinator Details
 
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        Session::put('positionid', $positionId);
-        Session::put('secpositionid', $secPositionId);
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
         //Get Coordinator Reporting Tree
         if ($corId == 25 || $positionId == 25) {
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
@@ -899,19 +900,19 @@ class ReportController extends Controller
     /**
      * View the International Coordinator ToDo List
      */
-    public function showIntCoordinatorToDo(): View
+    public function showIntCoordinatorToDo(Request $request): View
     {
         //Get Coordinator Details
 
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        Session::put('positionid', $positionId);
-        Session::put('secpositionid', $secPositionId);
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
         //Get Coordinator Reporting Tree
         if ($corId == 25 || $positionId == 25) {
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
@@ -952,9 +953,9 @@ class ReportController extends Controller
 
     }
 
-    public function showBoardlist(): View
+    public function showBoardlist(Request $request): View
     {
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1089,19 +1090,19 @@ class ReportController extends Controller
     /**
      * View the Volunteer Appreciation list
      */
-    public function showAppreciation(): View
+    public function showAppreciation(Request $request): View
     {
         //Get Coordinator Details
 
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        Session::put('positionid', $positionId);
-        Session::put('secpositionid', $secPositionId);
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
         //Get Coordinator Reporting Tree
         if ($corId == 25 || $positionId == 25) {
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
@@ -1146,19 +1147,19 @@ class ReportController extends Controller
     /**
      * View the Volunteer Birthday list
      */
-    public function showBirthday(): View
+    public function showBirthday(Request $request): View
     {
         //Get Coordinator Details
 
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        Session::put('positionid', $positionId);
-        Session::put('secpositionid', $secPositionId);
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
         //Get Coordinator Reporting Tree
         if ($corId == 25 || $positionId == 25) {
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
@@ -1214,14 +1215,14 @@ class ReportController extends Controller
     /**
      * View the Reporting Tree
      */
-    public function showReportingTree(): View
+    public function showReportingTree(Request $request): View
     {
         $coordinator_array = [];
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corConfId = $corDetails['conference_id'];
         $positionId = $corDetails['position_id'];
-        Session::put('positionid', $positionId);
-        $cord_pos_id = Session::get('positionid');
+        $request->session()->put('positionid', $positionId);
+        $cord_pos_id = $request->session()->get('positionid');
         if ($positionId != 7) {
             $conference_clause = 'AND coordinator_details.conference_id='.$corConfId;
         } else {
@@ -1293,21 +1294,21 @@ class ReportController extends Controller
     /**
      * View the EOY Status list
      */
-    public function showEOYStatus(): View
+    public function showEOYStatus(Request $request): View
     {
-        $user = Auth::user();
+        $user = $request->user();
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        Session::put('positionid', $positionId);
-        Session::put('secpositionid', $secPositionId);
-        Session::put('corconfid', $corConfId);
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
+        $request->session()->put('corconfid', $corConfId);
         //Get Coordinator Reporting Tree
         $reportIdList = DB::table('coordinator_reporting_tree as crt')
             ->select('crt.id')
@@ -1369,19 +1370,19 @@ class ReportController extends Controller
     /**
      * View the Financial Reports List
      */
-    public function showReportToReview(): View
+    public function showReportToReview(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        Session::put('positionid', $positionId);
-        Session::put('secpositionid', $secPositionId);
-        Session::put('corconfid', $corConfId);
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
+        $request->session()->put('corconfid', $corConfId);
         //Get Coordinator Reporting Tree
         $reportIdList = DB::table('coordinator_reporting_tree as crt')
             ->select('crt.id')
@@ -1435,21 +1436,21 @@ class ReportController extends Controller
     /**
      * View the Board Info Received list
      */
-    public function showReportToBoardInfo()
+    public function showReportToBoardInfo(Request $request)
     {
-        $user = Auth::user();
+        $user = $request->user();
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        Session::put('positionid', $positionId);
-        Session::put('secpositionid', $secPositionId);
-        Session::put('corconfid', $corConfId);
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
+        $request->session()->put('corconfid', $corConfId);
         //Get Coordinator Reporting Tree
         $reportIdList = DB::table('coordinator_reporting_tree as crt')
             ->select('crt.id')
@@ -1650,19 +1651,19 @@ class ReportController extends Controller
     }
 
     /* Listing for boundaries issues */
-    public function showReportToIssues(): View
+    public function showReportToIssues(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        Session::put('positionid', $positionId);
-        Session::put('secpositionid', $secPositionId);
-        Session::put('corconfid', $corConfId);
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
+        $request->session()->put('corconfid', $corConfId);
         //Get Coordinator Reporting Tree
         $reportIdList = DB::table('coordinator_reporting_tree as crt')
             ->select('crt.id')
@@ -1717,19 +1718,19 @@ class ReportController extends Controller
     }
 
     /** Listing Chpater Awards */
-    public function showChapterAwards(): View
+    public function showChapterAwards(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        Session::put('positionid', $positionId);
-        Session::put('secpositionid', $secPositionId);
-        Session::put('corconfid', $corConfId);
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
+        $request->session()->put('corconfid', $corConfId);
         //Get Coordinator Reporting Tree
         $reportIdList = DB::table('coordinator_reporting_tree as crt')
             ->select('crt.id')
@@ -1760,21 +1761,21 @@ class ReportController extends Controller
     /**
      * Add Chaper Awards
      */
-    public function addAwards(): View
+    public function addAwards(Request $request): View
     {
-        $user = Auth::user();
+        $user = $request->user();
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        Session::put('positionid', $positionId);
-        Session::put('secpositionid', $secPositionId);
-        Session::put('corconfid', $corConfId);
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
+        $request->session()->put('corconfid', $corConfId);
         //Get Coordinator Reporting Tree
         $reportIdList = DB::table('coordinator_reporting_tree as crt')
             ->select('crt.id')

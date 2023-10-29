@@ -24,7 +24,7 @@ class ExportController extends Controller
     /**
      * Export Chapter List
      */
-    public function exportChapter($id)
+    public function exportChapter(Request $request, $id)
     {
         $fileName = 'chapter_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -35,7 +35,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -249,7 +249,7 @@ class ExportController extends Controller
     /**
      * Export Zapped Chapter List
      */
-    public function exportZappedChapter()
+    public function exportZappedChapter(Request $request)
     {
         $fileName = 'chapter_zap_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -260,7 +260,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -463,7 +463,7 @@ class ExportController extends Controller
     /**
      * Export Overdue Re-Registration List
      */
-    public function exportReReg()
+    public function exportReReg(Request $request)
     {
         $fileName = 'rereg_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -474,7 +474,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -576,7 +576,7 @@ class ExportController extends Controller
     /**
      * Export International Overdue Re-Registration List
      */
-    public function exportIntReReg()
+    public function exportIntReReg(Request $request)
     {
         $fileName = 'int_rereg_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -587,7 +587,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -688,7 +688,7 @@ class ExportController extends Controller
     /**
      * Export International Chapter List
      */
-    public function exportInternationalChapter()
+    public function exportInternationalChapter(Request $request)
     {
         $fileName = 'int_chapter_'.date('Y-m-d').'.csv';
         $headers = [
@@ -699,7 +699,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -857,7 +857,7 @@ class ExportController extends Controller
     /**
      * Export International Zapped Chapter List
      */
-    public function exportInternationalZapChapter()
+    public function exportInternationalZapChapter(Request $request)
     {
         $fileName = 'int_chapter_zap_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -868,7 +868,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1028,7 +1028,7 @@ class ExportController extends Controller
     /**
      * Export EIN Status List
      */
-    public function exportEINStatus()
+    public function exportEINStatus(Request $request)
     {
         $fileName = 'ein_status_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1039,7 +1039,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1121,7 +1121,7 @@ class ExportController extends Controller
     /**
      * Export International EIN Status List
      */
-    public function exportIntEINStatus()
+    public function exportIntEINStatus(Request $request)
     {
         $fileName = 'int_ein_status_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1132,7 +1132,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1201,7 +1201,7 @@ class ExportController extends Controller
     /**
      * Export EOY Reports Status List
      */
-    public function exportEOYStatus()
+    public function exportEOYStatus(Request $request)
     {
         $fileName = 'eoy_status_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1212,7 +1212,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1300,7 +1300,7 @@ class ExportController extends Controller
     /**
      * Export International EOY Reports Status List
      */
-    public function exportIntEOYStatus()
+    public function exportIntEOYStatus(Request $request)
     {
         $fileName = 'int_eoy_status_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1311,7 +1311,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1383,7 +1383,7 @@ class ExportController extends Controller
     /**
      * Export Coordinator List
      */
-    public function exportCoordinator($id)
+    public function exportCoordinator(Request $request, $id)
     {
         $fileName = 'coordinator_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1394,7 +1394,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1479,7 +1479,7 @@ class ExportController extends Controller
     /**
      * Export International Coordinator List
      */
-    public function exportIntCoordinator()
+    public function exportIntCoordinator(Request $request)
     {
         $fileName = 'int_coordinator_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1490,7 +1490,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1565,7 +1565,7 @@ class ExportController extends Controller
     /**
      * Export International Retired Coordinator List
      */
-    public function exportIntRetCoordinator()
+    public function exportIntRetCoordinator(Request $request)
     {
         $fileName = 'int_coordinator_ret_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1576,7 +1576,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1655,7 +1655,7 @@ class ExportController extends Controller
     {
 
         $fileName = 'coordinator_retire_'.date('Y-m-d').'.csv';
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $tasks = CoordinatorDetails::select('*')
@@ -1755,7 +1755,7 @@ class ExportController extends Controller
     {
 
         $fileName = 'coordinator_appreciation_'.date('Y-m-d').'.csv';
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $exportCoordinatorList = CoordinatorDetails::select('*')
@@ -1819,7 +1819,7 @@ class ExportController extends Controller
     /**
      * Export Chapter Coordinator List
      */
-    public function exportChapterCoordinator(): RedirectResponse
+    public function exportChapterCoordinator(Request $request): RedirectResponse
     {
 
         // output headers so that the file is downloaded rather than displayed
@@ -1837,7 +1837,7 @@ class ExportController extends Controller
 
         $chapter_array = null;
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1975,7 +1975,7 @@ class ExportController extends Controller
     /**
      * Export Boad Election Report List
      */
-    public function exportBoardElection()
+    public function exportBoardElection(Request $request)
     {
         $fileName = 'board_election_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1986,7 +1986,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $positionid = $corDetails['position_id'];
         $corConfId = $corDetails['conference_id'];
@@ -2210,7 +2210,7 @@ class ExportController extends Controller
         return redirect('/home');
     }
 
-    public function exportChapterAwardList()
+    public function exportChapterAwardList(Request $request)
     {
         // output headers so that the file is downloaded rather than displayed
         header('Content-Type: text/csv; charset=utf-8');
@@ -2222,7 +2222,7 @@ class ExportController extends Controller
         fputcsv($output, ['State', 'Chapter', 'Award', 'Approved']);
         $award_array = null;
         //Get Coordinators Details
-        $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
 
         $coordinator_id = $corDetails['coordinator_id'];
         $conference_id = $corDetails['conference_id'];

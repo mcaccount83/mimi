@@ -80,12 +80,12 @@ class BoardController extends Controller
             ->get();
 
         $chapterId = $id;
-        $user = Auth::user();
+        $user = $request->user();
         $user_type = $user->user_type;
         $userStatus = $user->is_active;
         if ($userStatus != 1) {
             Auth::logout();
-            Session::flush();
+            $request->session()->flush();
 
             return redirect('/login');
         }
@@ -804,16 +804,16 @@ class BoardController extends Controller
     /**
      * Show EOY BoardInfo All Board Members
      */
-    public function showBoardInfo()
+    public function showBoardInfo(Request $request)
     {
-        $borDetails = User::find(Auth::user()->id)->BoardDetails;
+        $borDetails = User::find($request->user()->id)->BoardDetails;
         $borPositionId = $borDetails['board_position_id'];
         $chapterId = $borDetails['chapter_id'];
         $isActive = $borDetails['is_active'];
         // if($isActive !=1)
         //  {
         //      Auth::logout();
-        //       Session::flush();
+        //       $request->session()->flush();
         //       return redirect('/login');
         //   }
         $chapterDetails = Chapter::find($chapterId);
@@ -898,12 +898,12 @@ class BoardController extends Controller
      */
     public function createBoardInfo(Request $request, $chapter_id): RedirectResponse
     {
-        $user = Auth::user();
+        $user = $request->user();
         $user_type = $user->user_type;
         $userStatus = $user->is_active;
         if ($userStatus != 1) {
             Auth::logout();
-            Session::flush();
+            $request->session()->flush();
 
             return redirect('/login');
         }
@@ -1196,16 +1196,16 @@ class BoardController extends Controller
     /**
      * Show EOY Financial Report All Board Members
      */
-    public function showFinancialReport($chapterId)
+    public function showFinancialReport(Request $request, $chapterId)
     {
         try {
-            $borDetails = User::find(Auth::user()->id)->BoardDetails;
+            $borDetails = User::find($request->user()->id)->BoardDetails;
             $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
             $isActive = $borDetails['is_active'];
             //if($isActive != 1)
             // {
             //     Auth::logout();
-            //     Session::flush();
+            //     $request->session()->flush();
             //      return redirect('/login');
             //  }
 
@@ -1234,14 +1234,14 @@ class BoardController extends Controller
         }
     }
 
-    public function printFinancialReport($chapterId)
+    public function printFinancialReport(Request $request, $chapterId)
     {
-        $borDetails = User::find(Auth::user()->id)->BoardDetails;
+        $borDetails = User::find($request->user()->id)->BoardDetails;
         $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
         $isActive = $borDetails['is_active'];
         if ($isActive != 1) {
             Auth::logout();
-            Session::flush();
+            $request->session()->flush();
 
             return redirect('/login');
         }
@@ -1261,14 +1261,14 @@ class BoardController extends Controller
         return view('boards.printfinancial')->with($data);
     }
 
-    public function printFinancialReport2($chapterId)
+    public function printFinancialReport2(Request $request, $chapterId)
     {
-        $borDetails = User::find(Auth::user()->id)->BoardDetails;
+        $borDetails = User::find($request->user()->id)->BoardDetails;
         $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
         $isActive = $borDetails['is_active'];
         if ($isActive != 1) {
             Auth::logout();
-            Session::flush();
+            $request->session()->flush();
 
             return redirect('/login');
         }
@@ -1293,12 +1293,12 @@ class BoardController extends Controller
      */
     public function storeFinancialReport(Request $request, $chapter_id): RedirectResponse
     {
-        $borDetails = User::find(Auth::user()->id)->BoardDetails;
+        $borDetails = User::find($request->user()->id)->BoardDetails;
         $isActive = $borDetails['is_active'];
         //if($isActive !=1)
         //{
         //     Auth::logout();
-        //    Session::flush();
+        //    $request->session()->flush();
         //     return redirect('/login');
         // }
         //Basic Settings
@@ -1309,7 +1309,7 @@ class BoardController extends Controller
         $dropboxSecret = 'd3xuzouwlv0p7rm';
         $dropboxToken = '__DhDVdXdTIAAAAAAAAAAQY4Muzhmj5mMaz0k6zXInYJU8CMG8m5HzRxmBI_d27t';
 
-        $input = request()->all();
+        $input = $request->all();
         $chName = $input['ch_name'];
         $chState = $input['ch_state'];
         $chPcid = $input['ch_pcid'];
@@ -2001,7 +2001,7 @@ class BoardController extends Controller
         $chapterDetailsExistArr = DB::table('financial_report')->where('chapter_id', '=', $chapter_id)->get();
         $chapterDetailsExist = $chapterDetailsExistArr->count();
 
-        //  $input = request()->all();
+        //  $input = $request->all();
 
         // Step 1 Fields
         if (isset($input['optChangeDues']) && $input['optChangeDues'] == 'no') {
