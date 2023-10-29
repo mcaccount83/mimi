@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\FinancialReport;
+use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class PDFController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('preventBackHistory');
@@ -18,7 +17,6 @@ class PDFController extends Controller
     }
 
     public $pdfData = [];
-
 
     /**
      * Show Financial Report PDF All Board Members
@@ -80,7 +78,7 @@ class PDFController extends Controller
                 'bank_balance_now' => $financial_report_array->bank_balance_now,
                 'petty_cash' => $financial_report_array->petty_cash,
                 'bank_reconciliation_array' => $financial_report_array->bank_reconciliation_array,
-                'receive_compensation' =>$financial_report_array->receive_compensation,
+                'receive_compensation' => $financial_report_array->receive_compensation,
                 'receive_compensation_explanation' => $financial_report_array->receive_compensation_explanation,
                 'financial_benefit' => $financial_report_array->financial_benefit,
                 'financial_benefit_explanation' => $financial_report_array->financial_benefit_explanation,
@@ -143,13 +141,13 @@ class PDFController extends Controller
             // Load the view and generate the PDF
             $pdf = Pdf::loadView('boards.financial-report', ['pdfData' => $pdfData]);
 
-           // Download the PDF
+            // Download the PDF
             return $pdf->stream('Financial Report.pdf');
 
         } catch (\Exception $e) {
-        // Handle the exception and log the error message
-        Log::error($e);
-        // You can also return an error response or take other appropriate actions
+            // Handle the exception and log the error message
+            Log::error($e);
+            // You can also return an error response or take other appropriate actions
+        }
     }
-}
 }

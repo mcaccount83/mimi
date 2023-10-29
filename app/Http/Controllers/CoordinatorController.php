@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ChapersUpdatePrimaryCoor;
 use App\Models\Coordinator;
 use App\Models\FinancialReport;
-use App\Mail\ChapersUpdatePrimaryCoor;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

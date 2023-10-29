@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\CoordinatorController;
@@ -7,9 +8,7 @@ use App\Http\Controllers\ExportController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ReportController;
-use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,12 +46,11 @@ Route::middleware('preventBackHistory')->group(function () {
 
     // Your other custom routes can be defined here
 
-    });
+});
 
-    Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-    Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
-
+Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
 
 /**
  * Routes for Custom Links
@@ -212,4 +210,3 @@ Route::get('/adminreports/nopresident', [ReportController::class, 'showNoPreside
  * Routes for PDF
  */
 Route::get('/board/financialPDF/{id}', [PDFController::class, 'financialReport'])->name('FinancialReport');
-

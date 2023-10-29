@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Chapter;
-use App\Models\Coordinator;
-use App\Models\FinancialReport;
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdatePrimaryCoor;
 use App\Mail\PaymentsM2MChapterThankYou;
@@ -12,6 +9,9 @@ use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegLate;
 use App\Mail\PaymentsReRegReminder;
 use App\Mail\PaymentsSustainingChapterThankYou;
+use App\Models\Chapter;
+use App\Models\Coordinator;
+use App\Models\FinancialReport;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
