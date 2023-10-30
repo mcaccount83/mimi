@@ -33,7 +33,8 @@ class PDFController extends Controller
             $financial_report_array = FinancialReport::find($chapterId);
 
             $chapterDetails = DB::table('chapters')
-                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state', 'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
+                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state',
+                        'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                 ->where('chapters.is_active', '=', '1')
                 ->where('chapters.id', '=', $chapterId)
@@ -140,7 +141,6 @@ class PDFController extends Controller
 
             // Load the view and generate the PDF
             $pdf = Pdf::loadView('boards.financial-report', ['pdfData' => $pdfData]);
-
             // Download the PDF
             return $pdf->stream('Financial Report.pdf');
 

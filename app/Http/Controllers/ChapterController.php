@@ -10,7 +10,6 @@ use App\Mail\PaymentsReRegLate;
 use App\Mail\PaymentsReRegReminder;
 use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Models\Chapter;
-use App\Models\Coordinator;
 use App\Models\FinancialReport;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -470,16 +469,17 @@ class ChapterController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
-
             // Log the error
             Log::error($e);
-
             return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again..');
         }
-
         return redirect()->to('/chapter/list')->with('success', 'Chapter created successfully');
     }
 
+
+    /**
+     * Edit Chapter
+     */
     public function edit(Request $request, $id): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -628,7 +628,9 @@ class ChapterController extends Controller
         return view('chapters.edit')->with($data);
     }
 
-    //chapterupdate
+    /**
+     *Update Chapter
+     */
     public function update(Request $request, $id): RedirectResponse
     {
 
@@ -710,7 +712,6 @@ class ChapterController extends Controller
             $chapter->country = $ch_country;
             $chapter->region = $ch_region;
             $chapter->ein = $request->get('ch_ein');
-            //$chapter->ein_letter = (int) $request->has('ch_ein_letter');
             $chapter->ein_letter_path = $request->get('ch_ein_letter_path');
             $chapter->status = $ch_status;
             $chapter->territory = $request->get('ch_boundariesterry');
@@ -732,19 +733,11 @@ class ChapterController extends Controller
             $chapter->sistered_by = $request->get('ch_sistered');
             $chapter->start_month_id = $ch_month;
             $chapter->start_year = $ch_foundyear;
-            // $chapter->next_renewal_year = $request->get('ch_foundyear')+1;
             $chapter->primary_coordinator_id = $ch_pcid;
-            //$chapter->founders_name = $request->get('ch_pre_fname').' '.$request->get('ch_pre_lname');
             $chapter->last_updated_by = $lastUpdatedBy;
             $chapter->last_updated_date = date('Y-m-d H:i:s');
 
             $chapter->save();
-
-            //$financial_report_array = FinancialReport::find($chapterId);
-            //if(!empty($financial_report_array))
-            //{
-            //    DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [null,$chapterId]);
-            //}
 
             //President Info
             if ($request->get('ch_pre_fname') != '' && $request->get('ch_pre_lname') != '' && $request->get('ch_pre_email') != '') {
@@ -780,8 +773,6 @@ class ChapterController extends Controller
                 }
             }
             //AVP Info
-            // if($request->get('ch_avp_fname') !='' && $request->get('ch_avp_lname') !='' && $request->get('ch_avp_email') !='')
-            // {
             $AVPDetails = DB::table('board_details')
                 ->select('board_id', 'user_id')
                 ->where('chapter_id', '=', $chapterId)
@@ -861,10 +852,7 @@ class ChapterController extends Controller
                     );
                 }
             }
-            // }
             //MVP Info
-            //if($request->get('ch_mvp_fname') !='' && $request->get('ch_mvp_lname') !='' && $request->get('ch_mvp_email') !='')
-            //{
             $MVPDetails = DB::table('board_details')
                 ->select('board_id', 'user_id')
                 ->where('chapter_id', '=', $chapterId)
@@ -944,10 +932,8 @@ class ChapterController extends Controller
                     );
                 }
             }
-            //}
+
             //TRS Info
-            //if($request->get('ch_trs_fname') !='' && $request->get('ch_trs_lname') !='' && $request->get('ch_trs_email') !='')
-            //{
             $TRSDetails = DB::table('board_details')
                 ->select('board_id', 'user_id')
                 ->where('chapter_id', '=', $chapterId)
@@ -1027,10 +1013,7 @@ class ChapterController extends Controller
                     );
                 }
             }
-            //}
             //SEC Info
-            //if($request->get('ch_sec_fname') !='' && $request->get('ch_sec_lname') !='' && $request->get('ch_sec_email') !='')
-            //{
             $SECDetails = DB::table('board_details')
                 ->select('board_id', 'user_id')
                 ->where('chapter_id', '=', $chapterId)
@@ -1110,7 +1093,6 @@ class ChapterController extends Controller
                     );
                 }
             }
-            //}
 
             //change primary coordinator email
             $cor_details = db::table('coordinator_details')
@@ -1462,13 +1444,10 @@ class ChapterController extends Controller
             echo $e->getMessage();
             exit();
             DB::rollback();
-
             // Log the error
             Log::error($e);
-
             return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again..');
         }
-
         return redirect()->to('/chapter/list')->with('success', 'Chapter has been updated');
     }
 
@@ -1477,7 +1456,6 @@ class ChapterController extends Controller
      */
     public function boundaryview(Request $request, $id): View
     {
-
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
@@ -1523,6 +1501,9 @@ class ChapterController extends Controller
         return view('chapters.boundaryview')->with($data);
     }
 
+    /**
+     * Update Boundary Details
+     */
     public function updateBoundary(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -1542,15 +1523,13 @@ class ChapterController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
-
             // Log the error
             Log::error($e);
-
             return redirect()->to('/yearreports/boundaryissue')->with('fail', 'Something went wrong, Please try again.');
         }
-
         return redirect()->to('/yearreports/boundaryissue')->with('success', 'Boundary issue has been successfully updated');
     }
+
 
     /**
      * Display the International chapter list
@@ -1577,9 +1556,11 @@ class ChapterController extends Controller
         return view('chapters.international')->with($data);
     }
 
+    /**
+     * Display the Inquiries Chapter list
+     */
     public function showInquiriesChapter(Request $request): View
     {
-
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
@@ -1640,9 +1621,11 @@ class ChapterController extends Controller
         return view('chapters.inquiries')->with($data);
     }
 
+    /**
+     * Display the Zapped Inquiries list
+     */
     public function zappedInquiriesChapter(Request $request): View
     {
-
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
@@ -1680,9 +1663,11 @@ class ChapterController extends Controller
         return view('chapters.inquirieszapped')->with($data);
     }
 
+    /**
+     * Display the Inquiries Detailed Chapter View
+     */
     public function inquiriesview(Request $request, $id): View
     {
-
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
@@ -1728,6 +1713,10 @@ class ChapterController extends Controller
         return view('chapters.inquiriesview')->with($data);
     }
 
+
+    /**
+     * Display the Website Details
+     */
     public function showWebsiteChapter(Request $request): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -1942,6 +1931,7 @@ class ChapterController extends Controller
         return view('chapters.zapview')->with($data);
     }
 
+
     /**
      * View the International Zapped chapter list
      */
@@ -2035,6 +2025,9 @@ class ChapterController extends Controller
         return view('chapters.intzapview')->with($data);
     }
 
+    /**
+     * Edit Website Details
+     */
     public function editWebsite(Request $request, $id): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -2082,6 +2075,10 @@ class ChapterController extends Controller
         return view('chapters.editweb')->with($data);
     }
 
+
+    /**
+     * Udaate Website Details (store)
+     */
     public function updateWebsite(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -2161,7 +2158,10 @@ class ChapterController extends Controller
         return redirect()->to('/chapter/website')->with('success', 'Chapter Website has been changed successfully.');
     }
 
-    //Function for checking Email is registerd or not
+
+    /**
+     * Function for checking Email is registerd or not
+     */
     public function checkEmail($email): JsonResponse
     {
         $isExists = \App\Models\User::where('email', $email)->first();
@@ -2170,51 +2170,10 @@ class ChapterController extends Controller
         }
     }
 
-    public function addToPrezList($chapterId)
-    {
-        $chapterList = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->where('chapters.is_Active', '=', '1')
-            ->where('bd.board_position_id', '=', '1')
-            ->where('chapters.id', $chapterId)
-            ->orderByDesc('chapters.id')
-            ->get();
-        $chapterName = $chapterList[0]->name;
-        $chapterState = $chapterList[0]->state;
-        $chapterPreFname = $chapterList[0]->bor_f_name;
-        $chapterPreLname = $chapterList[0]->bor_l_name;
-        $chapterPreEmail = $chapterList[0]->bor_email;
-        $chapterStatus = $chapterList[0]->status;
-        $chapterCordEmail = $chapterList[0]->cor_email;
 
-        //         if($chapterStatus==1){
-        //             $to_email='listadmin@momsclub.org';
-        //             //$to_email='neha.purwar@otssolutions.com';
-        //      }
-        //      else{
-        //             $to_email=$chapterCordEmail;
-        //             //$to_email='neha.purwar@otssolutions.com';
-        //         }
-        $to_email = $chapterCordEmail;
-        $mailData = [
-            'chapterPreEmail' => $chapterPreEmail,
-            'chapterPreFname' => $chapterPreFname,
-            'chapterPreLname' => $chapterPreLname,
-            'chapterName' => $chapterName,
-            'chapterState' => $chapterState,
-            'content' => 'A request has been received to add the following president to the Prez Only Group:',
-        ];
-
-        Mail::send('emails.chapterprezlist', $mailData, function ($message) use ($to_email) {
-            $message->to($to_email, 'MOMS Club')->subject('PrezList Add Request');
-        });
-
-    }
-
-    //Function for getting Reporting Hierarchy of Chapter
+   /**
+     * Function for getting Reporting Hierarchy of Chapter
+     */
     public function checkReportId($id)
     {
         $reportingList = DB::table('coordinator_reporting_tree')
@@ -2281,7 +2240,10 @@ class ChapterController extends Controller
         }
     }
 
-    //Function for Zapped the Chapter
+
+    /**
+    * Function for Zapping a Chapter (store)
+    */
     public function chapterDisband(Request $request): RedirectResponse
     {
         $input = $request->all();
@@ -2443,21 +2405,19 @@ class ChapterController extends Controller
             Mail::send('emails.chapterdisband', $mailData, function ($message) use ($to_email) {
                 $message->to($to_email, 'MOMS Club')->subject('Chapter Removal Request');
             });
-            //$request->session()->flash('success', 'Chapter has been successfully Disband');
-            //   DB::commit();
+
             return redirect()->to('/chapter/zapped')->with('success', 'Chapter has been successfully Zapped');
-            //return redirect('/home');
-
-            //return;
-
         } catch (\Exception $e) {
             echo $e->getMessage();
-            // Rollback Transaction
-            //   DB::rollback();
+
             exit;
         }
     }
 
+
+    /**
+     * Function for unZapping a Chapter (store)
+     */
     public function unZappedChapter($id): RedirectResponse
     {
         $chapterid = $id;
@@ -2484,6 +2444,10 @@ class ChapterController extends Controller
         return redirect()->to('/chapter/list')->with('success', 'Chapter has been successfully Unzapped');
     }
 
+
+    /**
+     * Function for updating a Zapped Chapter (store)
+     */
     public function updateZappedChapter(Request $request, $id): RedirectResponse
     {
 
@@ -2527,6 +2491,10 @@ class ChapterController extends Controller
         return redirect()->to('/chapter/zapped')->with('success', 'Chapter has been updated');
     }
 
+
+    /**
+     * Reset Password
+     */
     public function chapterResetPassword(Request $request)
     {
 
@@ -2540,7 +2508,9 @@ class ChapterController extends Controller
 
     }
 
-    // For M2M Payments
+    /**
+     * M2M Payments
+     */
     public function showDonation($id): View
     {
         $chapterList = DB::table('chapters')
@@ -2560,6 +2530,9 @@ class ChapterController extends Controller
         return view('chapters.m2mdonation')->with($data);
     }
 
+    /**
+     * M2M Payments (store)
+     */
     public function createDonation(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -2620,17 +2593,17 @@ class ChapterController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
-
             // Log the error
             Log::error($e);
-
             return redirect()->to('/reports/m2mdonation')->with('fail', 'Something went wrong, Please try again.');
         }
-
         return redirect()->to('/reports/m2mdonation')->with('success', 'Donation has been successfully saved');
     }
 
-    // For Re-Registrations
+
+    /**
+     * ReRegistration List
+     */
     public function showReRegistration(Request $request): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -2722,6 +2695,10 @@ class ChapterController extends Controller
         return $chapter_array;
     }
 
+
+    /**
+     * ReRegistration Notes
+     */
     public function showReRegNotes($id): View
     {
         $chapterList = DB::table('chapters')
@@ -2741,6 +2718,9 @@ class ChapterController extends Controller
         return view('chapters.re-regnotes')->with($data);
     }
 
+    /**
+     * ReRegistration Notes (store)
+     */
     public function makeReRegNotes(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -2764,16 +2744,18 @@ class ChapterController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
-
             // Log the error
             Log::error($e);
-
             return redirect()->to('/chapter/re-registration')->with('fail', 'Something went wrong, Please try again.');
         }
 
         return redirect()->to('/chapter/re-registration')->with('success', 'Your Re-Regisration Notes have been saved');
     }
 
+
+    /**
+     * ReRegistration Payment
+     */
     public function showPayment($id): View
     {
         $chapterList = DB::table('chapters')
@@ -2793,6 +2775,9 @@ class ChapterController extends Controller
         return view('chapters.payment')->with($data);
     }
 
+    /**
+     * ReRegistration Payment (store)
+     */
     public function makePayment(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -2840,16 +2825,17 @@ class ChapterController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
-
             // Log the error
             Log::error($e);
-
             return redirect()->to('/chapter/re-registration')->with('fail', 'Something went wrong, Please try again.');
         }
 
         return redirect()->to('/chapter/re-registration')->with('success', 'Payment has been successfully payment saved');
     }
 
+    /**
+     * ReRegistration Reminders Auto Send
+     */
     public function reminderReRegistration(Request $request): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -2949,17 +2935,17 @@ class ChapterController extends Controller
             // Rollback Transaction
             echo $e->getMessage();
             exit();
-
             // Log the error
             Log::error($e);
-
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
-
         return redirect()->to('/chapter/re-registration')->with('success', 'Re-Registration Reminders have been successfully sent.');
 
     }
 
+    /**
+     * ReRegistration Late Notices Auto Send
+     */
     public function lateReRegistration(Request $request): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -3060,17 +3046,17 @@ class ChapterController extends Controller
             // Rollback Transaction
             echo $e->getMessage();
             exit();
-
             // Log the error
             Log::error($e);
-
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
-
         return redirect()->to('/chapter/re-registration')->with('success', 'Re-Registration Late Notices have been successfully sent.');
 
     }
 
+    /**
+     * get CCMail
+     */
     public function getCCMail($pcid)
     {
         $reportingList = DB::table('coordinator_reporting_tree')
@@ -3159,6 +3145,9 @@ class ChapterController extends Controller
         return view('chapters.awardsview')->with($data);
     }
 
+    /**
+     * Upate Awards (store)
+     */
     public function updateAwards(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -3189,17 +3178,16 @@ class ChapterController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
-
             // Log the error
             Log::error($e);
-
             return redirect()->to('/yearreports/chapterawards')->with('fail', 'Something went wrong, Please try again.');
         }
-
         return redirect()->to('/yearreports/chapterawards')->with('success', 'Chapter Awards have been successfully updated');
     }
 
-    //For Board Info Received
+    /**
+     * Board Info Report
+     */
     public function showBoardInfo($chapterId): View
     {
         $chapterDetails = Chapter::find($chapterId);
@@ -3279,6 +3267,9 @@ class ChapterController extends Controller
         return view('chapters.boardinfo')->with($data);
     }
 
+    /**
+     * Activate Board (store)
+     */
     public function createBoardInfo(Request $request, $chapter_id): RedirectResponse
     {
         $user = $request->user();
@@ -3289,10 +3280,7 @@ class ChapterController extends Controller
                 return redirect()->to('/yearreports/boardinfo')->with('success', 'Board Info has been successfully activated');
             } elseif ($status == 'fail') {
                 return redirect()->to('/yearreports/boardinfo')->with('fail', 'Something went wrong, Please try again.');
-            }/*else{
-                return redirect('/home')->with('fail', 'Email already used in the system. Please try with new one.');
             }
-            exit;*/
         }
 
         $chapter = Chapter::find($chapter_id);
@@ -3555,16 +3543,16 @@ class ChapterController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
-
             // Log the error
             Log::error($e);
-
             return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again.');
         }
-
         return redirect()->to('/chapter/list')->with('success', 'Board Info has been Saved');
     }
 
+    /**
+     * Activate Board
+     */
     public function activateBoard($chapter_id, $lastUpdatedBy)
     {
         $message = '';
@@ -3678,7 +3666,9 @@ class ChapterController extends Controller
         }
     }
 
-    //Financial Report for Coordinator side for Reviewing of Chapters
+    /**
+     * Financial Report for Coordinator side for Reviewing of Chapters
+     */
     public function showFinancialReport(Request $request, $chapterId): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -3713,7 +3703,6 @@ class ChapterController extends Controller
         $filterReportingList = array_reverse($filterReportingList);
         $filterReportingList = array_reverse($filterReportingList);
         $array_rows = count($filterReportingList);
-        //var_dump($filterReportingList);
 
         foreach ($filterReportingList as $key => $val) {
             $corList = DB::table('coordinator_details as cd')
@@ -3726,8 +3715,7 @@ class ChapterController extends Controller
                 $reviewerList[] = ['cid' => $corList[0]->cid, 'cname' => $corList[0]->fname.' '.$corList[0]->lname.' ('.$corList[0]->pos.')'];
             }
         }
-        // var_dump($reviewerList);
-        //print $financial_report_array['reviewer_id'];
+
         $data = ['reviewerList' => $reviewerList, 'chapterid' => $chapterId, 'financial_report_array' => $financial_report_array, 'emailListCord' => $emailListCord, 'cc_string' => $cc_string, 'loggedInName' => $loggedInName, 'balance' => $balance, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails];
 
         return view('chapters.financial')->with($data);
@@ -3736,7 +3724,6 @@ class ChapterController extends Controller
     public function storeFinancialReport(Request $request, $chapter_id): RedirectResponse
     {
         //Basic Settings
-        //$target_dir = $uploadedFilePath = "F:/xampp/htdocs/momsclub-dev/uploads/";  //Windows
         $target_dir = $uploadedFilePath = '/home/momsclub/public_html/mimi/uploads/';  //Live
         //Configure Dropbox Application
         $dropboxKey = '7naxrobjsc02z0c';
@@ -4382,10 +4369,8 @@ class ChapterController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollback();
-
             // Log the error
             Log::error($e);
-
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
 
@@ -4396,7 +4381,6 @@ class ChapterController extends Controller
      */
     public function statusView(Request $request, $id): View
     {
-
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
@@ -4432,10 +4416,12 @@ class ChapterController extends Controller
             ->orderBy('cd.first_name')
             ->get();
 
-        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
+        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG',
+                '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
         $currentMonth = $chapterList[0]->start_month_id;
 
-        $data = ['currentMonth' => $currentMonth, 'chapterList' => $chapterList, 'regionList' => $regionList, 'primaryCoordinatorList' => $primaryCoordinatorList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
+        $data = ['currentMonth' => $currentMonth, 'chapterList' => $chapterList, 'regionList' => $regionList, 'primaryCoordinatorList' => $primaryCoordinatorList,
+            'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
 
         return view('chapters.reportstatus')->with($data);
     }
@@ -4481,6 +4467,9 @@ class ChapterController extends Controller
         return redirect()->to('/yearreports/eoystatus')->with('success', 'Report status successfully updated');
     }
 
+    /**
+     * Chapter Links Page
+     */
     public function chapterLinks(): View
     {
         $link_array_intl_q = DB::select("SELECT id, intl_state, country, name, status, website_link_status, website_url FROM chapters WHERE state='52' AND is_active ='1' ORDER BY country, intl_state, name");

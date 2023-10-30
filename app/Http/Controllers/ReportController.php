@@ -2,15 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Chapter;
-use App\Models\Coordinator;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
 class ReportController extends Controller
@@ -21,6 +17,10 @@ class ReportController extends Controller
         $this->middleware('auth')->except('logout');
     }
 
+
+     /**
+     * Chpater Status Report
+     */
     public function showChapterStatus(Request $request): View
     {
         //Get Coordinators Details
@@ -66,7 +66,7 @@ class ReportController extends Controller
             ->orderBy('st.state_short_name')
             ->orderBy('chapters.name')
             ->get();
-        //->paginate(30);
+
         if (isset($_GET['check'])) {
             if ($_GET['check'] == 'yes') {
                 $checkBoxStatus = 'checked';
@@ -261,7 +261,6 @@ class ReportController extends Controller
             ->leftJoin('board_details as bd', 'ch.id', '=', 'bd.chapter_id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $id)
-                            //->orderBy('bd.board_position_id','ASC')
             ->get();
 
         $stateArr = DB::table('state')
@@ -288,8 +287,10 @@ class ReportController extends Controller
             ->orderBy('cd.first_name')
             ->get();
 
-        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
-        $data = ['chapterList' => $chapterList, 'regionList' => $regionList, 'primaryCoordinatorList' => $primaryCoordinatorList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
+        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG',
+                '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
+        $data = ['chapterList' => $chapterList, 'regionList' => $regionList, 'primaryCoordinatorList' => $primaryCoordinatorList, 'stateArr' => $stateArr,
+                'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
 
         return view('chapters.chapterview')->with($data);
     }
@@ -305,7 +306,8 @@ class ReportController extends Controller
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
         $regionId = $corDetails['region_id'];
-        if ($positionId == 6 || $positionId == 7 || $positionId == 10 || $positionId == 10 || ($corId == 158 && $positionId == 5) || ($corId == 25 && $secPositionId == 25) || $positionId == 25) {
+        if ($positionId == 6 || $positionId == 7 || $positionId == 10 || $positionId == 10 || ($corId == 158 && $positionId == 5) ||
+            ($corId == 25 && $secPositionId == 25) || $positionId == 25) {
             $full_list = true;
         } else {
             $full_list = false;
@@ -327,11 +329,12 @@ class ReportController extends Controller
         } else {
             $conference_clause = '';
         }
-        // AND chapters.conference = $corConfId
 
         // Create a new query that will get a list of all the chapters in this conference
         if ($full_list) {
-            $chapterList = DB::select(DB::raw('SELECT chapters.id as ch_id, state.state_short_name as ch_state, chapters.name as ch_name, chapters.start_month_id as month, chapters.ein_letter_path as ein_letter_path, db_month.month_short_name as month_name, chapters.start_year as year, coordinator.first_name as cor_fname, coordinator.last_name as cor_lname
+            $chapterList = DB::select(DB::raw('SELECT chapters.id as ch_id, state.state_short_name as ch_state, chapters.name as ch_name, chapters.start_month_id as month,
+                chapters.ein_letter_path as ein_letter_path, db_month.month_short_name as month_name, chapters.start_year as year, coordinator.first_name as cor_fname,
+                coordinator.last_name as cor_lname
                         FROM chapters
                         INNER JOIN state
                         ON chapters.state=state.id
@@ -344,9 +347,9 @@ class ReportController extends Controller
             " AND chapters.is_active ='1'
                         ORDER BY chapters.state, chapters.name ASC"));
         } else {
-            // AND chapters.conference = $corConfId
-
-            $chapterList = DB::select(DB::raw('SELECT chapters.id as ch_id, state.state_short_name as ch_state, chapters.name as ch_name, chapters.start_month_id as month, chapters.ein_letter_path as ein_letter_path, db_month.month_short_name as month_name, chapters.start_year as year, coordinator.first_name as cor_fname, coordinator.last_name as cor_lname
+            $chapterList = DB::select(DB::raw('SELECT chapters.id as ch_id, state.state_short_name as ch_state, chapters.name as ch_name, chapters.start_month_id as month,
+                chapters.ein_letter_path as ein_letter_path, db_month.month_short_name as month_name, chapters.start_year as year, coordinator.first_name as cor_fname,
+                coordinator.last_name as cor_lname
                         FROM chapters
                         INNER JOIN state
                         ON chapters.state=state.id
@@ -360,13 +363,15 @@ class ReportController extends Controller
                         AND chapters.is_active ='1'
                         ORDER BY chapters.state, chapters.name ASC"));
         }
-        //  echo "<pre>"; print_r($chapterList);
-        //Get Coordinator Reporting Tree
+
         $data = ['chapterList' => $chapterList, 'corId' => $corId];
 
         return view('reports.chapternew')->with($data);
     }
 
+     /**
+     * Large Chapter Report
+     */
     public function showChapterLarge(Request $request): View
     {
         //Get Coordinators Details
@@ -402,7 +407,8 @@ class ReportController extends Controller
 
         //Get Chapter List mapped with login coordinator
         $chapterList = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+                    'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -412,12 +418,13 @@ class ReportController extends Controller
             ->orderBy('st.state_short_name')
             ->orderBy('chapters.name')
             ->get();
-        //->paginate(30);
+
         if (isset($_GET['check'])) {
             if ($_GET['check'] == 'yes') {
                 $checkBoxStatus = 'checked';
                 $chapterList = DB::table('chapters')
-                    ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+                    ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+                            'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
                     ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
                     ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -428,7 +435,6 @@ class ReportController extends Controller
                     ->orderBy('chapters.name')
                     ->get();
             }
-
         } else {
             $checkBoxStatus = '';
         }
@@ -438,6 +444,9 @@ class ReportController extends Controller
         return view('reports.chapterlarge')->with($data);
     }
 
+     /**
+     * Chapter Probation Report
+     */
     public function showChapterProbation(Request $request): View
     {
         //Get Coordinators Details
@@ -477,14 +486,13 @@ class ReportController extends Controller
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
-                        // ->where('chapters.status', '=', '5')
             ->where('bd.board_position_id', '=', '1')
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
             ->whereIn('chapters.status', $status)
             ->orderBy('st.state_short_name')
             ->orderBy('chapters.name')
             ->get();
-        //->paginate(30);
+
         if (isset($_GET['check'])) {
             if ($_GET['check'] == 'yes') {
                 $checkBoxStatus = 'checked';
@@ -547,7 +555,8 @@ class ReportController extends Controller
 
         //Get Chapter List mapped with login coordinator
         $chapterList = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month')
+            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+                    'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -602,7 +611,8 @@ class ReportController extends Controller
 
         //Get Chapter List mapped with login coordinator
         $chapterList = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+                    'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -612,12 +622,13 @@ class ReportController extends Controller
             ->orderBy('st.state_short_name')
             ->orderBy('chapters.name')
             ->get();
-        //->paginate(30);
+
         if (isset($_GET['check'])) {
             if ($_GET['check'] == 'yes') {
                 $checkBoxStatus = 'checked';
                 $chapterList = DB::table('chapters')
-                    ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+                    ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+                            'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
                     ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
                     ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -670,7 +681,8 @@ class ReportController extends Controller
 
         //Get Chapter List mapped with login coordinator
         $chapterList = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+                    'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -679,12 +691,13 @@ class ReportController extends Controller
             ->orderBy('st.state_short_name')
             ->orderBy('chapters.name')
             ->get();
-        //->paginate(30);
+
         if (isset($_GET['check'])) {
             if ($_GET['check'] == 'yes') {
                 $checkBoxStatus = 'checked';
                 $chapterList = DB::table('chapters')
-                    ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+                    ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+                            'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
                     ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
                     ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -744,7 +757,8 @@ class ReportController extends Controller
 
             //Get Chapter List mapped with login coordinator
             $chapterList = DB::table('chapters')
-                ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+                ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+                        'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
                 ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -754,13 +768,13 @@ class ReportController extends Controller
                 ->orderBy('st.state_short_name')
                 ->orderBy('chapters.name')
                 ->get();
-            //->paginate(30);
 
             if (isset($_GET['check'])) {
                 if ($_GET['check'] == 'yes') {
                     $checkBoxStatus = 'checked';
                     $chapterList = DB::table('chapters')
-                        ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+                        ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+                                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
                         ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
                         ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                         ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -791,7 +805,6 @@ class ReportController extends Controller
     public function showChapterVolunteer(Request $request): View
     {
         //Get Coordinator Details
-
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
@@ -814,7 +827,6 @@ class ReportController extends Controller
                 ->where($sqlLayerId, '=', $corId)
                 ->get();
         }
-        //var_dump($corConfId,$corId);
         $inQryStr = '';
         foreach ($reportIdList as $key => $val) {
             $inQryStr .= $val->id.',';
@@ -827,18 +839,14 @@ class ReportController extends Controller
             ->select('cd.coordinator_id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.report_id as report_id', 'cd.sec_position_id as sec_position_id', 'cp.long_title as position', 'rg.short_name as reg', 'cd.conference_id as cor_conf')
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
-                            //  ->join('coordinator_position as cp', 'cp.id', '=', 'cd.sec_position_id')
             ->where('cd.is_active', '=', '1')
-                            //->whereIn('cd.report_id', $inQryArr)
             ->whereIn('cd.coordinator_id', $inQryArr)
-                            //  ->orderBy('cd.first_name')
             ->orderByRaw("FIELD(rg.short_name , 'None') DESC")
             ->orderByRaw('rg.short_name', 'ASC')
-                            // ->orderBy('rg.short_name','=','None','DESC')
             ->orderByDesc('cp.id')
             ->get();
         $data = ['coordinatorList' => $coordinatorList];
-        // echo '<pre>';print_r($inQryArr);
+
         return view('reports.chaptervolunteer')->with($data);
     }
 
@@ -848,7 +856,6 @@ class ReportController extends Controller
     public function showCoordinatorToDo(Request $request): View
     {
         //Get Coordinator Details
-
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
@@ -903,7 +910,6 @@ class ReportController extends Controller
     public function showIntCoordinatorToDo(Request $request): View
     {
         //Get Coordinator Details
-
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
@@ -953,6 +959,9 @@ class ReportController extends Controller
 
     }
 
+    /**
+     * BoardList
+     */
     public function showBoardlist(Request $request): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -973,7 +982,6 @@ class ReportController extends Controller
         $inQryArr = explode(',', $inQryStr);
 
         //Get Chapter List mapped with login coordinator
-
         $activeChapterList = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'chapters.email as chapter_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city', 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
@@ -1093,7 +1101,6 @@ class ReportController extends Controller
     public function showAppreciation(Request $request): View
     {
         //Get Coordinator Details
-
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
@@ -1116,7 +1123,6 @@ class ReportController extends Controller
                 ->where($sqlLayerId, '=', $corId)
                 ->get();
         }
-        //var_dump($corConfId,$corId);
         $inQryStr = '';
         foreach ($reportIdList as $key => $val) {
             $inQryStr .= $val->id.',';
@@ -1129,18 +1135,12 @@ class ReportController extends Controller
             ->select('cd.coordinator_id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.report_id as report_id', 'cd.sec_position_id as sec_position_id', 'cp.long_title as position', 'rg.short_name as reg', 'cd.conference_id as cor_conf', 'cd.recognition_year0 as yr_0', 'cd.recognition_year1 as yr_1', 'cd.recognition_year2 as yr_2', 'cd.recognition_year3 as yr_3', 'cd.recognition_year4 as yr_4', 'cd.recognition_year5 as yr_5', 'cd.recognition_year6 as yr_6', 'cd.recognition_year7 as yr_7', 'cd.recognition_year8 as yr_8', 'cd.recognition_year9 as yr_9', 'cd.recognition_toptier as toptier', 'cd.coordinator_start_date as start_date', 'cd.recognition_necklace as necklace')
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
-                            //  ->join('coordinator_position as cp', 'cp.id', '=', 'cd.sec_position_id')
             ->where('cd.is_active', '=', '1')
-                            //->whereIn('cd.report_id', $inQryArr)
             ->whereIn('cd.coordinator_id', $inQryArr)
-                            //  ->orderBy('cd.first_name','ASC')
-                            //->orderByRaw("FIELD(rg.short_name , 'None') DESC")
             ->orderByRaw('cd.coordinator_start_date', 'ASC')
-                            // ->orderBy('rg.short_name','=','None','DESC')
-                            //->orderBy('cp.id','DESC')
             ->get();
         $data = ['coordinatorList' => $coordinatorList];
-        // echo '<pre>';print_r($inQryArr);
+
         return view('reports.appreciation')->with($data);
     }
 
@@ -1150,7 +1150,6 @@ class ReportController extends Controller
     public function showBirthday(Request $request): View
     {
         //Get Coordinator Details
-
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
@@ -1173,7 +1172,7 @@ class ReportController extends Controller
                 ->where($sqlLayerId, '=', $corId)
                 ->get();
         }
-        //var_dump($corConfId,$corId);
+
         $inQryStr = '';
         foreach ($reportIdList as $key => $val) {
             $inQryStr .= $val->id.',';
@@ -1197,20 +1196,6 @@ class ReportController extends Controller
         return view('reports.birthday')->with($data);
     }
 
-    //public function resources()
-    //   {
-    //         //Get Coordinator Details
-    //       $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
-    //     $corId = $corDetails['coordinator_id'];
-    //   $corConfId = $corDetails['conference_id'];
-    //            $corlayerId = $corDetails['layer_id'];
-    //          $sqlLayerId = 'crt.layer'.$corlayerId;
-    //        $positionId = $corDetails['position_id'];
-    //      $secPositionId = $corDetails['sec_position_id'];
-    //            Session::put('positionid', $positionId);
-    //          Session::put('secpositionid', $secPositionId);
-    //        return view('reports.resources');
-    //  }
 
     /**
      * View the Reporting Tree
@@ -1250,10 +1235,13 @@ class ReportController extends Controller
             $coordinator_array[$key] = (array) $value;
         }
 
-        // echo "<pre>"; print_r(compact('coordinator_array')); exit();
         return view('reports.reportingtree', compact('coordinator_array', 'cord_pos_id'));
     }
 
+
+    /**
+     * get CCMail
+     */
     public function getCCMail($pcid)
     {
         $reportingList = DB::table('coordinator_reporting_tree')
@@ -1337,7 +1325,6 @@ class ReportController extends Controller
             ->orderBy('st.state_short_name')
             ->orderBy('chapters.name')
             ->get();
-        //->paginate(30);
 
         if (isset($_GET['check'])) {
             if ($_GET['check'] == 'yes') {
@@ -1363,7 +1350,7 @@ class ReportController extends Controller
 
         $countList = count($chapterList);
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
-        // echo '<pre>';print_r($data);die;
+
         return view('reports.eoystatus')->with($data);
     }
 
@@ -1479,7 +1466,6 @@ class ReportController extends Controller
             ->orderBy('st.state_short_name')
             ->orderBy('chapters.name')
             ->get();
-        //->paginate(30);
 
         if (isset($_GET['check'])) {
             if ($_GET['check'] == 'yes') {
@@ -1508,7 +1494,6 @@ class ReportController extends Controller
             if ($row_count > 0) {
                 for ($i = 0; $i < $row_count; $i++) {
                     if ($chapterList[$i]->new_board_submitted && ! $chapterList[$i]->new_board_active) {
-                        //if($chapterList[$i]->id == 1898)
                         $status = $this->activateBoard($chapterList[$i]->id, $lastUpdatedBy);
                     }
                 }
@@ -1530,7 +1515,7 @@ class ReportController extends Controller
 
         $countList = count($chapterList);
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
-        // echo '<pre>';print_r($data);die;
+
         return view('reports.boardinfo')->with($data);
     }
 
@@ -1637,7 +1622,6 @@ class ReportController extends Controller
                 DB::rollback();
                 $errorCode = $e->errorInfo[1];
                 if ($errorCode == 1062) {
-                    //return $message =$e->errorInfo[2];
                     return $message = 'duplicate';
                 } else {
                     return $message = 'fail';
@@ -1650,7 +1634,9 @@ class ReportController extends Controller
         }
     }
 
-    /* Listing for boundaries issues */
+    /**
+     * Boundaires Issues
+     */
     public function showReportToIssues(Request $request): View
     {
         //Get Coordinators Details
@@ -1691,7 +1677,7 @@ class ReportController extends Controller
             ->orderBy('st.state_short_name')
             ->orderBy('chapters.name')
             ->get();
-        //->paginate(30);
+
         if (isset($_GET['check'])) {
             if ($_GET['check'] == 'yes') {
                 $checkBoxStatus = 'checked';
@@ -1717,7 +1703,9 @@ class ReportController extends Controller
         return view('reports.issues')->with($data);
     }
 
-    /** Listing Chpater Awards */
+   /**
+     * List of Chapter Awards
+     */
     public function showChapterAwards(Request $request): View
     {
         //Get Coordinators Details
@@ -1805,7 +1793,6 @@ class ReportController extends Controller
             ->orderBy('st.state_short_name')
             ->orderBy('chapters.name')
             ->get();
-        //->paginate(30);
 
         if (isset($_GET['check'])) {
             if ($_GET['check'] == 'yes') {
@@ -1836,7 +1823,10 @@ class ReportController extends Controller
         return view('reports.addawards')->with($data);
     }
 
-    /** Duplicate User List */
+
+    /**
+     * List of Duplicate Users
+     */
     public function showDuplicate(): View
     {
 
@@ -1856,7 +1846,10 @@ class ReportController extends Controller
         return view('reports.duplicateuser')->with($data);
     }
 
-    /** Duplicate Board Id List */
+
+    /**
+     *List of duplicate Board IDs
+     */
     public function showDuplicateId(): View
     {
 
@@ -1877,7 +1870,9 @@ class ReportController extends Controller
         return view('reports.duplicateboardid')->with($data);
     }
 
-    /** Multiple Board List */
+    /**
+     * VList of users on multiple boards
+     */
     public function showMultiple(): View
     {
 
@@ -1897,7 +1892,10 @@ class ReportController extends Controller
         return view('reports.multipleboard')->with($data);
     }
 
-    /** Board with No President List */
+
+    /**
+     * boards with no president
+     */
     public function showNoPresident(): View
     {
 

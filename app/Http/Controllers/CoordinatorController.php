@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ChapersUpdatePrimaryCoor;
-use App\Models\Coordinator;
 use App\Models\FinancialReport;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -23,7 +22,9 @@ class CoordinatorController extends Controller
         $this->middleware('auth')->except('logout');
     }
 
-    /** Coordiantor Listing */
+    /**
+    * Coordiantor Listing
+     */
     public function index(Request $request): View
     {
         //Get Coordinator Details
@@ -135,7 +136,9 @@ class CoordinatorController extends Controller
         return view('coordinators.index')->with($data);
     }
 
-    /** New Coordiantor Create Form*/
+    /**
+     * Coordiantor New Create
+     */
     public function create(Request $request): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -163,7 +166,9 @@ class CoordinatorController extends Controller
         return view('coordinators.create')->with($data);
     }
 
-    /** Coordiantor Create */
+    /**
+     * Create New Coordiantor (store)
+     */
     public function store(Request $request): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -316,22 +321,20 @@ class CoordinatorController extends Controller
             );
             DB::commit();
         } catch (\Exception $e) {
-
             // Rollback Transaction
             DB::rollback();
             echo $e->getMessage();
             exit;
-
             // Log the error
             Log::error($e);
-
             return redirect()->to('/coordinatorlist')->with('fail', 'Something went wrong, Please try again..');
         }
-
         return redirect()->to('/coordinatorlist')->with('success', 'Coordinator created successfully.');
     }
 
-    /** Coordiantor Edit Form */
+    /**
+     * Edit Coordiantor
+     */
     public function edit(Request $request, $id): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -341,7 +344,6 @@ class CoordinatorController extends Controller
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
             ->where('cd.coordinator_id', '=', $id)
-                            //->orderBy('bd.board_position_id','ASC')
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
@@ -353,57 +355,50 @@ class CoordinatorController extends Controller
             ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
-                    //->where('conference_id', '=', $corConfId)
             ->orderBy('long_name')
             ->get();
         $confList = DB::table('conference')
             ->select('id', 'conference_name')
-                        //->where('conference_id', '=', $corConfId)
             ->orderBy('conference_name')
             ->get();
         $positionList = DB::table('coordinator_position')
             ->select('id', 'long_title')
-                        //->where('conference_id', '=', $corConfId)
             ->orderBy('long_title')
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinator_details as cd')
             ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                    //->where('cd.conference_id', '=', $corConfId)
-                   // ->where('cd.position_id', '<=', '6')
-                    //->where('cd.position_id', '>=', '1')
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.first_name')
             ->get();
         $directReportTo = DB::table('coordinator_details as cd')
             ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                            //->where('cd.conference_id', '=', $corConfId)
-                            // ->where('cd.position_id', '<=', '6')
             ->where('cd.report_id', '=', $id)
             ->where('cd.is_active', '=', '1')
-                            //->orderBy('cd.first_name','ASC')
             ->get();
 
         $directChapterTo = DB::table('chapters as ch')
             ->select('ch.id as ch_id', 'ch.name as ch_name', 'st.state_short_name as st_name')
             ->join('state as st', 'ch.state', '=', 'st.id')
-                        //->where('cd.conference_id', '=', $corConfId)
-                        // ->where('cd.position_id', '<=', '6')
             ->where('ch.primary_coordinator_id', '=', $id)
             ->where('ch.is_active', '=', '1')
-                        //->orderBy('cd.first_name','ASC')
             ->get();
-        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
+        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG',
+                    '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
         $currentMonth = $coordinatorDetails[0]->birthday_month_id;
 
-        $data = ['directChapterTo' => $directChapterTo, 'directReportTo' => $directReportTo, 'primaryCoordinatorList' => $primaryCoordinatorList, 'positionList' => $positionList, 'confList' => $confList, 'currentMonth' => $currentMonth, 'coordinatorDetails' => $coordinatorDetails, 'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
+        $data = ['directChapterTo' => $directChapterTo, 'directReportTo' => $directReportTo, 'primaryCoordinatorList' => $primaryCoordinatorList,
+                'positionList' => $positionList, 'confList' => $confList, 'currentMonth' => $currentMonth, 'coordinatorDetails' => $coordinatorDetails,
+                'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
 
         return view('coordinators.edit')->with($data);
     }
 
-    /** Coordiantor Email Update */
+    /**
+     * Update Coordinator Email (store)
+     */
     public function update2(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -419,6 +414,10 @@ class CoordinatorController extends Controller
         return redirect()->to('/coordinatorlist')->with('success', 'Coordinator email updated successfully.');
     }
 
+
+    /**
+     * Update Coordinator (store)
+     */
     public function update(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -465,7 +464,9 @@ class CoordinatorController extends Controller
         return redirect()->to('/coordinatorlist')->with('success', 'Coordinator updated successfully.');
     }
 
-    /** Coordiantor Change Role Form */
+    /**
+     * Change Coordinator Role
+     */
     public function showChangeRole(Request $request, $id): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -477,7 +478,6 @@ class CoordinatorController extends Controller
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
             ->where('cd.coordinator_id', '=', $id)
-                            //->orderBy('bd.board_position_id','ASC')
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
@@ -499,8 +499,6 @@ class CoordinatorController extends Controller
             ->get();
         $positionList = DB::table('coordinator_position')
             ->select('id', 'long_title')
-                        //->where('conference_id', '=', $corConfId)
-                        //->orderBy('long_title')
             ->orderBy('id')
             ->get();
 
@@ -591,12 +589,15 @@ class CoordinatorController extends Controller
 
     }
 
+
+    /**
+     * Unretire Coordinator
+     */
     public function showUnretiredCoordinator($id): RedirectResponse
     {
         $coordinatorDetails = DB::table('coordinator_details as cd')
             ->select('cd.*')
             ->where('cd.coordinator_id', '=', $id)
-                           //->orderBy('bd.board_position_id','ASC')
             ->get();
         if (! empty($coordinatorDetails[0]->user_id)) {
             DB::table('coordinator_details')
@@ -613,7 +614,10 @@ class CoordinatorController extends Controller
         return redirect()->to('/coordinator/retired')->with('success', 'Coordinator successfully unretired');
     }
 
-    /** Coordiantor Retire */
+
+    /**
+     * Retire Coordiantor
+     */
     public function updateRole(Request $request, $id)
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -666,14 +670,11 @@ class CoordinatorController extends Controller
 
                 return redirect()->to('/coordinatorlist')->with('success', 'Coordinator retired successfully.');
                 exit;
-                // return true;
             } catch (\Exception $e) {
                 // Rollback Transaction
                 DB::rollback();
-
                 // Log the error
                 Log::error($e);
-
                 return redirect()->to('/coordinatorlist')->with('fail', 'Something went wrong, Please try again.');
             }
         }
@@ -767,14 +768,16 @@ class CoordinatorController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
-
             // Log the error
             Log::error($e);
-
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
     }
 
+
+    /**
+     * Reassign Chapter
+     */
     public function ReassignChapter(Request $request, $chapter_id, $coordinator_id, $check_changed = false)
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -806,17 +809,18 @@ class CoordinatorController extends Controller
             }
 
             DB::commit();
-
             return true;
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
-
             return false;
         }
 
     }
 
+    /**
+     * Reassign Coordinator
+     */
     public function ReassignCoordinator(Request $request, $coordinator_id, $new_coordinator_id, $check_changed = false)
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -862,7 +866,6 @@ class CoordinatorController extends Controller
             $layer6 = $cordReportingTree[0]->layer6;
             $layer7 = $cordReportingTree[0]->layer7;
             $layer8 = $cordReportingTree[0]->layer8;
-            //$coordinator_id = $cordId;
             switch ($new_layer_id) {
                 case 0:
                     $layer0 = $coordinator_id;
@@ -951,6 +954,9 @@ class CoordinatorController extends Controller
         }
     }
 
+    /**
+     * Get Region List
+     */
     public function getRegionList($corConfId): JsonResponse
     {
         $regionList = DB::table('region')
@@ -967,6 +973,9 @@ class CoordinatorController extends Controller
 
     }
 
+    /**
+     * Get Reporting List
+     */
     public function getReportingList(): JsonResponse
     {
         $conference_id = $_GET['conf_id'];
@@ -1003,6 +1012,10 @@ class CoordinatorController extends Controller
         return response()->json(['html' => $html]);
     }
 
+
+    /**
+     * Get Direct Report
+     */
     public function getDirectReportingList(): JsonResponse
     {
         $conference_id = $_GET['conf_id'];
@@ -1037,6 +1050,10 @@ class CoordinatorController extends Controller
         return response()->json(['html' => $html]);
     }
 
+
+    /**
+     * Get Primary Coordinator
+     */
     public function getChapterPrimaryFor(): JsonResponse
     {
         $conference_id = $_GET['conf_id'];
@@ -1069,6 +1086,10 @@ class CoordinatorController extends Controller
         return response()->json(['html' => $html]);
     }
 
+
+    /**
+     * Retired Coorinators
+     */
     public function showRetiredCoordinator(Request $request): View
     {
         //Get Coordinator Details
@@ -1099,6 +1120,9 @@ class CoordinatorController extends Controller
         return view('coordinators.retired')->with($data);
     }
 
+    /**
+     * Retired Coordinator Details
+     */
     public function showRetiredCoordinatorView(Request $request, $id): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -1143,6 +1167,9 @@ class CoordinatorController extends Controller
         return view('coordinators.retiredview')->with($data);
     }
 
+    /**
+     * International Retired Coordinators
+     */
     public function showIntCoordinator(): View
     {
         //Get International Coordinator List
@@ -1158,6 +1185,10 @@ class CoordinatorController extends Controller
         return view('coordinators.international')->with($data);
     }
 
+
+    /**
+     * International Retired Coordinator Details
+     */
     public function showIntRetCoordinator(): View
     {
         //Get International Coordinator List
@@ -1174,7 +1205,9 @@ class CoordinatorController extends Controller
         return view('coordinators.retiredinternational')->with($data);
     }
 
-    /** Coordiantor Appreciation */
+    /**
+     * Coordiantor Appreciation Gifts
+     */
     public function appreciation(Request $request, $id): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -1234,6 +1267,9 @@ class CoordinatorController extends Controller
         return view('coordinators.appreciation')->with($data);
     }
 
+    /**
+     * Update Coordiantor Appreciation Gifts (store)
+     */
     public function updateAppreciation(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -1277,20 +1313,19 @@ class CoordinatorController extends Controller
                 } catch (\Exception $e) {
                     // Rollback Transaction
                     DB::rollback();
-
                     // Log the error
                     Log::error($e);
-
                     return redirect()->to('/reports/appreciation')->with('fail', 'Something went wrong, Please try again.');
                 }
             }
         }
-
         return redirect()->to('/reports/appreciation')->with('success', 'Appreciation gifts updated successfully');
 
     }
 
-    /** Coordiantor Birthday */
+    /**
+     * Coordiantor Birthdays
+     */
     public function birthday(Request $request, $id): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -1350,6 +1385,10 @@ class CoordinatorController extends Controller
         return view('coordinators.birthday')->with($data);
     }
 
+
+    /**
+     * Update Coordiantor Birthdays (store)
+     */
     public function updateBirthday(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -1382,19 +1421,20 @@ class CoordinatorController extends Controller
                 } catch (\Exception $e) {
                     // Rollback Transaction
                     DB::rollback();
-
                     // Log the error
                     Log::error($e);
-
                     return redirect()->to('/reports/birthday')->with('fail', 'Something went wrong, Please try again.');
                 }
             }
         }
-
         return redirect()->to('/reports/birthday')->with('success', 'Appreciation gifts updated successfully');
 
     }
 
+
+    /**
+     * Coordiantor Dashboard - Login Main Screen
+     */
     public function showDashboard(Request $request): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -1500,6 +1540,10 @@ class CoordinatorController extends Controller
         return redirect()->to('/coordinator/dashboard')->with('success', 'Coordinator dashboard updated successfully');
     }
 
+
+    /**
+     * Coordiantor Profile
+     */
     public function showProfile(Request $request): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -1550,6 +1594,10 @@ class CoordinatorController extends Controller
         return view('coordinators.profile')->with($data);
     }
 
+
+    /**
+     * CUpdate Profile (Store)
+     */
     public function updateProfile(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -1595,15 +1643,12 @@ class CoordinatorController extends Controller
                 } catch (\Exception $e) {
                     // Rollback Transaction
                     DB::rollback();
-
                     // Log the error
                     Log::error($e);
-
                     return redirect()->to('/coordinator/profile')->with('fail', 'Something went wrong, Please try again.');
                 }
             }
         }
-
         return redirect()->to('/coordinator/profile')->with('success', 'Coordinator profile updated successfully');
     }
 }

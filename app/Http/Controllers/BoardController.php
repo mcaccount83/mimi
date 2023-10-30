@@ -14,9 +14,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Redirect;
+use App\Mail\EOYFinancialSubmitted;
 use Illuminate\Support\Facades\Response;
-use Illuminate\Support\Facades\Session;
 use Kunnu\Dropbox\Dropbox;
 use Kunnu\Dropbox\DropboxApp;
 use Kunnu\Dropbox\DropboxFile;
@@ -37,7 +36,9 @@ class BoardController extends Controller
     {
 
         $presInfoPre = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city', 'bd.zip as zip', 'st.state_short_name as state')
+            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name',
+                    'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city', 'bd.zip as zip',
+                    'st.state_short_name as state')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -108,7 +109,8 @@ class BoardController extends Controller
 
             $chapter->save();
             //President Info
-            if ($request->get('ch_pre_fname') != '' && $request->get('ch_pre_lname') != '' && $request->get('ch_pre_email') != '') {
+            if ($request->get('ch_pre_fname') != '' && $request->get('ch_pre_lname') != '' && $request->get('ch_pre_email') != '')
+            {
                 $PREDetails = DB::table('board_details')
                     ->select('board_id', 'user_id')
                     ->where('chapter_id', '=', $chapterId)
@@ -145,8 +147,6 @@ class BoardController extends Controller
                 }
             }
             //AVP Info
-            // if($request->get('ch_avp_fname') !='' && $request->get('ch_avp_lname') !='' && $request->get('ch_avp_email') !='')
-            // {
             $AVPDetails = DB::table('board_details')
                 ->select('board_id', 'user_id')
                 ->where('chapter_id', '=', $chapterId)
@@ -196,7 +196,6 @@ class BoardController extends Controller
                             'user_type' => 'board',
                             'is_active' => 1]
                     );
-
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
                         ->orderByDesc('board_details.board_id')
@@ -226,10 +225,7 @@ class BoardController extends Controller
                     );
                 }
             }
-            //}
             //MVP Info
-            //if($request->get('ch_mvp_fname') !='' && $request->get('ch_mvp_lname') !='' && $request->get('ch_mvp_email') !='')
-            // {
             $MVPDetails = DB::table('board_details')
                 ->select('board_id', 'user_id')
                 ->where('chapter_id', '=', $chapterId)
@@ -279,7 +275,6 @@ class BoardController extends Controller
                             'user_type' => 'board',
                             'is_active' => 1]
                     );
-
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
                         ->orderByDesc('board_details.board_id')
@@ -309,10 +304,7 @@ class BoardController extends Controller
                     );
                 }
             }
-            // }
             //TRS Info
-            //if($request->get('ch_trs_fname') !='' && $request->get('ch_trs_lname') !='' && $request->get('ch_trs_email') !='')
-            //{
             $TRSDetails = DB::table('board_details')
                 ->select('board_id', 'user_id')
                 ->where('chapter_id', '=', $chapterId)
@@ -362,7 +354,6 @@ class BoardController extends Controller
                             'user_type' => 'board',
                             'is_active' => 1]
                     );
-
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
                         ->orderByDesc('board_details.board_id')
@@ -392,10 +383,7 @@ class BoardController extends Controller
                     );
                 }
             }
-            //}
             //SEC Info
-            //if($request->get('ch_sec_fname') !='' && $request->get('ch_sec_lname') !='' && $request->get('ch_sec_email') !='')
-            //{
             $SECDetails = DB::table('board_details')
                 ->select('board_id', 'user_id')
                 ->where('chapter_id', '=', $chapterId)
@@ -445,7 +433,6 @@ class BoardController extends Controller
                             'user_type' => 'board',
                             'is_active' => 1]
                     );
-
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
                         ->orderByDesc('board_details.board_id')
@@ -479,7 +466,9 @@ class BoardController extends Controller
 
             //Update Chapter MailData//
             $presInfoUpd = DB::table('chapters')
-                ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city', 'bd.zip as zip', 'st.state_short_name as state')
+                ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name',
+                        'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city',
+                        'bd.zip as zip', 'st.state_short_name as state')
                 ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -677,8 +666,10 @@ class BoardController extends Controller
             //List Admin Notification//
             $to_email2 = 'listadmin@momsclub.org';
 
-            if ($presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
-
+            if ($presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email ||
+            $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] ||
+            $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd'])
+            {
                 Mail::to($to_email2, 'MOMS Club')
                     ->send(new ChapersUpdateListAdmin($mailData));
             }
@@ -687,13 +678,10 @@ class BoardController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
-
             // Log the error
             Log::error($e);
-
             return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
         }
-
         return redirect()->back()->with('success', 'Chapter has successfully updated');
     }
 
@@ -704,7 +692,6 @@ class BoardController extends Controller
     {
         DB::beginTransaction();
         try {
-
             $chapterId = $id;
             $posId = $request->get('bor_positionid');
             $boardDetails = DB::table('board_details')
@@ -791,13 +778,10 @@ class BoardController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
-
             // Log the error
             Log::error($e);
-
             return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
         }
-
         return redirect()->back()->with('success', 'Chapter has successfully updated');
     }
 
@@ -810,12 +794,7 @@ class BoardController extends Controller
         $borPositionId = $borDetails['board_position_id'];
         $chapterId = $borDetails['chapter_id'];
         $isActive = $borDetails['is_active'];
-        // if($isActive !=1)
-        //  {
-        //      Auth::logout();
-        //       $request->session()->flush();
-        //       return redirect('/login');
-        //   }
+
         $chapterDetails = Chapter::find($chapterId);
         $stateArr = DB::table('state')
             ->select('state.*')
@@ -827,68 +806,80 @@ class BoardController extends Controller
             ->where('id', '=', $chapterDetails->state)
             ->get();
         $chapterState = $chapterState[0]->state_short_name;
-        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
+        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG',
+                        '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
         $currentMonth = $chapterDetails->start_month_id;
 
         $chapterList = DB::table('chapters as ch')
-            ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
+            ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address',
+                    'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
             ->leftJoin('board_details as bd', 'ch.id', '=', 'bd.chapter_id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $chapterId)
             ->where('bd.board_position_id', '=', '1')
-                    //->orderBy('bd.board_position_id','ASC')
             ->get();
 
         $PREDetails = DB::table('incoming_board_member as bd')
-            ->select('bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.board_position_id', 'bd.street_address as pre_addr', 'bd.city as pre_city', 'bd.zip as pre_zip', 'bd.phone as pre_phone', 'bd.state as pre_state', 'bd.id as ibd_id')
+            ->select('bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.board_position_id',
+                    'bd.street_address as pre_addr', 'bd.city as pre_city', 'bd.zip as pre_zip', 'bd.phone as pre_phone', 'bd.state as pre_state', 'bd.id as ibd_id')
             ->where('bd.chapter_id', '=', $chapterId)
             ->where('bd.board_position_id', '=', '1')
             ->get();
         if (count($PREDetails) == 0) {
-            $PREDetails[0] = ['pre_fname' => '', 'pre_lname' => '', 'pre_email' => '', 'pre_addr' => '', 'pre_city' => '', 'pre_zip' => '', 'pre_phone' => '', 'pre_state' => '', 'ibd_id' => ''];
+            $PREDetails[0] = ['pre_fname' => '', 'pre_lname' => '', 'pre_email' => '', 'pre_addr' => '', 'pre_city' => '', 'pre_zip' => '', 'pre_phone' => '',
+                    'pre_state' => '', 'ibd_id' => ''];
             $PREDetails = json_decode(json_encode($PREDetails));
         }
 
         $AVPDetails = DB::table('incoming_board_member as bd')
-            ->select('bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.board_position_id', 'bd.street_address as avp_addr', 'bd.city as avp_city', 'bd.zip as avp_zip', 'bd.phone as avp_phone', 'bd.state as avp_state', 'bd.id as ibd_id')
+            ->select('bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.board_position_id', 'bd.street_address as avp_addr',
+                    'bd.city as avp_city', 'bd.zip as avp_zip', 'bd.phone as avp_phone', 'bd.state as avp_state', 'bd.id as ibd_id')
             ->where('bd.chapter_id', '=', $chapterId)
             ->where('bd.board_position_id', '=', '2')
             ->get();
         if (count($AVPDetails) == 0) {
-            $AVPDetails[0] = ['avp_fname' => '', 'avp_lname' => '', 'avp_email' => '', 'avp_addr' => '', 'avp_city' => '', 'avp_zip' => '', 'avp_phone' => '', 'avp_state' => '', 'ibd_id' => ''];
+            $AVPDetails[0] = ['avp_fname' => '', 'avp_lname' => '', 'avp_email' => '', 'avp_addr' => '', 'avp_city' => '', 'avp_zip' => '', 'avp_phone' => '',
+                    'avp_state' => '', 'ibd_id' => ''];
             $AVPDetails = json_decode(json_encode($AVPDetails));
         }
 
         $MVPDetails = DB::table('incoming_board_member as bd')
-            ->select('bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.board_position_id', 'bd.street_address as mvp_addr', 'bd.city as mvp_city', 'bd.zip as mvp_zip', 'bd.phone as mvp_phone', 'bd.state as mvp_state', 'bd.id as ibd_id')
+            ->select('bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.board_position_id', 'bd.street_address as mvp_addr',
+                    'bd.city as mvp_city', 'bd.zip as mvp_zip', 'bd.phone as mvp_phone', 'bd.state as mvp_state', 'bd.id as ibd_id')
             ->where('bd.chapter_id', '=', $chapterId)
             ->where('bd.board_position_id', '=', '3')
             ->get();
         if (count($MVPDetails) == 0) {
-            $MVPDetails[0] = ['mvp_fname' => '', 'mvp_lname' => '', 'mvp_email' => '', 'mvp_addr' => '', 'mvp_city' => '', 'mvp_zip' => '', 'mvp_phone' => '', 'mvp_state' => '', 'ibd_id' => ''];
+            $MVPDetails[0] = ['mvp_fname' => '', 'mvp_lname' => '', 'mvp_email' => '', 'mvp_addr' => '', 'mvp_city' => '', 'mvp_zip' => '', 'mvp_phone' => '',
+                    'mvp_state' => '', 'ibd_id' => ''];
             $MVPDetails = json_decode(json_encode($MVPDetails));
         }
 
         $TRSDetails = DB::table('incoming_board_member as bd')
-            ->select('bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.board_position_id', 'bd.street_address as trs_addr', 'bd.city as trs_city', 'bd.zip as trs_zip', 'bd.phone as trs_phone', 'bd.state as trs_state', 'bd.id as ibd_id')
+            ->select('bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.board_position_id', 'bd.street_address as trs_addr',
+                    'bd.city as trs_city', 'bd.zip as trs_zip', 'bd.phone as trs_phone', 'bd.state as trs_state', 'bd.id as ibd_id')
             ->where('bd.chapter_id', '=', $chapterId)
             ->where('bd.board_position_id', '=', '4')
             ->get();
         if (count($TRSDetails) == 0) {
-            $TRSDetails[0] = ['trs_fname' => '', 'trs_lname' => '', 'trs_email' => '', 'trs_addr' => '', 'trs_city' => '', 'trs_zip' => '', 'trs_phone' => '', 'trs_state' => '', 'ibd_id' => ''];
+            $TRSDetails[0] = ['trs_fname' => '', 'trs_lname' => '', 'trs_email' => '', 'trs_addr' => '', 'trs_city' => '', 'trs_zip' => '', 'trs_phone' => '',
+                    'trs_state' => '', 'ibd_id' => ''];
             $TRSDetails = json_decode(json_encode($TRSDetails));
         }
 
         $SECDetails = DB::table('incoming_board_member as bd')
-            ->select('bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.board_position_id', 'bd.street_address as sec_addr', 'bd.city as sec_city', 'bd.zip as sec_zip', 'bd.phone as sec_phone', 'bd.state as sec_state', 'bd.id as ibd_id')
+            ->select('bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.board_position_id', 'bd.street_address as sec_addr',
+                    'bd.city as sec_city', 'bd.zip as sec_zip', 'bd.phone as sec_phone', 'bd.state as sec_state', 'bd.id as ibd_id')
             ->where('bd.chapter_id', '=', $chapterId)
             ->where('bd.board_position_id', '=', '5')
             ->get();
         if (count($SECDetails) == 0) {
-            $SECDetails[0] = ['sec_fname' => '', 'sec_lname' => '', 'sec_email' => '', 'sec_addr' => '', 'sec_city' => '', 'sec_zip' => '', 'sec_phone' => '', 'sec_state' => '', 'ibd_id' => ''];
+            $SECDetails[0] = ['sec_fname' => '', 'sec_lname' => '', 'sec_email' => '', 'sec_addr' => '', 'sec_city' => '', 'sec_zip' => '', 'sec_phone' => '',
+                    'sec_state' => '', 'ibd_id' => ''];
             $SECDetails = json_decode(json_encode($SECDetails));
         }
-        $data = ['chapterState' => $chapterState, 'currentMonth' => $currentMonth, 'foundedMonth' => $foundedMonth, 'stateArr' => $stateArr, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PREDetails' => $PREDetails, 'chapterList' => $chapterList];
+        $data = ['chapterState' => $chapterState, 'currentMonth' => $currentMonth, 'foundedMonth' => $foundedMonth, 'stateArr' => $stateArr, 'SECDetails' => $SECDetails,
+                'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PREDetails' => $PREDetails, 'chapterList' => $chapterList];
 
         return view('boards.boardinfo')->with($data);
     }
@@ -1182,13 +1173,10 @@ class BoardController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
-
             // Log the error
             Log::error($e);
-
             return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
         }
-
         return redirect()->to('/home')->with('success', 'Board Info has been Submitted');
 
     }
@@ -1202,12 +1190,6 @@ class BoardController extends Controller
             $borDetails = User::find($request->user()->id)->BoardDetails;
             $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
             $isActive = $borDetails['is_active'];
-            //if($isActive != 1)
-            // {
-            //     Auth::logout();
-            //     $request->session()->flush();
-            //      return redirect('/login');
-            //  }
 
             DB::beginTransaction();
 
@@ -1228,8 +1210,8 @@ class BoardController extends Controller
             return view('boards.financial')->with($data);
         } catch (\Exception $e) {
             DB::rollBack();
-            // Log the error or perform any necessary actions
-            // You can also add a flash message to inform the user about the error
+            // Log the error
+            Log::error($e);
             return redirect()->to('/home');
         }
     }
@@ -1295,14 +1277,7 @@ class BoardController extends Controller
     {
         $borDetails = User::find($request->user()->id)->BoardDetails;
         $isActive = $borDetails['is_active'];
-        //if($isActive !=1)
-        //{
-        //     Auth::logout();
-        //    $request->session()->flush();
-        //     return redirect('/login');
-        // }
-        //Basic Settings
-        //$target_dir = $uploadedFilePath = "F:/xampp/htdocs/momsclub-dev/uploads/";  //Windows
+
         $target_dir = $uploadedFilePath = '/home/momsclub/public_html/mimi/uploads/';  //Live
         //Configure Dropbox Application
         $dropboxKey = '7naxrobjsc02z0c';
@@ -2001,7 +1976,6 @@ class BoardController extends Controller
         $chapterDetailsExistArr = DB::table('financial_report')->where('chapter_id', '=', $chapter_id)->get();
         $chapterDetailsExist = $chapterDetailsExistArr->count();
 
-        //  $input = $request->all();
 
         // Step 1 Fields
         if (isset($input['optChangeDues']) && $input['optChangeDues'] == 'no') {
@@ -2755,11 +2729,6 @@ class BoardController extends Controller
         $completed_name = $input['CompletedName'];
         $completed_email = $input['CompletedEmail'];
 
-        //Furthest step
-        //	if(isset($input['FurthestStep'])){
-        //		$farthest_step_visited =$input['FurthestStep'];
-        //	}
-
         if ($reportReceived == 1) {
             DB::update('UPDATE chapters SET financial_report_received = ? where id = ?', [1, $chapter_id]);
         }
@@ -3056,7 +3025,8 @@ class BoardController extends Controller
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
-
+            // Log the error
+            Log::error($e);
             return redirect()->back()->with('fail', 'Something went wrong Please try again.');
         }
     }
@@ -3067,7 +3037,8 @@ class BoardController extends Controller
         $financial_report_array = FinancialReport::find($chId);
 
         $chapterDetails = DB::table('chapters')
-            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state', 'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
+            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state',
+                    'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('chapters.id', '=', $chId)
@@ -3141,43 +3112,15 @@ class BoardController extends Controller
             default:
                 $to_email = 'admin@momsclub.org';
         }
-        // $to_email = "arvind.kumar@otssolutions.com";
         DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$reviewer_id, $chId]);
 
-        $mail_message = '<p>'.$chName.', '.$chState." has submitted their Financial Report. It is ready to be reviewed.</p>\n";
-        $mail_message .= '<p>Submitted by: '.$financial_report_array['completed_name'].', '.$financial_report_array['completed_email'].'</p>';
+        $mailData =[
+            'chapter_name' => $chName,
+            'chapter_state' => $chState,
+        ];
 
-        $mail_message .= '<p>Attachments:';
-        if (isset($financial_report_array['roster_path'])) {
-            $mail_message .= "<ul><li><a href='".$financial_report_array['roster_path']."'>Chapter Roster</a></li>";
-        } else {
-            $mail_message .= '<ul><li>No Roster Attached</li>';
-        }
-        if (isset($financial_report_array['bank_statement_included_path'])) {
-            $mail_message .= "<li><a href='".$financial_report_array['bank_statement_included_path']."'>Primary Bank Statement</a></li>";
-        } else {
-            $mail_message .= '<li>No Statement Attached</li>';
-        }
-        if (isset($financial_report_array['bank_statement_2_included_path'])) {
-            $mail_message .= "<li><a href='".$financial_report_array['bank_statement_2_included_path']."'>Additional Bank Statement</a></li>";
-        }
-        if (isset($financial_report_array['file_irs_path'])) {
-            $mail_message .= "<li><a href='".$financial_report_array['file_irs_path']."'>990N Confirmation File</a></li></ul></p>";
-        } else {
-            $mail_message .= '<li>No 990N File Attached</li></ul></p>';
-        }
-
-        $mail_message .= '<p>Coordinators:';
-        $mail_message .= '<ul><li>Primary Coordinator: '.$coordinator_array[0]['first_name'].' '.$coordinator_array[0]['last_name'].'</li>';
-        if (isset($coordinator_array[1]['first_name'])) {
-            $mail_message .= '<li>Secondary Coordinator: '.$coordinator_array[1]['first_name'].' '.$coordinator_array[1]['last_name'].'</li></ul></p>';
-        }
-
-        $mailData = ['content' => $mail_message];
-        $mail_subject = 'Financial Report for '.$chName.', '.$chState.' has been submitted';
-        Mail::send('emails.financialreport', $mailData, function ($message) use ($to_email, $mail_subject) {
-            $message->to($to_email, 'MIMI')->subject($mail_subject);
-        });
+        Mail::to($to_email, 'MOMS Club')
+                    ->send(new EOYFinancialSubmitted($mailData, $financial_report_array, $coordinator_array));
 
         return true;
     }
