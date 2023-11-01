@@ -11,7 +11,9 @@ class EOYFinancialSubmitted extends Mailable
     use Queueable, SerializesModels;
 
     public $mailData;
+
     public $financial_report_array;
+
     public $coordinator_array;
 
     /**
@@ -19,8 +21,7 @@ class EOYFinancialSubmitted extends Mailable
      *
      * @return void
      */
-
-     public function __construct($mailData, $financial_report_array, $coordinator_array)
+    public function __construct($mailData, $financial_report_array, $coordinator_array)
     {
         $this->mailData = $mailData;
         $this->financial_report_array = $financial_report_array;

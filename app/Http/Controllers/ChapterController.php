@@ -4,15 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdatePrimaryCoor;
+use App\Mail\ChapterAddListAdmin;
+use App\Mail\ChapterAddPrimaryCoor;
+use App\Mail\ChapterReAddListAdmin;
+use App\Mail\ChapterRemoveListAdmin;
 use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegLate;
 use App\Mail\PaymentsReRegReminder;
 use App\Mail\PaymentsSustainingChapterThankYou;
-use App\Mail\ChapterAddListAdmin;
-use App\Mail\ChapterAddPrimaryCoor;
-use App\Mail\ChapterReAddListAdmin;
-use App\Mail\ChapterRemoveListAdmin;
 use App\Models\Chapter;
 use App\Models\FinancialReport;
 use App\Models\User;
@@ -464,11 +464,12 @@ class ChapterController extends Controller
             DB::rollback();
             // Log the error
             Log::error($e);
+
             return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again...');
         }
+
         return redirect()->to('/chapter/list')->with('success', 'Chapter created successfully');
     }
-
 
     /**
      * Edit Chapter
@@ -1439,8 +1440,10 @@ class ChapterController extends Controller
             DB::rollback();
             // Log the error
             Log::error($e);
+
             return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again..');
         }
+
         return redirect()->to('/chapter/list')->with('success', 'Chapter has been updated');
     }
 
@@ -1518,11 +1521,12 @@ class ChapterController extends Controller
             DB::rollback();
             // Log the error
             Log::error($e);
+
             return redirect()->to('/yearreports/boundaryissue')->with('fail', 'Something went wrong, Please try again.');
         }
+
         return redirect()->to('/yearreports/boundaryissue')->with('success', 'Boundary issue has been successfully updated');
     }
-
 
     /**
      * Display the International chapter list
@@ -1705,7 +1709,6 @@ class ChapterController extends Controller
 
         return view('chapters.inquiriesview')->with($data);
     }
-
 
     /**
      * Display the Website Details
@@ -1924,7 +1927,6 @@ class ChapterController extends Controller
         return view('chapters.zapview')->with($data);
     }
 
-
     /**
      * View the International Zapped chapter list
      */
@@ -2068,7 +2070,6 @@ class ChapterController extends Controller
         return view('chapters.editweb')->with($data);
     }
 
-
     /**
      * Udaate Website Details (store)
      */
@@ -2151,7 +2152,6 @@ class ChapterController extends Controller
         return redirect()->to('/chapter/website')->with('success', 'Chapter Website has been changed successfully.');
     }
 
-
     /**
      * Function for checking Email is registerd or not
      */
@@ -2163,8 +2163,7 @@ class ChapterController extends Controller
         }
     }
 
-
-   /**
+    /**
      * Function for getting Reporting Hierarchy of Chapter
      */
     public function checkReportId($id)
@@ -2233,10 +2232,9 @@ class ChapterController extends Controller
         }
     }
 
-
     /**
-    * Function for Zapping a Chapter (store)
-    */
+     * Function for Zapping a Chapter (store)
+     */
     public function chapterDisband(Request $request): RedirectResponse
     {
         $input = $request->all();
@@ -2386,10 +2384,10 @@ class ChapterController extends Controller
             ];
 
             //Primary Coordinator Notification//
-        $to_email = 'listadmin@momsclub.org';
+            $to_email = 'listadmin@momsclub.org';
 
-        Mail::to($to_email, 'MOMS Club')
-            ->send(new ChapterRemoveListAdmin($mailData));
+            Mail::to($to_email, 'MOMS Club')
+                ->send(new ChapterRemoveListAdmin($mailData));
 
             return redirect()->to('/chapter/zapped')->with('success', 'Chapter has been successfully Zapped');
         } catch (\Exception $e) {
@@ -2399,7 +2397,6 @@ class ChapterController extends Controller
         }
     }
 
-
     /**
      * Function for unZapping a Chapter (store)
      */
@@ -2407,162 +2404,164 @@ class ChapterController extends Controller
     {
         try {
             DB::beginTransaction();
-        $chapterid = $id;
-        DB::table('chapters')
-            ->where('id', $chapterid)
-            ->update(['is_active' => 1, 'disband_reason' => '', 'zap_date' => null]);
+            $chapterid = $id;
+            DB::table('chapters')
+                ->where('id', $chapterid)
+                ->update(['is_active' => 1, 'disband_reason' => '', 'zap_date' => null]);
 
-        $userRelatedChpaterList = DB::table('board_details as bd')
-            ->select('bd.user_id')
-            ->where('bd.chapter_id', '=', $chapterid)
-            ->get();
-        if (count($userRelatedChpaterList) > 0) {
-            foreach ($userRelatedChpaterList as $list) {
-                $userId = $list->user_id;
-                DB::table('users')
-                    ->where('id', $userId)
-                    ->update(['is_active' => 1]);
+            $userRelatedChpaterList = DB::table('board_details as bd')
+                ->select('bd.user_id')
+                ->where('bd.chapter_id', '=', $chapterid)
+                ->get();
+            if (count($userRelatedChpaterList) > 0) {
+                foreach ($userRelatedChpaterList as $list) {
+                    $userId = $list->user_id;
+                    DB::table('users')
+                        ->where('id', $userId)
+                        ->update(['is_active' => 1]);
+                }
             }
-        }
-        DB::table('board_details')
-            ->where('chapter_id', $chapterid)
-            ->update(['is_active' => 1]);
+            DB::table('board_details')
+                ->where('chapter_id', $chapterid)
+                ->update(['is_active' => 1]);
 
             $chapterList = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->where('chapters.is_Active', '=', '1')
-            ->where('bd.board_position_id', '=', '1')
-            ->where('chapters.id', $chapterid)
-            ->orderByDesc('chapters.id')
-            ->get();
+                ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+                ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+                ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                ->where('chapters.is_Active', '=', '1')
+                ->where('bd.board_position_id', '=', '1')
+                ->where('chapters.id', $chapterid)
+                ->orderByDesc('chapters.id')
+                ->get();
 
-        $chapterName = $chapterList[0]->name;
-        $chapterState = $chapterList[0]->state;
-        $chapterEmail = $chapterList[0]->email;
-        $chapterStatus = $chapterList[0]->status;
-        //President Info
-        $preinfo = DB::table('board_details')
-            ->select('first_name', 'last_name', 'email')
-            ->where('chapter_id', $chapterid)
-            ->where('board_position_id', '=', '1')
-            ->get();
+            $chapterName = $chapterList[0]->name;
+            $chapterState = $chapterList[0]->state;
+            $chapterEmail = $chapterList[0]->email;
+            $chapterStatus = $chapterList[0]->status;
+            //President Info
+            $preinfo = DB::table('board_details')
+                ->select('first_name', 'last_name', 'email')
+                ->where('chapter_id', $chapterid)
+                ->where('board_position_id', '=', '1')
+                ->get();
 
-        if (count($preinfo) > 0) {
-            $prefirst = $preinfo[0]->first_name;
-            $presecond = $preinfo[0]->last_name;
-            $preemail = $preinfo[0]->email;
-        } else {
-            $prefirst = '';
-            $presecond = '';
-            $preemail = '';
-        }
-        //Avp info
-        $avpinfo = DB::table('board_details')
-            ->select('first_name', 'last_name', 'email')
-            ->where('chapter_id', $chapterid)
-            ->where('board_position_id', '=', '2')
-            ->get();
-        if (count($avpinfo) > 0) {
-            $avpfirst = $avpinfo[0]->first_name;
-            $avpsecond = $avpinfo[0]->last_name;
-            $avpemail = $avpinfo[0]->email;
-        } else {
-            $avpfirst = '';
-            $avpsecond = '';
-            $avpemail = '';
-        }
-        //Mvp info
+            if (count($preinfo) > 0) {
+                $prefirst = $preinfo[0]->first_name;
+                $presecond = $preinfo[0]->last_name;
+                $preemail = $preinfo[0]->email;
+            } else {
+                $prefirst = '';
+                $presecond = '';
+                $preemail = '';
+            }
+            //Avp info
+            $avpinfo = DB::table('board_details')
+                ->select('first_name', 'last_name', 'email')
+                ->where('chapter_id', $chapterid)
+                ->where('board_position_id', '=', '2')
+                ->get();
+            if (count($avpinfo) > 0) {
+                $avpfirst = $avpinfo[0]->first_name;
+                $avpsecond = $avpinfo[0]->last_name;
+                $avpemail = $avpinfo[0]->email;
+            } else {
+                $avpfirst = '';
+                $avpsecond = '';
+                $avpemail = '';
+            }
+            //Mvp info
 
-        $mvpinfo = DB::table('board_details')
-            ->select('first_name', 'last_name', 'email')
-            ->where('chapter_id', $chapterid)
-            ->where('board_position_id', '=', '3')
-            ->get();
-        if (count($mvpinfo) > 0) {
-            $mvpfirst = $mvpinfo[0]->first_name;
-            $mvpsecond = $mvpinfo[0]->last_name;
-            $mvpemail = $mvpinfo[0]->email;
-        } else {
-            $mvpfirst = '';
-            $mvpsecond = '';
-            $mvpemail = '';
-        }
-        //Treasurere info
-        $triinfo = DB::table('board_details')
-            ->select('first_name', 'last_name', 'email')
-            ->where('chapter_id', $chapterid)
-            ->where('board_position_id', '=', '4')
-            ->get();
-        if (count($triinfo) > 0) {
-            $trifirst = $triinfo[0]->first_name;
-            $trisecond = $triinfo[0]->last_name;
-            $triemail = $triinfo[0]->email;
-        } else {
-            $trifirst = '';
-            $trisecond = '';
-            $triemail = '';
-        }
-        //secretary info
-        $secinfo = DB::table('board_details')
-            ->select('first_name', 'last_name', 'email')
-            ->where('chapter_id', $chapterid)
-            ->where('board_position_id', '=', '5')
-            ->get();
-        if (count($secinfo) > 0) {
-            $secfirst = $secinfo[0]->first_name;
-            $secscond = $secinfo[0]->last_name;
-            $secemail = $secinfo[0]->email;
-        } else {
-            $secfirst = '';
-            $secscond = '';
-            $secemail = '';
-        }
-        //conference info
-        $coninfo = DB::table('chapters')
-            ->select('chapters.*', 'conference')
-            ->where('id', $chapterid)
-            ->get();
-        $conf = $coninfo[0]->conference;
+            $mvpinfo = DB::table('board_details')
+                ->select('first_name', 'last_name', 'email')
+                ->where('chapter_id', $chapterid)
+                ->where('board_position_id', '=', '3')
+                ->get();
+            if (count($mvpinfo) > 0) {
+                $mvpfirst = $mvpinfo[0]->first_name;
+                $mvpsecond = $mvpinfo[0]->last_name;
+                $mvpemail = $mvpinfo[0]->email;
+            } else {
+                $mvpfirst = '';
+                $mvpsecond = '';
+                $mvpemail = '';
+            }
+            //Treasurere info
+            $triinfo = DB::table('board_details')
+                ->select('first_name', 'last_name', 'email')
+                ->where('chapter_id', $chapterid)
+                ->where('board_position_id', '=', '4')
+                ->get();
+            if (count($triinfo) > 0) {
+                $trifirst = $triinfo[0]->first_name;
+                $trisecond = $triinfo[0]->last_name;
+                $triemail = $triinfo[0]->email;
+            } else {
+                $trifirst = '';
+                $trisecond = '';
+                $triemail = '';
+            }
+            //secretary info
+            $secinfo = DB::table('board_details')
+                ->select('first_name', 'last_name', 'email')
+                ->where('chapter_id', $chapterid)
+                ->where('board_position_id', '=', '5')
+                ->get();
+            if (count($secinfo) > 0) {
+                $secfirst = $secinfo[0]->first_name;
+                $secscond = $secinfo[0]->last_name;
+                $secemail = $secinfo[0]->email;
+            } else {
+                $secfirst = '';
+                $secscond = '';
+                $secemail = '';
+            }
+            //conference info
+            $coninfo = DB::table('chapters')
+                ->select('chapters.*', 'conference')
+                ->where('id', $chapterid)
+                ->get();
+            $conf = $coninfo[0]->conference;
 
-        $mailData = [
-            'chapterName' => $chapterName,
-            'chapterEmail' => $chapterEmail,
-            'chapterState' => $chapterState,
-            'pfirst' => $prefirst,
-            'plast' => $presecond,
-            'pemail' => $preemail,
-            'afirst' => $avpfirst,
-            'alast' => $avpsecond,
-            'aemail' => $avpemail,
-            'mfirst' => $mvpfirst,
-            'mlast' => $mvpsecond,
-            'memail' => $mvpemail,
-            'tfirst' => $trifirst,
-            'tlast' => $trisecond,
-            'temail' => $triemail,
-            'sfirst' => $secfirst,
-            'slast' => $secscond,
-            'semail' => $secemail,
-            'conf' => $conf,
-        ];
+            $mailData = [
+                'chapterName' => $chapterName,
+                'chapterEmail' => $chapterEmail,
+                'chapterState' => $chapterState,
+                'pfirst' => $prefirst,
+                'plast' => $presecond,
+                'pemail' => $preemail,
+                'afirst' => $avpfirst,
+                'alast' => $avpsecond,
+                'aemail' => $avpemail,
+                'mfirst' => $mvpfirst,
+                'mlast' => $mvpsecond,
+                'memail' => $mvpemail,
+                'tfirst' => $trifirst,
+                'tlast' => $trisecond,
+                'temail' => $triemail,
+                'sfirst' => $secfirst,
+                'slast' => $secscond,
+                'semail' => $secemail,
+                'conf' => $conf,
+            ];
 
-        //Primary Coordinator Notification//
-        $to_email = 'listadmin@momsclub.org';
+            //Primary Coordinator Notification//
+            $to_email = 'listadmin@momsclub.org';
 
-        Mail::to($to_email, 'MOMS Club')
-            ->send(new ChapterReAddListAdmin($mailData));
+            Mail::to($to_email, 'MOMS Club')
+                ->send(new ChapterReAddListAdmin($mailData));
 
             DB::commit();
-            } catch (\Exception $e) {
+        } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
             // Log the error
             Log::error($e);
+
             return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again..');
         }
+
         return redirect()->to('/chapter/list')->with('success', 'Chapter was successfully unzapped');
     }
 
@@ -2611,7 +2610,6 @@ class ChapterController extends Controller
 
         return redirect()->to('/chapter/zapped')->with('success', 'President Email has been updated');
     }
-
 
     /**
      * Reset Password
@@ -2716,11 +2714,12 @@ class ChapterController extends Controller
             DB::rollback();
             // Log the error
             Log::error($e);
+
             return redirect()->to('/reports/m2mdonation')->with('fail', 'Something went wrong, Please try again.');
         }
+
         return redirect()->to('/reports/m2mdonation')->with('success', 'Donation has been successfully saved');
     }
-
 
     /**
      * ReRegistration List
@@ -2866,12 +2865,12 @@ class ChapterController extends Controller
             DB::rollback();
             // Log the error
             Log::error($e);
+
             return redirect()->to('/chapter/re-registration')->with('fail', 'Something went wrong, Please try again.');
         }
 
         return redirect()->to('/chapter/re-registration')->with('success', 'Your Re-Regisration Notes have been saved');
     }
-
 
     /**
      * ReRegistration Payment
@@ -2947,6 +2946,7 @@ class ChapterController extends Controller
             DB::rollback();
             // Log the error
             Log::error($e);
+
             return redirect()->to('/chapter/re-registration')->with('fail', 'Something went wrong, Please try again.');
         }
 
@@ -3054,8 +3054,10 @@ class ChapterController extends Controller
             exit();
             // Log the error
             Log::error($e);
+
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
+
         return redirect()->to('/chapter/re-registration')->with('success', 'Re-Registration Reminders have been successfully sent.');
 
     }
@@ -3165,8 +3167,10 @@ class ChapterController extends Controller
             exit();
             // Log the error
             Log::error($e);
+
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
+
         return redirect()->to('/chapter/re-registration')->with('success', 'Re-Registration Late Notices have been successfully sent.');
 
     }
@@ -3297,8 +3301,10 @@ class ChapterController extends Controller
             DB::rollback();
             // Log the error
             Log::error($e);
+
             return redirect()->to('/yearreports/chapterawards')->with('fail', 'Something went wrong, Please try again.');
         }
+
         return redirect()->to('/yearreports/chapterawards')->with('success', 'Chapter Awards have been successfully updated');
     }
 
@@ -3662,8 +3668,10 @@ class ChapterController extends Controller
             DB::rollback();
             // Log the error
             Log::error($e);
+
             return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again.');
         }
+
         return redirect()->to('/chapter/list')->with('success', 'Board Info has been Saved');
     }
 
@@ -4488,6 +4496,7 @@ class ChapterController extends Controller
             DB::rollback();
             // Log the error
             Log::error($e);
+
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
 
@@ -4534,7 +4543,7 @@ class ChapterController extends Controller
             ->get();
 
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG',
-                '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
+            '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
         $currentMonth = $chapterList[0]->start_month_id;
 
         $data = ['currentMonth' => $currentMonth, 'chapterList' => $chapterList, 'regionList' => $regionList, 'primaryCoordinatorList' => $primaryCoordinatorList,

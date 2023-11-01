@@ -176,10 +176,10 @@ class ExportController extends Controller
             }
 
             $columns = ['EIN', 'Conference', 'Region', 'State', 'Name', 'Primary Coordinator', 'Last Updated', 'First Name', 'Last Name', 'Address', 'City', 'State',
-                    'Zip', 'Country', 'Phone', 'email', 'Inquiries', 'Chapter Email', 'AVP First Name', 'AVP Last Name', 'AVP Email', 'AVP Phone', 'MVP First Name',
-                    'MVP Last Name', 'MVP Email', 'MVP Phone', 'Treasurer First Name', 'Treasurer Last Name', 'Treasurer Email', 'Treasurer Phone', 'Secretary First Name',
-                    'Secretary Last Name', 'Secretary Email', 'Secretary Phone', 'Chapter P.O. Box', 'WebpageURL', 'Linked', 'E-Groups', 'Territory', 'InquiriesNote',
-                    'Status', 'Start Month', 'Start Year', 'Dues Last Paid', 'Members paid for', 'NextRenewal', 'Notes', 'Founder', 'Sistered By', 'FormerName'];
+                'Zip', 'Country', 'Phone', 'email', 'Inquiries', 'Chapter Email', 'AVP First Name', 'AVP Last Name', 'AVP Email', 'AVP Phone', 'MVP First Name',
+                'MVP Last Name', 'MVP Email', 'MVP Phone', 'Treasurer First Name', 'Treasurer Last Name', 'Treasurer Email', 'Treasurer Phone', 'Secretary First Name',
+                'Secretary Last Name', 'Secretary Email', 'Secretary Phone', 'Chapter P.O. Box', 'WebpageURL', 'Linked', 'E-Groups', 'Territory', 'InquiriesNote',
+                'Status', 'Start Month', 'Start Year', 'Dues Last Paid', 'Members paid for', 'NextRenewal', 'Notes', 'Founder', 'Sistered By', 'FormerName'];
             $callback = function () use ($exportChapterList, $columns) {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, $columns);
@@ -239,8 +239,10 @@ class ExportController extends Controller
                 }
                 fclose($file);
             };
+
             return Response::stream($callback, 200, $headers);
         }
+
         return redirect()->to('/home');
     }
 
@@ -379,10 +381,10 @@ class ExportController extends Controller
                 $exportZapChapterList[] = $list;
             }
             $columns = ['EIN', 'Conference', 'Region', 'State', 'Name', 'Primary Coordinator', 'Last Updated', 'First Name', 'Last Name', 'Address', 'City',
-                    'State', 'Zip', 'Country', 'Phone', 'email', 'Inquiries', 'Chapter Email', 'AVP First Name', 'AVP Last Name', 'AVP Email', 'MVP First Name',
-                    'MVP Last Name', 'MVP Email', 'Treasurer First Name', 'Treasurer Last Name', 'Treasurer Email', 'Secretary First Name', 'Secretary Last Name',
-                    'Secretary Email', 'Chapter P.O. Box', 'WebpageURL', 'Linked', 'E-Groups', 'Territory', 'InquiriesNote', 'Status', 'Start Month', 'Start Year',
-                    'Dues Last Paid', 'Members paid for', 'NextRenewal', 'Notes', 'Founder', 'Sistered By', 'FormerName', 'Disband Date', 'Disband Reason'];
+                'State', 'Zip', 'Country', 'Phone', 'email', 'Inquiries', 'Chapter Email', 'AVP First Name', 'AVP Last Name', 'AVP Email', 'MVP First Name',
+                'MVP Last Name', 'MVP Email', 'Treasurer First Name', 'Treasurer Last Name', 'Treasurer Email', 'Secretary First Name', 'Secretary Last Name',
+                'Secretary Email', 'Chapter P.O. Box', 'WebpageURL', 'Linked', 'E-Groups', 'Territory', 'InquiriesNote', 'Status', 'Start Month', 'Start Year',
+                'Dues Last Paid', 'Members paid for', 'NextRenewal', 'Notes', 'Founder', 'Sistered By', 'FormerName', 'Disband Date', 'Disband Reason'];
             $callback = function () use ($exportZapChapterList, $columns) {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, $columns);
@@ -440,8 +442,10 @@ class ExportController extends Controller
                 }
                 fclose($file);
             };
+
             return Response::stream($callback, 200, $headers);
         }
+
         return redirect()->to('/home');
     }
 
@@ -471,8 +475,8 @@ class ExportController extends Controller
         if ($corId == '1') {
             $ReRegList = DB::table('chapters')
                 ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
-                        'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
-                        'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
+                    'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
+                    'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
                 ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -491,8 +495,8 @@ class ExportController extends Controller
         } else {
             $ReRegList = DB::table('chapters')
                 ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
-                        'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
-                        'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
+                    'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
+                    'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
                 ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -552,8 +556,10 @@ class ExportController extends Controller
                 }
                 fclose($file);
             };
+
             return Response::stream($callback, 200, $headers);
         }
+
         return redirect()->to('/home');
     }
 
@@ -583,8 +589,8 @@ class ExportController extends Controller
         if ($corId == '1') {
             $ReRegList = DB::table('chapters')
                 ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
-                        'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
-                        'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
+                    'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
+                    'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
                 ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -603,8 +609,8 @@ class ExportController extends Controller
         } else {
             $ReRegList = DB::table('chapters')
                 ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
-                        'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
-                        'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
+                    'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
+                    'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
                 ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -663,8 +669,10 @@ class ExportController extends Controller
                 }
                 fclose($file);
             };
+
             return Response::stream($callback, 200, $headers);
         }
+
         return redirect()->to('/home');
     }
 
@@ -688,8 +696,8 @@ class ExportController extends Controller
         $corlayerId = $corDetails['layer_id'];
         $activeChapterList = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
-                    'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
-                    'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
+                'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
+                'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -776,10 +784,10 @@ class ExportController extends Controller
                 $exportChapterList[] = $list;
             }
             $columns = ['EIN', 'Conference', 'Region', 'State', 'Name', 'Primary Coordinator', 'Last Updated', 'First Name', 'Last Name', 'Address', 'City',
-                    'State', 'Zip', 'Country', 'Phone', 'email', 'Inquiries', 'Chapter Email', 'AVP First Name', 'AVP Last Name', 'AVP Email', 'MVP First Name',
-                    'MVP Last Name', 'MVP Email', 'Treasurer First Name', 'Treasurer Last Name', 'Treasurer Email', 'Secretary First Name', 'Secretary Last Name',
-                    'Secretary Email', 'Chapter P.O. Box', 'WebpageURL', 'Linked', 'E-Groups', 'Territory', 'InquiriesNote', 'Status', 'Start Month', 'Start Year',
-                    'Dues Last Paid', 'Members paid for', 'NextRenewal', 'Notes', 'Founder', 'Sistered By', 'FormerName'];
+                'State', 'Zip', 'Country', 'Phone', 'email', 'Inquiries', 'Chapter Email', 'AVP First Name', 'AVP Last Name', 'AVP Email', 'MVP First Name',
+                'MVP Last Name', 'MVP Email', 'Treasurer First Name', 'Treasurer Last Name', 'Treasurer Email', 'Secretary First Name', 'Secretary Last Name',
+                'Secretary Email', 'Chapter P.O. Box', 'WebpageURL', 'Linked', 'E-Groups', 'Territory', 'InquiriesNote', 'Status', 'Start Month', 'Start Year',
+                'Dues Last Paid', 'Members paid for', 'NextRenewal', 'Notes', 'Founder', 'Sistered By', 'FormerName'];
             $callback = function () use ($exportChapterList, $columns) {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, $columns);
@@ -835,8 +843,10 @@ class ExportController extends Controller
                 }
                 fclose($file);
             };
+
             return Response::stream($callback, 200, $headers);
         }
+
         return redirect()->to('/home');
     }
 
@@ -860,8 +870,8 @@ class ExportController extends Controller
         $corlayerId = $corDetails['layer_id'];
         $activeChapterList = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
-                    'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
-                    'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
+                'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
+                'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -947,10 +957,10 @@ class ExportController extends Controller
                 $exportChapterList[] = $list;
             }
             $columns = ['EIN', 'Conference', 'Region', 'State', 'Name', 'Primary Coordinator', 'Last Updated', 'First Name', 'Last Name', 'Address', 'City', 'State',
-                    'Zip', 'Country', 'Phone', 'email', 'Inquiries', 'Chapter Email', 'AVP First Name', 'AVP Last Name', 'AVP Email', 'MVP First Name', 'MVP Last Name',
-                    'MVP Email', 'Treasurer First Name', 'Treasurer Last Name', 'Treasurer Email', 'Secretary First Name', 'Secretary Last Name', 'Secretary Email',
-                    'Chapter P.O. Box', 'WebpageURL', 'Linked', 'E-Groups', 'Territory', 'InquiriesNote', 'Status', 'Start Month', 'Start Year', 'Dues Last Paid',
-                    'Members paid for', 'NextRenewal', 'Notes', 'Founder', 'Sistered By', 'FormerName', 'Disband Date', 'Disband Reason'];
+                'Zip', 'Country', 'Phone', 'email', 'Inquiries', 'Chapter Email', 'AVP First Name', 'AVP Last Name', 'AVP Email', 'MVP First Name', 'MVP Last Name',
+                'MVP Email', 'Treasurer First Name', 'Treasurer Last Name', 'Treasurer Email', 'Secretary First Name', 'Secretary Last Name', 'Secretary Email',
+                'Chapter P.O. Box', 'WebpageURL', 'Linked', 'E-Groups', 'Territory', 'InquiriesNote', 'Status', 'Start Month', 'Start Year', 'Dues Last Paid',
+                'Members paid for', 'NextRenewal', 'Notes', 'Founder', 'Sistered By', 'FormerName', 'Disband Date', 'Disband Reason'];
             $callback = function () use ($exportChapterList, $columns) {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, $columns);
@@ -1008,8 +1018,10 @@ class ExportController extends Controller
                 }
                 fclose($file);
             };
+
             return Response::stream($callback, 200, $headers);
         }
+
         return redirect()->to('/home');
     }
 
@@ -1046,8 +1058,8 @@ class ExportController extends Controller
 
         $activeChapterList = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
-                    'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
-                    'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
+                'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
+                'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -1073,7 +1085,7 @@ class ExportController extends Controller
 
             }
             $columns = ['Conference', 'Region', 'State', 'Name', 'EIN', 'EIN Leter', 'EIN Path', 'Start Month', 'Start Year', 'First Name', 'Last Name', 'Address',
-                    'City', 'State', 'Zip', 'Country', 'Phone', 'Email'];
+                'City', 'State', 'Zip', 'Country', 'Phone', 'Email'];
             $callback = function () use ($exportChapterList, $columns) {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, $columns);
@@ -1101,8 +1113,10 @@ class ExportController extends Controller
                 }
                 fclose($file);
             };
+
             return Response::stream($callback, 200, $headers);
         }
+
         return redirect()->to('/home');
     }
 
@@ -1126,8 +1140,8 @@ class ExportController extends Controller
         $corlayerId = $corDetails['layer_id'];
         $activeChapterList = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
-                    'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
-                    'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
+                'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
+                'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -1153,7 +1167,7 @@ class ExportController extends Controller
 
             }
             $columns = ['Conference', 'Region', 'State', 'Name', 'EIN', 'EIN Leter', 'EIN Path', 'Start Month', 'Start Year', 'First Name', 'Last Name', 'Address',
-                    'City', 'State', 'Zip', 'Country', 'Phone', 'Email'];
+                'City', 'State', 'Zip', 'Country', 'Phone', 'Email'];
             $callback = function () use ($exportChapterList, $columns) {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, $columns);
@@ -1181,8 +1195,10 @@ class ExportController extends Controller
                 }
                 fclose($file);
             };
+
             return Response::stream($callback, 200, $headers);
         }
+
         return redirect()->to('/home');
     }
 
@@ -1219,9 +1235,9 @@ class ExportController extends Controller
 
         $activeChapterList = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'chapters.new_board_submitted as new_board_submitted',
-                    'chapters.new_board_active as new_board_active', 'chapters.financial_report_received as financial_report_received',
-                    'chapters.financial_report_complete as financial_report_complete', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
-                    'st.state_short_name as state', 'fr.reviewer_id as reviewer_id')
+                'chapters.new_board_active as new_board_active', 'chapters.financial_report_received as financial_report_received',
+                'chapters.financial_report_complete as financial_report_complete', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
+                'st.state_short_name as state', 'fr.reviewer_id as reviewer_id')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftjoin('financial_report as fr', 'chapters.id', '=', 'fr.chapter_id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -1262,7 +1278,7 @@ class ExportController extends Controller
             }
 
             $columns = ['Conference', 'Region', 'State', 'Name', 'Board Report Received', 'Board Report Activated', 'Financial Report Received', 'Financial Report Reviewed',
-                    'Primary Coordinator', 'Assigned Reviewer'];
+                'Primary Coordinator', 'Assigned Reviewer'];
             $callback = function () use ($exportChapterList, $columns) {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, $columns);
@@ -1309,8 +1325,8 @@ class ExportController extends Controller
         $corlayerId = $corDetails['layer_id'];
         $activeChapterList = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'chapters.new_board_submitted as new_board_submitted',
-                    'chapters.new_board_active as new_board_active', 'chapters.financial_report_received as financial_report_received',
-                    'chapters.financial_report_complete as financial_report_complete', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'st.state_short_name as state')
+                'chapters.new_board_active as new_board_active', 'chapters.financial_report_received as financial_report_received',
+                'chapters.financial_report_complete as financial_report_complete', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'st.state_short_name as state')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
@@ -1349,7 +1365,7 @@ class ExportController extends Controller
             }
 
             $columns = ['Conference', 'Region', 'State', 'Name', 'Board Report Received', 'Board Report Activated', 'Financial Report Received',
-                    'Financial Report Reviewed', 'Primary Coordinator'];
+                'Financial Report Reviewed', 'Primary Coordinator'];
             $callback = function () use ($exportChapterList, $columns) {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, $columns);
@@ -1432,7 +1448,7 @@ class ExportController extends Controller
         }
         if (count($exportCoordinatorList) > 0) {
             $columns = ['Id', 'Conference', 'Region', 'First Name', 'Last Name', 'Position', 'Sec Position', 'Email', 'Sec Email', 'Report Id', 'Address', 'City',
-                    'State', 'Zip', 'Phone', 'Alt Phone', 'Birthday Month', 'Birthday Day', 'Coordinator Start', 'Last Promoted', 'Last UpdatedBy', 'Last UpdatedDate'];
+                'State', 'Zip', 'Phone', 'Alt Phone', 'Birthday Month', 'Birthday Day', 'Coordinator Start', 'Last Promoted', 'Last UpdatedBy', 'Last UpdatedDate'];
             $callback = function () use ($exportCoordinatorList, $columns) {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, $columns);
@@ -1465,8 +1481,10 @@ class ExportController extends Controller
                 }
                 fclose($file);
             };
+
             return Response::stream($callback, 200, $headers);
         }
+
         return redirect()->to('/home');
     }
 
@@ -1546,8 +1564,10 @@ class ExportController extends Controller
                 }
                 fclose($file);
             };
+
             return Response::stream($callback, 200, $headers);
         }
+
         return redirect()->to('/home');
     }
 
@@ -1595,8 +1615,8 @@ class ExportController extends Controller
 
         if (count($exportCoordinatorList) > 0) {
             $columns = ['Conference', 'Region', 'First Name', 'Last Name', 'Position', 'Sec Position', 'Email', 'Sec Email', 'Reports To', 'Address', 'City', 'State',
-                    'Zip', 'Phone', 'Alt Phone', 'Birthday Month', 'Birthday Day', 'Coordinator Start', 'Last Promoted', 'Last UpdatedBy', 'Last UpdatedDate',
-                    'Disband Date', 'Disband Reason'];
+                'Zip', 'Phone', 'Alt Phone', 'Birthday Month', 'Birthday Day', 'Coordinator Start', 'Last Promoted', 'Last UpdatedBy', 'Last UpdatedDate',
+                'Disband Date', 'Disband Reason'];
             $callback = function () use ($exportCoordinatorList, $columns) {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, $columns);
@@ -1629,8 +1649,10 @@ class ExportController extends Controller
                 }
                 fclose($file);
             };
+
             return Response::stream($callback, 200, $headers);
         }
+
         return redirect()->to('/home');
     }
 
@@ -1708,6 +1730,7 @@ class ExportController extends Controller
 
             fclose($file);
         };
+
         return Response::stream($callback, 200, $headers);
     }
 
@@ -1764,7 +1787,7 @@ class ExportController extends Controller
             $_temp[$_v->id] = $_v->long_title;
         }
         $columns = ['Conference', 'Region', 'First Name', 'Last Name', 'Start Date', 'Position', 'Secondary Position', '<1 Year', '1 Year', '2 Years',
-                '3 Years', '4 Years', '5 Years', '6 Years', '7 Years', '8 Years', '9 Years', 'Necklace', 'Top Tier/Other'];
+            '3 Years', '4 Years', '5 Years', '6 Years', '7 Years', '8 Years', '9 Years', 'Necklace', 'Top Tier/Other'];
         $callback = function () use ($exportCoordinatorList, $columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
@@ -1791,12 +1814,13 @@ class ExportController extends Controller
                 $row['Top Tier/Other'] = $list->recognition_toptier;
 
                 fputcsv($file, [$row['Conference'], $row['Region'], $row['First Name'], $row['Last Name'], $row['Start Date'], $row['Position'], $row['Secondary Position'],
-                $row['< 1 Year'], $row['1 Year'], $row['2 Years'], $row['3 Years'], $row['4 Years'], $row['5 Years'], $row['6 Years'], $row['7 Years'], $row['8 Years'],
-                $row['9 Years'], $row['Necklace'], $row['Top Tier/Other']]);
+                    $row['< 1 Year'], $row['1 Year'], $row['2 Years'], $row['3 Years'], $row['4 Years'], $row['5 Years'], $row['6 Years'], $row['7 Years'], $row['8 Years'],
+                    $row['9 Years'], $row['Necklace'], $row['Top Tier/Other']]);
             }
 
             fclose($file);
         };
+
         return Response::stream($callback, 200, $headers);
     }
 
@@ -1843,7 +1867,7 @@ class ExportController extends Controller
         //Get Chapter List mapped with login coordinator
         $chapter_array = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                    'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as region')
+                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as region')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -1952,6 +1976,7 @@ class ExportController extends Controller
             fclose($output);
             exit($output);
         }
+
         return redirect()->to('/home');
     }
 
@@ -1991,9 +2016,9 @@ class ExportController extends Controller
         //Get Chapter List mapped with login coordinator
         $activeChapterList = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
-                    'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
-                    'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state',
-                    'wls.status as website_status')
+                'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
+                'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state',
+                'wls.status as website_status')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('incoming_board_member as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -2025,7 +2050,7 @@ class ExportController extends Controller
                 //For AVP Details
                 $avpDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.phone as avp_phone',
-                            'bd.street_address as avp_address', 'bd.city as avp_city', 'bd.state as avp_state', 'bd.zip as avp_zip', 'bd.board_position_id as positionid')
+                        'bd.street_address as avp_address', 'bd.city as avp_city', 'bd.state as avp_state', 'bd.zip as avp_zip', 'bd.board_position_id as positionid')
                     ->leftJoin('incoming_board_member as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '2')
@@ -2053,7 +2078,7 @@ class ExportController extends Controller
                 //For MVP Details
                 $mvpDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.phone as mvp_phone',
-                            'bd.street_address as mvp_address', 'bd.city as mvp_city', 'bd.state as mvp_state', 'bd.zip as mvp_zip', 'bd.board_position_id as positionid')
+                        'bd.street_address as mvp_address', 'bd.city as mvp_city', 'bd.state as mvp_state', 'bd.zip as mvp_zip', 'bd.board_position_id as positionid')
                     ->leftJoin('incoming_board_member as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '3')
@@ -2081,7 +2106,7 @@ class ExportController extends Controller
                 //For TREASURER Details
                 $trsDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.phone as trs_phone',
-                            'bd.street_address as trs_address', 'bd.city as trs_city', 'bd.state as trs_state', 'bd.zip as trs_zip', 'bd.board_position_id as positionid')
+                        'bd.street_address as trs_address', 'bd.city as trs_city', 'bd.state as trs_state', 'bd.zip as trs_zip', 'bd.board_position_id as positionid')
                     ->leftJoin('incoming_board_member as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '4')
@@ -2109,7 +2134,7 @@ class ExportController extends Controller
                 //For SECRETARY Details
                 $secDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.phone as sec_phone',
-                            'bd.street_address as sec_address', 'bd.city as sec_city', 'bd.state as sec_state', 'bd.zip as sec_zip', 'bd.board_position_id as positionid')
+                        'bd.street_address as sec_address', 'bd.city as sec_city', 'bd.state as sec_state', 'bd.zip as sec_zip', 'bd.board_position_id as positionid')
                     ->leftJoin('incoming_board_member as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '5')
@@ -2139,10 +2164,10 @@ class ExportController extends Controller
             }
 
             $columns = ['Conference', 'Region', 'State', 'Chapter Name', 'First Name', 'Last Name', 'email', 'Phone', 'Address', 'City', 'State', 'Zip',
-                    'AVP First Name', 'AVP Last Name', 'AVP Email', 'AVP Phone', 'AVP Address', 'AVP City', 'AVP State', 'AVP Zip', 'MVP First Name',
-                    'MVP Last Name', 'MVP Email', 'MVP Phone', 'MVP Address', 'MVP City', 'MVP State', 'MVP Zip', 'Treasurer First Name', 'Treasurer Last Name',
-                    'Treasurer Email', 'Treasurer Phone', 'Treasurer Address', 'Treasurer City', 'Treasurer State', 'Treasurer Zip', 'Secretary First Name',
-                    'Secretary Last Name', 'Secretary Email', 'Secretary Phone', 'Secretary Address', 'Secretary City', 'Secretary State', 'Secretary Zip'];
+                'AVP First Name', 'AVP Last Name', 'AVP Email', 'AVP Phone', 'AVP Address', 'AVP City', 'AVP State', 'AVP Zip', 'MVP First Name',
+                'MVP Last Name', 'MVP Email', 'MVP Phone', 'MVP Address', 'MVP City', 'MVP State', 'MVP Zip', 'Treasurer First Name', 'Treasurer Last Name',
+                'Treasurer Email', 'Treasurer Phone', 'Treasurer Address', 'Treasurer City', 'Treasurer State', 'Treasurer Zip', 'Secretary First Name',
+                'Secretary Last Name', 'Secretary Email', 'Secretary Phone', 'Secretary Address', 'Secretary City', 'Secretary State', 'Secretary Zip'];
             $callback = function () use ($exportChapterList, $columns) {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, $columns);
@@ -2197,8 +2222,10 @@ class ExportController extends Controller
                 }
                 fclose($file);
             };
+
             return Response::stream($callback, 200, $headers);
         }
+
         return redirect()->to('/home');
     }
 
