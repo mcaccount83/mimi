@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Models\CoordinatorDetails;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -1659,7 +1660,7 @@ class ExportController extends Controller
     /**
      * Export Retired Coordinator List
      */
-    public function exportRetiredCoordinator(Request $request)
+    public function exportRetiredCoordinator(Request $request): StreamedResponse
     {
 
         $fileName = 'coordinator_retire_'.date('Y-m-d').'.csv';
@@ -1759,7 +1760,7 @@ class ExportController extends Controller
     /**
      * Export Coordinator Appreciation List
      */
-    public function exportAppreciation(Request $request)
+    public function exportAppreciation(Request $request): StreamedResponse
     {
         $fileName = 'coordinator_appreciation_'.date('Y-m-d').'.csv';
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;

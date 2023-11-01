@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdatePrimaryCoor;
 use App\Models\Chapter;
@@ -789,7 +790,7 @@ class BoardController extends Controller
     /**
      * Show EOY BoardInfo All Board Members
      */
-    public function showBoardInfo(Request $request)
+    public function showBoardInfo(Request $request): View
     {
         $borDetails = User::find($request->user()->id)->BoardDetails;
         $borPositionId = $borDetails['board_position_id'];
