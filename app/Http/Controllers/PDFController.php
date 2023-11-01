@@ -34,7 +34,7 @@ class PDFController extends Controller
 
             $chapterDetails = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state',
-                        'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
+                    'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                 ->where('chapters.is_active', '=', '1')
                 ->where('chapters.id', '=', $chapterId)

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
+use Illuminate\View\View;
 use Kunnu\Dropbox\Dropbox;
 use Kunnu\Dropbox\DropboxApp;
 use Kunnu\Dropbox\DropboxFile;
@@ -36,8 +37,8 @@ class BoardController extends Controller
 
         $presInfoPre = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name',
-                    'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city', 'bd.zip as zip',
-                    'st.state_short_name as state')
+                'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city', 'bd.zip as zip',
+                'st.state_short_name as state')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -108,8 +109,7 @@ class BoardController extends Controller
 
             $chapter->save();
             //President Info
-            if ($request->get('ch_pre_fname') != '' && $request->get('ch_pre_lname') != '' && $request->get('ch_pre_email') != '')
-            {
+            if ($request->get('ch_pre_fname') != '' && $request->get('ch_pre_lname') != '' && $request->get('ch_pre_email') != '') {
                 $PREDetails = DB::table('board_details')
                     ->select('board_id', 'user_id')
                     ->where('chapter_id', '=', $chapterId)
@@ -466,8 +466,8 @@ class BoardController extends Controller
             //Update Chapter MailData//
             $presInfoUpd = DB::table('chapters')
                 ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name',
-                        'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city',
-                        'bd.zip as zip', 'st.state_short_name as state')
+                    'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city',
+                    'bd.zip as zip', 'st.state_short_name as state')
                 ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -667,8 +667,7 @@ class BoardController extends Controller
 
             if ($presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email ||
             $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] ||
-            $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd'])
-            {
+            $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
                 Mail::to($to_email2, 'MOMS Club')
                     ->send(new ChapersUpdateListAdmin($mailData));
             }
@@ -679,8 +678,10 @@ class BoardController extends Controller
             DB::rollback();
             // Log the error
             Log::error($e);
+
             return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
         }
+
         return redirect()->back()->with('success', 'Chapter has successfully updated');
     }
 
@@ -779,15 +780,17 @@ class BoardController extends Controller
             DB::rollback();
             // Log the error
             Log::error($e);
+
             return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
         }
+
         return redirect()->back()->with('success', 'Chapter has successfully updated');
     }
 
     /**
      * Show EOY BoardInfo All Board Members
      */
-    public function showBoardInfo(Request $request)
+    public function showBoardInfo(Request $request): View
     {
         $borDetails = User::find($request->user()->id)->BoardDetails;
         $borPositionId = $borDetails['board_position_id'];
@@ -806,12 +809,12 @@ class BoardController extends Controller
             ->get();
         $chapterState = $chapterState[0]->state_short_name;
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG',
-                        '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
+            '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
         $currentMonth = $chapterDetails->start_month_id;
 
         $chapterList = DB::table('chapters as ch')
             ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address',
-                    'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
+                'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
             ->leftJoin('board_details as bd', 'ch.id', '=', 'bd.chapter_id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $chapterId)
@@ -820,65 +823,65 @@ class BoardController extends Controller
 
         $PREDetails = DB::table('incoming_board_member as bd')
             ->select('bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.board_position_id',
-                    'bd.street_address as pre_addr', 'bd.city as pre_city', 'bd.zip as pre_zip', 'bd.phone as pre_phone', 'bd.state as pre_state', 'bd.id as ibd_id')
+                'bd.street_address as pre_addr', 'bd.city as pre_city', 'bd.zip as pre_zip', 'bd.phone as pre_phone', 'bd.state as pre_state', 'bd.id as ibd_id')
             ->where('bd.chapter_id', '=', $chapterId)
             ->where('bd.board_position_id', '=', '1')
             ->get();
         if (count($PREDetails) == 0) {
             $PREDetails[0] = ['pre_fname' => '', 'pre_lname' => '', 'pre_email' => '', 'pre_addr' => '', 'pre_city' => '', 'pre_zip' => '', 'pre_phone' => '',
-                    'pre_state' => '', 'ibd_id' => ''];
+                'pre_state' => '', 'ibd_id' => ''];
             $PREDetails = json_decode(json_encode($PREDetails));
         }
 
         $AVPDetails = DB::table('incoming_board_member as bd')
             ->select('bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.board_position_id', 'bd.street_address as avp_addr',
-                    'bd.city as avp_city', 'bd.zip as avp_zip', 'bd.phone as avp_phone', 'bd.state as avp_state', 'bd.id as ibd_id')
+                'bd.city as avp_city', 'bd.zip as avp_zip', 'bd.phone as avp_phone', 'bd.state as avp_state', 'bd.id as ibd_id')
             ->where('bd.chapter_id', '=', $chapterId)
             ->where('bd.board_position_id', '=', '2')
             ->get();
         if (count($AVPDetails) == 0) {
             $AVPDetails[0] = ['avp_fname' => '', 'avp_lname' => '', 'avp_email' => '', 'avp_addr' => '', 'avp_city' => '', 'avp_zip' => '', 'avp_phone' => '',
-                    'avp_state' => '', 'ibd_id' => ''];
+                'avp_state' => '', 'ibd_id' => ''];
             $AVPDetails = json_decode(json_encode($AVPDetails));
         }
 
         $MVPDetails = DB::table('incoming_board_member as bd')
             ->select('bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.board_position_id', 'bd.street_address as mvp_addr',
-                    'bd.city as mvp_city', 'bd.zip as mvp_zip', 'bd.phone as mvp_phone', 'bd.state as mvp_state', 'bd.id as ibd_id')
+                'bd.city as mvp_city', 'bd.zip as mvp_zip', 'bd.phone as mvp_phone', 'bd.state as mvp_state', 'bd.id as ibd_id')
             ->where('bd.chapter_id', '=', $chapterId)
             ->where('bd.board_position_id', '=', '3')
             ->get();
         if (count($MVPDetails) == 0) {
             $MVPDetails[0] = ['mvp_fname' => '', 'mvp_lname' => '', 'mvp_email' => '', 'mvp_addr' => '', 'mvp_city' => '', 'mvp_zip' => '', 'mvp_phone' => '',
-                    'mvp_state' => '', 'ibd_id' => ''];
+                'mvp_state' => '', 'ibd_id' => ''];
             $MVPDetails = json_decode(json_encode($MVPDetails));
         }
 
         $TRSDetails = DB::table('incoming_board_member as bd')
             ->select('bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.board_position_id', 'bd.street_address as trs_addr',
-                    'bd.city as trs_city', 'bd.zip as trs_zip', 'bd.phone as trs_phone', 'bd.state as trs_state', 'bd.id as ibd_id')
+                'bd.city as trs_city', 'bd.zip as trs_zip', 'bd.phone as trs_phone', 'bd.state as trs_state', 'bd.id as ibd_id')
             ->where('bd.chapter_id', '=', $chapterId)
             ->where('bd.board_position_id', '=', '4')
             ->get();
         if (count($TRSDetails) == 0) {
             $TRSDetails[0] = ['trs_fname' => '', 'trs_lname' => '', 'trs_email' => '', 'trs_addr' => '', 'trs_city' => '', 'trs_zip' => '', 'trs_phone' => '',
-                    'trs_state' => '', 'ibd_id' => ''];
+                'trs_state' => '', 'ibd_id' => ''];
             $TRSDetails = json_decode(json_encode($TRSDetails));
         }
 
         $SECDetails = DB::table('incoming_board_member as bd')
             ->select('bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.board_position_id', 'bd.street_address as sec_addr',
-                    'bd.city as sec_city', 'bd.zip as sec_zip', 'bd.phone as sec_phone', 'bd.state as sec_state', 'bd.id as ibd_id')
+                'bd.city as sec_city', 'bd.zip as sec_zip', 'bd.phone as sec_phone', 'bd.state as sec_state', 'bd.id as ibd_id')
             ->where('bd.chapter_id', '=', $chapterId)
             ->where('bd.board_position_id', '=', '5')
             ->get();
         if (count($SECDetails) == 0) {
             $SECDetails[0] = ['sec_fname' => '', 'sec_lname' => '', 'sec_email' => '', 'sec_addr' => '', 'sec_city' => '', 'sec_zip' => '', 'sec_phone' => '',
-                    'sec_state' => '', 'ibd_id' => ''];
+                'sec_state' => '', 'ibd_id' => ''];
             $SECDetails = json_decode(json_encode($SECDetails));
         }
         $data = ['chapterState' => $chapterState, 'currentMonth' => $currentMonth, 'foundedMonth' => $foundedMonth, 'stateArr' => $stateArr, 'SECDetails' => $SECDetails,
-                'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PREDetails' => $PREDetails, 'chapterList' => $chapterList];
+            'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PREDetails' => $PREDetails, 'chapterList' => $chapterList];
 
         return view('boards.boardinfo')->with($data);
     }
@@ -1174,8 +1177,10 @@ class BoardController extends Controller
             DB::rollback();
             // Log the error
             Log::error($e);
+
             return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
         }
+
         return redirect()->to('/home')->with('success', 'Board Info has been Submitted');
 
     }
@@ -1211,6 +1216,7 @@ class BoardController extends Controller
             DB::rollBack();
             // Log the error
             Log::error($e);
+
             return redirect()->to('/home');
         }
     }
@@ -1974,7 +1980,6 @@ class BoardController extends Controller
 
         $chapterDetailsExistArr = DB::table('financial_report')->where('chapter_id', '=', $chapter_id)->get();
         $chapterDetailsExist = $chapterDetailsExistArr->count();
-
 
         // Step 1 Fields
         if (isset($input['optChangeDues']) && $input['optChangeDues'] == 'no') {
@@ -3026,6 +3031,7 @@ class BoardController extends Controller
             DB::rollback();
             // Log the error
             Log::error($e);
+
             return redirect()->back()->with('fail', 'Something went wrong Please try again.');
         }
     }

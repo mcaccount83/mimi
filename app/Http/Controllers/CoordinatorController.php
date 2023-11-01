@@ -23,7 +23,7 @@ class CoordinatorController extends Controller
     }
 
     /**
-    * Coordiantor Listing
+     * Coordiantor Listing
      */
     public function index(Request $request): View
     {
@@ -327,8 +327,10 @@ class CoordinatorController extends Controller
             exit;
             // Log the error
             Log::error($e);
+
             return redirect()->to('/coordinatorlist')->with('fail', 'Something went wrong, Please try again..');
         }
+
         return redirect()->to('/coordinatorlist')->with('success', 'Coordinator created successfully.');
     }
 
@@ -386,12 +388,12 @@ class CoordinatorController extends Controller
             ->where('ch.is_active', '=', '1')
             ->get();
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG',
-                    '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
+            '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
         $currentMonth = $coordinatorDetails[0]->birthday_month_id;
 
         $data = ['directChapterTo' => $directChapterTo, 'directReportTo' => $directReportTo, 'primaryCoordinatorList' => $primaryCoordinatorList,
-                'positionList' => $positionList, 'confList' => $confList, 'currentMonth' => $currentMonth, 'coordinatorDetails' => $coordinatorDetails,
-                'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
+            'positionList' => $positionList, 'confList' => $confList, 'currentMonth' => $currentMonth, 'coordinatorDetails' => $coordinatorDetails,
+            'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
 
         return view('coordinators.edit')->with($data);
     }
@@ -413,7 +415,6 @@ class CoordinatorController extends Controller
 
         return redirect()->to('/coordinatorlist')->with('success', 'Coordinator email updated successfully.');
     }
-
 
     /**
      * Update Coordinator (store)
@@ -589,7 +590,6 @@ class CoordinatorController extends Controller
 
     }
 
-
     /**
      * Unretire Coordinator
      */
@@ -613,7 +613,6 @@ class CoordinatorController extends Controller
 
         return redirect()->to('/coordinator/retired')->with('success', 'Coordinator successfully unretired');
     }
-
 
     /**
      * Retire Coordiantor
@@ -675,6 +674,7 @@ class CoordinatorController extends Controller
                 DB::rollback();
                 // Log the error
                 Log::error($e);
+
                 return redirect()->to('/coordinatorlist')->with('fail', 'Something went wrong, Please try again.');
             }
         }
@@ -770,10 +770,10 @@ class CoordinatorController extends Controller
             DB::rollback();
             // Log the error
             Log::error($e);
+
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
     }
-
 
     /**
      * Reassign Chapter
@@ -809,10 +809,12 @@ class CoordinatorController extends Controller
             }
 
             DB::commit();
+
             return true;
         } catch (\Exception $e) {
             // Rollback Transaction
             DB::rollback();
+
             return false;
         }
 
@@ -1012,7 +1014,6 @@ class CoordinatorController extends Controller
         return response()->json(['html' => $html]);
     }
 
-
     /**
      * Get Direct Report
      */
@@ -1050,7 +1051,6 @@ class CoordinatorController extends Controller
         return response()->json(['html' => $html]);
     }
 
-
     /**
      * Get Primary Coordinator
      */
@@ -1085,7 +1085,6 @@ class CoordinatorController extends Controller
 
         return response()->json(['html' => $html]);
     }
-
 
     /**
      * Retired Coorinators
@@ -1184,7 +1183,6 @@ class CoordinatorController extends Controller
 
         return view('coordinators.international')->with($data);
     }
-
 
     /**
      * International Retired Coordinator Details
@@ -1315,10 +1313,12 @@ class CoordinatorController extends Controller
                     DB::rollback();
                     // Log the error
                     Log::error($e);
+
                     return redirect()->to('/reports/appreciation')->with('fail', 'Something went wrong, Please try again.');
                 }
             }
         }
+
         return redirect()->to('/reports/appreciation')->with('success', 'Appreciation gifts updated successfully');
 
     }
@@ -1385,7 +1385,6 @@ class CoordinatorController extends Controller
         return view('coordinators.birthday')->with($data);
     }
 
-
     /**
      * Update Coordiantor Birthdays (store)
      */
@@ -1423,14 +1422,15 @@ class CoordinatorController extends Controller
                     DB::rollback();
                     // Log the error
                     Log::error($e);
+
                     return redirect()->to('/reports/birthday')->with('fail', 'Something went wrong, Please try again.');
                 }
             }
         }
+
         return redirect()->to('/reports/birthday')->with('success', 'Appreciation gifts updated successfully');
 
     }
-
 
     /**
      * Coordiantor Dashboard - Login Main Screen
@@ -1540,7 +1540,6 @@ class CoordinatorController extends Controller
         return redirect()->to('/coordinator/dashboard')->with('success', 'Coordinator dashboard updated successfully');
     }
 
-
     /**
      * Coordiantor Profile
      */
@@ -1594,7 +1593,6 @@ class CoordinatorController extends Controller
         return view('coordinators.profile')->with($data);
     }
 
-
     /**
      * CUpdate Profile (Store)
      */
@@ -1645,10 +1643,12 @@ class CoordinatorController extends Controller
                     DB::rollback();
                     // Log the error
                     Log::error($e);
+
                     return redirect()->to('/coordinator/profile')->with('fail', 'Something went wrong, Please try again.');
                 }
             }
         }
+
         return redirect()->to('/coordinator/profile')->with('success', 'Coordinator profile updated successfully');
     }
 }
