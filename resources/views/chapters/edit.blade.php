@@ -749,12 +749,12 @@
                 <input type="text" name="ch_sustaining_donation" class="form-control my-colorpicker1" value="${{ $chapterList[0]->sustaining_donation }}" disabled>
               </div>
               </div>
- </div>
+            </div>
              <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">End of Year Reporting</h3>
               </div>
               <div class="box-body">
-<br>
+            <br>
               <!-- /.form group -->
               <div class="radio-chk">
               <div class="col-sm-3 col-xs-12">
@@ -878,7 +878,7 @@
               </div>
 
               </div>
-      </div>
+        </div>
 
             <!-- /.box-body -->
             <div class="box-body text-center">
@@ -948,19 +948,19 @@
   function disbandChapter(){
         var txt =  $("#disband_reason").val();
         var cid = $("#chapter_id").val();
-        if(txt ==''){
-          alert("Please enter reason for Disband");
-          $("#disband_reason").focus();
-          return false;
-        }else{
-          $.ajax({
-              url: '/mimi/chapter/disband',
-              type: "POST",
-              data: { reason:txt,chpaterid:cid, _token: '{{csrf_token()}}' },
-              success: function(result) {
-               // alert('Chapter has been successfully Zapped');
 
-                window.location.href = "/mimi/home?dis=1";
+        if(txt ==''){
+            alert("Please enter reason for Disband");
+            $("#disband_reason").focus();
+            return false;
+        }else{
+            $.ajax({
+              url: '{{ route('chapter.disband') }}',
+              type: 'POST',
+              data: { reason:txt,chapterid:cid, _token: '{{csrf_token()}}' },
+              success: function(response) {
+                    window.location.href = "{{ route('chapter.list') }}";
+
               },
               error: function (jqXHR, exception) {
 

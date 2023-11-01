@@ -3,10 +3,13 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ChapterRemoveListAdmin extends Mailable
+class ChapterReAddListAdmin extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -28,7 +31,8 @@ class ChapterRemoveListAdmin extends Mailable
     public function build(): static
     {
         return $this
-            ->subject('Chapter Removal Notification')
-            ->markdown('emails.chapterupdate.listadminremovenotice');
+            ->subject('Chapter unZapped Notification')
+            ->markdown('emails.chapterupdate.listadminreaddnotice');
     }
 }
+

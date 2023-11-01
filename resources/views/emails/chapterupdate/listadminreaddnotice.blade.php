@@ -1,7 +1,7 @@
 @component('mail::message')
-# ListAdmin Disband Notification
+# ListAdmin unZapped Notification
 
-The follownig chapter has disbanded: MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}, Conference {{$mailData['conf']}}.
+The follownig chapter has unZapped: MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}, Conference {{$mailData['conf']}}.
  <br>
  <table>
     <tbody>
@@ -45,7 +45,7 @@ The follownig chapter has disbanded: MOMS Club of {{$mailData['chapterName']}}, 
     </body>
 </table>
 
-Please remove members of this chapter from any groups, forums and mailing lists.
+Please readd members of this chapter from any groups, forums and mailing lists.
 
 **MCL,**<br>
 International MOMS Club

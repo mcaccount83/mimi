@@ -12,7 +12,7 @@ To calculate your payment:
 <li>If this total amount of members is 10 or more, multiply the number by $5.00 to get your total amount due</li>
 <li>Payments received after the last day of <b>{{$mailData['dueDate']}}</b> should include a late fee of $10</li></ul>
 
-You can pay online by clicking here:  <a href='$reregistration_url'>MOMS Club Re-Registration</a><br>
+You online: https://momsclub.org/resources/re-registration-payment
 Password: daytime support
 
 OR to pay by mail:<br>

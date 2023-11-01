@@ -88,8 +88,9 @@ Route::get('/chapter/website', [ChapterController::class, 'showWebsiteChapter'])
 Route::get('/chapter/website/edit/{id}', [ChapterController::class, 'editWebsite']);
 Route::post('/chapter/website/update/{id}', [ChapterController::class, 'updateWebsite'])->name('chapter.updateweb');
 Route::get('/chapter/view/{id}', [ChapterController::class, 'showChapterView']);
-Route::post('/chapter/disband', [ChapterController::class, 'chapterDisband']);
-Route::post('/chapter/resetpswd', [ChapterController::class, 'chapterResetPassword']);
+//Route::post('/chapter/disband', [ChapterController::class, 'chapterDisband']);
+Route::post('/chapter/disband', [ChapterController::class, 'chapterDisband'])->name('chapter.disband');
+//Route::post('/chapter/resetpswd', [ChapterController::class, 'chapterResetPassword']);
 Route::get('/chapter/financial/{id}', [ChapterController::class, 'showFinancialReport'])->name('chapter.showfinancial');
 Route::post('/chapter/financial/{id}', [ChapterController::class, 'storeFinancialReport'])->name('chapter.storefinancial');
 Route::get('chapter/boardinfo/{id}', [ChapterController::class, 'showBoardInfo'])->name('chapter.showboardinfo');

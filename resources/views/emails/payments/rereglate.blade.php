@@ -20,7 +20,7 @@ To calculate your payment:
 <li>If this total amount of members is less than 10, make your check for the amount of $50</li>
 <li>If this total amount of members is 10 or more, multiply the number by $5.00 to get your total amount due</li></ul>
 
-You can pay online by clicking here:  <a href='$reregistration_url'>MOMS Club Re-Registration</a><br>
+Pay online: https://momsclub.org/resources/re-registration-payment
 Password: daytime support
 
 OR to pay by mail:

@@ -9,6 +9,10 @@ use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegLate;
 use App\Mail\PaymentsReRegReminder;
 use App\Mail\PaymentsSustainingChapterThankYou;
+use App\Mail\ChapterAddListAdmin;
+use App\Mail\ChapterAddPrimaryCoor;
+use App\Mail\ChapterReAddListAdmin;
+use App\Mail\ChapterRemoveListAdmin;
 use App\Models\Chapter;
 use App\Models\FinancialReport;
 use App\Models\User;
@@ -19,7 +23,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 use Kunnu\Dropbox\Dropbox;
 use Kunnu\Dropbox\DropboxApp;
@@ -407,6 +410,7 @@ class ChapterController extends Controller
                 );
 
             }
+
             $cordInfo = DB::table('coordinator_details')
                 ->select('first_name', 'last_name', 'email')
                 ->where('is_active', '=', '1')
@@ -417,31 +421,13 @@ class ChapterController extends Controller
                 ->where('id', $input['ch_state'])
                 ->get();
 
-            $to_email = [
-                $cordInfo[0]->email,
-                $input['ch_pre_email'],
-            ];
-
             $mailData = [
                 'chapter_name' => $input['ch_name'],
                 'chapter_state' => $state[0]->state_short_name,
                 'cor_fname' => $cordInfo[0]->first_name,
                 'cor_lname' => $cordInfo[0]->last_name,
                 'updated_by' => date('Y-m-d H:i:s'),
-            ];
-
-            Mail::send('emails.chapteradd', $mailData, function ($message) use ($to_email) {
-                $message->to($to_email, 'MOMS Club')->subject('New Chapter Added');
-            });
-
-            $to_email2 = 'listadmin@momsclub.org';
-
-            $mailData2 = [
-                'chapter_name' => $input['ch_name'],
-                'chapter_state' => $state[0]->state_short_name,
                 'email' => $input['ch_email'],
-                'cor_fname' => $cordInfo[0]->first_name,
-                'cor_lname' => $cordInfo[0]->last_name,
                 'pfirst' => $input['ch_pre_fname'],
                 'plast' => $input['ch_pre_lname'],
                 'pemail' => $input['ch_pre_email'],
@@ -458,12 +444,19 @@ class ChapterController extends Controller
                 'slast' => $input['ch_sec_lname'],
                 'semail' => $input['ch_sec_email'],
                 'conf' => $corConfId,
-                'updated_by' => date('Y-m-d H:i:s'),
             ];
 
-            Mail::send('emails.listadminchapteradd', $mailData2, function ($message2) use ($to_email2) {
-                $message2->to($to_email2, 'MOMS Club')->subject('Chapter Add Request');
-            });
+            //Primary Coordinator Notification//
+            $to_email = $cordInfo[0]->email;
+
+            Mail::to($to_email, 'MOMS Club')
+                ->send(new ChapterAddPrimaryCoor($mailData));
+
+            //List Admin Notification//
+            $to_email2 = 'listadmin@momsclub.org';
+
+            Mail::to($to_email2, 'MOMS Club')
+                ->send(new ChapterAddListAdmin($mailData));
 
             DB::commit();
         } catch (\Exception $e) {
@@ -471,7 +464,7 @@ class ChapterController extends Controller
             DB::rollback();
             // Log the error
             Log::error($e);
-            return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again..');
+            return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again...');
         }
         return redirect()->to('/chapter/list')->with('success', 'Chapter created successfully');
     }
@@ -2247,9 +2240,9 @@ class ChapterController extends Controller
     public function chapterDisband(Request $request): RedirectResponse
     {
         $input = $request->all();
-        $chapterid = $input['chpaterid'];
+        $chapterid = $input['chapterid'];
         $disbandReason = $input['reason'];
-        //  DB::beginTransaction();
+
         try {
             DB::table('chapters')
                 ->where('id', $chapterid)
@@ -2270,6 +2263,7 @@ class ChapterController extends Controller
             DB::table('board_details')
                 ->where('chapter_id', $chapterid)
                 ->update(['is_active' => 0]);
+
             $chapterList = DB::table('chapters')
                 ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
                 ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
@@ -2284,12 +2278,8 @@ class ChapterController extends Controller
             $chapterName = $chapterList[0]->name;
             $chapterState = $chapterList[0]->state;
             $chapterEmail = $chapterList[0]->email;
-            $chapterPreFname = $chapterList[0]->bor_f_name;
-            $chapterPreLname = $chapterList[0]->bor_l_name;
-            $chapterPreEmail = $chapterList[0]->bor_email;
             $chapterStatus = $chapterList[0]->status;
-            $chapterCordEmail = $chapterList[0]->cor_email;
-            //Avp board info detail(Rishi)
+            //President Info
             $preinfo = DB::table('board_details')
                 ->select('first_name', 'last_name', 'email')
                 ->where('chapter_id', $chapterid)
@@ -2305,7 +2295,7 @@ class ChapterController extends Controller
                 $presecond = '';
                 $preemail = '';
             }
-            //Avpinfo
+            //Avp info
             $avpinfo = DB::table('board_details')
                 ->select('first_name', 'last_name', 'email')
                 ->where('chapter_id', $chapterid)
@@ -2336,7 +2326,7 @@ class ChapterController extends Controller
                 $mvpsecond = '';
                 $mvpemail = '';
             }
-            //triinfo
+            //Treasurere info
             $triinfo = DB::table('board_details')
                 ->select('first_name', 'last_name', 'email')
                 ->where('chapter_id', $chapterid)
@@ -2351,7 +2341,7 @@ class ChapterController extends Controller
                 $trisecond = '';
                 $triemail = '';
             }
-            //secinfo
+            //secretary info
             $secinfo = DB::table('board_details')
                 ->select('first_name', 'last_name', 'email')
                 ->where('chapter_id', $chapterid)
@@ -2366,20 +2356,14 @@ class ChapterController extends Controller
                 $secscond = '';
                 $secemail = '';
             }
-            //conferenceinfo
+            //conference info
             $coninfo = DB::table('chapters')
                 ->select('chapters.*', 'conference')
                 ->where('id', $chapterid)
                 ->get();
             $conf = $coninfo[0]->conference;
-            $to_email = 'listadmin@momsclub.org';
-            if ($chapterStatus == 1) {
-            }
 
             $mailData = [
-                'chapterPreEmail' => $chapterPreEmail,
-                'chapterPreFname' => $chapterPreFname,
-                'chapterPreLname' => $chapterPreLname,
                 'chapterName' => $chapterName,
                 'chapterEmail' => $chapterEmail,
                 'chapterState' => $chapterState,
@@ -2399,12 +2383,13 @@ class ChapterController extends Controller
                 'slast' => $secscond,
                 'semail' => $secemail,
                 'conf' => $conf,
-                'content' => 'The following chapter has disbanded',
             ];
 
-            Mail::send('emails.chapterdisband', $mailData, function ($message) use ($to_email) {
-                $message->to($to_email, 'MOMS Club')->subject('Chapter Removal Request');
-            });
+            //Primary Coordinator Notification//
+        $to_email = 'listadmin@momsclub.org';
+
+        Mail::to($to_email, 'MOMS Club')
+            ->send(new ChapterRemoveListAdmin($mailData));
 
             return redirect()->to('/chapter/zapped')->with('success', 'Chapter has been successfully Zapped');
         } catch (\Exception $e) {
@@ -2420,6 +2405,8 @@ class ChapterController extends Controller
      */
     public function unZappedChapter($id): RedirectResponse
     {
+        try {
+            DB::beginTransaction();
         $chapterid = $id;
         DB::table('chapters')
             ->where('id', $chapterid)
@@ -2441,12 +2428,146 @@ class ChapterController extends Controller
             ->where('chapter_id', $chapterid)
             ->update(['is_active' => 1]);
 
-        return redirect()->to('/chapter/list')->with('success', 'Chapter has been successfully Unzapped');
+            $chapterList = DB::table('chapters')
+            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->where('chapters.is_Active', '=', '1')
+            ->where('bd.board_position_id', '=', '1')
+            ->where('chapters.id', $chapterid)
+            ->orderByDesc('chapters.id')
+            ->get();
+
+        $chapterName = $chapterList[0]->name;
+        $chapterState = $chapterList[0]->state;
+        $chapterEmail = $chapterList[0]->email;
+        $chapterStatus = $chapterList[0]->status;
+        //President Info
+        $preinfo = DB::table('board_details')
+            ->select('first_name', 'last_name', 'email')
+            ->where('chapter_id', $chapterid)
+            ->where('board_position_id', '=', '1')
+            ->get();
+
+        if (count($preinfo) > 0) {
+            $prefirst = $preinfo[0]->first_name;
+            $presecond = $preinfo[0]->last_name;
+            $preemail = $preinfo[0]->email;
+        } else {
+            $prefirst = '';
+            $presecond = '';
+            $preemail = '';
+        }
+        //Avp info
+        $avpinfo = DB::table('board_details')
+            ->select('first_name', 'last_name', 'email')
+            ->where('chapter_id', $chapterid)
+            ->where('board_position_id', '=', '2')
+            ->get();
+        if (count($avpinfo) > 0) {
+            $avpfirst = $avpinfo[0]->first_name;
+            $avpsecond = $avpinfo[0]->last_name;
+            $avpemail = $avpinfo[0]->email;
+        } else {
+            $avpfirst = '';
+            $avpsecond = '';
+            $avpemail = '';
+        }
+        //Mvp info
+
+        $mvpinfo = DB::table('board_details')
+            ->select('first_name', 'last_name', 'email')
+            ->where('chapter_id', $chapterid)
+            ->where('board_position_id', '=', '3')
+            ->get();
+        if (count($mvpinfo) > 0) {
+            $mvpfirst = $mvpinfo[0]->first_name;
+            $mvpsecond = $mvpinfo[0]->last_name;
+            $mvpemail = $mvpinfo[0]->email;
+        } else {
+            $mvpfirst = '';
+            $mvpsecond = '';
+            $mvpemail = '';
+        }
+        //Treasurere info
+        $triinfo = DB::table('board_details')
+            ->select('first_name', 'last_name', 'email')
+            ->where('chapter_id', $chapterid)
+            ->where('board_position_id', '=', '4')
+            ->get();
+        if (count($triinfo) > 0) {
+            $trifirst = $triinfo[0]->first_name;
+            $trisecond = $triinfo[0]->last_name;
+            $triemail = $triinfo[0]->email;
+        } else {
+            $trifirst = '';
+            $trisecond = '';
+            $triemail = '';
+        }
+        //secretary info
+        $secinfo = DB::table('board_details')
+            ->select('first_name', 'last_name', 'email')
+            ->where('chapter_id', $chapterid)
+            ->where('board_position_id', '=', '5')
+            ->get();
+        if (count($secinfo) > 0) {
+            $secfirst = $secinfo[0]->first_name;
+            $secscond = $secinfo[0]->last_name;
+            $secemail = $secinfo[0]->email;
+        } else {
+            $secfirst = '';
+            $secscond = '';
+            $secemail = '';
+        }
+        //conference info
+        $coninfo = DB::table('chapters')
+            ->select('chapters.*', 'conference')
+            ->where('id', $chapterid)
+            ->get();
+        $conf = $coninfo[0]->conference;
+
+        $mailData = [
+            'chapterName' => $chapterName,
+            'chapterEmail' => $chapterEmail,
+            'chapterState' => $chapterState,
+            'pfirst' => $prefirst,
+            'plast' => $presecond,
+            'pemail' => $preemail,
+            'afirst' => $avpfirst,
+            'alast' => $avpsecond,
+            'aemail' => $avpemail,
+            'mfirst' => $mvpfirst,
+            'mlast' => $mvpsecond,
+            'memail' => $mvpemail,
+            'tfirst' => $trifirst,
+            'tlast' => $trisecond,
+            'temail' => $triemail,
+            'sfirst' => $secfirst,
+            'slast' => $secscond,
+            'semail' => $secemail,
+            'conf' => $conf,
+        ];
+
+        //Primary Coordinator Notification//
+        $to_email = 'listadmin@momsclub.org';
+
+        Mail::to($to_email, 'MOMS Club')
+            ->send(new ChapterReAddListAdmin($mailData));
+
+            DB::commit();
+            } catch (\Exception $e) {
+            // Rollback Transaction
+            DB::rollback();
+            // Log the error
+            Log::error($e);
+            return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again..');
+        }
+        return redirect()->to('/chapter/list')->with('success', 'Chapter was successfully unzapped');
     }
 
-
     /**
-     * Function for updating a Zapped Chapter (store)
+     * Function for updating a Zapped Chapter Email (store)
      */
     public function updateZappedChapter(Request $request, $id): RedirectResponse
     {
@@ -2464,7 +2585,7 @@ class ChapterController extends Controller
 
         $chapterId = $id;
 
-        //President Info Rishi
+        //President Info
         if ($request->get('ch_pre_email') != '') {
             $PREDetails = DB::table('board_details')
                 ->select('board_id', 'user_id')
@@ -2488,7 +2609,7 @@ class ChapterController extends Controller
             }
         }
 
-        return redirect()->to('/chapter/zapped')->with('success', 'Chapter has been updated');
+        return redirect()->to('/chapter/zapped')->with('success', 'President Email has been updated');
     }
 
 
@@ -2695,7 +2816,6 @@ class ChapterController extends Controller
         return $chapter_array;
     }
 
-
     /**
      * ReRegistration Notes
      */
@@ -2855,7 +2975,6 @@ class ChapterController extends Controller
 
         $startDate = \Carbon\Carbon::create($year, $month, 30);
         $lastYearDate = \Carbon\Carbon::create($lastYear, $lastMonth, 1);
-        $dueDate = \Carbon\Carbon::create($year, $lastMonth, 10);
 
         // Convert $month to words
         $monthInWords = strftime('%B', strtotime("2000-$month-01"));
@@ -2863,7 +2982,6 @@ class ChapterController extends Controller
         // Format dates as "mm-dd-yyyy"
         $startDateFormatted = date('m-d-Y', strtotime($startDate));
         $lastYearDateFormatted = date('m-d-Y', strtotime($lastYearDate));
-        $dueDateFormatted = date('m-d-Y', strtotime($dueDate));
 
         $chapters = Chapter::select('chapters.name as chapter_name', 'state.state_short_name as chapter_state', 'board_details.email as bor_email',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
@@ -2911,7 +3029,6 @@ class ChapterController extends Controller
                 'lastYearDate' => $lastYearDateFormatted,
                 'startMonth' => $monthInWords,
                 'reRegDate' => $startDateFormatted,
-                'dueDate' => $dueDateFormatted,
             ];
 
             $cc_email = $coordinatorEmails[$chapterName] ?? []; // Get coordinator emails for this chapter
