@@ -12,7 +12,7 @@ To calculate your payment:
 <li>If this total amount of members is 10 or more, multiply the number by $5.00 to get your total amount due</li>
 <li>Payments received after the last day of <b>{{$mailData['startMonth']}}</b> should include a late fee of $10</li></ul>
 
-You online: https://momsclub.org/resources/re-registration-payment
+You online: https://momsclub.org/resources/re-registration-payment<br>
 Password: daytime support
 
 OR to pay by mail:<br>
@@ -39,7 +39,7 @@ Anniversary Month: <b>{{$mailData['startMonth']}}</b></td></tr>
 Sustaining chapter donations are <u>voluntary</u> and in addition to your chapter's re-registration dues.  At this time, the minimum sustaining chapter donation is $100.  The donation benefits the International MOMS Club, which is a 501 (c)(3) public charity.  Your support to the MOMS Club is a service project for your chapter and should be included in its own line on your chapter's Annual and Financial Reports.  Your donation will help us keep dues low and help new and existing chapters in the U.S. and around the world.
 </p>
 </td></tr></table>
-
+<br>
 Thank you for your prompt renewal payment and/or sustaining chapter donation! If you have any questions, please do not hesitate to contact your chapter's Primary Coordinator.
 
 You can view/update your chpater details at any time by logging into MIMI at https://momsclub.org/mimi.
