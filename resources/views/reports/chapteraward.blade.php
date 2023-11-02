@@ -23,117 +23,209 @@
     @endif
     <!-- Main content -->
     <section class="content">
-      <div class="row">
-		<div class="col-md-12">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">Report of Chapter Awards</h3>
-            </div>
-            <!-- /.box-header -->
-            
-            <div class="box-body table-responsive">
-              <table id="chapterlist_zapped" class="table table-bordered table-hover">
-              <thead> 
-			    <tr>
-			        <th></th>
-					<th>State</th>
-                  <th>Name</th>
-                 <th>Award</th>
-				 <th>Approved</th>
-                </tr>
-                </thead>
-                <tbody>
-                    
-                    <tr>
-                <?php
-//                 echo "<pre>";
-// 			print_r($chapter_array);die;
-                      
-					$row_count=count($chapter_array);
-						
-						for ($row = 0; $row < $row_count; $row++){
-							//if((!$only_show_primary) || ($chapter_array[$row]['reviewer_id']==$_SESSION['userid'])){
-								for($award=1;$award<=5;$award++){
-									if($chapter_array[$row]['award_' . $award . '_type']>0){
-                                        echo " <td><a href='/mimi/chapter/awardsview/".$chapter_array[$row]['id']."'><i class='fa fa-pencil-square' aria-hidden='true'></i></a></td> \n";
-										echo " <td>" . $chapter_array[$row]['state'] . "</td> \n";
-										echo " <td>" . $chapter_array[$row]['name'] . "</td> \n";
-										
+        <div class="row">
+          <div class="col-md-12">
+            <div class="box">
+              <div class="box-header with-border">
+                <h3 class="box-title">Report of Chapter Awards</h3>
+                &nbsp;&nbsp;(Chapters that were added after June 30, <?php echo date('Y');?> will not be listed)
 
-										switch ($chapter_array[$row]['award_' . $award . '_type']) {
-											case 1:
-												echo " <td>Outstanding Specific Service Project</td> \n";
-												break;
-											case 2:
-												echo " <td>Outstanding Overall Service Program</td> \n";
-												break;
-											case 3:
-												echo " <td>Outstanding Children's Activity</td> \n";
-												break;
-											case 4:
-												echo " <td>Outstanding Spirit</td> \n";
-												break;
-											case 5:
-												echo " <td>Outstanding Chapter</td> \n";
-												break;
-											case 6:
-												echo " <td>Outstanding New Chapter</td> \n";
-												break;
-											case 7:
-												echo " <td>Other Outstanding Award</td> \n";
-												break;
-										}										if($chapter_array[$row]['award_' . $award . '_approved'])
-											echo " <td>YES</td> \n";
-										else
-											echo " <td bgcolor=\"#FF0000\">NO</td> \n";						
-										
-										echo "</tr>";
-									}
-								}
-							//}
-						}
-				  ?>
-                        
-                  </tbody>
-                </table>
+              </div>
+              <!-- /.box-header -->
+
+              <div class="box-body table-responsive">
+                <table id="chapterlist_zapped" class="table table-bordered table-hover">
+                <thead>
+                  <tr>
+                  <th>Add/Edit</th>
+
+                  <th>State</th>
+                  <th>Name</th>
+                  <th>Award 1</th>
+                  <th>Award 2</th>
+                  <th>Award 3</th>
+                  <th>Award 4</th>
+                  <th>Award 5</th>
+
+                  </tr>
+                  </thead>
+                  <tbody>
+
+                  @foreach($chapterList as $list)
+                    <tr>
+                        <td>
+                           <?php if (Session::get('positionid') >=5 && Session::get('positionid') <=7 || $position = 25){ ?>
+
+                                  <a href="<?php echo url("/chapter/awardsview/{$list->id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
+
+
+                          <?php }?>
+
+                        </td>
+
+                        <td>{{ $list->state }}</td>
+                            <td>{{ $list->name }}</td>
+                            <td>@if($list->award_1_nomination_type=='1')
+                                Outstanding Specific Service Project
+                                @elseif($list->award_1_nomination_type=='2')
+                                Outstanding Overall Service Program
+                                @elseif($list->award_1_nomination_type=='3')
+                                Outstanding Children's Activity
+                                @elseif($list->award_1_nomination_type=='4')
+                                Outstanding Spirit
+                                @elseif($list->award_1_nomination_type=='5')
+                                Outstanding Chapter
+                                @elseif($list->award_1_nomination_type=='6')
+                                Outstanding New Chapter
+                                @elseif($list->award_1_nomination_type=='7')
+                                Other Outstanding Award
+                                @else
+
+                                @endif
+                                    @if ($list->award_1_approved)
+                                        <div style="background-color: #2c770050;">YES</div>
+                                    @else
+                                        @if ($list->award_1_nomination_type)
+                                            <div style="background-color: #FF000050;">NO</div>
+                                        @endif
+                                @endif</td>
+                            <td>@if($list->award_2_nomination_type=='1')
+                                Outstanding Specific Service Project
+                                @elseif($list->award_2_nomination_type=='2')
+                                Outstanding Overall Service Program
+                                @elseif($list->award_2_nomination_type=='3')
+                                Outstanding Children's Activity
+                                @elseif($list->award_2_nomination_type=='4')
+                                Outstanding Spirit
+                                @elseif($list->award_2_nomination_type=='5')
+                                Outstanding Chapter
+                                @elseif($list->award_2_nomination_type=='6')
+                                Outstanding New Chapter
+                                @elseif($list->award_2_nomination_type=='7')
+                                Other Outstanding Award
+                                @else
+
+                                @endif
+                                    @if ($list->award_2_approved)
+                                        <div style="background-color: #2c770050;">YES</div>
+                                    @else
+                                        @if ($list->award_2_nomination_type)
+                                            <div style="background-color: #FF000050;">NO</div>
+                                        @endif
+                                @endif</td>
+                            <td>@if($list->award_3_nomination_type=='1')
+                                Outstanding Specific Service Project
+                                @elseif($list->award_3_nomination_type=='2')
+                                Outstanding Overall Service Program
+                                @elseif($list->award_3_nomination_type=='3')
+                                Outstanding Children's Activity
+                                @elseif($list->award_3_nomination_type=='4')
+                                Outstanding Spirit
+                                @elseif($list->award_3_nomination_type=='5')
+                                Outstanding Chapter
+                                @elseif($list->award_3_nomination_type=='6')
+                                Outstanding New Chapter
+                                @elseif($list->award_3_nomination_type=='7')
+                                Other Outstanding Award
+                                @else
+
+                                @endif
+                                    @if ($list->award_3_approved)
+                                        <div style="background-color: #2c770050;">YES</div>
+                                    @else
+                                        @if ($list->award_3_nomination_type)
+                                            <div style="background-color: #FF000050;">NO</div>
+                                        @endif
+                                @endif</td>
+                            <td>@if($list->award_4_nomination_type=='1')
+                                Outstanding Specific Service Project
+                                @elseif($list->award_4_nomination_type=='2')
+                                Outstanding Overall Service Program
+                                @elseif($list->award_4_nomination_type=='3')
+                                Outstanding Children's Activity
+                                @elseif($list->award_4_nomination_type=='4')
+                                Outstanding Spirit
+                                @elseif($list->award_4_nomination_type=='5')
+                                Outstanding Chapter
+                                @elseif($list->award_4_nomination_type=='6')
+                                Outstanding New Chapter
+                                @elseif($list->award_4_nomination_type=='7')
+                                Other Outstanding Award
+                                @else
+
+                                @endif
+                                @if ($list->award_4_approved)
+                                    <div style="background-color: #2c770050;">YES</div>
+                                @else
+                                    @if ($list->award_4_nomination_type)
+                                        <div style="background-color: #FF000050;">NO</div>
+                                    @endif
+                            @endif</td>
+                            <td>@if($list->award_5_nomination_type=='1')
+                                Outstanding Specific Service Project
+                                @elseif($list->award_5_nomination_type=='2')
+                                Outstanding Overall Service Program
+                                @elseif($list->award_5_nomination_type=='3')
+                                Outstanding Children's Activity
+                                @elseif($list->award_5_nomination_type=='4')
+                                Outstanding Spirit
+                                @elseif($list->award_5_nomination_type=='5')
+                                Outstanding Chapter
+                                @elseif($list->award_5_nomination_type=='6')
+                                Outstanding New Chapter
+                                @elseif($list->award_5_nomination_type=='7')
+                                Other Outstanding Award
+                                @else
+
+                                @endif
+                                    @if ($list->award_5_approved)
+                                        <div style="background-color: #2c770050;">YES</div>
+                                    @else
+                                        @if ($list->award_5_nomination_type)
+                                            <div style="background-color: #FF000050;">NO</div>
+                                        @endif
+                                @endif</td>
+
+                    </tr>
+                @endforeach
+
+                    </tbody>
+                  </table>
 				 <div class="radio-chk labelcheck">
               <div class="col-sm-6 col-xs-12">
                 <div class="form-group">
                     <label style="display: block;"><input type="checkbox" name="showPrimary" id="showPrimary" class="ios-switch green bigswitch" {{$checkBoxStatus}} onchange="showPrimary()" /><div><div></div></div>
-                    
+
                   </label>
                   <span> Only show chapters I am Primary Reviewer for</span>
                 </div>
               </div>
               </div>
-			  
+
 			   <div class="box-body text-center">
-                          <a class="btn btn-themeBlue margin" href="{{ route('report.addawards') }}">Add Award</a>
+                          <a class="btn btn-themeBlue margin" href="{{ route('report.addawards') }}">View All Chapers</a>
 
 			  <?php
 			 if($checkBoxStatus){ ?>
 				<a href="{{ route('export.chapteraward',$corId) }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>>Export Award List</button></a>
-			<?php 
+			<?php
 			 }
 			 else{ ?>
 				<a href="{{ route('export.chapteraward','0') }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>>Export Award List</button></a>
 			 <?php } ?>
-			  
-			  
-			  
+
+
+
              </div>
-			  
+
             </div>
 
            </div>
-          <!-- /.box -->
         </div>
       </div>
-    </section>    
-    <!-- Main content -->
-    
-    <!-- /.content -->
- 
+    </section>
+
+
 @endsection
 @section('customscript')
 <script>

@@ -11,20 +11,20 @@
         <li class="active">Coordinator List</li>
       </ol>
     </section>
-   
+
 	 @if ($message = Session::get('success'))
       <div class="alert alert-success">
-		<button type="button" class="close" data-dismiss="alert">×</button>	
+		<button type="button" class="close" data-dismiss="alert">×</button>
          <p>{{ $message }}</p>
       </div>
     @endif
 	 @if ($message = Session::get('fail'))
       <div class="alert alert-danger">
-		<button type="button" class="close" data-dismiss="alert">×</button>	
+		<button type="button" class="close" data-dismiss="alert">×</button>
          <p>{{ $message }}</p>
       </div>
     @endif
-	
+
     <!-- Main content -->
     <section class="content">
       <div class="row">
@@ -48,38 +48,22 @@
                     <th>Email</th>
                     <th>Reports To</th>
                     <th>Home Chapter</th>
-                </tr>  
+                </tr>
                 </thead>
                 <tbody>
                   @foreach($coordinatorList as $list)
                     <tr>
                       <td><a href="<?php echo url("/coordinator/edit/{$list->cor_id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
-                      
                       <td>{{ $list->reg }}</td>
                       <td>{{ $list->cor_fname }}</td>
                       <td>{{ $list->cor_lname }}</td>
-
                       <td>{{ $list->position }}</td>
-              <?php
-        		 $coordinatorSecPos = DB::select(DB::raw("SELECT cp.long_title as sec_pos FROM coordinator_position as cp join coordinator_details as cd on cd.sec_position_id = cp.id WHERE cd.coordinator_id = {$list->cor_id}") );
-          ?>
-                     @if(empty($coordinatorSecPos)) 
-        							<td></td>
-        							@else
-        							<td>{{$coordinatorSecPos[0]->sec_pos}}</td>        
-        						@endif
-        			<td>{{ $list->coordinator_start_date }}</td>
-                     <td><a href="mailto:{{ $list->cor_email }}">{{ $list->cor_email }}</a></td>  
-
-             <?php
-        		 $ReportTo = DB::select(DB::raw("SELECT cd.first_name as first_name, cd.last_name as last_name FROM coordinator_details as cd WHERE cd.coordinator_id = {$list->report_id}") );
-          ?>
-     
-        							<td>{{$ReportTo[0]->first_name}} {{$ReportTo[0]->last_name}}</td>       
-                                         <td>{{ $list->cor_chapter }}</td>
-
+                      <td>{{ $list->sec_pos }}</td>
+                	  <td>{{ $list->coordinator_start_date }}</td>
+                      <td><a href="mailto:{{ $list->cor_email }}">{{ $list->cor_email }}</a></td>
+                      <td>{{$list->report_fname}} {{$list->report_lname}}</td>
+                      <td>{{ $list->cor_chapter }}</td>
                     </tr>
-
                   @endforeach
                 </tbody>
               </table>
@@ -88,7 +72,7 @@
               <div class="col-sm-6 col-xs-12">
                 <div class="form-group">
                     <label style="display: block;"><input type="checkbox" name="showPrimary" id="showPrimary" class="ios-switch green bigswitch" {{$checkBoxStatus}} onchange="showPrimary()" /><div><div></div></div>
-					</label>		
+					</label>
 				   <span>Show only my direct reports</span>
                 </div>
               </div>
@@ -99,22 +83,22 @@
               <?php
 			 if($checkBoxStatus){ ?>
 				<a href="{{ route('export.coordinator',$corId) }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>>Export Coordinator List</button></a>
-			<?php 
+			<?php
 			 }
 			 else{ ?>
 				<a href="{{ route('export.coordinator','0') }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>>Export Coordinator List</button></a>
 			 <?php } ?>
-			  
-			  
+
+
               <a class="btn btn-themeBlue margin" href="mailto:{{ $emailListCord }}">E-mail Listed Coordinators</a>
             </div>
          </div>
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
 @endsection
 

@@ -18,13 +18,13 @@
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">Report of Chapter Coordinators</h3>
-              
+
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
               <table id="chapterlist_zapped" class="table table-bordered table-hover">
-              <thead> 
+              <thead>
 			    <tr>
 				  <th></th>
 				  <th>State</th>
@@ -47,21 +47,27 @@
 										->select('*')
 										->where('id', '=', $id)
 										->get();
-						
+
 						foreach($reportingList as $key => $value)
 						{
 							$reportingList[$key] = (array) $value;
-						}   
+						}
 						$filterReportingList = array_filter($reportingList[0]);
 						unset($filterReportingList['id']);
 						unset($filterReportingList['layer0']);
  					    $filterReportingList = array_reverse($filterReportingList);
 					    foreach($filterReportingList as $key =>$val){
-						$coordinator_array[] = DB::select(DB::raw("select cd.first_name as first_name,cd.last_name as last_name,cp.short_title as position FROM coordinator_details as cd INNER JOIN coordinator_position as cp ON cd.position_id = cp.id WHERE cd.coordinator_id = {$val}") );		
-								
+                            $coordinator_data = DB::table('coordinator_details as cd')
+                                ->select('cd.first_name as first_name', 'cd.last_name as last_name', 'cp.short_title as position')
+                                ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                                ->where('cd.coordinator_id', $val)
+                                ->get();
+
+                            $coordinator_array[] = $coordinator_data;
+
 						}
 						$cord_row_count = count($coordinator_array);
-						
+
 						echo "<tr>";
 						echo "<td><a href='/mimi/chapter/edit/".$chapterList[$row]->id."'><i class='fa fa-pencil-square' aria-hidden='true'></i></a></td> \n";
 						echo "<td>" . $chapterList[$row]->state . "</td>\n";
@@ -113,47 +119,47 @@
 											$position_found=true;
 										}
 										break;
-									}														                                                      
+									}
 
 								}
 							if(!$position_found)
 								echo " <td></td>\n";
-								
+
 						}
 						unset($coordinator_array);
 					}
 					echo "</tr>";
 					?>
-					
+
 			        <!--</tr>-->
-                 
+
                   </tbody>
                 </table>
 				 <div class="radio-chk labelcheck">
               <div class="col-sm-6 col-xs-12">
                 <div class="form-group">
                     <label style="display: block;"><input type="checkbox" name="showPrimary" id="showPrimary" class="ios-switch green bigswitch" {{$checkBoxStatus}} onchange="showPrimary()" /><div><div></div></div>
-                    
+
                   </label>
                   <span> Only show chapters I am Primary For</span>
                 </div>
               </div>
               </div>
 			  <div class="box-body text-center">
-            
+
               <a href="{{ route('export.chaptercoordinator') }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>>Export Chapter Coordinator List</button></a>
              </div>
             </div>
-			
+
            </div>
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection
 @section('customscript')
 <script>

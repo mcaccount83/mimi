@@ -18,13 +18,13 @@
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">Report of New Chapters 1 Year or Younger</h3>
-            
+
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
               <table id="chapterlist_zapped" class="table table-bordered table-hover">
-				<thead> 
+				<thead>
 			    <tr>
 					<th></th>
 					<th>State</th>
@@ -37,15 +37,15 @@
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
-				
-							<td><a href="<?php //echo url("/chapter/edit/{$list->id}") 
+
+							<td><a href="<?php //echo url("/chapter/edit/{$list->id}")
 							echo url("/chapter/edit/{$list->ch_id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
 							</td>
-						
+
 						<td>{{ $list->ch_state }}</td>
                         <td>{{ $list->ch_name }}</td>
 						<td>{{ $list->month_name }} {{ $list->year }}</td>
-						<td bgcolor="<?php 
+						<td bgcolor="<?php
 							if($list->ein_letter_path == null)
 									echo "#FF0000";
 							?>">
@@ -56,8 +56,8 @@
 							@endif
 						</td>
 						<td>{{ $list->cor_fname }} {{ $list->cor_lname }}</td>
-                       
-                       
+
+
 			        </tr>
                   @endforeach
                   </tbody>
@@ -67,9 +67,9 @@
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection

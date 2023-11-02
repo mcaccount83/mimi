@@ -15,7 +15,7 @@ If you have already submitted your payment, please let us know. Sometimes cleric
 <li>If you have not submitted your payment, please follow the instructions below and include a $10 late fee when submitting.</li></ul>
 
 To calculate your payment:
-<ul><li>Determine how many people paid dues to your chapter from <b>{{$mailData['lastYearDate']}}</b> through <b>{{$mailData['reRegDate']}}</b></li>
+<ul><li>Determine how many people paid dues to your chapter from <b>{{$mailData['startRange']}}</b> through <b>{{$mailData['endRange']}}</b></li>
 <li>Add in any people who paid reduced dues or had their dues waived due to financial hardship</li>
 <li>If this total amount of members is less than 10, make your check for the amount of $50</li>
 <li>If this total amount of members is 10 or more, multiply the number by $5.00 to get your total amount due</li></ul>
@@ -34,7 +34,7 @@ Chapter Re-Registration<br>
 208 Hewitt Dr., Ste 103 #328<br>
 Waco, TX 76712</center>
 <br>
-<table><td><b>MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}</b><br>
+<table style="border:1px"><td><b>MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}</b><br>
 Anniversary Month: <b>{{$mailData['startMonth']}}</b></td></tr>
 <tr><td>
 <br>

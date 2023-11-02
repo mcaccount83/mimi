@@ -196,7 +196,7 @@ Route::get('/reports/downloads', [ReportController::class, 'showDownloads'])->na
 Route::get('/yearreports/review', [ReportController::class, 'showReportToReview'])->name('report.review');
 Route::get('/yearreports/boardinfo', [ReportController::class, 'showReportToBoardInfo'])->name('report.boardinfo');
 Route::get('/yearreports/boardnotification', [ReportController::class, 'boardNotification'])->name('report.boardnotification');
-Route::get('/yearreports/chapteraward', [ReportController::class, 'showReportToBoardInfo'])->name('report.awards');
+Route::get('/yearreports/chapteraward', [ReportController::class, 'showChapterAwards'])->name('report.awards');
 Route::get('/yearreports/boundaryissue', [ReportController::class, 'showReportToIssues'])->name('report.issues');
 Route::get('/yearreports/chapterawards', [ReportController::class, 'showChapterAwards'])->name('report.chapterawards');
 Route::get('/yearreports/eoystatus', [ReportController::class, 'showEOYStatus'])->name('report.eoystatus');

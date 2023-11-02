@@ -60,61 +60,58 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($reChapterList as $list)
-                <?php
-                $chapterEmailList = DB::table('board_details as bd')
-                                          ->select('bd.email as bor_email')
-                                          ->where('bd.chapter_id', '=', $list->id)
-                                          ->get();
-                      $emailListCord="";
-                      foreach($chapterEmailList as $val){
-                        $email = $val->bor_email;
-                        $escaped_email=str_replace("'", "\\'", $email);
-                        if ($emailListCord==""){
-                            $emailListCord = $escaped_email;
-                        }
-                        else{
-                            $emailListCord .= ";" . $escaped_email;
-                        }
-                      }
-                      $cc_string="";
-                     //var_dump($list);die;
-                      $reportingList = DB::table('coordinator_reporting_tree')
-                                            ->select('*')
-                                            ->where('id', '=', $list->primary_coordinator_id)
+                    @foreach($reChapterList as $list)
+                    <?php
+                        $chapterEmailList = DB::table('board_details as bd')
+                                            ->select('bd.email as bor_email')
+                                            ->where('bd.chapter_id', '=', $list->id)
                                             ->get();
-                            foreach($reportingList as $key => $value)
-                            {
-                                $reportingList[$key] = (array) $value;
-                            }
-                            $filterReportingList = array_filter($reportingList[0]);
-                            unset($filterReportingList['id']);
-                            unset($filterReportingList['layer0']);
-                            $filterReportingList = array_reverse($filterReportingList);
-                            $str = "";
-                            $array_rows=count($filterReportingList);
-                            $down_line_email="";
-                            foreach($filterReportingList as $key =>$val){
-                                //if($corId != $val && $val >1){
-								if($val >1){
-                                    $corList = DB::table('coordinator_details as cd')
-                                                    ->select('cd.email as cord_email')
-                                                    ->where('cd.coordinator_id', '=', $val)
-                                                    ->where('cd.is_active', '=', 1)
-                                                    ->get();
-                                  if ($down_line_email==""){
-                                    if(isset($corList[0]))
-                                      $down_line_email = $corList[0]->cord_email;
-                                  }
-                                  else{
-                                    if(isset($corList[0]))
-                                      $down_line_email .= ";" . $corList[0]->cord_email;
-                                  }
+                        $emailListCord="";
+                        foreach($chapterEmailList as $val){
+                          $email = $val->bor_email;
+                          $escaped_email=str_replace("'", "\\'", $email);
+                          if ($emailListCord==""){
+                              $emailListCord = $escaped_email;
+                          }
+                          else{
+                              $emailListCord .= ";" . $escaped_email;
+                          }
+                        }
+                        $cc_string="";
+                        $reportingList = DB::table('coordinator_reporting_tree')
+                                              ->select('*')
+                                              ->where('id', '=', $list->primary_coordinator_id)
+                                              ->get();
+                              foreach($reportingList as $key => $value)
+                              {
+                                  $reportingList[$key] = (array) $value;
+                              }
+                              $filterReportingList = array_filter($reportingList[0]);
+                              unset($filterReportingList['id']);
+                              unset($filterReportingList['layer0']);
+                              $filterReportingList = array_reverse($filterReportingList);
+                              $str = "";
+                              $array_rows=count($filterReportingList);
+                              $down_line_email="";
+                              foreach($filterReportingList as $key =>$val){
+                                  if($val >1){
+                                      $corList = DB::table('coordinator_details as cd')
+                                                      ->select('cd.email as cord_email')
+                                                      ->where('cd.coordinator_id', '=', $val)
+                                                      ->where('cd.is_active', '=', 1)
+                                                      ->get();
+                                    if ($down_line_email==""){
+                                      if(isset($corList[0]))
+                                        $down_line_email = $corList[0]->cord_email;
+                                    }
+                                    else{
+                                      if(isset($corList[0]))
+                                        $down_line_email .= ";" . $corList[0]->cord_email;
+                                    }
 
-                                }
-                            }
-                            $cc_string = "?cc=" . $down_line_email;
-                           // var_dump($list);die;
+                                  }
+                              }
+                              $cc_string = "?cc=" . $down_line_email;
 
                     $reregistration_url = "https://momsclub.org/resources/re-registration-payment/";
 
@@ -127,17 +124,17 @@
                     <li>Payments received after the last day of your renewal month should include a late fee of $10</li></ul>";
                     $mail_message .= "<b><p>Make your payment:</p></b>
 	                <ul><li><a href='$reregistration_url'>Pay Online</a> (Password:  daytime support)</li>
-	                <li>Pay via Mail to: Chapter Re-Registration, 1464 Madera Road N191, Simi Valley, CA  93065</li></ul>";
+	                <li>Pay via Mail to: Chapter Re-Registration, 208 Hewitt Dr. Ste 103 #328, Waco, TX 76712</li></ul>";
                       ?>
                   <tr>
                         <td>
                         <?php if (Session::get('positionid') ==6 ){ ?>
-                                <a href="<?php if($corConfId == $list->conference){ echo url("/chapter/re-registration/payment/{$list->id}"); } else { echo "#";}?>"><i class="<?php if($corConfId == $list->conference){ echo "fa fa-credit-card"; }  ?> aria-hidden="true"></i> </a>
+                                <a href="/chapter/re-registration/payment/{{$list->id}}"><i class="fa fa-credit-card" aria-hidden="true"></i> </a>
                         <?php }?>
                         </td>
                         <td>
                         <?php if (Session::get('positionid') ==6 ){ ?>
-                                <a href="<?php if($corConfId == $list->conference){ echo url("/chapter/re-registration/notes/{$list->id}"); } else { echo "#";}?>"><i class="<?php if($corConfId == $list->conference){ echo "fa fa-pencil"; }  ?> aria-hidden="true"></i> </a>
+                                <a href="/chapter/re-registration/notes/{{$list->id}}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                         <?php }?>
                         </td>
                         <td><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Re-Registration Reminder - MOMS Club of {{ $list->name }}, {{ $list->state_short_name }}&body={{ $mail_message }}"><i class="fa fa-envelope" aria-hidden="true"></i></a></td>
@@ -175,23 +172,18 @@
 	        <?php if((Session::get('positionid') >=6 && Session::get('positionid') <=7) || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>
 			 	<a href="{{route('chapter.latereminder')}}" class="btn btn-themeBlue margin" <?php if($checkBoxStatus) echo "disabled";?>>Send One Month Late Notices</a>
 			<?php }?>
-									     <a href="{{ route('export.rereg')}}"><button class="btn btn-themeBlue margin">Export Overdue Chapter List</button></a>
+					<a href="{{ route('export.rereg')}}"><button class="btn btn-themeBlue margin">Export Overdue Chapter List</button></a>
 
             </div>
             </div>
 
 
             </div>
-          <!-- /.box -->
         </div>
       </div>
     </section>
-
-    <!-- Main content -->
-
-    <!-- /.content -->
-
 @endsection
+
 @section('customscript')
 <script>
 
@@ -208,11 +200,9 @@
 		}
 	}
 	function ConfirmSend(){
-		//this.disabled=true;
 		var result=confirm("Re-registration reminders will be sent to all unpaid chapters in your conference with renewal dates this month.  Do you wish to continue?");
-	//	this.disabled=true;
-		//return false;
-		if(result){
+
+        if(result){
 			return true;
 		}
 

@@ -18,13 +18,13 @@
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">Report of Volunteer Utilization</h3>
-             
+
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
               <table id="chapterlist_zapped" class="table table-bordered table-hover">
-				<thead> 
+				<thead>
 			    <tr>
 			        <th></th>
 			        <th>Conference</th>
@@ -36,30 +36,39 @@
 					<th>Direct Report</th>
           <th>InDirect Report</th>
           <th>Total Report</th>
-					
+
                 </tr>
                 </thead>
                 <tbody>
-                    
+
                 @foreach($coordinatorList as $list)
                   <tr>
-                      <td><a href="<?php echo url("/coordinator/edit/{$list->cor_id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
+                      <td><a href="/coordinator/edit/{$list->cor_id}"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
                       <td>{{ $list->cor_conf }}</td>
                     <td>{{ $list->reg }}</td>
                     <td>{{ $list->cor_fname }}</td>
                     <td>{{ $list->cor_lname }}</td>
 					          <td>{{ $list->position }}</td>
-					  
+
         					  <?php
                     // Calculate direct chapter report
-        					  $coordinatorSecPos = DB::select(DB::raw("SELECT cp.long_title as sec_pos FROM coordinator_position as cp join coordinator_details as cd on cd.sec_position_id = cp.id WHERE cd.coordinator_id = {$list->cor_id}") );
+                    $coordinatorSecPos = DB::table('coordinator_position as cp')
+                        ->select('cp.long_title as sec_pos')
+                        ->join('coordinator_details as cd', 'cd.sec_position_id', '=', 'cp.id')
+                        ->where('cd.coordinator_id', $list->cor_id)
+                        ->get();
 
-        						$coordinator_options = DB::select(DB::raw("SELECT name FROM chapters where primary_coordinator_id = {$list->cor_id} AND is_active='1'") );
-        						$direct_report=count($coordinator_options);
+                        $coordinator_options = DB::table('chapters')
+                            ->select('name')
+                            ->where('primary_coordinator_id', $list->cor_id)
+                            ->where('is_active', '1')
+                            ->get();
+
+                            $direct_report=count($coordinator_options);
 
                     // calculate indirect chpater report
                     $corlayerId = $list->layer_id;
-                        $sqlLayerId = 'crt.layer'.$corlayerId; 
+                        $sqlLayerId = 'crt.layer'.$corlayerId;
                     $reportIdList = DB::table('coordinator_reporting_tree as crt')
                                         ->select('crt.id')
                                         ->where($sqlLayerId, '=', $list->cor_id)
@@ -84,12 +93,7 @@
                     $indirect_report = count($indirectChapterReport) - $direct_report;
                     $total_report = $direct_report + $indirect_report;
         					   ?>
-        						@if(empty($coordinatorSecPos)) 
-        							<td></td>
-        							@else
-        							<td>{{$coordinatorSecPos[0]->sec_pos}}</td>        
-        						@endif
-							
+        			  <td>{{ $list->sec_pos }}</td>
                       <td>{{ $direct_report }}</td>
                       <td>{{ $indirect_report }}</td>
                       <td>{{ $total_report }}</td>
@@ -102,9 +106,9 @@
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection

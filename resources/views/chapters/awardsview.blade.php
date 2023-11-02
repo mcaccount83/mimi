@@ -79,15 +79,15 @@
                          </div>
 
                                              <div class="col-sm-12 col-xs-12">
- 
+
                                  <div class="form-group">
                                 <label for="AwardDesc1">Award 1 Description:</label>
                                     <textarea class="form-control" rows="5" id="AwardDesc1" name="AwardDesc1"><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_1_outstanding_project_desc'];}?></textarea>
                                  </div>
 
-                          
+
                         </div>
-             
+
 			              <div class="radio-chk">
                 <div class="col-sm-12 col-xs-12">
                   <div class="form-group">
@@ -122,13 +122,13 @@
                                                                                                                         <div id="OutstandingCriteria2" style="display: none;">
 
                                              <div class="col-sm-12 col-xs-12">
- 
+
                                  <div class="form-group">
                                 <label for="AwardDesc2">Award 2 Description:</label>
                                     <textarea class="form-control" rows="5" id="AwardDesc2" name="AwardDesc2"><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_2_outstanding_project_desc'];}?></textarea>
                                  </div>
 
-                          
+
                         </div>
             <div class="radio-chk">
                 <div class="col-sm-12 col-xs-12">
@@ -165,13 +165,13 @@
                                                                                                                         <div id="OutstandingCriteria3" style="display: none;">
 
                                              <div class="col-sm-12 col-xs-12">
- 
+
                                  <div class="form-group">
                                 <label for="AwardDesc3">Award 3 Description:</label>
                                     <textarea class="form-control" rows="5" id="AwardDesc3" name="AwardDesc3"><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_3_outstanding_project_desc'];}?></textarea>
                                  </div>
 
-                          
+
                         </div>
                               <div class="radio-chk">
                 <div class="col-sm-12 col-xs-12">
@@ -208,13 +208,13 @@
                                                                                                                         <div id="OutstandingCriteria4" style="display: none;">
 
                                              <div class="col-sm-12 col-xs-12">
- 
+
                                  <div class="form-group">
                                 <label for="AwardDesc4">Award 4 Description:</label>
                                     <textarea class="form-control" rows="5" id="AwardDesc4" name="AwardDesc4"><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_4_outstanding_project_desc'];}?></textarea>
                                  </div>
 
-                          
+
                         </div>
                               <div class="radio-chk">
                 <div class="col-sm-12 col-xs-12">
@@ -250,13 +250,13 @@
                                                                                              <div id="OutstandingCriteria5" style="display: none;">
 
                                              <div class="col-sm-12 col-xs-12">
- 
+
                                  <div class="form-group">
                                 <label for="AwardDesc5">Award 5 Description:</label>
                                     <textarea class="form-control" rows="5" id="AwardDesc5" name="AwardDesc5"><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_5_outstanding_project_desc'];}?></textarea>
                                  </div>
 
-                          
+
                         </div>
                               <div class="radio-chk">
 
@@ -273,14 +273,14 @@
                 </div>
               </div>
               </div>
-              
+
 
               <div class="box-body text-center">
                           <button type="submit" class="btn btn-themeBlue margin">Save</button>
 
               <button type="button" class="btn btn-themeBlue margin" onclick="window.history.go(-1); return false;">Back</button>
               </div>
-        
+
               </div>
               </div>
               </div>
@@ -290,12 +290,12 @@
     </section>
     </form>
     @endsection
-    
+
     @section('customscript')
     <script>
-    
 
-    
+
+
 	var pcid = $("#pcid").val();
 	if(pcid !=""){
 		$.ajax({
@@ -309,15 +309,15 @@
             }
         });
     }
-    
+
     function ShowOutstandingCriteria(AwardNumber){
-        
+
         var NominationElementName="";
         var CriteriaElementName="";
-        
+
         NominationElementName = "NominationType" + AwardNumber;
         CriteriaElementName = "OutstandingCriteria" + AwardNumber;
-        
+
         if (document.getElementById(NominationElementName).value == 1 || document.getElementById(NominationElementName).value == 2 || document.getElementById(NominationElementName).value == 3 || document.getElementById(NominationElementName).value == 4 || document.getElementById(NominationElementName).value == 5 || document.getElementById(NominationElementName).value == 6 ||document.getElementById(NominationElementName).value == 7){
             document.getElementById(CriteriaElementName).style.display = 'block';
         }
@@ -325,11 +325,10 @@
             document.getElementById(CriteriaElementName).style.display = 'none';
         }
     }
-    
-    
-  
+
+
+
         </script>
-        
+
         @endsection
 
-  

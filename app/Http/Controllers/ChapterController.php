@@ -2726,94 +2726,100 @@ class ChapterController extends Controller
      */
     public function showReRegistration(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
+            //Get Coordinators Details
+            $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+            $corId = $corDetails['coordinator_id'];
+            $corConfId = $corDetails['conference_id'];
+            $currentYear = date('Y');
+            $currentMonth = date('m');
 
-        $request->session()->put('positionid', $positionId);
-        $request->session()->put('secpositionid', $secPositionId);
+            $corlayerId = $corDetails['layer_id'];
+            $sqlLayerId = 'crt.layer'.$corlayerId;
+            $positionId = $corDetails['position_id'];
+            $secPositionId = $corDetails['sec_position_id'];
+            $request->session()->put('positionid', $positionId);
+            $request->session()->put('secpositionid', $secPositionId);
+            $request->session()->put('corconfid', $corConfId);
 
-        $all_chapters = false;
-        if ($positionId == 6 || $positionId == 7 || $positionId == 10 || $secPositionId == 10 || $positionId == 25 || $secPositionId == 25 || ($corId == 423 && $positionId == 8)) {
-            $full_list = true;
-        } else {
-            $full_list = false;
-        }
+            if ($positionId <= 7 || $positionId == 25) {
+                if ($corId == 25 || $positionId == 25) {
+                    //Get Coordinator Reporting Tree
+                    $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                        ->select('crt.id')
+                        ->where('crt.layer1', '=', '6')
+                        ->get();
+                } else {
+                    //Get Coordinator Reporting Tree
+                    $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                        ->select('crt.id')
+                        ->where($sqlLayerId, '=', $corId)
+                        ->get();
+                }
+                $inQryStr = '';
+                foreach ($reportIdList as $key => $val) {
+                    $inQryStr .= $val->id.',';
+                }
+                $inQryStr = rtrim($inQryStr, ',');
+                $inQryArr = explode(',', $inQryStr);
 
-        if (isset($_GET['check'])) {
-            if ($_GET['check'] == 'yes') {
-                $checkBoxStatus = 'checked';
-                $all_chapters = true;
-                $reChapterList = $this->load_reregistration_chapter_list($corId, $corConfId, $corRegId, $full_list, $all_chapters, $positionId);
+            }
+            $reChapterList = DB::table('chapters')
+                ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+                        'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name')
+                ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+                ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'st.id')
+                ->where('chapters.is_active', '=', '1')
+                ->where('bd.board_position_id', '=', '1')
+                ->where(function ($query) use ($currentYear, $currentMonth) {
+                    $query->where('chapters.next_renewal_year', '<', $currentYear)
+                        ->orWhere(function ($query) use ($currentYear, $currentMonth) {
+                            $query->where('chapters.next_renewal_year', '=', $currentYear)
+                                ->where('chapters.start_month_id', '<=', $currentMonth);
+                        });
+                })
+                ->whereIn('chapters.primary_coordinator_id', $inQryArr)
+                ->orderByDesc('chapters.next_renewal_year')
+                ->orderByDesc('chapters.start_month_id')
+                ->get();
+
+            if (isset($_GET['check'])) {
+                if ($_GET['check'] == 'yes') {
+                    $checkBoxStatus = 'checked';
+                    $reChapterList = DB::table('chapters')
+                        ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+                                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name')
+                        ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+                        ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                        ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                        ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'st.id')
+                        ->where('chapters.is_active', '=', '1')
+                        ->where('bd.board_position_id', '=', '1')
+                        ->where(function ($query) use ($currentYear, $currentMonth) {
+                            $query->where('chapters.next_renewal_year', '<', $currentYear)
+                                ->orWhere(function ($query) use ($currentYear, $currentMonth) {
+                                    $query->where('chapters.next_renewal_year', '=', $currentYear)
+                                        ->where('chapters.start_month_id', '<=', $currentMonth);
+                                });
+                        })
+                        ->where('chapters.primary_coordinator_id', $corId)
+                        ->orderByDesc('chapters.next_renewal_year')
+                        ->orderByDesc('chapters.start_month_id')
+                        ->get();
+                }
+
             } else {
-                $reChapterList = $this->load_reregistration_chapter_list($corId, $corConfId, $corRegId, $full_list, $all_chapters, $positionId);
+                $checkBoxStatus = '';
             }
 
-        } else {
-            $checkBoxStatus = '';
+            $countList = count($reChapterList);
 
-            $reChapterList = $this->load_reregistration_chapter_list($corId, $corConfId, $corRegId, $full_list, $all_chapters, $positionId);
-        }
-        $data = ['reChapterList' => $reChapterList, 'checkBoxStatus' => $checkBoxStatus, 'corConfId' => $corConfId];
+        $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $corId];
 
         return view('chapters.reregistration')->with($data);
     }
 
-    public function load_reregistration_chapter_list($corId, $conference_id, $region_id, $full_list, $all_chapters, $positionId)
-    {
-        if ($positionId == 7 || ($corId == 423 && $positionId == 8)) {
-            $conference_clause = '';
-        } else {
-            $conference_clause = ' AND chapters.conference='.$conference_id;
-        }
-        if ($all_chapters) {
-            $chapter_array = DB::select(DB::raw('SELECT chapters.id, chapters.primary_coordinator_id,chapters.conference, state.state_short_name, chapters.name, state.state_long_name as state,chapters.dues_last_paid, chapters.start_month_id, db_month.month_short_name, chapters.next_renewal_year, chapters.reg_notes
-            FROM chapters
-            INNER JOIN state
-            ON chapters.state=state.id
-            INNER JOIN db_month
-            ON chapters.start_month_id=db_month.id
-            WHERE chapters.is_active = 1'.
-            $conference_clause.' '.
-            ' ORDER BY chapters.state, chapters.name'));
-        } else {
-            if ($full_list) {
-                $currentYear = date('Y');
-                $currentMonth = date('m');
-                $chapter_array = DB::select(DB::raw("SELECT chapters.id,chapters.conference, chapters.primary_coordinator_id,state.state_short_name, chapters.name, state.state_long_name as state,chapters.dues_last_paid, chapters.start_month_id, db_month.month_short_name, chapters.next_renewal_year, chapters.reg_notes
-                FROM chapters
-                INNER JOIN state
-                ON chapters.state=state.id
-                INNER JOIN db_month
-                ON chapters.start_month_id=db_month.id
-                WHERE (chapters.next_renewal_year < $currentYear
-                OR (chapters.next_renewal_year = $currentYear AND chapters.start_month_id <= $currentMonth))".
-                $conference_clause.' '.
-                ' AND chapters.is_active = 1
-                ORDER BY chapters.next_renewal_year DESC,chapters.start_month_id DESC'));
-            } else {
-                $currentYear = date('Y');
-                $currentMonth = date('m');
-                $chapter_array = DB::select(DB::raw("SELECT chapters.id, chapters.primary_coordinator_id,chapters.conference, state.state_short_name, state.state_long_name as state, chapters.name, chapters.dues_last_paid, chapters.start_month_id, db_month.month_short_name, chapters.next_renewal_year, chapters.reg_notes
-                FROM chapters
-                INNER JOIN state
-                ON chapters.state=state.id
-                INNER JOIN db_month
-                ON chapters.start_month_id=db_month.id
-                WHERE (chapters.next_renewal_year < $currentYear
-                OR (chapters.next_renewal_year = $currentYear AND chapters.start_month_id <= $currentMonth))".
-                $conference_clause.' '.
-                " AND chapters.region = $region_id
-                AND chapters.is_active = 1
-                ORDER BY chapters.next_renewal_year DESC ,chapters.start_month_id DESC"));
-            }
-        }
-
-        return $chapter_array;
-    }
 
     /**
      * ReRegistration Notes
@@ -2965,23 +2971,24 @@ class ChapterController extends Controller
 
         $month = date('m');
         $year = date('Y');
-        $lastMonth = $month - 1;
+        $monthRangeStart = $month;
+        $monthRangeEnd = $month - 1;
         $lastYear = $year - 1;
 
         if ($month == 1) {
-            $lastMonth = 12;
+            $monthRangeStart = 12;
             $lastYear = $year - 1;
         }
 
-        $startDate = \Carbon\Carbon::create($year, $month, 30);
-        $lastYearDate = \Carbon\Carbon::create($lastYear, $lastMonth, 1);
+        $rangeStartDate = \Carbon\Carbon::create($lastYear, $monthRangeStart, 1);
+        $rangeEndDate = \Carbon\Carbon::create($year, $monthRangeEnd, 1)->endOfMonth();
 
         // Convert $month to words
         $monthInWords = strftime('%B', strtotime("2000-$month-01"));
 
         // Format dates as "mm-dd-yyyy"
-        $startDateFormatted = date('m-d-Y', strtotime($startDate));
-        $lastYearDateFormatted = date('m-d-Y', strtotime($lastYearDate));
+        $rangeStartDateFormatted = date('m-d-Y', strtotime($rangeStartDate));
+        $rangeEndDateFormatted = date('m-d-Y', strtotime($rangeEndDate));
 
         $chapters = Chapter::select('chapters.name as chapter_name', 'state.state_short_name as chapter_state', 'board_details.email as bor_email',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
@@ -2999,10 +3006,6 @@ class ChapterController extends Controller
         $chapterEmails = []; // Store email addresses for each chapter
         $coordinatorEmails = []; // Store coordinator email addresses by chapter
         $chapterChEmails = []; // Store ch_email addresses by chapter
-        $firstChapter = $chapters->first(); // Get the first chapter to fetch the shared data
-
-        if ($firstChapter) {
-            $sharedChapterState = $firstChapter->chapter_state;
 
             foreach ($chapters as $chapter) {
                 if ($chapter->bor_email) {
@@ -3020,30 +3023,34 @@ class ChapterController extends Controller
                 if ($chapter->ch_email) {
                     $chapterChEmails[$chapter->chapter_name] = $chapter->ch_email;
                 }
-            }
-        }
-        foreach ($chapterEmails as $chapterName => $emailRecipients) {
-            $mailData = [
-                'chapterName' => $chapterName,
-                'chapterState' => $sharedChapterState,
-                'lastYearDate' => $lastYearDateFormatted,
-                'startMonth' => $monthInWords,
-                'reRegDate' => $startDateFormatted,
-            ];
 
-            $cc_email = $coordinatorEmails[$chapterName] ?? []; // Get coordinator emails for this chapter
+         // Set the state for this chapter
+         $sharedChapterState = $chapter->chapter_state;
 
-            // Check if chapterChEmails exists before adding it to the email recipients array
-            if (isset($chapterChEmails[$chapterName])) {
-                $emailRecipients[] = $chapterChEmails[$chapterName];
-            }
+         $mailData[$chapter->chapter_name] = [
+             'chapterName' => $chapter->chapter_name,
+             'chapterState' => $sharedChapterState, // Use the state for this chapter
+             'startRange' => $rangeStartDateFormatted,
+             'endRange' => $rangeEndDateFormatted,
+             'startMonth' => $monthInWords,
+         ];
 
-            // Re-Registration Reminder Email for this chapter
-            if (! empty($emailRecipients)) {
-                Mail::to($emailRecipients)
-                    ->cc($cc_email)
-                    ->send(new PaymentsReRegReminder($mailData));
-            }
+         if (isset($chapterChEmails[$chapter->chapter_name])) {
+             $chapterEmails[$chapter->chapter_name][] = $chapterChEmails[$chapter->chapter_name];
+         }
+     }
+
+     // Send a single email with multiple recipients
+     foreach ($mailData as $chapterName => $data) {
+         $emailRecipients = $chapterEmails[$chapterName];
+         $cc_email = $coordinatorEmails[$chapterName] ?? [];
+
+         if (!empty($emailRecipients)) {
+             Mail::to($emailRecipients)
+                 ->cc($cc_email)
+                 ->send(new PaymentsReRegReminder($data));
+         }
+
         }
 
         try {
@@ -3074,25 +3081,27 @@ class ChapterController extends Controller
 
         $month = date('m');
         $year = date('Y');
-        $startMonth = $month - 1;
-        $lastMonth = $month - 2;
+        $lastMonth = $month -1;
+        $monthRangeStart = $month - 1;
+        $monthRangeEnd = $month - 2;
         $lastYear = $year - 1;
 
         if ($month == 1) {
-            $lastMonth = 12;
+            $monthRangeEnd = 12;
             $lastYear = $year - 1;
         }
 
-        $startDate = \Carbon\Carbon::create($year, $startMonth, 30);
-        $lastYearDate = \Carbon\Carbon::create($lastYear, $lastMonth, 1);
+        $rangeStartDate = \Carbon\Carbon::create($lastYear, $monthRangeStart, 1);
+        $rangeEndDate = \Carbon\Carbon::create($year, $monthRangeEnd, 1)->endOfMonth();
 
         // Convert $month to words
-        $startMonthInWords = strftime('%B', strtotime("2000-$startMonth-01"));
-        $dueMonthInWords = strftime('%B', strtotime("2000-$month-01"));
+        $monthInWords = strftime('%B', strtotime("2000-$month-01"));
+        $lastMonthInWords = strftime('%B', strtotime("2000-$lastMonth-01"));
+
 
         // Format dates as "mm-dd-yyyy"
-        $startDateFormatted = date('m-d-Y', strtotime($startDate));
-        $lastYearDateFormatted = date('m-d-Y', strtotime($lastYearDate));
+        $rangeStartDateFormatted = date('m-d-Y', strtotime($rangeStartDate));
+        $rangeEndDateFormatted = date('m-d-Y', strtotime($rangeEndDate));
 
         $chapters = Chapter::select('chapters.name as chapter_name', 'state.state_short_name as chapter_state', 'board_details.email as bor_email',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
@@ -3110,10 +3119,6 @@ class ChapterController extends Controller
         $chapterEmails = []; // Store email addresses for each chapter
         $coordinatorEmails = []; // Store coordinator email addresses by chapter
         $chapterChEmails = []; // Store ch_email addresses by chapter
-        $firstChapter = $chapters->first(); // Get the first chapter to fetch the shared data
-
-        if ($firstChapter) {
-            $sharedChapterState = $firstChapter->chapter_state;
 
             foreach ($chapters as $chapter) {
                 if ($chapter->bor_email) {
@@ -3131,49 +3136,52 @@ class ChapterController extends Controller
                 if ($chapter->ch_email) {
                     $chapterChEmails[$chapter->chapter_name] = $chapter->ch_email;
                 }
+
+         // Set the state for this chapter
+         $sharedChapterState = $chapter->chapter_state;
+
+         $mailData[$chapter->chapter_name] = [
+             'chapterName' => $chapter->chapter_name,
+             'chapterState' => $sharedChapterState, // Use the state for this chapter
+             'startRange' => $rangeStartDateFormatted,
+             'endRange' => $rangeEndDateFormatted,
+             'startMonth' => $lastMonthInWords,
+             'dueMonth' => $monthInWords,
+         ];
+
+         if (isset($chapterChEmails[$chapter->chapter_name])) {
+             $chapterEmails[$chapter->chapter_name][] = $chapterChEmails[$chapter->chapter_name];
+         }
+     }
+
+     // Send a single email with multiple recipients
+     foreach ($mailData as $chapterName => $data) {
+         $emailRecipients = $chapterEmails[$chapterName];
+         $cc_email = $coordinatorEmails[$chapterName] ?? [];
+
+         if (!empty($emailRecipients)) {
+             Mail::to($emailRecipients)
+                 ->cc($cc_email)
+                    ->send(new PaymentsReRegLate($data));
+                }
+
             }
-        }
 
-        foreach ($chapterEmails as $chapterName => $emailRecipients) {
-            $mailData = [
-                'chapterName' => $chapterName,
-                'chapterState' => $sharedChapterState,
-                'lastYearDate' => $lastYearDateFormatted,
-                'reRegDate' => $startDateFormatted,
-                'startMonth' => $startMonthInWords,
-                'dueMonth' => $dueMonthInWords,
-            ];
+            try {
+                DB::commit();
+            } catch (\Exception $e) {
+                // Rollback Transaction
+                echo $e->getMessage();
+                exit();
+                // Log the error
+                Log::error($e);
 
-            $cc_email = $coordinatorEmails[$chapterName] ?? []; // Get coordinator emails for this chapter
-
-            // Check if chapterChEmails exists before adding it to the email recipients array
-            if (isset($chapterChEmails[$chapterName])) {
-                $emailRecipients[] = $chapterChEmails[$chapterName];
+                return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
             }
 
-            // Re-Registration Reminder Email for this chapter
-            if (! empty($emailRecipients)) {
-                Mail::to($emailRecipients)
-                    ->cc($cc_email)
-                    ->send(new PaymentsReRegLate($mailData));
-            }
+            return redirect()->to('/chapter/re-registration')->with('success', 'Re-Registration Late Reminders have been successfully sent.');
+
         }
-
-        try {
-            DB::commit();
-        } catch (\Exception $e) {
-            // Rollback Transaction
-            echo $e->getMessage();
-            exit();
-            // Log the error
-            Log::error($e);
-
-            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
-        }
-
-        return redirect()->to('/chapter/re-registration')->with('success', 'Re-Registration Late Notices have been successfully sent.');
-
-    }
 
     /**
      * get CCMail
