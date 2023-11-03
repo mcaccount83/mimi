@@ -43,7 +43,7 @@
 
                 @foreach($coordinatorList as $list)
                   <tr>
-                      <td><a href="/coordinator/edit/{$list->cor_id}"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
+                      <td><a href="<?php echo url("/coordinator/edit/{$list->cor_id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
                       <td>{{ $list->cor_conf }}</td>
                     <td>{{ $list->reg }}</td>
                     <td>{{ $list->cor_fname }}</td>
