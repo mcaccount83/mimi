@@ -2,7 +2,13 @@
 # ListAdmin Disband Notification
 
 The follownig chapter has disbanded: MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}, Conference {{$mailData['conf']}}.
+
+Please remove members of this chapter from any groups, forums and mailing lists.
+
+**MCL,**<br>
+International MOMS Club
  <br>
+ @component('mail::table')
  <table>
     <tbody>
         <tr>
@@ -42,13 +48,9 @@ The follownig chapter has disbanded: MOMS Club of {{$mailData['chapterName']}}, 
             <td>{{$mailData['tfirst']}} {{$mailData['tlast']}}</td>
             <td>{{$mailData['temail']}}</td>
         </tr>
-    </body>
+    </tbody>
 </table>
-
-Please remove members of this chapter from any groups, forums and mailing lists.
-
-**MCL,**<br>
-International MOMS Club
-<br>
 @endcomponent
+<br>
 
+@endcomponent

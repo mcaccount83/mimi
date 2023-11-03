@@ -2,7 +2,13 @@
 # ListAdmin Update Notification
 
 The follownig chapter has added to MIMI:  MOMS Club of {{$mailData['chapter_name']}}, {{$mailData['chapter_state']}}, Conference {{$mailData['conf']}}.
- <br>
+
+Please add members of this chapter to any groups, forums and mailing lists.
+
+**MCL,**<br>
+International MOMS Club
+<br>
+@component('mail::table')
     <table>
         <tbody>
             <tr>
@@ -42,12 +48,10 @@ The follownig chapter has added to MIMI:  MOMS Club of {{$mailData['chapter_name
                 <td>{{$mailData['tfirst']}} {{$mailData['tlast']}}</td>
                 <td>{{$mailData['temail']}}</td>
             </tr>
-        </body>
+        </tbody>
     </table>
 
-Please add members of this chapter to any groups, forums and mailing lists.
+@endcomponent
 <br>
-**MCL,**<br>
-International MOMS Club
-<br>
+
 @endcomponent

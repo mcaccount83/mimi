@@ -28,7 +28,7 @@ class PaymentsReRegReminder extends Mailable
     public function build(): static
     {
         return $this
-            ->subject('Re-Registration Payment Reminder' | $this->mailData['chapterName'], $this->mailData['chapterState'])
+            ->subject('Re-Registration Payment Reminder')
             ->markdown('emails.payments.reregreminder')
             ->with('mailData', $this->mailData);
     }
