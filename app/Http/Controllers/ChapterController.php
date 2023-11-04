@@ -4644,6 +4644,9 @@ class ChapterController extends Controller
             $link_array_usa[$key]['url'] = $value->website_url;
         }
 
-        return view('chapterlinks', compact('link_array_intl', 'link_array_usa'));
+        return view('chapterlinks', [
+            'link_array_intl' => $link_array_intl,
+            'link_array_usa' => $link_array_usa,
+        ]);
     }
 }
