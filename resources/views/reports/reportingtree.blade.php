@@ -36,51 +36,69 @@
 <script>
   google.charts.load('current', {packages:["orgchart"]});
   google.charts.setOnLoadCallback(drawChart);
-  
+
   function drawChart() {
   var data = new google.visualization.DataTable();
   data.addColumn('string', 'Name');
   data.addColumn('string', 'Manager');
   data.addColumn('string', 'ToolTip');
-  
+
   // For each orgchart box, provide the name, manager, and tooltip to show.
   data.addRows([
     @php
-    
+
       $rowcount = count($coordinator_array);
 
       //Now make the tree
       for($a=0;$a<$rowcount;$a++){
         $first_name = str_replace(array("'", "\"", "&quot;"), "", htmlspecialchars($coordinator_array[$a]['first_name'] ) );
         $last_name = str_replace(array("'", "\"", "&quot;"), "", htmlspecialchars($coordinator_array[$a]['last_name'] ) );
-        
+
         echo "[{v:'" . $coordinator_array[$a]['id'] . "', f:'". $first_name . " " . $last_name . "<br>" . $coordinator_array[$a]['position_title'];
-        
+
         if ($coordinator_array[$a]['sec_position_title']!="")
           echo " / " . $coordinator_array[$a]['sec_position_title'];
-        
+
         if ($coordinator_array[$a]['region']!="None")
         echo "<br>" . $coordinator_array[$a]['region'];
-        
+
         echo "'},'";
         if ($coordinator_array[$a]['report_id']==366 && $cord_pos_id == 7)
           echo "'";
         else if($coordinator_array[$a]['report_id']==1 && $cord_pos_id != 7)
           echo "'";
         else
-          echo $coordinator_array[$a]['report_id'] . "'"; 
-        
-        echo ",''],\n"; // '" . $coordinator_array[$a]['chapter_list'] . "'],\n"; 
+          echo $coordinator_array[$a]['report_id'] . "'";
+
+        echo ",''],\n";
       }
-    
-    @endphp 
+
+    @endphp
 
   ]);
-  
+
   // Create the chart.
   var chart = new google.visualization.OrgChart(document.getElementById('chart_div'));
   // Draw the chart, setting the allowHtml option to true for the tooltips.
   chart.draw(data, {allowHtml: true, size: 'medium'});
   }
 </script>
+
+<style>
+.google-visualization-orgchart-lineleft {
+	border-left: 2px solid #333!important;
+}
+.google-visualization-orgchart-linebottom {
+	border-bottom: 2px solid #333!important;
+}
+.google-visualization-orgchart-lineright {
+	border-right: 2px solid #333!important;
+}
+
+.google-visualization-orgchart-linetop{
+	border-right: 2px solid #333!important;
+}
+
+</style>
+
 @endsection

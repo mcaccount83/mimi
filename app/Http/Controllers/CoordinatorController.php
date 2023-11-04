@@ -1069,7 +1069,6 @@ for ($i = 0; $i < $rowcountChapter; $i++) {
                                         FROM coordinator_details as cd
                                         INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
                                         WHERE (cd.position_id > 1 AND cd.conference_id = $conference_id AND cd.is_active=1)
-                                        /*OR (cd.position_id = 7 AND cd.is_active=1)*/
                                         ORDER BY cd.position_id,cd.first_name, cd.last_name"));
         } else {
             $reportCoordinatorList = DB::select(DB::raw('SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos

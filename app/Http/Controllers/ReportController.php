@@ -1235,8 +1235,11 @@ class ReportController extends Controller
         $request->session()->put('positionid', $positionId);
         $cord_pos_id = $request->session()->get('positionid');
 
+        if ($positionId !=7) {
         $resultOne = DB::table('coordinator_details')
-            ->select('coordinator_details.coordinator_id AS id', 'coordinator_details.first_name', 'coordinator_details.last_name', 'pos1.short_title AS position_title', 'pos2.short_title AS sec_position_title', 'coordinator_details.layer_id', 'coordinator_details.report_id', 'coordinator_details.report_id AS tree_id', 'region.short_name AS region')
+            ->select('coordinator_details.coordinator_id AS id', 'coordinator_details.first_name', 'coordinator_details.last_name', 'pos1.short_title AS position_title',
+                'pos2.short_title AS sec_position_title', 'coordinator_details.layer_id', 'coordinator_details.report_id', 'coordinator_details.report_id AS tree_id',
+                'region.short_name AS region')
             ->join('coordinator_position as pos1', 'pos1.id', '=', 'coordinator_details.position_id')
             ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'coordinator_details.sec_position_id')
             ->join('region', 'coordinator_details.region_id', '=', 'region.id')
@@ -1246,7 +1249,21 @@ class ReportController extends Controller
             ->orderBy('coordinator_details.region_id')
             ->orderByDesc('coordinator_details.position_id')
             ->get();
-
+        }
+        else{
+            $resultOne = DB::table('coordinator_details')
+            ->select('coordinator_details.coordinator_id AS id', 'coordinator_details.first_name', 'coordinator_details.last_name', 'pos1.short_title AS position_title',
+                'pos2.short_title AS sec_position_title', 'coordinator_details.layer_id', 'coordinator_details.report_id', 'coordinator_details.report_id AS tree_id',
+                'region.short_name AS region')
+            ->join('coordinator_position as pos1', 'pos1.id', '=', 'coordinator_details.position_id')
+            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'coordinator_details.sec_position_id')
+            ->join('region', 'coordinator_details.region_id', '=', 'region.id')
+            ->where('coordinator_details.on_leave', 0)
+            ->where('coordinator_details.is_active', 1)
+            ->orderBy('coordinator_details.region_id')
+            ->orderByDesc('coordinator_details.position_id')
+            ->get();
+        }
         foreach ($resultOne as $key => $value) {
             $resultOne[$key]->chapter_list = '';
             $resultTwo = DB::table('chapters')
