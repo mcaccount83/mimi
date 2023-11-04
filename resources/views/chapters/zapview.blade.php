@@ -13,8 +13,8 @@
     </section>
 
     <!-- Main content -->
-    <form method="POST" action='{{ route("chapters.store") }}'">
-    @csrf
+    <form method="POST" action='{{ route("chapter.updatezapped",$chapterList[0]->id) }}'>
+        @csrf
     <section class="content">
       <div class="row">
 		<div class="col-md-12">
@@ -114,7 +114,7 @@
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control my-colorpicker1" value="{{ $chapterList[0]->bd_email }}" >
+                <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control my-colorpicker1" value="{{ $chapterList[0]->bd_email }}" disabled>
               </div>
               </div>
               <!-- /.form group -->
@@ -225,7 +225,7 @@
 				<div class="col-sm-6 col-xs-12">
 					<div class="form-group">
                         <label>Vacant</label>
-                        <label style="display: block;"><input type="checkbox" name="AVPVacant" id="AVPVacant" class="ios-switch green bigswitch" disabled {{$AVPDetails[0]->avp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" /><div><div></div></div>
+                        <label style="display: block;"><input type="checkbox" name="AVPVacant" id="AVPVacant" class="ios-switch green bigswitch" disabled {{$AVPDetails[0]->avp_fname == ''  ? 'checked' : ''}} ><div><div></div></div>
 						</label>
                     </div>
 				</div>
@@ -297,7 +297,7 @@
 				<div class="col-sm-6 col-xs-12">
 					<div class="form-group">
                         <label>Vacant</label>
-                        <label style="display: block;"><input type="checkbox" name="MVPVacant" id="MVPVacant" class="ios-switch green bigswitch" disabled {{$MVPDetails[0]->mvp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)"/><div><div></div></div>
+                        <label style="display: block;"><input type="checkbox" name="MVPVacant" id="MVPVacant" class="ios-switch green bigswitch" disabled {{$MVPDetails[0]->mvp_fname == ''  ? 'checked' : ''}} ><div><div></div></div>
 						</label>
                     </div>
 				</div>
@@ -369,7 +369,7 @@
 				<div class="col-sm-6 col-xs-12">
 					<div class="form-group">
                         <label>Vacant</label>
-                        <label style="display: block;"><input type="checkbox" name="TreasVacant" id="TreasVacant" class="ios-switch green bigswitch" disabled {{$TRSDetails[0]->trs_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)"/><div><div></div></div>
+                        <label style="display: block;"><input type="checkbox" name="TreasVacant" id="TreasVacant" class="ios-switch green bigswitch" disabled {{$TRSDetails[0]->trs_fname == ''  ? 'checked' : ''}} ><div><div></div></div>
 						</label>
                     </div>
 				</div>
@@ -440,7 +440,7 @@
 				<div class="col-sm-6 col-xs-12">
 					<div class="form-group">
                         <label>Vacant</label>
-                        <label style="display: block;"><input type="checkbox" name="SecVacant" id="SecVacant" class="ios-switch green bigswitch" disabled {{$SECDetails[0]->sec_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)"/><div><div></div></div>
+                        <label style="display: block;"><input type="checkbox" name="SecVacant" id="SecVacant" class="ios-switch green bigswitch" disabled {{$SECDetails[0]->sec_fname == ''  ? 'checked' : ''}} ><div><div></div></div>
 						</label>
                     </div>
 				</div>
@@ -495,14 +495,14 @@
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label>Chapter Email Information</label>
-                <input type="email" name="ch_email" class="form-control my-colorpicker1" value="{{ $chapterList[0]->email}}" >
+                <input type="email" name="ch_email" class="form-control my-colorpicker1" value="{{ $chapterList[0]->email}}" disabled>
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label>Email to give to moms interested in joining your chapter</label>
-                <input type="email" name="ch_inqemailcontact" class="form-control my-colorpicker1" value="{{ $chapterList[0]->inquiries_contact}}" >
+                <input type="email" name="ch_inqemailcontact" class="form-control my-colorpicker1" value="{{ $chapterList[0]->inquiries_contact}}" disabled>
               </div>
               </div>
               <!-- /.form group -->
@@ -626,8 +626,14 @@
             <div class="box-body text-center">
                <a href="<?php echo url("/chapter/unzap/{$chapterList[0]->id}") ?>" class="btn btn-themeBlue margin">UnZap</a>
               <a href="{{ route('chapter.zapped') }}" class="btn btn-themeBlue margin">Back</a>
-              <a href="#" class="btn btn-themeBlue margin">Email Update</a>
               </div>
+              <div class="box-body text-center">
+                    <button type="button" class="btn btn-themeBlue margin" onclick="return UpdateEmail()">Update President Email</button>
+
+
+                          <button type="submit" class="btn btn-themeBlue margin" >Save Email Update</button>
+                          var reason = prompt("This action will update the email address for the last President on Reocrd for the chpater.  If you wish to continue, please enter their emamil address and press OK.", "");
+
             <!-- /.box-body -->
 
           </div>
@@ -641,6 +647,34 @@
 
 @section('customscript')
 <script>
+
+function UpdateEmail(){
+                var email=document.getElementById("ch_pre_email").value;
+                var new_email="";
+
+                if (email==""){
+                    new_email = prompt("Please enter the new email address for the President");
+
+                    if (new_email != null) {
+                        document.getElementById("ch_pre_email").value = new_email;
+                        return true;
+                    }
+                }
+                else{
+                    var result=confirm("This President already has an emails address, are you sure you want to update it?");
+                    if(result){
+                        new_email = prompt("Please enter the new email address for the President");
+                        if (new_email != null) {
+                            document.getElementById("ch_pre_email").value = new_email;
+                            return true;
+                        }
+                    }
+                    else{
+                        return false;
+                    }
+                }
+            }
+
   $( document ).ready(function() {
 
 	var selectedCorId = $("select#ch_primarycor option").filter(":selected").val();
@@ -702,165 +736,7 @@
     }
 });
 
- function ConfirmVacant(checkboxid) {
-    switch(checkboxid){
-					case "AVPVacant":
-              if($("#AVPVacant").prop("checked") == true){
-                $("#ch_avp_fname").prop("readonly",true);
-                $("#ch_avp_lname").prop("readonly",true);
-                $("#ch_avp_email").prop("readonly",true);
-                $("#ch_avp_street").prop("readonly",true);
-                $("#ch_avp_city").prop("readonly",true);
-                $("#ch_avp_zip").prop("readonly",true);
-                $("#ch_avp_phone").prop("readonly",true);
-                $("#ch_avp_state").prop("disabled",true);
-                $("#ch_avp_fname").val("");
-                $("#ch_avp_lname").val("");
-                $("#ch_avp_email").val("");
-                $("#ch_avp_street").val("");
-                $("#ch_avp_city").val("");
-                $("#ch_avp_zip").val("");
-                $("#ch_avp_phone").val("");
-                $("#ch_avp_state").val("");
-              }
-              else{
-                $("#ch_avp_fname").prop("readonly",false);
-                $("#ch_avp_lname").prop("readonly",false);
-                $("#ch_avp_email").prop("readonly",false);
-                $("#ch_avp_street").prop("readonly",false);
-                $("#ch_avp_city").prop("readonly",false);
-                $("#ch_avp_zip").prop("readonly",false);
-                $("#ch_avp_phone").prop("readonly",false);
-                $("#ch_avp_state").prop("disabled",false);
 
-                $("#ch_avp_fname").prop("required",true);
-                $("#ch_avp_lname").prop("required",true);
-                $("#ch_avp_email").prop("required",true);
-                $("#ch_avp_street").prop("required",true);
-                $("#ch_avp_city").prop("required",true);
-                $("#ch_avp_zip").prop("required",true);
-                $("#ch_avp_phone").prop("required",true);
-                $("#ch_avp_state").prop("required",true);
-              }
-            break;
-          case "MVPVacant":
-              if($("#MVPVacant").prop("checked") == true){
-                $("#ch_mvp_fname").prop("readonly",true);
-                $("#ch_mvp_lname").prop("readonly",true);
-                $("#ch_mvp_email").prop("readonly",true);
-                $("#ch_mvp_street").prop("readonly",true);
-                $("#ch_mvp_city").prop("readonly",true);
-                $("#ch_mvp_zip").prop("readonly",true);
-                $("#ch_mvp_phone").prop("readonly",true);
-                $("#ch_mvp_state").prop("disabled",true);
-                $("#ch_mvp_fname").val("");
-                $("#ch_mvp_lname").val("");
-                $("#ch_mvp_email").val("");
-                $("#ch_mvp_street").val("");
-                $("#ch_mvp_city").val("");
-                $("#ch_mvp_zip").val("");
-                $("#ch_mvp_phone").val("");
-                $("#ch_mvp_state").val("");
-              }
-              else{
-                $("#ch_mvp_fname").prop("readonly",false);
-                $("#ch_mvp_lname").prop("readonly",false);
-                $("#ch_mvp_email").prop("readonly",false);
-                $("#ch_mvp_street").prop("readonly",false);
-                $("#ch_mvp_city").prop("readonly",false);
-                $("#ch_mvp_zip").prop("readonly",false);
-                $("#ch_mvp_phone").prop("readonly",false);
-                $("#ch_mvp_state").prop("disabled",false);
-                $("#ch_mvp_fname").prop("required",true);
-                $("#ch_mvp_lname").prop("required",true);
-                $("#ch_mvp_email").prop("required",true);
-                $("#ch_mvp_street").prop("required",true);
-                $("#ch_mvp_city").prop("required",true);
-                $("#ch_mvp_zip").prop("required",true);
-                $("#ch_mvp_phone").prop("required",true);
-                $("#ch_mvp_state").prop("required",true);
-              }
-            break;
-          case "TreasVacant":
-              if($("#TreasVacant").prop("checked") == true){
-                $("#ch_trs_fname").prop("readonly",true);
-                $("#ch_trs_lname").prop("readonly",true);
-                $("#ch_trs_email").prop("readonly",true);
-                $("#ch_trs_street").prop("readonly",true);
-                $("#ch_trs_city").prop("readonly",true);
-                $("#ch_trs_zip").prop("readonly",true);
-                $("#ch_trs_phone").prop("readonly",true);
-                $("#ch_trs_state").prop("disabled",true);
-                $("#ch_trs_fname").val("");
-                $("#ch_trs_lname").val("");
-                $("#ch_trs_email").val("");
-                $("#ch_trs_street").val("");
-                $("#ch_trs_city").val("");
-                $("#ch_trs_zip").val("");
-                $("#ch_trs_phone").val("");
-                $("#ch_trs_state").val("");
-              }
-              else{
-                $("#ch_trs_fname").prop("readonly",false);
-                $("#ch_trs_lname").prop("readonly",false);
-                $("#ch_trs_email").prop("readonly",false);
-                $("#ch_trs_street").prop("readonly",false);
-                $("#ch_trs_city").prop("readonly",false);
-                $("#ch_trs_zip").prop("readonly",false);
-                $("#ch_trs_phone").prop("readonly",false);
-                $("#ch_trs_state").prop("disabled",false);
-                $("#ch_trs_fname").prop("required",true);
-                $("#ch_trs_lname").prop("required",true);
-                $("#ch_trs_email").prop("required",true);
-                $("#ch_trs_street").prop("required",true);
-                $("#ch_trs_city").prop("required",true);
-                $("#ch_trs_zip").prop("required",true);
-                $("#ch_trs_phone").prop("required",true);
-                $("#ch_trs_state").prop("required",true);
-
-              }
-            break;
-          case "SecVacant":
-              if($("#SecVacant").prop("checked") == true){
-                $("#ch_sec_fname").prop("readonly",true);
-                $("#ch_sec_lname").prop("readonly",true);
-                $("#ch_sec_email").prop("readonly",true);
-                $("#ch_sec_street").prop("readonly",true);
-                $("#ch_sec_city").prop("readonly",true);
-                $("#ch_sec_zip").prop("readonly",true);
-                $("#ch_sec_phone").prop("readonly",true);
-                $("#ch_sec_state").prop("disabled",true);
-                $("#ch_sec_fname").val("");
-                $("#ch_sec_lname").val("");
-                $("#ch_sec_email").val("");
-                $("#ch_sec_street").val("");
-                $("#ch_sec_city").val("");
-                $("#ch_sec_zip").val("");
-                $("#ch_sec_phone").val("");
-                $("#ch_sec_state").val("");
-              }
-              else{
-                $("#ch_sec_fname").prop("readonly",false);
-                $("#ch_sec_lname").prop("readonly",false);
-                $("#ch_sec_email").prop("readonly",false);
-                $("#ch_sec_street").prop("readonly",false);
-                $("#ch_sec_city").prop("readonly",false);
-                $("#ch_sec_zip").prop("readonly",false);
-                $("#ch_sec_phone").prop("readonly",false);
-                $("#ch_sec_state").prop("disabled",false);
-                $("#ch_sec_fname").prop("required",true);
-                $("#ch_sec_lname").prop("required",true);
-                $("#ch_sec_email").prop("required",true);
-                $("#ch_sec_street").prop("required",true);
-                $("#ch_sec_city").prop("required",true);
-                $("#ch_sec_zip").prop("required",true);
-                $("#ch_sec_phone").prop("required",true);
-                $("#ch_sec_state").prop("required",true);
-              }
-            break;
-    }
-
-  }
   //submit validation function
   function PreSaveValidate(){
     		var errMessage="";

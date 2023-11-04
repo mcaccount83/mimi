@@ -1295,7 +1295,6 @@ function is_url()
   //submit validation function
   function PreSaveValidate(){
     var errMessage="";
-        //if($("#ch_pre_email").val() != "" || $("#ch_avp_email").val() != "" || $("#ch_mvp_email").val() != "" || $("#ch_trs_email").val() != "" || $("#ch_sec_email").val() != ""){
           //Ensure there are no e-mail addresses repeated
           if($("#ch_pre_email").val() != ""){
             if($("#ch_pre_email").val() == $("#ch_avp_email").val() || $("#ch_pre_email").val() == $("#ch_mvp_email").val() || $("#ch_pre_email").val() == $("#ch_trs_email").val() || $("#ch_pre_email").val() == $("#ch_sec_email").val()) {
@@ -1337,30 +1336,6 @@ function is_url()
                 return true;
             }
 
-
-      /*function checkDuplicateEmail(email,id){
-        var chkid = id+"_chk";
-        var oldVal = $("#"+id).val();
-        var newVal = $("#"+chkid).val();
-        if(oldVal != newVal){
-           $.ajax({
-                url: '/checkemail/'+email,
-                type: "GET",
-                success: function(result) {
-                    if(result.exists){
-                        alert('This Email already used in system. Please try with new one.');
-                        $("#"+id).val('');
-                        $("#"+id).focus();
-                    }
-                },
-                error: function (jqXHR, exception) {
-
-                }
-            });
-        }else{
-            return false;
-        }
-    }*/
 
     function resetPassword(userid){
         var new_password="";

@@ -78,6 +78,7 @@ Route::get('/chapter/edit/{id}', [ChapterController::class, 'edit']);
 Route::post('/chapter/update/{id}', [ChapterController::class, 'update'])->name('chapters.update');
 Route::get('/chapter/international', [ChapterController::class, 'showIntChapter'])->name('chapter.inter');
 Route::get('/chapter/zapped', [ChapterController::class, 'showZappedChapter'])->name('chapter.zapped');
+Route::post('/chapter/updatezapped/{id}', [ChapterController::class, 'updateZappedChapter'])->name('chapter.updatezapped');
 Route::get('/chapter/international/zap', [ChapterController::class, 'showIntZappedChapter'])->name('chapter.interzap');
 Route::get('/chapter/international/zapped/view/{id}', [ChapterController::class, 'showIntZappedChapterView']);
 Route::get('/chapter/unzap/{id}', [ChapterController::class, 'unZappedChapter']);

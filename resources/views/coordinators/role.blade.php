@@ -224,63 +224,60 @@
 								</thead>
 								<tbody>
 									<?php
-									//echo $coordinatorDetails[0]->coordinator_id;
-									//echo $coordinatorDetails[0]->conference_id;
-									//$chapter_list = null;
-									//$chip->GetChapterListIDIsPrimaryFor($coordinator->ID, $chapter_list);
+
 									$chapter_list = DB::table('chapters')
-    ->select('chapters.id', 'state.state_short_name as state', 'chapters.name as name')
-    ->join('state', 'chapters.state', '=', 'state.id')
-    ->where('primary_coordinator_id', $coordinatorDetails[0]->coordinator_id)
-    ->where('chapters.is_active', 1)
-    ->orderBy('state.state_short_name')
-    ->orderBy('chapters.name')
-    ->get();
+                                        ->select('chapters.id', 'state.state_short_name as state', 'chapters.name as name')
+                                        ->join('state', 'chapters.state', '=', 'state.id')
+                                        ->where('primary_coordinator_id', $coordinatorDetails[0]->coordinator_id)
+                                        ->where('chapters.is_active', 1)
+                                        ->orderBy('state.state_short_name')
+                                        ->orderBy('chapters.name')
+                                        ->get();
 
-									if($coordinatorDetails[0]->region_id ==0){
-										$coordinator_options = DB::table('coordinator_details as cd')
-    ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-    ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-    ->where(function ($query) use ($coordinatorDetails) {
-        $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
-            ->where('cd.position_id', '>=', 1)
-            ->where('cd.position_id', '<=', 6)
-            ->where('cd.is_active', 1);
-    })
-    ->orWhere(function ($query) use ($coordinatorDetails) {
-        $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
-            ->where('cd.position_id', 25)
-            ->where('cd.is_active', 1);
-    })
-    ->orderBy('cd.first_name')
-    ->orderBy('cd.last_name')
-    ->get();
+                                                                        if($coordinatorDetails[0]->region_id ==0){
+                                                                            $coordinator_options = DB::table('coordinator_details as cd')
+                                        ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+                                        ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                                        ->where(function ($query) use ($coordinatorDetails) {
+                                            $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
+                                                ->where('cd.position_id', '>=', 1)
+                                                ->where('cd.position_id', '<=', 6)
+                                                ->where('cd.is_active', 1);
+                                        })
+                                        ->orWhere(function ($query) use ($coordinatorDetails) {
+                                            $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
+                                                ->where('cd.position_id', 25)
+                                                ->where('cd.is_active', 1);
+                                        })
+                                        ->orderBy('cd.first_name')
+                                        ->orderBy('cd.last_name')
+                                        ->get();
 
-									}else{
-										$coordinator_options = DB::table('coordinator_details as cd')
-    ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-    ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-    ->where(function ($query) use ($coordinatorDetails) {
-        $query->where('cd.region_id', $coordinatorDetails[0]->region_id)
-            ->where(function ($query) {
-                $query->where('cd.position_id', '>=', 1)
-                    ->where('cd.position_id', '<=', 5)
-                    ->where('cd.is_active', 1);
-            });
-    })
-    ->orWhere(function ($query) use ($coordinatorDetails) {
-        $query->where('cd.position_id', 6)
-            ->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
-            ->where('cd.is_active', 1);
-    })
-    ->orWhere(function ($query) use ($coordinatorDetails) {
-        $query->where('cd.position_id', 25)
-            ->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
-            ->where('cd.is_active', 1);
-    })
-    ->orderBy('cd.first_name')
-    ->orderBy('cd.last_name')
-    ->get();
+                                                                        }else{
+                                                                            $coordinator_options = DB::table('coordinator_details as cd')
+                                        ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+                                        ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                                        ->where(function ($query) use ($coordinatorDetails) {
+                                            $query->where('cd.region_id', $coordinatorDetails[0]->region_id)
+                                                ->where(function ($query) {
+                                                    $query->where('cd.position_id', '>=', 1)
+                                                        ->where('cd.position_id', '<=', 5)
+                                                        ->where('cd.is_active', 1);
+                                                });
+                                        })
+                                        ->orWhere(function ($query) use ($coordinatorDetails) {
+                                            $query->where('cd.position_id', 6)
+                                                ->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
+                                                ->where('cd.is_active', 1);
+                                        })
+                                        ->orWhere(function ($query) use ($coordinatorDetails) {
+                                            $query->where('cd.position_id', 25)
+                                                ->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
+                                                ->where('cd.is_active', 1);
+                                        })
+                                        ->orderBy('cd.first_name')
+                                        ->orderBy('cd.last_name')
+                                        ->get();
 
 									}
 									$row_countCO=count($coordinator_options);

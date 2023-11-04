@@ -822,8 +822,6 @@ class CoordinatorController extends Controller
                     'conference_id' => $request->get('cord_conf'),
                     'home_chapter' => $request->get('cord_chapter'),
                     'report_id' => $report_id,
-                    'on_leave' => false,
-                    'leave_date' => null,
                     'last_promoted' => $promote_date,
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => date('Y-m-d H:i:s')]);

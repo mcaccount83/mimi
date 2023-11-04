@@ -627,7 +627,6 @@ class ChapterController extends Controller
      */
     public function update(Request $request, $id): RedirectResponse
     {
-
         $presInfoPre = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city', 'bd.zip as zip', 'st.state_short_name as state')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
@@ -2577,46 +2576,40 @@ class ChapterController extends Controller
      */
     public function updateZappedChapter(Request $request, $id): RedirectResponse
     {
-
-        $presInfoPre = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city', 'bd.zip as zip', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->where('chapters.is_Active', '=', '0')
-            ->where('bd.board_position_id', '=', '1')
-            ->where('chapters.id', $id)
-            ->orderByDesc('chapters.id')
-            ->get();
-
         $chapterId = $id;
+        DB::beginTransaction();
+        try {
+            //President Info
+                $PREDetails = DB::table('board_details')
+                    ->select('board_id', 'user_id')
+                    ->where('chapter_id', '=', $chapterId)
+                    ->where('board_position_id', '=', '1')
+                    ->get();
 
-        //President Info
-        if ($request->get('ch_pre_email') != '') {
-            $PREDetails = DB::table('board_details')
-                ->select('board_id', 'user_id')
-                ->where('chapter_id', '=', $chapterId)
-                ->where('board_position_id', '=', '1')
-                ->get();
-            if (count($PREDetails) != 0) {
-                $userId = $PREDetails[0]->user_id;
-                $boardId = $PREDetails[0]->board_id;
+                    $userId = $PREDetails[0]->user_id;
+                    $boardId = $PREDetails[0]->board_id;
 
-                $user = User::find($userId);
-                $user->first_name = $request->get('ch_pre_fname');
-                $user->last_name = $request->get('ch_pre_lname');
-                $user->email = $request->get('ch_pre_email');
-                $user->updated_at = date('Y-m-d H:i:s');
-                $user->save();
+                    $user = User::find($userId);
+                    $user->email = $request->get('ch_pre_email');
+                    $user->save();
 
-                DB::table('board_details')
-                    ->where('board_id', $boardId)
-                    ->update(['email' => $request->get('ch_pre_email')]);
-            }
-        }
+                    DB::table('board_details')
+                        ->where('board_id', $boardId)
+                        ->update(['email' => $request->get('ch_pre_email')]);
 
-        return redirect()->to('/chapter/zapped')->with('success', 'President Email has been updated');
-    }
+
+                            DB::commit();
+                        } catch (\Exception $e) {
+                            // Rollback Transaction
+                            DB::rollback();
+                            // Log the error
+                            Log::error($e);
+
+                            return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again...');
+                        }
+
+                        return redirect()->to('/chapter/zapped')->with('success', 'President Email has been updated');
+                }
 
     /**
      * Reset Password

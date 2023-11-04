@@ -115,7 +115,7 @@
 						<select name="cord_month" class="form-control select2" style="width: 100%;" required>
 						  <option value="">Select Month</option>
 						  @foreach($foundedMonth as $key=>$val)
-							  
+
 							  <option value="{{$key}}" {{$currentMonth == $key  ? 'selected' : ''}}>{{$val}}</option>
 						  @endforeach
 						</select>
@@ -133,7 +133,7 @@
 						<div class="col-sm-6 col-xs-12">
 							<div class="form-group">
 							<label class="mrg-b-25">Coordinators Directly Reporting to {{ $coordinatorDetails[0]->first_name }} :</label>
-							
+
 							<table id="coordinator-list" width="100%">
 								<thead>
 								   <tr>
@@ -143,7 +143,7 @@
 										<th></th>
 								   </tr>
 								</thead>
-								<tbody> 
+								<tbody>
 								<?php
 								$row_count=count($directReportTo);
 								for ($row = 0; $row < $row_count; $row++){
@@ -155,13 +155,13 @@
 								}
 								?>
 								</tbody>
-							</table>	
+							</table>
 							</div>
 						</div>
 						<div class="col-sm-6 col-xs-12">
 							<div class="form-group">
 							<label class="mrg-b-25">Primary Coordinator For :</label>
-							
+
 							<table id="coordinator-list" width="100%">
 								<thead>
 								   <tr>
@@ -169,24 +169,24 @@
 										<th>Chapter Name</th>
 								   </tr>
 								</thead>
-								<tbody> 
+								<tbody>
 								<?php
 								$row_count=count($directChapterTo);
 								for ($row = 0; $row < $row_count; $row++){
 									echo "<tr>";
 									echo "<td>".$directChapterTo[$row]->st_name."</td>";
 										echo "<td>".$directChapterTo[$row]->ch_name."</td>";
-										
+
 									echo "</tr>";
 								}
 								?>
 								</tbody>
-							</table>	
+							</table>
 							</div>
 						</div>
-						
+
 					</div>
-					
+
 				<div class="box-header with-border mrg-t-10"></div>
 				<div class="box-body">
 					<div class="col-sm-6 col-xs-12">
@@ -233,14 +233,14 @@
 						</select>
 						</div>
 					</div>
-					
+
 					<div class="col-sm-12 col-xs-12">
 					  <div class="form-group">
 						<label>Home Chapter</label>
 						<input type="text" name="cord_chapter" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->home_chapter }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" disabled>
 					  </div>
 					</div>
-					
+
 					<div class="col-sm-12 col-xs-12">
 						<div class="form-group">
 						<label>Reports To</label>
@@ -264,13 +264,13 @@
 						<input type="text" name="cord_altphone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->last_promoted }}" disabled>
 					  </div>
 					</div>
-					
-					
+
+
 					<div class="col-sm-6 col-xs-12">
 					<div class="radio-chk">
 							<div class="form-group">
 							<label>On Leave Of Absense</label>
-							<label style="display: block;"><input  type="checkbox" name="SecVacant" id="SecVacant" class="ios-switch green bigswitch" {{$coordinatorDetails[0]->on_leave == '1'  ? 'checked' : ''}}/><div><div></div></div>
+							<label style="display: block;"><input disabled type="checkbox" name="SecVacant" id="SecVacant" class="ios-switch green bigswitch" {{$coordinatorDetails[0]->on_leave == '1'  ? 'checked' : ''}}/><div><div></div></div>
 							</label>
 						</div>
 					</div>
@@ -281,9 +281,9 @@
 						<input type="text" name="cord_altphone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->leave_date }}" disabled>
 					  </div>
 					</div>
-					
+
 					<div class="clearfix"></div>
-					
+
 					<div class="col-sm-6 col-xs-12">
 					  <div class="form-group">
 						<label>Last Updated By</label>
@@ -299,24 +299,24 @@
 				</div>
             </div>
 		</div>
-         
+
 		<!-- /.box-body -->
 		<div class="box-body text-center">
 			<button type="submit" class="btn btn-themeBlue margin">Save</button>
-		
+
 			<button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);">Reset</button>
 			<a href="{{ route('coordinator.list') }}" class="btn btn-themeBlue margin">Back</a>
 		</div>
 		 <div class="box-body text-center">
 			<a href="{{ route('coordinator.role',$coordinatorDetails[0]->coordinator_id) }}" class="btn btn-themeBlue margin">Change Role</a>
 			<button type="button" class="btn btn-themeBlue margin" id="{{ $coordinatorDetails[0]->user_id }}" onclick="return resetPassword(this.id)">Reset Password</button>
-		
-		</div>  
+
+		</div>
         <!-- /.box-body -->
         </div>
     </section>
 </form>
- 
+
 @endsection
 @section('customscript')
 <script>
@@ -339,7 +339,7 @@ function isPhone() {
 		alert("Please Enter Number Only");
 		return false;
 	}
-} 
+}
 
    function ConfirmCancel(element){
 		var result=confirm("Any unsaved changes will be lost. Do you want to continue?");
@@ -347,12 +347,12 @@ function isPhone() {
 			location.reload()
 		else
 			return false;
-	}	
+	}
 	function checkDuplicateEmail(email,id){
 		var chkid = id+"_chk";
 		var oldVal = $("#"+id).val();
 		var newVal = $("#"+chkid).val();
-		if(oldVal != newVal){	
+		if(oldVal != newVal){
 		   $.ajax({
 				url: '/mimi/checkemail/'+email,
 				type: "GET",
@@ -369,10 +369,10 @@ function isPhone() {
 			});
 		}else{
 			return false;
-		}			
-    }  
-	
-	
+		}
+    }
+
+
 	function resetPassword(userid){
       	var new_password="";
 		new_password = prompt("Please enter new password for this Coordinator", "TempPass4You");
@@ -395,13 +395,13 @@ function isPhone() {
 				});
 				return true;
 				}
-			}	
+			}
 			else{
 			//alert('Not Allowed');
 			return false;
 			}
 		}
-			
+
 	function addPrezList(val){
     $("#prezListBtn").attr("disabled", true);
           $.ajax({
@@ -416,8 +416,8 @@ function isPhone() {
 
             }
         });
-        
-      }		
+
+      }
 	function addVolList(val){
 		$("#volListBtn").attr("disabled", true);
           $.ajax({
@@ -432,8 +432,8 @@ function isPhone() {
 
             }
         });
-    }	
-  $( document ).ready(function() {	
+    }
+  $( document ).ready(function() {
 	var phoneListArr = ["cord_phone","cord_altphone"];
     for (var i = phoneListArr.length - 1; i >= 0; i--) {
         var inputValue = $("#"+phoneListArr[i]).val();
@@ -448,7 +448,7 @@ function isPhone() {
         this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
     });
 
-  });		
+  });
 </script>
 @endsection
 
