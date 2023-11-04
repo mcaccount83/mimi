@@ -13,7 +13,14 @@
     </section>
     @if ($message = Session::get('success'))
       <div class="alert alert-success">
-        <p>{{ $message }}</p>
+		<button type="button" class="close" data-dismiss="alert">×</button>
+         <p>{{ $message }}</p>
+      </div>
+    @endif
+	 @if ($message = Session::get('fail'))
+      <div class="alert alert-danger">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+         <p>{{ $message }}</p>
       </div>
     @endif
 
@@ -69,7 +76,7 @@
 					  </div>
 					</div>
 					<!-- /.form group -->
-					
+
 					<div class="col-sm-3 col-xs-12">
 					  <div class="form-group">
 						<label>Country</label><span class="field-required">*</span>
@@ -135,19 +142,19 @@
 				</div>
             </div>
 		</div>
-            
+
 		<!-- /.box-body -->
 		<div class="box-body text-center">
 			<button type="submit" id="btn-save" class="btn btn-themeBlue margin">Save</button>
 			<button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);">Reset</button>
-		
+
 			<a href="{{ route('coordinator.list') }}" class="btn btn-themeBlue margin">Back</a>
 		</div>
         <!-- /.box-body -->
         </div>
     </section>
 </form>
- 
+
 @endsection
 @section('customscript')
 <script>
@@ -170,7 +177,7 @@ function isPhone() {
 		alert("Please Enter Number Only");
 		return false;
 	}
-} 
+}
 
 function ConfirmCancel(element){
 		var result=confirm("Any unsaved changes will be lost. Do you want to continue?");
@@ -178,7 +185,7 @@ function ConfirmCancel(element){
 			location.reload()
 		else
 			return false;
-	}	
+	}
     function checkDuplicateEmail(email,id){
        $.ajax({
             url: '/mimi/checkemail/'+email,
@@ -195,21 +202,21 @@ function ConfirmCancel(element){
             }
         });
     }
-  $( document ).ready(function() {	
+  $( document ).ready(function() {
 	var phoneListArr = ["cord_phone","cord_altphone"];
     for (var i = phoneListArr.length - 1; i >= 0; i--) {
         var inputValue = $("#"+phoneListArr[i]).val();
         if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
         var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
         $("#"+phoneListArr[i]).val(reInputValue);
-    } 
+    }
 	$("#cord_phone").keyup(function() {
         this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
     });
 	$("#cord_altphone").keyup(function() {
         this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
     });
-	
+
 	/*$('form#create_form').find('input').each(function(){
 		if(!$(this).prop('required')){
 			alert('not');
@@ -217,9 +224,9 @@ function ConfirmCancel(element){
 			alert('yes');
 		}
 	});*/
-	
-  });	
-  
+
+  });
+
 
 </script>
 @endsection

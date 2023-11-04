@@ -17,21 +17,12 @@
          <p>{{ $message }}</p>
       </div>
     @endif
-
-    @if( Session::has("success") )
-    <div class="alert alert-success alert-block" role="alert">
-        <button class="close" data-dismiss="alert"></button>
-        {{ Session::get("success") }}
-    </div>
+    @if ($message = Session::get('fail'))
+      <div class="alert alert-danger">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+         <p>{{ $message }}</p>
+      </div>
     @endif
-
-    @if( Session::has("error") )
-    <div class="alert alert-danger alert-block" role="alert">
-        <button class="close" data-dismiss="alert"></button>
-        {{ Session::get("error") }}
-    </div>
-    @endif
-
 
     <!-- Main content -->
     <section class="content">

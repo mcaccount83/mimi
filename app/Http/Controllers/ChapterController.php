@@ -2242,6 +2242,8 @@ class ChapterController extends Controller
         $disbandReason = $input['reason'];
 
         try {
+            DB::beginTransaction();
+
             DB::table('chapters')
                 ->where('id', $chapterid)
                 ->update(['is_active' => 0, 'disband_reason' => $disbandReason, 'zap_date' => date('Y-m-d')]);
@@ -2389,14 +2391,19 @@ class ChapterController extends Controller
             Mail::to($to_email, 'MOMS Club')
                 ->send(new ChapterRemoveListAdmin($mailData));
 
-            return redirect()->to('/chapter/zapped')->with('success', 'Chapter has been successfully Zapped');
-        } catch (\Exception $e) {
-            echo $e->getMessage();
 
-            exit;
+                DB::commit();
+            } catch (\Exception $e) {
+                // Rollback Transaction
+                DB::rollback();
+                // Log the error
+                Log::error($e);
+
+                return redirect()->to('/chapter/zapped')->with('fail', 'Something went wrong, Please try again..');
+            }
+
+            return redirect()->to('/chapter/zapped')->with('success', 'Chapter was successfully zapped');
         }
-    }
-
     /**
      * Function for unZapping a Chapter (store)
      */

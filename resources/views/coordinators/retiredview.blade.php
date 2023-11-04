@@ -13,7 +13,14 @@
     </section>
     @if ($message = Session::get('success'))
       <div class="alert alert-success">
-        <p>{{ $message }}</p>
+		<button type="button" class="close" data-dismiss="alert">×</button>
+         <p>{{ $message }}</p>
+      </div>
+    @endif
+	 @if ($message = Session::get('fail'))
+      <div class="alert alert-danger">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+         <p>{{ $message }}</p>
       </div>
     @endif
 
@@ -113,7 +120,7 @@
 						<select name="cord_month" class="form-control select2" style="width: 100%;" disabled>
 						  <option value="">Select Month</option>
 						  @foreach($foundedMonth as $key=>$val)
-							  
+
 							  <option value="{{$key}}" {{$currentMonth == $key  ? 'selected' : ''}}>{{$val}}</option>
 						  @endforeach
 						</select>
@@ -195,8 +202,8 @@
 						<input type="text" name="cord_altphone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->last_promoted }}" disabled>
 					  </div>
 					</div>
-					
-					
+
+
 					<div class="col-sm-6 col-xs-12">
 					<div class="radio-chk">
 							<div class="form-group">
@@ -212,9 +219,9 @@
 						<input type="text" name="cord_altphone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->leave_date }}" disabled>
 					  </div>
 					</div>
-					
+
 					<div class="clearfix"></div>
-					
+
 					<div class="col-sm-6 col-xs-12">
 					  <div class="form-group">
 						<label>Last Updated By</label>
@@ -230,7 +237,7 @@
 				</div>
             </div>
 		</div>
-            
+
 		<!-- /.box-body -->
 		<div class="box-body text-center">
 		<a href="{{ route('coordinator.retired') }}" class="btn btn-themeBlue margin">Back</a>
@@ -241,7 +248,7 @@
         </div>
     </section>
 </form>
- 
+
 @endsection
 @section('customscript')
 <script>

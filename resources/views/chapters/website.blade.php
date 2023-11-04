@@ -11,11 +11,18 @@
         <li class="active">Chapter Website List</li>
       </ol>
     </section>
-	 @if ($message = Session::get('success'))
-      <div class="alert alert-success">
-         <p>{{ $message }}</p>
-      </div>
-    @endif
+    @if ($message = Session::get('success'))
+    <div class="alert alert-success">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+       <p>{{ $message }}</p>
+    </div>
+  @endif
+   @if ($message = Session::get('fail'))
+    <div class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+       <p>{{ $message }}</p>
+    </div>
+  @endif
     <!-- Main content -->
     <section class="content">
       <div class="row">
@@ -26,10 +33,10 @@
 
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
               <table id="chapterlist_inter" class="table table-bordered table-hover">
-              <thead> 
+              <thead>
 			    <tr>
 					<th></th>
 					<th>Chapter State</th>
@@ -59,14 +66,14 @@
             <div class="box-body text-center">
 
 			<button type="button" class="btn btn-themeBlue margin" onclick="window.open('https://momsclub.org/chapters/chapter-links/')">View Chapter Links Page</button>
-		</div> 
-		  
+		</div>
+
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection

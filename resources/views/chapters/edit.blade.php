@@ -959,7 +959,7 @@
               type: 'POST',
               data: { reason:txt,chapterid:cid, _token: '{{csrf_token()}}' },
               success: function(response) {
-                    window.location.href = "{{ route('chapter.list') }}";
+                    window.location.href = "{{ route('chapter.zapped') }}";
 
               },
               error: function (jqXHR, exception) {
