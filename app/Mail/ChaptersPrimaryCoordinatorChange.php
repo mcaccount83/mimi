@@ -10,14 +10,16 @@ class ChaptersPrimaryCoordinatorChange extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $mailData;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($mailData)
     {
-        //
+        $this->mailData = $mailData;
     }
 
     /**
@@ -25,6 +27,8 @@ class ChaptersPrimaryCoordinatorChange extends Mailable
      */
     public function build(): static
     {
-        return $this->markdown('emails.chpaterupdate.primarycoordinatorchange');
+        return $this
+        ->subject('Primary Coordinator Change')
+        ->markdown('emails.chapterupdate.primarycoordinatorchange');
     }
 }

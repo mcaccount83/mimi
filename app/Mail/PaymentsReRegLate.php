@@ -28,7 +28,7 @@ class PaymentsReRegLate extends Mailable
     public function build(): static
     {
         return $this
-            ->subject('Re-Registration Late Payment Reminder')
+            ->subject("Re-Registration Late Payment Reminder | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->markdown('emails.payments.rereglate')
             ->with('mailData', $this->mailData);
     }

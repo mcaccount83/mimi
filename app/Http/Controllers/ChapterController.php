@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ChapersUpdateListAdmin;
+use App\Mail\ChaptersPrimaryCoordinatorChange;
+use App\Mail\ChaptersPrimaryCoordinatorChangePCNotice;
 use App\Mail\ChapersUpdatePrimaryCoor;
 use App\Mail\ChapterAddListAdmin;
 use App\Mail\ChapterAddPrimaryCoor;
@@ -1162,18 +1164,30 @@ class ChapterController extends Controller
                     ->get();
                 $chapterState = $chapterState[0]->state_short_name;
 
-                $to_email = array_merge((array) $coremail, $to_email3);
                 $mailData = [
                     'chapter_name' => $request->get('ch_name'),
                     'chapter_state' => $chapterState,
+                    'ch_pre_fname' => $request->get('ch_pre_fname'),
+                    'ch_pre_lname' => $request->get('ch_pre_lname'),
+                    'ch_pre_email' => $request->get('ch_pre_email'),
                     'name1' => $corename,
                     'name2' => $corename1,
                     'email1' => $coreemail1,
                 ];
 
-                Mail::send('emails.primarychange', $mailData, function ($message) use ($to_email) {
-                    $message->to($to_email, 'MOMS Club')->subject('Primary Coordinator Change');
-                });
+                //Chapter Notification//
+                $to_email = $to_email3;
+
+                Mail::to($to_email, 'MOMS Club')
+                    ->send(new ChaptersPrimaryCoordinatorChange($mailData));
+
+
+                //Primary Coordinator Notification//
+                $to_email = $coremail;
+
+                Mail::to($to_email, 'MOMS Club')
+                    ->send(new ChaptersPrimaryCoordinatorChangePCNotice($mailData));
+
             }
 
             //Update Chapter MailData//
@@ -1370,13 +1384,28 @@ class ChapterController extends Controller
             //Primary Coordinator Notification//
             $to_email = $presInfoUpd[0]->cor_email;
 
+            if ($presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email || $presInfoUpd[0]->street != $presInfoPre[0]->street || $presInfoUpd[0]->city != $presInfoPre[0]->city || $presInfoUpd[0]->state != $presInfoPre[0]->state ||
+                    $presInfoUpd[0]->zip != $presInfoPre[0]->zip || $presInfoUpd[0]->phone != $presInfoPre[0]->phone || $presInfoUpd[0]->inquiries_contact != $presInfoPre[0]->inquiries_contact ||
+                    $presInfoUpd[0]->ein != $presInfoPre[0]->ein || $presInfoUpd[0]->ein_letter_path != $presInfoPre[0]->ein_letter_path || $presInfoUpd[0]->inquiries_note != $presInfoPre[0]->inquiries_note ||
+                    $presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->po_box != $presInfoPre[0]->po_box || $presInfoUpd[0]->website_url != $presInfoPre[0]->website_url ||
+                    $presInfoUpd[0]->website_link_status != $presInfoPre[0]->website_link_status || $presInfoUpd[0]->egroup != $presInfoPre[0]->egroup || $presInfoUpd[0]->territory != $presInfoPre[0]->territory ||
+                    $presInfoUpd[0]->additional_info != $presInfoPre[0]->additional_info || $presInfoUpd[0]->status != $presInfoPre[0]->status || $presInfoUpd[0]->notes !=  $presInfoPre[0]->notes ||
+                    $mailDataAvpp['avpfnamePre'] != $mailDataAvp['avpfnameUpd'] || $mailDataAvpp['avplnamePre'] != $mailDataAvp['avplnameUpd'] || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] ||
+                    $mailDataMvpp['mvpfnamePre'] != $mailDataMvp['mvpfnameUpd'] || $mailDataMvpp['mvplnamePre'] != $mailDataMvp['mvplnameUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] ||
+                    $mailDatatresp['tresfnamePre'] != $mailDatatres['tresfnameUpd'] || $mailDatatresp['treslnamePre'] != $mailDatatres['treslnameUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] ||
+                    $mailDataSecp['secfnamePre'] != $mailDataSec['secfnameUpd'] || $mailDataSecp['seclnamePre'] != $mailDataSec['seclnameUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
+
             Mail::to($to_email, 'MOMS Club')
                 ->send(new ChapersUpdatePrimaryCoor($mailData));
+
+            }
 
             //List Admin Notification//
             $to_email2 = 'listadmin@momsclub.org';
 
-            if ($presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
+            if ($presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] ||
+                        $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] ||
+                        $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
 
                 Mail::to($to_email2, 'MOMS Club')
                     ->send(new ChapersUpdateListAdmin($mailData));
