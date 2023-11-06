@@ -297,38 +297,36 @@ class ReportController extends Controller
 
     public function showChapterNew(Request $request): View
     {
-          //Get Coordinators Details
-          $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-          $corId = $corDetails['coordinator_id'];
-          $corConfId = $corDetails['conference_id'];
-          $corlayerId = $corDetails['layer_id'];
-          $sqlLayerId = 'crt.layer'.$corlayerId;
-          $positionId = $corDetails['position_id'];
-          $secPositionId = $corDetails['sec_position_id'];
-          $request->session()->put('positionid', $positionId);
-          $request->session()->put('secpositionid', $secPositionId);
+        //Get Coordinators Details
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corId = $corDetails['coordinator_id'];
+        $corConfId = $corDetails['conference_id'];
+        $corlayerId = $corDetails['layer_id'];
+        $sqlLayerId = 'crt.layer'.$corlayerId;
+        $positionId = $corDetails['position_id'];
+        $secPositionId = $corDetails['sec_position_id'];
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
 
-          //Get Coordinator Reporting Tree
-          if ($corId == 25 || $positionId == 25) {
-              $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                  ->select('crt.id')
-                  ->where('crt.layer1', '=', '6')
-                  ->get();
-          } else {
-              $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                  ->select('crt.id')
-                  ->where($sqlLayerId, '=', $corId)
-                  ->get();
-          }
+        //Get Coordinator Reporting Tree
+        if ($corId == 25 || $positionId == 25) {
+            $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                ->select('crt.id')
+                ->where('crt.layer1', '=', '6')
+                ->get();
+        } else {
+            $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                ->select('crt.id')
+                ->where($sqlLayerId, '=', $corId)
+                ->get();
+        }
 
-          $inQryStr = '';
-          foreach ($reportIdList as $key => $val) {
-              $inQryStr .= $val->id.',';
-          }
-          $inQryStr = rtrim($inQryStr, ',');
-          $inQryArr = explode(',', $inQryStr);
-
-
+        $inQryStr = '';
+        foreach ($reportIdList as $key => $val) {
+            $inQryStr .= $val->id.',';
+        }
+        $inQryStr = rtrim($inQryStr, ',');
+        $inQryArr = explode(',', $inQryStr);
 
         $date_clause = '';
         $last_year = date('Y') - 1;
@@ -347,11 +345,10 @@ class ReportController extends Controller
             $conference_clause = '';
         }
 
-
         //Get Chapter List mapped with login coordinator
         $chapterList = DB::table('chapters')
             ->select('chapters.*', 'chapters.id as ch_id', 'chapters.name as ch_name', 'db.month_short_name as month_name', 'start_year as year', 'cd.first_name as cor_f_name',
-                'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name','bd.email as bor_email', 'bd.phone as phone',
+                'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
                 'st.state_short_name as ch_state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
@@ -369,8 +366,8 @@ class ReportController extends Controller
             if ($_GET['check'] == 'yes') {
                 $checkBoxStatus = 'checked';
                 $chapterList = DB::table('chapters')
-                    ->select('chapters.*', 'chapters.id as ch_id', 'chapters.name as ch_name', 'db.month_short_name as month_name', 'start_year as year','cd.first_name as cor_f_name',
-                        'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name','bd.email as bor_email', 'bd.phone as phone',
+                    ->select('chapters.*', 'chapters.id as ch_id', 'chapters.name as ch_name', 'db.month_short_name as month_name', 'start_year as year', 'cd.first_name as cor_f_name',
+                        'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
                         'st.state_short_name as ch_state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname')
                     ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
                     ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
@@ -1156,10 +1153,10 @@ class ReportController extends Controller
         //Get Coordinator List mapped with login coordinator
         $coordinatorList = DB::table('coordinator_details as cd')
             ->select('cd.coordinator_id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
-                    'cd.report_id as report_id', 'cd.sec_position_id as sec_position_id', 'cp.long_title as position', 'rg.short_name as reg', 'cd.conference_id as cor_conf',
-                    'cd.recognition_year0 as yr_0', 'cd.recognition_year1 as yr_1', 'cd.recognition_year2 as yr_2', 'cd.recognition_year3 as yr_3', 'cd.recognition_year4 as yr_4',
-                    'cd.recognition_year5 as yr_5', 'cd.recognition_year6 as yr_6', 'cd.recognition_year7 as yr_7', 'cd.recognition_year8 as yr_8', 'cd.recognition_year9 as yr_9',
-                    'cd.recognition_toptier as toptier', 'cd.coordinator_start_date as start_date', 'cd.recognition_necklace as necklace')
+                'cd.report_id as report_id', 'cd.sec_position_id as sec_position_id', 'cp.long_title as position', 'rg.short_name as reg', 'cd.conference_id as cor_conf',
+                'cd.recognition_year0 as yr_0', 'cd.recognition_year1 as yr_1', 'cd.recognition_year2 as yr_2', 'cd.recognition_year3 as yr_3', 'cd.recognition_year4 as yr_4',
+                'cd.recognition_year5 as yr_5', 'cd.recognition_year6 as yr_6', 'cd.recognition_year7 as yr_7', 'cd.recognition_year8 as yr_8', 'cd.recognition_year9 as yr_9',
+                'cd.recognition_toptier as toptier', 'cd.coordinator_start_date as start_date', 'cd.recognition_necklace as necklace')
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->where('cd.is_active', '=', '1')
@@ -1235,34 +1232,33 @@ class ReportController extends Controller
         $request->session()->put('positionid', $positionId);
         $cord_pos_id = $request->session()->get('positionid');
 
-        if ($positionId !=7) {
-        $resultOne = DB::table('coordinator_details')
-            ->select('coordinator_details.coordinator_id AS id', 'coordinator_details.first_name', 'coordinator_details.last_name', 'pos1.short_title AS position_title',
-                'pos2.short_title AS sec_position_title', 'coordinator_details.layer_id', 'coordinator_details.report_id', 'coordinator_details.report_id AS tree_id',
-                'region.short_name AS region')
-            ->join('coordinator_position as pos1', 'pos1.id', '=', 'coordinator_details.position_id')
-            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'coordinator_details.sec_position_id')
-            ->join('region', 'coordinator_details.region_id', '=', 'region.id')
-            ->where('coordinator_details.on_leave', 0)
-            ->where('coordinator_details.conference_id', $corConfId)
-            ->where('coordinator_details.is_active', 1)
-            ->orderBy('coordinator_details.region_id')
-            ->orderByDesc('coordinator_details.position_id')
-            ->get();
-        }
-        else{
+        if ($positionId != 7) {
             $resultOne = DB::table('coordinator_details')
-            ->select('coordinator_details.coordinator_id AS id', 'coordinator_details.first_name', 'coordinator_details.last_name', 'pos1.short_title AS position_title',
-                'pos2.short_title AS sec_position_title', 'coordinator_details.layer_id', 'coordinator_details.report_id', 'coordinator_details.report_id AS tree_id',
-                'region.short_name AS region')
-            ->join('coordinator_position as pos1', 'pos1.id', '=', 'coordinator_details.position_id')
-            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'coordinator_details.sec_position_id')
-            ->join('region', 'coordinator_details.region_id', '=', 'region.id')
-            ->where('coordinator_details.on_leave', 0)
-            ->where('coordinator_details.is_active', 1)
-            ->orderBy('coordinator_details.region_id')
-            ->orderByDesc('coordinator_details.position_id')
-            ->get();
+                ->select('coordinator_details.coordinator_id AS id', 'coordinator_details.first_name', 'coordinator_details.last_name', 'pos1.short_title AS position_title',
+                    'pos2.short_title AS sec_position_title', 'coordinator_details.layer_id', 'coordinator_details.report_id', 'coordinator_details.report_id AS tree_id',
+                    'region.short_name AS region')
+                ->join('coordinator_position as pos1', 'pos1.id', '=', 'coordinator_details.position_id')
+                ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'coordinator_details.sec_position_id')
+                ->join('region', 'coordinator_details.region_id', '=', 'region.id')
+                ->where('coordinator_details.on_leave', 0)
+                ->where('coordinator_details.conference_id', $corConfId)
+                ->where('coordinator_details.is_active', 1)
+                ->orderBy('coordinator_details.region_id')
+                ->orderByDesc('coordinator_details.position_id')
+                ->get();
+        } else {
+            $resultOne = DB::table('coordinator_details')
+                ->select('coordinator_details.coordinator_id AS id', 'coordinator_details.first_name', 'coordinator_details.last_name', 'pos1.short_title AS position_title',
+                    'pos2.short_title AS sec_position_title', 'coordinator_details.layer_id', 'coordinator_details.report_id', 'coordinator_details.report_id AS tree_id',
+                    'region.short_name AS region')
+                ->join('coordinator_position as pos1', 'pos1.id', '=', 'coordinator_details.position_id')
+                ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'coordinator_details.sec_position_id')
+                ->join('region', 'coordinator_details.region_id', '=', 'region.id')
+                ->where('coordinator_details.on_leave', 0)
+                ->where('coordinator_details.is_active', 1)
+                ->orderBy('coordinator_details.region_id')
+                ->orderByDesc('coordinator_details.position_id')
+                ->get();
         }
         foreach ($resultOne as $key => $value) {
             $resultOne[$key]->chapter_list = '';
@@ -1432,16 +1428,16 @@ class ReportController extends Controller
         $year = date('Y');
 
         $chapterList = DB::table('chapters as ch')
-                ->select('ch.id as chap_id', 'ch.primary_coordinator_id as primary_coordinator_id', 'ch.name as name', 'ch.financial_report_received as financial_report_received', 'ch.financial_report_complete as report_complete', 'cd.coordinator_id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state', 'fr.review_complete as review_complete', 'fr.post_balance as post_balance')
-                ->join('state as st', 'ch.state', '=', 'st.id')
-                ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
-                ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'fr.reviewer_id')
-                ->where('ch.created_at', '<=', date("$year-06-30"))
-                ->where('ch.is_active', 1)
-                ->whereIn('ch.primary_coordinator_id', $inQryArr)
-                ->orderBy('ch.state')
-                ->orderBy('ch.name')
-                ->get();
+            ->select('ch.id as chap_id', 'ch.primary_coordinator_id as primary_coordinator_id', 'ch.name as name', 'ch.financial_report_received as financial_report_received', 'ch.financial_report_complete as report_complete', 'cd.coordinator_id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state', 'fr.review_complete as review_complete', 'fr.post_balance as post_balance')
+            ->join('state as st', 'ch.state', '=', 'st.id')
+            ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
+            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'fr.reviewer_id')
+            ->where('ch.created_at', '<=', date("$year-06-30"))
+            ->where('ch.is_active', 1)
+            ->whereIn('ch.primary_coordinator_id', $inQryArr)
+            ->orderBy('ch.state')
+            ->orderBy('ch.name')
+            ->get();
 
         if (isset($_GET['check'])) {
             if ($_GET['check'] == 'yes') {
@@ -1787,14 +1783,14 @@ class ReportController extends Controller
         $request->session()->put('corconfid', $corConfId);
         //Get Coordinator Reporting Tree
         $reportIdList = DB::table('coordinator_reporting_tree as crt')
-        ->select('crt.id')
-        ->where($sqlLayerId, '=', $corId)
-        ->get();
+            ->select('crt.id')
+            ->where($sqlLayerId, '=', $corId)
+            ->get();
 
-    $reportIds = $reportIdList->pluck('id')->toArray();
-    $inQryStr = implode(',', $reportIds);
+        $reportIds = $reportIdList->pluck('id')->toArray();
+        $inQryStr = implode(',', $reportIds);
 
-    $chapterList = DB::table('chapters as ch')
+        $chapterList = DB::table('chapters as ch')
             ->select('ch.id as id', 'ch.name as name', 'ch.primary_coordinator_id as pc_id', 'fr.reviewer_id as reviewer_id',
                 'cd.coordinator_id as cord_id', 'cd.first_name as reviewer_first_name', 'cd.last_name as reviewer_last_name', 'st.state_short_name as state',
                 'fr.award_1_nomination_type', 'fr.award_2_nomination_type', 'fr.award_3_nomination_type',
@@ -1829,11 +1825,11 @@ class ReportController extends Controller
                     $checkBoxStatus = 'checked';
                     $chapterList = DB::table('chapters as ch')
                         ->select('ch.id as id', 'ch.name as name', 'ch.primary_coordinator_id as pc_id', 'fr.reviewer_id as reviewer_id',
-                        'cd.coordinator_id as cord_id', 'cd.first_name as reviewer_first_name', 'cd.last_name as reviewer_last_name', 'st.state_short_name as state',
-                        'fr.award_1_nomination_type as award_1_type', 'fr.award_2_nomination_type as award_2_type', 'fr.award_3_nomination_type as award_3_type',
-                        'fr.award_4_nomination_type as award_4_type', 'fr.award_5_nomination_type as award_5_type', 'fr.check_award_1_approved as award_1_approved',
-                        'fr.check_award_2_approved as award_2_approved', 'fr.check_award_3_approved as award_3_approved',
-                        'fr.check_award_4_approved as award_4_approved', 'fr.check_award_5_approved as award_5_approved')
+                            'cd.coordinator_id as cord_id', 'cd.first_name as reviewer_first_name', 'cd.last_name as reviewer_last_name', 'st.state_short_name as state',
+                            'fr.award_1_nomination_type as award_1_type', 'fr.award_2_nomination_type as award_2_type', 'fr.award_3_nomination_type as award_3_type',
+                            'fr.award_4_nomination_type as award_4_type', 'fr.award_5_nomination_type as award_5_type', 'fr.check_award_1_approved as award_1_approved',
+                            'fr.check_award_2_approved as award_2_approved', 'fr.check_award_3_approved as award_3_approved',
+                            'fr.check_award_4_approved as award_4_approved', 'fr.check_award_5_approved as award_5_approved')
                         ->join('state as st', 'ch.state', '=', 'st.id')
                         ->leftJoin('financial_report as fr', function ($join) {
                             $join->on('fr.chapter_id', '=', 'ch.id');
@@ -1867,6 +1863,7 @@ class ReportController extends Controller
 
         return view('reports.chapteraward', $data);
     }
+
     /**
      * Add Chaper Awards
      */
@@ -1902,10 +1899,10 @@ class ReportController extends Controller
         //Get Chapter List mapped with login coordinator
         $chapterList = DB::table('chapters')
             ->select('chapters.*', 'rg.short_name as region', 'st.state_short_name as state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname',
-                    'fr.award_1_nomination_type', 'fr.award_2_nomination_type', 'fr.award_3_nomination_type', 'fr.award_4_nomination_type', 'fr.award_5_nomination_type',
-                    'fr.check_award_1_approved as award_1_approved',
-                        'fr.check_award_2_approved as award_2_approved', 'fr.check_award_3_approved as award_3_approved',
-                        'fr.check_award_4_approved as award_4_approved', 'fr.check_award_5_approved as award_5_approved')
+                'fr.award_1_nomination_type', 'fr.award_2_nomination_type', 'fr.award_3_nomination_type', 'fr.award_4_nomination_type', 'fr.award_5_nomination_type',
+                'fr.check_award_1_approved as award_1_approved',
+                'fr.check_award_2_approved as award_2_approved', 'fr.check_award_3_approved as award_3_approved',
+                'fr.check_award_4_approved as award_4_approved', 'fr.check_award_5_approved as award_5_approved')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
@@ -1924,9 +1921,9 @@ class ReportController extends Controller
                 $checkBoxStatus = 'checked';
                 $chapterList = DB::table('chapters')
                     ->select('chapters.*', 'st.state_short_name as state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'fr.award_1_nomination_type',
-                    'fr.award_2_nomination_type', 'fr.award_3_nomination_type', 'fr.award_4_nomination_type', 'fr.award_5_nomination_type', 'fr.check_award_1_approved as award_1_approved',
-                    'fr.check_award_2_approved as award_2_approved', 'fr.check_award_3_approved as award_3_approved',
-                    'fr.check_award_4_approved as award_4_approved', 'fr.check_award_5_approved as award_5_approved')
+                        'fr.award_2_nomination_type', 'fr.award_3_nomination_type', 'fr.award_4_nomination_type', 'fr.award_5_nomination_type', 'fr.check_award_1_approved as award_1_approved',
+                        'fr.check_award_2_approved as award_2_approved', 'fr.check_award_3_approved as award_3_approved',
+                        'fr.check_award_4_approved as award_4_approved', 'fr.check_award_5_approved as award_5_approved')
                     ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
                     ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->leftJoin('state as st', 'chapters.state', '=', 'st.id')

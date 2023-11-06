@@ -41,7 +41,6 @@ Route::middleware('preventBackHistory')->group(function () {
     Route::post('password/reset', [Auth\ResetPasswordController::class, 'reset']);
     Route::post('password/update', [Auth\ResetPasswordController::class, 'update'])->name('password.update');
 
-
     // Home Route
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 

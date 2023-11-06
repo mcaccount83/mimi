@@ -1903,7 +1903,7 @@ class ExportController extends Controller
                         ->where('cd.coordinator_id', $val)
                         ->get();
 
-                $coordinator_array[] = $coordinatorDetails->toArray();
+                    $coordinator_array[] = $coordinatorDetails->toArray();
 
                 }
                 $cord_row_count = count($coordinator_array);
@@ -2277,7 +2277,6 @@ class ExportController extends Controller
             ->orderBy('ch.state')
             ->orderBy('ch.name')
             ->get();
-
 
         $award_array = json_decode(json_encode($chapterList), true);
         $rowcount = count($award_array);
