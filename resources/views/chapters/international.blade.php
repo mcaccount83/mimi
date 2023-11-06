@@ -24,10 +24,10 @@
               </div>
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
               <table id="chapterlist_inter" class="table table-bordered table-hover">
-              <thead> 
+              <thead>
 			    <tr>
 					<th></th>
 					<th>Conference</th>
@@ -44,7 +44,7 @@
                 <tbody>
                 @foreach($intChapterList as $list)
                   <tr>
-                        <td><a href="<?php echo url("/chapter/edit/{$list->id}") ?>"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
+                        <td><a href="<?php echo url("/chapter/international/view/{$list->id}") ?>"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
                         <td>{{ $list->cor_cid }}</td>
                         <td>{{ $list->state }}</td>
                         <td>{{ $list->name }}</td>
@@ -59,7 +59,7 @@
                   </tbody>
                 </table>
             </div>
-           
+
             <div class="box-body text-center">
             <a href="{{ route('export.intchapter') }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>>Export Chapter List</button></a>
               </div>
@@ -67,9 +67,9 @@
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection

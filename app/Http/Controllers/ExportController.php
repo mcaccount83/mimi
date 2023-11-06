@@ -1611,7 +1611,7 @@ class ExportController extends Controller
             ->join('coordinator_details as cds', 'cds.coordinator_id', '=', 'cd.report_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->where('cd.is_active', '=', '0')
-            ->orderBy('cd.zapped_date', 'DEC')
+            ->orderByDesc('cd.zapped_date')
             ->get();
 
         if (count($exportCoordinatorList) > 0) {
@@ -1672,7 +1672,7 @@ class ExportController extends Controller
                 ['is_active', '=', 0],
                 ['conference_id', '=', $corConfId],
             ])
-            ->orderBy('coordinator_details.zapped_date', 'DES')
+            ->orderByDesc('coordinator_details.zapped_date')
             ->get();
 
         $headers = [
@@ -1897,8 +1897,14 @@ class ExportController extends Controller
                 unset($filterReportingList['layer0']);
                 $filterReportingList = array_reverse($filterReportingList);
                 foreach ($filterReportingList as $key => $val) {
-                    $coordinator_array[] = DB::select(DB::raw("select cd.first_name as first_name,cd.last_name as last_name,cp.short_title as position
-                            FROM coordinator_details as cd INNER JOIN coordinator_position as cp ON cd.position_id = cp.id	WHERE cd.coordinator_id = {$val}"));
+                    $coordinatorDetails = DB::table('coordinator_details as cd')
+                        ->select('cd.first_name as first_name', 'cd.last_name as last_name', 'cp.short_title as position')
+                        ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                        ->where('cd.coordinator_id', $val)
+                        ->get();
+
+                $coordinator_array[] = $coordinatorDetails->toArray();
+
                 }
                 $cord_row_count = count($coordinator_array);
                 $stacked_coord_array = null;
@@ -2261,13 +2267,17 @@ class ExportController extends Controller
             $inQryStr .= $val->id.',';
         }
         $inQryStr = rtrim($inQryStr, ',');
-        $chapterList = DB::select(DB::raw("SELECT ch.id as id,ch.name as name,ch.primary_coordinator_id as pc_id,fr.reviewer_id as reviewer_id,cd.coordinator_id AS cord_id,
-                cd.first_name as reviewer_first_name, cd.last_name as reviewer_last_name, st.state_short_name as state,fr.award_1_nomination_type as award_1_type,
-                fr.award_2_nomination_type as award_2_type,fr.award_3_nomination_type as award_3_type,fr.award_4_nomination_type as award_4_type,
-                fr.award_5_nomination_type as award_5_type,fr.check_award_1_approved as award_1_approved,fr.check_award_2_approved as award_2_approved,
-                fr.check_award_3_approved as award_3_approved,fr.check_award_4_approved as award_4_approved,fr.check_award_5_approved as award_5_approved
-                FROM chapters as ch INNER JOIN state as st ON ch.state=st.id LEFT JOIN financial_report as fr ON fr.chapter_id=ch.id LEFT JOIN coordinator_details as cd
-                ON cd.coordinator_id = fr.reviewer_id WHERE ch.is_active=1 and ch.primary_coordinator_id IN ($inQryStr) ORDER BY ch.state, ch.name"));
+        $chapterList = DB::table('chapters as ch')
+            ->select('ch.id as id', 'ch.name as name', 'ch.primary_coordinator_id as pc_id', 'fr.reviewer_id as reviewer_id', 'cd.coordinator_id as cord_id', 'cd.first_name as reviewer_first_name', 'cd.last_name as reviewer_last_name', 'st.state_short_name as state', 'fr.award_1_nomination_type as award_1_type', 'fr.award_2_nomination_type as award_2_type', 'fr.award_3_nomination_type as award_3_type', 'fr.award_4_nomination_type as award_4_type', 'fr.award_5_nomination_type as award_5_type', 'fr.check_award_1_approved as award_1_approved', 'fr.check_award_2_approved as award_2_approved', 'fr.check_award_3_approved as award_3_approved', 'fr.check_award_4_approved as award_4_approved', 'fr.check_award_5_approved as award_5_approved')
+            ->join('state as st', 'ch.state', '=', 'st.id')
+            ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
+            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'fr.reviewer_id')
+            ->where('ch.is_active', 1)
+            ->whereIn('ch.primary_coordinator_id', explode(',', $inQryStr))
+            ->orderBy('ch.state')
+            ->orderBy('ch.name')
+            ->get();
+
 
         $award_array = json_decode(json_encode($chapterList), true);
         $rowcount = count($award_array);

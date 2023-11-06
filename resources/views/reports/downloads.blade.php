@@ -22,8 +22,8 @@
             </div>
             <!-- /.box-header -->
             <div class="col-md-6">
-        <div class="box-header with-border mrg-t-10">            
-                <h3 class="box-title">Availale Conference Reports</h3>
+        <div class="box-header with-border mrg-t-10">
+                <h3 class="box-title">Available Conference Reports</h3>
               </div>
 
 					    <div>
@@ -56,13 +56,13 @@
 					    <div>
 					        <a href="{{ route('export.chapteraward',0)}}"><button class="btn btn-themeBlue margin">Export Chapter Awards List</button></a>
 					    </div>
-					    
-                        
-                </div>        
+
+
+                </div>
 
     <?php if($positionId == 7  || $positionId == 3 || $secPositionId == 13){?>
 <div class="col-md-6">
-            <div class="box-header with-border mrg-t-10">            
+            <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">Available International Reports</h3>
               </div>
 
@@ -87,8 +87,8 @@
 					    <div>
 					        <a href="{{ route('export.inteoystatus')}}"><button class="btn btn-themeBlue margin">Export EOY Report Status List</button></a>
 					    </div>
-                        
-                </div>        
+
+                </div>
     <?php } ?>
            </div>
            </div>
@@ -96,11 +96,11 @@
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection
 @section('customscript')
 

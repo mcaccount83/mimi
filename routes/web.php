@@ -39,6 +39,8 @@ Route::middleware('preventBackHistory')->group(function () {
     Route::post('password/email', [Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
     Route::get('password/reset/{token}', [Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('password/reset', [Auth\ResetPasswordController::class, 'reset']);
+    Route::post('password/update', [Auth\ResetPasswordController::class, 'update'])->name('password.update');
+
 
     // Home Route
     Route::get('/home', [HomeController::class, 'index'])->name('home');
@@ -81,6 +83,7 @@ Route::get('/chapter/zapped', [ChapterController::class, 'showZappedChapter'])->
 Route::post('/chapter/updatezapped/{id}', [ChapterController::class, 'updateZappedChapter'])->name('chapter.updatezapped');
 Route::get('/chapter/international/zap', [ChapterController::class, 'showIntZappedChapter'])->name('chapter.interzap');
 Route::get('/chapter/international/zapped/view/{id}', [ChapterController::class, 'showIntZappedChapterView']);
+Route::get('/chapter/international/view/{id}', [ChapterController::class, 'showIntChapterView']);
 Route::get('/chapter/unzap/{id}', [ChapterController::class, 'unZappedChapter']);
 Route::get('/chapter/inquiries', [ChapterController::class, 'showInquiriesChapter'])->name('chapter.inquiries');
 Route::get('/chapter/inquirieszapped', [ChapterController::class, 'zappedInquiriesChapter'])->name('chapter.inquirieszapped');

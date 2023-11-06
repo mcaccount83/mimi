@@ -46,7 +46,7 @@
               </div>
               <div class="col-sm-4 col-xs-12">
               <div class="form-group">
-                <label>Region</label> 
+                <label>Region</label>
                 <select id="ch_region" name="ch_region" class="form-control select2" style="width: 100%;" required >
                   <option value="">Select Region</option>
                     @foreach($regionList as $rl)
@@ -94,9 +94,9 @@
                 <input type="text" name="ch_inqnote" class="form-control my-colorpicker1" value="{{ $chapterList[0]->inquiries_note}}" maxlength="50" >
               </div>
               </div>
-  
-            
-              
+
+
+
  <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">President</h3>
               </div>
@@ -109,7 +109,7 @@
          <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
-                <label>Last Name</label> 
+                <label>Last Name</label>
                 <input type="text" name="ch_pre_lname" class="form-control my-colorpicker1" value="{{ $chapterList[0]->last_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
@@ -124,34 +124,34 @@
               <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
-                <label>Phone</label> 
+                <label>Phone</label>
                 <input type="text" name="ch_pre_phone" id="ch_pre_phone" class="form-control my-colorpicker1" value="{{ $chapterList[0]->phone }}" maxlength="12" required onkeypress="return isPhone(event)">
               </div>
               </div>
-                                   
+
           <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">International MOMS Club Coordinators</h3>
               </div>
                             <div class="box-body">
-               
+
               <!-- /.form group -->
 
                     <div class="col-md-6 float-left">
 						<input  type="hidden" id="pcid" value="{{ $chapterList[0]->primary_coordinator_id}}">
 						<div id="display_corlist">
 						</div>
-                        
-                    </div>    
+
+                    </div>
                 </div>
               </div>
               </div>
-              
+
 
               <div class="box-body text-center">
-                  
+
 
               <a href="{{ route('chapter.inquiries') }}" class="btn btn-themeBlue margin">Back</a>
-        
+
               </div>
               </div>
               </div>
@@ -161,32 +161,29 @@
     </section>
     </form>
     @endsection
-    
+
     @section('customscript')
     <script>
-    function test() {
-alert('test');
-return false;
-}
+
 function CopyEmail(elementId){
-		
+
 		// Create a "hidden" input
 		var aux = document.createElement("input");
-		
+
 		var elementName = "email" + elementId;
-		
+
 		// Assign it the value of the specified element
 		aux.setAttribute("value", document.getElementById(elementName).innerHTML);
-		
+
 		// Append it to the body
 		document.body.appendChild(aux);
-		
+
 		// Highlight its content
 		aux.select();
-		
+
 		// Copy the highlighted text
 		document.execCommand("copy");
-		
+
 		// Remove it from the body
 		document.body.removeChild(aux);
 
@@ -194,10 +191,10 @@ function CopyEmail(elementId){
 
 	}
 function CopyNoChapter(){
-		
+
 		  var copyTextarea = document.querySelector('.js-copytextarea');
 		  copyTextarea.select();
-		
+
 		  try {
 			var successful = document.execCommand('copy');
 			var msg = successful ? 'successful' : 'unsuccessful';
@@ -206,7 +203,7 @@ function CopyNoChapter(){
 			console.log('Oops, unable to copy');
 		  }
 
-		  clearSelection();		
+		  clearSelection();
 
 		return false;
 
@@ -228,33 +225,33 @@ function clearSelection() {
 				}
 			}
 		}
-	}	
+	}
 	function CopyInquiryResp(elementId){
 
 		// Create a "hidden" input
 		var aux = document.createElement("input");
-		
+
 		var elementName = "response" + elementId;
-		
+
 		// Assign it the value of the specified element
 		aux.setAttribute("value", document.getElementById(elementName).innerHTML);
-		
+
 		// Append it to the body
 		document.body.appendChild(aux);
-		
+
 		// Highlight its content
 		aux.select();
-		
+
 		// Copy the highlighted text
 		document.execCommand("copy");
-		
+
 		// Remove it from the body
 		document.body.removeChild(aux);
 
 		return false;
 
 	}
-    
+
 	var pcid = $("#pcid").val();
 	if(pcid !=""){
 		$.ajax({
@@ -269,5 +266,5 @@ function clearSelection() {
         });
     }
         </script>
-        
+
         @endsection

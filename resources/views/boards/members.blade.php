@@ -41,10 +41,12 @@
                        Welcome, <b>{{$borDetails->first_name}} {{$borDetails->last_name}}</b>, to the MOMS Club MOMS information Management Interface (MIMI)!
                        </br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
                     </p>
-                  <!--     <p class="description text-center" style="color:red;">All Board Member Information is READ ONLY at this time.
-                    <br>In order to add new board members to MIMI, please complete the Board Election Report.
-                   <br>If you need to make updates to your current year officers please contact your Primary Coordinator.
-                   </p> -->
+                                <!-- Display the description text based on the disabled/enabled state -->
+                            <div class="description text-center" style="color: red; display: none;">
+                                <p><strong>All Board Member Information is READ ONLY at this time.<br>
+                                In order to add new board members to MIMI, please complete the Board Election Report.<br>
+                                If you need to make updates to your current year officers, please contact your Primary Coordinator.</strong></p>
+                            </div>
                 </div>
 
             </div>
@@ -62,30 +64,21 @@
                       </div>
 
                     <div class="col-md-4 float-left">
-					 @if($chapterDetails->new_board_active=='1')
-								<a class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>><?php echo $a = date('Y'); echo "-"; echo $a+1;?> Board Election Report</a>
-							@else
-							<!--LIVE BUTTON-->
-						            <a class="btn btn-info btn-fill" href="<?php echo url("/boardinfo") ?>"><?php echo $a = date('Y'); echo "-"; echo $a+1;?> Board Election Report</a>
-							<!--DISABLED BUTTON-->
-									<!--<a class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>><?php echo $a = date('Y'); echo "-"; echo $a+1;?> Board Election Report</a>-->
-
-							@endif
-
-
-					</div>
-
-                    <div class="col-md-4 float-left">
-                           <!--LIVE BUTTON-->
-					            <a class="btn btn-info btn-fill" href="<?php echo url("/board/financial/{$chapterDetails->id}") ?>"><?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</a>
-					       <!--DISABLED BUTTON-->
-					            <!--<a class="btn btn-info btn-fill" href="#" disabled><?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</a>-->
-
-
-
+					@if($chapterDetails->new_board_active=='1')
+                        <button type="button" id="BoardReportAlwaysDisabled" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $chapterDetails->id]) }}'">
+                            {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
+                        </button>
+                    @else
+                        <button type="button" id="BoardReport" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $chapterDetails->id]) }}'">
+                            {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
+                        </button>
+                    @endif
+                </div>
+                <div class="col-md-4 float-left">
+                        <button type="button" id="FinancialReport" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $chapterDetails->id]) }}'">
+                            {{ date('Y')-1 .'-'.date('Y') }} Financial Report
+                        </button>
                     </div>
-
-
                     </div>
                 </div>
 
@@ -117,7 +110,6 @@
         		@endif
 
         	   <div class="card-body">
-
                         <div class="row" id="checkRadios">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -269,7 +261,6 @@
                     <h4 class="card-title">READ ONLY - PLEASE CONTACT PC IF INCORRECT</h4>
                 </div>
                 <div class="card-body">
-
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -314,7 +305,6 @@
                                 <div class="form-group">
                                     <label><?php echo date('Y')-1 .'-'.date('Y');?> Financial Report Received</label>
                                     <label style="display: block;"><input  type="checkbox" class="ios-switch green bigswitch" disabled {{$chapterDetails->financial_report_received == '1'  ? 'checked' : ''}}/><div><div></div></div></label>
-
                                 </div>
                             </div>
                             </div>
@@ -328,19 +318,14 @@
 						<input  type="hidden" id="pcid" value="{{ $chapterDetails->primary_coordinator_id}}">
 						<div id="display_corlist">
 						</div>
-
                     </div>
                 </div>
 
 			<div class="card-body card-b"><hr></div>
                    <div class="box-body text-center">
-                    <!--LIVE BUTTON-->
-                        <button type="submit" class="btn btn-info btn-fill" onclick="return PreSaveValidate()">Save</button></div>
-                    <!--DISABLED BUTTON-->
-                        <!--<button type="submit" class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>>Save</button></div>-->
-
+                        <button type="submit" id="Save" class="btn btn-info btn-fill" onclick="return PreSaveValidate()">Save</button></div><br>
                     <div class="box-body text-center">
-                    <button type="button" class="btn btn-info btn-fill" onclick="window.open('https://groups.google.com/u/1/a/momsclub.org/g/2022-23boardlist')">BoardList Forum</button>
+                    <button type="button" class="btn btn-info btn-fill" onclick="window.open('https://groups.google.com/a/momsclub.org/g/2023-24boardlist">BoardList Forum</button>
                     <button type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-info btn-fill">eLearning Library</button></div>
                     </div>
                 </div>
@@ -353,17 +338,37 @@
 @endsection
 @section('customscript')
 <script>
+// Disable fields and buttons
+$(document).ready(function () {
+        $('input, select, textarea').prop('disabled', false);
+        $('#BoardReport').prop('disabled', false);
+        $('#FinancialReport').prop('disabled', false);
+        $('#Save').prop('disabled', false);
 
-//Disable Fields for EOY Editing
-//    $("#bor_fname").prop("readonly",true);
-//    $("#bor_lname").prop("readonly",true);
-//    $("#bor_addr").prop("readonly",true);
-//    $("#bor_city").prop("readonly",true);
-//    $("#bor_state").prop("disabled",true);
-//    $("#bor_zip").prop("readonly",true);
-//    $("#bor_email").prop("readonly",true);
-//    $("#bor_phone").prop("readonly",true);
+// ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report//
+        $('#BoardReportAlwaysDisabled').prop('disabled', true);
 
+// Check the disabled state and show the description div if necessary
+    if ($('input, select, textarea').prop('disabled')) {
+            $('.description').show();
+        }
+ });
+
+ function formatPhoneNumber(phoneNumber) {
+    // Format the phone number as "xxx-xxx-xxxx" if it's not empty
+    if (phoneNumber) {
+        var x = phoneNumber.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+        return !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
+    }
+    return phoneNumber;
+}
+
+var initialPhoneNumber = document.getElementById('bor_phone').value;
+document.getElementById('bor_phone').value = formatPhoneNumber(initialPhoneNumber);
+
+document.getElementById('bor_phone').addEventListener('input', function (e) {
+    e.target.value = formatPhoneNumber(e.target.value);
+});
 
 function isNumber(evt) {
     evt = (evt) ? evt : window.event;
@@ -387,17 +392,15 @@ function isPhone() {
 		return false;
 	}
 }
+
 $( document ).ready(function() {
-	var phoneListArr = ["bor_phone"];
     for (var i = phoneListArr.length - 1; i >= 0; i--) {
         var inputValue = $("#"+phoneListArr[i]).val();
         if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
         var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
         $("#"+phoneListArr[i]).val(reInputValue);
     }
-	$("#bor_phone").keyup(function() {
-        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });
+
 	$('.cls-pswd').on('keypress', function(e) {
 		if (e.which == 32)
 			return false;
@@ -412,7 +415,7 @@ $( document ).ready(function() {
 				$("#display_corlist").html(result);
             },
             error: function (jqXHR, exception) {
-
+                console.error("AJAX Error:", jqXHR, exception);
             }
         });
     }
@@ -421,7 +424,6 @@ $( document ).ready(function() {
 //submit validation function
   function PreSaveValidate(){
           var NewPassword=document.getElementById("bor_pswd").value;
-
 				//They changed their password
 				if(document.getElementById("bor_pswd").value != document.getElementById("bor_pswd").getAttribute("value")){
 					if(document.getElementById("bor_pswd").value != document.getElementById("bor_pswd_cnf").value){  //Make sure the password and confirmation match
@@ -438,7 +440,6 @@ $( document ).ready(function() {
 					else{
 						document.getElementById("bor_pswd_chg").value="1";
 					}
-
 				}
             var phoneListArr = ["bor_phone"];
 
@@ -453,7 +454,6 @@ $( document ).ready(function() {
 		//Okay, all validation passed, save the records to the database
 		return true;
 	}
-
 
 </script>
 @endsection

@@ -26,7 +26,7 @@ Chapter Re-Registration<br>
 208 Hewitt Dr., Ste 103 #328<br>
 Waco, TX 76712</center>
 <br>
-<table style="border:1px"><td><b>MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}</b><br>
+<table style="border:1px solid #000;"><td><b>MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}</b><br>
 Anniversary Month: <b>{{$mailData['startMonth']}}</b></td></tr>
 <tr><td>
 <br>

@@ -632,7 +632,6 @@
 
 
                           <button type="submit" class="btn btn-themeBlue margin" >Save Email Update</button>
-                          var reason = prompt("This action will update the email address for the last President on Reocrd for the chpater.  If you wish to continue, please enter their emamil address and press OK.", "");
 
             <!-- /.box-body -->
 

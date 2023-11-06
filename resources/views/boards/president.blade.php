@@ -2,7 +2,6 @@
 
 @section('content')
 
-
 <div class="container">
 <div>
 	@if ($message = Session::get('success'))
@@ -22,7 +21,6 @@
         <div class="col-md-12">
             <div class="card card-user">
                 <div class="card-image color_header">
-
                 </div>
                 <div class="card-body">
                     <div class="author">
@@ -42,10 +40,12 @@
                  <p class="description text-center">
                         Welcome, <b>{{$chapterList[0]->first_name}} {{$chapterList[0]->last_name}}</b>, to the MOMS Club MOMS information Management Interface (MIMI)! Here you can view and update your chapter's information, update, add, or remove board members, etc.</p>
 
-                  <!--   <p class="description text-center" style="color:red;">All Board Member Information is READ ONLY at this time.
-                      <br>In order to add new board members to MIMI, please complete the Board Election Report.
-                     <br>If you need to make updates to your current year officers please contact your Primary Coordinator.
-                   </p> -->
+                             <!-- Display the description text based on the disabled/enabled state -->
+                        <div class="description text-center" style="color: red; display: none;">
+                            <p><strong>All Board Member Information is READ ONLY at this time.<br>
+                            In order to add new board members to MIMI, please complete the Board Election Report.<br>
+                            If you need to make updates to your current year officers, please contact your Primary Coordinator.</strong></p>
+                        </div>
                 </div>
 
             </div>
@@ -64,29 +64,22 @@
                        <a class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>>No EIN Letter on File</a>
                        	@endif
                       </div>
-
                     <div class="col-md-4 float-left">
-					 @if($list->new_board_active=='1')
-								<a class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>><?php echo $a = date('Y'); echo "-"; echo $a+1;?> Board Election Report</a>
-							@else
-							<!--LIVE BUTTON-->
-						            <a class="btn btn-info btn-fill" href="<?php echo url("/boardinfo") ?>"><?php echo $a = date('Y'); echo "-"; echo $a+1;?> Board Election Report</a>
-							<!--DISABLED BUTTON-->
-									<!--<a class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>><?php echo $a = date('Y'); echo "-"; echo $a+1;?> Board Election Report</a>-->
-
-							@endif
-
-
-					</div>
-
-                    <div class="col-md-4 float-left">
-                        <!--LIVE BUTTON-->
-					        <a class="btn btn-info btn-fill" href="<?php echo url("/board/financial/{$list->id}") ?>"><?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</a>
-					   <!--DISABLED BUTTON-->
-					        <!--<a class="btn btn-info btn-fill" href="#" disabled><?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</a>-->
-
-
-					        @endforeach
+                        @if($list->new_board_active=='1')
+                        <button id="BoardReportAlwaysDisabled" type="button"  class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $list->id]) }}'">
+                            {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
+                        </button>
+                    @else
+                        <button id="BoardReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $list->id]) }}'">
+                            {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
+                        </button>
+                    @endif
+                </div>
+                <div class="col-md-4 float-left">
+                        <button id="FinancialReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $list->id]) }}'">
+                            {{ date('Y')-1 .'-'.date('Y') }} Financial Report
+                        </button>
+                    @endforeach
 					</div>
 
                     </div>
@@ -97,7 +90,6 @@
                     <h4 class="card-title">PRESIDENT</h4>
                 </div>
                 <div class="card-body">
-
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -111,7 +103,6 @@
                                     <input   type="text" name="ch_pre_lname" id="ch_pre_lname" class="form-control" placeholder="Last Name" value="{{ $chapterList[0]->last_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
-
                         </div>
                         <div class="row">
                             <div class="col-md-12">
@@ -589,12 +580,11 @@
                     <h4 class="card-title">READ ONLY - PLEASE CONTACT PC IF INCORRECT</h4>
                 </div>
                 <div class="card-body">
-
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>FOUNDED MONTH</label>
-                                     <select name="ch_founddate" class="form-control select2" style="width: 100%;" required disabled>
+                                     <select name="ch_founddate" class="form-control select2" style="width: 100%;" disabled>
                                         <option value="">Select Date</option>
                                         @foreach($foundedMonth as $key=>$val)
                                         <option value="{{$key}}" {{$currentMonth == $key  ? 'selected' : ''}}>{{$val}}</option>
@@ -634,7 +624,6 @@
                                 <div class="form-group">
                                     <label><?php echo date('Y')-1 .'-'.date('Y');?> Financial Report Received</label>
                                     <label style="display: block;"><input  type="checkbox" class="ios-switch green bigswitch" disabled {{$chapterList[0]->financial_report_received == '1'  ? 'checked' : ''}} /><div><div></div></div></label>
-
                                 </div>
                             </div>
                             </div>
@@ -648,19 +637,14 @@
 						<input  type="hidden" id="pcid" value="{{ $chapterList[0]->primary_coordinator_id}}">
 						<div id="display_corlist">
 						</div>
-
                     </div>
                 </div>
 
                 <div class="card-body card-b"><hr></div>
                    <div class="box-body text-center">
-                    <!--LIVE BUTTON-->
-                        <button type="submit" class="btn btn-info btn-fill" onclick="return PreSaveValidate()">Save</button></div>
-                    <!--DISABLED BUTTON-->
-                       <!-- <button type="submit" class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>>Save</button></div>-->
-
+                    <button id="Save" type="submit" class="btn btn-info btn-fill" onclick="return PreSaveValidate()">Save</button></div><br>
                     <div class="box-body text-center">
-                    <button type="button" class="btn btn-info btn-fill" onclick="window.open('https://groups.google.com/u/1/a/momsclub.org/g/2022-23boardlist')">BoardList Forum</button>
+                    <button type="button" class="btn btn-info btn-fill" onclick="window.open('https://groups.google.com/a/momsclub.org/g/2023-24boardlist)">BoardList Forum</button>
                     <button type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-info btn-fill">eLearning Library</button></div>
                     </div>
                 </div>
@@ -672,65 +656,48 @@
 </div>
 @endsection
 @section('customscript')
-<script type="text/javascript" src="//s3.amazonaws.com/downloads.mailchimp.com/js/signup-forms/popup/embed.js" data-dojo-config="usePlainJson: true, isDebug: false"></script>
 <script>
 
-//Disable Fields for EOY Editing
-//    $("#ch_pre_fname").prop("readonly",true);
-//    $("#ch_pre_lname").prop("readonly",true);
-//    $("#ch_pre_street").prop("readonly",true);
-//    $("#ch_pre_city").prop("readonly",true);
-//    $("#ch_pre_state").prop("disabled",true);
-//    $("#ch_pre_zip").prop("readonly",true);
-//    $("#ch_pre_email").prop("readonly",true);
-//    $("#ch_pre_phone").prop("readonly",true);
 
-//    $("#ch_avp_fname").prop("readonly",true);
-//    $("#ch_avp_lname").prop("readonly",true);
-//    $("#ch_avp_street").prop("readonly",true);
-//    $("#ch_avp_city").prop("readonly",true);
-//    $("#ch_avp_state").prop("disabled",true);
-//    $("#ch_avp_zip").prop("readonly",true);
-//    $("#ch_avp_email").prop("readonly",true);
-//    $("#ch_avp_phone").prop("readonly",true);
+// Disable fields and buttons
+$(document).ready(function () {
+        $('input, select, textarea').prop('disabled', false);
+        $('#BoardReport').prop('disabled', false);
+        $('#FinancialReport').prop('disabled', true);
+        $('#Save').prop('disabled', false);
 
-//    $("#ch_mvp_fname").prop("readonly",true);
-//    $("#ch_mvp_lname").prop("readonly",true);
-//    $("#ch_mvp_street").prop("readonly",true);
-//    $("#ch_mvp_city").prop("readonly",true);
-//    $("#ch_mvp_state").prop("disabled",true);
-//    $("#ch_mvp_zip").prop("readonly",true);
-//    $("#ch_mvp_email").prop("readonly",true);
-//    $("#ch_mvp_phone").prop("readonly",true);
+// ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report//
+        $('#BoardReportAlwaysDisabled').prop('disabled', true);
 
-//   $("#ch_trs_fname").prop("readonly",true);
-//    $("#ch_trs_lname").prop("readonly",true);
-//    $("#ch_trs_street").prop("readonly",true);
-//    $("#ch_trs_city").prop("readonly",true);
-//    $("#ch_trs_state").prop("disabled",true);
-//    $("#ch_trs_zip").prop("readonly",true);
-//    $("#ch_trs_email").prop("readonly",true);
-//    $("#ch_trs_phone").prop("readonly",true);
+// Check the disabled state and show the description div if necessary
+    if ($('input, select, textarea').prop('disabled')) {
+            $('.description').show();
+        }
+});
+function formatPhoneNumber(phoneNumber) {
+    // Format the phone number as "xxx-xxx-xxxx" if it's not empty
+    if (phoneNumber) {
+        var x = phoneNumber.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+        return !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
+    }
+    return phoneNumber;
+}
 
-//    $("#ch_sec_fname").prop("readonly",true);
-//   $("#ch_sec_lname").prop("readonly",true);
-//    $("#ch_sec_street").prop("readonly",true);
-//    $("#ch_sec_city").prop("readonly",true);
- //   $("#ch_sec_state").prop("disabled",true);
-//    $("#ch_sec_zip").prop("readonly",true);
-//    $("#ch_sec_email").prop("readonly",true);
-//    $("#ch_sec_phone").prop("readonly",true);
+function applyPhoneNumberFormattingToFields(fieldIds) {
+    for (var i = 0; i < fieldIds.length; i++) {
+        var field = document.getElementById(fieldIds[i]);
+        if (field) {
+            field.value = formatPhoneNumber(field.value);
+            field.addEventListener('input', function (e) {
+                e.target.value = formatPhoneNumber(e.target.value);
+            });
+        }
+    }
+}
 
-//    $("#ch_website").prop("readonly",true);
-//    $("#ch_onlinediss").prop("readonly",true);
-//    $("#ch_social1").prop("readonly",true);
-//    $("#ch_social2").prop("readonly",true);
-//    $("#ch_social3").prop("readonly",true);
-//    $("#ch_email").prop("readonly",true);
-//    $("#ch_inqemailcontact").prop("readonly",true);
-//    $("#ch_pobox").prop("readonly",true);
-//    $("add_link_req").prop("readonly",true);
-//    $("not_link").prop("readonly",true);
+var phoneFieldIds = ['ch_pre_phone', 'ch_avp_phone', 'ch_mvp_phone', 'ch_trs_phone', 'ch_sec_phone'];
+applyPhoneNumberFormattingToFields(phoneFieldIds);
+
 
 
 function is_url() {
@@ -792,29 +759,15 @@ function isPhone() {
 		return false;
 	}
 }
+
   $( document ).ready(function() {
-	var phoneListArr = ["ch_pre_phone","ch_avp_phone","ch_mvp_phone","ch_trs_phone","ch_sec_phone"];
     for (var i = phoneListArr.length - 1; i >= 0; i--) {
         var inputValue = $("#"+phoneListArr[i]).val();
         if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
         var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
         $("#"+phoneListArr[i]).val(reInputValue);
     }
-	$("#ch_pre_phone").keyup(function() {
-        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });
-	$("#ch_avp_phone").keyup(function() {
-        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });
-	$("#ch_mvp_phone").keyup(function() {
-        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });
-	$("#ch_trs_phone").keyup(function() {
-        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });
-	$("#ch_sec_phone").keyup(function() {
-        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });
+
 	$('.cls-pswd').on('keypress', function(e) {
 		if (e.which == 32)
 			return false;
@@ -829,7 +782,6 @@ function isPhone() {
 				$("#display_corlist").html(result);
             },
             error: function (jqXHR, exception) {
-
             }
         });
     }
@@ -914,7 +866,6 @@ function isPhone() {
         $("#ch_sec_phone_req").hide();
         $("#ch_sec_state_req").hide();
     }
-
   });
 
 function ConfirmVacant(checkboxid) {
@@ -1147,14 +1098,11 @@ function ConfirmVacant(checkboxid) {
               }
             break;
     }
-
   }
 
   //submit validation function
   function PreSaveValidate(){
     var errMessage="";
-        //if($("#ch_pre_email").val() != "" || $("#ch_avp_email").val() != "" || $("#ch_mvp_email").val() != "" || $("#ch_trs_email").val() != "" || $("#ch_sec_email").val() != ""){
-          //Ensure there are no e-mail addresses repeated
           if($("#ch_pre_email").val() != ""){
             if($("#ch_pre_email").val() == $("#ch_avp_email").val() || $("#ch_pre_email").val() == $("#ch_mvp_email").val() || $("#ch_pre_email").val() == $("#ch_trs_email").val() || $("#ch_pre_email").val() == $("#ch_sec_email").val()) {
               errMessage = "The e-mail address provided for the Chapter President was also provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
@@ -1182,8 +1130,7 @@ function ConfirmVacant(checkboxid) {
           }
 
           var phoneListArr = ["ch_pre_phone", "ch_avp_phone", "ch_mvp_phone", "ch_trs_phone", "ch_sec_phone"];
-
-                for (var i = 0; i < phoneListArr.length; i++) {
+            for (var i = 0; i < phoneListArr.length; i++) {
                     var inputField = document.getElementById(phoneListArr[i]);
                     var inputValue = inputField.value;
                     inputValue = inputValue.replace(/-/g, ''); // Remove hyphens
@@ -1192,7 +1139,6 @@ function ConfirmVacant(checkboxid) {
                 }
 
           var NewPassword=document.getElementById("ch_pre_pswd").value;
-
 				//They changed their password
 				if(document.getElementById("ch_pre_pswd").value != document.getElementById("ch_pre_pswd").getAttribute("value")){
 					if(document.getElementById("ch_pre_pswd").value != document.getElementById("ch_pre_pswd_cnf").value){  //Make sure the password and confirmation match
@@ -1209,14 +1155,10 @@ function ConfirmVacant(checkboxid) {
 					else{
 						document.getElementById("ch_pre_pswd_chg").value="1";
 					}
-
                 }
-
 		//Okay, all validation passed, save the records to the database
 		return true;
 	}
-
-
 
 </script>
 @endsection

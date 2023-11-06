@@ -3,17 +3,16 @@
 @section('content')
  <section class="content-header">
       <h1>
-        Chapter List
-       <small>Edit</small>
+        International Chapter List
+       <small>View</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Chapter List</li>
+        <li class="active">International Chapter List</li>
       </ol>
     </section>
 
     <!-- Main content -->
-    <form method="POST" action='{{ route("chapters.update",$chapterList[0]->id) }}'">
     @csrf
     <section class="content">
       <div class="row">
@@ -118,36 +117,13 @@
                 <input type="hidden" name="ch_hid_status" value="{{ $chapterList[0]->status }}">
               </div>
               </div>
-                            <!-- /.form group -->
+                <!-- /.form group -->
               <div class="col-sm-8 col-xs-12">
               <div class="form-group">
                 <label>Status Notes (not visible to board members)</label>
                 <input type="text" name="ch_notes" class="form-control my-colorpicker1" maxlength="50" value="{{ $chapterList[0]->notes}}" >
               </div>
               </div>
-                                <!-- /.form group -->
-            <!-- @if($positionid ==6)
-                  <div class="radio-chk">
-              <div class="col-sm-2 col-xs-12">
-                  <div class="form-group">
-                    <label>EIN Letter On File</label>
-                    <label style="display: block;"><input type="checkbox" name="ch_ein_letter" id="ch_ein_letter" class="ios-switch green bigswitch" {{$chapterList[0]->ein_letter == '1'  ? 'checked' : ''}} /><div><div></div></div>
-                                </label>
-                  </div>
-              </div>
-              </div>
-              @else
-                  <div class="radio-chk">
-              <div class="col-sm-2 col-xs-12">
-                  <div class="form-group">
-                    <label>EIN Letter On File</label>
-                    <label style="display: block;"><input disabled type="checkbox" name="ch_ein_letter" id="ch_ein_letter" class="ios-switch green bigswitch" {{$chapterList[0]->ein_letter == '1'  ? 'checked' : ''}} /><div><div></div></div>
-                                </label>
-                  </div>
-              </div>
-              </div>
-              @endif -->
-
               <!-- /.form group -->
               <div class="col-sm-12 col-xs-12">
               <div class="form-group">
@@ -224,9 +200,6 @@
               </div>
               </div>
 
-              <div class="box-body text-center">
-                <button type="button" class="btn btn-themeBlue margin" id="{{ $chapterList[0]->user_id }}" onclick="return resetPassword(this.id)">Reset Password</button>
-              </div>
               </div>
               <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">AVP</h3>
@@ -303,9 +276,7 @@
                     </div>
                 </div>
               </div>
-              <div class="box-body text-center">
-                <button type="button" class="btn btn-themeBlue margin" id="{{ $AVPDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$AVPDetails[0]->user_id == ''  ? 'disabled' : ''}} >Reset Password</button>
-              </div>
+
               </div>
               <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">MVP</h3>
@@ -382,9 +353,7 @@
                     </div>
                 </div>
               </div>
-              <div class="box-body text-center">
-                <button type="button" class="btn btn-themeBlue margin" id="{{ $MVPDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$MVPDetails[0]->user_id == ''  ? 'disabled' : ''}} >Reset Password</button>
-              </div>
+
               </div>
               <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">Treasurer</h3>
@@ -461,9 +430,7 @@
                     </div>
                 </div>
               </div>
-              <div class="box-body text-center">
-                <button type="button" class="btn btn-themeBlue margin" id="{{ $TRSDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$TRSDetails[0]->user_id == ''  ? 'disabled' : ''}} >Reset Password</button>
-              </div>
+
               </div>
               <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">Secretary</h3>
@@ -540,9 +507,7 @@
                     </div>
                 </div>
               </div>
-              <div class="box-body text-center">
-                <button type="button" class="btn btn-themeBlue margin" id="{{ $SECDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$SECDetails[0]->user_id == ''  ? 'disabled' : ''}} >Reset Password</button>
-              </div>
+
               </div>
               <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">Information</h3>
@@ -799,30 +764,7 @@
                             </div>
                         </div>
                     </div>
-            <?php if($positionid !=12){?>
-                <div class="box-body text-center">
-                 @foreach($chapterList as $list)
-                    <?php if($positionid >=5 && $positionid <=7){?>
-                        <button type="button" id="ReportStatus" class="btn btn-themeBlue margin" onclick="window.location.href='{{ route('chapter.statusview', ['id' => $list->id]) }}'">
-                            Update Report Status
-                        </button>
-                        <?php }?>
-                     @if($list->new_board_active=='1')
-                        <button type="button" id="BoardReportAlwaysDisabled" class="btn btn-themeBlue margin" onclick="window.location.href='{{ route('chapter.showboardinfo', ['id' => $list->id]) }}'">
-                            {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
-                        </button>
-                    @else
-                        <button type="button" id="BoardReport" class="btn btn-themeBlue margin" onclick="window.location.href='{{ route('chapter.showboardinfo', ['id' => $list->id]) }}'">
-                            {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
-                        </button>
-                    @endif
-                        <button type="button" id="FinancialReport" class="btn btn-themeBlue margin" onclick="window.location.href='{{ route('chapter.showfinancial', ['id' => $list->id]) }}'">
-                            {{ date('Y')-1 .'-'.date('Y') }} Financial Report
-                        </button>
-                    @endforeach
-                 </div>
-            <?php }?>
-            </div>
+
 
           <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">International MOMS Club Coordinators</h3>
@@ -869,28 +811,10 @@
 
             <!-- /.box-body -->
             <div class="box-body text-center">
-            <?php if (Session::get('positionid') <=7 || Session::get('positionid') == 25) {?>
-              <button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate()" >Save</button>
-              <?php }?>
-              <?php if (Session::get('positionid') <=7 || Session::get('positionid') == 25) {?>
-              <a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=MOMS Club of {{ $chapterList[0]->name }}" class="btn btn-themeBlue margin">E-mail Board</a>
-             <?php }?>
-              <?php if ((Session::get('positionid') >=4 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>
-              <button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);" >Reset</button>
-                <?php }?>
+
               <a href="{{ route('chapter.list') }}" class="btn btn-themeBlue margin">Back</a>
               </div>
 
-              <div class="box-body text-center">
-               <?php if ((Session::get('positionid') >=6 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>
-                <button type="button" class="btn btn-themeBlue margin" onclick="return UpdateEIN()">Update EIN</button>
-
-                <button type="button" class="btn btn-themeBlue margin" onclick="return EINLetter()">Update EIN Letter</button>
-              <?php } ?>
-              <?php if ((Session::get('positionid') >=5 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>
-              <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-default">Disband Chapter</button>
-              <?php } ?>
-              </div>
 
 
             <!-- /.box-body -->
@@ -900,49 +824,18 @@
         </div>
       </div>
 
-      <div class="modal fade" id="modal-default">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Chapter Disband Reason</h4>
-              </div>
-              <div class="modal-body">
-                <p>Marking a chapter as disbanded will remove the logins for all board members and remove the chapter.  Please enter their reason for disbanding and press OK
-                <input type="text" id="disband_reason" name="disband_reason" class="form-control my-colorpicker1">
-                <input type="hidden" id="chapter_id" name="chapter_id" class="form-control my-colorpicker1" value="{{ $chapterList[0]->id}}"></p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="return disbandChapter()">OK</button>
-              </div>
-            </div>
-            <!-- /.modal-content -->
-          </div>
-          <!-- /.modal-dialog -->
-        </div>
-        <!-- /.modal -->
-
-
-
     </section>
     </form>
     @endsection
 
   @section('customscript')
   <script>
- // Disable buttons **Change true/false if fields need to be enabled/disabled//
- $(document).ready(function () {
-        $('#ReportStatus').prop('disabled', false);
-        $('#BoardReport').prop('disabled', false);
-        $('#FinancialReport').prop('disabled', false);
+  // Disable fields and buttons
+    $(document).ready(function () {
+            $('input, select, textarea').prop('disabled', true);
+    });
 
- // ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report//
-        $('#BoardReportAlwaysDisabled').prop('disabled', true);
-});
-
-  function disbandChapter(){
+   function disbandChapter(){
         var txt =  $("#disband_reason").val();
         var cid = $("#chapter_id").val();
 

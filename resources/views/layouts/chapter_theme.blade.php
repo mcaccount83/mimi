@@ -17,7 +17,6 @@
     <link href="{{ asset('chapter_theme/css/demo.css') }}" rel="stylesheet" />
     <link href="{{ asset('chapter_theme/css/custom.css') }}" rel="stylesheet" />
 	<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css'>
-    
 </head>
 
 <body>
@@ -26,22 +25,17 @@
             <!-- Navbar -->
             <nav class="navbar navbar-expand-lg " color-on-scroll="500">
                 <div class=" container-fluid  ">
-                    <a class="navbar-brand" href="#"> <img src="{{ asset('chapter_theme/img/logo.png') }}"" alt=""> </a>
-                    <!--<button href="" class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-bar burger-lines"></span>
-                        <span class="navbar-toggler-bar burger-lines"></span>
-                        <span class="navbar-toggler-bar burger-lines"></span>
-                    </button>-->
+                    <a class="navbar-brand" href="#"> <img src="{{ asset('chapter_theme/img/logo.png') }}" alt=""> </a>
                     <div class="navbar-collapse justify-content-end" id="navigation">
                         <ul class="navbar-nav ml-auto">
                             <li class="nav-item">
                                 <a class="nav-link" href="https://momsclub.org/" target="_blank">
-                                    <span class="no-icon">MOMS Club Site</span>
+                                    <span class="no-icon">MOMS Club Main Website</span>
                                 </a>
                             </li>
 							<li class="nav-item">
                                 <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                        document.getElementById('logout-form').submit();"> {{ __('Logout') }} 
+                                        document.getElementById('logout-form').submit();"> {{ __('Logout') }}
                                 </a>
 								<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
 								@csrf

@@ -4,51 +4,45 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- CSRF Token -->
-  <meta name="csrf-token" content="{{ csrf_token() }}">
-  <title>{{config('app.name')}}</title>
-  <!-- Tell the browser to be responsive to screen width -->
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <!-- Bootstrap 3.3.7 -->
-  <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/font-awesome/css/font-awesome.min.css') }}">
-  <!-- Ionicons -->
-  <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/Ionicons/css/ionicons.min.css') }}">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="{{ asset('coordinator_theme/dist/css/AdminLTE.min.css') }}">
-  <!-- AdminLTE Skins. Choose a skin from the css/skins
-       folder instead of downloading all of them to reduce the load. -->
-  <link rel="stylesheet" href="{{ asset('coordinator_theme/dist/css/skins/_all-skins.min.css') }}">
-  <!-- Morris chart -->
-  <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/morris.js/morris.css') }}">
-  <!-- jvectormap -->
-  <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/jvectormap/jquery-jvectormap.css') }}">
-  <!-- Date Picker -->
-  <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
-  <!-- Daterange picker -->
-  <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
-    
-	<!-- iCheck for checkboxes and radio inputs -->	
-  <link rel="stylesheet" href="{{ asset('coordinator_theme/plugins/iCheck/all.css') }}">	
-  
- <!-- bootstrap wysihtml5 - text editor -->
-  <link rel="stylesheet" href="{{ asset('coordinator_theme/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="{{ asset('coordinator_theme/dist/css/custom.css') }}">
-  <!-- Custom CSS for Financial Report -->
-  <link rel="stylesheet" href="{{ asset('chapter_theme/css/custom_financial.css') }}">
-  <!-- Data Table -->
-  <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
-
-  <!-- Google Font -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{config('app.name')}}</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/font-awesome/css/font-awesome.min.css') }}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/Ionicons/css/ionicons.min.css') }}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ asset('coordinator_theme/dist/css/AdminLTE.min.css') }}">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="{{ asset('coordinator_theme/dist/css/skins/_all-skins.min.css') }}">
+    <!-- Morris chart -->
+    <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/morris.js/morris.css') }}">
+    <!-- jvectormap -->
+    <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/jvectormap/jquery-jvectormap.css') }}">
+    <!-- Date Picker -->
+    <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
+	<!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="{{ asset('coordinator_theme/plugins/iCheck/all.css') }}">
+    <!-- bootstrap wysihtml5 - text editor -->
+    <link rel="stylesheet" href="{{ asset('coordinator_theme/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ asset('coordinator_theme/dist/css/custom.css') }}">
+    <!-- Custom CSS for Financial Report -->
+    <link rel="stylesheet" href="{{ asset('chapter_theme/css/custom_financial.css') }}">
+    <!-- Data Table -->
+    <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+    <!-- Google Font -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini fixed"> 
+<body class="hold-transition skin-blue sidebar-mini fixed">
 <div class="wrapper">
-
   <header class="main-header">
     <!-- Logo -->
     <a href="{{ route('home') }}" class="logo">
@@ -63,14 +57,8 @@
       <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
         <span class="sr-only">Toggle navigation</span>
       </a>
-
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
-         <!-- <li class="dropdown user user-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <span class="hidden-xs">Chip Main Menu</span>
-            </a>
-          </li>-->
            <li class="dropdown user user-menu">
             <a href="https://momsclub.org/" target="_blank" class="hidden-xs">Return to Main Site</a>
           </li>
@@ -79,14 +67,13 @@
     </nav>
   </header>
   <!-- Left side column. contains the logo and sidebar -->
- <?php 
+ <?php
   use App\Models\User;
   $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
   $corId = $corDetails['coordinator_id'];
   $positionid = $corDetails['position_id'];
-  $secpositionid = $corDetails['sec_position_id']; 
+  $secpositionid = $corDetails['sec_position_id'];
   $loggedIn = $corDetails['first_name'].' '.$corDetails['last_name'];
-
    ?>
   <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
@@ -99,53 +86,56 @@
         <li class="{{ Request::is('coordinator/dashboard') ? 'active' : '' }}  ">
           <a href="{{ route('coordinator.showdashboard') }}">
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
-            
-            </a>
+          </a>
         </li><?php } ?>
+
         <?php if (($positionid >=1 && $positionid <=7) || $positionid ==25){ ?>
         <li class="{{ Request::is('chapter/list') ? 'active' : '' }} {{ Request::is('chapter/create') ? 'active' : '' }} {{ Request::is('chapter/edit/*') ? 'active' : ''}} {{ Request::is('chapterlist') ? 'active' : '' }}  ">
           <a href="{{ route('chapter.list') }}">
             <i class="fa fa-list"></i> <span>Chapter List</span>
-            
           </a>
         </li><?php } ?>
+
         <?php if (($positionid >=5 && $positionid <=7) || $positionid ==25){ ?>
         <li class="{{ Request::is('chapter/zapped') ? 'active' : '' }} {{ Request::is('chapter/zapped/view/*') ? 'active' : ''}}">
           <a href="{{ route('chapter.zapped') }}">
             <i class="fa fa-ban"></i>
             <span>Zapped Chapter List</span>
-           
           </a>
         </li> <?php } ?>
-        <?php if (($positionid >=5 && $positionid <=7) || $positionid ==25 || ($positionid == 10 || $secpositionid == 10) || ($corId == 423 && $positionid == 8)){ ?> 
+
+        <?php if (($positionid >=5 && $positionid <=7) || $positionid ==25 || ($positionid == 10 || $secpositionid == 10) || ($corId == 423 && $positionid == 8)){ ?>
         <li class="{{ Request::is('chapter/re-registration') ? 'active' : '' }} {{ Request::is('chapter/re-registration/payment/*') ? 'active' : '' }}">
           <a href="{{ route('chapter.registration') }}">
           <!--<a href="#">-->
               <i class="fa fa-credit-card"></i> <span>Re-Registrations</span>
            </a>
         </li> <?php } ?>
-        <?php if (($positionid >=5 && $positionid <=7) || ($positionid == 8 || $secpositionid == 8)){ ?> 
+
+        <?php if (($positionid >=5 && $positionid <=7) || ($positionid == 8 || $secpositionid == 8)){ ?>
         <li class="{{ Request::is('chapter/inquiries') ? 'active' : '' }} {{ Request::is('chapter/inquiriesview/*') ? 'active' : '' }}">
           <a href="{{ route('chapter.inquiries') }}">
             <i class="fa fa-map-marker"></i>
             <span>Inquiries</span>
           </a>
         </li> <?php } ?>
-        <?php if (($positionid == 8 || $secpositionid == 8)){ ?> 
+
+        <?php if (($positionid == 8 || $secpositionid == 8)){ ?>
         <li class="{{ Request::is('chapter/inquirieszapped') ? 'active' : '' }} ">
           <a href="{{ route('chapter.inquirieszapped') }}">
             <i class="fa fa-map-marker"></i>
             <span>Zapped Chapters</span>
           </a>
         </li> <?php } ?>
-        <?php if (($positionid >=5 && $positionid <=7) || ($positionid == 9 || $secpositionid == 9) || ($positionid == 25 || $secpositionid == 25)){ ?> 
+
+        <?php if (($positionid >=5 && $positionid <=7) || ($positionid == 9 || $secpositionid == 9) || ($positionid == 25 || $secpositionid == 25)){ ?>
         <li class="{{ Request::is('chapter/website') ? 'active' : '' }} {{ Request::is('chapter/website/edit/*') ? 'active' : '' }}">
           <a href="{{ route('chapter.website') }}">
             <i class="fa fa-laptop"></i><span>Website Review </span>
             </a>
         </li> <?php } ?>
-        
-        <?php if (($positionid == 13 || $secpositionid == 13) || ($positionid == 23 || $secpositionid == 23)){ ?> 
+
+        <?php if (($positionid == 13 || $secpositionid == 13) || ($positionid == 23 || $secpositionid == 23)){ ?>
         <li class="{{ Request::is('reports/boardlist') ? 'active' : '' }}">
           <a href="{{ route('report.boardlist') }}">
             <i class="fa fa-list"></i><span>BoardList</span>
@@ -159,6 +149,7 @@
             <span>Coordinator List</span>
           </a>
         </li><?php } ?>
+
         <?php if ($positionid >=6 && $positionid <=7){ ?>
         <li class="{{ Request::is('coordinator/retired') ? 'active' : '' }} {{ Request::is('coordinator/retired/view/*') ? 'active' : '' }}">
           <a href="{{ route('coordinator.retired') }}">
@@ -174,6 +165,7 @@
             <span>International Chapter List</span>
           </a>
         </li><?php } ?>
+
         <?php if ($positionid == 12 || $secpositionid == 12){ ?>
         <li class="{{ Request::is('chapter/international/zap') ? 'active' : '' }}  {{ Request::is('chapter/international/zapped/view/*') ? 'active' : ''}}">
           <a href="{{ route('chapter.interzap') }}">
@@ -182,6 +174,7 @@
           </a>
         </li>
         <?php } ?>
+
         <?php if ($positionid == 0 ){ ?>
         <li class="{{ Request::is('coordinator/international') ? 'active' : '' }}">
           <a href="{{ route('coordinator.inter') }}">
@@ -189,6 +182,7 @@
             <span>International Coordinator List</span>
           </a>
         </li><?php } ?>
+
         <?php if($positionid == 0){?>
           <li class="{{ Request::is('coordinator/retiredinternational') ? 'active' : '' }} {{ Request::is('coordinator/retired/view/*') ? 'active' : '' }}">
           <a href="{{ route('coordinator.retinter') }}">
@@ -197,6 +191,7 @@
           </a>
         </li>
         <?php } ?>
+
         <?php if ($positionid == 12 || $secpositionid == 12){ ?>
         <li class="{{ Request::is('reports/inteinstatus') ? 'active' : '' }}">
           <a href="{{ route('report.inteinstatus') }}">
@@ -213,31 +208,30 @@
         <?php } ?>
 
         <?php if ($positionid == 13 || $secpositionid == 13 ){ ?>
-        <li class="treeview {{ Request::is('chapter/international') ? 'active' : '' }} {{ Request::is('chapter/international/zap') ? 'active' : '' }}  {{ Request::is('chapter/international/zapped/view/*') ? 'active' : ''}} {{ Request::is('coordinator/international') ? 'active' : '' }} {{ Request::is('chapter/international/zap') ? 'active' : '' }}  {{ Request::is('chapter/international/zapped/view/*') ? 'active' : ''}} {{ Request::is('coordinator/retiredinternational') ? 'active' : '' }} {{ Request::is('coordinator/retired/view/*') ? 'active' : '' }} {{ Request::is('reports/inteinstatus') ? 'active' : '' }} {{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
+        <li class="treeview {{ Request::is('chapter/international/*') ? 'active' : '' }} {{ Request::is('coordinator/international/*') ? 'active' : '' }} {{ Request::is('coordinator/retiredinternational') ? 'active' : '' }} {{ Request::is('reports/inteinstatus') ? 'active' : '' }} {{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
             <a href="#"><i class="fa fa-list"></i> <span>International Lists</span>
               <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
             </a>
             <ul class="treeview-menu">
-         
-                <li class="{{ Request::is('home') ? 'active' : '' }} {{ Request::is('chapter/international') ? 'active' : '' }}">
+                <li class="{{ Request::is('chapter/international') ? 'active' : '' }} {{ Request::is('chapter/international/view/*') ? 'active' : '' }}">
           <a href="{{ route('chapter.inter') }}">
             <i class="fa fa-list"></i>
             <span>Chapter List</span>
           </a>
         </li>
-                <li class="{{ Request::is('chapter/international/zap') ? 'active' : '' }}  {{ Request::is('chapter/international/zapped/view/*') ? 'active' : ''}}">
+            <li class="{{ Request::is('chapter/international/zap') ? 'active' : '' }}  {{ Request::is('chapter/international/zapped/view/*') ? 'active' : ''}}">
           <a href="{{ route('chapter.interzap') }}">
             <i class="fa fa-ban"></i>
             <span>Zapped Chapter List</span>
           </a>
         </li>
-               <li class="{{ Request::is('coordinator/international') ? 'active' : '' }}">
+             <li class="{{ Request::is('coordinator/international') ? 'active' : '' }}">
           <a href="{{ route('coordinator.inter') }}">
             <i class="fa fa-user"></i>
             <span>Coordinator List</span>
           </a>
         </li>
-               <li class="{{ Request::is('coordinator/retiredinternational') ? 'active' : '' }} {{ Request::is('coordinator/retired/view/*') ? 'active' : '' }}">
+             <li class="{{ Request::is('coordinator/retiredinternational') ? 'active' : '' }}">
           <a href="{{ route('coordinator.retinter') }}">
             <i class="fa fa-ban"></i>
             <span>Retired Coordinator List</span>
@@ -299,7 +293,7 @@
 
             </ul>
         </li><?php } ?>
-        
+
                 <?php if (($positionid >=1 && $positionid <=7) || $positionid ==25){ ?>
         <li class="treeview {{ Request::is('reports/chaptervolunteer') ? 'active' : '' }} {{ Request::is('reports/coordinatortodo') ? 'active' : '' }} {{ Request::is('reports/intcoordinatortodo') ? 'active' : '' }} {{ Request::is('reports/appreciation') ? 'active' : '' }} {{ Request::is('reports/birthday') ? 'active' : '' }} {{ Request::is('coordinator/appreciation/*') ? 'active' : '' }} {{ Request::is('reports/reportingtree') ? 'active' : '' }}">
             <a href="#"><i class="fa fa-line-chart"></i> <span>Coordinator Reports</span>
@@ -324,7 +318,7 @@
                   <i class="fa fa-files-o"></i> <span>Coordinator ToDo</span>
                   </a>
               </li>
-              <?php } ?>              
+              <?php } ?>
               <?php if ($positionid >=6 && $positionid <=7){ ?>
                 <li class="{{ Request::is('reports/appreciation') ? 'active' : '' }} {{ Request::is('coordinator/appreciation/*') ? 'active' : '' }}"><a href="{{ route('report.appreciation') }}">
                   <i class="fa fa-files-o"></i> <span>Volunteer Appreciation</span>
@@ -362,7 +356,7 @@
                   <i class="fa fa-files-o"></i> <span>Financial Reports</span>
                   </a>
               </li>
-             
+
               <li class="{{ Request::is('yearreports/boundaryissue') ? 'active' : '' }}  {{ Request::is('chapter/boundaryview/*') ? 'active' : '' }}"><a href="{{ route('report.issues') }} ">
                   <i class="fa fa-files-o"></i> <span>Boundary issues</span>
                   </a>
@@ -373,16 +367,14 @@
               </li>
             </ul>
         </li><?php } ?>
-        
+
         <?php if ($positionid == 13 || $secpositionid == 13 ){ ?>
         <li class="treeview {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }} {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }} {{ Request::is('adminreports/multipleboard') ? 'active' : '' }} {{ Request::is('adminreports/nopresident') ? 'active' : '' }}">
             <a href="#"><i class="fa fa-line-chart"></i> <span>Admin Reports</span>
               <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
             </a>
-            
             <ul class="treeview-menu">
-         
-                <li class="{{ Request::is('adminreports/duplicateuser') ? 'active' : '' }}">
+               <li class="{{ Request::is('adminreports/duplicateuser') ? 'active' : '' }}">
           <a href="{{ route('report.duplicateuser') }}">
             <i class="fa fa-files-o"></i>
             <span>Duplicate Users</span>
@@ -406,11 +398,9 @@
             <span>No President</span>
           </a>
         </li>
-       
             </ul>
         </li><?php } ?>
-        
-        
+
         <?php if ($positionid >=6 && $positionid <=7 || ($positionid==25 || $secpositionid ==25)){ ?>
         <li class="{{ Request::is('reports/downloads') ? 'active' : '' }}">
           <a href="{{ route('report.downloads') }}">
@@ -418,51 +408,47 @@
                   </a>
         </li>
         <?php } ?>
-        
-        
-      
-               <div class="too" style="padding-left:15px; padding-top:9px;"><a href="https://momsclub.org/coordinator-toolkit/" target="_blank"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Coordinator Toolkit</a></div>
-               
-                <div class="too" style="padding-left:15px; padding-top:20px;"><a href="https://momsclub.org/elearning/" target="_blank"><i class="fa fa-graduation-cap"></i>&nbsp;&nbsp;eLearning Library</a></div>
- 
+
+         <div class="too" style="padding-left:15px; padding-top:9px;"><a href="https://momsclub.org/coordinator-toolkit/" target="_blank"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Coordinator Toolkit</a></div>
+
+        <div class="too" style="padding-left:15px; padding-top:20px;"><a href="https://momsclub.org/elearning/" target="_blank"><i class="fa fa-graduation-cap"></i>&nbsp;&nbsp;eLearning Library</a></div>
+
         <div class="too" style="padding-left:15px; padding-top: 20px;">
         <?php if ($positionid >=1 && $positionid <=24){ ?>
         <li class="{{ Request::is('coordinator/profile') ? 'active' : '' }}">
           <a href="{{ route('coordinator.showprofile') }}">
             <i class="fa fa-edit"></i>
             <span>&nbsp; Update Profile </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<sub>(<?php echo $loggedIn;?>)</sub></span>
-            
+
           </a>
         </li></div>
-        <?php } ?> 
-        
+        <?php } ?>
+
         <li class="">
           <a href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                 <i class="fa fa-sign-out"></i> <span>        {{ __('Logout') }}</span>
-            
+
            </a>
 		    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
-                                    </form>
+           </form>
         </li>
       </ul>
     </section>
     <!-- /.sidebar -->
   </aside>
-      
+
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
    @yield('content')
    </div>
-  <!-- /.content-wrapper --> 
+  <!-- /.content-wrapper -->
   <footer class="main-footer">
-    
-    <strong>Copyright &copy; <?php echo date('Y');?> <a href="https://momsclub.org/" target="_blank">MOMS Club</a>.</strong> All rights
+        <strong>Copyright &copy; <?php echo date('Y');?> <a href="https://momsclub.org/" target="_blank">MOMS Club</a>.</strong> All rights
     reserved.
   </footer>
-  <!-- Add the sidebar's background. This div must be placed
-       immediately after the control sidebar -->
+  <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
 </div>
 <!-- ./wrapper -->
 </body>
@@ -478,7 +464,6 @@
 <!-- DataTables -->
 <script src="{{ asset('coordinator_theme/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('coordinator_theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
-
 <!-- Bootstrap 3.3.7 -->
 <script src="{{ asset('coordinator_theme/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
 <!-- Morris.js charts -->
@@ -510,7 +495,6 @@
 <script src="{{ asset('coordinator_theme/dist/js/pages/dashboard.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('coordinator_theme/dist/js/demo.js') }}"></script>
-
 
 <script>
    //iCheck for checkbox and radio inputs
@@ -557,8 +541,8 @@
          'ordering'    : true,
          'info'        : false,
          'autoWidth'   : false
-  
-      });  
+
+      });
       $('#chapterlist_inter').DataTable({
         'paging'      : true,
         'lengthChange': true,
@@ -592,7 +576,7 @@
         'ordering'    : true,
         'info'        : false,
         'autoWidth'   : false
-      }); 
+      });
       $('#coordinatorlist_active').DataTable({
         'paging'      : true,
         'lengthChange': true,
@@ -600,7 +584,7 @@
         'ordering'    : true,
         'info'        : false,
         'autoWidth'   : false
-      });  
+      });
       $('#coordinatorlist_retired').DataTable({
         'paging'      : true,
         'lengthChange': true,
@@ -608,7 +592,7 @@
         'ordering'    : true,
         'info'        : false,
         'autoWidth'   : false
-      });  
+      });
       $('#chapterlist_einStatus').DataTable({
         'paging'      : true,
         'lengthChange': true,
@@ -642,7 +626,7 @@
           null,
         ]
       });
-   
+
     });
 </script>
 @yield('customscript')

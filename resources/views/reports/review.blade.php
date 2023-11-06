@@ -103,7 +103,6 @@
 						<a href="<?php //echo url("/chapter/edit/{$list->id}")
 							echo url("/chapter/financial/{$list->chap_id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
 							</td>
-
 						<td><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Financial Report Review - MOMS Club of {{ $list->name }}, {{ $list->state }}"><i class="fa fa-envelope" aria-hidden="true"></i></a></i></td>
 						<td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
@@ -115,46 +114,31 @@
                                                         ->get();
                                             ?>
                         <td>{{ $primaryCoor[0]->pfname }} {{$primaryCoor[0]->plname}}</td>
-                        <td bgcolor="<?php
-							if($list->financial_report_received !='1')
-									echo "#FF0000";
-							?>">
-							@if($list->financial_report_received=='1')
-							YES
-							@else
-								NO
-							@endif
+                        <td style="background-color: @if($list->financial_report_received == '1') transparent; @else #FF000050; @endif;">
+                            @if($list->financial_report_received == '1')
+                                YES
+                            @else
+                                NO
+                            @endif
+
 
 							<?php }?>
 						</td>
-
-						<td bgcolor="<?php
-							if($list->report_complete!='1')
-									echo "#FF0000";
-							?>">
-                        @if( $list->report_complete=='1')
-                        YES
-                        @else
-                        NO
-                        @endif
-                        </td>
-
-                        <td bgcolor="<?php
-							if($list->report_complete!='1')
-									echo "#FF0000";
-							?>">
-                        @if( $list->review_complete==null)
-                        --
-                        @else
-                        {{ $list->review_complete }}
-                        @endif
-                        </td>
-
-                         <!--<td>
-                        {{ $list->review_complete }}
-                        </td>-->
-
-                       <td>${{ $list->post_balance }}</td>
+                        <td style="background-color: @if($list->report_complete == '1') transparent; @else #FF000050; @endif;">
+                            @if($list->report_complete == '1')
+                                YES
+                            @else
+                                NO
+                            @endif
+						</td>
+                        <td style="background-color: @if($list->report_complete == '1') transparent; @else #FF000050; @endif;">
+                            @if($list->review_complete != null)
+                                {{ $list->review_complete }}
+                            @else
+                                NO
+                            @endif
+						</td>
+                        <td>${{ $list->post_balance }}</td>
 			        </tr>
                   @endforeach
                   </tbody>
@@ -163,21 +147,16 @@
               <div class="col-sm-6 col-xs-12">
                 <div class="form-group">
                     <label style="display: block;"><input type="checkbox" name="showPrimary" id="showPrimary" class="ios-switch green bigswitch" {{$checkBoxStatus}} onchange="showPrimary()" /><div><div></div></div>
-
                   </label>
                   <span> Only show chapters I am Assigned Reviewer for</span>
                 </div>
               <div class="radio-chk labelcheck">
                 <div class="form-group">
-                                    <label style="display: block;"><input type="checkbox" name="show2Primary" id="show2Primary" class="ios-switch green bigswitch" {{$checkBox2Status}} onchange="show2Primary()" /><div><div></div></div>
+                        <label style="display: block;"><input type="checkbox" name="show2Primary" id="show2Primary" class="ios-switch green bigswitch" {{$checkBox2Status}} onchange="show2Primary()" /><div><div></div></div>
                         </label>
-                                          <span> Only show chapters I am Primary Coordinator for</span>
-
+                    <span> Only show chapters I am Primary Coordinator for</span>
               </div>
               </div>
-
-			<!--<a href="{{ route('export.eoystatus')}}"><button class="btn btn-themeBlue margin">Export EOY Status List</button></a>-->
-
 			</div>
              </div>
            </div>
@@ -186,9 +165,7 @@
       </div>
     </section>
     <!-- Main content -->
-
     <!-- /.content -->
-
 @endsection
 @section('customscript')
 <script>

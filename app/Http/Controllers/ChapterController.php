@@ -1581,6 +1581,158 @@ class ChapterController extends Controller
         return view('chapters.international')->with($data);
     }
 
+     /**
+     * View the International chapter list
+     */
+    public function showIntChapterView(Request $request, $id): View
+   {
+       $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+       $corConfId = $corDetails['conference_id'];
+       $corId = $corDetails['coordinator_id'];
+       $positionid = $corDetails['position_id'];
+       $financial_report_array = FinancialReport::find($id);
+       if ($financial_report_array) {
+           $reviewComplete = $financial_report_array['review_complete'];
+       } else {
+           $reviewComplete = null;
+       }
+       $chapterList = DB::table('chapters as ch')
+           ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
+           ->leftJoin('board_details as bd', 'ch.id', '=', 'bd.chapter_id')
+           ->where('ch.is_active', '=', '1')
+           ->where('ch.id', '=', $id)
+           ->where('bd.board_position_id', '=', '1')
+           ->get();
+       $corConfId = $chapterList[0]->conference;
+       $corId = $chapterList[0]->primary_coordinator_id;
+       $AVPDetails = DB::table('board_details as bd')
+           ->select('bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.board_position_id', 'bd.street_address as avp_addr', 'bd.city as avp_city', 'bd.zip as avp_zip', 'bd.phone as avp_phone', 'bd.state as avp_state', 'bd.user_id as user_id')
+           ->where('bd.chapter_id', '=', $id)
+           ->where('bd.board_position_id', '=', '2')
+           ->get();
+       if (count($AVPDetails) == 0) {
+           $AVPDetails[0] = ['avp_fname' => '', 'avp_lname' => '', 'avp_email' => '', 'avp_addr' => '', 'avp_city' => '', 'avp_zip' => '', 'avp_phone' => '', 'avp_state' => '', 'user_id' => ''];
+           $AVPDetails = json_decode(json_encode($AVPDetails));
+       }
+
+       $MVPDetails = DB::table('board_details as bd')
+           ->select('bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.board_position_id', 'bd.street_address as mvp_addr', 'bd.city as mvp_city', 'bd.zip as mvp_zip', 'bd.phone as mvp_phone', 'bd.state as mvp_state', 'bd.user_id as user_id')
+           ->where('bd.chapter_id', '=', $id)
+           ->where('bd.board_position_id', '=', '3')
+           ->get();
+       if (count($MVPDetails) == 0) {
+           $MVPDetails[0] = ['mvp_fname' => '', 'mvp_lname' => '', 'mvp_email' => '', 'mvp_addr' => '', 'mvp_city' => '', 'mvp_zip' => '', 'mvp_phone' => '', 'mvp_state' => '', 'user_id' => ''];
+           $MVPDetails = json_decode(json_encode($MVPDetails));
+       }
+
+       $TRSDetails = DB::table('board_details as bd')
+           ->select('bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.board_position_id', 'bd.street_address as trs_addr', 'bd.city as trs_city', 'bd.zip as trs_zip', 'bd.phone as trs_phone', 'bd.state as trs_state', 'bd.user_id as user_id')
+           ->where('bd.chapter_id', '=', $id)
+           ->where('bd.board_position_id', '=', '4')
+           ->get();
+       if (count($TRSDetails) == 0) {
+           $TRSDetails[0] = ['trs_fname' => '', 'trs_lname' => '', 'trs_email' => '', 'trs_addr' => '', 'trs_city' => '', 'trs_zip' => '', 'trs_phone' => '', 'trs_state' => '', 'user_id' => ''];
+           $TRSDetails = json_decode(json_encode($TRSDetails));
+       }
+
+       $SECDetails = DB::table('board_details as bd')
+           ->select('bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.board_position_id', 'bd.street_address as sec_addr', 'bd.city as sec_city', 'bd.zip as sec_zip', 'bd.phone as sec_phone', 'bd.state as sec_state', 'bd.user_id as user_id')
+           ->where('bd.chapter_id', '=', $id)
+           ->where('bd.board_position_id', '=', '5')
+           ->get();
+       if (count($SECDetails) == 0) {
+           $SECDetails[0] = ['sec_fname' => '', 'sec_lname' => '', 'sec_email' => '', 'sec_addr' => '', 'sec_city' => '', 'sec_zip' => '', 'sec_phone' => '', 'sec_state' => '', 'user_id' => ''];
+           $SECDetails = json_decode(json_encode($SECDetails));
+       }
+
+       $stateArr = DB::table('state')
+           ->select('state.*')
+           ->orderBy('id')
+           ->get();
+       $countryArr = DB::table('country')
+           ->select('country.*')
+           ->orderBy('id')
+           ->get();
+       $regionList = DB::table('region')
+           ->select('id', 'long_name')
+           ->where('conference_id', '=', $corConfId)
+           ->orderBy('long_name')
+           ->get();
+       $confList = DB::table('conference')
+           ->select('id', 'conference_name')
+           ->where('id', '>=', 0)
+           ->orderBy('conference_name')
+           ->get();
+       $chapterEmailList = DB::table('board_details as bd')
+           ->select('bd.email as bor_email')
+           ->where('bd.chapter_id', '=', $id)
+           ->get();
+       $emailListCord = '';
+       foreach ($chapterEmailList as $val) {
+           $email = $val->bor_email;
+           $escaped_email = str_replace("'", "\\'", $email);
+           if ($emailListCord == '') {
+               $emailListCord = $escaped_email;
+           } else {
+               $emailListCord .= ';'.$escaped_email;
+           }
+       }
+
+       $cc_string = '';
+       $reportingList = DB::table('coordinator_reporting_tree')
+           ->select('*')
+           ->where('id', '=', $chapterList[0]->primary_coordinator_id)
+           ->get();
+       foreach ($reportingList as $key => $value) {
+           $reportingList[$key] = (array) $value;
+       }
+       $filterReportingList = array_filter($reportingList[0]);
+       unset($filterReportingList['id']);
+       unset($filterReportingList['layer0']);
+       $filterReportingList = array_reverse($filterReportingList);
+       $str = '';
+       $array_rows = count($filterReportingList);
+       $down_line_email = '';
+       foreach ($filterReportingList as $key => $val) {
+           // if($corId != $val && $val >1){
+           if ($val > 1) {
+               $corList = DB::table('coordinator_details as cd')
+                   ->select('cd.email as cord_email')
+                   ->where('cd.coordinator_id', '=', $val)
+                   ->where('cd.is_active', '=', 1)
+                   ->get();
+               if (count($corList) > 0) {
+                   if ($down_line_email == '') {
+                       $down_line_email = $corList[0]->cord_email;
+                   } else {
+                       $down_line_email .= ';'.$corList[0]->cord_email;
+                   }
+               }
+           }
+       }
+       $cc_string = '?cc='.$down_line_email;
+
+       $primaryCoordinatorList = DB::table('coordinator_details as cd')
+           ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+           ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+           ->where('cd.conference_id', '=', $corConfId)
+           ->where('cd.position_id', '<=', '6')
+           ->where('cd.position_id', '>=', '1')
+           ->where('cd.is_active', '=', '1')
+           ->orWhere('cd.position_id', '=', '25')
+           ->where('cd.is_active', '=', '1')
+           ->orderBy('cd.first_name')
+           ->get();
+
+       $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
+       $currentMonth = $chapterList[0]->start_month_id;
+
+       $data = ['positionid' => $positionid, 'corId' => $corId, 'reviewComplete' => $reviewComplete, 'emailListCord' => $emailListCord, 'cc_string' => $cc_string, 'currentMonth' => $currentMonth, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'chapterList' => $chapterList, 'regionList' => $regionList, 'confList' => $confList, 'primaryCoordinatorList' => $primaryCoordinatorList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
+
+       return view('chapters.intchapterview')->with($data);
+   }
+
+
     /**
      * Display the Inquiries Chapter list
      */
