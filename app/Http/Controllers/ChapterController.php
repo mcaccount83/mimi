@@ -15,6 +15,10 @@ use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegLate;
 use App\Mail\PaymentsReRegReminder;
 use App\Mail\PaymentsSustainingChapterThankYou;
+use App\Mail\WebsiteAddNoticeAdmin;
+use App\mail\WebsiteAddNoticeChapter;
+use App\Mmail\WebsiteRemoveNotice;
+use App\Mail\WebsiteReviewNotice;
 use App\Models\Chapter;
 use App\Models\FinancialReport;
 use App\Models\User;
@@ -175,12 +179,6 @@ class ChapterController extends Controller
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
         $input = $request->all();
 
-        if (isset($input['ch_linkstatus'])) {
-            $input['ch_linkstatus'];
-        } else {
-            $input['ch_linkstatus'] = 0;
-        }
-
         DB::beginTransaction();
         try {
             $chapterId = DB::table('chapters')->insertGetId(
@@ -193,11 +191,9 @@ class ChapterController extends Controller
                     'status' => $input['ch_status'],
                     'territory' => $input['ch_boundariesterry'],
                     'additional_info' => $input['ch_addinfo'],
-                    'website_link_status' => $input['ch_linkstatus'],
                     'email' => $input['ch_email'],
                     'inquiries_contact' => $input['ch_inqemailcontact'],
                     'inquiries_note' => $input['ch_inqnote'],
-                    'egroup' => $input['ch_onlinediss'],
                     'po_box' => $input['ch_pobox'],
                     'notes' => $input['ch_notes'],
                     'start_month_id' => $input['ch_founddate'],
@@ -682,12 +678,14 @@ class ChapterController extends Controller
             $ch_country = $request->get('ch_hid_country');
             $ch_region = $request->get('ch_hid_region');
             $ch_status = $request->get('ch_hid_status');
+            $ch_webstatus = $request ->get('ch_hid_webstatus');
             $ch_pcid = $request->get('ch_hid_primarycor');
         } else {
             $ch_state = $request->get('ch_state');
             $ch_country = $request->get('ch_country');
             $ch_region = $request->get('ch_region');
             $ch_status = $request->get('ch_status');
+            $ch_webstatus = $request ->get('ch_webstatus');
             $ch_pcid = $request->get('ch_primarycor');
         }
         if ($positionid == 7) {
@@ -698,7 +696,12 @@ class ChapterController extends Controller
             $ch_foundyear = $request->get('ch_hid_foundyear');
         }
 
+        if (empty(trim($ch_webstatus))) {
+            $ch_webstatus = 0; // Set it to 0 if it's blank
+        }
+
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+
         $chapter = Chapter::find($chapterId);
         DB::beginTransaction();
         try {
@@ -712,7 +715,7 @@ class ChapterController extends Controller
             $chapter->territory = $request->get('ch_boundariesterry');
             $chapter->additional_info = $request->get('ch_addinfo');
             $chapter->website_url = $request->get('ch_website');
-            $chapter->website_link_status = $request->get('ch_linkstatus');
+            $chapter->website_status = $ch_webstatus;
             $chapter->email = $request->get('ch_email');
             $chapter->inquiries_contact = $request->get('ch_inqemailcontact');
             $chapter->inquiries_note = $request->get('ch_inqnote');
@@ -1177,17 +1180,63 @@ class ChapterController extends Controller
 
                 //Chapter Notification//
                 $to_email = $to_email3;
-
                 Mail::to($to_email, 'MOMS Club')
                     ->send(new ChaptersPrimaryCoordinatorChange($mailData));
 
-
                 //Primary Coordinator Notification//
                 $to_email = $coremail;
-
                 Mail::to($to_email, 'MOMS Club')
                     ->send(new ChaptersPrimaryCoordinatorChangePCNotice($mailData));
+            }
 
+            //Website Notifications//
+            $cor_details = db::table('coordinator_details')
+                ->select('email')
+                ->where('conference_id', $corConfId)
+                ->where('position_id', 9)
+                ->where('is_active', 1)
+                ->get();
+            $row_count = count($cor_details);
+            if ($row_count == 0) {
+                $cc_details = db::table('coordinator_details')
+                    ->select('email')
+                    ->where('conference_id', $corConfId)
+                    ->where('coordinator_id', $corId)
+                    ->where('is_active', 1)
+                    ->get();
+                $to_email4 = $cc_details[0]->email;
+            } else {
+                $to_email4 = $cor_details[0]->email;
+            }
+
+            if ($request->get('ch_webstatus') != $request->get('ch_hid_webstatus')) {
+                $chapterDetails = Chapter::find($chapterId);
+                $stateArr = DB::table('state')
+                    ->select('state.*')
+                    ->orderBy('id')
+                    ->get();
+
+                $chapterState = DB::table('state')
+                    ->select('state_short_name')
+                    ->where('id', '=', $chapterDetails->state)
+                    ->get();
+                $chapterState = $chapterState[0]->state_short_name;
+
+                $mailData = [
+                    'chapter_name' => $request->get('ch_name'),
+                    'chapter_state' => $chapterState,
+                    'ch_website_url' => $request->get('ch_website'),
+                    ];
+
+                if ($request->get('ch_webstatus') == 1) {
+                    Mail::to($to_email4, 'MOMS Club')
+                    ->send(new WebsiteAddNoticeAdmin($mailData));
+                }
+
+                if ($request->get('ch_webstatus') == 2) {
+                    Mail::to($to_email4, 'MOMS Club')
+                    ->send(new WebsiteReviewNotice($mailData));
+                }
             }
 
             //Update Chapter MailData//
@@ -1256,7 +1305,7 @@ class ChapterController extends Controller
                 'chapemailUpd' => $presInfoUpd[0]->email,
                 'poBoxUpd' => $presInfoUpd[0]->po_box,
                 'webUrlUpd' => $presInfoUpd[0]->website_url,
-                'weblinkStatusUpd' => $presInfoUpd[0]->website_link_status,
+                'webStatusUpd' => $presInfoUpd[0]->website_status,
                 'egroupUpd' => $presInfoUpd[0]->egroup,
                 'boundUpd' => $presInfoUpd[0]->territory,
                 'addInfoUpd' => $presInfoUpd[0]->additional_info,
@@ -1283,7 +1332,7 @@ class ChapterController extends Controller
                 'chapemailPre' => $presInfoPre[0]->email,
                 'poBoxPre' => $presInfoPre[0]->po_box,
                 'webUrlPre' => $presInfoPre[0]->website_url,
-                'weblinkStatusPre' => $presInfoPre[0]->website_link_status,
+                'webStatusPre' => $presInfoPre[0]->website_status,
                 'egroupPre' => $presInfoPre[0]->egroup,
                 'boundPre' => $presInfoPre[0]->territory,
                 'addInfoPre' => $presInfoPre[0]->additional_info,
@@ -1388,7 +1437,7 @@ class ChapterController extends Controller
                     $presInfoUpd[0]->zip != $presInfoPre[0]->zip || $presInfoUpd[0]->phone != $presInfoPre[0]->phone || $presInfoUpd[0]->inquiries_contact != $presInfoPre[0]->inquiries_contact ||
                     $presInfoUpd[0]->ein != $presInfoPre[0]->ein || $presInfoUpd[0]->ein_letter_path != $presInfoPre[0]->ein_letter_path || $presInfoUpd[0]->inquiries_note != $presInfoPre[0]->inquiries_note ||
                     $presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->po_box != $presInfoPre[0]->po_box || $presInfoUpd[0]->website_url != $presInfoPre[0]->website_url ||
-                    $presInfoUpd[0]->website_link_status != $presInfoPre[0]->website_link_status || $presInfoUpd[0]->egroup != $presInfoPre[0]->egroup || $presInfoUpd[0]->territory != $presInfoPre[0]->territory ||
+                    $presInfoUpd[0]->website_status != $presInfoPre[0]->website_status || $presInfoUpd[0]->egroup != $presInfoPre[0]->egroup || $presInfoUpd[0]->territory != $presInfoPre[0]->territory ||
                     $presInfoUpd[0]->additional_info != $presInfoPre[0]->additional_info || $presInfoUpd[0]->status != $presInfoPre[0]->status || $presInfoUpd[0]->notes !=  $presInfoPre[0]->notes ||
                     $mailDataAvpp['avpfnamePre'] != $mailDataAvp['avpfnameUpd'] || $mailDataAvpp['avplnamePre'] != $mailDataAvp['avplnameUpd'] || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] ||
                     $mailDataMvpp['mvpfnamePre'] != $mailDataMvp['mvpfnameUpd'] || $mailDataMvpp['mvplnamePre'] != $mailDataMvp['mvplnameUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] ||
@@ -1409,55 +1458,6 @@ class ChapterController extends Controller
 
                 Mail::to($to_email2, 'MOMS Club')
                     ->send(new ChapersUpdateListAdmin($mailData));
-            }
-
-            //website notifications//
-            $cor_details = db::table('coordinator_details')
-                ->select('email')
-                ->where('conference_id', $corConfId)
-                ->where('position_id', 9)
-                ->where('is_active', 1)
-                ->get();
-            $row_count = count($cor_details);
-            if ($row_count == 0) {
-                $cc_details = db::table('coordinator_details')
-                    ->select('email')
-                    ->where('conference_id', $corConfId)
-                    ->where('coordinator_id', $corId)
-                    ->where('is_active', 1)
-                    ->get();
-                $to_email4 = $cc_details[0]->email;
-            } else {
-                $to_email4 = $cor_details[0]->email;
-            }
-
-            if ($presInfoUpd[0]->website_link_status != $presInfoPre[0]->website_link_status) {
-                if ($request->get('ch_linkstatus') == 1) {
-                    $link_url = $request->get('ch_website');
-                    $chname = $request->get('ch_name');
-                    $chstate = $request->get('ch_state ');
-                    $mail_message = '<p>The MOMS Club of '.$chname.' has updated their chapter website.</p>';
-                    $mail_message .= "<p>The new website address is: <a href='$link_url'>".$link_url.'</a></p>';
-                    $mail_message .= '<p>The site has been reviewed and will automatically be linked to the main website.</p>';
-                    $mailData = ['content' => $mail_message];
-                    Mail::send('emails.chapterwebsite', $mailData, function ($message4) use ($to_email4) {
-                        $message4->to($to_email4, 'MOMS Club')->subject('Chapter Website Linked');
-                    });
-                }
-
-                if ($request->get('ch_linkstatus') == 2) {
-                    $link_url = $request->get('ch_website');
-                    $chname = $request->get('ch_name');
-                    $chstate = $request->get('ch_state ');
-                    $mail_message = '<p>The MOMS Club of '.$chname.' has updated their chapter website.</p>';
-                    $mail_message .= "<p>The new website address is: <a href='$link_url'>".$link_url.'</a></p>';
-                    $mail_message .= "<p>Once the site has been reviewed and is ready to be linked, please mark it as 'Linked' and it will automatically be added to our main website.</p>";
-
-                    $mailData = ['content' => $mail_message];
-                    Mail::send('emails.chapterwebsite', $mailData, function ($message4) use ($to_email4) {
-                        $message4->to($to_email4, 'MOMS Club')->subject('Chapter Website Needs Review');
-                    });
-                }
             }
 
             DB::commit();
@@ -1904,7 +1904,7 @@ class ChapterController extends Controller
             $websiteList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.website_url as web', 'wb.status as web_status', 'chapters.website_notes as web_notes', 'chapters.egroup as egroup', 'st.state_short_name as state')
                 ->join('state as st', 'chapters.state', '=', 'st.id')
-                ->leftJoin('website_link_status as wb', 'chapters.website_link_status', '=', 'wb.id')
+                ->leftJoin('website_link_status as wb', 'chapters.website_status', '=', 'wb.id')
                 ->where('chapters.is_active', '=', '1')
                 ->orderBy('st.state_short_name')
                 ->orderBy('chapters.name')
@@ -1913,7 +1913,7 @@ class ChapterController extends Controller
             $websiteList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.website_url as web', 'wb.status as web_status', 'chapters.website_notes as web_notes', 'chapters.egroup as egroup', 'st.state_short_name as state')
                 ->join('state as st', 'chapters.state', '=', 'st.id')
-                ->leftJoin('website_link_status as wb', 'chapters.website_link_status', '=', 'wb.id')
+                ->leftJoin('website_link_status as wb', 'chapters.website_status', '=', 'wb.id')
                 ->where('chapters.is_active', '=', '1')
                 ->where('chapters.conference', '=', $corConfId)
                 ->orderBy('st.state_short_name')
@@ -1923,7 +1923,7 @@ class ChapterController extends Controller
             $websiteList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.website_url as web', 'wb.status as web_status', 'chapters.website_notes as web_notes', 'chapters.egroup as egroup', 'st.state_short_name as state')
                 ->join('state as st', 'chapters.state', '=', 'st.id')
-                ->leftJoin('website_link_status as wb', 'chapters.website_link_status', '=', 'wb.id')
+                ->leftJoin('website_link_status as wb', 'chapters.website_status', '=', 'wb.id')
                 ->where('chapters.is_active', '=', '1')
                 ->where('chapters.region', '=', $corRegId)
                 ->orderBy('st.state_short_name')
@@ -2261,73 +2261,72 @@ class ChapterController extends Controller
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
         $positionId = $corDetails['position_id'];
         $coordinatorId = $id;
-        $cor_details = db::table('coordinator_details')
-            ->select('email')
-            ->where('conference_id', $corConfId)
-            ->where('position_id', 9)
-            ->where('is_active', 1)
-            ->get();
-        $row_count = count($cor_details);
-        if ($row_count == 0) {
-            $cc_details = db::table('coordinator_details')
-                ->select('email')
-                ->where('conference_id', $corConfId)
-                ->where('coordinator_id', $corId)
-                ->where('is_active', 1)
-                ->get();
 
-            $to_email = $cc_details[0]->email;
-        } else {
-            $to_email = $cor_details[0]->email;
+        $ch_webstatus = $request ->get('ch_webstatus');
+        if (empty(trim($ch_webstatus))) {
+            $ch_webstatus = 0; // Set it to 0 if it's blank
         }
 
-        if ($request->get('WebStatus') == 1) {
-            $link_url = $request->get('Website');
-            $chname = $request->get('ch_name');
-            $chstate = $request->get('ch_state');
-            $mail_message = '<p>The MOMS Club of '.$chname.' has updated their chapter website.</p>';
-            $mail_message .= "<p>The new website address is: <a href='$link_url'>".$link_url.'</a></p>';
-            $mail_message .= '<p>The site has been reviewed and will automatically be linked to the main website.</p>';
-            $mailData = ['content' => $mail_message];
-            Mail::send('emails.chapterwebsite', $mailData, function ($message) use ($to_email) {
-                $message->to($to_email, 'MOMS Club')->subject('Chapter Website Linked');
-            });
-        }
-
-        if ($request->get('WebStatus') == 2) {
-            $link_url = $request->get('Website');
-            $chname = $request->get('ch_name');
-            $chstate = $request->get('ch_state');
-            $mail_message = '<p>The MOMS Club of '.$chname.' has updated their chapter website.</p>';
-            $mail_message .= "<p>The new website address is: <a href='$link_url'>".$link_url.'</a></p>';
-            $mail_message .= "<p>Once the site has been reviewed and is ready to be linked, please mark it as 'Linked' and it will automatically be added to our main website.</p>";
-
-            $mailData = ['content' => $mail_message];
-            Mail::send('emails.chapterwebsite', $mailData, function ($message) use ($to_email) {
-                $message->to($to_email, 'MOMS Club')->subject('Chapter Website Needs Review');
-            });
-
-        }
-
-        if ($request->get('WebStatus') == 3) {
-            $chname = $request->get('ch_name');
-            $chstate = $request->get('ch_state');
-            $mail_message = '<p>Website link has automatically been removed for '.$chname.'.</p>';
-
-            $mailData = ['content' => $mail_message];
-            Mail::send('emails.chapterwebsite', $mailData, function ($message) use ($to_email) {
-                $message->to($to_email, 'MOMS Club')->subject('Chapter Website Link Removed');
-            });
-        }
         DB::table('chapters')
             ->where('id', $coordinatorId)
-            ->update(['website_url' => $request->get('Website'),
-                'website_link_status' => $request->get('WebStatus'),
+            ->update(['website_url' => $request->get('ch_website'),
+                'website_status' => $ch_webstatus,
                 'egroup' => $request->get('ch_onlinediss'),
                 'social1' => $request->get('ch_social1'),
                 'social2' => $request->get('ch_social2'),
                 'social3' => $request->get('ch_social3'),
                 'website_notes' => $request->get('ch_notes')]);
+
+            //Website Notifications//
+            $cor_details = db::table('coordinator_details')
+                ->select('email')
+                ->where('conference_id', $corConfId)
+                ->where('position_id', 9)
+                ->where('is_active', 1)
+                ->get();
+            $row_count = count($cor_details);
+            if ($row_count == 0) {
+                $cc_details = db::table('coordinator_details')
+                    ->select('email')
+                    ->where('conference_id', $corConfId)
+                    ->where('coordinator_id', $corId)
+                    ->where('is_active', 1)
+                    ->get();
+                $to_email4 = $cc_details[0]->email;
+            } else {
+                $to_email4 = $cor_details[0]->email;
+            }
+
+            if ($request->get('ch_webstatus') != $request->get('ch_hid_webstatus')) {
+                $chapterDetails = Chapter::find($id);
+                $stateArr = DB::table('state')
+                    ->select('state.*')
+                    ->orderBy('id')
+                    ->get();
+
+                $chapterState = DB::table('state')
+                    ->select('state_short_name')
+                    ->where('id', '=', $chapterDetails->state)
+                    ->get();
+                $chapterState = $chapterState[0]->state_short_name;
+
+                $mailData = [
+                    'chapter_name' => $request->get('ch_name'),
+                    'chapter_state' => $chapterState,
+                    'ch_website_url' => $request->get('ch_website'),
+                    ];
+
+                if ($request->get('ch_webstatus') == 1) {
+                    Mail::to($to_email4, 'MOMS Club')
+                    ->send(new WebsiteAddNoticeAdmin($mailData));
+                }
+
+                if ($request->get('ch_webstatus') == 2) {
+                    Mail::to($to_email4, 'MOMS Club')
+                    ->send(new WebsiteReviewNotice($mailData));
+                }
+            }
+
 
         return redirect()->to('/chapter/website')->with('success', 'Chapter Website has been changed successfully.');
     }
@@ -4787,14 +4786,23 @@ class ChapterController extends Controller
      */
     public function chapterLinks(): View
     {
-        $link_array_intl_q = DB::select("SELECT id, intl_state, country, name, status, website_link_status, website_url FROM chapters WHERE state='52' AND is_active ='1' ORDER BY country, intl_state, name");
-        $link_array_usa_q = DB::select("SELECT chapters.id, chapters.state, chapters.intl_state, chapters.country, chapters.name, chapters.status, chapters.website_link_status, chapters.website_url, state.state_short_name, state.state_long_name
-                    FROM chapters
-                    INNER JOIN state
-                    ON chapters.state=state.id
-                    WHERE chapters.state<>52
-                    AND is_active ='1'
-                    ORDER BY chapters.state, chapters.name");
+        $link_array_intl_q = DB::table('chapters')
+                ->select('id', 'intl_state', 'country', 'name', 'status', 'website_status', 'website_url')
+                ->where('state', '=', '52')
+                ->where('is_active', '=', '1')
+                ->orderBy('country')
+                ->orderBy('intl_state')
+                ->orderBy('name')
+                ->get();
+        $link_array_usa_q = DB::table('chapters')
+                ->select('chapters.id', 'chapters.state', 'chapters.intl_state', 'chapters.country', 'chapters.name', 'chapters.status', 'chapters.website_status', 'chapters.website_url', 'state.state_short_name', 'state.state_long_name')
+                ->join('state', 'chapters.state', '=', 'state.id')
+                ->where('chapters.state', '<>', 52)
+                ->where('is_active', '1')
+                ->orderBy('chapters.state')
+                ->orderBy('chapters.name')
+                ->get();
+
         $link_array_intl = [];
         foreach ($link_array_intl_q as $key => $value) {
             $link_array_intl[$key]['id'] = $value->id;
@@ -4802,7 +4810,7 @@ class ChapterController extends Controller
             $link_array_intl[$key]['country'] = $value->country;
             $link_array_intl[$key]['name'] = $value->name;
             $link_array_intl[$key]['status'] = $value->status;
-            $link_array_intl[$key]['link_status'] = $value->website_link_status;
+            $link_array_intl[$key]['link_status'] = $value->website_status;
             $link_array_intl[$key]['url'] = $value->website_url;
         }
         $link_array_usa = [];
@@ -4814,7 +4822,7 @@ class ChapterController extends Controller
             $link_array_usa[$key]['country'] = $value->country;
             $link_array_usa[$key]['name'] = $value->name;
             $link_array_usa[$key]['status'] = $value->status;
-            $link_array_usa[$key]['link_status'] = $value->website_link_status;
+            $link_array_usa[$key]['link_status'] = $value->website_status;
             $link_array_usa[$key]['url'] = $value->website_url;
         }
 

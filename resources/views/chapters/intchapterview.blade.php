@@ -812,7 +812,7 @@
             <!-- /.box-body -->
             <div class="box-body text-center">
 
-              <a href="{{ route('chapter.list') }}" class="btn btn-themeBlue margin">Back</a>
+              <a href="{{ route('chapter.inter') }}" class="btn btn-themeBlue margin">Back</a>
               </div>
 
 

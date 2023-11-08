@@ -125,7 +125,9 @@ Route::get('/coordinatorlist', [CoordinatorController::class, 'index'])->name('c
 Route::get('/coordinator/retired', [CoordinatorController::class, 'showRetiredCoordinator'])->name('coordinator.retired');
 Route::get('/coordinator/unretired/{id}', [CoordinatorController::class, 'showUnretiredCoordinator'])->name('coordinator.unretired');
 Route::get('/coordinator/international', [CoordinatorController::class, 'showIntCoordinator'])->name('coordinator.inter');
+Route::get('/coordinator/international/view/{id}', [CoordinatorController::class, 'showIntCoordinatorView'])->name('coordinator.interview');
 Route::get('/coordinator/retiredinternational', [CoordinatorController::class, 'showIntRetCoordinator'])->name('coordinator.retinter');
+Route::get('/coordinator/retiredinternational/view/{id}', [CoordinatorController::class, 'showIntRetCoordinatorView'])->name('coordinator.retinterview');
 Route::get('/coordinator/create', [CoordinatorController::class, 'create'])->name('coordinator.create');
 Route::post('/coordinator/create', [CoordinatorController::class, 'store'])->name('coordinator.store');
 Route::get('/coordinator/edit/{id}', [CoordinatorController::class, 'edit'])->name('coordinator.edit');

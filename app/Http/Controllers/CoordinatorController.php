@@ -767,41 +767,41 @@ class CoordinatorController extends Controller
         }
 
        //Now reassign the coordinators that changed
-$rowcountCord = $_POST['CoordinatorCount'];
-$new_coordinator_ids = []; // Define an array to store new coordinator IDs
+        $rowcountCord = $_POST['CoordinatorCount'];
+        $new_coordinator_ids = []; // Define an array to store new coordinator IDs
 
-for ($i = 0; $i < $rowcountCord; $i++) {
-    $new_coordinator_field = 'Report'.$i;
-    $new_coordinator_id = $_POST[$new_coordinator_field];
+        for ($i = 0; $i < $rowcountCord; $i++) {
+            $new_coordinator_field = 'Report'.$i;
+            $new_coordinator_id = $_POST[$new_coordinator_field];
 
-    $coordinator_field = 'CoordinatorIDRow'.$i;
-    $coordinator_id = $_POST[$coordinator_field];
+            $coordinator_field = 'CoordinatorIDRow'.$i;
+            $coordinator_id = $_POST[$coordinator_field];
 
-    $new_coordinator_ids[] = $new_coordinator_id; // Store each new coordinator ID
-    $this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
-}
+            $new_coordinator_ids[] = $new_coordinator_id; // Store each new coordinator ID
+            $this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
+        }
 
-// Start with reassigning the chapters that changed
-$rowcountChapter = $_POST['ChapterCount'];
+        // Start with reassigning the chapters that changed
+        $rowcountChapter = $_POST['ChapterCount'];
 
-for ($i = 0; $i < $rowcountChapter; $i++) {
-    $coordinator_field = 'PCID'.$i;
-    $coordinator_id = $_POST[$coordinator_field];
+        for ($i = 0; $i < $rowcountChapter; $i++) {
+            $coordinator_field = 'PCID'.$i;
+            $coordinator_id = $_POST[$coordinator_field];
 
-    $chapter_field = 'ChapterIDRow'.$i;
-    $chapter_id = $_POST[$chapter_field];
+            $chapter_field = 'ChapterIDRow'.$i;
+            $chapter_id = $_POST[$chapter_field];
 
-    // Check if the index exists in $new_coordinator_ids
-    if (isset($new_coordinator_ids[$i])) {
-        $new_coordinator_id = $new_coordinator_ids[$i];
+            // Check if the index exists in $new_coordinator_ids
+            if (isset($new_coordinator_ids[$i])) {
+                $new_coordinator_id = $new_coordinator_ids[$i];
 
-        // Use the corresponding new coordinator ID from $new_coordinator_ids
-        $this->ReassignChapter($request, $chapter_id, $coordinator_id, true);
-    } else {
-        // Handle the case where $new_coordinator_ids[$i] is not defined
-        // This may include logging an error or taking appropriate action
-    }
-}
+                // Use the corresponding new coordinator ID from $new_coordinator_ids
+                $this->ReassignChapter($request, $chapter_id, $coordinator_id, true);
+            } else {
+                // Handle the case where $new_coordinator_ids[$i] is not defined
+                // This may include logging an error or taking appropriate action
+            }
+        }
 
 
         //Save other changes
@@ -1238,7 +1238,7 @@ for ($i = 0; $i < $rowcountChapter; $i++) {
     }
 
     /**
-     * International Retired Coordinators
+     * International Coordinators List
      */
     public function showIntCoordinator(): View
     {
@@ -1256,7 +1256,72 @@ for ($i = 0; $i < $rowcountChapter; $i++) {
     }
 
     /**
-     * International Retired Coordinator Details
+     * International Coordinators Detail
+     */
+    public function showIntCoordinatorView(Request $request, $id): View
+    {
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corId = $corDetails['coordinator_id'];
+        $corConfId = $corDetails['conference_id'];
+        $coordinatorDetails = DB::table('coordinator_details as cd')
+            ->select('cd.*')
+            ->where('cd.is_active', '=', '1')
+            ->where('cd.coordinator_id', '=', $id)
+            ->get();
+        $stateArr = DB::table('state')
+            ->select('state.*')
+            ->orderBy('id')
+            ->get();
+        $countryArr = DB::table('country')
+            ->select('country.*')
+            ->orderBy('id')
+            ->get();
+        $regionList = DB::table('region')
+            ->select('id', 'long_name')
+            ->orderBy('long_name')
+            ->get();
+        $confList = DB::table('conference')
+            ->select('id', 'conference_name')
+            ->orderBy('conference_name')
+            ->get();
+        $positionList = DB::table('coordinator_position')
+            ->select('id', 'long_title')
+            ->orderBy('long_title')
+            ->get();
+
+        $primaryCoordinatorList = DB::table('coordinator_details as cd')
+            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+            ->where('cd.is_active', '=', '1')
+            ->orderBy('cd.first_name')
+            ->get();
+        $directReportTo = DB::table('coordinator_details as cd')
+            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+            ->where('cd.report_id', '=', $id)
+            ->where('cd.is_active', '=', '1')
+            ->get();
+
+        $directChapterTo = DB::table('chapters as ch')
+            ->select('ch.id as ch_id', 'ch.name as ch_name', 'st.state_short_name as st_name')
+            ->join('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.primary_coordinator_id', '=', $id)
+            ->where('ch.is_active', '=', '1')
+            ->get();
+        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG',
+            '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
+        $currentMonth = $coordinatorDetails[0]->birthday_month_id;
+
+        $data = ['directChapterTo' => $directChapterTo, 'directReportTo' => $directReportTo, 'primaryCoordinatorList' => $primaryCoordinatorList,
+            'positionList' => $positionList, 'confList' => $confList, 'currentMonth' => $currentMonth, 'coordinatorDetails' => $coordinatorDetails,
+            'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth, 'cor_id' => $corId];
+
+        return view('coordinators.internationalview')->with($data);
+    }
+
+
+    /**
+     * International Retired Coordinator List
      */
     public function showIntRetCoordinator(): View
     {
@@ -1273,6 +1338,54 @@ for ($i = 0; $i < $rowcountChapter; $i++) {
 
         return view('coordinators.retiredinternational')->with($data);
     }
+
+    /**
+     * International Retired Coordinator Details
+     */
+    public function showIntRetCoordinatorView(Request $request, $id): View
+    {
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corId = $corDetails['coordinator_id'];
+        $corConfId = $corDetails['conference_id'];
+        $coordinatorDetails = DB::table('coordinator_details as cd')
+            ->select('cd.*')
+            ->where('cd.coordinator_id', '=', $id)
+            ->get();
+        $stateArr = DB::table('state')
+            ->select('state.*')
+            ->orderBy('id')
+            ->get();
+        $countryArr = DB::table('country')
+            ->select('country.*')
+            ->orderBy('id')
+            ->get();
+        $regionList = DB::table('region')
+            ->select('id', 'long_name')
+            ->orderBy('long_name')
+            ->get();
+        $confList = DB::table('conference')
+            ->select('id', 'conference_name')
+            ->orderBy('conference_name')
+            ->get();
+        $positionList = DB::table('coordinator_position')
+            ->select('id', 'long_title')
+            ->orderBy('long_title')
+            ->get();
+
+        $primaryCoordinatorList = DB::table('coordinator_details as cd')
+            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+            ->where('cd.is_active', '=', '1')
+            ->orderBy('cd.first_name')
+            ->get();
+        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
+        $currentMonth = $coordinatorDetails[0]->birthday_month_id;
+
+        $data = ['primaryCoordinatorList' => $primaryCoordinatorList, 'positionList' => $positionList, 'confList' => $confList, 'currentMonth' => $currentMonth, 'coordinatorDetails' => $coordinatorDetails, 'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
+
+        return view('coordinators.retiredinternationalview')->with($data);
+    }
+
 
     /**
      * Coordiantor Appreciation Gifts

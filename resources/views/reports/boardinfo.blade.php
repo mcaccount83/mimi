@@ -13,13 +13,13 @@
     </section>
 	@if ($message = Session::get('success'))
       <div class="alert alert-success">
-		<button type="button" class="close" data-dismiss="alert">×</button>	
+		<button type="button" class="close" data-dismiss="alert">×</button>
          <p>{{ $message }}</p>
       </div>
     @endif
 	 @if ($message = Session::get('fail'))
       <div class="alert alert-danger">
-		<button type="button" class="close" data-dismiss="alert">×</button>	
+		<button type="button" class="close" data-dismiss="alert">×</button>
          <p>{{ $message }}</p>
       </div>
     @endif
@@ -31,13 +31,13 @@
             <div class="box-header with-border">
               <h3 class="box-title">Report of Board Elections</h3>
               &nbsp;&nbsp;(Chapters that were added after June 30, <?php echo date('Y');?> will not be listed)
-             
+
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
               <table id="chapterlist_zapped" class="table table-bordered table-hover">
-              <thead> 
+              <thead>
 			    <tr>
 				<th></th>
                 <th>Email Board</th>
@@ -46,18 +46,18 @@
                 <th>Primary Coordinator</th>
                 <th>Received</th>
 				<th>Activated</th>
-				
-				
+
+
 				</tr>
                 </thead>
                 <tbody>
-                     
+
                 @foreach($chapterList as $list)
                 <?php
                 $chapterEmailList = DB::table('board_details as bd')
                                           ->select('bd.email as bor_email')
                                           ->where('bd.chapter_id', '=', $list->id)
-                                          ->get();  
+                                          ->get();
                       $emailListCord="";
                       foreach($chapterEmailList as $val){
                         $email = $val->bor_email;
@@ -67,8 +67,8 @@
                         }
                         else{
                             $emailListCord .= ";" . $escaped_email;
-                        } 
-                      } 
+                        }
+                      }
                       $cc_string="";
                      //var_dump($list);die;
                       $reportingList = DB::table('coordinator_reporting_tree')
@@ -78,7 +78,7 @@
                             foreach($reportingList as $key => $value)
                             {
                                 $reportingList[$key] = (array) $value;
-                            }   
+                            }
                             $filterReportingList = array_filter($reportingList[0]);
                             unset($filterReportingList['id']);
                             unset($filterReportingList['layer0']);
@@ -88,7 +88,7 @@
                             $down_line_email="";
                             foreach($filterReportingList as $key =>$val){
                                 //if($corId != $val && $val >1){
-								if($val >1){	
+								if($val >1){
                                     $corList = DB::table('coordinator_details as cd')
                                                     ->select('cd.email as cord_email')
                                                     ->where('cd.coordinator_id', '=', $val)
@@ -102,8 +102,8 @@
                                     if(isset($corList[0]))
                                       $down_line_email .= ";" . $corList[0]->cord_email;
                                   }
-                                   
-                                }    
+
+                                }
                             }
                             $cc_string = "?cc=" . $down_line_email;
                            // var_dump($list);die;
@@ -125,40 +125,32 @@
                          @if($list->new_board_active=='1')
 								<a href="#" <?php echo "disabled";?>></a>
 							@else
-							
+
 								<a href="<?php echo url("/chapter/boardinfo/{$list->id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
 
 							@endif
-                         
+
                         <?php }?>
-                          
+
                           </td>
                         <td><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Board Election Report Due - MOMS Club of {{ $list->name }}, {{ $list->state }}&body={{ $mail_message }}"><i class="fa fa-envelope" aria-hidden="true"></i></a></td>
 				  <td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
 						<td>{{ $list->cor_fname }} {{ $list->cor_lname }}</td>
-				  	<td bgcolor="<?php 
-							if($list->new_board_submitted !='1')
-									echo "#FF0000";
-							?>">
-							@if($list->new_board_submitted=='1')
-							YES
-							@else
-								NO
-							@endif
-						</td>
-						<td bgcolor="<?php 
-							if($list->new_board_active !='1')
-									echo "#FF0000";
-							?>">
-							@if($list->new_board_active=='1')
-							YES
-							@else
-								NO
-							@endif
-						</td>
-					
-						
+                        <td style="background-color: @if($list->new_board_submitted == '1') transparent; @else #FF000050; @endif;">
+                            @if($list->new_board_submitted == '1')
+                                YES
+                            @else
+                                NO
+                            @endif
+                        </td>
+                        <td style="background-color: @if($list->new_board_active == '1') transparent; @else #FF000050; @endif;">
+                            @if($list->new_board_active == '1')
+                                YES
+                            @else
+                                NO
+                            @endif
+                        </td>
                  </tr>
                   @endforeach
 
@@ -168,39 +160,39 @@
               <div class="col-sm-6 col-xs-12">
                 <div class="form-group">
                    <label style="display: block;"><input type="checkbox" name="showPrimary" id="showPrimary" class="ios-switch green bigswitch" {{$checkBoxStatus}} onchange="showPrimary()" /><div><div></div></div>
-                    
+
                   </label>
                   <span> Only show chapters I am primary for</span>
                 </div>
               </div>
               </div>
 			  <div class="box-body text-center">
-				<?php if (Session::get('positionid') >=5 && Session::get('positionid') <=7){ ?>	  
+				<?php if (Session::get('positionid') >=5 && Session::get('positionid') <=7){ ?>
 				    <button type="button" id="board-active" class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>>Make Received Boards Active</button>
 				                    <a href="{{ route('export.boardelection')}}"><button class="btn btn-themeBlue margin">Export UN-Activated Board List</button></a>
 
 			 	<!--<a href="{{route('report.boardnotification')}}" class="btn btn-themeBlue margin" >Send Late Notices</a>-->
 				<?php }?>
-               
+
              </div>
             </div>
-			
+
            </div>
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection
 @section('customscript')
 <script>
 $(document).ready(function(){
 	$("#board-active").click(function() {
 		window.location.href = "/mimi/yearreports/boardinfo?board=active";
-	});	
+	});
 });
   function showPrimary(){
     if($("#showPrimary").prop("checked") == true){

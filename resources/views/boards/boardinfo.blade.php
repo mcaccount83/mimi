@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <div class="card card-user">
                 <div class="card-image color_header">
-                   
+
                 </div>
                 <div class="card-body">
                     <div class="author">
@@ -22,25 +22,25 @@
                         </h4>-->
                         <br>
                         <p class="description" style="padding: 0 20px">
-                            Please complete the report below with information about your newly elcted board to ensure they have access to all the tools they need to be successful in the upcoming year. 
+                            Please complete the report below with information about your newly elcted board to ensure they have access to all the tools they need to be successful in the upcoming year.
                         </p>
                        <h4><center><?php if($chapterList[0]->new_board_submitted) echo "<br><font color=\"red\">Thank You! Your chapter's Board Eleciton Report has been Submitted!</font>"; ?></center></h4>
 
                     </div>
 
                 </div>
-                
+
             </div>
         </div>
         <div class="col-md-12">
 		    <div class="card">
-               
+
                 <form id="boardinfo" method="POST" action="{{ route('boardinfo.createboardinfo',$chapterList[0]->id) }}">
-				@csrf 
+				@csrf
 				<div class="card-header">
                     <h4 class="card-title">Chapter Boundaries</h4>
                 </div>
-				
+
 				<div class="card-body">
 					<div class="row">
 						<div class="col-md-12">
@@ -76,7 +76,7 @@
 					</div>
 				</div>
 
-				
+
 				<div class="card-header">
                     <h4 class="card-title">Chapter Information</h4>
                 </div>
@@ -89,8 +89,8 @@
 							</div>
 						</div>
                     </div>
-					
-				
+
+
                <!-- /.form group -->
                 <div class="col-md-12">
                                 <div class="form-group">
@@ -105,7 +105,7 @@
                                 <div class="col-md-4 float-left">
                                 <div class="form-check form-check-radio">
                                     <label class="form-check-label">
-                                        <input  type="radio" class="form-check-input" name="ch_linkstatus" value="1" id="link" disabled {{$chapterList[0]->website_link_status == '1'  ? 'checked' : ''}}>
+                                        <input  type="radio" class="form-check-input" name="ch_webstatus" value="1" id="link" disabled {{$chapterList[0]->website_link_status == '1'  ? 'checked' : ''}}>
                                         <span class="form-check-sign"></span>
                                         LINKED
                                     </label>
@@ -114,7 +114,7 @@
                                 <div class="col-md-4 float-left">
                                 <div class="form-check form-check-radio">
                                     <label class="form-check-label">
-                                        <input  type="radio" class="form-check-input" name="ch_linkstatus" id="add_link_req" value="2" disabled {{$chapterList[0]->website_link_status == '2'  ? 'checked' : ''}}>
+                                        <input  type="radio" class="form-check-input" name="ch_webstatus" id="add_link_req" value="2" disabled {{$chapterList[0]->website_link_status == '2'  ? 'checked' : ''}}>
                                         <span class="form-check-sign"></span>
                                         ADD LINK REQUESTED
                                     </label>
@@ -123,7 +123,7 @@
                                 <div class="col-md-4 float-left">
                                 <div class="form-check form-check-radio">
                                     <label class="form-check-label">
-                                        <input  type="radio" class="form-check-input" name="ch_linkstatus" id="not_link" value="3" disabled {{$chapterList[0]->website_link_status == '3'  ? 'checked' : ''}}>
+                                        <input  type="radio" class="form-check-input" name="ch_webstatus" id="not_link" value="3" disabled {{$chapterList[0]->website_link_status == '3'  ? 'checked' : ''}}>
                                         <span class="form-check-sign"></span>
                                         DO NOT LINK
                                     </label>
@@ -162,13 +162,13 @@
               		</div>
 						</div>
                     </div>
-				
+
 				</div>
                 <div class="card-header">
                     <h4 class="card-title">President</h4>
                 </div>
                 <div class="card-body">
-                   
+
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -182,7 +182,7 @@
                                     <input type="text" name="ch_pre_lname" class="form-control" placeholder="Last Name" value="{{ $PREDetails[0]->pre_lname }}" required maxlength="50" onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
-                            
+
                         </div>
                         <div class="row">
                             <div class="col-md-12">
@@ -233,13 +233,13 @@
                             </div>
 						<input type="hidden" name="presID" id="presID" value="<?php echo $PREDetails[0]->ibd_id; ?>" />
                         <div class="clearfix"></div>
-                   
+
                 </div>
                 <div class="card-header">
                     <h4 class="card-title">AVP</h4>
                 </div>
                 <div class="card-body">
-                  
+
                         <div class="row" id="checkRadios">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -304,7 +304,7 @@
                                 <div class="form-group">
                                     <label>Vacant</label>
                                     <label style="display: block;"><input type="checkbox" name="AVPVacant" id="AVPVacant" class="ios-switch green bigswitch" {{$AVPDetails[0]->avp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)"  /><div><div></div></div></label>
-                                
+
                                 </div>
                             </div>
                             </div>
@@ -314,7 +314,7 @@
                     <h4 class="card-title">MVP</h4>
                 </div>
                 <div class="card-body">
-                  
+
                         <div class="row" id="checkRadios">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -379,7 +379,7 @@
                                 <div class="form-group">
                                     <label>Vacant</label>
                                     <label style="display: block;"><input type="checkbox" name="MVPVacant" id="MVPVacant" class="ios-switch green bigswitch" {{$MVPDetails[0]->mvp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)"/><div><div></div></div></label>
-                                
+
                                 </div>
                             </div>
                             </div>
@@ -389,7 +389,7 @@
                     <h4 class="card-title">TREASURER</h4>
                 </div>
                 <div class="card-body">
-                   
+
                         <div class="row" id="checkRadios">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -454,17 +454,17 @@
                                 <div class="form-group">
                                     <label>Vacant</label>
                                     <label style="display: block;"><input type="checkbox" name="TreasVacant" id="TreasVacant" class="ios-switch green bigswitch" {{$TRSDetails[0]->trs_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)"/><div><div></div></div></label>
-                                
+
                                 </div>
                             </div>
                             </div>
-						<input type="hidden" name="trsID" id="trsID" value="<?php echo $TRSDetails[0]->ibd_id; ?>" />	
+						<input type="hidden" name="trsID" id="trsID" value="<?php echo $TRSDetails[0]->ibd_id; ?>" />
                 </div>
                 <div class="card-header">
                     <h4 class="card-title">SECRETARY</h4>
                 </div>
                 <div class="card-body">
-                  
+
                         <div class="row" id="checkRadios">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -529,25 +529,25 @@
                                 <div class="form-group">
                                     <label>Vacant</label>
                                     <label style="display: block;"><input type="checkbox" name="SecVacant" id="SecVacant" class="ios-switch green bigswitch" {{$SECDetails[0]->sec_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)"/><div><div></div></div></label>
-                                
+
                                 </div>
                             </div>
                             </div>
-						<input type="hidden" name="secID" id="secID" value="<?php echo $SECDetails[0]->ibd_id; ?>" />	
+						<input type="hidden" name="secID" id="secID" value="<?php echo $SECDetails[0]->ibd_id; ?>" />
                 </div>
-                
+
                 <div class="card-body">
                     <div class="col-md-12 text-center">
-                        
+
                     <button type="submit" class="btn btn-info btn-fill" onclick="return PreSaveValidate()" <?php if($chapterList[0]->new_board_submitted) echo "disabled"; ?>>Submit</button>
                     <a href="{{ route('home') }}" class="btn btn-info btn-fill">Back</a>
                     </div>
                 </div>
-				</form>	 
-               
+				</form>
+
             </div>
 		</div>
-        
+
     </div>
 </div>
 @endsection
@@ -574,7 +574,7 @@ function is_url() {
 
       var isChecked1 = $('#add_link_req').is(':checked');
       var isChecked2 = $('#not_link').is(':checked');
-      
+
       if (!isChecked1 && !isChecked2) {
         alert("Please select a link status.");
         return false;
@@ -588,7 +588,7 @@ function is_url() {
       $('#not_link').attr('disabled', true);
       $('#link').prop('checked', true);
     }
-    
+
     return true;
   } else {
     alert("Please enter a URL in the format http://xxxxxxxx.xxx");
@@ -615,7 +615,7 @@ function isPhone() {
 		alert("Please Enter Number Only");
 		return false;
 	}
-} 
+}
   function BoundaryError(error){
 		if (error){
 			$("#BoundaryIssue").prop("readonly",false);
@@ -636,7 +636,7 @@ $(document).ready(function() {
         if(inputValue.length > 10) inputValue = inputValue.substring(0,10);
         var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
         $("#"+phoneListArr[i]).val(reInputValue);
-    } 
+    }
 	 $("#ch_pre_phone").keyup(function() {
         this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2-")
     });
@@ -651,18 +651,18 @@ $(document).ready(function() {
     });
 	$("#ch_sec_phone").keyup(function() {
         this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2-")
-    });  
-	
+    });
+
 	var check = <?php echo "\"" . $chapterList[0]->boundary_issues . "\""; ?>;
-	
+
 	if(check == 0){
 		$("#BoundaryIssue").prop("readonly",true);
 		$("#BoundaryIssue").prop("required",false);
 	}else{
 		$("#BoundaryIssue").prop("readonly",false);
 		$("#BoundaryIssue").prop("required",true);
-	}	
-	
+	}
+
 	var pcid = $("#pcid").val();
 	if(pcid !=""){
 		$.ajax({
@@ -676,7 +676,7 @@ $(document).ready(function() {
             }
         });
     }
-   
+
     var avp = $("#ch_avp_fname").val();
     if(avp ==''){
         $("#ch_avp_fname").prop("readonly",true);
@@ -709,7 +709,7 @@ $(document).ready(function() {
         $("#ch_trs_zip").prop("readonly",true);
         $("#ch_trs_phone").prop("readonly",true);
         $("#ch_trs_state").prop("disabled",true);
-    } 
+    }
     var sec = $("#ch_sec_fname").val();
     if(sec ==''){
         $("#ch_sec_fname").prop("readonly",true);
@@ -721,9 +721,9 @@ $(document).ready(function() {
         $("#ch_sec_phone").prop("readonly",true);
         $("#ch_sec_state").prop("disabled",true);
     }
-   
+
   });
-  
+
   function ConfirmVacant(checkboxid) {
     switch(checkboxid){
 					case "AVPVacant":
@@ -763,8 +763,8 @@ $(document).ready(function() {
                 $("#ch_avp_zip").prop("required",true);
                 $("#ch_avp_phone").prop("required",true);
                 $("#ch_avp_state").prop("required",true);
-              }  
-            break; 
+              }
+            break;
           case "MVPVacant":
               if($("#MVPVacant").prop("checked") == true){
                 $("#ch_mvp_fname").prop("readonly",true);
@@ -801,7 +801,7 @@ $(document).ready(function() {
                 $("#ch_mvp_zip").prop("required",true);
                 $("#ch_mvp_phone").prop("required",true);
                 $("#ch_mvp_state").prop("required",true);
-              }  
+              }
             break;
           case "TreasVacant":
               if($("#TreasVacant").prop("checked") == true){
@@ -839,9 +839,9 @@ $(document).ready(function() {
                 $("#ch_trs_zip").prop("required",true);
                 $("#ch_trs_phone").prop("required",true);
                 $("#ch_trs_state").prop("required",true);
-                
-              }  
-            break; 
+
+              }
+            break;
           case "SecVacant":
               if($("#SecVacant").prop("checked") == true){
                 $("#ch_sec_fname").prop("readonly",true);
@@ -878,10 +878,10 @@ $(document).ready(function() {
                 $("#ch_sec_zip").prop("required",true);
                 $("#ch_sec_phone").prop("required",true);
                 $("#ch_sec_state").prop("required",true);
-              }  
-            break;      
-    }      
-    
+              }
+            break;
+    }
+
   }
 
 //submit validation function
@@ -892,7 +892,7 @@ $(document).ready(function() {
             if($("#ch_pre_email").val() == $("#ch_avp_email").val() || $("#ch_pre_email").val() == $("#ch_mvp_email").val() || $("#ch_pre_email").val() == $("#ch_trs_email").val() || $("#ch_pre_email").val() == $("#ch_sec_email").val()) {
               errMessage = "The e-mail address provided for the Chapter President was also provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
             }
-          }  
+          }
           if($("#ch_avp_email").val() != ""){
             if($("#ch_avp_email").val() == $("#ch_mvp_email").val() || $("#ch_avp_email").val() == $("#ch_trs_email").val() || $("#ch_avp_email").val() == $("#ch_sec_email").val()) {
               errMessage = "The e-mail address provided for the Chapter AVP was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
@@ -903,28 +903,28 @@ $(document).ready(function() {
               errMessage = "The e-mail address provided for the Chapter MVP was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
             }
           }
-          if($("#ch_trs_email").val() != ""){  
+          if($("#ch_trs_email").val() != ""){
             if($("#ch_trs_email").val() == $("#ch_sec_email").val()) {
               errMessage = "The e-mail address provided for the Chapter Treasurer was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
             }
           }
 		  if(!document.getElementById("BoundaryStatus1").checked && !document.getElementById("BoundaryStatus2").checked){
-					errMessage = "Please review your chapters boundaries and verify they match your chapters records.";		document.getElementById("BoundaryStatus1").focus();			
+					errMessage = "Please review your chapters boundaries and verify they match your chapters records.";		document.getElementById("BoundaryStatus1").focus();
 				}
-          
+
           if(errMessage.length > 0){
-            alert (errMessage);	
+            alert (errMessage);
             return false;
           }
-		  
-		  
+
+
 		var $myForm = $('#boardinfo');
             if($myForm[0].checkValidity()){
-                alert ("Thank you for submitting your chapter's incoming board information. New board members will not be able to login until July 1st.");  
+                alert ("Thank you for submitting your chapter's incoming board information. New board members will not be able to login until July 1st.");
                 return true;
             }
 
-	}  
-  
-</script>  
+	}
+
+</script>
 @endsection

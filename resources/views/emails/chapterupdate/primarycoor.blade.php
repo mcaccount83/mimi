@@ -205,25 +205,28 @@ MIMI Database Administrator
                     <td>{{$mailData['webUrlPre']}}</td>
                     <td>{{$mailData['webUrlUpd']}}</td>
                 </tr>
-                <tr style="{{$mailData['weblinkStatusPre'] != $mailData['weblinkStatusUpd'] ? 'background-color: yellow;' : ''}}">
+                <tr style="{{$mailData['webStatusPre'] != $mailData['webStatusUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Website Link Status</td>
-                    <td>@if($mailData['weblinkStatusPre']==1)
-
+                    <td>@if($mailData['webStatusPre']==1)
                             Linked
-                            @elseif($mailData['weblinkStatusPre']==2)
+                            @elseif($mailData['webStatusPre']==2)
                             Link Requested
-                            @else
+                            @elseif($mailData['webStatusPre']==3)
                             Do Not Link
-                        @endif
+                            @else
+                            Not Linked
+                            @endif</td>
+                    <td>@if($mailData['webStatusUpd']==1)
+                        Linked
+                        @elseif($mailData['webStatusUpd']==2)
+                        Link Requested
+                        @elseif($mailData['webStatusUpd']==3)
+                        Do Not Link
+                        @else
+                        Not Linked
+                    @endif</td>
+                </td>
                     </td>
-                    <td>@if($mailData['weblinkStatusUpd']==1)
-
-                            Linked
-                            @elseif($mailData['weblinkStatusUpd']==2)
-                            Link Requested
-                            @else
-                            Do Not Link
-                        @endif</td>
                 </tr>
                 <tr style="{{$mailData['egroupPre'] != $mailData['egroupUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>E-Group</td>

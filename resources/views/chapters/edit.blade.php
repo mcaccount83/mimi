@@ -84,16 +84,13 @@
               </div>
               </div>
                     <!-- /.form group -->
-
               <div class="col-sm-2 col-xs-12">
               <div class="form-group">
                 <label>EIN</label>
                 <input type="text" id="ch_ein" name="ch_ein" class="form-control my-colorpicker1" value="{{ $chapterList[0]->ein }}" maxlength="10" readonly>
               </div>
               </div>
-
-                            <!-- /.form group -->
-
+                  <!-- /.form group -->
                 <div class="col-sm-2 col-xs-12">
               <div class="form-group">
                  @if(empty($chapterList[0]->ein_letter_path))
@@ -125,28 +122,6 @@
                 <input type="text" name="ch_notes" class="form-control my-colorpicker1" maxlength="50" value="{{ $chapterList[0]->notes}}" >
               </div>
               </div>
-                                <!-- /.form group -->
-            <!-- @if($positionid ==6)
-                  <div class="radio-chk">
-              <div class="col-sm-2 col-xs-12">
-                  <div class="form-group">
-                    <label>EIN Letter On File</label>
-                    <label style="display: block;"><input type="checkbox" name="ch_ein_letter" id="ch_ein_letter" class="ios-switch green bigswitch" {{$chapterList[0]->ein_letter == '1'  ? 'checked' : ''}} /><div><div></div></div>
-                                </label>
-                  </div>
-              </div>
-              </div>
-              @else
-                  <div class="radio-chk">
-              <div class="col-sm-2 col-xs-12">
-                  <div class="form-group">
-                    <label>EIN Letter On File</label>
-                    <label style="display: block;"><input disabled type="checkbox" name="ch_ein_letter" id="ch_ein_letter" class="ios-switch green bigswitch" {{$chapterList[0]->ein_letter == '1'  ? 'checked' : ''}} /><div><div></div></div>
-                                </label>
-                  </div>
-              </div>
-              </div>
-              @endif -->
 
               <!-- /.form group -->
               <div class="col-sm-12 col-xs-12">
@@ -549,49 +524,28 @@
               </div>
               <div class="box-body">
 
-               <!-- /.form group -->
-               <div class="col-sm-12 col-xs-12">
-              <div class="form-group">
-                <label>Chapter Website</label>
-                <input type="text" name="ch_website" class="form-control my-colorpicker1" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}" maxlength="150" id="validate_url" onchange="is_url();">
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-12 col-xs-12">
-                <label>Link Status</label><span class="field-required" id="link_status" hidden>*</span>
-              </div>
-              <div class="col-sm-4 col-xs-12">
-              <div class="form-group">
-                <label class="span-t mrg-10">
-                  <input type="radio" name="ch_linkstatus" class="minimal" id="link" value="1" {{$chapterList[0]->website_link_status == '1'  ? 'checked' : ''}} >
-                  <span>Linked</span>
-                </label>
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-4 col-xs-12">
-              <div class="form-group">
-                <label class="span-t mrg-10">
-                  <input type="radio" name="ch_linkstatus" class="minimal" id="add_link_req" value="2" {{$chapterList[0]->website_link_status == '2'  ? 'checked' : ''}} >
-                  <span>Add Link Requested</span>
-                </label>
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-4 col-xs-12">
-              <div class="form-group">
-                <label class="span-t mrg-10">
-                  <input type="radio" name="ch_linkstatus" class="minimal" id="not_link" value="3" {{$chapterList[0]->website_link_status == '3'  ? 'checked' : ''}} >
-                 <span> Do not Link</span>
-                </label>
-              </div>
-              </div>
-                       <div class="col-sm-4 col-xs-12">
-              <div class="form-group">      <input type="hidden" name="ch_hid_linkstatus" value="{{$chapterList[0]->website_link_status}}">
-</div>
-              </div>
+                <!-- /.form group -->
+                <div class="col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <label>Chapter Website</label>
+                      <input type="text" name="ch_website" class="form-control my-colorpicker1" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}" maxlength="50" id="validate_url" onchange="is_url(); updateWebsiteStatus();">
+                    </div>
+                    </div>
+                      <!-- /.form group -->
+                      <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label>Website Link Status</label> <span class="field-required">*</span>
+                            <select id="ch_webstatus" name="ch_webstatus" class="form-control select2" style="width: 100%;" required>
+                                <option value="0" id="option0" {{$chapterList[0]->website_status == 0 ? 'selected' : ''}} disabled>Website Not Linked</option>
+                                <option value="1" id="option1" {{$chapterList[0]->website_status == 1 ? 'selected' : ''}}>Website Linked</option>
+                                <option value="2" id="option2" {{$chapterList[0]->website_status == 2 ? 'selected' : ''}}>Add Link Requested</option>
+                                <option value="3" id="option3" {{$chapterList[0]->website_status == 3 ? 'selected' : ''}}>Do Not Link</option>
+                            </select>
 
-              <!-- /.form group -->
+                            <input type="hidden" name="ch_hid_webstatus" value="{{ $chapterList[0]->website_status }}">
+                        </div>
+                    </div>
+                <!-- /.form group -->
               <div class="col-sm-12 col-xs-12">
               <div class="form-group">
                 <label>Online Discussion Group (Meetup, Google Groups, etc)</label>
@@ -794,7 +748,6 @@
                             <div class="form-group">
                                 <label><?php echo date('Y')-1 .'-'.date('Y');?> Financial Review Completed</label>
                                 <label style="display: block;"><input disabled type="checkbox" name="ch_financial_complete" id="" class="ios-switch green bigswitch" {{$chapterList[0]->financial_report_complete == '1'  ? 'checked' : ''}} /><div><div></div></div>
-                                <!--<label style="display: block;"><input disabled type="text" class="form-control my-colorpicker1" value={{$reviewComplete }} ><div><div></div></div>-->
                                 </label>
                             </div>
                         </div>
@@ -942,6 +895,9 @@
         $('#BoardReportAlwaysDisabled').prop('disabled', true);
 });
 
+// Disable Web Link Status option 0
+    document.getElementById('option0').disabled = true;
+
   function disbandChapter(){
         var txt =  $("#disband_reason").val();
         var cid = $("#chapter_id").val();
@@ -987,42 +943,62 @@ function isPhone() {
     }
 }
 
-function is_url()
-{
-  var str = $("#validate_url").val();
-  regexp =  /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
-      if (regexp.test(str))
-      {
-        if(str){
-          $('#link_status').removeAttr('hidden');
-          $('#link').removeAttr('disabled');
-          $('#add_link_req').removeAttr('disabled');
-          $('#not_link').removeAttr('disabled');
-          var isChecked = $('#link').is(':checked');
-          var isChecked1 = $('#add_link_req').is(':checked');
-          var isChecked2 = $('#not_link').is(':checked');
-          if(isChecked == '' || isChecked1 == '' || isChecked2 == ''){
-            alert("please select link status");
-            return false;
-          }
-        }else{
-          $('#link_status').attr('hidden',true);
-          $('#link').attr('disabled',true);
-          $('#add_link_req').attr('disabled',true);
-          $('#not_link').attr('disabled',true);
-          $('#link').prop('checked', false);
-          $('#add_link_req').prop('checked', false);
-          $('#not_link').prop('checked', false);
-          return false;
+function is_url() {
+        var str = $("#validate_url").val().trim(); // Trim leading and trailing whitespace
+        var chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
+
+        if (str === "") {
+            chWebStatusSelect.value = '0'; // Set to 0 if the input is blank
+            chWebStatusSelect.disabled = true; // Disable the select field
+            return true; // Field is empty, so no validation needed
         }
-        return true;
-      }
-      else
-      {
-        alert("Please Enter URL, Should be http://xxxxxxxx.xxx format");
-        return false;
-      }
+
+        var regexp = /^(https?:\/\/)([a-z0-9-]+\.(com|org))$/;
+
+        if (regexp.test(str)) {
+            chWebStatusSelect.disabled = false; // Enable the select field if a valid URL is entered
+            return true;
+        } else {
+            alert("Please Enter URL, Should be http://xxxxxxxx.xxx format");
+            chWebStatusSelect.value = '0'; // Set to 0 if an invalid URL is entered
+            chWebStatusSelect.disabled = true; // Disable the select field
+            return false;
+        }
+    }
+
+        function updateWebsiteStatus() {
+            const chWebsiteInput = document.querySelector('input[name="ch_website"]');
+            const chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
+
+            if (chWebsiteInput.value === '') {
+                chWebStatusSelect.value = '0'; // Set to 0 if the input is blank
+            } else if (chWebsiteInput.value !== 'http://www.momsclubofchaptername.com') {
+                // Set to 2 or 3 based on some condition, you can customize this part.
+                // For now, I'm setting it to 2.
+                chWebStatusSelect.value = '2';
+            }
+        }
+
+
+function enableEditField() {
+    const chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
+    const chWebsiteInput = document.querySelector('input[name="ch_website"]');
+
+    if (chWebStatusSelect.value === '2') {
+        chWebStatusSelect.disabled = false; // Enable the select field if option 2 is selected
+    } else {
+        chWebStatusSelect.disabled = true; // Disable for other options
+    }
+
+    // You can also add a condition to enable the input field when option 2 is selected.
+    // For example:
+    if (chWebStatusSelect.value === '2') {
+        chWebsiteInput.disabled = false; // Enable the "Chapter Website" input field for option 2
+    } else {
+        chWebsiteInput.disabled = true; // Disable for other options
+    }
 }
+
 
   $(document ).ready(function() {
     var phoneListArr = ["ch_pre_phone","ch_avp_phone","ch_mvp_phone","ch_trs_phone","ch_sec_phone"];
@@ -1366,6 +1342,7 @@ function is_url()
         }
 
             }
+
 function UpdateEIN(){
                 var ein=document.getElementById("ch_ein").value;
                 var new_ein="";

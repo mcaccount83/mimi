@@ -80,6 +80,13 @@
                 <input type="text" id="ch_ein" name="ch_ein" class="form-control my-colorpicker1" maxlength="10">
               </div>
               </div>
+                <!-- /.form group -->
+                  <div class="col-sm-4 col-xs-12">
+                    <div class="form-group">
+                    <label> </label>
+                    <input type="text" id="" name="" class="form-control my-colorpicker1" maxlength="10" readonly>
+                       </div>
+                    </div>
               <!-- /.form group -->
               <div class="col-sm-4 col-xs-12">
               <div class="form-group">
@@ -93,6 +100,14 @@
                 </select>
               </div>
               </div>
+               <!-- /.form group -->
+               <div class="col-sm-8 col-xs-12">
+                <div class="form-group">
+                  <label>Status Note (not visible to board members)</label>
+                  <input type="text" name="ch_notes" class="form-control my-colorpicker1" maxlength="50">
+                </div>
+                </div>
+
               <!-- /.form group -->
               <div class="col-sm-12 col-xs-12">
               <div class="form-group">
@@ -166,7 +181,7 @@
                 <input type="text" name="ch_pre_zip" class="form-control my-colorpicker1" maxlength="10" required onkeypress="return isNumber(event)">
               </div>
               </div>
-              
+
               </div>
               <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">AVP</h3>
@@ -318,7 +333,7 @@
                     </div>
 				</div>
               </div>
-              
+
               </div>
               <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">Treasurer</h3>
@@ -474,93 +489,43 @@
                 <h3 class="box-title">Information</h3>
               </div>
               <div class="box-body">
-              <!-- /.form group -->
-              <div class="col-sm-12 col-xs-12">
-              <div class="form-group">
-                <label>Additional Information</label>
-                <textarea name="ch_addinfo" class="form-control my-colorpicker1" rows="4" maxlength="250"></textarea>
-              </div>
-              </div>
-               <!-- /.form group -->
-               <div class="col-sm-12 col-xs-12">
-              <div class="form-group">
-                <label>Chapter Website</label>
-                <input type="text" name="ch_website" class="form-control my-colorpicker1" maxlength="150" readonly>
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-12 col-xs-12">
-                <label>Link Status</label>
-              </div>
-              <div class="col-sm-4 col-xs-12">
-              <div class="form-group">
-                <label class="span-t mrg-10">
-                  <input type="radio" name="ch_linkstatus" class="minimal" value="1">
-                  <span>Linked</span>
-                </label>
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-4 col-xs-12">
-              <div class="form-group">
-                <label class="span-t mrg-10">
-                  <input type="radio" name="ch_linkstatus" class="minimal" value="2">
-                  <span>Add Link Requested</span>
-                </label>
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-4 col-xs-12">
-              <div class="form-group">
-                <label class="span-t mrg-10">
-                  <input type="radio" name="ch_linkstatus" class="minimal" value="3">
-                 <span> Do not Link</span>
-                </label>
-              </div>
-              </div>
-              <!-- /.form group -->
+
+            <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label>Chapter Email Address</label>
                 <input type="email" name="ch_email" class="form-control my-colorpicker1" maxlength="30">
               </div>
               </div>
+                <!-- /.form group -->
+                <div class="col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <label>PO Box</label>
+                      <input type="text" name="ch_pobox" class="form-control my-colorpicker1" maxlength="30">
+                    </div>
+                    </div>
               <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
-                <label>Email to give to moms interested in joining your chapter</label> <span class="field-required">*</span>
+                <label>Inquiries Email Address</label> <span class="field-required">*</span>
                 <input type="email" name="ch_inqemailcontact" class="form-control my-colorpicker1" maxlength="50" required>
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
-                <label>Inquiries Note</label>
+                <label>Inquiries Notes (not visible to board members)</label>
                 <input type="text" name="ch_inqnote" class="form-control my-colorpicker1" maxlength="50">
               </div>
               </div>
-              <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label>Online Chapter Discussion Group</label>
-                <input type="text" name="ch_onlinediss" class="form-control my-colorpicker1" maxlength="50">
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label>PO Box</label>
-                <input type="text" name="ch_pobox" class="form-control my-colorpicker1" maxlength="30">
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label>Notes</label>
-                <input type="text" name="ch_notes" class="form-control my-colorpicker1" maxlength="50">
-              </div>
-              </div>
-              
+               <!-- /.form group -->
+               <div class="col-sm-12 col-xs-12">
+                <div class="form-group">
+                  <label>Additional Information (not visible to board members)</label>
+                  <textarea name="ch_addinfo" class="form-control my-colorpicker1" rows="4" maxlength="250"></textarea>
+                </div>
+                </div>
+
               </div>
               <div class="box-body">
                 <!-- /.form group -->
@@ -597,12 +562,12 @@
               </div>
               </div>
               </div>
-             
+
           <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">International MOMS Club Coordinators</h3>
               </div>
               <div class="box-body">
-               
+
               <!-- /.form group -->
               <div class="col-sm-12 col-xs-12">
               <div class="form-group">
@@ -619,7 +584,7 @@
               </div>
               </div>
       </div>
-            
+
             <!-- /.box-body -->
             <div class="box-body text-center">
               <button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate()">Save</button>
@@ -627,14 +592,14 @@
               <a href="{{ route('home') }}" class="btn btn-themeBlue margin">Back</a>
               </div>
             <!-- /.box-body -->
-            
+
           </div>
           <!-- /.box -->
         </div>
       </div>
     </section>
     </form>
- 
+
 @endsection
 @section('customscript')
 <script>
@@ -666,7 +631,7 @@ $(document).ready(function() {
         if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
         var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
         $("#"+phoneListArr[i]).val(reInputValue);
-    } 
+    }
 	$("#ch_pre_phone").keyup(function() {
         this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
     });
@@ -682,7 +647,7 @@ $(document).ready(function() {
 	$("#ch_sec_phone").keyup(function() {
         this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
     });
-    var a = $('input[type=checkbox]').attr('checked'); 
+    var a = $('input[type=checkbox]').attr('checked');
     if(a ='checked'){
         $("#ch_avp_fname").prop("readonly",true);
         $("#ch_avp_lname").prop("readonly",true);
@@ -692,7 +657,7 @@ $(document).ready(function() {
         $("#ch_avp_zip").prop("readonly",true);
         $("#ch_avp_phone").prop("readonly",true);
         $("#ch_avp_state").prop("disabled",true);
-        
+
 
         $("#ch_mvp_fname").prop("readonly",true);
         $("#ch_mvp_lname").prop("readonly",true);
@@ -721,7 +686,7 @@ $(document).ready(function() {
         $("#ch_sec_phone").prop("readonly",true);
         $("#ch_sec_state").prop("disabled",true);
    }
-    
+
   });
 
   function ConfirmVacant(checkboxid) {
@@ -762,8 +727,8 @@ $(document).ready(function() {
                 $("#ch_avp_zip").prop("required",true);
                 $("#ch_avp_phone").prop("required",true);
                 $("#ch_avp_state").prop("required",true);
-              }  
-            break; 
+              }
+            break;
           case "MVPVacant":
               if($("#MVPVacant").prop("checked") == true){
                 $("#ch_mvp_fname").prop("readonly",true);
@@ -799,7 +764,7 @@ $(document).ready(function() {
                 $("#ch_mvp_zip").prop("required",true);
                 $("#ch_mvp_phone").prop("required",true);
                 $("#ch_mvp_state").prop("required",true);
-              }  
+              }
             break;
           case "TreasVacant":
               if($("#TreasVacant").prop("checked") == true){
@@ -836,9 +801,9 @@ $(document).ready(function() {
                 $("#ch_trs_zip").prop("required",true);
                 $("#ch_trs_phone").prop("required",true);
                 $("#ch_trs_state").prop("required",true);
-                
-              }  
-            break; 
+
+              }
+            break;
           case "SecVacant":
               if($("#SecVacant").prop("checked") == true){
                 $("#ch_sec_fname").prop("readonly",true);
@@ -874,30 +839,28 @@ $(document).ready(function() {
                 $("#ch_sec_zip").prop("required",true);
                 $("#ch_sec_phone").prop("required",true);
                 $("#ch_sec_state").prop("required",true);
-              }  
-            break;      
-    }      
-    
+              }
+            break;
+    }
+
   }
-	
+
 	function ConfirmCancel(element){
 		var result=confirm("Any unsaved changes will be lost. Do you want to continue?");
 		if(result)
 			location.reload()
 		else
 			return false;
-	}	
+	}
 
   //submit validation function
   function PreSaveValidate(){
     		var errMessage="";
-        //if($("#ch_pre_email").val() != "" || $("#ch_avp_email").val() != "" || $("#ch_mvp_email").val() != "" || $("#ch_trs_email").val() != "" || $("#ch_sec_email").val() != ""){
-          //Ensure there are no e-mail addresses repeated
           if($("#ch_pre_email").val() != ""){
             if($("#ch_pre_email").val() == $("#ch_avp_email").val() || $("#ch_pre_email").val() == $("#ch_mvp_email").val() || $("#ch_pre_email").val() == $("#ch_trs_email").val() || $("#ch_pre_email").val() == $("#ch_sec_email").val()) {
               errMessage = "The e-mail address provided for the Chapter President was also provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
             }
-          }  
+          }
           if($("#ch_avp_email").val() != ""){
             if($("#ch_avp_email").val() == $("#ch_mvp_email").val() || $("#ch_avp_email").val() == $("#ch_trs_email").val() || $("#ch_avp_email").val() == $("#ch_sec_email").val()) {
               errMessage = "The e-mail address provided for the Chapter AVP was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
@@ -908,18 +871,17 @@ $(document).ready(function() {
               errMessage = "The e-mail address provided for the Chapter MVP was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
             }
           }
-          if($("#ch_trs_email").val() != ""){  
+          if($("#ch_trs_email").val() != ""){
             if($("#ch_trs_email").val() == $("#ch_sec_email").val()) {
               errMessage = "The e-mail address provided for the Chapter Treasurer was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
             }
           }
-          
+
           if(errMessage.length > 0){
-            alert (errMessage);	
+            alert (errMessage);
             return false;
           }
-        //}
-       							
+
 				//Okay, all validation passed, save the records to the database
 				return true;
 			}
@@ -934,7 +896,7 @@ $(document).ready(function() {
 
             }
         });
-        
+
       }
 
       function checkDuplicateEmail(email,id){

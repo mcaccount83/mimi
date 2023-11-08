@@ -199,7 +199,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Chapter Website</label>
-                                    <input  type="text" name="ch_website" class="form-control rowheight" maxlength="150" id="ch_website" placeholder="http://www.momsclubofchaptername.com"  value="{{$chapterDetails->website_url}}" onchange="is_url()" readonly>
+                                    <input  type="text" name="ch_website" class="form-control rowheight" maxlength="150" id="ch_website" placeholder="http://www.momsclubofchaptername.com"  value="{{$chapterDetails->website_url}}" readonly>
                                 </div>
                             </div>
                         </div>

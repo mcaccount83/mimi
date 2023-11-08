@@ -11,7 +11,7 @@
         <li class="active">Chapter Website Details</li>
       </ol>
     </section>
-   
+
     <!-- Main content -->
     <form method="POST" name="chapter-website-list" action='{{ route("chapter.updateweb",$chapterList[0]->id) }}'">
     @csrf
@@ -44,7 +44,7 @@
               </div>
               </div>
 
-            
+
               <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
@@ -58,56 +58,37 @@
                 </select>
               </div>
               </div>
-             
+
               </div>
-            
-             
+
+
               <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">Information</h3>
               </div>
               <div class="box-body">
               <!-- /.form group -->
-              
-               <!-- /.form group -->
-               <div class="col-sm-12 col-xs-12">
-              <div class="form-group">
-                <label>Chapter Website</label>
-				        <input type="hidden" name="CurrentWebsite" id="CurrentWebsite" value="{{$chapterList[0]->website_url}}" />
-                <input type="url" name="Website" id="Website" class="form-control my-colorpicker1" onchange="ConfirmWebsiteAddressChange()" value="{{$chapterList[0]->website_url}}" pattern="https?://.+">
-              </div>
-              </div>
+
               <!-- /.form group -->
-              <div class="col-sm-12 col-xs-12">
-                <label>Link Status</label>
-              </div>
-			  <input type="hidden" name="CurrentLinkStatus" id="CurrentLinkStatus" value="{{$chapterList[0]->website_link_status}}" />
-              <div class="col-sm-4 col-xs-12">
-              <div class="form-group">
-                <label class="span-t mrg-10">
-                  <input type="radio" name="WebStatus" id="WebStatus1" class="" value="1" onchange="ConfirmWebStatusChange()" {{$chapterList[0]->website_link_status == '1'  ? 'checked' : ''}}>
-                  <span>Linked</span>
-                </label>
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-4 col-xs-12">
-              <div class="form-group">
-                <label class="span-t mrg-10">
-                  <input type="radio" name="WebStatus" id="WebStatus2" class="" value="2" onchange="ConfirmWebStatusChange()" {{$chapterList[0]->website_link_status == '2'  ? 'checked' : ''}}>
-                  <span>Add Link Requested</span>
-                </label>
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-4 col-xs-12">
-              <div class="form-group">
-                <label class="span-t mrg-10">
-                  <input type="radio" name="WebStatus" id="WebStatus3" class="" value="3" onchange="ConfirmWebStatusChange()" {{$chapterList[0]->website_link_status == '3'  ? 'checked' : ''}}>
-                 <span> Do not Link</span>
-                </label>
-              </div>
-              </div>
-                          
+              <div class="col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <label>Chapter Website</label>
+                  <input type="text" name="ch_website" class="form-control my-colorpicker1" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}" maxlength="50" id="validate_url" onchange="is_url(); updateWebsiteStatus();">
+                </div>
+                </div>
+                  <!-- /.form group -->
+                  <div class="col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label>Website Link Status</label> <span class="field-required">*</span>
+                        <select id="ch_webstatus" name="ch_webstatus" class="form-control select2" style="width: 100%;" required>
+                            <option value="0" id="option0" {{$chapterList[0]->website_status == 0 ? 'selected' : ''}} disabled>Website Not Linked</option>
+                            <option value="1" id="option1" {{$chapterList[0]->website_status == 1 ? 'selected' : ''}}>Website Linked</option>
+                            <option value="2" id="option2" {{$chapterList[0]->website_status == 2 ? 'selected' : ''}}>Add Link Requested</option>
+                            <option value="3" id="option3" {{$chapterList[0]->website_status == 3 ? 'selected' : ''}}>Do Not Link</option>
+                        </select>
+
+                        <input type="hidden" name="ch_hid_webstatus" value="{{ $chapterList[0]->website_status }}">
+                    </div>
+                </div>
               <!-- /.form group -->
              <div class="col-sm-12 col-xs-12">
               <div class="form-group">
@@ -142,7 +123,7 @@
                 <input type="text" name="ch_social3" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social3}}">
               </div>
               </div>
-              
+
               </div>
              <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">President</h3>
@@ -162,8 +143,8 @@
                 <input type="text" name="ch_pre_lname" class="form-control my-colorpicker1" value="{{ $chapterList[0]->last_name }}" disabled>
               </div>
               </div>
-             
-             
+
+
               <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
@@ -178,14 +159,14 @@
                 <input type="text" name="ch_pre_phone" class="form-control my-colorpicker1" value="{{ $chapterList[0]->phone }}" disabled>
               </div>
               </div>
-              
+
               </div>
-             
+
           <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">International Moms Clubs Coordinators</h3>
               </div>
               <div class="box-body">
-               
+
               <!-- /.form group -->
               <div class="col-sm-12 col-xs-12">
               <div class="form-group">
@@ -201,22 +182,22 @@
               </div>
 
 			  </div>
-			  
+
               </div>
       </div>
-            
+
             <!-- /.box-body -->
             <div class="box-body text-center">
-              <button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate()">Save</button>
-              
+              <button type="submit" class="btn btn-themeBlue margin">Save</button>
+
               <a href="{{ route('chapter.website') }}" class="btn btn-themeBlue margin">Back</a>
               </div>
 			<input type="hidden" name="WebsiteReset" id="WebsiteReset" value="false">
-			 
+
             <!-- /.box-body -->
-            
+
           </div>
-          
+
           <!-- /.box -->
         </div>
       </div>
@@ -229,8 +210,13 @@
 
   @section('customscript')
   <script>
+
+    // Disable Web Link Status option 0
+    document.getElementById('option0').disabled = true;
+
+
   $( document ).ready(function() {
-	  
+
     var selectedCorId = $("select#ch_primarycor option").filter(":selected").val();
     if(selectedCorId !=""){
       $.ajax({
@@ -244,10 +230,10 @@
             }
         });
     }
-     
+
   });
 
-	
+
   function checkReportId(val){
           $.ajax({
             url: '/mimi/checkreportid/'+val,
@@ -259,68 +245,45 @@
 
             }
         });
-        
+
       }
-  
-	function ConfirmWebStatusChange(){
-	
-			var confirmlinkremoval = false;
 
-			// First check and see if they changed the status and it needs to be delinked
-			if(document.getElementsByName("WebStatus")[2].checked && document.getElementById("CurrentLinkStatus").value==1){ //They want the site removed and it was previously linked
-				confirmlinkremoval = confirm("This chapter's website is current linked to the International MOMS Club website, selecting 'Do NOT Linked' will remove this link.  Do you wish to have the chapter's link removed?")
+      function is_url() {
+        var str = $("#validate_url").val().trim(); // Trim leading and trailing whitespace
+        var chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
 
-				if (confirmlinkremoval)
-					document.getElementById("WebsiteReset").value="true";	
-				else
-					document.getElementById("WebStatus1").checked=true; // Set webstatus value back to 'linked'
-			}	
-			else if(document.getElementsByName("WebStatus")[1].checked && document.getElementById("CurrentLinkStatus").value==1){ //They want the site removed and it was previously linked
-				confirmlinkremoval = confirm("This chapter's website is current linked to the International MOMS Club website, selecting 'Add Link Requested' will remove the existing link.  Do you wish to have the chapter's link removed?")
-				if (confirmlinkremoval)
-					document.getElementById("WebsiteReset").value="true";	
-				else
-					document.getElementById("WebStatus1").checked=true; // Set webstatus value back to 'linked'				
-			
-			}
-			else if(document.getElementsByName("WebStatus")[0].checked && document.getElementById("CurrentLinkStatus").value!=1){ //They want the site removed and it was previously linked
-				document.getElementById("WebsiteReset").value="true";	
-
-			}
-		}
-	function ConfirmWebsiteAddressChange(){
-			// They want the site linked so see if it changed
-			if(document.getElementById("Website").value != document.getElementById("Website").getAttribute("value")){				
-
-				if(document.getElementById("Website").value==""){			
-					alert("You have removed the chapter's website, the link status will also be removed.");
-					document.getElementById("WebsiteReset").value="true";
-					
-					$(this).removeAttr('checked');
-					
-					document.getElementById("WebStatus1").checked=false; // Set webstatus value to 'review'
-					document.getElementById("WebStatus2").checked=false; // Set webstatus value to 'review'
-					document.getElementById("WebStatus3").checked=false;// Set webstatus value to 'review'
-					return;
-				}
-				
-				//okay, website was changed - do they want it linked?
-				if(document.getElementsByName("WebStatus")[0].checked){ //was linked and still want it linked
-					confirmlinkremoval = alert("You have changed this chapter's website that is currently linked to the International MOMS Club website.  If the site has not yet been reviewed, please change the link status to Add Link Requested.")
-				}
-			}
-	
-		}
-
-    $("form[name=chapter-website-list]").submit(function(){
-      var chapterWebsite = $("input[name=Website]").val();
-      var WebStatus = document.getElementsByName("WebStatus");
-      if(chapterWebsite != ""){
-        if(WebStatus[0].checked == false && WebStatus[1].checked == false && WebStatus[2].checked == false){
-          alert("Link status must be checked."); return false;
+        if (str === "") {
+            chWebStatusSelect.value = '0'; // Set to 0 if the input is blank
+            chWebStatusSelect.disabled = true; // Disable the select field
+            return true; // Field is empty, so no validation needed
         }
-      }
-    });
+
+        var regexp = /^(https?:\/\/)([a-z0-9-]+\.(com|org))$/;
+
+        if (regexp.test(str)) {
+            chWebStatusSelect.disabled = false; // Enable the select field if a valid URL is entered
+            return true;
+        } else {
+            alert("Please Enter URL, Should be http://xxxxxxxx.xxx format");
+            chWebStatusSelect.value = '0'; // Set to 0 if an invalid URL is entered
+            chWebStatusSelect.disabled = true; // Disable the select field
+            return false;
+        }
+    }
+
+        function updateWebsiteStatus() {
+            const chWebsiteInput = document.querySelector('input[name="ch_website"]');
+            const chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
+
+            if (chWebsiteInput.value === '') {
+                chWebStatusSelect.value = '0'; // Set to 0 if the input is blank
+            } else if (chWebsiteInput.value !== 'http://www.momsclubofchaptername.com') {
+                // Set to 2 or 3 based on some condition, you can customize this part.
+                // For now, I'm setting it to 2.
+                chWebStatusSelect.value = '2';
+            }
+        }
+
 </script>
 @endsection
 
