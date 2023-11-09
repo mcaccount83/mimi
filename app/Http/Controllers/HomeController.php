@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chapter;
-use App\Models\User;
 use App\Models\FinancialReport;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -179,7 +179,7 @@ class HomeController extends Controller
             }
         }
 
-         /**
+        /**
          * Outgoing Board Login with Fiancial Report Only
          */
         if ($user_type == 'outgoing') {
@@ -189,7 +189,7 @@ class HomeController extends Controller
             $chapterId = $borDetails['chapter_id'];
             $chapterDetails = Chapter::find($chapterId);
             $request->session()->put('chapterid', $chapterId);
-            $loggedInName = $borDetails->first_name . ' ' . $borDetails->last_name;
+            $loggedInName = $borDetails->first_name.' '.$borDetails->last_name;
 
             $financial_report_array = FinancialReport::find($chapterId);
 
@@ -204,16 +204,14 @@ class HomeController extends Controller
 
             $data = ['financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails, 'user_type' => $user_type];
 
-                return view('boards.financial')->with($data);
+            return view('boards.financial')->with($data);
 
-            } else {
-                Auth::logout(); // logout user
-                $request->session()->flush();
+        } else {
+            Auth::logout(); // logout user
+            $request->session()->flush();
 
-                return redirect()->to('/login');
-            }
-
-
+            return redirect()->to('/login');
+        }
 
     }
 }
