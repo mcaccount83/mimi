@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdatePrimaryCoor;
+use App\Mail\WebsiteReviewNotice;
 use App\Models\Chapter;
 use App\Models\FinancialReport;
 use App\Models\User;
-use App\Mail\WebsiteReviewNotice;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -492,11 +492,11 @@ class BoardController extends Controller
                     'chapter_name' => $request->get('ch_name'),
                     'chapter_state' => $chapterState,
                     'ch_website_url' => $request->get('ch_website'),
-                    ];
+                ];
 
                 if ($request->get('ch_webstatus') == 2) {
                     Mail::to($to_email4, 'MOMS Club')
-                    ->send(new WebsiteReviewNotice($mailData));
+                        ->send(new WebsiteReviewNotice($mailData));
                 }
             }
 
@@ -701,14 +701,14 @@ class BoardController extends Controller
                     $presInfoUpd[0]->ein != $presInfoPre[0]->ein || $presInfoUpd[0]->ein_letter_path != $presInfoPre[0]->ein_letter_path || $presInfoUpd[0]->inquiries_note != $presInfoPre[0]->inquiries_note ||
                     $presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->po_box != $presInfoPre[0]->po_box || $presInfoUpd[0]->website_url != $presInfoPre[0]->website_url ||
                     $presInfoUpd[0]->website_status != $presInfoPre[0]->website_status || $presInfoUpd[0]->egroup != $presInfoPre[0]->egroup || $presInfoUpd[0]->territory != $presInfoPre[0]->territory ||
-                    $presInfoUpd[0]->additional_info != $presInfoPre[0]->additional_info || $presInfoUpd[0]->status != $presInfoPre[0]->status || $presInfoUpd[0]->notes !=  $presInfoPre[0]->notes ||
+                    $presInfoUpd[0]->additional_info != $presInfoPre[0]->additional_info || $presInfoUpd[0]->status != $presInfoPre[0]->status || $presInfoUpd[0]->notes != $presInfoPre[0]->notes ||
                     $mailDataAvpp['avpfnamePre'] != $mailDataAvp['avpfnameUpd'] || $mailDataAvpp['avplnamePre'] != $mailDataAvp['avplnameUpd'] || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] ||
                     $mailDataMvpp['mvpfnamePre'] != $mailDataMvp['mvpfnameUpd'] || $mailDataMvpp['mvplnamePre'] != $mailDataMvp['mvplnameUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] ||
                     $mailDatatresp['tresfnamePre'] != $mailDatatres['tresfnameUpd'] || $mailDatatresp['treslnamePre'] != $mailDatatres['treslnameUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] ||
                     $mailDataSecp['secfnamePre'] != $mailDataSec['secfnameUpd'] || $mailDataSecp['seclnamePre'] != $mailDataSec['seclnameUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
 
-            Mail::to($to_email, 'MOMS Club')
-                ->send(new ChapersUpdatePrimaryCoor($mailData));
+                Mail::to($to_email, 'MOMS Club')
+                    ->send(new ChapersUpdatePrimaryCoor($mailData));
 
             }
 

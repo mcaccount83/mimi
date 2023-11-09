@@ -28,7 +28,7 @@ class ChaptersPrimaryCoordinatorChange extends Mailable
     public function build(): static
     {
         return $this
-        ->subject('Primary Coordinator Change')
-        ->markdown('emails.chapterupdate.primarycoordinatorchange');
+            ->subject('Primary Coordinator Change')
+            ->markdown('emails.chapterupdate.primarycoordinatorchange');
     }
 }
