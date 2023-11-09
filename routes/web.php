@@ -26,19 +26,12 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::middleware('web', 'throttle:60,1')
-    ->prefix('api')
-    ->group(base_path('routes/web.php'));
-
-
 Route::middleware(['preventBackHistory'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     // Add more routes that require the 'preventBackHistory' middleware here
 });
 
-
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
-
 
 /**
  * Routes for Custom Links

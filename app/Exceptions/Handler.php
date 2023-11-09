@@ -2,7 +2,6 @@
 
 namespace App\Exceptions;
 
-use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -20,15 +19,13 @@ class Handler extends ExceptionHandler
     ];
 
     /**
-     * Report or log an exception.
-     *
-     * @return void
+     * Register the exception handling callbacks for the application.
      */
-    public function report(Throwable $exception)
+    public function register(): void
     {
-        // Log exception to storage
-        parent::report($exception);
-
+        $this->reportable(function (Throwable $e) {
+            //
+        });
     }
 
     /**
@@ -37,18 +34,18 @@ class Handler extends ExceptionHandler
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Throwable $exception)
-    {
-        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\HttpException) {
-            if ($exception->getStatusCode() == 404) {
-                return redirect()->to('/login');
-            }
+   // public function render($request, Throwable $exception)
+  //  {
+   //     if ($exception instanceof \Symfony\Component\HttpKernel\Exception\HttpException) {
+   //         if ($exception->getStatusCode() == 404) {
+   //             return redirect()->to('/login');
+   //         }
 
-            if ($exception->getStatusCode() == 500) {
-                return redirect()->to('/login');
-            }
-        } else {
-            return parent::render($request, $exception);
-        }
-    }
+    //        if ($exception->getStatusCode() == 500) {
+   //             return redirect()->to('/login');
+   //         }
+  //      } else {
+   //         return parent::render($request, $exception);
+   //     }
+  //  }
 }
