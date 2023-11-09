@@ -3,21 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ChapersUpdateListAdmin;
-use App\Mail\ChaptersPrimaryCoordinatorChange;
-use App\Mail\ChaptersPrimaryCoordinatorChangePCNotice;
 use App\Mail\ChapersUpdatePrimaryCoor;
 use App\Mail\ChapterAddListAdmin;
 use App\Mail\ChapterAddPrimaryCoor;
 use App\Mail\ChapterReAddListAdmin;
 use App\Mail\ChapterRemoveListAdmin;
+use App\Mail\ChaptersPrimaryCoordinatorChange;
+use App\Mail\ChaptersPrimaryCoordinatorChangePCNotice;
 use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegLate;
 use App\Mail\PaymentsReRegReminder;
 use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Mail\WebsiteAddNoticeAdmin;
-use App\mail\WebsiteAddNoticeChapter;
-use App\Mmail\WebsiteRemoveNotice;
 use App\Mail\WebsiteReviewNotice;
 use App\Models\Chapter;
 use App\Models\FinancialReport;
@@ -678,14 +676,14 @@ class ChapterController extends Controller
             $ch_country = $request->get('ch_hid_country');
             $ch_region = $request->get('ch_hid_region');
             $ch_status = $request->get('ch_hid_status');
-            $ch_webstatus = $request ->get('ch_hid_webstatus');
+            $ch_webstatus = $request->get('ch_hid_webstatus');
             $ch_pcid = $request->get('ch_hid_primarycor');
         } else {
             $ch_state = $request->get('ch_state');
             $ch_country = $request->get('ch_country');
             $ch_region = $request->get('ch_region');
             $ch_status = $request->get('ch_status');
-            $ch_webstatus = $request ->get('ch_webstatus');
+            $ch_webstatus = $request->get('ch_webstatus');
             $ch_pcid = $request->get('ch_primarycor');
         }
         if ($positionid == 7) {
@@ -1226,16 +1224,16 @@ class ChapterController extends Controller
                     'chapter_name' => $request->get('ch_name'),
                     'chapter_state' => $chapterState,
                     'ch_website_url' => $request->get('ch_website'),
-                    ];
+                ];
 
                 if ($request->get('ch_webstatus') == 1) {
                     Mail::to($to_email4, 'MOMS Club')
-                    ->send(new WebsiteAddNoticeAdmin($mailData));
+                        ->send(new WebsiteAddNoticeAdmin($mailData));
                 }
 
                 if ($request->get('ch_webstatus') == 2) {
                     Mail::to($to_email4, 'MOMS Club')
-                    ->send(new WebsiteReviewNotice($mailData));
+                        ->send(new WebsiteReviewNotice($mailData));
                 }
             }
 
@@ -1438,14 +1436,14 @@ class ChapterController extends Controller
                     $presInfoUpd[0]->ein != $presInfoPre[0]->ein || $presInfoUpd[0]->ein_letter_path != $presInfoPre[0]->ein_letter_path || $presInfoUpd[0]->inquiries_note != $presInfoPre[0]->inquiries_note ||
                     $presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->po_box != $presInfoPre[0]->po_box || $presInfoUpd[0]->website_url != $presInfoPre[0]->website_url ||
                     $presInfoUpd[0]->website_status != $presInfoPre[0]->website_status || $presInfoUpd[0]->egroup != $presInfoPre[0]->egroup || $presInfoUpd[0]->territory != $presInfoPre[0]->territory ||
-                    $presInfoUpd[0]->additional_info != $presInfoPre[0]->additional_info || $presInfoUpd[0]->status != $presInfoPre[0]->status || $presInfoUpd[0]->notes !=  $presInfoPre[0]->notes ||
+                    $presInfoUpd[0]->additional_info != $presInfoPre[0]->additional_info || $presInfoUpd[0]->status != $presInfoPre[0]->status || $presInfoUpd[0]->notes != $presInfoPre[0]->notes ||
                     $mailDataAvpp['avpfnamePre'] != $mailDataAvp['avpfnameUpd'] || $mailDataAvpp['avplnamePre'] != $mailDataAvp['avplnameUpd'] || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] ||
                     $mailDataMvpp['mvpfnamePre'] != $mailDataMvp['mvpfnameUpd'] || $mailDataMvpp['mvplnamePre'] != $mailDataMvp['mvplnameUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] ||
                     $mailDatatresp['tresfnamePre'] != $mailDatatres['tresfnameUpd'] || $mailDatatresp['treslnamePre'] != $mailDatatres['treslnameUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] ||
                     $mailDataSecp['secfnamePre'] != $mailDataSec['secfnameUpd'] || $mailDataSecp['seclnamePre'] != $mailDataSec['seclnameUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
 
-            Mail::to($to_email, 'MOMS Club')
-                ->send(new ChapersUpdatePrimaryCoor($mailData));
+                Mail::to($to_email, 'MOMS Club')
+                    ->send(new ChapersUpdatePrimaryCoor($mailData));
 
             }
 
@@ -1581,157 +1579,156 @@ class ChapterController extends Controller
         return view('chapters.international')->with($data);
     }
 
-     /**
+    /**
      * View the International chapter list
      */
     public function showIntChapterView(Request $request, $id): View
-   {
-       $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-       $corConfId = $corDetails['conference_id'];
-       $corId = $corDetails['coordinator_id'];
-       $positionid = $corDetails['position_id'];
-       $financial_report_array = FinancialReport::find($id);
-       if ($financial_report_array) {
-           $reviewComplete = $financial_report_array['review_complete'];
-       } else {
-           $reviewComplete = null;
-       }
-       $chapterList = DB::table('chapters as ch')
-           ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
-           ->leftJoin('board_details as bd', 'ch.id', '=', 'bd.chapter_id')
-           ->where('ch.is_active', '=', '1')
-           ->where('ch.id', '=', $id)
-           ->where('bd.board_position_id', '=', '1')
-           ->get();
-       $corConfId = $chapterList[0]->conference;
-       $corId = $chapterList[0]->primary_coordinator_id;
-       $AVPDetails = DB::table('board_details as bd')
-           ->select('bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.board_position_id', 'bd.street_address as avp_addr', 'bd.city as avp_city', 'bd.zip as avp_zip', 'bd.phone as avp_phone', 'bd.state as avp_state', 'bd.user_id as user_id')
-           ->where('bd.chapter_id', '=', $id)
-           ->where('bd.board_position_id', '=', '2')
-           ->get();
-       if (count($AVPDetails) == 0) {
-           $AVPDetails[0] = ['avp_fname' => '', 'avp_lname' => '', 'avp_email' => '', 'avp_addr' => '', 'avp_city' => '', 'avp_zip' => '', 'avp_phone' => '', 'avp_state' => '', 'user_id' => ''];
-           $AVPDetails = json_decode(json_encode($AVPDetails));
-       }
+    {
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corConfId = $corDetails['conference_id'];
+        $corId = $corDetails['coordinator_id'];
+        $positionid = $corDetails['position_id'];
+        $financial_report_array = FinancialReport::find($id);
+        if ($financial_report_array) {
+            $reviewComplete = $financial_report_array['review_complete'];
+        } else {
+            $reviewComplete = null;
+        }
+        $chapterList = DB::table('chapters as ch')
+            ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
+            ->leftJoin('board_details as bd', 'ch.id', '=', 'bd.chapter_id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->where('bd.board_position_id', '=', '1')
+            ->get();
+        $corConfId = $chapterList[0]->conference;
+        $corId = $chapterList[0]->primary_coordinator_id;
+        $AVPDetails = DB::table('board_details as bd')
+            ->select('bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.board_position_id', 'bd.street_address as avp_addr', 'bd.city as avp_city', 'bd.zip as avp_zip', 'bd.phone as avp_phone', 'bd.state as avp_state', 'bd.user_id as user_id')
+            ->where('bd.chapter_id', '=', $id)
+            ->where('bd.board_position_id', '=', '2')
+            ->get();
+        if (count($AVPDetails) == 0) {
+            $AVPDetails[0] = ['avp_fname' => '', 'avp_lname' => '', 'avp_email' => '', 'avp_addr' => '', 'avp_city' => '', 'avp_zip' => '', 'avp_phone' => '', 'avp_state' => '', 'user_id' => ''];
+            $AVPDetails = json_decode(json_encode($AVPDetails));
+        }
 
-       $MVPDetails = DB::table('board_details as bd')
-           ->select('bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.board_position_id', 'bd.street_address as mvp_addr', 'bd.city as mvp_city', 'bd.zip as mvp_zip', 'bd.phone as mvp_phone', 'bd.state as mvp_state', 'bd.user_id as user_id')
-           ->where('bd.chapter_id', '=', $id)
-           ->where('bd.board_position_id', '=', '3')
-           ->get();
-       if (count($MVPDetails) == 0) {
-           $MVPDetails[0] = ['mvp_fname' => '', 'mvp_lname' => '', 'mvp_email' => '', 'mvp_addr' => '', 'mvp_city' => '', 'mvp_zip' => '', 'mvp_phone' => '', 'mvp_state' => '', 'user_id' => ''];
-           $MVPDetails = json_decode(json_encode($MVPDetails));
-       }
+        $MVPDetails = DB::table('board_details as bd')
+            ->select('bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.board_position_id', 'bd.street_address as mvp_addr', 'bd.city as mvp_city', 'bd.zip as mvp_zip', 'bd.phone as mvp_phone', 'bd.state as mvp_state', 'bd.user_id as user_id')
+            ->where('bd.chapter_id', '=', $id)
+            ->where('bd.board_position_id', '=', '3')
+            ->get();
+        if (count($MVPDetails) == 0) {
+            $MVPDetails[0] = ['mvp_fname' => '', 'mvp_lname' => '', 'mvp_email' => '', 'mvp_addr' => '', 'mvp_city' => '', 'mvp_zip' => '', 'mvp_phone' => '', 'mvp_state' => '', 'user_id' => ''];
+            $MVPDetails = json_decode(json_encode($MVPDetails));
+        }
 
-       $TRSDetails = DB::table('board_details as bd')
-           ->select('bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.board_position_id', 'bd.street_address as trs_addr', 'bd.city as trs_city', 'bd.zip as trs_zip', 'bd.phone as trs_phone', 'bd.state as trs_state', 'bd.user_id as user_id')
-           ->where('bd.chapter_id', '=', $id)
-           ->where('bd.board_position_id', '=', '4')
-           ->get();
-       if (count($TRSDetails) == 0) {
-           $TRSDetails[0] = ['trs_fname' => '', 'trs_lname' => '', 'trs_email' => '', 'trs_addr' => '', 'trs_city' => '', 'trs_zip' => '', 'trs_phone' => '', 'trs_state' => '', 'user_id' => ''];
-           $TRSDetails = json_decode(json_encode($TRSDetails));
-       }
+        $TRSDetails = DB::table('board_details as bd')
+            ->select('bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.board_position_id', 'bd.street_address as trs_addr', 'bd.city as trs_city', 'bd.zip as trs_zip', 'bd.phone as trs_phone', 'bd.state as trs_state', 'bd.user_id as user_id')
+            ->where('bd.chapter_id', '=', $id)
+            ->where('bd.board_position_id', '=', '4')
+            ->get();
+        if (count($TRSDetails) == 0) {
+            $TRSDetails[0] = ['trs_fname' => '', 'trs_lname' => '', 'trs_email' => '', 'trs_addr' => '', 'trs_city' => '', 'trs_zip' => '', 'trs_phone' => '', 'trs_state' => '', 'user_id' => ''];
+            $TRSDetails = json_decode(json_encode($TRSDetails));
+        }
 
-       $SECDetails = DB::table('board_details as bd')
-           ->select('bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.board_position_id', 'bd.street_address as sec_addr', 'bd.city as sec_city', 'bd.zip as sec_zip', 'bd.phone as sec_phone', 'bd.state as sec_state', 'bd.user_id as user_id')
-           ->where('bd.chapter_id', '=', $id)
-           ->where('bd.board_position_id', '=', '5')
-           ->get();
-       if (count($SECDetails) == 0) {
-           $SECDetails[0] = ['sec_fname' => '', 'sec_lname' => '', 'sec_email' => '', 'sec_addr' => '', 'sec_city' => '', 'sec_zip' => '', 'sec_phone' => '', 'sec_state' => '', 'user_id' => ''];
-           $SECDetails = json_decode(json_encode($SECDetails));
-       }
+        $SECDetails = DB::table('board_details as bd')
+            ->select('bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.board_position_id', 'bd.street_address as sec_addr', 'bd.city as sec_city', 'bd.zip as sec_zip', 'bd.phone as sec_phone', 'bd.state as sec_state', 'bd.user_id as user_id')
+            ->where('bd.chapter_id', '=', $id)
+            ->where('bd.board_position_id', '=', '5')
+            ->get();
+        if (count($SECDetails) == 0) {
+            $SECDetails[0] = ['sec_fname' => '', 'sec_lname' => '', 'sec_email' => '', 'sec_addr' => '', 'sec_city' => '', 'sec_zip' => '', 'sec_phone' => '', 'sec_state' => '', 'user_id' => ''];
+            $SECDetails = json_decode(json_encode($SECDetails));
+        }
 
-       $stateArr = DB::table('state')
-           ->select('state.*')
-           ->orderBy('id')
-           ->get();
-       $countryArr = DB::table('country')
-           ->select('country.*')
-           ->orderBy('id')
-           ->get();
-       $regionList = DB::table('region')
-           ->select('id', 'long_name')
-           ->where('conference_id', '=', $corConfId)
-           ->orderBy('long_name')
-           ->get();
-       $confList = DB::table('conference')
-           ->select('id', 'conference_name')
-           ->where('id', '>=', 0)
-           ->orderBy('conference_name')
-           ->get();
-       $chapterEmailList = DB::table('board_details as bd')
-           ->select('bd.email as bor_email')
-           ->where('bd.chapter_id', '=', $id)
-           ->get();
-       $emailListCord = '';
-       foreach ($chapterEmailList as $val) {
-           $email = $val->bor_email;
-           $escaped_email = str_replace("'", "\\'", $email);
-           if ($emailListCord == '') {
-               $emailListCord = $escaped_email;
-           } else {
-               $emailListCord .= ';'.$escaped_email;
-           }
-       }
+        $stateArr = DB::table('state')
+            ->select('state.*')
+            ->orderBy('id')
+            ->get();
+        $countryArr = DB::table('country')
+            ->select('country.*')
+            ->orderBy('id')
+            ->get();
+        $regionList = DB::table('region')
+            ->select('id', 'long_name')
+            ->where('conference_id', '=', $corConfId)
+            ->orderBy('long_name')
+            ->get();
+        $confList = DB::table('conference')
+            ->select('id', 'conference_name')
+            ->where('id', '>=', 0)
+            ->orderBy('conference_name')
+            ->get();
+        $chapterEmailList = DB::table('board_details as bd')
+            ->select('bd.email as bor_email')
+            ->where('bd.chapter_id', '=', $id)
+            ->get();
+        $emailListCord = '';
+        foreach ($chapterEmailList as $val) {
+            $email = $val->bor_email;
+            $escaped_email = str_replace("'", "\\'", $email);
+            if ($emailListCord == '') {
+                $emailListCord = $escaped_email;
+            } else {
+                $emailListCord .= ';'.$escaped_email;
+            }
+        }
 
-       $cc_string = '';
-       $reportingList = DB::table('coordinator_reporting_tree')
-           ->select('*')
-           ->where('id', '=', $chapterList[0]->primary_coordinator_id)
-           ->get();
-       foreach ($reportingList as $key => $value) {
-           $reportingList[$key] = (array) $value;
-       }
-       $filterReportingList = array_filter($reportingList[0]);
-       unset($filterReportingList['id']);
-       unset($filterReportingList['layer0']);
-       $filterReportingList = array_reverse($filterReportingList);
-       $str = '';
-       $array_rows = count($filterReportingList);
-       $down_line_email = '';
-       foreach ($filterReportingList as $key => $val) {
-           // if($corId != $val && $val >1){
-           if ($val > 1) {
-               $corList = DB::table('coordinator_details as cd')
-                   ->select('cd.email as cord_email')
-                   ->where('cd.coordinator_id', '=', $val)
-                   ->where('cd.is_active', '=', 1)
-                   ->get();
-               if (count($corList) > 0) {
-                   if ($down_line_email == '') {
-                       $down_line_email = $corList[0]->cord_email;
-                   } else {
-                       $down_line_email .= ';'.$corList[0]->cord_email;
-                   }
-               }
-           }
-       }
-       $cc_string = '?cc='.$down_line_email;
+        $cc_string = '';
+        $reportingList = DB::table('coordinator_reporting_tree')
+            ->select('*')
+            ->where('id', '=', $chapterList[0]->primary_coordinator_id)
+            ->get();
+        foreach ($reportingList as $key => $value) {
+            $reportingList[$key] = (array) $value;
+        }
+        $filterReportingList = array_filter($reportingList[0]);
+        unset($filterReportingList['id']);
+        unset($filterReportingList['layer0']);
+        $filterReportingList = array_reverse($filterReportingList);
+        $str = '';
+        $array_rows = count($filterReportingList);
+        $down_line_email = '';
+        foreach ($filterReportingList as $key => $val) {
+            // if($corId != $val && $val >1){
+            if ($val > 1) {
+                $corList = DB::table('coordinator_details as cd')
+                    ->select('cd.email as cord_email')
+                    ->where('cd.coordinator_id', '=', $val)
+                    ->where('cd.is_active', '=', 1)
+                    ->get();
+                if (count($corList) > 0) {
+                    if ($down_line_email == '') {
+                        $down_line_email = $corList[0]->cord_email;
+                    } else {
+                        $down_line_email .= ';'.$corList[0]->cord_email;
+                    }
+                }
+            }
+        }
+        $cc_string = '?cc='.$down_line_email;
 
-       $primaryCoordinatorList = DB::table('coordinator_details as cd')
-           ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-           ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-           ->where('cd.conference_id', '=', $corConfId)
-           ->where('cd.position_id', '<=', '6')
-           ->where('cd.position_id', '>=', '1')
-           ->where('cd.is_active', '=', '1')
-           ->orWhere('cd.position_id', '=', '25')
-           ->where('cd.is_active', '=', '1')
-           ->orderBy('cd.first_name')
-           ->get();
+        $primaryCoordinatorList = DB::table('coordinator_details as cd')
+            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+            ->where('cd.conference_id', '=', $corConfId)
+            ->where('cd.position_id', '<=', '6')
+            ->where('cd.position_id', '>=', '1')
+            ->where('cd.is_active', '=', '1')
+            ->orWhere('cd.position_id', '=', '25')
+            ->where('cd.is_active', '=', '1')
+            ->orderBy('cd.first_name')
+            ->get();
 
-       $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
-       $currentMonth = $chapterList[0]->start_month_id;
+        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
+        $currentMonth = $chapterList[0]->start_month_id;
 
-       $data = ['positionid' => $positionid, 'corId' => $corId, 'reviewComplete' => $reviewComplete, 'emailListCord' => $emailListCord, 'cc_string' => $cc_string, 'currentMonth' => $currentMonth, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'chapterList' => $chapterList, 'regionList' => $regionList, 'confList' => $confList, 'primaryCoordinatorList' => $primaryCoordinatorList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
+        $data = ['positionid' => $positionid, 'corId' => $corId, 'reviewComplete' => $reviewComplete, 'emailListCord' => $emailListCord, 'cc_string' => $cc_string, 'currentMonth' => $currentMonth, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'chapterList' => $chapterList, 'regionList' => $regionList, 'confList' => $confList, 'primaryCoordinatorList' => $primaryCoordinatorList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
 
-       return view('chapters.intchapterview')->with($data);
-   }
-
+        return view('chapters.intchapterview')->with($data);
+    }
 
     /**
      * Display the Inquiries Chapter list
@@ -2259,7 +2256,7 @@ class ChapterController extends Controller
         $positionId = $corDetails['position_id'];
         $coordinatorId = $id;
 
-        $ch_webstatus = $request ->get('ch_webstatus');
+        $ch_webstatus = $request->get('ch_webstatus');
         if (empty(trim($ch_webstatus))) {
             $ch_webstatus = 0; // Set it to 0 if it's blank
         }
@@ -2274,56 +2271,55 @@ class ChapterController extends Controller
                 'social3' => $request->get('ch_social3'),
                 'website_notes' => $request->get('ch_notes')]);
 
-            //Website Notifications//
-            $cor_details = db::table('coordinator_details')
+        //Website Notifications//
+        $cor_details = db::table('coordinator_details')
+            ->select('email')
+            ->where('conference_id', $corConfId)
+            ->where('position_id', 9)
+            ->where('is_active', 1)
+            ->get();
+        $row_count = count($cor_details);
+        if ($row_count == 0) {
+            $cc_details = db::table('coordinator_details')
                 ->select('email')
                 ->where('conference_id', $corConfId)
-                ->where('position_id', 9)
+                ->where('coordinator_id', $corId)
                 ->where('is_active', 1)
                 ->get();
-            $row_count = count($cor_details);
-            if ($row_count == 0) {
-                $cc_details = db::table('coordinator_details')
-                    ->select('email')
-                    ->where('conference_id', $corConfId)
-                    ->where('coordinator_id', $corId)
-                    ->where('is_active', 1)
-                    ->get();
-                $to_email4 = $cc_details[0]->email;
-            } else {
-                $to_email4 = $cor_details[0]->email;
-            }
+            $to_email4 = $cc_details[0]->email;
+        } else {
+            $to_email4 = $cor_details[0]->email;
+        }
 
-            if ($request->get('ch_webstatus') != $request->get('ch_hid_webstatus')) {
-                $chapterDetails = Chapter::find($id);
-                $stateArr = DB::table('state')
-                    ->select('state.*')
-                    ->orderBy('id')
-                    ->get();
+        if ($request->get('ch_webstatus') != $request->get('ch_hid_webstatus')) {
+            $chapterDetails = Chapter::find($id);
+            $stateArr = DB::table('state')
+                ->select('state.*')
+                ->orderBy('id')
+                ->get();
 
-                $chapterState = DB::table('state')
-                    ->select('state_short_name')
-                    ->where('id', '=', $chapterDetails->state)
-                    ->get();
-                $chapterState = $chapterState[0]->state_short_name;
+            $chapterState = DB::table('state')
+                ->select('state_short_name')
+                ->where('id', '=', $chapterDetails->state)
+                ->get();
+            $chapterState = $chapterState[0]->state_short_name;
 
-                $mailData = [
-                    'chapter_name' => $request->get('ch_name'),
-                    'chapter_state' => $chapterState,
-                    'ch_website_url' => $request->get('ch_website'),
-                    ];
+            $mailData = [
+                'chapter_name' => $request->get('ch_name'),
+                'chapter_state' => $chapterState,
+                'ch_website_url' => $request->get('ch_website'),
+            ];
 
-                if ($request->get('ch_webstatus') == 1) {
-                    Mail::to($to_email4, 'MOMS Club')
+            if ($request->get('ch_webstatus') == 1) {
+                Mail::to($to_email4, 'MOMS Club')
                     ->send(new WebsiteAddNoticeAdmin($mailData));
-                }
-
-                if ($request->get('ch_webstatus') == 2) {
-                    Mail::to($to_email4, 'MOMS Club')
-                    ->send(new WebsiteReviewNotice($mailData));
-                }
             }
 
+            if ($request->get('ch_webstatus') == 2) {
+                Mail::to($to_email4, 'MOMS Club')
+                    ->send(new WebsiteReviewNotice($mailData));
+            }
+        }
 
         return redirect()->to('/chapter/website')->with('success', 'Chapter Website has been changed successfully.');
     }
@@ -2567,19 +2563,19 @@ class ChapterController extends Controller
             Mail::to($to_email, 'MOMS Club')
                 ->send(new ChapterRemoveListAdmin($mailData));
 
+            DB::commit();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            DB::rollback();
+            // Log the error
+            Log::error($e);
 
-                DB::commit();
-            } catch (\Exception $e) {
-                // Rollback Transaction
-                DB::rollback();
-                // Log the error
-                Log::error($e);
-
-                return redirect()->to('/chapter/zapped')->with('fail', 'Something went wrong, Please try again..');
-            }
-
-            return redirect()->to('/chapter/zapped')->with('success', 'Chapter was successfully zapped');
+            return redirect()->to('/chapter/zapped')->with('fail', 'Something went wrong, Please try again..');
         }
+
+        return redirect()->to('/chapter/zapped')->with('success', 'Chapter was successfully zapped');
+    }
+
     /**
      * Function for unZapping a Chapter (store)
      */
@@ -2757,36 +2753,35 @@ class ChapterController extends Controller
         DB::beginTransaction();
         try {
             //President Info
-                $PREDetails = DB::table('board_details')
-                    ->select('board_id', 'user_id')
-                    ->where('chapter_id', '=', $chapterId)
-                    ->where('board_position_id', '=', '1')
-                    ->get();
+            $PREDetails = DB::table('board_details')
+                ->select('board_id', 'user_id')
+                ->where('chapter_id', '=', $chapterId)
+                ->where('board_position_id', '=', '1')
+                ->get();
 
-                    $userId = $PREDetails[0]->user_id;
-                    $boardId = $PREDetails[0]->board_id;
+            $userId = $PREDetails[0]->user_id;
+            $boardId = $PREDetails[0]->board_id;
 
-                    $user = User::find($userId);
-                    $user->email = $request->get('ch_pre_email');
-                    $user->save();
+            $user = User::find($userId);
+            $user->email = $request->get('ch_pre_email');
+            $user->save();
 
-                    DB::table('board_details')
-                        ->where('board_id', $boardId)
-                        ->update(['email' => $request->get('ch_pre_email')]);
+            DB::table('board_details')
+                ->where('board_id', $boardId)
+                ->update(['email' => $request->get('ch_pre_email')]);
 
+            DB::commit();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            DB::rollback();
+            // Log the error
+            Log::error($e);
 
-                            DB::commit();
-                        } catch (\Exception $e) {
-                            // Rollback Transaction
-                            DB::rollback();
-                            // Log the error
-                            Log::error($e);
+            return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again...');
+        }
 
-                            return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again...');
-                        }
-
-                        return redirect()->to('/chapter/zapped')->with('success', 'President Email has been updated');
-                }
+        return redirect()->to('/chapter/zapped')->with('success', 'President Email has been updated');
+    }
 
     /**
      * Reset Password
@@ -2903,100 +2898,99 @@ class ChapterController extends Controller
      */
     public function showReRegistration(Request $request): View
     {
-            //Get Coordinators Details
-            $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-            $corId = $corDetails['coordinator_id'];
-            $corConfId = $corDetails['conference_id'];
-            $currentYear = date('Y');
-            $currentMonth = date('m');
+        //Get Coordinators Details
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corId = $corDetails['coordinator_id'];
+        $corConfId = $corDetails['conference_id'];
+        $currentYear = date('Y');
+        $currentMonth = date('m');
 
-            $corlayerId = $corDetails['layer_id'];
-            $sqlLayerId = 'crt.layer'.$corlayerId;
-            $positionId = $corDetails['position_id'];
-            $secPositionId = $corDetails['sec_position_id'];
-            $request->session()->put('positionid', $positionId);
-            $request->session()->put('secpositionid', $secPositionId);
-            $request->session()->put('corconfid', $corConfId);
+        $corlayerId = $corDetails['layer_id'];
+        $sqlLayerId = 'crt.layer'.$corlayerId;
+        $positionId = $corDetails['position_id'];
+        $secPositionId = $corDetails['sec_position_id'];
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
+        $request->session()->put('corconfid', $corConfId);
 
-            if ($positionId <= 7 || $positionId == 25) {
-                if ($corId == 25 || $positionId == 25) {
-                    //Get Coordinator Reporting Tree
-                    $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                        ->select('crt.id')
-                        ->where('crt.layer1', '=', '6')
-                        ->get();
-                } else {
-                    //Get Coordinator Reporting Tree
-                    $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                        ->select('crt.id')
-                        ->where($sqlLayerId, '=', $corId)
-                        ->get();
-                }
-                $inQryStr = '';
-                foreach ($reportIdList as $key => $val) {
-                    $inQryStr .= $val->id.',';
-                }
-                $inQryStr = rtrim($inQryStr, ',');
-                $inQryArr = explode(',', $inQryStr);
-
-            }
-            $reChapterList = DB::table('chapters')
-                ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                        'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name')
-                ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-                ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'st.id')
-                ->where('chapters.is_active', '=', '1')
-                ->where('bd.board_position_id', '=', '1')
-                ->where(function ($query) use ($currentYear, $currentMonth) {
-                    $query->where('chapters.next_renewal_year', '<', $currentYear)
-                        ->orWhere(function ($query) use ($currentYear, $currentMonth) {
-                            $query->where('chapters.next_renewal_year', '=', $currentYear)
-                                ->where('chapters.start_month_id', '<=', $currentMonth);
-                        });
-                })
-                ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-                ->orderByDesc('chapters.next_renewal_year')
-                ->orderByDesc('chapters.start_month_id')
-                ->get();
-
-            if (isset($_GET['check'])) {
-                if ($_GET['check'] == 'yes') {
-                    $checkBoxStatus = 'checked';
-                    $reChapterList = DB::table('chapters')
-                        ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name')
-                        ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
-                        ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
-                        ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-                        ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'st.id')
-                        ->where('chapters.is_active', '=', '1')
-                        ->where('bd.board_position_id', '=', '1')
-                        ->where(function ($query) use ($currentYear, $currentMonth) {
-                            $query->where('chapters.next_renewal_year', '<', $currentYear)
-                                ->orWhere(function ($query) use ($currentYear, $currentMonth) {
-                                    $query->where('chapters.next_renewal_year', '=', $currentYear)
-                                        ->where('chapters.start_month_id', '<=', $currentMonth);
-                                });
-                        })
-                        ->where('chapters.primary_coordinator_id', $corId)
-                        ->orderByDesc('chapters.next_renewal_year')
-                        ->orderByDesc('chapters.start_month_id')
-                        ->get();
-                }
-
+        if ($positionId <= 7 || $positionId == 25) {
+            if ($corId == 25 || $positionId == 25) {
+                //Get Coordinator Reporting Tree
+                $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                    ->select('crt.id')
+                    ->where('crt.layer1', '=', '6')
+                    ->get();
             } else {
-                $checkBoxStatus = '';
+                //Get Coordinator Reporting Tree
+                $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                    ->select('crt.id')
+                    ->where($sqlLayerId, '=', $corId)
+                    ->get();
+            }
+            $inQryStr = '';
+            foreach ($reportIdList as $key => $val) {
+                $inQryStr .= $val->id.',';
+            }
+            $inQryStr = rtrim($inQryStr, ',');
+            $inQryArr = explode(',', $inQryStr);
+
+        }
+        $reChapterList = DB::table('chapters')
+            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name')
+            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'st.id')
+            ->where('chapters.is_active', '=', '1')
+            ->where('bd.board_position_id', '=', '1')
+            ->where(function ($query) use ($currentYear, $currentMonth) {
+                $query->where('chapters.next_renewal_year', '<', $currentYear)
+                    ->orWhere(function ($query) use ($currentYear, $currentMonth) {
+                        $query->where('chapters.next_renewal_year', '=', $currentYear)
+                            ->where('chapters.start_month_id', '<=', $currentMonth);
+                    });
+            })
+            ->whereIn('chapters.primary_coordinator_id', $inQryArr)
+            ->orderByDesc('chapters.next_renewal_year')
+            ->orderByDesc('chapters.start_month_id')
+            ->get();
+
+        if (isset($_GET['check'])) {
+            if ($_GET['check'] == 'yes') {
+                $checkBoxStatus = 'checked';
+                $reChapterList = DB::table('chapters')
+                    ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+                        'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name')
+                    ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                    ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'st.id')
+                    ->where('chapters.is_active', '=', '1')
+                    ->where('bd.board_position_id', '=', '1')
+                    ->where(function ($query) use ($currentYear, $currentMonth) {
+                        $query->where('chapters.next_renewal_year', '<', $currentYear)
+                            ->orWhere(function ($query) use ($currentYear, $currentMonth) {
+                                $query->where('chapters.next_renewal_year', '=', $currentYear)
+                                    ->where('chapters.start_month_id', '<=', $currentMonth);
+                            });
+                    })
+                    ->where('chapters.primary_coordinator_id', $corId)
+                    ->orderByDesc('chapters.next_renewal_year')
+                    ->orderByDesc('chapters.start_month_id')
+                    ->get();
             }
 
-            $countList = count($reChapterList);
+        } else {
+            $checkBoxStatus = '';
+        }
+
+        $countList = count($reChapterList);
 
         $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $corId];
 
         return view('chapters.reregistration')->with($data);
     }
-
 
     /**
      * ReRegistration Notes
@@ -3184,49 +3178,49 @@ class ChapterController extends Controller
         $coordinatorEmails = []; // Store coordinator email addresses by chapter
         $chapterChEmails = []; // Store ch_email addresses by chapter
 
-            foreach ($chapters as $chapter) {
-                if ($chapter->bor_email) {
-                    $chapterEmails[$chapter->chapter_name][] = $chapter->bor_email; // Store emails by chapter name
+        foreach ($chapters as $chapter) {
+            if ($chapter->bor_email) {
+                $chapterEmails[$chapter->chapter_name][] = $chapter->bor_email; // Store emails by chapter name
 
-                    $cc_email1 = $this->getCCMail($chapter->pcid);
-                    $cc_email1 = array_filter($cc_email1);
+                $cc_email1 = $this->getCCMail($chapter->pcid);
+                $cc_email1 = array_filter($cc_email1);
 
-                    if (! empty($cc_email1)) {
-                        $coordinatorEmails[$chapter->chapter_name] = $cc_email1; // Store coordinator emails by chapter
-                    }
+                if (! empty($cc_email1)) {
+                    $coordinatorEmails[$chapter->chapter_name] = $cc_email1; // Store coordinator emails by chapter
                 }
+            }
 
-                // Check if ch_email is not null before adding it to the chapterChEmails array
-                if ($chapter->ch_email) {
-                    $chapterChEmails[$chapter->chapter_name] = $chapter->ch_email;
-                }
+            // Check if ch_email is not null before adding it to the chapterChEmails array
+            if ($chapter->ch_email) {
+                $chapterChEmails[$chapter->chapter_name] = $chapter->ch_email;
+            }
 
-         // Set the state for this chapter
-         $sharedChapterState = $chapter->chapter_state;
+            // Set the state for this chapter
+            $sharedChapterState = $chapter->chapter_state;
 
-         $mailData[$chapter->chapter_name] = [
-             'chapterName' => $chapter->chapter_name,
-             'chapterState' => $sharedChapterState, // Use the state for this chapter
-             'startRange' => $rangeStartDateFormatted,
-             'endRange' => $rangeEndDateFormatted,
-             'startMonth' => $monthInWords,
-         ];
+            $mailData[$chapter->chapter_name] = [
+                'chapterName' => $chapter->chapter_name,
+                'chapterState' => $sharedChapterState, // Use the state for this chapter
+                'startRange' => $rangeStartDateFormatted,
+                'endRange' => $rangeEndDateFormatted,
+                'startMonth' => $monthInWords,
+            ];
 
-         if (isset($chapterChEmails[$chapter->chapter_name])) {
-             $chapterEmails[$chapter->chapter_name][] = $chapterChEmails[$chapter->chapter_name];
-         }
-     }
+            if (isset($chapterChEmails[$chapter->chapter_name])) {
+                $chapterEmails[$chapter->chapter_name][] = $chapterChEmails[$chapter->chapter_name];
+            }
+        }
 
-     // Send a single email with multiple recipients
-     foreach ($mailData as $chapterName => $data) {
-         $emailRecipients = $chapterEmails[$chapterName];
-         $cc_email = $coordinatorEmails[$chapterName] ?? [];
+        // Send a single email with multiple recipients
+        foreach ($mailData as $chapterName => $data) {
+            $emailRecipients = $chapterEmails[$chapterName];
+            $cc_email = $coordinatorEmails[$chapterName] ?? [];
 
-         if (!empty($emailRecipients)) {
-             Mail::to($emailRecipients)
-                 ->cc($cc_email)
-                 ->send(new PaymentsReRegReminder($data));
-         }
+            if (! empty($emailRecipients)) {
+                Mail::to($emailRecipients)
+                    ->cc($cc_email)
+                    ->send(new PaymentsReRegReminder($data));
+            }
 
         }
 
@@ -3258,7 +3252,7 @@ class ChapterController extends Controller
 
         $month = date('m');
         $year = date('Y');
-        $lastMonth = $month -1;
+        $lastMonth = $month - 1;
         $monthRangeStart = $month - 1;
         $monthRangeEnd = $month - 2;
         $lastYear = $year - 1;
@@ -3274,7 +3268,6 @@ class ChapterController extends Controller
         // Convert $month to words
         $monthInWords = strftime('%B', strtotime("2000-$month-01"));
         $lastMonthInWords = strftime('%B', strtotime("2000-$lastMonth-01"));
-
 
         // Format dates as "mm-dd-yyyy"
         $rangeStartDateFormatted = date('m-d-Y', strtotime($rangeStartDate));
@@ -3297,68 +3290,68 @@ class ChapterController extends Controller
         $coordinatorEmails = []; // Store coordinator email addresses by chapter
         $chapterChEmails = []; // Store ch_email addresses by chapter
 
-            foreach ($chapters as $chapter) {
-                if ($chapter->bor_email) {
-                    $chapterEmails[$chapter->chapter_name][] = $chapter->bor_email; // Store emails by chapter name
+        foreach ($chapters as $chapter) {
+            if ($chapter->bor_email) {
+                $chapterEmails[$chapter->chapter_name][] = $chapter->bor_email; // Store emails by chapter name
 
-                    $cc_email1 = $this->getCCMail($chapter->pcid);
-                    $cc_email1 = array_filter($cc_email1);
+                $cc_email1 = $this->getCCMail($chapter->pcid);
+                $cc_email1 = array_filter($cc_email1);
 
-                    if (! empty($cc_email1)) {
-                        $coordinatorEmails[$chapter->chapter_name] = $cc_email1; // Store coordinator emails by chapter
-                    }
+                if (! empty($cc_email1)) {
+                    $coordinatorEmails[$chapter->chapter_name] = $cc_email1; // Store coordinator emails by chapter
                 }
+            }
 
-                // Check if ch_email is not null before adding it to the chapterChEmails array
-                if ($chapter->ch_email) {
-                    $chapterChEmails[$chapter->chapter_name] = $chapter->ch_email;
-                }
+            // Check if ch_email is not null before adding it to the chapterChEmails array
+            if ($chapter->ch_email) {
+                $chapterChEmails[$chapter->chapter_name] = $chapter->ch_email;
+            }
 
-         // Set the state for this chapter
-         $sharedChapterState = $chapter->chapter_state;
+            // Set the state for this chapter
+            $sharedChapterState = $chapter->chapter_state;
 
-         $mailData[$chapter->chapter_name] = [
-             'chapterName' => $chapter->chapter_name,
-             'chapterState' => $sharedChapterState, // Use the state for this chapter
-             'startRange' => $rangeStartDateFormatted,
-             'endRange' => $rangeEndDateFormatted,
-             'startMonth' => $lastMonthInWords,
-             'dueMonth' => $monthInWords,
-         ];
+            $mailData[$chapter->chapter_name] = [
+                'chapterName' => $chapter->chapter_name,
+                'chapterState' => $sharedChapterState, // Use the state for this chapter
+                'startRange' => $rangeStartDateFormatted,
+                'endRange' => $rangeEndDateFormatted,
+                'startMonth' => $lastMonthInWords,
+                'dueMonth' => $monthInWords,
+            ];
 
-         if (isset($chapterChEmails[$chapter->chapter_name])) {
-             $chapterEmails[$chapter->chapter_name][] = $chapterChEmails[$chapter->chapter_name];
-         }
-     }
+            if (isset($chapterChEmails[$chapter->chapter_name])) {
+                $chapterEmails[$chapter->chapter_name][] = $chapterChEmails[$chapter->chapter_name];
+            }
+        }
 
-     // Send a single email with multiple recipients
-     foreach ($mailData as $chapterName => $data) {
-         $emailRecipients = $chapterEmails[$chapterName];
-         $cc_email = $coordinatorEmails[$chapterName] ?? [];
+        // Send a single email with multiple recipients
+        foreach ($mailData as $chapterName => $data) {
+            $emailRecipients = $chapterEmails[$chapterName];
+            $cc_email = $coordinatorEmails[$chapterName] ?? [];
 
-         if (!empty($emailRecipients)) {
-             Mail::to($emailRecipients)
-                 ->cc($cc_email)
+            if (! empty($emailRecipients)) {
+                Mail::to($emailRecipients)
+                    ->cc($cc_email)
                     ->send(new PaymentsReRegLate($data));
-                }
-
             }
-
-            try {
-                DB::commit();
-            } catch (\Exception $e) {
-                // Rollback Transaction
-                echo $e->getMessage();
-                exit();
-                // Log the error
-                Log::error($e);
-
-                return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
-            }
-
-            return redirect()->to('/chapter/re-registration')->with('success', 'Re-Registration Late Reminders have been successfully sent.');
 
         }
+
+        try {
+            DB::commit();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            echo $e->getMessage();
+            exit();
+            // Log the error
+            Log::error($e);
+
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        }
+
+        return redirect()->to('/chapter/re-registration')->with('success', 'Re-Registration Late Reminders have been successfully sent.');
+
+    }
 
     /**
      * get CCMail
@@ -3906,27 +3899,27 @@ class ChapterController extends Controller
                                 'board_id' => $boardDetails[$i]->board_id,
                                 'user_id' => $boardDetails[$i]->user_id]);
 
-                    //Delete Details of Board memebers from users table
-                    DB::table('users')
-                        ->where('id', $boardDetails[$i]->user_id)
-                        ->delete();
+                        //Delete Details of Board memebers from users table
+                        DB::table('users')
+                            ->where('id', $boardDetails[$i]->user_id)
+                            ->delete();
                     }
                 }
                 //Delete Details of Board memebers from Board Detials table
-                    DB::table('board_details')
-                        ->where('chapter_id', $chapter_id)
-                        ->delete();
+                DB::table('board_details')
+                    ->where('chapter_id', $chapter_id)
+                    ->delete();
 
                 //Create & Activate Details of Board memebers from Incoming Board Members
-                    for ($i = 0; $i < $countIncomingBoardDetails; $i++) {
-                        $userId = DB::table('users')->insertGetId(
-                            ['first_name' => $incomingBoardDetails[$i]->first_name,
-                                'last_name' => $incomingBoardDetails[$i]->last_name,
-                                'email' => $incomingBoardDetails[$i]->email,
-                                'password' => Hash::make('TempPass4You'),
-                                'user_type' => 'board',
-                                'is_active' => 1]
-                        );
+                for ($i = 0; $i < $countIncomingBoardDetails; $i++) {
+                    $userId = DB::table('users')->insertGetId(
+                        ['first_name' => $incomingBoardDetails[$i]->first_name,
+                            'last_name' => $incomingBoardDetails[$i]->last_name,
+                            'email' => $incomingBoardDetails[$i]->email,
+                            'password' => Hash::make('TempPass4You'),
+                            'user_type' => 'board',
+                            'is_active' => 1]
+                    );
 
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
@@ -3961,50 +3954,49 @@ class ChapterController extends Controller
                 DB::update('UPDATE chapters SET new_board_active = ? where id = ?', [1, $chapter_id]);
 
                 //Delete Details of Board memebers from Income Board Member table
-                    DB::table('incoming_board_member')
+                DB::table('incoming_board_member')
                     ->where('chapter_id', $chapter_id)
                     ->delete();
 
-                    // Fetch outgoing_board_member records (for access to Financial Report)
-                    $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
-                        foreach ($outgoingBoardMembers as $member) {
-                            // Find or create the user based on email
-                            $user = DB::table('users')->updateOrInsert(
-                                ['email' => $member->email],
-                                [
-                                    'first_name' => $member->first_name,
-                                    'last_name' => $member->last_name,
-                                    'password' => Hash::make('TempPass4You'),
-                                    'user_type' => 'outgoing',
-                                    'is_active' => 1
-                                ]
-                            );
+                // Fetch outgoing_board_member records (for access to Financial Report)
+                $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
+                foreach ($outgoingBoardMembers as $member) {
+                    // Find or create the user based on email
+                    $user = DB::table('users')->updateOrInsert(
+                        ['email' => $member->email],
+                        [
+                            'first_name' => $member->first_name,
+                            'last_name' => $member->last_name,
+                            'password' => Hash::make('TempPass4You'),
+                            'user_type' => 'outgoing',
+                            'is_active' => 1,
+                        ]
+                    );
 
-                            // Use the user ID for other operations if needed
-                            $userId = DB::table('users')->where('email', $member->email)->value('id');
+                    // Use the user ID for other operations if needed
+                    $userId = DB::table('users')->where('email', $member->email)->value('id');
 
-                            // Now you can continue with other operations, e.g., updating outgoing_board_member
-                            DB::table('outgoing_board_member')
-                                ->where('email', $member->email)
-                                ->update(['user_id' => $userId, 'is_active' => 1]);
-                        }
-
-
-                    DB::commit();
-                } catch (\Illuminate\Database\QueryException $e) {
-                    DB::rollback();
-                    Log::error($e);
-                    $errorCode = $e->errorInfo[1];
-                    if ($errorCode == 1062) {
-                        return $message = $e->errorInfo[2];
-                    } else {
-                        return $message = 'fail';
-                    }
+                    // Now you can continue with other operations, e.g., updating outgoing_board_member
+                    DB::table('outgoing_board_member')
+                        ->where('email', $member->email)
+                        ->update(['user_id' => $userId, 'is_active' => 1]);
                 }
 
-                return $message = 'success';
+                DB::commit();
+            } catch (\Illuminate\Database\QueryException $e) {
+                DB::rollback();
+                Log::error($e);
+                $errorCode = $e->errorInfo[1];
+                if ($errorCode == 1062) {
+                    return $message = $e->errorInfo[2];
+                } else {
+                    return $message = 'fail';
+                }
             }
+
+            return $message = 'success';
         }
+    }
 
     /**
      * Financial Report for Coordinator side for Reviewing of Chapters
@@ -4814,21 +4806,21 @@ class ChapterController extends Controller
     public function chapterLinks(): View
     {
         $link_array_intl_q = DB::table('chapters')
-                ->select('id', 'intl_state', 'country', 'name', 'status', 'website_status', 'website_url')
-                ->where('state', '=', '52')
-                ->where('is_active', '=', '1')
-                ->orderBy('country')
-                ->orderBy('intl_state')
-                ->orderBy('name')
-                ->get();
+            ->select('id', 'intl_state', 'country', 'name', 'status', 'website_status', 'website_url')
+            ->where('state', '=', '52')
+            ->where('is_active', '=', '1')
+            ->orderBy('country')
+            ->orderBy('intl_state')
+            ->orderBy('name')
+            ->get();
         $link_array_usa_q = DB::table('chapters')
-                ->select('chapters.id', 'chapters.state', 'chapters.intl_state', 'chapters.country', 'chapters.name', 'chapters.status', 'chapters.website_status', 'chapters.website_url', 'state.state_short_name', 'state.state_long_name')
-                ->join('state', 'chapters.state', '=', 'state.id')
-                ->where('chapters.state', '<>', 52)
-                ->where('is_active', '1')
-                ->orderBy('chapters.state')
-                ->orderBy('chapters.name')
-                ->get();
+            ->select('chapters.id', 'chapters.state', 'chapters.intl_state', 'chapters.country', 'chapters.name', 'chapters.status', 'chapters.website_status', 'chapters.website_url', 'state.state_short_name', 'state.state_long_name')
+            ->join('state', 'chapters.state', '=', 'state.id')
+            ->where('chapters.state', '<>', 52)
+            ->where('is_active', '1')
+            ->orderBy('chapters.state')
+            ->orderBy('chapters.name')
+            ->get();
 
         $link_array_intl = [];
         foreach ($link_array_intl_q as $key => $value) {
