@@ -11,7 +11,7 @@
         <li class="active">Board Election Report</li>
       </ol>
     </section>
-   
+
     <!-- Main content -->
     <form id="board-info" method="POST" action='{{ route("chapter.createboardinfo",$chapterList[0]->id) }}'>
     @csrf
@@ -56,13 +56,13 @@
                 <input type="text" name="ch_name" class="form-control my-colorpicker1" maxlength="200"  value="{{ $chapterList[0]->territory }}" readonly>
               </div>
               </div>
-             
+
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-group">
                         <label class="span-t mrg-10">
                             <input type="radio" class="" name="BoundaryStatus" onclick="return BoundaryError(false)" id="BoundaryStatus1" value="0" <?php if (!is_null($chapterList[0]->boundary_issues) && (!$chapterList[0]->boundary_issues == 1)) echo "checked"; ?> required readonly>
                             <span>Boundaries are correct</span>
-                            
+
                         </label>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                         <label class="span-t mrg-10">
                             <input type="radio" class="" name="BoundaryStatus" onClick="return BoundaryError(true)" id="BoundaryStatus2" value="1" <?php if ($chapterList[0]->boundary_issues == 1) echo "checked"; ?> required readonly>
                             <span>Boundaries are not correct</span>
-                            
+
                         </label>
                     </div>
                 </div>
@@ -87,14 +87,32 @@
               </div>
               <div class="box-body">
               <!-- /.form group -->
-              		<div class="col-sm-6 col-xs-12">
+              		<div class="col-sm-12 col-xs-12">
 							<div class="form-group">
 								<label>Email Address to Give to MOMS Interested in joining your Chapter</label> <span class="field-required">*</span>
 								<input type="text" name="InquiriesContact" class="form-control" value="{{ $chapterList[0]->inquiries_contact }}" required maxlength="50">
 							</div>
 						</div>
-             </div> 
-            
+                 <!-- /.form group -->
+                 <div class="col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <label>Chapter Website</label>
+                      <input type="text" name="ch_website" class="form-control my-colorpicker1" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}" maxlength="50" id="validate_url" onchange="is_url(); updateWebsiteStatus();">
+                    </div>
+                    </div>
+                      <!-- /.form group -->
+               <div class="col-sm-6 col-xs-12">
+                <div class="form-group">
+                    <label>Website Link Status</label> <span class="field-required">*</span>
+                    <select id="ch_webstatus" name="ch_webstatus" class="form-control select2" style="width: 100%;" required>
+                        <option value="0" id="option0" {{$chapterList[0]->website_status == 0 ? 'selected' : ''}} disabled>Website Not Linked</option>
+                        <option value="1" id="option1" {{$chapterList[0]->website_status == 1 ? 'selected' : ''}} disabled>Website Linked</option>
+                        <option value="2" id="option2" {{$chapterList[0]->website_status == 2 ? 'selected' : ''}}>Add Link Requested</option>
+                        <option value="3" id="option3" {{$chapterList[0]->website_status == 3 ? 'selected' : ''}}>Do Not Link</option>
+                    </select>
+
+                </div>
+            </div>
             <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">President</h3>
               </div>
@@ -239,7 +257,7 @@
                 </div>
               </div>
              <input type="hidden" name="avpID" id="avpID" value="<?php echo $AVPDetails[0]->ibd_id; ?>" />
-             
+
               </div>
               <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">MVP</h3>
@@ -394,7 +412,7 @@
                 </div>
               </div>
              <input type="hidden" name="trsID" id="trsID" value="<?php echo $TRSDetails[0]->ibd_id; ?>" />
-             
+
               </div>
               <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">Secretary</h3>
@@ -473,19 +491,19 @@
               </div>
               <input type="hidden" name="secID" id="secID" value="<?php echo $SECDetails[0]->ibd_id; ?>" />
               </div>
-              
+
               </div>
       </div>
-            
+
             <!-- /.box-body -->
             <div class="box-body text-center">
               <button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate(true)">Save</button>
               <button type="button" class="btn btn-themeBlue margin" onclick="return PreSaveValidate(false)" >Activate Board</button>
               <a href="{{ route('report.boardinfo') }}" class="btn btn-themeBlue margin">Back</a>
             </div>
-             
+
             <!-- /.box-body -->
-            
+
           </div>
           <!-- /.box -->
         </div>
@@ -496,6 +514,13 @@
 
   @section('customscript')
   <script>
+
+       // Disable fields and buttons
+ //      $(document).ready(function () {
+ //           $('input, select, textarea').prop('disabled', true);
+  //  });
+
+
    function isNumber(evt) {
     evt = (evt) ? evt : window.event;
     var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -515,7 +540,7 @@ function isPhone() {
         alert("Please Enter Number Only");
         return false;
     }
-} 
+}
 function BoundaryError(error){
         if (error){
             $("#BoundaryIssue").prop("",false);
@@ -535,7 +560,7 @@ function BoundaryError(error){
         if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
         var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
         $("#"+phoneListArr[i]).val(reInputValue);
-    }   
+    }
     $("#ch_pre_phone").keyup(function() {
         this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
     });
@@ -550,18 +575,18 @@ function BoundaryError(error){
     });
     $("#ch_sec_phone").keyup(function() {
         this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });  
-    
+    });
+
     var check = <?php echo "\"" . $chapterList[0]->boundary_issues . "\""; ?>;
-    
+
     if(check == 0){
         $("#BoundaryIssue").prop("",true);
         $("#BoundaryIssue").prop("required",false);
     }else{
         $("#BoundaryIssue").prop("",false);
         $("#BoundaryIssue").prop("required",true);
-    }   
-    
+    }
+
     var avp = $("#ch_avp_fname").val();
     if(avp ==''){
         $("#ch_avp_fname").prop("readonly",true);
@@ -594,7 +619,7 @@ function BoundaryError(error){
         $("#ch_trs_zip").prop("readonly",true);
         $("#ch_trs_phone").prop("readonly",true);
         $("#ch_trs_state").prop("disabled",true);
-    } 
+    }
     var sec = $("#ch_sec_fname").val();
     if(sec ==''){
         $("#ch_sec_fname").prop("readonly",true);
@@ -648,8 +673,8 @@ function BoundaryError(error){
                 $("#ch_avp_zip").prop("required",true);
                 $("#ch_avp_phone").prop("required",true);
                 $("#ch_avp_state").prop("required",true);
-              }  
-            break; 
+              }
+            break;
           case "MVPVacant":
               if($("#MVPVacant").prop("checked") == true){
                 $("#ch_mvp_fname").prop("readonly",true);
@@ -686,7 +711,7 @@ function BoundaryError(error){
                 $("#ch_mvp_zip").prop("required",true);
                 $("#ch_mvp_phone").prop("required",true);
                 $("#ch_mvp_state").prop("required",true);
-              }  
+              }
             break;
           case "TreasVacant":
               if($("#TreasVacant").prop("checked") == true){
@@ -724,9 +749,9 @@ function BoundaryError(error){
                 $("#ch_trs_zip").prop("required",true);
                 $("#ch_trs_phone").prop("required",true);
                 $("#ch_trs_state").prop("required",true);
-                
-              }  
-            break; 
+
+              }
+            break;
           case "SecVacant":
               if($("#SecVacant").prop("checked") == true){
                 $("#ch_sec_fname").prop("readonly",true);
@@ -763,15 +788,15 @@ function BoundaryError(error){
                 $("#ch_sec_zip").prop("required",true);
                 $("#ch_sec_phone").prop("required",true);
                 $("#ch_sec_state").prop("required",true);
-              }  
-            break;      
-    }      
-    
+              }
+            break;
+    }
+
   }
- 
+
   //submit validation function
   function PreSaveValidate(show_submit_message){
-     
+
     var errMessage="";
         //if($("#ch_pre_email").val() != "" || $("#ch_avp_email").val() != "" || $("#ch_mvp_email").val() != "" || $("#ch_trs_email").val() != "" || $("#ch_sec_email").val() != ""){
           //Ensure there are no e-mail addresses repeated
@@ -779,7 +804,7 @@ function BoundaryError(error){
             if($("#ch_pre_email").val() == $("#ch_avp_email").val() || $("#ch_pre_email").val() == $("#ch_mvp_email").val() || $("#ch_pre_email").val() == $("#ch_trs_email").val() || $("#ch_pre_email").val() == $("#ch_sec_email").val()) {
               errMessage = "The e-mail address provided for the Chapter President was also provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
             }
-          }  
+          }
           if($("#ch_avp_email").val() != ""){
             if($("#ch_avp_email").val() == $("#ch_mvp_email").val() || $("#ch_avp_email").val() == $("#ch_trs_email").val() || $("#ch_avp_email").val() == $("#ch_sec_email").val()) {
               errMessage = "The e-mail address provided for the Chapter AVP was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
@@ -790,19 +815,19 @@ function BoundaryError(error){
               errMessage = "The e-mail address provided for the Chapter MVP was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
             }
           }
-          if($("#ch_trs_email").val() != ""){  
+          if($("#ch_trs_email").val() != ""){
             if($("#ch_trs_email").val() == $("#ch_sec_email").val()) {
               errMessage = "The e-mail address provided for the Chapter Treasurer was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
             }
           }
-          
+
           if(errMessage.length > 0){
-            alert (errMessage); 
+            alert (errMessage);
             return false;
           }
           if(show_submit_message){
                     //Okay, all validation passed, save the records to the database
-                    alert ("Thank you for submitting the board information for this chapter.  The new board will not be able to login until the new board has been activated.");    
+                    alert ("Thank you for submitting the board information for this chapter.  The new board will not be able to login until the new board has been activated.");
                 }
                 else{
                     $("#submit_type").val('activate_board');
@@ -811,10 +836,10 @@ function BoundaryError(error){
                         $("#board-info").submit();
                     else
                         return false;
-                    
-                    
+
+
                 }
-                
+
             return true;
     }
 
@@ -822,7 +847,7 @@ function BoundaryError(error){
         var chkid = id+"_chk";
         var oldVal = $("#"+id).val();
         var newVal = $("#"+chkid).val();
-        if(oldVal != newVal){   
+        if(oldVal != newVal){
            $.ajax({
                 url: '/mimi/checkemail/'+email,
                 type: "GET",
@@ -839,12 +864,12 @@ function BoundaryError(error){
             });
         }else{
             return false;
-        }           
-    } */ 
+        }
+    } */
 
-   
 
-    
+
+
 </script>
 @endsection
 

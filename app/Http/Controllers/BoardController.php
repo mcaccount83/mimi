@@ -959,18 +959,13 @@ class BoardController extends Controller
             $issue_note = '';
         }
 
-        $websiteStatus = $request->get('ch_wwebstatus');
-
-        if ($websiteStatus === '2' || $websiteStatus === '3') {
-            $chapter->website_status = $websiteStatus;
-        }
-
         DB::beginTransaction();
         try {
             $chapter->inquiries_contact = $request->get('InquiriesContact');
             $chapter->boundary_issues = $request->get('BoundaryStatus');
             $chapter->boundary_issue_notes = $issue_note;
             $chapter->website_url = $request->get('ch_website');
+            $chapter->website_status = $request->get('ch_webstatus');
             $chapter->egroup = $request->get('ch_onlinediss');
             $chapter->social1 = $request->get('ch_social1');
             $chapter->social2 = $request->get('ch_social2');
@@ -1244,6 +1239,7 @@ class BoardController extends Controller
             $borDetails = User::find($request->user()->id)->BoardDetails;
             $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
             $isActive = $borDetails['is_active'];
+            $user_type = $borDetails['user_type'];
 
             DB::beginTransaction();
 
@@ -1257,7 +1253,7 @@ class BoardController extends Controller
                 ->get();
 
             $submitted = $chapterDetails[0]->financial_report_received;
-            $data = ['financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails];
+            $data = ['financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails, 'user_type' => $user_type];
 
             DB::commit();
 
@@ -2731,7 +2727,7 @@ class BoardController extends Controller
             $award_5_nomination_type = $input['NominationType5'];
         } else {
             $award_5_nomination_type = null;
-        }
+        }http://localhost/chapter/boardinfo/2152#
 
         if (isset($input['OutstandingFollowByLaws5']) && $input['OutstandingFollowByLaws5'] == 'no') {
             $award_5_outstanding_follow_bylaws = 0;

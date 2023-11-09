@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Auth;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\ChapterController;
@@ -22,36 +22,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::view('/', 'welcome')->name('welcome');
+//Route::view('/', '')->name('welcome');
 
-Route::middleware('preventBackHistory')->group(function () {
-    // Authentication Routes
-    Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('login', [LoginController::class, 'login']);
-    Route::post('logout', [LoginController::class, 'logout'])->name('user.logout');
+Auth::routes();
 
-    // Registration Routes
-    Route::get('register', [Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('register', [Auth\RegisterController::class, 'register']);
-
-    // Password Reset Routes
-    Route::get('password/reset', [Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
-    Route::post('password/email', [Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-    Route::get('password/reset/{token}', [Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
-    Route::post('password/reset', [Auth\ResetPasswordController::class, 'reset']);
-    Route::post('password/update', [Auth\ResetPasswordController::class, 'update'])->name('password.update');
+Route::middleware('web', 'throttle:60,1')
+    ->prefix('api')
+    ->group(base_path('routes/web.php'));
 
 
-    // Home Route
+Route::middleware(['preventBackHistory'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-
-    // Your other custom routes can be defined here
-
+    // Add more routes that require the 'preventBackHistory' middleware here
 });
 
-Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
+
 
 /**
  * Routes for Custom Links

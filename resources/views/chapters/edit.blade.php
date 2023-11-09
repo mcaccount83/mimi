@@ -611,7 +611,7 @@
                 <textarea name="ch_addinfo" class="form-control my-colorpicker1" rows="4" >{{ $chapterList[0]->additional_info }}</textarea>
               </div>
               </div>
-              </div>
+            </div>
              <div class="box-header with-border mrg-t-10">
 
               </div>

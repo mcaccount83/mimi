@@ -444,97 +444,98 @@
 						</label>
                     </div>
 				</div>
-              </div>
-              </div>
-              <div class="box-header with-border mrg-t-10">
-                <h3 class="box-title"></h3>
-              </div>
-              <div class="box-body">
-              <!-- /.form group -->
-              <div class="col-sm-12 col-xs-12">
-              <div class="form-group">
-                <label>Additional Information</label>
-                <textarea name="ch_addinfo" class="form-control my-colorpicker1" rows="4" disabled>{{ $chapterList[0]->additional_info }}</textarea>
-              </div>
-              </div>
-			   <div class="col-sm-12 col-xs-12">
-              <div class="form-group">
-                <label>Chapter Website</label>
-                <input type="text" name="ch_website" class="form-control my-colorpicker1" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}" maxlength="30" disabled>
-              </div>
-              </div>
-              <!-- /.form group -->
+            </div>
+                <div class="box-header with-border mrg-t-10">
+                    <h3 class="box-title">Information</h3>
+                  </div>
+                  <div class="box-body">
 
-              <div class="col-sm-4 col-xs-12">
-              <div class="form-group">
-                <label class="span-t mrg-10">
-                   <input type="radio" name="ch_linkstatus" class="minimal" value="1" disabled {{$chapterList[0]->website_link_status == '1'  ? 'checked' : ''}}>
-                  <span>Linked</span>
-                </label>
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-4 col-xs-12">
-              <div class="form-group">
-                <label class="span-t mrg-10">
-                  <input type="radio" name="ch_linkstatus" class="minimal" value="2" disabled {{$chapterList[0]->website_link_status == '2'  ? 'checked' : ''}}>
-                  <span>Add Link Requested</span>
-                </label>
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-4 col-xs-12">
-              <div class="form-group">
-                <label class="span-t mrg-10">
-                  <input type="radio" name="ch_linkstatus" class="minimal" value="3" disabled {{$chapterList[0]->website_link_status == '3'  ? 'checked' : ''}}>
-                 <span> Do not Link</span>
-                </label>
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label>Chapter Email Information</label>
-                <input type="email" name="ch_email" class="form-control my-colorpicker1" value="{{ $chapterList[0]->email}}" disabled>
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label>Email to give to moms interested in joining your chapter</label>
-                <input type="email" name="ch_inqemailcontact" class="form-control my-colorpicker1" value="{{ $chapterList[0]->inquiries_contact}}" disabled>
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label>Inquiries Note</label>
-                <input type="text" name="ch_inqnote" class="form-control my-colorpicker1" value="{{ $chapterList[0]->inquiries_note}}" disabled>
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label>Online Chapter Discussion Group</label>
-                <input type="text" name="ch_onlinediss" class="form-control my-colorpicker1" value="{{ $chapterList[0]->egroup}}" disabled>
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label>PO Box</label>
-                <input type="text" name="ch_pobox" class="form-control my-colorpicker1" value="{{ $chapterList[0]->po_box}}" disabled>
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label>Notes</label>
-                <input type="text" name="ch_notes" class="form-control my-colorpicker1" value="{{ $chapterList[0]->website_notes}}" disabled>
-              </div>
-              </div>
+                    <!-- /.form group -->
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                          <label>Chapter Website</label>
+                          <input type="text" name="ch_website" class="form-control my-colorpicker1" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}" maxlength="50" id="validate_url" >
+                        </div>
+                        </div>
+                          <!-- /.form group -->
+                          <div class="col-sm-6 col-xs-12">
+                            <div class="form-group">
+                                <label>Website Link Status</label> <span class="field-required">*</span>
+                                <select id="ch_webstatus" name="ch_webstatus" class="form-control select2" style="width: 100%;" required>
+                                    <option value="0" id="option0" {{$chapterList[0]->website_status == 0 ? 'selected' : ''}} disabled>Website Not Linked</option>
+                                    <option value="1" id="option1" {{$chapterList[0]->website_status == 1 ? 'selected' : ''}}>Website Linked</option>
+                                    <option value="2" id="option2" {{$chapterList[0]->website_status == 2 ? 'selected' : ''}}>Add Link Requested</option>
+                                    <option value="3" id="option3" {{$chapterList[0]->website_status == 3 ? 'selected' : ''}}>Do Not Link</option>
+                                </select>
 
-              </div>
+                                <input type="hidden" name="ch_hid_webstatus" value="{{ $chapterList[0]->website_status }}">
+                            </div>
+                        </div>
+                    <!-- /.form group -->
+                  <div class="col-sm-12 col-xs-12">
+                  <div class="form-group">
+                    <label>Online Discussion Group (Meetup, Google Groups, etc)</label>
+                    <input type="text" name="ch_onlinediss" class="form-control my-colorpicker1" value="{{ $chapterList[0]->egroup}}" maxlength="50" >
+                  </div>
+                  </div>
+                  <!-- /.form group -->
+                  <div class="col-sm-4 col-xs-12">
+                  <div class="form-group">
+                    <label>Facebook</label>
+                    <input type="text" name="ch_social1" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social1}}" maxlength="50" >
+                  </div>
+                  </div>
+                  <!-- /.form group -->
+                  <div class="col-sm-4 col-xs-12">
+                  <div class="form-group">
+                    <label>Twitter</label>
+                    <input type="text" name="ch_social2" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social2}}" maxlength="50" >
+                  </div>
+                  </div>
+                  <!-- /.form group -->
+                  <div class="col-sm-4 col-xs-12">
+                  <div class="form-group">
+                    <label>Instagram</label>
+                    <input type="text" name="ch_social3" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social3}}" maxlength="50" >
+                  </div>
+                  </div>
+                  <!-- /.form group -->
+                  <div class="col-sm-6 col-xs-12">
+                  <div class="form-group">
+                    <label>Chapter Email Address</label>
+                    <input type="email" name="ch_email" class="form-control my-colorpicker1" value="{{ $chapterList[0]->email}}" maxlength="50" >
+                  </div>
+                  </div>
+                  <!-- /.form group -->
+                  <div class="col-sm-6 col-xs-12">
+                  <div class="form-group">
+                    <label>PO Box</label>
+                    <input type="text" name="ch_pobox" class="form-control my-colorpicker1" maxlength="30" value="{{ $chapterList[0]->po_box}}" >
+                  </div>
+                  </div>
+                  <!-- /.form group -->
+                  <div class="col-sm-6 col-xs-12">
+                  <div class="form-group">
+                    <label>Inquiries Email Address</label> <span class="field-required">*</span>
+                    <input type="email" name="ch_inqemailcontact" class="form-control my-colorpicker1" value="{{ $chapterList[0]->inquiries_contact}}" maxlength="50" required >
+                  </div>
+                  </div>
+                  <!-- /.form group -->
+                  <div class="col-sm-6 col-xs-12">
+                  <div class="form-group">
+                    <label>Inquiries Notes (not visible to board members)</label>
+                    <input type="text" name="ch_inqnote" class="form-control my-colorpicker1" value="{{ $chapterList[0]->inquiries_note}}" maxlength="50" >
+                  </div>
+                  </div>
+                  <!-- /.form group -->
+                  <div class="col-sm-12 col-xs-12">
+                  <div class="form-group">
+                    <label>Additional Information (not visible to board members)</label>
+                    <textarea name="ch_addinfo" class="form-control my-colorpicker1" rows="4" >{{ $chapterList[0]->additional_info }}</textarea>
+                  </div>
+                  </div>
+
+
               <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title"></h3>
               </div>
@@ -583,7 +584,7 @@
               <div class="col-sm-12 col-xs-12">
               <div class="form-group">
                 <label>Primary Coordinator (Changing this value will cause the page to refresh)</label> <span class="field-required">*</span>
-                <select name="ch_primarycor" id="ch_primarycor" class="form-control select2" style="width: 100%;" onchange="checkReportId(this.value)" required disabled>
+                <select name="ch_primarycor" id="ch_primarycor" class="form-control select2" style="width: 100%;" " required disabled>
                 <option value="">Select Primary Coordinator</option>
                 @foreach($primaryCoordinatorList as $pcl)
                       <option value="{{$pcl->cid}}" {{$chapterList[0]->primary_coordinator_id == $pcl->cid  ? 'selected' : ''}}>{{$pcl->cor_f_name}} {{$pcl->cor_l_name}} ({{$pcl->pos}})</option>
@@ -646,6 +647,11 @@
 
 @section('customscript')
 <script>
+// Disable fields and buttons
+$(document).ready(function () {
+   $('input, select, textarea').prop('disabled', true);
+});
+
 
 function UpdateEmail(){
                 var email=document.getElementById("ch_pre_email").value;
@@ -675,66 +681,11 @@ function UpdateEmail(){
             }
 
   $( document ).ready(function() {
-
-	var selectedCorId = $("select#ch_primarycor option").filter(":selected").val();
-    if(selectedCorId !=""){
-      $.ajax({
-            url: '/mimi/checkreportid/'+selectedCorId,
-            type: "GET",
-            success: function(result) {
-               $("#display_corlist").html(result);
-            },
-            error: function (jqXHR, exception) {
-
-            }
-        });
-    }
 	var avp = $("#ch_avp_fname").val();
-    if(avp ==''){
-        $("#ch_avp_fname").prop("readonly",true);
-        $("#ch_avp_lname").prop("readonly",true);
-        $("#ch_avp_email").prop("readonly",true);
-        $("#ch_avp_street").prop("readonly",true);
-        $("#ch_avp_city").prop("readonly",true);
-        $("#ch_avp_zip").prop("readonly",true);
-        $("#ch_avp_phone").prop("readonly",true);
-        $("#ch_avp_state").prop("disabled",true);
-    }
     var mvp = $("#ch_mvp_fname").val();
-    if(mvp ==''){
-        $("#ch_mvp_fname").prop("readonly",true);
-        $("#ch_mvp_lname").prop("readonly",true);
-        $("#ch_mvp_email").prop("readonly",true);
-        $("#ch_mvp_street").prop("readonly",true);
-        $("#ch_mvp_city").prop("readonly",true);
-        $("#ch_mvp_zip").prop("readonly",true);
-        $("#ch_mvp_phone").prop("readonly",true);
-        $("#ch_mvp_state").prop("disabled",true);
-    }
     var trs = $("#ch_trs_fname").val();
-    if(trs ==''){
-        $("#ch_trs_fname").prop("readonly",true);
-        $("#ch_trs_lname").prop("readonly",true);
-        $("#ch_trs_email").prop("readonly",true);
-        $("#ch_trs_street").prop("readonly",true);
-        $("#ch_trs_city").prop("readonly",true);
-        $("#ch_trs_zip").prop("readonly",true);
-        $("#ch_trs_phone").prop("readonly",true);
-        $("#ch_trs_state").prop("disabled",true);
-    }
     var sec = $("#ch_sec_fname").val();
-    if(sec ==''){
-        $("#ch_sec_fname").prop("readonly",true);
-        $("#ch_sec_lname").prop("readonly",true);
-        $("#ch_sec_email").prop("readonly",true);
-        $("#ch_sec_street").prop("readonly",true);
-        $("#ch_sec_city").prop("readonly",true);
-        $("#ch_sec_zip").prop("readonly",true);
-        $("#ch_sec_phone").prop("readonly",true);
-        $("#ch_sec_state").prop("disabled",true);
-    }
-});
-
+    });
 
   //submit validation function
   function PreSaveValidate(){
@@ -743,17 +694,13 @@ function UpdateEmail(){
 				if($("#ch_pre_email").val() == $("#ch_avp_email").val() || $("#ch_pre_email").val() == $("#ch_mvp_email").val() || $("#ch_pre_email").val() == $("#ch_trs_email").val() || $("#ch_pre_email").val() == $("#ch_sec_email").val()) {
 					errMessage = "The e-mail address provided for the Chapter President was also provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
 				}
-
-
 				if(errMessage.length > 0){
 					alert (errMessage);
 					return false;
 				}
-
 				//Okay, all validation passed, save the records to the database
 				return true;
 			}
-
 
 </script>
 

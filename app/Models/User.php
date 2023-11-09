@@ -36,4 +36,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(\App\Models\BoardDetails::class);
     }
+
+    public function OutgoingDetails()
+    {
+        return $this->hasOne(\App\Models\OutgoingBoardMember::class);
+    }
 }

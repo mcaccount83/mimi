@@ -3419,7 +3419,9 @@ chapter did have Associate Members this year, how many Associate Members did you
 </div>
 <div class="box-body text-center">
     <br>
-        <a href="{{ route('home') }}" class="btn btn-info btn-fill">Back</a>
+                        @if($user_type !== 'outgoing')
+                        <a href="{{ route('home') }}" class="btn btn-info btn-fill">Back</a>
+                    @endif
                          <button type="button" id="btn-save" class="btn btn-info btn-fill" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
 
 

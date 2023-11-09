@@ -1902,18 +1902,16 @@ class ChapterController extends Controller
         $positionId = $corDetails['position_id'];
         if ($positionId == 7) {
             $websiteList = DB::table('chapters')
-                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.website_url as web', 'wb.status as web_status', 'chapters.website_notes as web_notes', 'chapters.egroup as egroup', 'st.state_short_name as state')
+                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.website_url as web', 'chapters.website_status as status', 'chapters.website_notes as web_notes', 'chapters.egroup as egroup', 'st.state_short_name as state')
                 ->join('state as st', 'chapters.state', '=', 'st.id')
-                ->leftJoin('website_link_status as wb', 'chapters.website_status', '=', 'wb.id')
                 ->where('chapters.is_active', '=', '1')
                 ->orderBy('st.state_short_name')
                 ->orderBy('chapters.name')
                 ->get();
         } elseif ($positionId == 6 || $positionId == 25) {
             $websiteList = DB::table('chapters')
-                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.website_url as web', 'wb.status as web_status', 'chapters.website_notes as web_notes', 'chapters.egroup as egroup', 'st.state_short_name as state')
+                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.website_url as web', 'chapters.website_status as status', 'chapters.website_notes as web_notes', 'chapters.egroup as egroup', 'st.state_short_name as state')
                 ->join('state as st', 'chapters.state', '=', 'st.id')
-                ->leftJoin('website_link_status as wb', 'chapters.website_status', '=', 'wb.id')
                 ->where('chapters.is_active', '=', '1')
                 ->where('chapters.conference', '=', $corConfId)
                 ->orderBy('st.state_short_name')
@@ -1921,9 +1919,8 @@ class ChapterController extends Controller
                 ->get();
         } else {
             $websiteList = DB::table('chapters')
-                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.website_url as web', 'wb.status as web_status', 'chapters.website_notes as web_notes', 'chapters.egroup as egroup', 'st.state_short_name as state')
+                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.website_url as web', 'chapters.website_status as status', 'chapters.website_notes as web_notes', 'chapters.egroup as egroup', 'st.state_short_name as state')
                 ->join('state as st', 'chapters.state', '=', 'st.id')
-                ->leftJoin('website_link_status as wb', 'chapters.website_status', '=', 'wb.id')
                 ->where('chapters.is_active', '=', '1')
                 ->where('chapters.region', '=', $corRegId)
                 ->orderBy('st.state_short_name')
@@ -3579,7 +3576,7 @@ class ChapterController extends Controller
     }
 
     /**
-     * Activate Board (store)
+     * Update Board Report (store)
      */
     public function createBoardInfo(Request $request, $chapter_id): RedirectResponse
     {
@@ -3605,6 +3602,8 @@ class ChapterController extends Controller
         DB::beginTransaction();
         try {
             $chapter->inquiries_contact = $request->get('InquiriesContact');
+            $chapter->website_url = $request->get('ch_website');
+            $chapter->website_status = $request->get('ch_webstatus');
             $chapter->boundary_issues = $request->get('BoundaryStatus');
             $chapter->boundary_issue_notes = $issue_note;
             $chapter->new_board_submitted = 1;
@@ -3892,7 +3891,8 @@ class ChapterController extends Controller
                             ['first_name' => $boardDetails[$i]->first_name,
                                 'last_name' => $boardDetails[$i]->last_name,
                                 'email' => $boardDetails[$i]->email,
-                                'password' => $boardDetails[$i]->password,
+                                'password' => Hash::make('TempPass4You'),
+                                'remember_token' => '',
                                 'board_position_id' => $boardDetails[$i]->board_position_id,
                                 'chapter_id' => $chapter_id,
                                 'street_address' => $boardDetails[$i]->street_address,
@@ -3906,27 +3906,27 @@ class ChapterController extends Controller
                                 'board_id' => $boardDetails[$i]->board_id,
                                 'user_id' => $boardDetails[$i]->user_id]);
 
-                        //Delete Details of Board memebers from users table
-                        DB::table('users')
-                            ->where('id', $boardDetails[$i]->user_id)
-                            ->delete();
+                    //Delete Details of Board memebers from users table
+                    DB::table('users')
+                        ->where('id', $boardDetails[$i]->user_id)
+                        ->delete();
                     }
                 }
                 //Delete Details of Board memebers from Board Detials table
-                DB::table('board_details')
-                    ->where('chapter_id', $chapter_id)
-                    ->delete();
+                    DB::table('board_details')
+                        ->where('chapter_id', $chapter_id)
+                        ->delete();
 
                 //Create & Activate Details of Board memebers from Incoming Board Members
-                for ($i = 0; $i < $countIncomingBoardDetails; $i++) {
-                    $userId = DB::table('users')->insertGetId(
-                        ['first_name' => $incomingBoardDetails[$i]->first_name,
-                            'last_name' => $incomingBoardDetails[$i]->last_name,
-                            'email' => $incomingBoardDetails[$i]->email,
-                            'password' => Hash::make('TempPass4You'),
-                            'user_type' => 'board',
-                            'is_active' => 1]
-                    );
+                    for ($i = 0; $i < $countIncomingBoardDetails; $i++) {
+                        $userId = DB::table('users')->insertGetId(
+                            ['first_name' => $incomingBoardDetails[$i]->first_name,
+                                'last_name' => $incomingBoardDetails[$i]->last_name,
+                                'email' => $incomingBoardDetails[$i]->email,
+                                'password' => Hash::make('TempPass4You'),
+                                'user_type' => 'board',
+                                'is_active' => 1]
+                        );
 
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
@@ -3951,33 +3951,60 @@ class ChapterController extends Controller
                             'zip' => $incomingBoardDetails[$i]->zip,
                             'country' => 'USA',
                             'phone' => $incomingBoardDetails[$i]->phone,
-                            //'vacant' => $input['ch_pre_fname'],
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s'),
                             'is_active' => 1]
                     );
                 }
+
                 //Update Chapter after Board Active
                 DB::update('UPDATE chapters SET new_board_active = ? where id = ?', [1, $chapter_id]);
 
-                DB::table('incoming_board_member')
+                //Delete Details of Board memebers from Income Board Member table
+                    DB::table('incoming_board_member')
                     ->where('chapter_id', $chapter_id)
                     ->delete();
 
-                DB::commit();
-            } catch (\Illuminate\Database\QueryException $e) {
-                DB::rollback();
-                $errorCode = $e->errorInfo[1];
-                if ($errorCode == 1062) {
-                    return $message = $e->errorInfo[2];
-                } else {
-                    return $message = 'fail';
-                }
-            }
+                    // Fetch outgoing_board_member records (for access to Financial Report)
+                    $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
+                        foreach ($outgoingBoardMembers as $member) {
+                            // Find or create the user based on email
+                            $user = DB::table('users')->updateOrInsert(
+                                ['email' => $member->email],
+                                [
+                                    'first_name' => $member->first_name,
+                                    'last_name' => $member->last_name,
+                                    'password' => Hash::make('TempPass4You'),
+                                    'user_type' => 'outgoing',
+                                    'is_active' => 1
+                                ]
+                            );
 
-            return $message = 'success';
+                            // Use the user ID for other operations if needed
+                            $userId = DB::table('users')->where('email', $member->email)->value('id');
+
+                            // Now you can continue with other operations, e.g., updating outgoing_board_member
+                            DB::table('outgoing_board_member')
+                                ->where('email', $member->email)
+                                ->update(['user_id' => $userId, 'is_active' => 1]);
+                        }
+
+
+                    DB::commit();
+                } catch (\Illuminate\Database\QueryException $e) {
+                    DB::rollback();
+                    Log::error($e);
+                    $errorCode = $e->errorInfo[1];
+                    if ($errorCode == 1062) {
+                        return $message = $e->errorInfo[2];
+                    } else {
+                        return $message = 'fail';
+                    }
+                }
+
+                return $message = 'success';
+            }
         }
-    }
 
     /**
      * Financial Report for Coordinator side for Reviewing of Chapters

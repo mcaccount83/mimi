@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Chapter;
 use App\Models\User;
+use App\Models\FinancialReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -177,5 +178,42 @@ class HomeController extends Controller
                 return redirect()->to('/login');
             }
         }
+
+         /**
+         * Outgoing Board Login with Fiancial Report Only
+         */
+        if ($user_type == 'outgoing') {
+            $borDetails = User::find($request->user()->id)->OutgoingDetails;
+            $borPositionId = $borDetails['board_position_id'];
+            $isActive = $borDetails['is_active'];
+            $chapterId = $borDetails['chapter_id'];
+            $chapterDetails = Chapter::find($chapterId);
+            $request->session()->put('chapterid', $chapterId);
+            $loggedInName = $borDetails->first_name . ' ' . $borDetails->last_name;
+
+            $financial_report_array = FinancialReport::find($chapterId);
+
+            $chapterDetails = DB::table('chapters')
+                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state', 'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
+                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                ->where('chapters.is_active', '=', '1')
+                ->where('chapters.id', '=', $chapterId)
+                ->get();
+
+            $submitted = $chapterDetails[0]->financial_report_received;
+
+            $data = ['financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails, 'user_type' => $user_type];
+
+                return view('boards.financial')->with($data);
+
+            } else {
+                Auth::logout(); // logout user
+                $request->session()->flush();
+
+                return redirect()->to('/login');
+            }
+
+
+
     }
 }

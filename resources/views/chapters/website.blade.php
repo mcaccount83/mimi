@@ -54,7 +54,17 @@
 						<td><a href="<?php echo url("/chapter/website/edit/{$list->id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
                         <td>{{ $list->state }}</td>
                         <td>{{ $list->chapter_name }}</td>
-                        <td>{{ $list->web_status }}</td>
+                        <td>
+                            @if($list->status == '1')
+                                Linked
+                            @elseif ($list->status == '2')
+                                Add Link Requested
+                            @elseif ($list->status == '3')
+                                Do No Link
+                            @else
+
+                            @endif
+                        </td>
                         <td>{{ $list->web }}</td>
                         <td>{{ $list->egroup }}</td>
                         <td>{{ $list->web_notes }}</td>
