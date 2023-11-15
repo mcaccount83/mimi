@@ -9,7 +9,6 @@ use Illuminate\Queue\SerializesModels;
 class WebsiteReviewNotice extends Mailable
 {
     use Queueable, SerializesModels;
-    use Queueable, SerializesModels;
 
     public $mailData;
 

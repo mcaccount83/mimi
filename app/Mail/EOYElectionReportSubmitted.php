@@ -10,6 +10,8 @@ class EOYElectionReportSubmitted extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $mailData;
+
     /**
      * Create a new message instance.
      *

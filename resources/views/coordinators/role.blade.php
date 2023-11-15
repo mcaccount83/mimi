@@ -60,6 +60,7 @@
 						<input type="hidden" name="OldPrimaryPosition" value="{{$coordinatorDetails[0]->position_id}}">
 						<input type="hidden" name="submit_type" id="submit_type" value="" />
 						<input type="hidden" name="userid" id="userid" value="{{$coordinatorDetails[0]->user_id}}" />
+                        <input type="hidden" name="coordinator_id" id="coordinator_id" value="{{$coordinatorDetails[0]->coordinator_id}}" />
 						<input type="hidden" name="coordName" value="{{$coordinatorDetails[0]->first_name }} {{$coordinatorDetails[0]->last_name}}" />
 						<input type="hidden" name="coordConf" value="{{$coordinatorDetails[0]->conference_id}}" />
 						<input type="hidden" name="email" value="{{$coordinatorDetails[0]->email}}" />
@@ -110,13 +111,14 @@
 					<div class="col-sm-12 col-xs-12">
 						<div class="form-group">
 						<label>Reports To</label><span class="field-required">*</span>
-						<select name="cord_report" id="cord_report" class="form-control select2" style="width: 100%;" required>
+						<select name="cord_report_pc" id="cord_report_pc" class="form-control select2" style="width: 100%;" required>
 
 						   @foreach($primaryCoordinatorList as $pcl)
 							  <option value="{{$pcl->cid}}" {{$coordinatorDetails[0]->report_id == $pcl->cid  ? 'selected' : ''}}>{{$pcl->cor_f_name}} {{$pcl->cor_l_name}} ({{$pcl->pos}})</option>
 							@endforeach
 						</select>
 						</div>
+                        <input type="hidden" name="OldReportPC" value="{{$coordinatorDetails[0]->report_id}}">
 					</div>
 				</div>
 					<div class="box-header with-border mrg-t-10"></div>

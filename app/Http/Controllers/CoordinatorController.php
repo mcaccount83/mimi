@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ChapersUpdatePrimaryCoor;
+use App\Mail\CoordinatorRetireAdmin;
 use App\Models\FinancialReport;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -669,14 +670,16 @@ class CoordinatorController extends Controller
                     'last_updated_by' => date('Y-m-d H:i:s'),
                     'last_updated_date' => date('Y-m-d H:i:s')]);
             DB::update('UPDATE users SET is_active = ? where id = ?', [1, $coordinatorDetails[0]->user_id]);
+
             DB::commit();
         }
 
-        return redirect()->to('/coordinator/retired')->with('success', 'Coordinator successfully unretired');
+        return redirect()->to('/coordinatorlist')->with('success', 'Coordinator successfully unretired');
     }
 
     /**
-     * Retire Coordiantor
+     * Update Coordiantor Role
+     * Including LOA & Retiring Cooardinator
      */
     public function updateRole(Request $request, $id)
     {
@@ -726,9 +729,9 @@ class CoordinatorController extends Controller
                 $to_email = 'jackie.mchenry@momsclub.org';
 
                 Mail::to($to_email, 'MOMS Club')
-                    ->send(new ChapersUpdatePrimaryCoor($mailData));
+                    ->send(new CoordinatorRetireAdmin($mailData));
 
-                return redirect()->to('/coordinatorlist')->with('success', 'Coordinator retired successfully.');
+                return redirect()->to('/coordinator/retired')->with('success', 'Coordinator retired successfully.');
                 exit;
             } catch (\Exception $e) {
                 // Rollback Transaction
@@ -739,6 +742,7 @@ class CoordinatorController extends Controller
                 return redirect()->to('/coordinatorlist')->with('fail', 'Something went wrong, Please try again.');
             }
         }
+
         if ($submit_type == 'Leave' || $submit_type == 'RemoveLeave') {
             DB::beginTransaction();
             try {
@@ -765,42 +769,39 @@ class CoordinatorController extends Controller
             }
         }
 
-        //Now reassign the coordinators that changed
-        $rowcountCord = $_POST['CoordinatorCount'];
-        $new_coordinator_ids = []; // Define an array to store new coordinator IDs
+        ///Reassign Direct Report Coordinators that Changed
+		$rowcountCord = $_POST['CoordinatorCount'];
+	    for($i=0; $i<$rowcountCord; $i++){
+			$new_coordinator_field = "Report" . $i;
+			$new_coordinator_id = $_POST[$new_coordinator_field];
 
-        for ($i = 0; $i < $rowcountCord; $i++) {
-            $new_coordinator_field = 'Report'.$i;
-            $new_coordinator_id = $_POST[$new_coordinator_field];
+			$coordinator_field = "CoordinatorIDRow" . $i;
+			$coordinator_id = $_POST[$coordinator_field];
 
-            $coordinator_field = 'CoordinatorIDRow'.$i;
-            $coordinator_id = $_POST[$coordinator_field];
+			$this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
+		}
 
-            $new_coordinator_ids[] = $new_coordinator_id; // Store each new coordinator ID
-            $this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
+        //Reassign Primary Coordinatory Chapters that Changed
+		$rowcountChapter = $_POST['ChapterCount'];
+		for($i=0; $i<$rowcountChapter; $i++){
+			$coordinator_field = "PCID" . $i;
+			$coordinator_id = $_POST[$coordinator_field];
+
+			$chapter_field = "ChapterIDRow" . $i;
+			$chapter_id = $_POST[$chapter_field];
+
+			$this->ReassignChapter($request, $chapter_id, $coordinator_id, true);
         }
 
-        // Start with reassigning the chapters that changed
-        $rowcountChapter = $_POST['ChapterCount'];
+        if($rowcountCord == 0 && $rowcountChapter == 0){
 
-        for ($i = 0; $i < $rowcountChapter; $i++) {
-            $coordinator_field = 'PCID'.$i;
-            $coordinator_id = $_POST[$coordinator_field];
-
-            $chapter_field = 'ChapterIDRow'.$i;
-            $chapter_id = $_POST[$chapter_field];
-
-            // Check if the index exists in $new_coordinator_ids
-            if (isset($new_coordinator_ids[$i])) {
-                $new_coordinator_id = $new_coordinator_ids[$i];
-
-                // Use the corresponding new coordinator ID from $new_coordinator_ids
-                $this->ReassignChapter($request, $chapter_id, $coordinator_id, true);
-            } else {
-                // Handle the case where $new_coordinator_ids[$i] is not defined
-                // This may include logging an error or taking appropriate action
-            }
         }
+
+        //Reassign Report To / Direct Supervisor that Changed
+            $coordinator_id = $request->get('coordinator_id');
+            $new_coordinator_id = $request->get('cord_report_pc');
+                $this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
+
 
         //Save other changes
         $position_id = $request->get('cord_pri_pos');
@@ -808,7 +809,7 @@ class CoordinatorController extends Controller
         $old_position_id = $request->get('OldPrimaryPosition');
         $old_sec_position_id = $request->get('OldSecPosition');
         $promote_date = $request->get('CoordinatorPromoteDate');
-        $report_id = $request->get('cord_report');
+        //$report_id = $request->get('cord_report');
         if ($promote_date == '0000-00-00') {
             $promote_date = null;
         }
@@ -824,7 +825,7 @@ class CoordinatorController extends Controller
                     'region_id' => $request->get('cord_region'),
                     'conference_id' => $request->get('cord_conf'),
                     'home_chapter' => $request->get('cord_chapter'),
-                    'report_id' => $report_id,
+                    //'report_id' => $report_id,
                     'last_promoted' => $promote_date,
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => date('Y-m-d H:i:s')]);
@@ -908,20 +909,22 @@ class CoordinatorController extends Controller
         }
         DB::beginTransaction();
         try {
+            //Find new layer
             $query = $layerId = DB::table('coordinator_details')
                 ->select('layer_id')
                 ->where('coordinator_id', $new_coordinator_id)
                 ->limit(1)
                 ->get();
             $new_layer_id = $query[0]->layer_id + 1;
-            //Update their main report ID & layer
 
+            //Update their main report ID & layer
             DB::table('coordinator_details')
                 ->where('coordinator_id', $coordinator_id)
                 ->update(['report_id' => $new_coordinator_id,
                     'layer_id' => $new_layer_id,
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => date('Y-m-d H:i:s')]);
+
             //Update the coordinator tree with their new tree relationship
             //Get the current report array
             $cordReportingTree = DB::table('coordinator_reporting_tree')
