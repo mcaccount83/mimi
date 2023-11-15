@@ -2941,7 +2941,7 @@ class ChapterController extends Controller
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'st.id')
+            ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->where(function ($query) use ($currentYear, $currentMonth) {
@@ -2965,7 +2965,7 @@ class ChapterController extends Controller
                     ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
                     ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-                    ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'st.id')
+                    ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '1')
                     ->where(function ($query) use ($currentYear, $currentMonth) {
@@ -3178,6 +3178,11 @@ class ChapterController extends Controller
         $coordinatorEmails = []; // Store coordinator email addresses by chapter
         $chapterChEmails = []; // Store ch_email addresses by chapter
 
+        $mailData = [];
+
+        if ($chapters->isEmpty()) {
+            return redirect()->back()->with('info', 'There are no Chapters with Re-Registration Reminders to be Sent this Month.');
+            } else {
         foreach ($chapters as $chapter) {
             if ($chapter->bor_email) {
                 $chapterEmails[$chapter->chapter_name][] = $chapter->bor_email; // Store emails by chapter name
@@ -3185,7 +3190,7 @@ class ChapterController extends Controller
                 $cc_email1 = $this->getCCMail($chapter->pcid);
                 $cc_email1 = array_filter($cc_email1);
 
-                if (! empty($cc_email1)) {
+                if (!empty($cc_email1)) {
                     $coordinatorEmails[$chapter->chapter_name] = $cc_email1; // Store coordinator emails by chapter
                 }
             }
@@ -3196,11 +3201,11 @@ class ChapterController extends Controller
             }
 
             // Set the state for this chapter
-            $sharedChapterState = $chapter->chapter_state;
+            $chapterState = $chapter->chapter_state; // Use the state for this chapter
 
             $mailData[$chapter->chapter_name] = [
                 'chapterName' => $chapter->chapter_name,
-                'chapterState' => $sharedChapterState, // Use the state for this chapter
+                'chapterState' => $chapterState,
                 'startRange' => $rangeStartDateFormatted,
                 'endRange' => $rangeEndDateFormatted,
                 'startMonth' => $monthInWords,
@@ -3210,19 +3215,19 @@ class ChapterController extends Controller
                 $chapterEmails[$chapter->chapter_name][] = $chapterChEmails[$chapter->chapter_name];
             }
         }
+    }
 
         // Send a single email with multiple recipients
-        foreach ($mailData as $chapterName => $data) {
-            $emailRecipients = $chapterEmails[$chapterName];
-            $cc_email = $coordinatorEmails[$chapterName] ?? [];
+    foreach ($mailData as $chapterName => $data) {
+        $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
+        $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
 
-            if (! empty($emailRecipients)) {
-                Mail::to($emailRecipients)
-                    ->cc($cc_email)
+        if (!empty($emailRecipients)) {
+            Mail::to($emailRecipients)
+                ->cc($cc_email)
                     ->send(new PaymentsReRegReminder($data));
+                }
             }
-
-        }
 
         try {
             DB::commit();
@@ -3232,7 +3237,6 @@ class ChapterController extends Controller
             exit();
             // Log the error
             Log::error($e);
-
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
 
@@ -3290,6 +3294,11 @@ class ChapterController extends Controller
         $coordinatorEmails = []; // Store coordinator email addresses by chapter
         $chapterChEmails = []; // Store ch_email addresses by chapter
 
+        $mailData = [];
+
+        if ($chapters->isEmpty()) {
+            return redirect()->back()->with('info', 'There are no Chapters with Late Reminders to be Sent this Month.');
+            } else {
         foreach ($chapters as $chapter) {
             if ($chapter->bor_email) {
                 $chapterEmails[$chapter->chapter_name][] = $chapter->bor_email; // Store emails by chapter name
@@ -3297,22 +3306,23 @@ class ChapterController extends Controller
                 $cc_email1 = $this->getCCMail($chapter->pcid);
                 $cc_email1 = array_filter($cc_email1);
 
-                if (! empty($cc_email1)) {
+                if (!empty($cc_email1)) {
                     $coordinatorEmails[$chapter->chapter_name] = $cc_email1; // Store coordinator emails by chapter
                 }
             }
 
             // Check if ch_email is not null before adding it to the chapterChEmails array
-            if ($chapter->ch_email) {
-                $chapterChEmails[$chapter->chapter_name] = $chapter->ch_email;
-            }
+    if ($chapter->ch_email) {
+        $chapterChEmails[$chapter->chapter_name] = $chapter->ch_email;
+        $chapterEmails[$chapter->chapter_name][] = $chapter->ch_email; // Add ch_email to chapterEmails
+    }
 
             // Set the state for this chapter
-            $sharedChapterState = $chapter->chapter_state;
+            $chapterState = $chapter->chapter_state; // Use the state for this chapter
 
             $mailData[$chapter->chapter_name] = [
                 'chapterName' => $chapter->chapter_name,
-                'chapterState' => $sharedChapterState, // Use the state for this chapter
+                'chapterState' => $chapterState,
                 'startRange' => $rangeStartDateFormatted,
                 'endRange' => $rangeEndDateFormatted,
                 'startMonth' => $lastMonthInWords,
@@ -3323,21 +3333,20 @@ class ChapterController extends Controller
                 $chapterEmails[$chapter->chapter_name][] = $chapterChEmails[$chapter->chapter_name];
             }
         }
+    }
 
-        // Send a single email with multiple recipients
-        foreach ($mailData as $chapterName => $data) {
-            $emailRecipients = $chapterEmails[$chapterName];
-            $cc_email = $coordinatorEmails[$chapterName] ?? [];
+    // Send a single email with multiple recipients
+    foreach ($mailData as $chapterName => $data) {
+        $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
+        $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
 
-            if (! empty($emailRecipients)) {
-                Mail::to($emailRecipients)
-                    ->cc($cc_email)
-                    ->send(new PaymentsReRegLate($data));
-            }
-
+        if (!empty($emailRecipients)) {
+            Mail::to($emailRecipients)
+                ->cc($cc_email)
+                ->send(new PaymentsReRegLate($data));
         }
-
-        try {
+    }
+       try {
             DB::commit();
         } catch (\Exception $e) {
             // Rollback Transaction
@@ -3345,7 +3354,6 @@ class ChapterController extends Controller
             exit();
             // Log the error
             Log::error($e);
-
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
 

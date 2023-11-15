@@ -19,6 +19,13 @@
          <p>{{ $message }}</p>
       </div>
     @endif
+
+    @if ($message = Session::get('info'))
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <p>{{ $message }}</p>
+    </div>
+@endif
  <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
@@ -141,13 +148,17 @@
                         <td>{{ $list->state_short_name }}</td>
                         <td>{{ $list->name }}</td>
                         <td>{{ $list->reg_notes }}</td>
-						<td <?php
-							$due = $list->month_short_name . " " . $list->next_renewal_year;
-							$overdue = (date("Y") * 12 + date("m")) - ($list->next_renewal_year * 12 + $list->start_month_id);
-							if($overdue > 1)
-								echo " bgcolor=\"#FF0000\" font-color=\"#fff\"";
-							elseif($overdue == 1)
-                                echo " bgcolor=\"#ffff00\"";?>>{{ $due }}</td>
+						<td style="
+    @php
+        $due = $list->month_short_name . " " . $list->next_renewal_year;
+        $overdue = (date("Y") * 12 + date("m")) - ($list->next_renewal_year * 12 + $list->start_month_id);
+        if($overdue > 1)
+            echo "background-color: #FF0000; color: #fff;";
+        elseif($overdue == 1)
+            echo "background-color: #ffff00;";
+    @endphp
+">{{ $due }}</td>
+
 						<td>{{ $list->dues_last_paid }}</td>
 
                     </tr>
@@ -166,10 +177,10 @@
 						 <div class="box-body text-center">
 
 
-            <?php if((Session::get('positionid') >=6 && Session::get('positionid') <=7) || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>
+            <?php if(Session::get('positionid') ==6 || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>
               <a title="Re-registration reminders will be sent to all unpaid chapters in your conference with renewal dates this month." href="{{ route('chapter.reminder') }}"><button class="btn btn-themeBlue margin"   <?php if($checkBoxStatus) echo "disabled";?>>Send Current Month Reminders</button></a>
 			<?php }?>
-	        <?php if((Session::get('positionid') >=6 && Session::get('positionid') <=7) || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>
+	        <?php if(Session::get('positionid') ==6 || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>
 			 	<a href="{{route('chapter.latereminder')}}" class="btn btn-themeBlue margin" <?php if($checkBoxStatus) echo "disabled";?>>Send One Month Late Notices</a>
 			<?php }?>
 					<a href="{{ route('export.rereg')}}"><button class="btn btn-themeBlue margin">Export Overdue Chapter List</button></a>
