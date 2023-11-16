@@ -20,10 +20,10 @@
               <h3 class="box-title">List of International Coordinators</h3>
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
               <table id="coordinatorlist_retired" class="table table-bordered table-hover">
-              <thead> 
+              <thead>
 			    <tr>
 			      <th></th>
 			      <th>Conference</th>
@@ -37,7 +37,7 @@
                 <tbody>
                 @foreach($intCoordinatorList as $list)
                   <tr>
-                        <td><a href="<?php echo url("/coordinator/retired/view/{$list->cor_id}") ?>"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
+                        <td><a href="<?php echo url("/coordinator/retiredinternational/view/{$list->cor_id}") ?>"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
                         <td>{{ $list->cor_cid }}</td>
                         <td>{{ $list->reg_name }}</td>
                         <td>{{ $list->cor_fname }}</td>
@@ -50,14 +50,14 @@
                   </tbody>
                 </table>
              </div>
-       
+
             <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection
 

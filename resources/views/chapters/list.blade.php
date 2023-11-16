@@ -52,6 +52,18 @@
                   </tr>
                 </thead>
                 <tbody>
+                    @if (!function_exists('formatPhoneNumber'))
+                    <?php
+                    function formatPhoneNumber($phoneNumber)
+                    {
+                        // Remove non-numeric characters from the phone number
+                        $phoneNumber = preg_replace('/[^0-9]/', '', $phoneNumber);
+
+                        // Format the phone number as xxx-xxx-xxxx
+                        return substr($phoneNumber, 0, 3) . '-' . substr($phoneNumber, 3, 3) . '-' . substr($phoneNumber, 6);
+                    }
+                    ?>
+                @endif
                   @foreach($chapterList as $list)
                   <?php
                       $chapterEmailList = DB::table('board_details as bd')
@@ -115,7 +127,7 @@
                       <td>{{ $list->bor_f_name }}</td>
                       <td>{{ $list->bor_l_name }}</td>
                       <td><a href="mailto:{{ $list->bor_email }}">{{ $list->bor_email }}</a></td>
-                      <td>{{ $list->phone }}</td>
+                      <td>{{ formatPhoneNumber($list->phone) }}</td>
                       <td>{{ $list->cor_f_name }} {{ $list->cor_l_name }}</td>
                     </tr>
                   @endforeach

@@ -149,15 +149,15 @@
                         <td>{{ $list->name }}</td>
                         <td>{{ $list->reg_notes }}</td>
 						<td style="
-    @php
-        $due = $list->month_short_name . " " . $list->next_renewal_year;
-        $overdue = (date("Y") * 12 + date("m")) - ($list->next_renewal_year * 12 + $list->start_month_id);
-        if($overdue > 1)
-            echo "background-color: #FF0000; color: #fff;";
-        elseif($overdue == 1)
-            echo "background-color: #ffff00;";
-    @endphp
-">{{ $due }}</td>
+                            @php
+                                $due = $list->month_short_name . " " . $list->next_renewal_year;
+                                $overdue = (date("Y") * 12 + date("m")) - ($list->next_renewal_year * 12 + $list->start_month_id);
+                                if($overdue > 1)
+                                    echo "background-color: #FF000050;";
+                                elseif($overdue == 1)
+                                    echo "background-color: #FFFF0050;";
+                            @endphp
+                        ">{{ $due }}</td>
 
 						<td>{{ $list->dues_last_paid }}</td>
 

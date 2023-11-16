@@ -12,8 +12,6 @@ class EOYFinancialSubmitted extends Mailable
 
     public $mailData;
 
-    public $financial_report_array;
-
     public $coordinator_array;
 
     /**
@@ -21,18 +19,19 @@ class EOYFinancialSubmitted extends Mailable
      *
      * @return void
      */
-    public function __construct($mailData, $financial_report_array, $coordinator_array)
+    public function __construct($mailData, $coordinator_array)
     {
         $this->mailData = $mailData;
-        $this->financial_report_array = $financial_report_array;
         $this->coordinator_array = $coordinator_array;
     }
 
-    /**
+   /**
      * Build the message.
      */
     public function build(): static
     {
-        return $this->markdown('emails.endofyear.financialsubmitted');
+        return $this
+        ->subject('Financial Report Submitted')
+        ->markdown('emails.endofyear.financialsubmitted');
     }
 }

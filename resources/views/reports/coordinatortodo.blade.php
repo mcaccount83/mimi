@@ -18,18 +18,18 @@
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">Report of Coordinator ToDo List</h3>
-             
+
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
               <table id="chapterlist_zapped" class="table table-bordered table-hover">
-				<thead> 
+				<thead>
 				@php
                   use Carbon\Carbon;
-                
+
                   $currentMonth = Carbon::now()->month;
-                @endphp  
+                @endphp
 			    <tr>
 					<th>Region</th>
 					<th>First Name</th>
@@ -46,13 +46,11 @@
                     @else
                       <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                     @endif
-
                     @if ($currentMonth == 7))
                       <th>990 Report Reminder</th>
                     @else
                       <th>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
                     @endif
-
 					@if ($currentMonth == 7))
                       <th>Financial Report Reminder</th>
                     @else
@@ -68,32 +66,23 @@
                     <td>{{ $list->cor_lname }}</td>
 					<td>{{ $list->position }}</td>
                     <td>{{ $list->todo_month }}</td>
-                    <td bgcolor="<?php 
-							if($list->todo_check_chapters !='1')
-									echo "#FF0000";
-							?>">
-							@if($list->todo_check_chapters=='1')
-							YES
-							@else
-								NO
-							@endif
-            		</td> 
-                    @if (($currentMonth == 2) || ($currentMonth == 3))
-                      <td bgcolor="<?php 
-                        if ($list->todo_election_faq != '1') {
-                          echo "#FF0000";
-                        }
-                      ?>">
-                        @if ($list->todo_election_faq == '1')
-                          YES
+                    <td style="background-color: @if($list->todo_check_chapters == '1') transparent; @else #FF000050; @endif;">
+                        @if($list->todo_check_chapters == '1')
+                            YES
                         @else
-                          NO
+                            NO
                         @endif
-                      </td>
+                    </td>
+                    @if (($currentMonth == 2) || ($currentMonth == 3))
+                    <td style="background-color: @if($list->todo_election_faq == '1') transparent; @else #FF000050; @endif;">
+                        @if($list->todo_election_faq == '1')
+                            YES
+                        @else
+                            NO
+                        @endif
                     @else
                       <td></td>
                     @endif
-       
                     <td></td>
                     <td></td>
                   </tr>
@@ -105,9 +94,9 @@
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection

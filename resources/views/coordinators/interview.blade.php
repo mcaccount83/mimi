@@ -3,29 +3,16 @@
 @section('content')
  <section class="content-header">
       <h1>
-      Retired Coordinator List
-       <small>View</small>
+      Coordinator List
+       <small>Edit</small>
        </h1>
       <ol class="breadcrumb">
         <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Retired Coordinator List</li>
+        <li class="active">Coordinator List</li>
       </ol>
     </section>
-    @if ($message = Session::get('success'))
-      <div class="alert alert-success">
-		<button type="button" class="close" data-dismiss="alert">×</button>
-         <p>{{ $message }}</p>
-      </div>
-    @endif
-	 @if ($message = Session::get('fail'))
-      <div class="alert alert-danger">
-		<button type="button" class="close" data-dismiss="alert">×</button>
-         <p>{{ $message }}</p>
-      </div>
-    @endif
-
     <!-- Main content -->
-     <form method="POST" action='{{ route("coordinator.update2",$coordinatorDetails[0]->coordinator_id) }}'">
+    <form method="POST" action='{{ route("coordinator.update",$coordinatorDetails[0]->coordinator_id) }}'">
     @csrf
     <section class="content">
 		<div class="row">
@@ -38,36 +25,36 @@
 				  <!-- /.form group -->
 					<div class="col-sm-6 col-xs-12">
 					  <div class="form-group">
-						<label>First Name</label>
-						<input type="text" name="cord_fname" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->first_name }}" disabled>
+						<label>First Name</label><span class="field-required">*</span>
+						<input type="text" name="cord_fname" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->first_name }}" maxlength="50" required  autocomplete="nope">
 					  </div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-6 col-xs-12">
 					  <div class="form-group">
-						<label>Last Name</label>
-						<input type="text" name="cord_lname" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->last_name }}" disabled>
+						<label>Last Name</label><span class="field-required">*</span>
+						<input type="text" name="cord_lname" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->last_name }}" maxlength="50" required oautocomplete="nope">
 					  </div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-12 col-xs-12">
 						<div class="form-group">
-							<label>Street Address</label>
-							<textarea name="cord_addr" class="form-control my-colorpicker1" rows="4" disabled>{{ $coordinatorDetails[0]->address }}</textarea>
+							<label>Street Address</label><span class="field-required">*</span>
+							<input autocomplete="nope" name="cord_addr" class="form-control my-colorpicker1" rows="4" maxlength="250" required value="{{ $coordinatorDetails[0]->address }}	">
 						</div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-3 col-xs-12">
 						<div class="form-group">
-							<label>City</label>
-							<input type="text" name="cord_city" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->city }}" disabled>
+							<label>City</label><span class="field-required">*</span>
+							<input type="text" name="cord_city" class="form-control my-colorpicker1" maxlength="50" value="{{ $coordinatorDetails[0]->city }}" required autocomplete="nope">
 						</div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-3 col-xs-12">
 					  <div class="form-group">
-						<label>State</label>
-						<select name="cord_state" class="form-control select2" style="width: 100%;" disabled>
+						<label>State</label><span class="field-required">*</span>
+						<select name="cord_state" class="form-control select2" style="width: 100%;" required>
 						<option value="">Select State</option>
 							@foreach($stateArr as $state)
 							  <option value="{{$state->state_short_name}}" {{$coordinatorDetails[0]->state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
@@ -78,14 +65,8 @@
 					<!-- /.form group -->
 					<div class="col-sm-3 col-xs-12">
 					  <div class="form-group">
-						<label>Zip</label>
-						<input type="text" name="cord_zip" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->zip }}" disabled>
-					  </div>
-					</div>
-					<div class="col-sm-3 col-xs-12">
-					  <div class="form-group">
-						<label>Country</label>
-						<select id="cord_country" name="cord_country" class="form-control select2" style="width: 100%;" disabled>
+						<label>Country</label><span class="field-required">*</span>
+						<select id="cord_country" name="cord_country" class="form-control select2" style="width: 100%;" required>
 						<option value="">Select Country</option>
 							@foreach($countryArr as $con)
 							  <option value="{{$con->short_name}}" {{$coordinatorDetails[0]->country == $con->short_name  ? 'selected' : ''}}>{{$con->name}}</option>
@@ -93,31 +74,45 @@
 						</select>
 					  </div>
 					</div>
-					<!-- /.form group -->
-					<div class="col-sm-12 col-xs-12">
+					<div class="col-sm-3 col-xs-12">
 					  <div class="form-group">
-						<label>Email</label>
-						<input type="email" name="cord_email" id="cord_email" class="form-control my-colorpicker1" onblur="checkDuplicateEmail(this.value,this.id)" maxlength="50" value="{{ $coordinatorDetails[0]->email }}" required autocomplete="nope">
-						<input type="hidden" name="cord_email2" id="cord_email_chk" value="{{ $coordinatorDetails[0]->email }}">
+						<label>Zip</label><span class="field-required">*</span>
+						<input type="text" name="cord_zip" class="form-control my-colorpicker1" maxlength="10" value="{{ $coordinatorDetails[0]->zip }}" required  autocomplete="nope">
 					  </div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-6 col-xs-12">
 					  <div class="form-group">
-						<label>Phone</label>
-						<input type="text" name="cord_phone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->phone }}" disabled>
+						<label>Email</label><span class="field-required">*</span>
+						<input type="email" name="cord_email" id="cord_email" class="form-control my-colorpicker1" onblur="checkDuplicateEmail(this.value,this.id)" maxlength="50" value="{{ $coordinatorDetails[0]->email }}" required autocomplete="nope">
+						<input type="hidden" id="cord_email_chk" value="{{ $coordinatorDetails[0]->email }}">
+					  </div>
+					</div>
+					<!-- /.form group -->
+					<div class="col-sm-6 col-xs-12">
+					  <div class="form-group">
+						<label>Secondary Email</label>
+						<input type="email" name="cord_sec_email" id="cord_sec_email" class="form-control my-colorpicker1"   maxlength="50" value="{{ $coordinatorDetails[0]->sec_email }}" autocomplete="nope">
+						<input type="hidden" id="cord_email_chk" value="{{ $coordinatorDetails[0]->sec_email }}">
+					  </div>
+					</div>
+					<!-- /.form group -->
+					<div class="col-sm-6 col-xs-12">
+					  <div class="form-group">
+						<label>Phone</label><span class="field-required">*</span>
+						<input type="text" name="cord_phone" id="cord_phone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->phone }}" maxlength="12" required  autocomplete="nope">
 					  </div>
 					</div>
 					<div class="col-sm-6 col-xs-12">
 					  <div class="form-group">
 						<label>Alternate Phone</label>
-						<input type="text" name="cord_altphone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->alt_phone }}" disabled>
+						<input type="text" name="cord_altphone" id="cord_altphone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->alt_phone }}" maxlength="12" autocomplete="nope">
 					  </div>
 					</div>
 					<div class="col-sm-6 col-xs-12">
 						<div class="form-group">
-						<label>Birthday Month</label>
-						<select name="cord_month" class="form-control select2" style="width: 100%;" disabled>
+						<label>Birthday Month</label><span class="field-required">*</span>
+						<select name="cord_month" class="form-control select2" style="width: 100%;" required>
 						  <option value="">Select Month</option>
 						  @foreach($foundedMonth as $key=>$val)
 
@@ -128,11 +123,70 @@
 					</div>
 					<div class="col-sm-6 col-xs-12">
 						<div class="form-group">
-						<label>Birthday Day</label>
-						<input type="number" name="cord_day" class="form-control my-colorpicker1" min="1" max="31" value="{{ $coordinatorDetails[0]->birthday_day }}" disabled>
+						<label>Birthday Day</label><span class="field-required">*</span>
+						<input type="number" name="cord_day" class="form-control my-colorpicker1" min="1" max="31" value="{{ $coordinatorDetails[0]->birthday_day }}" required>
 						</div>
 					</div>
 				</div>
+				<div class="box-header with-border mrg-t-10"></div>
+					<div class="box-body">
+						<div class="col-sm-6 col-xs-12">
+							<div class="form-group">
+							<label class="mrg-b-25">Coordinators Directly Reporting to {{ $coordinatorDetails[0]->first_name }} :</label>
+
+							<table id="coordinator-list" width="100%">
+								<thead>
+								   <tr>
+										<th>First Name</th>
+										<th>Last Name</th>
+										<th>Position</th>
+										<th></th>
+								   </tr>
+								</thead>
+								<tbody>
+								<?php
+								$row_count=count($directReportTo);
+								for ($row = 0; $row < $row_count; $row++){
+									echo "<tr>";
+										echo "<td>".$directReportTo[$row]->cor_f_name."</td>";
+										echo "<td>".$directReportTo[$row]->cor_l_name."</td>";
+										echo "<td>".$directReportTo[$row]->pos."</td>";
+									echo "</tr>";
+								}
+								?>
+								</tbody>
+							</table>
+							</div>
+						</div>
+						<div class="col-sm-6 col-xs-12">
+							<div class="form-group">
+							<label class="mrg-b-25">Primary Coordinator For :</label>
+
+							<table id="coordinator-list" width="100%">
+								<thead>
+								   <tr>
+										<th>State</th>
+										<th>Chapter Name</th>
+								   </tr>
+								</thead>
+								<tbody>
+								<?php
+								$row_count=count($directChapterTo);
+								for ($row = 0; $row < $row_count; $row++){
+									echo "<tr>";
+									echo "<td>".$directChapterTo[$row]->st_name."</td>";
+										echo "<td>".$directChapterTo[$row]->ch_name."</td>";
+
+									echo "</tr>";
+								}
+								?>
+								</tbody>
+							</table>
+							</div>
+						</div>
+
+					</div>
+
 				<div class="box-header with-border mrg-t-10"></div>
 				<div class="box-body">
 					<div class="col-sm-6 col-xs-12">
@@ -179,6 +233,14 @@
 						</select>
 						</div>
 					</div>
+
+					<div class="col-sm-12 col-xs-12">
+					  <div class="form-group">
+						<label>Home Chapter</label>
+						<input type="text" name="cord_chapter" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->home_chapter }}" maxlength="50" " autocomplete="nope" disabled>
+					  </div>
+					</div>
+
 					<div class="col-sm-12 col-xs-12">
 						<div class="form-group">
 						<label>Reports To</label>
@@ -208,7 +270,7 @@
 					<div class="radio-chk">
 							<div class="form-group">
 							<label>On Leave Of Absense</label>
-							<label style="display: block;"><input  type="checkbox" name="SecVacant" id="SecVacant" class="ios-switch green bigswitch" /><div><div></div></div>
+							<label style="display: block;"><input disabled type="checkbox" name="SecVacant" id="SecVacant" class="ios-switch green bigswitch" {{$coordinatorDetails[0]->on_leave == '1'  ? 'checked' : ''}}/><div><div></div></div>
 							</label>
 						</div>
 					</div>
@@ -240,10 +302,12 @@
 
 		<!-- /.box-body -->
 		<div class="box-body text-center">
-		<a href="{{ route('coordinator.retired') }}" class="btn btn-themeBlue margin">Back</a>
-			<a href='{{ route('coordinator.unretired', $coordinatorDetails[0]->coordinator_id) }}' class="btn btn-themeBlue margin">UnRetire</a>
-		<button type="submit" class="btn btn-themeBlue margin">save</button>
+
+
+
+			<a href="{{ route('coordinator.list') }}" class="btn btn-themeBlue margin">Back</a>
 		</div>
+
         <!-- /.box-body -->
         </div>
     </section>
@@ -253,10 +317,12 @@
 @section('customscript')
 <script>
 
-   // Disable fields and buttons
+       // Disable fields and buttons
    $(document).ready(function () {
             $('input, select, textarea').prop('disabled', true);
     });
+
+
 
 </script>
 @endsection

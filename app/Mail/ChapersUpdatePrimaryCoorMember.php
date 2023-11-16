@@ -3,16 +3,19 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class EOYReviewrAssigned extends Mailable
+class ChapersUpdatePrimaryCoorMember extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $mailData;
 
-  /**
+    /**
      * Create a new message instance.
      *
      * @return void
@@ -28,7 +31,7 @@ class EOYReviewrAssigned extends Mailable
     public function build(): static
     {
         return $this
-        ->subject('Financial Reviewer Assigned')
-        ->markdown('emails.endofyear.reviewerassigned');
+            ->subject('Chapter Update Notification')
+            ->markdown('emails.chapterupdate.primarycoormember');
+        }
     }
-}

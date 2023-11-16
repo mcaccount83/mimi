@@ -208,7 +208,7 @@
         <?php } ?>
 
         <?php if ($positionid == 13 || $secpositionid == 13 ){ ?>
-        <li class="treeview {{ Request::is('chapter/international') ? 'active' : '' }} {{ Request::is('chapter/international/*') ? 'active' : '' }} {{ Request::is('coordinator/international') ? 'active' : '' }}  {{ Request::is('coordinator/international/*') ? 'active' : '' }} {{ Request::is('coordinator/retiredinternational') ? 'active' : '' }} {{ Request::is('reports/inteinstatus') ? 'active' : '' }} {{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
+        <li class="treeview {{ Request::is('chapter/international') ? 'active' : '' }} {{ Request::is('chapter/international/*') ? 'active' : '' }} {{ Request::is('coordinator/international') ? 'active' : '' }} {{ Request::is('coordinator/international/view/*') ? 'active' : '' }} {{ Request::is('coordinator/international/*') ? 'active' : '' }} {{ Request::is('coordinator/retiredinternational') ? 'active' : '' }}  {{ Request::is('coordinator/retiredinternational/view/*') ? 'active' : ''}} {{ Request::is('reports/inteinstatus') ? 'active' : '' }} {{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
             <a href="#"><i class="fa fa-list"></i> <span>International Lists</span>
               <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
             </a>
@@ -225,13 +225,13 @@
             <span>Zapped Chapter List</span>
           </a>
         </li>
-             <li class="{{ Request::is('coordinator/international') ? 'active' : '' }}">
+             <li class="{{ Request::is('coordinator/international') ? 'active' : '' }} {{ Request::is('coordinator/international/view/*') ? 'active' : '' }}">
           <a href="{{ route('coordinator.inter') }}">
             <i class="fa fa-user"></i>
             <span>Coordinator List</span>
           </a>
         </li>
-             <li class="{{ Request::is('coordinator/retiredinternational') ? 'active' : '' }}">
+             <li class="{{ Request::is('coordinator/retiredinternational') ? 'active' : '' }} {{ Request::is('coordinator/retiredinternational/view/*') ? 'active' : ''}}">
           <a href="{{ route('coordinator.retinter') }}">
             <i class="fa fa-ban"></i>
             <span>Retired Coordinator List</span>

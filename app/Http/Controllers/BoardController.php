@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdatePrimaryCoor;
+use App\Mail\ChapersUpdateListAdminMember;
+use App\Mail\ChapersUpdatePrimaryCoorMember;
+use App\Mail\EOYFinancialSubmitted;
 use App\Mail\WebsiteReviewNotice;
 use App\Models\Chapter;
 use App\Models\FinancialReport;
@@ -810,18 +813,16 @@ class BoardController extends Controller
             //PC Admin Notification
             $to_email = $chapterInfo[0]->cor_email;
 
-            Mail::send('emails.chaptermemberupdate', $mailData, function ($message) use ($to_email) {
-                $message->to($to_email, 'MOMS Club')->subject('Database Update Auto-Notification');
-            });
+            Mail::to($to_email, 'MOMS Club')
+                    ->send(new ChapersUpdatePrimaryCoorMember($mailData));
 
             //List Admin Notification//
             $to_email2 = 'listadmin@momsclub.org';
 
             if ($boardDetailsUpd[0]->bor_email != $boardDetails[0]->bor_email) {
 
-                Mail::send('emails.listadminchaptermemberupdate', $mailData, function ($message2) use ($to_email2) {
-                    $message2->to($to_email2, 'MOMS Club')->subject('Chapter Update Request');
-                });
+                Mail::to($to_email2, 'MOMS Club')
+                    ->send(new ChapersUpdateListAdminMember($mailData));
             }
 
             DB::commit();
@@ -3162,42 +3163,26 @@ class BoardController extends Controller
             default:
                 $to_email = 'admin@momsclub.org';
         }
+
         DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$reviewer_id, $chId]);
 
-        $mail_message = '<p>'.$chName.', '.$chState." has submitted their Financial Report. It is ready to be reviewed.</p>\n";
-        $mail_message .= '<p>Submitted by: '.$financial_report_array['completed_name'].', '.$financial_report_array['completed_email'].'</p>';
+        $fiancialReport = DB::table('financial_report')
+            ->select('*')
+            ->where('id', '=', $chId)
+            ->get();
 
-        $mail_message .= '<p>Attachments:';
-        if (isset($financial_report_array['roster_path'])) {
-            $mail_message .= "<ul><li><a href='".$financial_report_array['roster_path']."'>Chapter Roster</a></li>";
-        } else {
-            $mail_message .= '<ul><li>No Roster Attached</li>';
-        }
-        if (isset($financial_report_array['bank_statement_included_path'])) {
-            $mail_message .= "<li><a href='".$financial_report_array['bank_statement_included_path']."'>Primary Bank Statement</a></li>";
-        } else {
-            $mail_message .= '<li>No Statement Attached</li>';
-        }
-        if (isset($financial_report_array['bank_statement_2_included_path'])) {
-            $mail_message .= "<li><a href='".$financial_report_array['bank_statement_2_included_path']."'>Additional Bank Statement</a></li>";
-        }
-        if (isset($financial_report_array['file_irs_path'])) {
-            $mail_message .= "<li><a href='".$financial_report_array['file_irs_path']."'>990N Confirmation File</a></li></ul></p>";
-        } else {
-            $mail_message .= '<li>No 990N File Attached</li></ul></p>';
-        }
+            $mailData = [
+                'chapter_name' => $fiancialReport->get('ch_name'),
+                'chapter_state' => $fiancialReport->get('ch_state'),
+                'roster_path' => $fiancialReport->get('roster_path'),
+                'file_irs_path' => $fiancialReport->get('file_irs_path'),
+                'bank_statement_included_path' => $fiancialReport->get('bank_statement_included_path'),
+                'bank_statement_2_included_path' => $fiancialReport->get('bank_statement_2_included_path'),
+            ];
 
-        $mail_message .= '<p>Coordinators:';
-        $mail_message .= '<ul><li>Primary Coordinator: '.$coordinator_array[0]['first_name'].' '.$coordinator_array[0]['last_name'].'</li>';
-        if (isset($coordinator_array[1]['first_name'])) {
-            $mail_message .= '<li>Secondary Coordinator: '.$coordinator_array[1]['first_name'].' '.$coordinator_array[1]['last_name'].'</li></ul></p>';
-        }
-
-        $mailData = ['content' => $mail_message];
-        $mail_subject = 'Financial Report for '.$chName.', '.$chState.' has been submitted';
-        Mail::send('emails.financialreport', $mailData, function ($message) use ($to_email, $mail_subject) {
-            $message->to($to_email, 'MIMI')->subject($mail_subject);
-        });
+         //Send email to new Assigned Reviewer//
+         Mail::to($to_email)
+            ->send(new EOYFinancialSubmitted($mailData, $coordinator_array));
 
         return true;
     }

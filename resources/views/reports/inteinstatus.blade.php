@@ -19,13 +19,13 @@
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">EIN Status</h3>
-              
+
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
               <table id="chapterlist_inteinStatus" class="table table-bordered table-hover">
-              <thead> 
+              <thead>
 			    <tr>
 			      <th>Conference</th>
 				  <th>State</th>
@@ -44,19 +44,16 @@
                         <td>{{ $list->name }}</td>
 						<td>{{ $list->start_month }} {{ $list->start_year }}</td>
 						<td>{{ $list->ein }}</td>
-						<td bgcolor="<?php 
-							if($list->ein_letter_path == null)
-									echo "#FF0000";
-							?>">
-							@if($list->ein_letter_path != null)
-							YES
-							@else
-								NO
-							@endif
-						</td>
+                        <td style="background-color: @if($list->ein_letter_path != null) transparent; @else #FF000050; @endif;">
+                            @if($list->ein_letter_path != null)
+                                YES
+                            @else
+                                NO
+                            @endif
+                        </td>
 						<td>
 						    @if(empty($list->ein_letter_path))
-						    
+
 						    @else
 						    <a href="{{ $list->ein_letter_path }}" target="blank">{{ $list->name }} EIN Letter</a>
 						    @endif</td>
@@ -70,17 +67,17 @@
               </div>
               </div>
             </div>
-			
+
            </div>
-            
+
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection
 @section('customscript')
 

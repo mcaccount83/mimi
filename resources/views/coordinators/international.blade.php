@@ -38,7 +38,7 @@
                 <tbody>
                 @foreach($intCoordinatorList as $list)
                   <tr>
-                        <td><a href="<?php echo url("/coordinator/edit/{$list->cor_id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
+                        <td><a href="<?php echo url("/coordinator/international/view/{$list->cor_id}") ?>"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
                         <td>{{ $list->cor_cid }}</td>
                         <td>{{ $list->reg_name }}</td>
                         <td>{{ $list->cor_fname }}</td>

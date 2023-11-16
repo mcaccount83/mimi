@@ -42,6 +42,18 @@
                 </tr>
                 </thead>
                 <tbody>
+                    @if (!function_exists('formatPhoneNumber'))
+                    <?php
+                    function formatPhoneNumber($phoneNumber)
+                    {
+                        // Remove non-numeric characters from the phone number
+                        $phoneNumber = preg_replace('/[^0-9]/', '', $phoneNumber);
+
+                        // Format the phone number as xxx-xxx-xxxx
+                        return substr($phoneNumber, 0, 3) . '-' . substr($phoneNumber, 3, 3) . '-' . substr($phoneNumber, 6);
+                    }
+                    ?>
+                @endif
                 @foreach($intChapterList as $list)
                   <tr>
                         <td><a href="<?php echo url("/chapter/international/view/{$list->id}") ?>"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
@@ -52,7 +64,7 @@
                       <td>{{ $list->pre_fname }}</td>
                       <td>{{ $list->pre_lname }}</td>
                       <td><a href="mailto:{{ $list->pre_email }}">{{ $list->pre_email }}</a></td>
-                      <td>{{ $list->pre_phone }}</td>
+                      <td>{{ formatPhoneNumber($list->pre_phone) }}</td>
                       <td>{{ $list->cd_fname }} {{ $list->cd_lname }}</td>
                     </tr>
                   @endforeach

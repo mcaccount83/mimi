@@ -1317,7 +1317,7 @@ class CoordinatorController extends Controller
             'positionList' => $positionList, 'confList' => $confList, 'currentMonth' => $currentMonth, 'coordinatorDetails' => $coordinatorDetails,
             'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth, 'cor_id' => $corId];
 
-        return view('coordinators.internationalview')->with($data);
+        return view('coordinators.interview')->with($data);
     }
 
     /**
@@ -1383,7 +1383,7 @@ class CoordinatorController extends Controller
 
         $data = ['primaryCoordinatorList' => $primaryCoordinatorList, 'positionList' => $positionList, 'confList' => $confList, 'currentMonth' => $currentMonth, 'coordinatorDetails' => $coordinatorDetails, 'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
 
-        return view('coordinators.retiredinternationalview')->with($data);
+        return view('coordinators.retinterview')->with($data);
     }
 
     /**

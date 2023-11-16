@@ -45,16 +45,14 @@
 						<td>{{ $list->ch_state }}</td>
                         <td>{{ $list->ch_name }}</td>
 						<td>{{ $list->month_name }} {{ $list->year }}</td>
-						<td bgcolor="<?php
-							if($list->ein_letter_path == null)
-									echo "#FF0000";
-							?>">
-							@if($list->ein_letter_path != null)
-							YES
-							@else
-								NO
-							@endif
-						</td>
+                        <td style="background-color: @if($list->ein_letter_path != null) transparent; @else #FF000050; @endif;">
+                            @if($list->ein_letter_path != null)
+                                YES
+                            @else
+                                NO
+                            @endif
+                        </td>
+
 						<td>{{ $list->cor_fname }} {{ $list->cor_lname }}</td>
 
 

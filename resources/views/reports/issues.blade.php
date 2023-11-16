@@ -25,10 +25,10 @@
               <h3 class="box-title">Report of Boundary Issues</h3>
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
               <table id="chapterlist_zapped" class="table table-bordered table-hover">
-              <thead> 
+              <thead>
 			    <tr>
 					<th></th>
 				  <th>State</th>
@@ -47,18 +47,13 @@
 						<td>{{ $list->name }}</td>
                         <td>{{ $list->boundary_issue_notes}}</td>
                         <td>{{ $list->territory}}</td>
-                        <td bgcolor="<?php 
-							if($list->boundary_issue_resolved !='1')
-									echo "#FF0000";
-							?>">
-							@if($list->boundary_issue_resolved=='1')
-							YES
-							@else
-								NO
-							@endif
-						</td>
-
-                     
+                        <td style="background-color: @if($list->boundary_issue_resolved == '1') transparent; @else #FF000050; @endif;">
+                            @if($list->boundary_issue_resolved == '1')
+                                YES
+                            @else
+                                NO
+                            @endif
+                        </td>
 			        </tr>
                   @endif
                   @endforeach
@@ -68,23 +63,23 @@
               <div class="col-sm-6 col-xs-12">
                 <div class="form-group">
                     <label style="display: block;"><input type="checkbox" name="showPrimary" id="showPrimary" class="ios-switch green bigswitch" {{$checkBoxStatus}} onchange="showPrimary()" /><div><div></div></div>
-                    
+
                   </label>
                   <span> Only show chapters I am Primary Reviewer for</span>
                 </div>
               </div>
               </div>
             </div>
-			
+
            </div>
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection
 @section('customscript')
 <script>

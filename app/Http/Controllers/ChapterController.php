@@ -10,6 +10,7 @@ use App\Mail\ChapterReAddListAdmin;
 use App\Mail\ChapterRemoveListAdmin;
 use App\Mail\ChaptersPrimaryCoordinatorChange;
 use App\Mail\ChaptersPrimaryCoordinatorChangePCNotice;
+use App\Mail\EOYReviewrAssigned;
 use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegLate;
@@ -2784,7 +2785,7 @@ class ChapterController extends Controller
     }
 
     /**
-     * Reset Password
+     * Reset Password --- not sure if we need this????
      */
     public function chapterResetPassword(Request $request)
     {
@@ -4673,6 +4674,7 @@ class ChapterController extends Controller
                 $irs_path = 'No 990N Confirmation File';
             }
 
+            //Send email to new Assigned Reviewer//
             $to_email = $ReviewerEmail;
             $mailData = ['chapter_name' => $chapter_name,
                 'chapter_state' => $chapter_state,
@@ -4680,11 +4682,11 @@ class ChapterController extends Controller
                 'bank_statement_path' => $bank_statement_path,
                 'bank_statemet_2_path' => $bank_statemet_2_path,
                 'irs_path' => $irs_path];
-            if ($report->isDirty('reviewer_id')) {
-                Mail::send('emails.reviewerassigned', $mailData, function ($message) use ($to_email) {
-                    $message->to($to_email, 'MOMS Club')->subject('Financial Reviewer Assigned');
-                });
-            }
+
+                if ($report->isDirty('reviewer_id')) {
+                 Mail::to($to_email)
+                     ->send(new EOYReviewrAssigned($mailData));
+             }
 
             $report->save();
 

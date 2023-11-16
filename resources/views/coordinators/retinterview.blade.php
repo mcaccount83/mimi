@@ -53,7 +53,7 @@
 					<div class="col-sm-12 col-xs-12">
 						<div class="form-group">
 							<label>Street Address</label>
-							<textarea name="cord_addr" class="form-control my-colorpicker1" rows="4" disabled>{{ $coordinatorDetails[0]->address }}</textarea>
+							<textarea name="cord_addr" class="form-control my-colorpicker1" rows="1" disabled>{{ $coordinatorDetails[0]->address }}</textarea>
 						</div>
 					</div>
 					<!-- /.form group -->
@@ -241,8 +241,7 @@
 		<!-- /.box-body -->
 		<div class="box-body text-center">
 		<a href="{{ route('coordinator.retired') }}" class="btn btn-themeBlue margin">Back</a>
-			<a href='{{ route('coordinator.unretired', $coordinatorDetails[0]->coordinator_id) }}' class="btn btn-themeBlue margin">UnRetire</a>
-		<button type="submit" class="btn btn-themeBlue margin">save</button>
+
 		</div>
         <!-- /.box-body -->
         </div>
@@ -257,6 +256,7 @@
    $(document).ready(function () {
             $('input, select, textarea').prop('disabled', true);
     });
+
 
 </script>
 @endsection
