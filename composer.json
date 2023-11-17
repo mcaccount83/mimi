@@ -26,7 +26,9 @@
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
         "phpunit/phpunit": "^10.0",
-        "spatie/laravel-ignition": "^2.0"
+        "spatie/laravel-ignition": "^2.0",
+        "jasonmccreary/laravel-test-assertions": "^2.3",
+        "laravel-shift/factory-generator": "dev-master"
     },
     "config": {
         "optimize-autoloader": true,
