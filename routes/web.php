@@ -1,8 +1,7 @@
 <?php
 
-//use App\Http\Controllers\Auth;
-//use Illuminate\Support\Facades\Auth;
-//use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\ChapterController;
@@ -24,44 +23,14 @@ use App\Http\Controllers\ReportController;
 |
 */
 
-//Route::view('/', 'welcome')->name('welcome');
-
-//Route::middleware('preventBackHistory')->group(function () {
-    // Authentication Routes
- //   Route::get('/', [LoginController::class, 'showLoginForm'])->name('home');
-  //  Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
- //   Route::post('login', [LoginController::class, 'login']);
-//    Route::post('logout', [LoginController::class, 'logout'])->name('user.logout');
-
-    // Registration Routes
-//    Route::get('register', [Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
-//    Route::post('register', [Auth\RegisterController::class, 'register']);
-
-    // Password Reset Routes
- //   Route::get('password/reset', [Auth\ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
- //   Route::post('password/email', [Auth\ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
-//    Route::get('password/reset/{token}', [Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
-//    Route::post('password/reset', [Auth\ResetPasswordController::class, 'reset']);
-//    Route::post('password/update', [Auth\ResetPasswordController::class, 'update'])->name('password.update');
-
-    // Home Route
-//    Route::get('/home', [HomeController::class, 'index'])->name('home');
-
-    // Your other custom routes can be defined here
-
-//});
-
-//Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
-
 Auth::routes();
 
-Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::middleware(['preventBackHistory'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::get('/', [LoginController::class, 'showLoginForm'])->name('home');
 });
-
 
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
 
