@@ -13,25 +13,25 @@
     </section>
     @if ($message = Session::get('success'))
 		<div class="alert alert-success">
-			<button type="button" class="close" data-dismiss="alert">×</button>	
+			<button type="button" class="close" data-dismiss="alert">×</button>
          <p>{{ $message }}</p>
 		</div>
     @endif
 	@if ($message = Session::get('fail'))
 		<div class="alert alert-danger">
-			<button type="button" class="close" data-dismiss="alert">×</button>	
+			<button type="button" class="close" data-dismiss="alert">×</button>
          <p>{{ $message }}</p>
 		</div>
     @endif
     <!-- Main content -->
     <form method="POST" action='{{ route("coordinator.updatedashboard",$coordinatorDetails[0]->coordinator_id) }}' id="update-dashboard">
     @csrf
-        <?php 
+        <?php
         use App\Models\User;
         $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $positionid = $corDetails['position_id'];
-        $secpositionid = $corDetails['sec_position_id']; 
+        $secpositionid = $corDetails['sec_position_id'];
         ?>
     <section class="content">
 		<div class="row">
@@ -44,7 +44,7 @@
 				@php
                   use Carbon\Carbon;
                   $currentMonth = Carbon::now()->month;
-                @endphp    
+                @endphp
 				<div class="row">
                       <div class="col-sm-6 col-xs-12">
                         <div class="form-inline">
@@ -90,15 +90,15 @@
                     <a href="#" onclick="uncheckAll();"><i class="fa fa-times"></i> Uncheck All</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="#" id="save-btn"><i class="fa fa-save"></i> Save</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <?php if ($positionid == 6 || $secpositionid == 25) {?>
-                    <a href="https://momsclub.org/mimi/reports/coordinatortodo"><i class="fa fa-files-o"></i> View Report</a>
+                        <a href="{{ url('/reports/coordinatortodo') }}"><i class="fa fa-files-o"></i> View Report</a>
                     <?php } ?>
                     <?php if ($positionid == 7) {?>
-                    <a href="https://momsclub.org/mimi/reports/intcoordinatortodo"><i class="fa fa-files-o"></i> View Report</a>
+                        <a href="{{ url('/reports/intcoordinatortodo') }}"><i class="fa fa-files-o"></i> View Report</a>
                     <?php } ?>
                 </div>
 				</div>
 				</div>
-				
+
 				<div class="box card">
 				<div class="box-header with-border mrg-t-10">
 					<h3 class="box-title">Contact Your Coordinator</h3>
@@ -111,7 +111,7 @@
 		</div>
 		</div>
 		</div>
-		
+
 		<div class="col-md-4">
 			<div class="box card">
 				<div class="box-header with-border mrg-t-10">
@@ -131,7 +131,7 @@
 		</div>
 		</div>
 		</div>
-		
+
 		<div class="col-md-4">
 			<div class="box card">
 				<div class="box-header with-border mrg-t-10">
@@ -147,15 +147,15 @@
 		</div>
 		</div>
 
-         
-		<!-- 
+
+		<!--
 		<div class="box-body text-center">
 			<button type="submit" class="btn btn-themeBlue margin">Save</button>
 		</div> -->
         </div>
     </section>
 </form>
- 
+
 @endsection
 @section('customscript')
 <script>
@@ -166,24 +166,24 @@ function uncheckAll() {
             checkboxes[i].checked = false;
         }
     }
-    
+
 
 document.getElementById("save-btn").addEventListener("click", function() {
   // Get the value of the todo_month input
   var todoMonth = document.getElementById("todo_month").value;
-  
+
   // Check if the todo_month input is empty
   if (todoMonth.trim() === "") {
     // Show an error message to the user
     alert("The Month field is required.");
     return false;
   }
-  
+
   // Submit the form if the input is valid
   document.getElementById("update-dashboard").submit();
 });
 
-  
+
 
 
 </script>

@@ -23,6 +23,12 @@
          <p>{{ $message }}</p>
       </div>
     @endif
+    @if ($message = Session::get('info'))
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <p>{{ $message }}</p>
+    </div>
+@endif
     <!-- Main content -->
     <section class="content">
       <div class="row">
@@ -34,20 +40,17 @@
 
             </div>
             <!-- /.box-header -->
-
             <div class="box-body table-responsive">
               <table id="chapterlist_zapped" class="table table-bordered table-hover">
               <thead>
 			    <tr>
 				<th></th>
-                <th>Email Board</th>
+                <!--<th>Email Board</th>-->
 				<th>State</th>
                 <th>Name</th>
                 <th>Primary Coordinator</th>
                 <th>Received</th>
 				<th>Activated</th>
-
-
 				</tr>
                 </thead>
                 <tbody>
@@ -70,7 +73,7 @@
                         }
                       }
                       $cc_string="";
-                     //var_dump($list);die;
+
                       $reportingList = DB::table('coordinator_reporting_tree')
                                             ->select('*')
                                             ->where('id', '=', $list->primary_coordinator_id)
@@ -85,9 +88,9 @@
                             $filterReportingList = array_reverse($filterReportingList);
                             $str = "";
                             $array_rows=count($filterReportingList);
+
                             $down_line_email="";
                             foreach($filterReportingList as $key =>$val){
-                                //if($corId != $val && $val >1){
 								if($val >1){
                                     $corList = DB::table('coordinator_details as cd')
                                                     ->select('cd.email as cord_email')
@@ -106,8 +109,6 @@
                                 }
                             }
                             $cc_string = "?cc=" . $down_line_email;
-                           // var_dump($list);die;
-
 
 	                $mail_message = "<br>Don't forget to complete the Board Election Report for your chapter!  This report is available now and should be filled out as soon as your chapter has held its election but is due no later than June 30th at 11:59pm.";
 	                $mail_message = "Please submit your report as soon as possible to ensure that your incoming board members have access to all the tools they need to be successful. The information from the report is used for:";
@@ -125,16 +126,13 @@
                          @if($list->new_board_active=='1')
 								<a href="#" <?php echo "disabled";?>></a>
 							@else
-
 								<a href="<?php echo url("/chapter/boardinfo/{$list->id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
-
 							@endif
-
                         <?php }?>
-
                           </td>
-                        <td><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Board Election Report Due - MOMS Club of {{ $list->name }}, {{ $list->state }}&body={{ $mail_message }}"><i class="fa fa-envelope" aria-hidden="true"></i></a></td>
-				  <td>{{ $list->state }}</td>
+                        <!--<td><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Board Election Report Due - MOMS Club of {{ $list->name }}, {{ $list->state }}&body={{ $mail_message }}"><i class="fa fa-envelope" aria-hidden="true"></i></a></td>
+			     	    -->
+                            <td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
 						<td>{{ $list->cor_fname }} {{ $list->cor_lname }}</td>
                         <td style="background-color: @if($list->new_board_submitted == '1') transparent; @else #FF000050; @endif;">
@@ -160,23 +158,20 @@
               <div class="col-sm-6 col-xs-12">
                 <div class="form-group">
                    <label style="display: block;"><input type="checkbox" name="showPrimary" id="showPrimary" class="ios-switch green bigswitch" {{$checkBoxStatus}} onchange="showPrimary()" /><div><div></div></div>
-
                   </label>
                   <span> Only show chapters I am primary for</span>
                 </div>
               </div>
               </div>
+
 			  <div class="box-body text-center">
 				<?php if (Session::get('positionid') >=5 && Session::get('positionid') <=7){ ?>
+                    <a title="Board Election Report reminders will be sent to all chapters who have not submitted a report." href="{{ route('report.boardinforeminder') }}"><button class="btn btn-themeBlue margin">Send Board Election Reminders</button></a>
 				    <button type="button" id="board-active" class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>>Make Received Boards Active</button>
-				                    <a href="{{ route('export.boardelection')}}"><button class="btn btn-themeBlue margin">Export UN-Activated Board List</button></a>
-
-			 	<!--<a href="{{route('report.boardnotification')}}" class="btn btn-themeBlue margin" >Send Late Notices</a>-->
+				    <a href="{{ route('export.boardelection')}}"><button class="btn btn-themeBlue margin">Export UN-Activated Board List</button></a>
 				<?php }?>
-
              </div>
             </div>
-
            </div>
           <!-- /.box -->
         </div>
@@ -190,17 +185,27 @@
 @section('customscript')
 <script>
 $(document).ready(function(){
-	$("#board-active").click(function() {
-		window.location.href = "/mimi/yearreports/boardinfo?board=active";
-	});
+    $("#board-active").click(function() {
+        var base_url = '{{ url("/yearreports/boardinfo") }}';
+
+        if ($("#board-active").prop("checked") == true) {
+            window.location.href = base_url + '?board=active';
+        } else {
+            window.location.href = base_url;
+        }
+    });
 });
-  function showPrimary(){
-    if($("#showPrimary").prop("checked") == true){
-      window.location.href = "/mimi/yearreports/boardinfo?check=yes";
+
+
+function showPrimary() {
+    var base_url = '{{ url("/yearreports/boardinfo") }}';
+
+    if ($("#showPrimary").prop("checked") == true) {
+        window.location.href = base_url + '?check=yes';
+    } else {
+        window.location.href = base_url;
     }
-    else{
-      window.location.href = "/mimi/yearreports/boardinfo";
-    }
-	}
+}
+
 </script>
 @endsection

@@ -42,7 +42,7 @@ Sustaining chapter donations are <u>voluntary</u> and in addition to your chapte
 <br>
 Thank you for your prompt renewal payment and/or sustaining chapter donation! If you have any questions, please do not hesitate to contact your chapter's Primary Coordinator.
 
-You can view/update your chpater details at any time by logging into MIMI at https://momsclub.org/mimi.
+You can view/update your chapter details at any time by logging into MIMI at https://momsclub.org/mimi.
 
 **MCL,**<br>
 MIMI Database Administrator

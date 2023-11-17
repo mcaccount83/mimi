@@ -71,12 +71,13 @@
                   @endforeach
                   </tbody>
                 </table>
+                <div class="box-body text-center"><a href="{{ route('export.einstatus')}}"><button class="btn btn-themeBlue margin">Export EIN Status List</button></a>
 
                 </div>
               </div>
+
               </div>
             </div>
-           <div class="box-body text-center"><a href="{{ route('export.einstatus')}}"><button class="btn btn-themeBlue margin">Export EIN Status List</button></a>
 
            </div>
           <!-- /.box -->

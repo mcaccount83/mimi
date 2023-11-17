@@ -13,13 +13,13 @@
     </section>
     @if ($message = Session::get('success'))
 		<div class="alert alert-success">
-			<button type="button" class="close" data-dismiss="alert">×</button>	
+			<button type="button" class="close" data-dismiss="alert">×</button>
          <p>{{ $message }}</p>
 		</div>
     @endif
 	@if ($message = Session::get('fail'))
 		<div class="alert alert-danger">
-			<button type="button" class="close" data-dismiss="alert">×</button>	
+			<button type="button" class="close" data-dismiss="alert">×</button>
          <p>{{ $message }}</p>
 		</div>
     @endif
@@ -120,7 +120,7 @@
 					  </div>
 					</div>
 					<!-- /.form group -->
-					
+
 					<div class="col-sm-3 col-xs-12">
 					  <div class="form-group">
 						<label>Country</label><span class="field-required">*</span>
@@ -171,7 +171,7 @@
 						<select name="cord_month" class="form-control select2" style="width: 100%;" required>
 						  <option value="">Select Month</option>
 						  @foreach($foundedMonth as $key=>$val)
-							  
+
 							  <option value="{{$key}}" {{$currentMonth == $key  ? 'selected' : ''}}>{{$val}}</option>
 						  @endforeach
 						</select>
@@ -190,12 +190,12 @@
 					  </div>
 					</div>
 				</div>
-				
+
 				<div class="box-header with-border mrg-t-10">
 					<h3 class="box-title">Supervising Coordinator Info</h3>
 				</div>
 				<div class="box-body">
-					
+
 					<div class="col-sm-12 col-xs-12">
 						<div class="form-group">
 						<label>Name</label>
@@ -220,11 +220,11 @@
 						<input type="text" name="cord_altphone" class="form-control my-colorpicker1" value="{{ $primaryCoordinatorList[0]->cor_altphone }} " disabled>
 						</div>
 					</div>
-					
+
 				</div>
             </div>
 		</div>
-         
+
 		<!-- /.box-body -->
 		<div class="box-body text-center">
 			<button type="submit" class="btn btn-themeBlue margin">Save</button>
@@ -232,16 +232,16 @@
 			<a href="{{ route('home') }}" class="btn btn-themeBlue margin">Back</a>
 		</div>
 		 <div class="box-body text-center">
-			
+
 			<button type="button" class="btn btn-themeBlue margin" id="{{ $coordinatorDetails[0]->user_id }}" onclick="return resetPassword(this.id)">Change Password</button>
 			<button type="button" class="btn btn-themeBlue margin" onclick="window.open('https://momsclub.org/coordinator-toolkit/')">Coordinator Toolkit</button>
 			<button type="button" class="btn btn-themeBlue margin" onclick="window.open('https://momsclub.org/elearning/')">eLearning Library</button>
-		</div>  
+		</div>
         <!-- /.box-body -->
         </div>
     </section>
 </form>
- 
+
 @endsection
 @section('customscript')
 <script>
@@ -264,21 +264,21 @@ function isPhone() {
 		alert("Please Enter Number Only, Should be xxx-xxx-xxxx format");
 		return false;
 	}
-} 
+}
    function ConfirmCancel(element){
 		var result=confirm("Any unsaved changes will be lost. Do you want to continue?");
 		if(result)
 			location.reload()
 		else
 			return false;
-	}	
+	}
 	function checkDuplicateEmail(email,id){
 		var chkid = id+"_chk";
 		var oldVal = $("#"+id).val();
 		var newVal = $("#"+chkid).val();
-		if(oldVal != newVal){	
+		if(oldVal != newVal){
 		   $.ajax({
-				url: '/mimi/checkemail/'+email,
+            url: '{{ url("/check.email/") }}' + '/' + email,
 				type: "GET",
 			    success: function(result) {
 					if(result.exists){
@@ -293,14 +293,14 @@ function isPhone() {
 			});
 		}else{
 			return false;
-		}			
-    }  
-	
-	
+		}
+    }
+
+
 	function resetPassword(userid){
       	var new_password="";
 				new_password = prompt("Please enter new password for this Coordinator");
-				
+
 				if( new_password.indexOf(" ") !== -1 )
 				{
 					alert("Space not allowed");
@@ -326,14 +326,14 @@ function isPhone() {
               });
 				return true;
 					}
-				}	
+				}
 				else{
           //alert('Not Allowed');
           return false;
         }
-								
+
 			}
-	$( document ).ready(function() {	
+	$( document ).ready(function() {
 	$("#cord_phone").keyup(function() {
         this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
     });

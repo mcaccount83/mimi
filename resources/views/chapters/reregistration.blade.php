@@ -170,7 +170,7 @@
                 <div class="form-group">
                     <label style="display: block;"><input type="checkbox" name="showPrimary" id="showPrimary" class="ios-switch green bigswitch" {{$checkBoxStatus}} onclick="showPrimary()" /><div><div></div></div>
                     </label>
-                  <span> Show all chapters</span>
+                  <span>  Only show chapters I am primary for</span>
                 </div>
               </div>
               </div>
@@ -202,14 +202,16 @@
 
   });
 
-  function showPrimary(){
-	  	if($("#showPrimary").prop("checked") == true){
-			window.location.href = "/mimi/chapter/re-registration?check=yes";
-		}
-		else{
-		  window.location.href = "/mimi/chapter/re-registration";
-		}
-	}
+  function showPrimary() {
+    var base_url = '{{ url("/chapter/re-registration") }}';
+
+    if ($("#showPrimary").prop("checked") == true) {
+        window.location.href = base_url + '?check=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
+
 	function ConfirmSend(){
 		var result=confirm("Re-registration reminders will be sent to all unpaid chapters in your conference with renewal dates this month.  Do you wish to continue?");
 

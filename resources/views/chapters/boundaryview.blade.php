@@ -68,7 +68,7 @@
                 <input type="text" name="ch_territory" class="form-control my-colorpicker1" value="{{ $chapterList[0]->territory }}"  required onkeypress="return isAlphanumeric(event)"  >
 			</div>
 			</div>
-			
+
 			<div class="col-sm-12 col-xs-12">
               <div class="form-group">
                 <label>Boundary Issues Reported by Chapter</label>
@@ -84,17 +84,17 @@
                   </div>
                   </div>
 
-  
+
                 </div>
               </div>
               </div>
-              
+
 
               <div class="box-body text-center">
                           <button type="submit" class="btn btn-themeBlue margin">Save</button>
 
               <a href="{{ route('report.issues') }}" class="btn btn-themeBlue margin">Back</a>
-        
+
               </div>
               </div>
               </div>
@@ -104,15 +104,15 @@
     </section>
     </form>
     @endsection
-    
+
     @section('customscript')
     <script>
-    
-    
+
+
 	var pcid = $("#pcid").val();
 	if(pcid !=""){
 		$.ajax({
-            url: '/mimi/checkreportid/'+pcid,
+            url: '{{ url("/checkreportid/") }}' + '/' + pcid,
             type: "GET",
             success: function(result) {
 				$("#display_corlist").html(result);
@@ -123,7 +123,6 @@
         });
     }
         </script>
-        
+
         @endsection
 
-  

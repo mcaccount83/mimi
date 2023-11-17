@@ -11,6 +11,24 @@
         <li class="active">End of Year Status Report</li>
       </ol>
     </section>
+    @if ($message = Session::get('success'))
+      <div class="alert alert-success">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+         <p>{{ $message }}</p>
+      </div>
+    @endif
+	 @if ($message = Session::get('fail'))
+      <div class="alert alert-danger">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+         <p>{{ $message }}</p>
+      </div>
+    @endif
+    @if ($message = Session::get('info'))
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <p>{{ $message }}</p>
+    </div>
+@endif
     <!-- Main content -->
     <section class="content">
       <div class="row">
@@ -86,7 +104,9 @@
                 </div>
               </div>
               </div>
-           <div class="box-body text-center"><a href="{{ route('export.eoystatus')}}"><button class="btn btn-themeBlue margin">Export EOY Status List</button></a>
+              <div class="box-body text-center">
+              <a title="EOY Late Notices will be sent to all chapters who have not submitted reports." href="{{ route('report.eoylatereminder') }}"><button class="btn btn-themeBlue margin">Send EOY Late Notices</button></a>
+          <a href="{{ route('export.eoystatus')}}"><button class="btn btn-themeBlue margin">Export EOY Status List</button></a>
             </div>
            </div>
           <!-- /.box -->
@@ -98,13 +118,16 @@
 @endsection
 @section('customscript')
 <script>
-  function showPrimary(){
-    if($("#showPrimary").prop("checked") == true){
-      window.location.href = "/mimi/yearreports/eoystatus?check=yes";
+        function showPrimary() {
+    var base_url = '{{ url("/yearreports/eoystatus") }}';
+
+    if ($("#showPrimary").prop("checked") == true) {
+        window.location.href = base_url + '?check=yes';
+    } else {
+        window.location.href = base_url;
     }
-    else{
-      window.location.href = "/mimi/yearreports/eoystatus";
-    }
-	}
+}
+
+
 </script>
 @endsection

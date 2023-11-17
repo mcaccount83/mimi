@@ -887,7 +887,7 @@ $(document).ready(function() {
 			}
       function checkReportId(val){
           $.ajax({
-            url: '/mimi/checkreportid/'+val,
+            url: '{{ url("/checkreportid/") }}' + '/' + val,
             type: "GET",
             success: function(result) {
                $("#display_corlist").html(result);
@@ -901,7 +901,7 @@ $(document).ready(function() {
 
       function checkDuplicateEmail(email,id){
        $.ajax({
-            url: '/mimi/checkemail/'+email,
+        url: '{{ url("/check.email/") }}' + '/' + email,
             type: "GET",
             success: function(result) {
                 if(result.exists){

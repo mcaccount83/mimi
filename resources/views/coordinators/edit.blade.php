@@ -354,7 +354,7 @@ function isPhone() {
 		var newVal = $("#"+chkid).val();
 		if(oldVal != newVal){
 		   $.ajax({
-				url: '/mimi/checkemail/'+email,
+            url: '{{ url("/check.email/") }}' + '/' + email,
 				type: "GET",
 			    success: function(result) {
 					if(result.exists){
@@ -384,7 +384,7 @@ function isPhone() {
 			}
 			else{
                $.ajax({
-                  url: '/mimi/chapter/resetpswd',
+                url: '{{ url("/chapter.resetpswd") }}',
                   type: "POST",
                   data: { pswd:new_password,user_id:userid, _token: '{{csrf_token()}}' },
                   success: function(result) {
@@ -397,8 +397,8 @@ function isPhone() {
 				}
 			}
 			else{
-			//alert('Not Allowed');
-			return false;
+
+                return false;
 			}
 		}
 

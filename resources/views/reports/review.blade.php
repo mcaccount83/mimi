@@ -11,6 +11,24 @@
         <li class="active">Financial Reports</li>
       </ol>
     </section>
+    @if ($message = Session::get('success'))
+      <div class="alert alert-success">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+         <p>{{ $message }}</p>
+      </div>
+    @endif
+	 @if ($message = Session::get('fail'))
+      <div class="alert alert-danger">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+         <p>{{ $message }}</p>
+      </div>
+    @endif
+    @if ($message = Session::get('info'))
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <p>{{ $message }}</p>
+    </div>
+@endif
     <!-- Main content -->
     <section class="content">
       <div class="row">
@@ -155,9 +173,12 @@
                         <label style="display: block;"><input type="checkbox" name="show2Primary" id="show2Primary" class="ios-switch green bigswitch" {{$checkBox2Status}} onchange="show2Primary()" /><div><div></div></div>
                         </label>
                     <span> Only show chapters I am Primary Coordinator for</span>
+                </div>
+            </div>
+            </div>
+              <div class="box-body text-center">
+              <a title="Financial Report reminders will be sent to all chapters who have not submitted a report." href="{{ route('report.financialreminder') }}"><button class="btn btn-themeBlue margin">Send Financial Report Reminders</button></a>
               </div>
-              </div>
-			</div>
              </div>
            </div>
           <!-- /.box -->
@@ -169,22 +190,25 @@
 @endsection
 @section('customscript')
 <script>
-  function showPrimary(){
-    if($("#showPrimary").prop("checked") == true){
-      window.location.href = "/mimi/yearreports/review?check=yes";
-    }
-    else{
-      window.location.href = "/mimi/yearreports/review";
-    }
-	}
+  function showPrimary() {
+    var base_url = '{{ url("/yearreports/review") }}';
 
-	function show2Primary(){
-    if($("#show2Primary").prop("checked") == true){
-      window.location.href = "/mimi/yearreports/review?check2=yes";
+    if ($("#showPrimary").prop("checked") == true) {
+        window.location.href = base_url + '?check=yes';
+    } else {
+        window.location.href = base_url;
     }
-    else{
-      window.location.href = "/mimi/yearreports/review";
+}
+
+function show2Primary() {
+    var base_url = '{{ url("/yearreports/review") }}';
+
+    if ($("#show2Primary").prop("checked") == true) {
+        window.location.href = base_url + '?check2=yes';
+    } else {
+        window.location.href = base_url;
     }
-	}
+}
+
 </script>
 @endsection

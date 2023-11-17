@@ -849,7 +849,7 @@ function BoundaryError(error){
         var newVal = $("#"+chkid).val();
         if(oldVal != newVal){
            $.ajax({
-                url: '/mimi/checkemail/'+email,
+            url: '{{ url("/check.email/") }}' + '/' + email,
                 type: "GET",
                 success: function(result) {
                     if(result.exists){

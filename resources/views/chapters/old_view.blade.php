@@ -3,7 +3,7 @@
 @section('content')
  <section class="content-header">
       <h1>
-        Chapter List 
+        Chapter List
         <small>View</small>
       </h1>
       <ol class="breadcrumb">
@@ -107,7 +107,7 @@
                 <input type="text" name="ch_notes" class="form-control my-colorpickStatus Notes (not visible to board members)er1" value="{{ $chapterList[0]->website_notes}}" disabled>
               </div>
               </div>
-              
+
               </div>
             <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">President</h3>
@@ -161,7 +161,7 @@
                 <label>State</label>
                 <select name="ch_pre_state" class="form-control select2" style="width: 100%;" disabled>
                 <option value="">{{ $chapterList[0]->bd_state }}</option>
-                  
+
                 </select>
               </div>
               </div>
@@ -172,7 +172,7 @@
                 <input type="text" name="ch_pre_zip" class="form-control my-colorpicker1" value="{{ $chapterList[0]->zip }}" disabled>
               </div>
               </div>
-              
+
               </div>
               <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">AVP</h3>
@@ -226,7 +226,7 @@
                 <label>State</label>
                 <select name="ch_avp_state" id="ch_avp_state" class="form-control select2" style="width: 100%;" disabled>
                 <option value="">{{ $AVPDetails[0]->avp_state }}</option>
-                  
+
                 </select>
               </div>
               </div>
@@ -319,7 +319,7 @@
                     </div>
 				</div>
               </div>
-              
+
               </div>
               <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">Treasurer</h3>
@@ -467,7 +467,7 @@
                 <h3 class="box-title"></h3>
               </div>
               <div class="box-body">
-                  
+
                   <!-- /.form group -->
               <div class="col-sm-12 col-xs-12">
               <div class="form-group">
@@ -483,7 +483,7 @@
               </div>
               </div>
               <!-- /.form group -->
-             
+
               <div class="col-sm-4 col-xs-12">
               <div class="form-group">
                 <label class="span-t mrg-10">
@@ -545,8 +545,8 @@
                 <input type="text" name="ch_pobox" class="form-control my-colorpicker1" value="{{ $chapterList[0]->po_box}}" disabled>
               </div>
               </div>
-              
-              
+
+
               </div>
               <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title"></h3>
@@ -565,7 +565,7 @@
                 <input type="text" name="ch_sistered" id="ch_sistered" class="form-control my-colorpicker1" value="{{ $chapterList[0]->sistered_by}}" maxlength="50" disabled>
               </div>
               </div>
-			  
+
                 <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
@@ -591,7 +591,7 @@
                 <label>Re-Registration dues last paid</label>
                 <input type="text" name="ch_dues" class="form-control my-colorpicker1" value="{{$chapterList[0]->dues_last_paid }}" readonly>
               </div>
-              </div> 
+              </div>
               <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
@@ -610,7 +610,7 @@
               </div>
 			  </div>
               <!-- /.form group -->
-              	
+
 					<div class="radio-chk">
 						<div class="col-sm-6 col-xs-12">
 							<div class="form-group">
@@ -620,7 +620,7 @@
 							</div>
 						</div>
 					</div>
-				
+
 			  <!-- /.form group -->
 			  <div class="radio-chk">
 				<div class="col-sm-6 col-xs-12">
@@ -641,16 +641,16 @@
 							</div>
 						</div>
 					</div>
-			  
-			  
-			  
+
+
+
               </div>
-             
+
           <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">International MOMS Club Coordinators</h3>
               </div>
              <div class="box-body">
-               
+
               <!-- /.form group -->
               <div class="col-sm-12 col-xs-12">
               <div class="form-group">
@@ -669,7 +669,7 @@
                 <h3 class="box-title"></h3>
               </div>
               <div class="box-body">
-				
+
 			   <!-- /.form group -->
 				  <div class="col-sm-6 col-xs-12">
 				  <div class="form-group">
@@ -685,35 +685,35 @@
 				  </div>
 				  </div>
 			  </div>
-			  
+
               </div>
       </div>
-            
+
             <!-- /.box-body -->
              <a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=MOMS Club of {{ $chapterList[0]->name }}" class="btn btn-themeBlue margin">E-mail Board</a>
-            
+
             <div class="box-body text-center">
 					<a href="{{ route('home') }}" class="btn btn-themeBlue margin">Back</a>
               </div>
             <!-- /.box-body -->
-            
+
           </div>
           <!-- /.box -->
         </div>
       </div>
     </section>
     </form>
- 
+
 @endsection
 
 @section('customscript')
 <script>
   $( document ).ready(function() {
-		
+
 	var selectedCorId = $("select#ch_primarycor option").filter(":selected").val();
     if(selectedCorId !=""){
       $.ajax({
-            url: '/mimi/checkreportid/'+selectedCorId,
+        url: '{{ url("/checkreportid/") }}' + '/' + selectedCorId,
             type: "GET",
             success: function(result) {
                $("#display_corlist").html(result);
@@ -722,7 +722,7 @@
 
             }
         });
-    }	
+    }
 	var avp = $("#ch_avp_fname").val();
     if(avp ==''){
         $("#ch_avp_fname").prop("readonly",true);
@@ -755,7 +755,7 @@
         $("#ch_trs_zip").prop("readonly",true);
         $("#ch_trs_phone").prop("readonly",true);
         $("#ch_trs_state").prop("disabled",true);
-    } 
+    }
     var sec = $("#ch_sec_fname").val();
     if(sec ==''){
         $("#ch_sec_fname").prop("readonly",true);
@@ -767,7 +767,7 @@
         $("#ch_sec_phone").prop("readonly",true);
         $("#ch_sec_state").prop("disabled",true);
     }
-	
+
   });
 
  function ConfirmVacant(checkboxid) {
@@ -809,8 +809,8 @@
                 $("#ch_avp_zip").prop("required",true);
                 $("#ch_avp_phone").prop("required",true);
                 $("#ch_avp_state").prop("required",true);
-              }  
-            break; 
+              }
+            break;
           case "MVPVacant":
               if($("#MVPVacant").prop("checked") == true){
                 $("#ch_mvp_fname").prop("readonly",true);
@@ -847,7 +847,7 @@
                 $("#ch_mvp_zip").prop("required",true);
                 $("#ch_mvp_phone").prop("required",true);
                 $("#ch_mvp_state").prop("required",true);
-              }  
+              }
             break;
           case "TreasVacant":
               if($("#TreasVacant").prop("checked") == true){
@@ -885,9 +885,9 @@
                 $("#ch_trs_zip").prop("required",true);
                 $("#ch_trs_phone").prop("required",true);
                 $("#ch_trs_state").prop("required",true);
-                
-              }  
-            break; 
+
+              }
+            break;
           case "SecVacant":
               if($("#SecVacant").prop("checked") == true){
                 $("#ch_sec_fname").prop("readonly",true);
@@ -924,10 +924,10 @@
                 $("#ch_sec_zip").prop("required",true);
                 $("#ch_sec_phone").prop("required",true);
                 $("#ch_sec_state").prop("required",true);
-              }  
-            break;      
-    }      
-    
+              }
+            break;
+    }
+
   }
   //submit validation function
   function PreSaveValidate(){
@@ -937,12 +937,12 @@
 			errMessage = "The e-mail address provided for the Chapter President was also provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
 		}
 
-		
+
 		if(errMessage.length > 0){
-			alert (errMessage);	
+			alert (errMessage);
 			return false;
 		}
-											
+
 		//Okay, all validation passed, save the records to the database
 		return true;
 	}

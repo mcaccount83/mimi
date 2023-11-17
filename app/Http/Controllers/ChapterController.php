@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdatePrimaryCoor;
+use App\Mail\ChapersUpdateEINCoor;
 use App\Mail\ChapterAddListAdmin;
 use App\Mail\ChapterAddPrimaryCoor;
 use App\Mail\ChapterReAddListAdmin;
@@ -446,13 +447,13 @@ class ChapterController extends Controller
             //Primary Coordinator Notification//
             $to_email = $cordInfo[0]->email;
 
-            Mail::to($to_email, 'MOMS Club')
+            Mail::to($to_email)
                 ->send(new ChapterAddPrimaryCoor($mailData));
 
             //List Admin Notification//
             $to_email2 = 'listadmin@momsclub.org';
 
-            Mail::to($to_email2, 'MOMS Club')
+            Mail::to($to_email2)
                 ->send(new ChapterAddListAdmin($mailData));
 
             DB::commit();
@@ -1179,12 +1180,12 @@ class ChapterController extends Controller
 
                 //Chapter Notification//
                 $to_email = $to_email3;
-                Mail::to($to_email, 'MOMS Club')
+                Mail::to($to_email)
                     ->send(new ChaptersPrimaryCoordinatorChange($mailData));
 
                 //Primary Coordinator Notification//
                 $to_email = $coremail;
-                Mail::to($to_email, 'MOMS Club')
+                Mail::to($to_email)
                     ->send(new ChaptersPrimaryCoordinatorChangePCNotice($mailData));
             }
 
@@ -1228,12 +1229,12 @@ class ChapterController extends Controller
                 ];
 
                 if ($request->get('ch_webstatus') == 1) {
-                    Mail::to($to_email4, 'MOMS Club')
+                    Mail::to($to_email4)
                         ->send(new WebsiteAddNoticeAdmin($mailData));
                 }
 
                 if ($request->get('ch_webstatus') == 2) {
-                    Mail::to($to_email4, 'MOMS Club')
+                    Mail::to($to_email4)
                         ->send(new WebsiteReviewNotice($mailData));
                 }
             }
@@ -1283,6 +1284,7 @@ class ChapterController extends Controller
                 ->get();
 
             $mailDataPres = [
+                'conference' => $corConfId,
                 'chapterNameUpd' => $presInfoUpd[0]->name,
                 'chapterStateUpd' => $presInfoUpd[0]->state,
                 'cor_fnameUpd' => $presInfoUpd[0]->cor_f_name,
@@ -1432,7 +1434,7 @@ class ChapterController extends Controller
             //Primary Coordinator Notification//
             $to_email = $presInfoUpd[0]->cor_email;
 
-            if ($presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email || $presInfoUpd[0]->street != $presInfoPre[0]->street || $presInfoUpd[0]->city != $presInfoPre[0]->city || $presInfoUpd[0]->state != $presInfoPre[0]->state ||
+            if ($presInfoUpd[0]->name != $presInfoPre[0]->name || $presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email || $presInfoUpd[0]->street != $presInfoPre[0]->street || $presInfoUpd[0]->city != $presInfoPre[0]->city || $presInfoUpd[0]->state != $presInfoPre[0]->state ||
                     $presInfoUpd[0]->zip != $presInfoPre[0]->zip || $presInfoUpd[0]->phone != $presInfoPre[0]->phone || $presInfoUpd[0]->inquiries_contact != $presInfoPre[0]->inquiries_contact ||
                     $presInfoUpd[0]->ein != $presInfoPre[0]->ein || $presInfoUpd[0]->ein_letter_path != $presInfoPre[0]->ein_letter_path || $presInfoUpd[0]->inquiries_note != $presInfoPre[0]->inquiries_note ||
                     $presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->po_box != $presInfoPre[0]->po_box || $presInfoUpd[0]->website_url != $presInfoPre[0]->website_url ||
@@ -1443,7 +1445,7 @@ class ChapterController extends Controller
                     $mailDatatresp['tresfnamePre'] != $mailDatatres['tresfnameUpd'] || $mailDatatresp['treslnamePre'] != $mailDatatres['treslnameUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] ||
                     $mailDataSecp['secfnamePre'] != $mailDataSec['secfnameUpd'] || $mailDataSecp['seclnamePre'] != $mailDataSec['seclnameUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
 
-                Mail::to($to_email, 'MOMS Club')
+                Mail::to($to_email)
                     ->send(new ChapersUpdatePrimaryCoor($mailData));
 
             }
@@ -1455,8 +1457,17 @@ class ChapterController extends Controller
                         $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] ||
                         $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
 
-                Mail::to($to_email2, 'MOMS Club')
+                Mail::to($to_email2)
                     ->send(new ChapersUpdateListAdmin($mailData));
+            }
+
+            //EIN Coor Notification//
+            $to_email3 = 'melissa.baca@momsclub.org';
+
+            if ($presInfoUpd[0]->name != $presInfoPre[0]->name) {
+
+                Mail::to($to_email3)
+                    ->send(new ChapersUpdateEINCoor($mailData));
             }
 
             DB::commit();
@@ -2312,12 +2323,12 @@ class ChapterController extends Controller
             ];
 
             if ($request->get('ch_webstatus') == 1) {
-                Mail::to($to_email4, 'MOMS Club')
+                Mail::to($to_email4)
                     ->send(new WebsiteAddNoticeAdmin($mailData));
             }
 
             if ($request->get('ch_webstatus') == 2) {
-                Mail::to($to_email4, 'MOMS Club')
+                Mail::to($to_email4)
                     ->send(new WebsiteReviewNotice($mailData));
             }
         }
@@ -2561,7 +2572,7 @@ class ChapterController extends Controller
             //Primary Coordinator Notification//
             $to_email = 'listadmin@momsclub.org';
 
-            Mail::to($to_email, 'MOMS Club')
+            Mail::to($to_email)
                 ->send(new ChapterRemoveListAdmin($mailData));
 
             DB::commit();
@@ -2729,7 +2740,7 @@ class ChapterController extends Controller
             //Primary Coordinator Notification//
             $to_email = 'listadmin@momsclub.org';
 
-            Mail::to($to_email, 'MOMS Club')
+            Mail::to($to_email)
                 ->send(new ChapterReAddListAdmin($mailData));
 
             DB::commit();
@@ -2785,7 +2796,7 @@ class ChapterController extends Controller
     }
 
     /**
-     * Reset Password --- not sure if we need this????
+     * Reset Password
      */
     public function chapterResetPassword(Request $request)
     {
@@ -2858,7 +2869,7 @@ class ChapterController extends Controller
 
                 //M2M Donation Thank You Email//
                 Mail::to($to_email)
-                    ->cc($cc_email, 'MOMS Club')
+                    ->cc($cc_email)
                     ->send(new PaymentsM2MChapterThankYou($mailData));
             }
 
@@ -2877,7 +2888,7 @@ class ChapterController extends Controller
 
                 //Sustaining Chapter Thank You Email//
                 Mail::to($to_email)
-                    ->cc($cc_email, 'MOMS Club')
+                    ->cc($cc_email)
                     ->send(new PaymentsSustainingChapterThankYou($mailData));
             }
 
@@ -3113,7 +3124,7 @@ class ChapterController extends Controller
                 $to_email = $boardPresEmail;
                 $cc_email = $primaryCordEmail;
 
-                Mail::to($to_email, 'MOMS Club')
+                Mail::to($to_email)
                     ->cc($cc_email)
                     ->send(new PaymentsReRegChapterThankYou($mailData));
             }

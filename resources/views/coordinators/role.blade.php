@@ -408,7 +408,7 @@
             var confID = $(this).val();
 			if(confID) {
                 $.ajax({
-                    url: '/mimi/getregion/'+confID,
+                    url: '{{ url("/get.region/") }}' + '/' + confID,
                     type: "GET",
                     dataType: "json",
                     success:function(data) {
@@ -429,7 +429,7 @@
 			var posID = $('#cord_pos').val();
             if(confID) {
                	$.ajax({
-                    url: '/mimi/getreporting',
+                    url: '{{ url("/get.reporting") }}',
                     type: "GET",
                     dataType: "json",
 					data: {conf_id: confID, reg_id: regID, pos_id: posID},
@@ -450,7 +450,7 @@
 			var posID = $('#cord_pos').val();
             if(confID) {
                	$.ajax({
-                    url: '/mimi/getdirectreport',
+                    url: '{{ url("/get.directreport") }}',
                     type: "GET",
                     dataType: "json",
 					data: {conf_id: confID, reg_id: regID, pos_id: posID},
@@ -470,7 +470,7 @@
 			var posID = $('#cord_pos').val();
             if(confID) {
                	$.ajax({
-                    url: '/mimi/getdirectreport',
+                    url: '{{ url("/get.directreport") }}',
                     type: "GET",
                     dataType: "json",
 					data: {conf_id: confID, reg_id: regID, pos_id: posID},
@@ -490,7 +490,7 @@
 			var posID = $('#cord_pos').val();
             if(confID) {
                	$.ajax({
-                    url: '/mimi/getchapterprimary',
+                    url: '{{ url("/get.chapterprimary") }}',
                     type: "GET",
                     dataType: "json",
 					data: {conf_id: confID, reg_id: regID, pos_id: posID},

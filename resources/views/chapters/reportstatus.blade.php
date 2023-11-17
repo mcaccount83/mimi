@@ -56,7 +56,7 @@
                 <input type="hidden" name="ch_hid_region" value="{{ $chapterList[0]->region }}">
               </div>
               </div>
-             
+
 			    <div class="radio-chk">
                 <div class="col-sm-6 col-xs-12">
                   <div class="form-group">
@@ -90,19 +90,19 @@
                   </div>
                   </div>
 
-  
+
                 </div>
                 <p><strong>Board Report Note:</strong>   Activating Board Report HERE will only update the STATUS and will NOT trigger the activation sequence.  To trigger the board activation sequence, activate individually from the Board Report or as a group from the Board Report List</p>
                 <p><strong>Financial Report Note:</strong>  Submitting Board Report HERE will only update the STATUS and will NOT assign a report reviewer.  A report reviewer will need to be aassigned before the review process can begin to avoid receiving an error code.</p>
               </div>
               </div>
-              
+
 
               <div class="box-body text-center">
                           <button type="submit" class="btn btn-themeBlue margin">Save</button>
 
               <a href="{{ route('report.eoystatus') }}" class="btn btn-themeBlue margin">Back</a>
-        
+
               </div>
               </div>
               </div>
@@ -112,15 +112,15 @@
     </section>
     </form>
     @endsection
-    
+
     @section('customscript')
     <script>
-    
-    
+
+
 	var pcid = $("#pcid").val();
 	if(pcid !=""){
 		$.ajax({
-            url: '/mimi/checkreportid/'+pcid,
+            url: '{{ url("/checkreportid/") }}' + '/' + pcid,
             type: "GET",
             success: function(result) {
 				$("#display_corlist").html(result);
@@ -131,7 +131,6 @@
         });
     }
         </script>
-        
+
         @endsection
 
-  

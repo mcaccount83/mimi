@@ -18,13 +18,13 @@
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">Report of Chapter Status</h3>
-              
+
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
               <table id="chapterlist_zapped" class="table table-bordered table-hover">
-              <thead> 
+              <thead>
 			    <tr>
 					<th></th>
 				  <th>State</th>
@@ -36,15 +36,15 @@
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
-					
-						
-							<td><a href="<?php //echo url("/chapter/edit/{$list->id}") 
+
+
+							<td><a href="<?php //echo url("/chapter/edit/{$list->id}")
 							echo url("/chapter/edit/{$list->id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
 							</td>
-						
+
 						<td>{{ $list->state }}</td>
                         <td>{{ $list->name }}</td>
-                       
+
                         <?php
 						switch ($list->status) {
 							case 1:
@@ -70,33 +70,35 @@
               <div class="col-sm-6 col-xs-12">
                 <div class="form-group">
                     <label style="display: block;"><input type="checkbox" name="showPrimary" id="showPrimary" class="ios-switch green bigswitch" {{$checkBoxStatus}} onchange="showPrimary()" /><div><div></div></div>
-                    
+
                   </label>
                   <span> Only show chapters 'Not Ok'</span>
                 </div>
               </div>
               </div>
             </div>
-			
+
            </div>
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection
 @section('customscript')
 <script>
-  function showPrimary(){
-    if($("#showPrimary").prop("checked") == true){
-      window.location.href = "/mimi/reports/chapterstatus?check=yes";
+    function showPrimary() {
+    var base_url = '{{ url("/reports/chapterstatus") }}';
+
+    if ($("#showPrimary").prop("checked") == true) {
+        window.location.href = base_url + '?check=yes';
+    } else {
+        window.location.href = base_url;
     }
-    else{
-      window.location.href = "/mimi/reports/chapterstatus";
-    }
-	}
+}
+
 </script>
 @endsection

@@ -50,7 +50,7 @@ Sustaining chapter donations are voluntary and in addition to your chapter's re-
 <br>
 If payment is not recevied by the last day of <b>{{$mailData['dueMonth']}}</b> your chapter will be placed on probation.
 
-You can view/update your chpater details at any time by logging into MIMI at https://momsclub.org/mimi.
+You can view/update your chapter details at any time by logging into MIMI at https://momsclub.org/mimi.
 
 If you have any questions at all, do not hesitate to ask.
 

@@ -409,7 +409,7 @@ $( document ).ready(function() {
     var pcid = $("#pcid").val();
 	if(pcid !=""){
 		$.ajax({
-            url: '/mimi/checkreportid/'+pcid,
+            url: '{{ url("/checkreportid/") }}' + '/' + pcid,
             type: "GET",
             success: function(result) {
 				$("#display_corlist").html(result);

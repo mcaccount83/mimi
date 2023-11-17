@@ -3,16 +3,19 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class ChaptersPrimaryCoordinatorChangePCNotice extends Mailable
+class ChapersUpdateEINCoor extends Mailable
 {
     use Queueable, SerializesModels;
 
     public $mailData;
 
-     /**
+    /**
      * Create a new message instance.
      *
      * @return void
@@ -21,12 +24,14 @@ class ChaptersPrimaryCoordinatorChangePCNotice extends Mailable
     {
         $this->mailData = $mailData;
     }
+
     /**
      * Build the message.
      */
     public function build(): static
     {
-        return $this->subject("Primary Coordinator Change | {$this->mailData['chapter_name']}, {$this->mailData['chapter_state']}")
-            ->markdown('emails.chapterupdate.primarycoordinatorchangepcnotice');
+        return $this
+            ->subject('Chapter Name Change Notification')
+            ->markdown('emails.chapterupdate.eincoor');
+        }
     }
-}

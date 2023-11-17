@@ -769,6 +769,33 @@
     var trs = $("#ch_trs_fname").val();
     var sec = $("#ch_sec_fname").val();
 
+    var selectedCorId = $("select#ch_primarycor option").filter(":selected").val();
+    if(selectedCorId !=""){
+      $.ajax({
+        url: '{{ url("/checkreportid/") }}' + '/' + selectedCorId,
+            type: "GET",
+            success: function(result) {
+               $("#display_corlist").html(result);
+            },
+            error: function (jqXHR, exception) {
+
+            }
+        });
+    }
+     function checkReportId(val){
+          $.ajax({
+            url: '{{ url("/checkreportid/") }}' + '/' + val,
+            type: "GET",
+            success: function(result) {
+               $("#display_corlist").html(result);
+            },
+            error: function (jqXHR, exception) {
+
+            }
+        });
+
+      }
+
   });
 
 </script>

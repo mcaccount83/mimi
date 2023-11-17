@@ -188,7 +188,7 @@ function ConfirmCancel(element){
 	}
     function checkDuplicateEmail(email,id){
        $.ajax({
-            url: '/mimi/checkemail/'+email,
+        url: '{{ url("/check.email/") }}' + '/' + email,
             type: "GET",
             success: function(result) {
                 if(result.exists){

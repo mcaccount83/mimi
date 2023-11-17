@@ -220,7 +220,7 @@
     var selectedCorId = $("select#ch_primarycor option").filter(":selected").val();
     if(selectedCorId !=""){
       $.ajax({
-            url: '/mimi/checkreportid/'+selectedCorId,
+        url: '{{ url("/checkreportid/") }}' + '/' + selectedCorId,
             type: "GET",
             success: function(result) {
                $("#display_corlist").html(result);
@@ -236,7 +236,7 @@
 
   function checkReportId(val){
           $.ajax({
-            url: '/mimi/checkreportid/'+val,
+            url: '{{ url("/checkreportid/") }}' + '/' + val,
             type: "GET",
             success: function(result) {
                $("#display_corlist").html(result);

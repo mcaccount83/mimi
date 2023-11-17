@@ -70,16 +70,16 @@ Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'i
  * Routes for Custom Links
  */
 Route::get('/datalist', [ChapterController::class, 'showDatalist'])->name('get.users');
-Route::get('/checkemail/{id}', [ChapterController::class, 'checkEmail']);
-Route::get('/checkreportid/{id}', [ChapterController::class, 'checkReportId']);
+Route::get('/checkemail/{id}', [ChapterController::class, 'checkEmail'])->name('check.email');
+Route::get('/checkreportid/{id}', [ChapterController::class, 'checkReportId'])->name('check.reportid');
 Route::get('/prezlist/{id}', [ChapterController::class, 'addToPrezList']);
 Route::get('/cordprezlist/{id}', [CoordinatorController::class, 'addToPrezList']);
 Route::get('/cordvollist/{id}', [CoordinatorController::class, 'addToVolList']);
-Route::get('/getregion/{id}', [CoordinatorController::class, 'getRegionList']);
-Route::get('/getreporting', [CoordinatorController::class, 'getReportingList']);
-Route::get('/getdirectreport', [CoordinatorController::class, 'getDirectReportingList']);
-Route::get('/getchapterprimary', [CoordinatorController::class, 'getChapterPrimaryFor']);
-Route::get('/chapter-links', [ChapterController::class, 'chapterLinks']);
+Route::get('/getregion/{id}', [CoordinatorController::class, 'getRegionList'])->name('get.region');
+Route::get('/getreporting', [CoordinatorController::class, 'getReportingList'])->name('get.reporting');
+Route::get('/getdirectreport', [CoordinatorController::class, 'getDirectReportingList'])->name('get.directreport');
+Route::get('/getchapterprimary', [CoordinatorController::class, 'getChapterPrimaryFor'])->name('get.chapterprimary');
+Route::get('/chapter-links', [ChapterController::class, 'chapterLinks'])->name('chapter.links');
 
 /**
  * Routes for Chapters
@@ -107,7 +107,7 @@ Route::post('/chapter/website/update/{id}', [ChapterController::class, 'updateWe
 Route::get('/chapter/view/{id}', [ChapterController::class, 'showChapterView']);
 //Route::post('/chapter/disband', [ChapterController::class, 'chapterDisband']);
 Route::post('/chapter/disband', [ChapterController::class, 'chapterDisband'])->name('chapter.disband');
-//Route::post('/chapter/resetpswd', [ChapterController::class, 'chapterResetPassword']);
+Route::post('/chapter/resetpswd', [ChapterController::class, 'chapterResetPassword'])->name('chapter.resetpswd');
 Route::get('/chapter/financial/{id}', [ChapterController::class, 'showFinancialReport'])->name('chapter.showfinancial');
 Route::post('/chapter/financial/{id}', [ChapterController::class, 'storeFinancialReport'])->name('chapter.storefinancial');
 Route::get('chapter/boardinfo/{id}', [ChapterController::class, 'showBoardInfo'])->name('chapter.showboardinfo');
@@ -214,7 +214,9 @@ Route::get('/reports/socialmedia', [ReportController::class, 'showSocialMedia'])
 Route::get('/reports/downloads', [ReportController::class, 'showDownloads'])->name('report.downloads');
 Route::get('/yearreports/review', [ReportController::class, 'showReportToReview'])->name('report.review');
 Route::get('/yearreports/boardinfo', [ReportController::class, 'showReportToBoardInfo'])->name('report.boardinfo');
-Route::get('/yearreports/boardnotification', [ReportController::class, 'boardNotification'])->name('report.boardnotification');
+Route::get('/yearreports/boardinfo/reminder', [ReportController::class, 'reminderBoardInfo'])->name('report.boardinforeminder');
+Route::get('/yearreports/review/reminder', [ReportController::class, 'reminderFinancialReport'])->name('report.financialreminder');
+Route::get('/yearreports/status/reminder', [ReportController::class, 'reminderEOYReportsLate'])->name('report.eoylatereminder');
 Route::get('/yearreports/chapteraward', [ReportController::class, 'showChapterAwards'])->name('report.awards');
 Route::get('/yearreports/boundaryissue', [ReportController::class, 'showReportToIssues'])->name('report.issues');
 Route::get('/yearreports/chapterawards', [ReportController::class, 'showChapterAwards'])->name('report.chapterawards');

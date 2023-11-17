@@ -163,13 +163,16 @@
 @endsection
 @section('customscript')
 <script>
-  function showPrimary(){
-    if($("#showPrimary").prop("checked") == true){
-      window.location.href = "/mimi/reports/chaptercoordinators?check=yes";
+    function showPrimary() {
+    var base_url = '{{ url("/reports/chaptercoordinators") }}';
+
+    if ($("#showPrimary").prop("checked") == true) {
+        window.location.href = base_url + '?check=yes';
+    } else {
+        window.location.href = base_url;
     }
-    else{
-      window.location.href = "/mimi/reports/chaptercoordinators";
-    }
-	}
+}
+
+
 </script>
 @endsection
