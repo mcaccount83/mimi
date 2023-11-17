@@ -28,7 +28,7 @@ class EOYElectionReportThankYou extends Mailable
     public function build(): static
     {
         return $this
-        ->subject('Election Report Submitted')
-        ->markdown('emails.endofyear.electionreportthankyou');
+            ->subject('Election Report Submitted')
+            ->markdown('emails.endofyear.electionreportthankyou');
     }
 }

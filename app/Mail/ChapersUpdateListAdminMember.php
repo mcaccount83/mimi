@@ -30,5 +30,5 @@ class ChapersUpdateListAdminMember extends Mailable
         return $this
             ->subject('Chapter Update ListAdmin Notice')
             ->markdown('emails.chapterupdate.listadminmember');
-        }
     }
+}
