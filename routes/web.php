@@ -38,12 +38,12 @@ Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'i
 /**
  * Routes for Custom Links
  */
-Route::get('/datalist', [ChapterController::class, 'showDatalist'])->name('get.users');
+//Route::get('/datalist', [ChapterController::class, 'showDatalist'])->name('get.users');
 Route::get('/checkemail/{id}', [ChapterController::class, 'checkEmail'])->name('check.email');
 Route::get('/checkreportid/{id}', [ChapterController::class, 'checkReportId'])->name('check.reportid');
-Route::get('/prezlist/{id}', [ChapterController::class, 'addToPrezList']);
-Route::get('/cordprezlist/{id}', [CoordinatorController::class, 'addToPrezList']);
-Route::get('/cordvollist/{id}', [CoordinatorController::class, 'addToVolList']);
+//Route::get('/prezlist/{id}', [ChapterController::class, 'addToPrezList']);
+//Route::get('/cordprezlist/{id}', [CoordinatorController::class, 'addToPrezList']);
+//Route::get('/cordvollist/{id}', [CoordinatorController::class, 'addToVolList']);
 Route::get('/getregion/{id}', [CoordinatorController::class, 'getRegionList'])->name('get.region');
 Route::get('/getreporting', [CoordinatorController::class, 'getReportingList'])->name('get.reporting');
 Route::get('/getdirectreport', [CoordinatorController::class, 'getDirectReportingList'])->name('get.directreport');
@@ -74,7 +74,7 @@ Route::get('/chapter/inquiriesview/{id}', [ChapterController::class, 'inquiriesv
 Route::get('/chapter/website', [ChapterController::class, 'showWebsiteChapter'])->name('chapter.website');
 Route::get('/chapter/website/edit/{id}', [ChapterController::class, 'editWebsite']);
 Route::post('/chapter/website/update/{id}', [ChapterController::class, 'updateWebsite'])->name('chapter.updateweb');
-Route::get('/chapter/view/{id}', [ChapterController::class, 'showChapterView']);
+//Route::get('/chapter/view/{id}', [ChapterController::class, 'showChapterView']);
 //Route::post('/chapter/disband', [ChapterController::class, 'chapterDisband']);
 Route::post('/chapter/disband', [ChapterController::class, 'chapterDisband'])->name('chapter.disband');
 Route::post('/chapter/resetpswd', [ChapterController::class, 'chapterResetPassword'])->name('chapter.resetpswd');
@@ -101,7 +101,7 @@ Route::post('/chapter/updatestatus/{id}', [ChapterController::class, 'updateStat
 /**
  * Routes for Coordinator
  */
-Route::get('userData', [CoordinatorController::class, 'updateemail'])->name('coordinator.upretired');
+//Route::get('userData', [CoordinatorController::class, 'updateemail'])->name('coordinator.upretired');
 Route::get('/coordinator/dashboard/', [CoordinatorController::class, 'showDashboard'])->name('coordinator.showdashboard');
 Route::post('/coordinator/dashboard/{id}', [CoordinatorController::class, 'updateDashboard'])->name('coordinator.updatedashboard');
 Route::get('/coordinatorlist', [CoordinatorController::class, 'index'])->name('coordinator.list');
