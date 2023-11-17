@@ -64,63 +64,15 @@
                     }
                     ?>
                 @endif
-                  @foreach($chapterList as $list)
-                  <?php
-                      $chapterEmailList = DB::table('board_details as bd')
-                                          ->select('bd.email as bor_email')
-                                          ->where('bd.chapter_id', '=', $list->id)
-                                          ->get();
-                      $emailListCord="";
-                      foreach($chapterEmailList as $val){
-                        $email = $val->bor_email;
-                        $escaped_email=str_replace("'", "\\'", $email);
-                        if ($emailListCord==""){
-                            $emailListCord = $escaped_email;
-                        }
-                        else{
-                            $emailListCord .= ";" . $escaped_email;
-                        }
-                      }
-                      $cc_string="";
-                      $reportingList = DB::table('coordinator_reporting_tree')
-                                            ->select('*')
-                                            ->where('id', '=', $list->primary_coordinator_id)
-                                            ->get();
-                            foreach($reportingList as $key => $value)
-                            {
-                                $reportingList[$key] = (array) $value;
-                            }
-                            $filterReportingList = array_filter($reportingList[0]);
-                            unset($filterReportingList['id']);
-                            unset($filterReportingList['layer0']);
-                            $filterReportingList = array_reverse($filterReportingList);
-                            $str = "";
-                            $array_rows=count($filterReportingList);
-                            $down_line_email="";
-                            foreach($filterReportingList as $key =>$val){
-                                //if($corId != $val && $val >1){
-								if($val >1){
-                                    $corList = DB::table('coordinator_details as cd')
-                                                    ->select('cd.email as cord_email')
-                                                    ->where('cd.coordinator_id', '=', $val)
-                                                    ->where('cd.is_active', '=', 1)
-                                                    ->get();
-                                  if ($down_line_email==""){
-                                    if(isset($corList[0]))
-                                      $down_line_email = $corList[0]->cord_email;
-                                  }
-                                  else{
-                                    if(isset($corList[0]))
-                                      $down_line_email .= ";" . $corList[0]->cord_email;
-                                  }
-
-                                }
-                            }
-                            $cc_string = "?cc=" . $down_line_email;
-                  ?>
-                    <tr>
-					  <td><a href="<?php echo url("/chapter/edit/{$list->id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
-                      <td><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=MOMS Club of {{ $list->name }}, {{ $list->state }}"><i class="fa fa-envelope" aria-hidden="true"></i></a></i></td>
+                @foreach($chapterList as $list)
+                @php
+                    $emailDetails = app('App\Http\Controllers\ChapterController')->getEmailDetails($list->id);
+                    $emailListCord = $emailDetails['emailListCord'];
+                    $cc_string = $emailDetails['cc_string'];
+                @endphp
+                <tr>
+                <td><a href="<?php echo url("/chapter/edit/{$list->id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
+                <td><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=MOMS Club of {{ $list->name }}, {{ $list->state }}"><i class="fa fa-envelope" aria-hidden="true"></i></a></td>
                       <td>{{ $list->state }}</td>
                       <td>{{ $list->name }}</td>
                       <td>{{ $list->ein }}</td>

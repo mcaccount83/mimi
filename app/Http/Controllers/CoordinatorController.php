@@ -1245,7 +1245,10 @@ class CoordinatorController extends Controller
     {
         //Get International Coordinator List
         $intCoordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.conference_id as cor_cid', 'rg.short_name as reg_name', 'cp.long_title as position', 'cd.sec_position_id as sec_position_id')
+            ->select('cd.coordinator_id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.conference_id as cor_cid',
+            'rg.short_name as reg_name', 'cp.long_title as position',
+                DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
+                )
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->where('cd.is_active', '=', '1')

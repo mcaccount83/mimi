@@ -45,7 +45,6 @@
               <thead>
 			    <tr>
 				<th></th>
-                <!--<th>Email Board</th>-->
 				<th>State</th>
                 <th>Name</th>
                 <th>Primary Coordinator</th>
@@ -56,70 +55,6 @@
                 <tbody>
 
                 @foreach($chapterList as $list)
-                <?php
-                $chapterEmailList = DB::table('board_details as bd')
-                                          ->select('bd.email as bor_email')
-                                          ->where('bd.chapter_id', '=', $list->id)
-                                          ->get();
-                      $emailListCord="";
-                      foreach($chapterEmailList as $val){
-                        $email = $val->bor_email;
-                        $escaped_email=str_replace("'", "\\'", $email);
-                        if ($emailListCord==""){
-                            $emailListCord = $escaped_email;
-                        }
-                        else{
-                            $emailListCord .= ";" . $escaped_email;
-                        }
-                      }
-                      $cc_string="";
-
-                      $reportingList = DB::table('coordinator_reporting_tree')
-                                            ->select('*')
-                                            ->where('id', '=', $list->primary_coordinator_id)
-                                            ->get();
-                            foreach($reportingList as $key => $value)
-                            {
-                                $reportingList[$key] = (array) $value;
-                            }
-                            $filterReportingList = array_filter($reportingList[0]);
-                            unset($filterReportingList['id']);
-                            unset($filterReportingList['layer0']);
-                            $filterReportingList = array_reverse($filterReportingList);
-                            $str = "";
-                            $array_rows=count($filterReportingList);
-
-                            $down_line_email="";
-                            foreach($filterReportingList as $key =>$val){
-								if($val >1){
-                                    $corList = DB::table('coordinator_details as cd')
-                                                    ->select('cd.email as cord_email')
-                                                    ->where('cd.coordinator_id', '=', $val)
-                                                    ->where('cd.is_active', '=', 1)
-                                                    ->get();
-                                  if ($down_line_email==""){
-                                    if(isset($corList[0]))
-                                      $down_line_email = $corList[0]->cord_email;
-                                  }
-                                  else{
-                                    if(isset($corList[0]))
-                                      $down_line_email .= ";" . $corList[0]->cord_email;
-                                  }
-
-                                }
-                            }
-                            $cc_string = "?cc=" . $down_line_email;
-
-	                $mail_message = "<br>Don't forget to complete the Board Election Report for your chapter!  This report is available now and should be filled out as soon as your chapter has held its election but is due no later than June 30th at 11:59pm.";
-	                $mail_message = "Please submit your report as soon as possible to ensure that your incoming board members have access to all the tools they need to be successful. The information from the report is used for:";
-	                $mail_message .= "<ul><li>Chapter Contacts for your Coordinator Team</li>
-                    <li>Access to MIMI</li>
-                    <li>Inclusion in the Board Discussion Group</li>
-                    <li>Receipt of Conference Newsletter</li>
-                    <li>Payments received after the last day of your renewal month should include a late fee of $10</li></ul>";
-                   $mail_message .= "The Board Election Report (as well as the Financial Report) can be accessed by logging into your MIMI account (<a href='https://momsclub.org/mimi'>https://momsclub.org/mimi</a>) and selecting the buttons at the top of your screen."
-
-                      ?>
                   <tr>
                       <td>
                          <?php if (Session::get('positionid') >=5 && Session::get('positionid') <=7){ ?>
@@ -130,8 +65,6 @@
 							@endif
                         <?php }?>
                           </td>
-                        <!--<td><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Board Election Report Due - MOMS Club of {{ $list->name }}, {{ $list->state }}&body={{ $mail_message }}"><i class="fa fa-envelope" aria-hidden="true"></i></a></td>
-			     	    -->
                             <td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
 						<td>{{ $list->cor_fname }} {{ $list->cor_lname }}</td>

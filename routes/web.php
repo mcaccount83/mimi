@@ -86,6 +86,7 @@ Route::get('/chapter-links', [ChapterController::class, 'chapterLinks'])->name('
  */
 //Route::get('/chapterlist', 'ChapterController@index');
 Route::get('/chapter/list', [ChapterController::class, 'list'])->name('chapter.list');
+Route::get('/chapter/getEmail{id}', [ChapterController::class, 'getEmailDetails'])->name('get.emaildetails');
 Route::get('/chapter/create', [ChapterController::class, 'create'])->name('chapters.create');
 Route::post('/chapter/create', [ChapterController::class, 'store'])->name('chapters.store');
 Route::get('/chapter/zapped/view/{id}', [ChapterController::class, 'showZappedChapterView']);

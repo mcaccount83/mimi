@@ -44,21 +44,8 @@
                         <td>{{ $list->cor_fname }}</td>
                         <td>{{ $list->cor_lname }}</td>
                         <td>{{ $list->position }}</td>
-                        <?php
-                        $coordinatorSecPos = DB::table('coordinator_position as cp')
-                            ->select('cp.long_title as sec_pos')
-                            ->join('coordinator_details as cd', 'cd.sec_position_id', '=', 'cp.id')
-                            ->where('cd.coordinator_id', $list->cor_id)
-                            ->get();
-                        ?>
-
-                        @if($coordinatorSecPos->isEmpty())
-                            <td></td>
-                        @else
-                            <td>{{$coordinatorSecPos[0]->sec_pos}}</td>
-                        @endif
+                        <td>{{ $list->sec_pos }}</td>
                         <td><a href="mailto:{{ $list->cor_email }}">{{ $list->cor_email }}</a></td>
-
                   @endforeach
                   </tbody>
                 </table>

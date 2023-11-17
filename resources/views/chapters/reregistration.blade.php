@@ -68,71 +68,29 @@
                 </thead>
                 <tbody>
                     @foreach($reChapterList as $list)
-                    <?php
-                        $chapterEmailList = DB::table('board_details as bd')
-                                            ->select('bd.email as bor_email')
-                                            ->where('bd.chapter_id', '=', $list->id)
-                                            ->get();
-                        $emailListCord="";
-                        foreach($chapterEmailList as $val){
-                          $email = $val->bor_email;
-                          $escaped_email=str_replace("'", "\\'", $email);
-                          if ($emailListCord==""){
-                              $emailListCord = $escaped_email;
-                          }
-                          else{
-                              $emailListCord .= ";" . $escaped_email;
-                          }
-                        }
-                        $cc_string="";
-                        $reportingList = DB::table('coordinator_reporting_tree')
-                                              ->select('*')
-                                              ->where('id', '=', $list->primary_coordinator_id)
-                                              ->get();
-                              foreach($reportingList as $key => $value)
-                              {
-                                  $reportingList[$key] = (array) $value;
-                              }
-                              $filterReportingList = array_filter($reportingList[0]);
-                              unset($filterReportingList['id']);
-                              unset($filterReportingList['layer0']);
-                              $filterReportingList = array_reverse($filterReportingList);
-                              $str = "";
-                              $array_rows=count($filterReportingList);
-                              $down_line_email="";
-                              foreach($filterReportingList as $key =>$val){
-                                  if($val >1){
-                                      $corList = DB::table('coordinator_details as cd')
-                                                      ->select('cd.email as cord_email')
-                                                      ->where('cd.coordinator_id', '=', $val)
-                                                      ->where('cd.is_active', '=', 1)
-                                                      ->get();
-                                    if ($down_line_email==""){
-                                      if(isset($corList[0]))
-                                        $down_line_email = $corList[0]->cord_email;
-                                    }
-                                    else{
-                                      if(isset($corList[0]))
-                                        $down_line_email .= ";" . $corList[0]->cord_email;
-                                    }
+                    @php
+                        $emailDetails = app('App\Http\Controllers\ChapterController')->getEmailDetails($list->id);
+                        $emailListCord = $emailDetails['emailListCord'];
+                        $cc_string = $emailDetails['cc_string'];
+                        $reregistration_url = "https://momsclub.org/resources/re-registration-payment/";
 
-                                  }
-                              }
-                              $cc_string = "?cc=" . $down_line_email;
-
-                    $reregistration_url = "https://momsclub.org/resources/re-registration-payment/";
-
-	                $mail_message = "<br><hr>
-                    <b><p>Calculate your payment:</p></b>
-                    <ul><li>Determine how many people paid dues to your chapter since your last re-registration payment through today.</li>
-                    <li>Add in any people who paid reduced dues or had their dues waived due to financial hardship</li>
-                    <li>If this total amount of members is less than 10, make your check for the amount of $50</li>
-                    <li>If this total amount of members is 10 or more, multiply the number by $5.00 to get your total amount due</li>
-                    <li>Payments received after the last day of your renewal month should include a late fee of $10</li></ul>";
-                    $mail_message .= "<b><p>Make your payment:</p></b>
-	                <ul><li><a href='$reregistration_url'>Pay Online</a> (Password:  daytime support)</li>
-	                <li>Pay via Mail to: Chapter Re-Registration, 208 Hewitt Dr. Ste 103 #328, Waco, TX 76712</li></ul>";
-                      ?>
+                        $mail_message = "**Insert Personal Message Here**
+                                        <br>
+                                        MCL,<br>
+                                        International MOMS Club
+                                        <br>
+                                        <hr>
+                                        <b><p>Calculate your payment:</p></b>
+                                        <ul><li>Determine how many people paid dues to your chapter since your last re-registration payment through today.</li>
+                                        <li>Add in any people who paid reduced dues or had their dues waived due to financial hardship</li>
+                                        <li>If this total amount of members is less than 10, make your check for the amount of $50</li>
+                                        <li>If this total amount of members is 10 or more, multiply the number by $5.00 to get your total amount due</li>
+                                        <li>Payments received after the last day of your renewal month should include a late fee of $10</li></ul>
+                                        <br>
+                                        <b><p>Make your payment:</p></b>
+                                        <ul><li><a href='$reregistration_url'>Pay Online</a> (Password:  daytime support)</li>
+                                        <li>Pay via Mail to: Chapter Re-Registration, 208 Hewitt Dr. Ste 103 #328, Waco, TX 76712</li></ul>";
+                    @endphp
                   <tr>
                         <td>
                         <?php if (Session::get('positionid') ==6 ){ ?>
@@ -144,7 +102,7 @@
                                 <a href="<?php echo url("/chapter/re-registration/notes/{$list->id}") ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                         <?php }?>
                         </td>
-                        <td><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Re-Registration Reminder - MOMS Club of {{ $list->name }}, {{ $list->state_short_name }}&body={{ $mail_message }}"><i class="fa fa-envelope" aria-hidden="true"></i></a></td>
+                        <td><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Re-Registration Reminder - MOMS Club of {{ $list->name }}, {{ $list->state_short_name }}&body={{ urlencode($mail_message) }}"><i class="fa fa-envelope" aria-hidden="true"></i></a></td>
                         <td>{{ $list->state_short_name }}</td>
                         <td>{{ $list->name }}</td>
                         <td>{{ $list->reg_notes }}</td>

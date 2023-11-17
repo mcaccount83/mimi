@@ -121,6 +121,76 @@ class ChapterController extends Controller
     }
 
     /**
+     * Downline for Emailing Chapter and Coordintors
+     */
+    public function getEmailDetails($id)
+    {
+        $chapterList = DB::table('chapters')
+            ->select('chapters.id as id', 'chapters.primary_coordinator_id as primary_coordinator_id')
+            ->where('chapters.id', '=', $id)
+            ->first();
+
+        $chapterEmailList = DB::table('board_details as bd')
+        ->select('bd.email as bor_email')
+        ->where('bd.chapter_id', '=', $chapterList->id)
+        ->get();
+
+        $emailListCord="";
+        foreach($chapterEmailList as $val){
+        $email = $val->bor_email;
+        $escaped_email=str_replace("'", "\\'", $email);
+        if ($emailListCord==""){
+        $emailListCord = $escaped_email;
+        }
+        else{
+        $emailListCord .= ";" . $escaped_email;
+        }
+        }
+        $cc_string="";
+        $reportingList = DB::table('coordinator_reporting_tree')
+                ->select('*')
+                ->where('id', '=', $chapterList->primary_coordinator_id)
+                ->get();
+        foreach($reportingList as $key => $value)
+        {
+        $reportingList[$key] = (array) $value;
+        }
+        $filterReportingList = array_filter($reportingList[0]);
+        unset($filterReportingList['id']);
+        unset($filterReportingList['layer0']);
+        $filterReportingList = array_reverse($filterReportingList);
+        $str = "";
+        $array_rows=count($filterReportingList);
+        $down_line_email="";
+        foreach($filterReportingList as $key =>$val){
+        //if($corId != $val && $val >1){
+        if($val >1){
+        $corList = DB::table('coordinator_details as cd')
+                        ->select('cd.email as cord_email')
+                        ->where('cd.coordinator_id', '=', $val)
+                        ->where('cd.is_active', '=', 1)
+                        ->get();
+        if ($down_line_email==""){
+        if(isset($corList[0]))
+            $down_line_email = $corList[0]->cord_email;
+        }
+        else{
+        if(isset($corList[0]))
+            $down_line_email .= ";" . $corList[0]->cord_email;
+        }
+
+        }
+        }
+        $cc_string = "?cc=" . $down_line_email;
+
+        return [
+            'emailListCord' => $emailListCord,
+            'cc_string' => $cc_string,
+        ];
+
+        }
+
+    /**
      * Add New chapter list (View)
      */
     public function create(Request $request): View
