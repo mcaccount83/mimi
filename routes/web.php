@@ -54,7 +54,7 @@ use App\Http\Controllers\ReportController;
 
 Auth::routes();
 
-Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+Route::get('/logout', [Auth\LoginController::class, 'logout'])->name('logout');
 
 Route::middleware(['preventBackHistory'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
