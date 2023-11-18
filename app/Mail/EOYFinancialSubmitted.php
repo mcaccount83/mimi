@@ -25,13 +25,13 @@ class EOYFinancialSubmitted extends Mailable
         $this->coordinator_array = $coordinator_array;
     }
 
-   /**
+    /**
      * Build the message.
      */
     public function build(): static
     {
         return $this
-        ->subject('Financial Report Submitted')
-        ->markdown('emails.endofyear.financialsubmitted');
+            ->subject('Financial Report Submitted')
+            ->markdown('emails.endofyear.financialsubmitted');
     }
 }

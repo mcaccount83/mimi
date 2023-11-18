@@ -12,7 +12,7 @@ class ChaptersPrimaryCoordinatorChangePCNotice extends Mailable
 
     public $mailData;
 
-     /**
+    /**
      * Create a new message instance.
      *
      * @return void
@@ -21,6 +21,7 @@ class ChaptersPrimaryCoordinatorChangePCNotice extends Mailable
     {
         $this->mailData = $mailData;
     }
+
     /**
      * Build the message.
      */
