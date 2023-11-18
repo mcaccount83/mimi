@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ChapersUpdatePrimaryCoor;
 use App\Mail\CoordinatorRetireAdmin;
 use App\Models\FinancialReport;
 use App\Models\User;
@@ -770,38 +769,37 @@ class CoordinatorController extends Controller
         }
 
         ///Reassign Direct Report Coordinators that Changed
-		$rowcountCord = $_POST['CoordinatorCount'];
-	    for($i=0; $i<$rowcountCord; $i++){
-			$new_coordinator_field = "Report" . $i;
-			$new_coordinator_id = $_POST[$new_coordinator_field];
+        $rowcountCord = $_POST['CoordinatorCount'];
+        for ($i = 0; $i < $rowcountCord; $i++) {
+            $new_coordinator_field = 'Report'.$i;
+            $new_coordinator_id = $_POST[$new_coordinator_field];
 
-			$coordinator_field = "CoordinatorIDRow" . $i;
-			$coordinator_id = $_POST[$coordinator_field];
+            $coordinator_field = 'CoordinatorIDRow'.$i;
+            $coordinator_id = $_POST[$coordinator_field];
 
-			$this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
-		}
-
-        //Reassign Primary Coordinatory Chapters that Changed
-		$rowcountChapter = $_POST['ChapterCount'];
-		for($i=0; $i<$rowcountChapter; $i++){
-			$coordinator_field = "PCID" . $i;
-			$coordinator_id = $_POST[$coordinator_field];
-
-			$chapter_field = "ChapterIDRow" . $i;
-			$chapter_id = $_POST[$chapter_field];
-
-			$this->ReassignChapter($request, $chapter_id, $coordinator_id, true);
+            $this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
         }
 
-        if($rowcountCord == 0 && $rowcountChapter == 0){
+        //Reassign Primary Coordinatory Chapters that Changed
+        $rowcountChapter = $_POST['ChapterCount'];
+        for ($i = 0; $i < $rowcountChapter; $i++) {
+            $coordinator_field = 'PCID'.$i;
+            $coordinator_id = $_POST[$coordinator_field];
+
+            $chapter_field = 'ChapterIDRow'.$i;
+            $chapter_id = $_POST[$chapter_field];
+
+            $this->ReassignChapter($request, $chapter_id, $coordinator_id, true);
+        }
+
+        if ($rowcountCord == 0 && $rowcountChapter == 0) {
 
         }
 
         //Reassign Report To / Direct Supervisor that Changed
-            $coordinator_id = $request->get('coordinator_id');
-            $new_coordinator_id = $request->get('cord_report_pc');
-                $this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
-
+        $coordinator_id = $request->get('coordinator_id');
+        $new_coordinator_id = $request->get('cord_report_pc');
+        $this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
 
         //Save other changes
         $position_id = $request->get('cord_pri_pos');
@@ -1246,9 +1244,9 @@ class CoordinatorController extends Controller
         //Get International Coordinator List
         $intCoordinatorList = DB::table('coordinator_details as cd')
             ->select('cd.coordinator_id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.conference_id as cor_cid',
-            'rg.short_name as reg_name', 'cp.long_title as position',
+                'rg.short_name as reg_name', 'cp.long_title as position',
                 DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
-                )
+            )
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->where('cd.is_active', '=', '1')

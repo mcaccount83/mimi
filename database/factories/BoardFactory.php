@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Board;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BoardFactory extends Factory
 {
