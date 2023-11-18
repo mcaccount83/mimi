@@ -115,11 +115,10 @@ return [
     */
 
     'markdown' => [
-        'theme' => 'email_style',
+        'theme' => 'default',
 
         'paths' => [
-            //resource_path('views/vendor/mail'),  //default
-            resource_path('views/layouts/mail'),
+            resource_path('views/vendor/mail'),
         ],
     ],
 

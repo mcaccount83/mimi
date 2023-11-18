@@ -8,9 +8,9 @@ use Throwable;
 class Handler extends ExceptionHandler
 {
     /**
-     * A list of the inputs that are never flashed for validation exceptions.
+     * The list of the inputs that are never flashed to the session on validation exceptions.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $dontFlash = [
         'current_password',
@@ -27,25 +27,4 @@ class Handler extends ExceptionHandler
             //
         });
     }
-
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    // public function render($request, Throwable $exception)
-    //  {
-    //     if ($exception instanceof \Symfony\Component\HttpKernel\Exception\HttpException) {
-    //         if ($exception->getStatusCode() == 404) {
-    //             return redirect()->to('/login');
-    //         }
-
-    //        if ($exception->getStatusCode() == 500) {
-    //             return redirect()->to('/login');
-    //         }
-    //      } else {
-    //         return parent::render($request, $exception);
-    //     }
-    //  }
 }
