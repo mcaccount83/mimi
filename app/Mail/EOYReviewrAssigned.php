@@ -12,7 +12,7 @@ class EOYReviewrAssigned extends Mailable
 
     public $mailData;
 
-  /**
+    /**
      * Create a new message instance.
      *
      * @return void
@@ -28,7 +28,7 @@ class EOYReviewrAssigned extends Mailable
     public function build(): static
     {
         return $this
-        ->subject('Financial Reviewer Assigned')
-        ->markdown('emails.endofyear.reviewerassigned');
+            ->subject('Financial Reviewer Assigned')
+            ->markdown('emails.endofyear.reviewerassigned');
     }
 }

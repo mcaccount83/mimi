@@ -8,7 +8,6 @@ use App\Mail\EOYLateReportReminder;
 use App\Models\Chapter;
 use App\Models\User;
 use Exception;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -1622,51 +1621,50 @@ class ReportController extends Controller
         if ($chapters->isEmpty()) {
             return redirect()->back()->with('info', 'There are no Chapters with Board Reports Due.');
         } else {
-        foreach ($chapters as $chapter) {
-        if ($chapter->name) {
-                $chapterEmails[$chapter->name][] = $chapter->bor_email; // Store emails by chapter name
+            foreach ($chapters as $chapter) {
+                if ($chapter->name) {
+                    $chapterEmails[$chapter->name][] = $chapter->bor_email; // Store emails by chapter name
 
-                $cc_email1 = $this->getCCMail($chapter->pcid);
-                $cc_email1 = array_filter($cc_email1);
+                    $cc_email1 = $this->getCCMail($chapter->pcid);
+                    $cc_email1 = array_filter($cc_email1);
 
-                if (!empty($cc_email1)) {
-                    $coordinatorEmails[$chapter->name] = $cc_email1; // Store coordinator emails by chapter
+                    if (! empty($cc_email1)) {
+                        $coordinatorEmails[$chapter->name] = $cc_email1; // Store coordinator emails by chapter
+                    }
+                }
+
+                // Check if ch_email is not null before adding it to the chapterChEmails array
+                if ($chapter->ch_email) {
+                    $chapterChEmails[$chapter->name] = $chapter->ch_email;
+                    $chapterEmails[$chapter->name][] = $chapter->ch_email; // Add ch_email to chapterEmails
+                }
+
+                // Set the state for this chapter
+                $chapterState = $chapter->state; // Use the state for this chapter
+
+                $mailData[$chapter->name] = [
+                    'chapterName' => $chapter->name,
+                    'chapterState' => $chapterState,
+                ];
+
+                if (isset($chapterChEmails[$chapter->name])) {
+                    $chapterEmails[$chapter->name][] = $chapterChEmails[$chapter->name];
                 }
             }
+        }
 
-            // Check if ch_email is not null before adding it to the chapterChEmails array
-            if ($chapter->ch_email) {
-                $chapterChEmails[$chapter->name] = $chapter->ch_email;
-                $chapterEmails[$chapter->name][] = $chapter->ch_email; // Add ch_email to chapterEmails
-            }
+        // Send a single email with multiple recipients
+        foreach ($mailData as $chapterName => $data) {
+            $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
+            $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
 
-            // Set the state for this chapter
-            $chapterState = $chapter->state; // Use the state for this chapter
-
-            $mailData[$chapter->name] = [
-                'chapterName' => $chapter->name,
-                'chapterState' => $chapterState,
-             ];
-
-
-            if (isset($chapterChEmails[$chapter->name])) {
-                $chapterEmails[$chapter->name][] = $chapterChEmails[$chapter->name];
+            if (! empty($emailRecipients)) {
+                Mail::to($emailRecipients)
+                    ->cc($cc_email)
+                    ->send(new EOYElectionReportReminder($data));
             }
         }
-    }
-
-    // Send a single email with multiple recipients
-    foreach ($mailData as $chapterName => $data) {
-        $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
-        $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
-
-        if (!empty($emailRecipients)) {
-            Mail::to($emailRecipients)
-                ->cc($cc_email)
-                ->send(new EOYElectionReportReminder($data));
-        }
-    }
-       try {
+        try {
             DB::commit();
         } catch (\Exception $e) {
             // Rollback Transaction
@@ -1674,13 +1672,13 @@ class ReportController extends Controller
             exit();
             // Log the error
             Log::error($e);
+
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
 
         return redirect()->to('/yearreports/boardinfo')->with('success', 'Board Election Reminders have been successfully sent.');
 
     }
-
 
     /**
      * Financial Report Reminder Auto Send
@@ -1715,51 +1713,50 @@ class ReportController extends Controller
         if ($chapters->isEmpty()) {
             return redirect()->back()->with('info', 'There are no Chapters with Financial Reports Due.');
         } else {
-        foreach ($chapters as $chapter) {
-        if ($chapter->name) {
-                $chapterEmails[$chapter->name][] = $chapter->bor_email; // Store emails by chapter name
+            foreach ($chapters as $chapter) {
+                if ($chapter->name) {
+                    $chapterEmails[$chapter->name][] = $chapter->bor_email; // Store emails by chapter name
 
-                $cc_email1 = $this->getCCMail($chapter->pcid);
-                $cc_email1 = array_filter($cc_email1);
+                    $cc_email1 = $this->getCCMail($chapter->pcid);
+                    $cc_email1 = array_filter($cc_email1);
 
-                if (!empty($cc_email1)) {
-                    $coordinatorEmails[$chapter->name] = $cc_email1; // Store coordinator emails by chapter
+                    if (! empty($cc_email1)) {
+                        $coordinatorEmails[$chapter->name] = $cc_email1; // Store coordinator emails by chapter
+                    }
+                }
+
+                // Check if ch_email is not null before adding it to the chapterChEmails array
+                if ($chapter->ch_email) {
+                    $chapterChEmails[$chapter->name] = $chapter->ch_email;
+                    $chapterEmails[$chapter->name][] = $chapter->ch_email; // Add ch_email to chapterEmails
+                }
+
+                // Set the state for this chapter
+                $chapterState = $chapter->state; // Use the state for this chapter
+
+                $mailData[$chapter->name] = [
+                    'chapterName' => $chapter->name,
+                    'chapterState' => $chapterState,
+                ];
+
+                if (isset($chapterChEmails[$chapter->name])) {
+                    $chapterEmails[$chapter->name][] = $chapterChEmails[$chapter->name];
                 }
             }
+        }
 
-            // Check if ch_email is not null before adding it to the chapterChEmails array
-            if ($chapter->ch_email) {
-                $chapterChEmails[$chapter->name] = $chapter->ch_email;
-                $chapterEmails[$chapter->name][] = $chapter->ch_email; // Add ch_email to chapterEmails
-            }
+        // Send a single email with multiple recipients
+        foreach ($mailData as $chapterName => $data) {
+            $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
+            $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
 
-            // Set the state for this chapter
-            $chapterState = $chapter->state; // Use the state for this chapter
-
-            $mailData[$chapter->name] = [
-                'chapterName' => $chapter->name,
-                'chapterState' => $chapterState,
-             ];
-
-
-            if (isset($chapterChEmails[$chapter->name])) {
-                $chapterEmails[$chapter->name][] = $chapterChEmails[$chapter->name];
+            if (! empty($emailRecipients)) {
+                Mail::to($emailRecipients)
+                    ->cc($cc_email)
+                    ->send(new EOYFinancialReportReminder($data));
             }
         }
-    }
-
-    // Send a single email with multiple recipients
-    foreach ($mailData as $chapterName => $data) {
-        $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
-        $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
-
-        if (!empty($emailRecipients)) {
-            Mail::to($emailRecipients)
-                ->cc($cc_email)
-                ->send(new EOYFinancialReportReminder($data));
-        }
-    }
-       try {
+        try {
             DB::commit();
         } catch (\Exception $e) {
             // Rollback Transaction
@@ -1767,13 +1764,13 @@ class ReportController extends Controller
             exit();
             // Log the error
             Log::error($e);
+
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
 
         return redirect()->to('/yearreports/review')->with('success', 'Financial Report Reminders have been successfully sent.');
 
     }
-
 
     /**
      * EOY Reports LATE Reminder Auto Send
@@ -1786,7 +1783,7 @@ class ReportController extends Controller
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         //Get Chapter List mapped with login coordinator
-        $chapters = Chapter::select('chapters.*','chapters.name as name', 'state.state_short_name as state', 'board_details.email as bor_email',
+        $chapters = Chapter::select('chapters.*', 'chapters.name as name', 'state.state_short_name as state', 'board_details.email as bor_email',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
             'board_details.board_position_id')
             ->join('state', 'chapters.state', '=', 'state.id')
@@ -1811,55 +1808,54 @@ class ReportController extends Controller
         if ($chapters->isEmpty()) {
             return redirect()->back()->with('info', 'There are no Chapters with End of Year Reports Due.');
         } else {
-        foreach ($chapters as $chapter) {
-        if ($chapter->name) {
-                $chapterEmails[$chapter->name][] = $chapter->bor_email; // Store emails by chapter name
+            foreach ($chapters as $chapter) {
+                if ($chapter->name) {
+                    $chapterEmails[$chapter->name][] = $chapter->bor_email; // Store emails by chapter name
 
-                $cc_email1 = $this->getCCMail($chapter->pcid);
-                $cc_email1 = array_filter($cc_email1);
+                    $cc_email1 = $this->getCCMail($chapter->pcid);
+                    $cc_email1 = array_filter($cc_email1);
 
-                if (!empty($cc_email1)) {
-                    $coordinatorEmails[$chapter->name] = $cc_email1; // Store coordinator emails by chapter
+                    if (! empty($cc_email1)) {
+                        $coordinatorEmails[$chapter->name] = $cc_email1; // Store coordinator emails by chapter
+                    }
+                }
+
+                // Check if ch_email is not null before adding it to the chapterChEmails array
+                if ($chapter->ch_email) {
+                    $chapterChEmails[$chapter->name] = $chapter->ch_email;
+                    $chapterEmails[$chapter->name][] = $chapter->ch_email; // Add ch_email to chapterEmails
+                }
+
+                // Set the state for this chapter
+                $chapterState = $chapter->state; // Use the state for this chapter
+
+                $mailData[$chapter->name] = [
+                    'chapterName' => $chapter->name,
+                    'chapterState' => $chapterState,
+                    'boardElectionReportReceived' => $chapter->new_board_submitted,
+                    'financialReportReceived' => $chapter->financial_report_received,
+                    '990NSubmissionReceived' => $chapter->financial_report_received,
+                    'einLetterCopyReceived' => $chapter->ein_letter_path,
+                ];
+
+                if (isset($chapterChEmails[$chapter->name])) {
+                    $chapterEmails[$chapter->name][] = $chapterChEmails[$chapter->name];
                 }
             }
+        }
 
-            // Check if ch_email is not null before adding it to the chapterChEmails array
-            if ($chapter->ch_email) {
-                $chapterChEmails[$chapter->name] = $chapter->ch_email;
-                $chapterEmails[$chapter->name][] = $chapter->ch_email; // Add ch_email to chapterEmails
-            }
+        // Send a single email with multiple recipients
+        foreach ($mailData as $chapterName => $data) {
+            $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
+            $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
 
-            // Set the state for this chapter
-            $chapterState = $chapter->state; // Use the state for this chapter
-
-            $mailData[$chapter->name] = [
-                'chapterName' => $chapter->name,
-                'chapterState' => $chapterState,
-                'boardElectionReportReceived' => $chapter->new_board_submitted,
-                'financialReportReceived' => $chapter->financial_report_received,
-                '990NSubmissionReceived' => $chapter->financial_report_received,
-                'einLetterCopyReceived' => $chapter->ein_letter_path,
-             ];
-
-
-            if (isset($chapterChEmails[$chapter->name])) {
-                $chapterEmails[$chapter->name][] = $chapterChEmails[$chapter->name];
+            if (! empty($emailRecipients)) {
+                Mail::to($emailRecipients)
+                    ->cc($cc_email)
+                    ->send(new EOYLateReportReminder($data));
             }
         }
-    }
-
-    // Send a single email with multiple recipients
-    foreach ($mailData as $chapterName => $data) {
-        $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
-        $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
-
-        if (!empty($emailRecipients)) {
-            Mail::to($emailRecipients)
-                ->cc($cc_email)
-                ->send(new EOYLateReportReminder($data));
-        }
-    }
-       try {
+        try {
             DB::commit();
         } catch (\Exception $e) {
             // Rollback Transaction
@@ -1867,14 +1863,13 @@ class ReportController extends Controller
             exit();
             // Log the error
             Log::error($e);
+
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
 
         return redirect()->to('/yearreports/eoystatus')->with('success', 'EOY Late Notices have been successfully sent.');
 
     }
-
-
 
     /**
      * Activate New Board Info Received
@@ -1993,7 +1988,6 @@ class ReportController extends Controller
             return $message = 'empty';
         }
     }
-
 
     /**
      * Boundaires Issues
@@ -2123,12 +2117,12 @@ class ReportController extends Controller
                 if ($request->has('check') && $request->input('check') == 'yes') {
                     $checkBoxStatus = 'checked';
                     $chapterList = DB::table('chapters as ch')
-                    ->select('ch.id as id', 'ch.name as name', 'ch.primary_coordinator_id as pc_id', 'fr.reviewer_id as reviewer_id',
-                        'cd.coordinator_id as cord_id', 'cd.first_name as reviewer_first_name', 'cd.last_name as reviewer_last_name', 'st.state_short_name as state',
-                        'fr.award_1_nomination_type', 'fr.award_2_nomination_type', 'fr.award_3_nomination_type',
-                        'fr.award_4_nomination_type', 'fr.award_5_nomination_type', 'fr.check_award_1_approved as award_1_approved',
-                        'fr.check_award_2_approved as award_2_approved', 'fr.check_award_3_approved as award_3_approved',
-                        'fr.check_award_4_approved as award_4_approved', 'fr.check_award_5_approved as award_5_approved')
+                        ->select('ch.id as id', 'ch.name as name', 'ch.primary_coordinator_id as pc_id', 'fr.reviewer_id as reviewer_id',
+                            'cd.coordinator_id as cord_id', 'cd.first_name as reviewer_first_name', 'cd.last_name as reviewer_last_name', 'st.state_short_name as state',
+                            'fr.award_1_nomination_type', 'fr.award_2_nomination_type', 'fr.award_3_nomination_type',
+                            'fr.award_4_nomination_type', 'fr.award_5_nomination_type', 'fr.check_award_1_approved as award_1_approved',
+                            'fr.check_award_2_approved as award_2_approved', 'fr.check_award_3_approved as award_3_approved',
+                            'fr.check_award_4_approved as award_4_approved', 'fr.check_award_5_approved as award_5_approved')
                         ->join('state as st', 'ch.state', '=', 'st.id')
                         ->leftJoin('financial_report as fr', function ($join) {
                             $join->on('fr.chapter_id', '=', 'ch.id');

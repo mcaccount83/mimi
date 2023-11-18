@@ -3,10 +3,7 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class EOYFinancialReportReminder extends Mailable
@@ -25,14 +22,13 @@ class EOYFinancialReportReminder extends Mailable
         $this->mailData = $mailData;
     }
 
-
     /**
      * Build the message.
      */
     public function build(): static
     {
         return $this
-        ->subject('Financial Report Reminder')
-        ->markdown('emails.endofyear.financialreportreminder');
+            ->subject('Financial Report Reminder')
+            ->markdown('emails.endofyear.financialreportreminder');
     }
 }
