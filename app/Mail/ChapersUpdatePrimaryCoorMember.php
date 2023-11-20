@@ -30,5 +30,5 @@ class ChapersUpdatePrimaryCoorMember extends Mailable
         return $this
             ->subject('Chapter Update Notification')
             ->markdown('emails.chapterupdate.primarycoormember');
-        }
     }
+}

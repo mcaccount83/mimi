@@ -3,10 +3,7 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class ChapersUpdateEINCoor extends Mailable
@@ -33,5 +30,5 @@ class ChapersUpdateEINCoor extends Mailable
         return $this
             ->subject('Chapter Name Change Notification')
             ->markdown('emails.chapterupdate.eincoor');
-        }
     }
+}

@@ -22,14 +22,13 @@ class EOYElectionReportReminder extends Mailable
         $this->mailData = $mailData;
     }
 
-
     /**
      * Build the message.
      */
     public function build(): static
     {
         return $this
-        ->subject('Election Report Reminder')
-        ->markdown('emails.endofyear.electionreportreminder');
+            ->subject('Election Report Reminder')
+            ->markdown('emails.endofyear.electionreportreminder');
     }
 }

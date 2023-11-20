@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ChapersUpdateListAdmin;
-use App\Mail\ChapersUpdatePrimaryCoor;
 use App\Mail\ChapersUpdateListAdminMember;
+use App\Mail\ChapersUpdatePrimaryCoor;
 use App\Mail\ChapersUpdatePrimaryCoorMember;
 use App\Mail\EOYFinancialSubmitted;
 use App\Mail\WebsiteReviewNotice;
@@ -814,7 +814,7 @@ class BoardController extends Controller
             $to_email = $chapterInfo[0]->cor_email;
 
             Mail::to($to_email, 'MOMS Club')
-                    ->send(new ChapersUpdatePrimaryCoorMember($mailData));
+                ->send(new ChapersUpdatePrimaryCoorMember($mailData));
 
             //List Admin Notification//
             $to_email2 = 'listadmin@momsclub.org';
@@ -3171,17 +3171,17 @@ class BoardController extends Controller
             ->where('id', '=', $chId)
             ->get();
 
-            $mailData = [
-                'chapter_name' => $fiancialReport->get('ch_name'),
-                'chapter_state' => $fiancialReport->get('ch_state'),
-                'roster_path' => $fiancialReport->get('roster_path'),
-                'file_irs_path' => $fiancialReport->get('file_irs_path'),
-                'bank_statement_included_path' => $fiancialReport->get('bank_statement_included_path'),
-                'bank_statement_2_included_path' => $fiancialReport->get('bank_statement_2_included_path'),
-            ];
+        $mailData = [
+            'chapter_name' => $fiancialReport->get('ch_name'),
+            'chapter_state' => $fiancialReport->get('ch_state'),
+            'roster_path' => $fiancialReport->get('roster_path'),
+            'file_irs_path' => $fiancialReport->get('file_irs_path'),
+            'bank_statement_included_path' => $fiancialReport->get('bank_statement_included_path'),
+            'bank_statement_2_included_path' => $fiancialReport->get('bank_statement_2_included_path'),
+        ];
 
-         //Send email to new Assigned Reviewer//
-         Mail::to($to_email)
+        //Send email to new Assigned Reviewer//
+        Mail::to($to_email)
             ->send(new EOYFinancialSubmitted($mailData, $coordinator_array));
 
         return true;
