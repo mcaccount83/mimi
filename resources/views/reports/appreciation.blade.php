@@ -23,13 +23,13 @@
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">Report of Volunteer Appreciation</h3>
-             
+
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
               <table id="chapterlist_zapped" class="table table-bordered table-hover">
-				<thead> 
+				<thead>
 			    <tr>
 			        <th></th>
 					<th>First Name</th>
@@ -47,11 +47,10 @@
                     <th>9 Years</th>
                     <th>Necklace</th>
                     <th>Top Tier/Other</th>
-					
                 </tr>
                 </thead>
                 <tbody>
-                    
+
                 @foreach($coordinatorList as $list)
                   <tr>
                     <td><a href="<?php echo url("/coordinator/appreciation/{$list->cor_id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
@@ -84,9 +83,9 @@
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection

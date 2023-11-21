@@ -69,27 +69,19 @@
 						<?php if (Session::get('positionid') <=7 || $positionid = 25){ ?>
 						<a href="<?php //echo url("/chapter/edit/{$list->id}")
 							echo url("/chapter/financial/{$list->chap_id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
+							<?php }?>
 							</td>
 						<td><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Financial Report Review - MOMS Club of {{ $list->name }}, {{ $list->state }}"><i class="fa fa-envelope" aria-hidden="true"></i></a></i></td>
 						<td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
                         <td>{{ $list->fname }} {{ $list->lname }}</td>
-                                			<?php
-                                                    $primaryCoor = DB::table('coordinator_details as cd')
-                                                        ->select('cd.first_name as pfname', 'cd.last_name as plname')
-                                                        ->where('cd.coordinator_id', $list->primary_coordinator_id)
-                                                        ->get();
-                                            ?>
-                        <td>{{ $primaryCoor[0]->pfname }} {{$primaryCoor[0]->plname}}</td>
+                        <td>{{ $list->pfname }} {{$list->plname}}</td>
                         <td style="background-color: @if($list->financial_report_received == '1') transparent; @else #FF000050; @endif;">
                             @if($list->financial_report_received == '1')
                                 YES
                             @else
                                 NO
                             @endif
-
-
-							<?php }?>
 						</td>
                         <td style="background-color: @if($list->report_complete == '1') transparent; @else #FF000050; @endif;">
                             @if($list->report_complete == '1')

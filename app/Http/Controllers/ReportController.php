@@ -442,6 +442,7 @@ class ReportController extends Controller
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
+            ->where('chapters.members_paid_for', '>=', '60')
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
             ->orderBy('st.state_short_name')
             ->orderBy('chapters.name')
@@ -458,6 +459,7 @@ class ReportController extends Controller
                     ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '1')
+                    ->where('chapters.members_paid_for', '>=', '60')
                     ->where('chapters.primary_coordinator_id', '=', $corId)
                     ->orderBy('st.state_short_name')
                     ->orderBy('chapters.name')
@@ -874,10 +876,66 @@ class ReportController extends Controller
             ->orderBy('rg.short_name')
             ->orderByDesc('cp.id')
             ->get();
+
+            foreach ($coordinatorList as $list) {
+                $reportingData = $this->calculateReporting($list->cor_id, $list->layer_id, $inQryArr);
+
+                $list->direct_report = $reportingData['direct_report'];
+                $list->indirect_report = $reportingData['indirect_report'];
+                $list->total_report = $reportingData['total_report'];
+            }
+
         $data = ['coordinatorList' => $coordinatorList];
 
         return view('reports.chaptervolunteer')->with($data);
     }
+
+    /**
+     * Calculate Direct/Indirect Reports
+     */
+    private function calculateReporting($coordinatorId, $corlayerId, $inQryArr)
+    {
+        // Calculate direct chapter report
+        $coordinator_options = DB::table('chapters')
+            ->select('name')
+            ->where('primary_coordinator_id', $coordinatorId)
+            ->where('is_active', '1')
+            ->get();
+        $direct_report = count($coordinator_options);
+
+        // Calculate indirect chapter report
+        $sqlLayerId = 'crt.layer' . $corlayerId;
+        $reportIdList = DB::table('coordinator_reporting_tree as crt')
+            ->select('crt.id')
+            ->where($sqlLayerId, '=', $coordinatorId)
+            ->get();
+
+        $inQryStr = '';
+        foreach ($reportIdList as $key => $val) {
+            $inQryStr .= $val->id . ',';
+        }
+        $inQryStr = rtrim($inQryStr, ',');
+        $inQryArr = explode(',', $inQryStr);
+
+        $indirectChapterReport = DB::table('chapters')
+            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.inquiries_contact as inq_con', 'chapters.territory as terry', 'chapters.status as status', 'chapters.inquiries_note as inq_note')
+            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->where('chapters.is_active', '=', '1')
+            ->where('bd.board_position_id', '=', '1')
+            ->whereIn('chapters.primary_coordinator_id', $inQryArr)
+            ->get();
+
+        $indirect_report = count($indirectChapterReport) - $direct_report;
+        $total_report = $direct_report + $indirect_report;
+
+        return [
+            'direct_report' => $direct_report,
+            'indirect_report' => $indirect_report,
+            'total_report' => $total_report,
+        ];
+    }
+
 
     /**
      * View the Coordinator ToDo List
@@ -1240,7 +1298,7 @@ class ReportController extends Controller
         $cord_pos_id = $request->session()->get('positionid');
 
         if ($positionId != 7) {
-            $resultOne = DB::table('coordinator_details')
+            $CoordinatorDetails = DB::table('coordinator_details')
                 ->select('coordinator_details.coordinator_id AS id', 'coordinator_details.first_name', 'coordinator_details.last_name', 'pos1.short_title AS position_title',
                     'pos2.short_title AS sec_position_title', 'coordinator_details.layer_id', 'coordinator_details.report_id', 'coordinator_details.report_id AS tree_id',
                     'region.short_name AS region')
@@ -1254,7 +1312,7 @@ class ReportController extends Controller
                 ->orderByDesc('coordinator_details.position_id')
                 ->get();
         } else {
-            $resultOne = DB::table('coordinator_details')
+            $CoordinatorDetails = DB::table('coordinator_details')
                 ->select('coordinator_details.coordinator_id AS id', 'coordinator_details.first_name', 'coordinator_details.last_name', 'pos1.short_title AS position_title',
                     'pos2.short_title AS sec_position_title', 'coordinator_details.layer_id', 'coordinator_details.report_id', 'coordinator_details.report_id AS tree_id',
                     'region.short_name AS region')
@@ -1267,22 +1325,7 @@ class ReportController extends Controller
                 ->orderByDesc('coordinator_details.position_id')
                 ->get();
         }
-        foreach ($resultOne as $key => $value) {
-            $resultOne[$key]->chapter_list = '';
-            $resultTwo = DB::table('chapters')
-                ->select('chapters.name', 'state.state_short_name')
-                ->join('state', 'chapters.state', '=', 'state.id')
-                ->where('chapters.primary_coordinator_id', $resultOne[$key]->id)
-                ->orderBy('state.state_short_name')
-                ->orderBy('chapters.name')
-                ->get();
-            foreach ($resultTwo as $key1 => $value1) {
-                $resultOne[$key]->chapter_list = $resultTwo[$key1]->state_short_name.' - '.$resultTwo[$key1]->name.'<br>';
-            }
-            $resultOne[$key]->indirect_count = 0;
-            $resultOne[$key]->total_count = 0;
-        }
-        foreach ($resultOne as $key => $value) {
+        foreach ($CoordinatorDetails as $key => $value) {
             $coordinator_array[$key] = (array) $value;
         }
 

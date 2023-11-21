@@ -33,7 +33,7 @@
                     <th>EIN</th>
                     <th>Letter On File</th>
                     <!--<th>Letter On File</th>-->
-                    <th>Letter Link</tdh>
+                    <th>Letter Link</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -44,16 +44,6 @@
                         <td>{{ $list->name }}</td>
 						<td>{{ $list->start_month }} {{ $list->start_year }}</td>
 						<td>{{ $list->ein }}</td>
-						<!--<td bgcolor="<?php
-							if($list->ein_letter !='1')
-									echo "#FF0000";
-							?>">
-							@if($list->ein_letter=='1')
-							YES
-							@else
-								NO
-							@endif-->
-						</td>
                         <td style="background-color: @if($list->ein_letter_path != null) transparent; @else #FF000050; @endif;">
                             @if($list->ein_letter_path != null)
                                 YES

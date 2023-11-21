@@ -23,13 +23,12 @@
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">Report of Volunteer Birthdays</h3>
-             
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
               <table id="chapterlist_zapped" class="table table-bordered table-hover">
-				<thead> 
+				<thead>
 			    <tr>
 			        <th></th>
 			        <th>Conference</th>
@@ -38,12 +37,10 @@
 					<th>Last Name</th>
 					<th>Birthday</th>
 					<th>Card Sent</th>
-
-					
                 </tr>
                 </thead>
                 <tbody>
-                    
+
                 @foreach($coordinatorList as $list)
                   <tr>
                       <td><a href="<?php echo url("/coordinator/birthday/{$list->cor_id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
@@ -53,20 +50,19 @@
                     <td>{{ $list->cor_lname }}</td>
                     <td>{{ $list->month }}  {{ $list->b_day }}</td>
                     <td>{{ $list->card_sent }}</td>
-
                     </tr>
                   @endforeach
                   </tbody>
                 </table>
             </div>
            </div>
-                     
+
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection

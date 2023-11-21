@@ -36,9 +36,7 @@
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
-							<td><a href="<?php //echo url("/chapter/edit/{$list->id}")
-							echo url("/chapter/edit/{$list->id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
-							</td>
+						<td><a href="<?php echo url("/chapter/edit/{$list->id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
 						<td>{{ $list->state }}</td>
                         <td>{{ $list->name }}</td>
 						<td>

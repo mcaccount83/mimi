@@ -18,20 +18,19 @@
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">Report of Duplicate Users</h3>
-              
+
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
               <table id="chapterlist_zapped" class="table table-bordered table-hover">
-              <thead> 
+              <thead>
 			    <tr>
                   <th>Email Address</th>
                   <th>User Type</th></th>
 			        <th>First Name</th>
 				  <th>Last Name</th>
 				  <th>Active</th>
-
                 </tr>
                 </thead>
                 <tbody>
@@ -48,23 +47,19 @@
 								NO
 							@endif
 						</td>
-
 			        </tr>
                   @endforeach
                   </tbody>
                 </table>
-		
             </div>
-			
            </div>
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
 @endsection
 @section('customscript')
 <script>

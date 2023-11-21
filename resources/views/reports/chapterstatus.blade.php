@@ -18,66 +18,54 @@
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">Report of Chapter Status</h3>
-
             </div>
             <!-- /.box-header -->
-
             <div class="box-body table-responsive">
               <table id="chapterlist_zapped" class="table table-bordered table-hover">
               <thead>
 			    <tr>
-					<th></th>
-				  <th>State</th>
-                  <th>Name</th>
-                 <th>Status</th>
-                 <th>Status Notes</th>
+				<th></th>
+				<th>State</th>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Status Notes</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($chapterList as $list)
-                  <tr>
-
-
-							<td><a href="<?php //echo url("/chapter/edit/{$list->id}")
-							echo url("/chapter/edit/{$list->id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
-							</td>
-
-						<td>{{ $list->state }}</td>
-                        <td>{{ $list->name }}</td>
-
-                        <?php
-						switch ($list->status) {
-							case 1:
-								echo " <td>OK</td> \n";
-								break;
-							case 4:
-								echo " <td>On Hold Do Not Refer</td> \n";
-								break;
-							case 5:
-								echo " <td>Probation</td> \n";
-								break;
-							case 6:
-								echo " <td>Probation Do Not Refer</td> \n";
-								break;
-						}
-						?>
-						<td>{{ $list->notes }}</td>
-			        </tr>
-                  @endforeach
-                  </tbody>
+                    @foreach($chapterList as $list)
+                        <tr>
+                            <td><a href="{{ url("/chapter/edit/{$list->id}") }}"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
+                            <td>{{ $list->state }}</td>
+                            <td>{{ $list->name }}</td>
+                            @switch($list->status)
+                                @case(1)
+                                    <td>OK</td>
+                                    @break
+                                @case(4)
+                                    <td>On Hold Do Not Refer</td>
+                                    @break
+                                @case(5)
+                                    <td>Probation</td>
+                                    @break
+                                @case(6)
+                                    <td>Probation Do Not Refer</td>
+                                    @break
+                            @endswitch
+                            <td>{{ $list->notes }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
                 </table>
 				 <div class="radio-chk labelcheck">
               <div class="col-sm-6 col-xs-12">
                 <div class="form-group">
                     <label style="display: block;"><input type="checkbox" name="showPrimary" id="showPrimary" class="ios-switch green bigswitch" {{$checkBoxStatus}} onchange="showPrimary()" /><div><div></div></div>
-
                   </label>
                   <span> Only show chapters 'Not Ok'</span>
                 </div>
               </div>
               </div>
             </div>
-
            </div>
           <!-- /.box -->
         </div>

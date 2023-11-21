@@ -36,23 +36,13 @@
                 </thead>
                 <tbody>
                 @foreach($chapterList as $list)
-				<?php
-					if($list->members_paid_for >=60)
-					{
-				 ?>
                   <tr>
-
-							<td><a href="<?php //echo url("/chapter/edit/{$list->id}")
-							echo url("/chapter/edit/{$list->id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
-							</td>
-
+						<td><a href="<?php echo url("/chapter/edit/{$list->id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
 						<td>{{ $list->state }}</td>
                         <td>{{ $list->name }}</td>
                         <td>{{ $list->members_paid_for }}</td>
 						<td>{{ $list->dues_last_paid }}</td>
-
 					   </tr>
-					<?php } ?>
                   @endforeach
                   </tbody>
                 </table>

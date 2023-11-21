@@ -33,7 +33,7 @@
                   <th>Start Date</th>
                     <th>EIN</th>
                     <th>Letter Received</th>
-                    <th>Letter Link</tdh>
+                    <th>Letter Link</th>
                 </tr>
                 </thead>
                 <tbody>

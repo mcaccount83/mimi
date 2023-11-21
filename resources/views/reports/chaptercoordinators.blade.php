@@ -39,24 +39,24 @@
                 </tr>
                 </thead>
                 <tbody>
-                <?php
-					$row_count=count($chapterList);
-					for ($row = 0; $row < $row_count; $row++){
-						 $id = $chapterList[$row]->primary_coordinator_id;
-						 $reportingList = DB::table('coordinator_reporting_tree')
-										->select('*')
-										->where('id', '=', $id)
-										->get();
+                    <?php
+                    $row_count = count($chapterList);
 
-						foreach($reportingList as $key => $value)
-						{
-							$reportingList[$key] = (array) $value;
-						}
-						$filterReportingList = array_filter($reportingList[0]);
-						unset($filterReportingList['id']);
-						unset($filterReportingList['layer0']);
- 					    $filterReportingList = array_reverse($filterReportingList);
-					    foreach($filterReportingList as $key =>$val){
+                    foreach ($chapterList as $row) {
+                        $id = $row->primary_coordinator_id;
+                        $reportingList = DB::table('coordinator_reporting_tree')
+                            ->select('*')
+                            ->where('id', '=', $id)
+                            ->get();
+
+                        $filterReportingList = array_filter((array)$reportingList[0], function ($key) {
+                            return !in_array($key, ['id', 'layer0']);
+                        }, ARRAY_FILTER_USE_KEY);
+
+                        $filterReportingList = array_reverse($filterReportingList);
+                        $coordinator_array = [];
+
+                        foreach ($filterReportingList as $val) {
                             $coordinator_data = DB::table('coordinator_details as cd')
                                 ->select('cd.first_name as first_name', 'cd.last_name as last_name', 'cp.short_title as position')
                                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
@@ -64,74 +64,40 @@
                                 ->get();
 
                             $coordinator_array[] = $coordinator_data;
+                        }
 
-						}
-						$cord_row_count = count($coordinator_array);
+                        $cord_row_count = count($coordinator_array);
 
-						echo "<tr>";
-						echo "<td><a href='/mimi/chapter/edit/".$chapterList[$row]->id."'><i class='fa fa-pencil-square' aria-hidden='true'></i></a></td> \n";
-						echo "<td>" . $chapterList[$row]->state . "</td>\n";
-						echo "<td>" . $chapterList[$row]->name . "</td>\n";
-						for($pos_row = 7; $pos_row > 0; $pos_row--){
-							$position_found=false;
+                        echo "<tr>";
+                        echo "<td><a href='/mimi/chapter/edit/{$row->id}'><i class='fa fa-pencil-square' aria-hidden='true'></i></a></td> \n";
+                        echo "<td>{$row->state}</td>\n";
+                        echo "<td>{$row->name}</td>\n";
 
-							for($cord_row = 0; $cord_row < $cord_row_count; $cord_row++){
-								switch ($pos_row) {
-									case 1:
-										if (isset($coordinator_array[$cord_row][0]) && $coordinator_array[$cord_row][0]->position=="BS" && !$position_found){
-											echo " <td>" . $coordinator_array[$cord_row][0]->first_name . " " . $coordinator_array[$cord_row][0]->last_name . "</td> \n";
-											$position_found=true;
-										}
-										break;
-									case 2:
-										if (isset($coordinator_array[$cord_row][0]) && $coordinator_array[$cord_row][0]->position=="AC" && !$position_found){
-											echo " <td>" . $coordinator_array[$cord_row][0]->first_name . " " . $coordinator_array[$cord_row][0]->last_name . "</td> \n";
-											$position_found=true;
-										}
-										break;
-									case 3:
-										if (isset($coordinator_array[$cord_row][0]) && $coordinator_array[$cord_row][0]->position=="SC" && !$position_found){
-											echo " <td>" . $coordinator_array[$cord_row][0]->first_name . " " . $coordinator_array[$cord_row][0]->last_name . "</td> \n";
-											$position_found=true;
-										}
-										break;
-									case 4:
-										if (isset($coordinator_array[$cord_row][0]) && $coordinator_array[$cord_row][0]->position=="ARC" && !$position_found){
-											echo " <td>" . $coordinator_array[$cord_row][0]->first_name . " " . $coordinator_array[$cord_row][0]->last_name. "</td> \n";
-											$position_found=true;
-										}
-										break;
-									case 5:
-										if (isset($coordinator_array[$cord_row][0]) && $coordinator_array[$cord_row][0]->position=="RC" && !$position_found){
-											echo " <td>" . $coordinator_array[$cord_row][0]->first_name . " " . $coordinator_array[$cord_row][0]->last_name . "</td> \n";
-											$position_found=true;
-										}
-										break;
-									case 6:
-										if (isset($coordinator_array[$cord_row][0]) && $coordinator_array[$cord_row][0]->position=="ACC" && !$position_found){
-											echo " <td>" . $coordinator_array[$cord_row][0]->first_name . " " . $coordinator_array[$cord_row][0]->last_name . "</td> \n";
-											$position_found=true;
-										}
-										break;
-									case 7:
-										if (isset($coordinator_array[$cord_row][0]) && $coordinator_array[$cord_row][0]->position=="CC" && !$position_found){
-											echo " <td>" . $coordinator_array[$cord_row][0]->first_name . " " . $coordinator_array[$cord_row][0]->last_name .  "</td> \n";
-											$position_found=true;
-										}
-										break;
-									}
+                        for ($pos_row = 7; $pos_row > 0; $pos_row--) {
+                            $position_found = false;
 
-								}
-							if(!$position_found)
-								echo " <td></td>\n";
+                            foreach ($coordinator_array as $cord_row => $cord_data) {
+                                if (isset($cord_data[0]) && $cord_data[0]->position == getPositionCode($pos_row) && !$position_found) {
+                                    echo "<td>{$cord_data[0]->first_name} {$cord_data[0]->last_name}</td> \n";
+                                    $position_found = true;
+                                }
+                            }
 
-						}
-						unset($coordinator_array);
-					}
-					echo "</tr>";
-					?>
+                            if (!$position_found) {
+                                echo " <td></td>\n";
+                            }
+                        }
 
-			        <!--</tr>-->
+                        unset($coordinator_array);
+                        echo "</tr>";
+                    }
+
+                    function getPositionCode($pos_row)
+                    {
+                        $positionCodes = ['BS', 'AC', 'SC', 'ARC', 'RC', 'ACC', 'CC'];
+                        return $positionCodes[$pos_row - 1];
+                    }
+                    ?>
 
                   </tbody>
                 </table>

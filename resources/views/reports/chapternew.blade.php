@@ -37,11 +37,7 @@
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
-
-							<td><a href="<?php //echo url("/chapter/edit/{$list->id}")
-							echo url("/chapter/edit/{$list->ch_id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
-							</td>
-
+						<td><a href="<?php echo url("/chapter/edit/{$list->ch_id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
 						<td>{{ $list->ch_state }}</td>
                         <td>{{ $list->ch_name }}</td>
 						<td>{{ $list->month_name }} {{ $list->year }}</td>
@@ -54,8 +50,6 @@
                         </td>
 
 						<td>{{ $list->cor_fname }} {{ $list->cor_lname }}</td>
-
-
 			        </tr>
                   @endforeach
                   </tbody>

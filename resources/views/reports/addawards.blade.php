@@ -29,7 +29,6 @@
               <thead>
 			    <tr>
 				<th>Add/Edit</th>
-
 				<th>State</th>
                 <th>Name</th>
                 <th>Award 1</th>
@@ -37,7 +36,6 @@
 				<th>Award 3</th>
 				<th>Award 4</th>
 				<th>Award 5</th>
-
 				</tr>
                 </thead>
                 <tbody>
@@ -46,12 +44,8 @@
                   <tr>
                       <td>
                          <?php if (Session::get('positionid') >=5 && Session::get('positionid') <=7 || $position = 25){ ?>
-
-								<a href="<?php echo url("/chapter/awardsview/{$list->id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
-
-
+							<a href="<?php echo url("/chapter/awardsview/{$list->id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
                         <?php }?>
-
                           </td>
 
 				  <td>{{ $list->state }}</td>
@@ -176,7 +170,6 @@
                                         <div style="background-color: #FF000050;">NO</div>
                                     @endif
                             @endif</td>
-
                  </tr>
                   @endforeach
 
