@@ -4,7 +4,7 @@
  <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-      M2M Donations Report
+      International M2M Donations Report
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
@@ -22,14 +22,14 @@
 		<div class="col-md-12">
           <div class="box">
             <div class="box-header with-border">
-              <h3 class="box-title">M2M Donations</h3>
-              
+              <h3 class="box-title">International M2M Donations</h3>
+
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
               <table id="chapterlist_zapped" class="table table-bordered table-hover">
-              <thead> 
+              <thead>
 			    <tr>
 					<!--<th>Donation</th> -->
 					<th>Conference</th>
@@ -59,16 +59,16 @@
               </div>
               </div>
             </div>
-			
+
            </div>
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection
 @section('customscript')
 

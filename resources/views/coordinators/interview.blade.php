@@ -3,7 +3,7 @@
 @section('content')
  <section class="content-header">
       <h1>
-      Coordinator List
+      International Coordinator List
        <small>Edit</small>
        </h1>
       <ol class="breadcrumb">

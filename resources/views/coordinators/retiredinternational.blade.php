@@ -4,7 +4,7 @@
  <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-      International Coordinator List
+      International Retired Coordinator List
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
@@ -17,7 +17,7 @@
 		<div class="col-md-12">
           <div class="box">
             <div class="box-header with-border">
-              <h3 class="box-title">List of International Coordinators</h3>
+              <h3 class="box-title">List of International Retired Coordinators</h3>
             </div>
             <!-- /.box-header -->
 
