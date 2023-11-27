@@ -19,7 +19,7 @@
 		<div class="col-md-12">
 			<div class="box card">
 				<div class="box-header with-border mrg-t-10">
-					<h3 class="box-title">Coordinator</h3>
+					<h3 class="box-title">Personal Information</h3>
 				</div>
 				<div class="box-body">
 				  <!-- /.form group -->
@@ -127,9 +127,25 @@
 						<input type="number" name="cord_day" class="form-control my-colorpicker1" min="1" max="31" value="{{ $coordinatorDetails[0]->birthday_day }}" required>
 						</div>
 					</div>
+                <div class="col-sm-6 col-xs-12">
+                    <div class="form-group">
+                            <label>Update Password</label>
+                            <input  type="password" class="form-control cls-pswd" placeholder="***********" name="cord_pswd" id="cord_pswd" value="" maxlength="30" >
+                        </div>
+					</div>
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label>Confirm Updated Password</label>
+                            <input  type="password" class="form-control cls-pswd" placeholder="***********" name="cord_pswd_cnf" id="cord_pswd_cnf" value="" maxlength="30">
+                            <input  type="hidden" name="cord_pswd_chg" id="cord_pswd_chg" value="0" >
+                        </div>
+					</div>
 				</div>
-				<div class="box-header with-border mrg-t-10"></div>
-					<div class="box-body">
+
+                <div class="box-header with-border mrg-t-10">
+					<h3 class="box-title">Coordinator Information</h3>
+				</div>
+                		<div class="box-body">
 						<div class="col-sm-6 col-xs-12">
 							<div class="form-group">
 							<label class="mrg-b-25">Coordinators Directly Reporting to {{ $coordinatorDetails[0]->first_name }} :</label>
@@ -189,7 +205,13 @@
 
 				<div class="box-header with-border mrg-t-10"></div>
 				<div class="box-body">
-					<div class="col-sm-6 col-xs-12">
+                    <div class="col-sm-4 col-xs-12">
+                        <div class="form-group">
+                          <label>Coordinator Start Date</label>
+                          <input type="text" name="cord_phone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->coordinator_start_date }}" disabled>
+                        </div>
+                      </div>
+					<div class="col-sm-4 col-xs-12">
 						<div class="form-group">
 						<label>Primary Position</label>
 						<select name="cord_month" class="form-control select2" style="width: 100%;" disabled>
@@ -200,7 +222,7 @@
 						</select>
 						</div>
 					</div>
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-4 col-xs-12">
 						<div class="form-group">
 						<label>Secondary Position</label>
 						<select name="cord_month" class="form-control select2" style="width: 100%;" disabled>
@@ -211,7 +233,13 @@
 						</select>
 						</div>
 					</div>
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-4 col-xs-12">
+                        <div class="form-group">
+                          <label>Home Chapter</label>
+                          <input type="text" name="cord_chapter" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->home_chapter }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" disabled>
+                        </div>
+                      </div>
+					<div class="col-sm-4 col-xs-12">
 						<div class="form-group">
 						<label>Region</label>
 						<select name="cord_month" class="form-control select2" style="width: 100%;" disabled>
@@ -222,7 +250,7 @@
 						</select>
 						</div>
 					</div>
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-4 col-xs-12">
 						<div class="form-group">
 						<label>Conference</label>
 						<select name="cord_month" class="form-control select2" style="width: 100%;" disabled>
@@ -233,15 +261,7 @@
 						</select>
 						</div>
 					</div>
-
-					<div class="col-sm-12 col-xs-12">
-					  <div class="form-group">
-						<label>Home Chapter</label>
-						<input type="text" name="cord_chapter" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->home_chapter }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" disabled>
-					  </div>
-					</div>
-
-					<div class="col-sm-12 col-xs-12">
+					<div class="col-sm-4 col-xs-12">
 						<div class="form-group">
 						<label>Reports To</label>
 						<select name="cord_month" class="form-control select2" style="width: 100%;" disabled>
@@ -252,21 +272,13 @@
 						</select>
 						</div>
 					</div>
-					<div class="col-sm-6 col-xs-12">
-					  <div class="form-group">
-						<label>Coordinator Start Date</label>
-						<input type="text" name="cord_phone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->coordinator_start_date }}" disabled>
-					  </div>
-					</div>
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-4 col-xs-12">
 					  <div class="form-group">
 						<label>Last Promotion Date</label>
 						<input type="text" name="cord_altphone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->last_promoted }}" disabled>
 					  </div>
 					</div>
-
-
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-2 col-xs-12">
 					<div class="radio-chk">
 							<div class="form-group">
 							<label>On Leave Of Absense</label>
@@ -275,7 +287,7 @@
 						</div>
 					</div>
 					</div>
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-2 col-xs-12">
 					  <div class="form-group">
 						<label>Leave Date</label>
 						<input type="text" name="cord_altphone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->leave_date }}" disabled>
@@ -302,15 +314,12 @@
 
 		<!-- /.box-body -->
 		<div class="box-body text-center">
-			<button type="submit" class="btn btn-themeBlue margin">Save</button>
-
+			<button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate();">Save</button>
 			<button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);">Reset</button>
 			<a href="{{ route('coordinator.list') }}" class="btn btn-themeBlue margin">Back</a>
 		</div>
 		 <div class="box-body text-center">
 			<a href="{{ route('coordinator.role',$coordinatorDetails[0]->coordinator_id) }}" class="btn btn-themeBlue margin">Change Role</a>
-			<button type="button" class="btn btn-themeBlue margin" id="{{ $coordinatorDetails[0]->user_id }}" onclick="return resetPassword(this.id)">Reset Password</button>
-
 		</div>
         <!-- /.box-body -->
         </div>
@@ -373,66 +382,7 @@ function isPhone() {
     }
 
 
-	function resetPassword(userid){
-      	var new_password="";
-		new_password = prompt("Please enter new password for this Coordinator", "TempPass4You");
-		if (new_password != null && userid !='') {
-			//Verify the password entered is of an allowable size
-			if(new_password.length < 7){
-				alert("Password must be at least 7 characters.  The password has not been reset.");
-				return false;
-			}
-			else{
-               $.ajax({
-                url: '{{ url("/chapter.resetpswd") }}',
-                  type: "POST",
-                  data: { pswd:new_password,user_id:userid, _token: '{{csrf_token()}}' },
-                  success: function(result) {
-                    alert('Password has been reset successfully');
-					},
-					error: function (jqXHR, exception) {
-                  }
-				});
-				return true;
-				}
-			}
-			else{
 
-                return false;
-			}
-		}
-
-	function addPrezList(val){
-    $("#prezListBtn").attr("disabled", true);
-          $.ajax({
-            url: '/mimi/cordprezlist/'+val,
-            type: "GET",
-            success: function(result) {
-              alert('Your request to be added to the PrezList has been submitted');
-              $("#prezListBtn").attr("disabled", false);
-				return true;
-            },
-            error: function (jqXHR, exception) {
-
-            }
-        });
-
-      }
-	function addVolList(val){
-		$("#volListBtn").attr("disabled", true);
-          $.ajax({
-            url: '/mimi/cordvollist/'+val,
-            type: "GET",
-            success: function(result) {
-              alert('Your request to be added to the PrezList has been submitted');
-              $("#volListBtn").attr("disabled", false);
-				      return true;
-            },
-            error: function (jqXHR, exception) {
-
-            }
-        });
-    }
   $( document ).ready(function() {
 	var phoneListArr = ["cord_phone","cord_altphone"];
     for (var i = phoneListArr.length - 1; i >= 0; i--) {
@@ -449,6 +399,31 @@ function isPhone() {
     });
 
   });
+
+
+   //submit validation function
+   function PreSaveValidate(){
+          var NewPassword=document.getElementById("cord_pswd").value;
+				//They changed their password
+				if(document.getElementById("cord_pswd").value != document.getElementById("cord_pswd").getAttribute("value")){
+					if(document.getElementById("cord_pswd").value != document.getElementById("cord_pswd_cnf").value){  //Make sure the password and confirmation match
+						alert ("The provided passwords do not match, please re-enter your password.");
+						document.getElementById("cord_pswd_cnf").focus();
+						return false;
+					}
+					// Make sure the password is the right length
+					else if(NewPassword.length < 7){
+						alert("Password must be at least 7 characters.");
+						document.getElementById("cord_pswd").focus();
+						return false;
+					}
+					else{
+						document.getElementById("cord_pswd_chg").value="1";
+					}
+                }
+		//Okay, all validation passed, save the records to the database
+		return true;
+	}
 </script>
 @endsection
 

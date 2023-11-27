@@ -156,13 +156,13 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Password</label>
+                                    <label>Update Password</label>
                                     <input  type="password" class="form-control cls-pswd" placeholder="***********" name="ch_pre_pswd" id="ch_pre_pswd" value="" maxlength="30" >
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Confirm Password</label>
+                                    <label>Confirm Updated Password</label>
                                     <input  type="password" class="form-control cls-pswd" placeholder="***********" name="ch_pre_pswd_cnf" id="ch_pre_pswd_cnf" value="" maxlength="30">
                                     <input  type="hidden" name="ch_pre_pswd_chg" id="ch_pre_pswd_chg" value="0" >
                                 </div>

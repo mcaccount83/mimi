@@ -458,6 +458,9 @@ class CoordinatorController extends Controller
                 $user->first_name = $request->get('cord_fname');
                 $user->last_name = $request->get('cord_lname');
                 $user->email = $request->get('cord_email');
+                if ($request->get('cord_pswd_chg') == '1') {
+                    $user->password = Hash::make($request->get('cord_pswd_cnf'));
+                }
                 $user->updated_at = date('Y-m-d H:i:s');
                 $user->save();
 
@@ -1801,6 +1804,9 @@ class CoordinatorController extends Controller
                     $user->first_name = $request->get('cord_fname');
                     $user->last_name = $request->get('cord_lname');
                     $user->email = $request->get('cord_email');
+                    if ($request->get('cord_pswd_chg') == '1') {
+                        $user->password = Hash::make($request->get('cord_pswd_cnf'));
+                    }
                     $user->updated_at = date('Y-m-d H:i:s');
                     $user->save();
 
@@ -1819,6 +1825,7 @@ class CoordinatorController extends Controller
                             'alt_phone' => $request->get('cord_altphone'),
                             'birthday_month_id' => $request->get('cord_month'),
                             'birthday_day' => $request->get('cord_day'),
+                            'home_chapter' => $request->get('cord_chapter'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s')]);
                     DB::commit();

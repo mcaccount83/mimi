@@ -176,13 +176,13 @@
 						<div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Password</label>
+                                    <label>Update Password</label>
                                     <input  type="password" class="form-control cls-pswd" placeholder="***********" name="bor_pswd" id="bor_pswd" value="" maxlength="30">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Confirm Password</label>
+                                    <label>Confirm Updated Password</label>
                                     <input  type="password" class="form-control cls-pswd" placeholder="***********" name="bor_pswd_cnf" id="bor_pswd_cnf" value="" maxlength="30">
                                 </div>
                             </div>
