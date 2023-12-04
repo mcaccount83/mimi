@@ -35,7 +35,7 @@
 				</div>
 				<div class="box-body"><div class="todolist">
 				@php
-                  use Carbon\Carbon;
+                  use Illuminate\Support\Carbon;
                   $currentMonth = Carbon::now()->month;
                 @endphp
 				<div class="row">
