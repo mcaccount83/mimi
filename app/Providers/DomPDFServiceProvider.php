@@ -7,7 +7,7 @@ use Barryvdh\DomPDF\Facade\pdf as PDF;
 
 class DomPDFServiceProvider extends ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
         $this->app->singleton('dompdf', function ($app) {
             return PDF::loadView('your.view'); // You may customize this as needed

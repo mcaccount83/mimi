@@ -7,7 +7,7 @@ use Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider as LogViewer;
 
 class LogViewerServiceProvider extends ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
         $this->app->register(LogViewer::class);
 
