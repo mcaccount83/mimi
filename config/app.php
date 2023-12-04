@@ -169,8 +169,8 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Barryvdh\DomPDF\ServiceProvider::class,
-        Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
+        App\Providers\DomPDFServiceProvider::class,
+        App\Providers\LogViewerServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -184,9 +184,5 @@ return [
     |
     */
 
-    'aliases' => Facade::defaultAliases()->merge([
-        'PDF' => Barryvdh\DomPDF\Facade::class,
-        'Redis' => Illuminate\Support\Facades\Redis::class,
-    ])->toArray(),
 
 ];
