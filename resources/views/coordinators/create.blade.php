@@ -122,7 +122,13 @@
 						<input type="tel" name="cord_altphone" id="cord_altphone" class="form-control my-colorpicker1" maxlength="12" onkeypress="return isPhone(event)" autocomplete="nope">
 					  </div>
 					</div>
-					<div class="col-sm-6 col-xs-12">
+                    <div class="col-sm-6 col-xs-12">
+                        <div class="form-group">
+                          <label>Home Chapter</label><span class="field-required">*</span>
+                          <input type="text" name="cord_chapter" id="cord_chapter" class="form-control my-colorpicker1" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope">
+                        </div>
+                      </div>
+					<div class="col-sm-3 col-xs-12">
 						<div class="form-group">
 						<label>Birthday Month</label><span class="field-required">*</span>
 						<select name="cord_month" id="cord_month" class="form-control select2" style="width: 100%;" required>
@@ -133,21 +139,21 @@
 						</select>
 						</div>
 					</div>
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-3 col-xs-12">
 						<div class="form-group">
 						<label>Birthday Day</label><span class="field-required">*</span>
 						<input type="number" name="cord_day" id="cord_day" class="form-control my-colorpicker1" min="1" max="31" required>
 						</div>
 					</div>
+
 				</div>
             </div>
 		</div>
 
 		<!-- /.box-body -->
 		<div class="box-body text-center">
-			<button type="submit" id="btn-save" class="btn btn-themeBlue margin">Save</button>
-			<button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);">Reset</button>
-
+			<button type="submit" id="btn-save" class="btn btn-themeBlue margin">Create</button>
+			<button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);">Clear Form</button>
 			<a href="{{ route('coordinator.list') }}" class="btn btn-themeBlue margin">Back</a>
 		</div>
         <!-- /.box-body -->
@@ -216,15 +222,6 @@ function ConfirmCancel(element){
 	$("#cord_altphone").keyup(function() {
         this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
     });
-
-	/*$('form#create_form').find('input').each(function(){
-		if(!$(this).prop('required')){
-			alert('not');
-		} else {
-			alert('yes');
-		}
-	});*/
-
   });
 
 

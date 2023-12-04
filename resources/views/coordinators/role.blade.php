@@ -48,7 +48,20 @@
 						<input type="text" name="cord_lname" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->last_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" readonly>
 					  </div>
 					</div>
-					<div class="col-sm-6 col-xs-12">
+
+                  <div class="col-sm-4 col-xs-12">
+                    <div class="form-group">
+                    <label>Reports To</label><span class="field-required">*</span>
+                    <select name="cord_report_pc" id="cord_report_pc" class="form-control select2" style="width: 100%;" required>
+
+                       @foreach($primaryCoordinatorList as $pcl)
+                          <option value="{{$pcl->cid}}" {{$coordinatorDetails[0]->report_id == $pcl->cid  ? 'selected' : ''}}>{{$pcl->cor_f_name}} {{$pcl->cor_l_name}} ({{$pcl->pos}})</option>
+                        @endforeach
+                    </select>
+                    <input type="hidden" name="OldReportPC" value="{{$coordinatorDetails[0]->report_id}}">
+                </div>
+            </div>
+					<div class="col-sm-4 col-xs-12">
 						<div class="form-group">
 						<label>Primary Position</label><span class="field-required">*</span>
 						<select name="cord_pri_pos" id="cord_pos" class="form-control select2" style="width: 100%;" onChange="CheckPromotion(this)" required>
@@ -66,7 +79,7 @@
 						<input type="hidden" name="email" value="{{$coordinatorDetails[0]->email}}" />
 						<input type="hidden" name="RetireReason" id="RetireReason" value="" />
 					</div>
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-4 col-xs-12">
 						<div class="form-group">
 						<label>Secondary Position</label>
 						<select name="cord_sec_pos" class="form-control select2" style="width: 100%;" onChange="CheckPromotion(this)">
@@ -78,7 +91,13 @@
 						</div>
 						<input type="hidden" name="OldSecPosition" value="{{$coordinatorDetails[0]->sec_position_id}}">
 					</div>
-					<div class="col-sm-6 col-xs-12">
+                    <div class="col-sm-4 col-xs-12">
+                        <div class="form-group">
+                          <label>Home Chapter</label><span class="field-required">*</span>
+                          <input type="text" name="cord_chapter" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->home_chapter }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" >
+                        </div>
+                      </div>
+					<div class="col-sm-4 col-xs-12">
 						<div class="form-group">
 						<label>Conference</label><span class="field-required">*</span>
 						<select name="cord_conf" id= "cord_conf" class="form-control select2" style="width: 100%;" required>
@@ -89,7 +108,7 @@
 						</select>
 						</div>
 					</div>
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-4 col-xs-12">
 						<div class="form-group">
 						<label>Region</label><span class="field-required">*</span>
 						<select name="cord_region" id="cord_region" class="form-control select2" style="width: 100%;" required>
@@ -100,27 +119,35 @@
 						</select>
 						</div>
 					</div>
-
-					<div class="col-sm-12 col-xs-12">
+                    <div class="col-sm-4 col-xs-12">
+                        <div class="form-group">
+                          <label>Coordinator Start Date</label>
+                          <input type="text" name="cord_phone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->coordinator_start_date }}" disabled>
+                        </div>
+                      </div>
+                  <div class="col-sm-4 col-xs-12">
+                    <div class="form-group">
+                      <label>Last Promotion Date</label>
+                      <input type="text" name="CoordinatorPromoteDate" id="CoordinatorPromoteDate" class="form-control my-colorpicker1" value="{{ $lastPromoted }}" readonly>
+                    </div>
+                    <input type="hidden" name="CoordinatorPromoteDateNew" id="CoordinatorPromoteDateNew"  value="{{$lastPromoted}}"/>
+                  </div>
+                  <div class="col-sm-2 col-xs-12">
+					<div class="radio-chk">
+							<div class="form-group">
+							<label>On Leave Of Absense</label>
+							<label style="display: block;"><input disabled type="checkbox" name="SecVacant" id="SecVacant" class="ios-switch green bigswitch" {{$coordinatorDetails[0]->on_leave == '1'  ? 'checked' : ''}}/><div><div></div></div>
+							</label>
+						</div>
+					</div>
+					</div>
+					<div class="col-sm-2 col-xs-12">
 					  <div class="form-group">
-						<label>Home Chapter</label><span class="field-required">*</span>
-						<input type="text" name="cord_chapter" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->home_chapter }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" >
+						<label>Leave Date</label>
+						<input type="text" name="cord_altphone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->leave_date }}" disabled>
 					  </div>
 					</div>
-
-					<div class="col-sm-12 col-xs-12">
-						<div class="form-group">
-						<label>Reports To</label><span class="field-required">*</span>
-						<select name="cord_report_pc" id="cord_report_pc" class="form-control select2" style="width: 100%;" required>
-
-						   @foreach($primaryCoordinatorList as $pcl)
-							  <option value="{{$pcl->cid}}" {{$coordinatorDetails[0]->report_id == $pcl->cid  ? 'selected' : ''}}>{{$pcl->cor_f_name}} {{$pcl->cor_l_name}} ({{$pcl->pos}})</option>
-							@endforeach
-						</select>
-						</div>
-                        <input type="hidden" name="OldReportPC" value="{{$coordinatorDetails[0]->report_id}}">
-					</div>
-				</div>
+                </div>
 					<div class="box-header with-border mrg-t-10"></div>
 					<div class="box-body">
 						<div class="col-sm-12 col-xs-12">
@@ -329,40 +356,7 @@
 					<div class="box-header with-border mrg-t-10">
 					</div>
 					<div class="box-body">
-
-					<div class="col-sm-6 col-xs-12">
-					  <div class="form-group">
-						<label>Coordinator Start Date</label>
-						<input type="text" name="cord_phone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->coordinator_start_date }}" disabled>
-					  </div>
-					</div>
-					<div class="col-sm-6 col-xs-12">
-					  <div class="form-group">
-						<label>Last Promotion Date</label>
-						<input type="text" name="CoordinatorPromoteDate" id="CoordinatorPromoteDate" class="form-control my-colorpicker1" value="{{ $lastPromoted }}" readonly>
-					  </div>
-					  <input type="hidden" name="CoordinatorPromoteDateNew" id="CoordinatorPromoteDateNew"  value="{{$lastPromoted}}"/>
-					</div>
-
-
-					<div class="col-sm-6 col-xs-12">
-					<div class="radio-chk">
-							<div class="form-group">
-							<label>On Leave Of Absense</label>
-							<label style="display: block;"><input disabled type="checkbox" name="SecVacant" id="SecVacant" class="ios-switch green bigswitch" {{$coordinatorDetails[0]->on_leave == '1'  ? 'checked' : ''}}/><div><div></div></div>
-							</label>
-						</div>
-					</div>
-					</div>
-					<div class="col-sm-6 col-xs-12">
-					  <div class="form-group">
-						<label>Leave Date</label>
-						<input type="text" name="cord_altphone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->leave_date }}" disabled>
-					  </div>
-					</div>
-
 					<div class="clearfix"></div>
-
 					<div class="col-sm-6 col-xs-12">
 					  <div class="form-group">
 						<label>Last Updated By</label>

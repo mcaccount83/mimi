@@ -75,7 +75,7 @@
 						<td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
                         <td>{{ $list->fname }} {{ $list->lname }}</td>
-                        <td>{{ $list->pfname }} {{$list->plname}}</td>
+                        <td>{{ $list->pcfname }} {{$list->pclname}}</td>
                         <td style="background-color: @if($list->financial_report_received == '1') transparent; @else #FF000050; @endif;">
                             @if($list->financial_report_received == '1')
                                 YES

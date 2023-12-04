@@ -203,14 +203,22 @@
 
 					</div>
 
-				<div class="box-header with-border mrg-t-10"></div>
-				<div class="box-body">
-                    <div class="col-sm-4 col-xs-12">
-                        <div class="form-group">
-                          <label>Coordinator Start Date</label>
-                          <input type="text" name="cord_phone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->coordinator_start_date }}" disabled>
-                        </div>
-                      </div>
+                    <div class="box-header with-border mrg-t-10">
+                        <h3 class="box-title">Coordinator Role</h3>
+                    </div>
+                <div class="box-body">
+
+			           <div class="col-sm-4 col-xs-12">
+						<div class="form-group">
+						<label>Reports To</label>
+						<select name="cord_month" class="form-control select2" style="width: 100%;" disabled>
+						  <option value=""></option>
+						   @foreach($primaryCoordinatorList as $pcl)
+							  <option value="{{$pcl->cid}}" {{$coordinatorDetails[0]->report_id == $pcl->cid  ? 'selected' : ''}}>{{$pcl->cor_f_name}} {{$pcl->cor_l_name}} ({{$pcl->pos}})</option>
+							@endforeach
+						</select>
+						</div>
+					</div>
 					<div class="col-sm-4 col-xs-12">
 						<div class="form-group">
 						<label>Primary Position</label>
@@ -239,18 +247,7 @@
                           <input type="text" name="cord_chapter" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->home_chapter }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" disabled>
                         </div>
                       </div>
-					<div class="col-sm-4 col-xs-12">
-						<div class="form-group">
-						<label>Region</label>
-						<select name="cord_month" class="form-control select2" style="width: 100%;" disabled>
-						 <option value=""></option>
-							@foreach($regionList as $reg)
-							  <option value="{{$reg->id}}" {{$coordinatorDetails[0]->region_id == $reg->id  ? 'selected' : ''}}>{{$reg->long_name}}</option>
-							@endforeach
-						</select>
-						</div>
-					</div>
-					<div class="col-sm-4 col-xs-12">
+                      <div class="col-sm-4 col-xs-12">
 						<div class="form-group">
 						<label>Conference</label>
 						<select name="cord_month" class="form-control select2" style="width: 100%;" disabled>
@@ -263,15 +260,21 @@
 					</div>
 					<div class="col-sm-4 col-xs-12">
 						<div class="form-group">
-						<label>Reports To</label>
+						<label>Region</label>
 						<select name="cord_month" class="form-control select2" style="width: 100%;" disabled>
-						  <option value=""></option>
-						   @foreach($primaryCoordinatorList as $pcl)
-							  <option value="{{$pcl->cid}}" {{$coordinatorDetails[0]->report_id == $pcl->cid  ? 'selected' : ''}}>{{$pcl->cor_f_name}} {{$pcl->cor_l_name}} ({{$pcl->pos}})</option>
+						 <option value=""></option>
+							@foreach($regionList as $reg)
+							  <option value="{{$reg->id}}" {{$coordinatorDetails[0]->region_id == $reg->id  ? 'selected' : ''}}>{{$reg->long_name}}</option>
 							@endforeach
 						</select>
 						</div>
 					</div>
+                        <div class="col-sm-4 col-xs-12">
+                            <div class="form-group">
+                              <label>Coordinator Start Date</label>
+                              <input type="text" name="cord_phone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->coordinator_start_date }}" disabled>
+                            </div>
+                          </div>
 					<div class="col-sm-4 col-xs-12">
 					  <div class="form-group">
 						<label>Last Promotion Date</label>
@@ -293,9 +296,12 @@
 						<input type="text" name="cord_altphone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->leave_date }}" disabled>
 					  </div>
 					</div>
+                </div>
 
+					<div class="box-header with-border mrg-t-10">
+					</div>
+					<div class="box-body">
 					<div class="clearfix"></div>
-
 					<div class="col-sm-6 col-xs-12">
 					  <div class="form-group">
 						<label>Last Updated By</label>
@@ -317,10 +323,12 @@
 			<button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate();">Save</button>
 			<button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);">Reset</button>
 			<a href="{{ route('coordinator.list') }}" class="btn btn-themeBlue margin">Back</a>
+        </div>
+            <div class="box-body text-center">
+                <a href="{{ route('coordinator.role',$coordinatorDetails[0]->coordinator_id) }}" class="btn btn-themeBlue margin">Update Coordinator Role</a>
+                </div>
 		</div>
-		 <div class="box-body text-center">
-			<a href="{{ route('coordinator.role',$coordinatorDetails[0]->coordinator_id) }}" class="btn btn-themeBlue margin">Change Role</a>
-		</div>
+
         <!-- /.box-body -->
         </div>
     </section>

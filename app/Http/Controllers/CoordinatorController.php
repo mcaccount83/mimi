@@ -238,6 +238,7 @@ class CoordinatorController extends Controller
                     'alt_phone' => $input['cord_altphone'],
                     'birthday_month_id' => $input['cord_month'],
                     'birthday_day' => $input['cord_day'],
+                    'home_chapter' => $input['cord_chapter'],
                     'coordinator_start_date' => date('Y-m-d H:i:s'),
                     'password' => Hash::make('TempPass4You'),
                     'last_updated_by' => $lastUpdatedBy,
