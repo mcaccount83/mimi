@@ -118,14 +118,10 @@
 @section('customscript')
 <script>
 $(document).ready(function(){
-    $("#board-active").click(function() {
-        var base_url = '{{ url("/yearreports/boardinfo") }}';
+    var base_url = '{{ url("/yearreports/boardinfo") }}';
 
-        if ($("#board-active").prop("checked") == true) {
-            window.location.href = base_url + '?board=active';
-        } else {
-            window.location.href = base_url;
-        }
+    $("#board-active").click(function() {
+        window.location.href = base_url + "?board=active";
     });
 });
 

@@ -1923,8 +1923,8 @@ class ReportController extends Controller
 
     }
 
-    /**
-     * Activate New Board Info Received
+     /**
+     * Activate Board
      */
     public function activateBoard($chapter_id, $lastUpdatedBy)
     {
@@ -1952,7 +1952,8 @@ class ReportController extends Controller
                             ['first_name' => $boardDetails[$i]->first_name,
                                 'last_name' => $boardDetails[$i]->last_name,
                                 'email' => $boardDetails[$i]->email,
-                                'password' => $boardDetails[$i]->password,
+                                'password' => Hash::make('TempPass4You'),
+                                'remember_token' => '',
                                 'board_position_id' => $boardDetails[$i]->board_position_id,
                                 'chapter_id' => $chapter_id,
                                 'street_address' => $boardDetails[$i]->street_address,
@@ -2011,33 +2012,73 @@ class ReportController extends Controller
                             'zip' => $incomingBoardDetails[$i]->zip,
                             'country' => 'USA',
                             'phone' => $incomingBoardDetails[$i]->phone,
-                            //'vacant' => $input['ch_pre_fname'],
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s'),
                             'is_active' => 1]
                     );
                 }
+
                 //Update Chapter after Board Active
                 DB::update('UPDATE chapters SET new_board_active = ? where id = ?', [1, $chapter_id]);
 
+                //Delete Details of Board memebers from Income Board Member table
                 DB::table('incoming_board_member')
                     ->where('chapter_id', $chapter_id)
                     ->delete();
 
+                // Fetch outgoing_board_member records (for access to Financial Report)
+                $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
+                foreach ($outgoingBoardMembers as $member) {
+                    // Find or create the user based on email
+                    $user = DB::table('users')->updateOrInsert(
+                        ['email' => $member->email],
+                        [
+                            'first_name' => $member->first_name,
+                            'last_name' => $member->last_name,
+                            'password' => Hash::make('TempPass4You'),
+                            'user_type' => 'outgoing',
+                            'is_active' => 1,
+                        ]
+                    );
+
+                    // Use the user ID for other operations if needed
+                    $userId = DB::table('users')->where('email', $member->email)->value('id');
+
+                    // Now you can continue with other operations, e.g., updating outgoing_board_member
+                    DB::table('outgoing_board_member')
+                        ->where('email', $member->email)
+                        ->update(['user_id' => $userId, 'is_active' => 1]);
+                }
+
+                 // Update returning board members user_type
+                 $BoardMembers = DB::table('board_details')->get();
+                 foreach ($BoardMembers as $member) {
+                     // Find or create the user based on email
+                     $user = DB::table('users')->updateOrInsert(
+                         ['email' => $member->email],
+                         [
+                             'first_name' => $member->first_name,
+                             'last_name' => $member->last_name,
+                             'password' => Hash::make('TempPass4You'),
+                             'user_type' => 'board',
+                             'is_active' => 1,
+                         ]
+                     );
+                }
+
                 DB::commit();
             } catch (\Illuminate\Database\QueryException $e) {
                 DB::rollback();
+                Log::error($e);
                 $errorCode = $e->errorInfo[1];
                 if ($errorCode == 1062) {
-                    return $message = 'duplicate';
+                    return $message = $e->errorInfo[2];
                 } else {
                     return $message = 'fail';
                 }
             }
 
             return $message = 'success';
-        } else {
-            return $message = 'empty';
         }
     }
 
