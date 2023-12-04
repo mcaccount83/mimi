@@ -3,38 +3,44 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Foundation\Auth\ConfirmsPasswords;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
+use Carbon\Carbon;
 
 class ConfirmPasswordController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Confirm Password Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller is responsible for handling password confirmations and
-    | uses a simple trait to include the behavior. You're free to explore
-    | this trait and override any functions that require customization.
-    |
-    */
-
     use ConfirmsPasswords;
 
     /**
-     * Where to redirect users when the intended url fails.
+     * Show the confirmation form.
      *
-     * @var string
+     * @return \Illuminate\View\View
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    public function showConfirmForm(): View
+    {
+        return view('auth.passwords.reset');
+    }
 
     /**
-     * Create a new controller instance.
+     * Confirm the user's password.
      *
-     * @return void
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function __construct()
+    protected function confirm(Request $request): RedirectResponse
     {
-        $this->middleware('auth');
+        $this->validate($request, [
+            'password' => 'required|password',
+        ]);
+
+        // Your logic to confirm the password goes here
+
+        return redirect()->intended(route('dashboard'));
     }
 }

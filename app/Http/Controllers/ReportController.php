@@ -2045,9 +2045,9 @@ class ReportController extends Controller
                     $userId = DB::table('users')->where('email', $member->email)->value('id');
 
                     // Now you can continue with other operations, e.g., updating outgoing_board_member
-                    DB::table('outgoing_board_member')
-                        ->where('email', $member->email)
-                        ->update(['user_id' => $userId, 'is_active' => 1]);
+                 //   DB::table('outgoing_board_member')
+                 //       ->where('email', $member->email)
+                  //      ->update(['user_id' => $userId, 'is_active' => 1]);
                 }
 
                  // Update returning board members user_type

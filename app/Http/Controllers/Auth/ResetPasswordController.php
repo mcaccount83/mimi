@@ -3,28 +3,60 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
+use Carbon\Carbon;
 
 class ResetPasswordController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Password Reset Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller is responsible for handling password reset requests
-    | and uses a simple trait to include this behavior. You're free to
-    | explore this trait and override any methods you wish to tweak.
-    |
-    */
-
     use ResetsPasswords;
 
     /**
-     * Where to redirect users after resetting their password.
+     * Display the password reset view.
      *
-     * @var string
+     * @param  string  $token
+     * @return \Illuminate\View\View
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    public function showResetForm($token): View
+    {
+        return view('auth.passwords.reset', ['token' => $token]);
+    }
+
+    /**
+     * Reset the given user's password.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    protected function reset(Request $request): RedirectResponse
+    {
+        $request->validate($this->rules(), $this->validationErrorMessages());
+
+        $updatePassword = DB::table('password_resets')
+                              ->where([
+                                'email' => $request->email,
+                                'token' => $request->token
+                              ])
+                              ->first();
+
+        if (!$updatePassword) {
+            return back()->withInput()->with('error', 'Invalid token!');
+        }
+
+        $user = User::where('email', $request->email)
+                    ->update(['password' => Hash::make($request->password)]);
+
+        DB::table('password_resets')->where(['email' => $request->email])->delete();
+
+        return redirect('/login')->with('message', 'Your password has been changed!');
+    }
+
+    // Additional methods as needed...
 }
