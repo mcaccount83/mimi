@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Illuminate\View\View;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\VerifiesEmails;
@@ -34,7 +35,7 @@ class VerificationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show()
+    public function show(): View
     {
         // Your logic to display the email verification notice goes here
         return view('auth.verify');

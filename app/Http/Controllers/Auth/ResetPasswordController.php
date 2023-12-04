@@ -24,7 +24,7 @@ class ResetPasswordController extends Controller
      * @param  string  $token
      * @return \Illuminate\View\View
      */
-    public function showResetForm($token): View
+    public function showResetForm(string $token): View
     {
         return view('auth.passwords.reset', ['token' => $token]);
     }
