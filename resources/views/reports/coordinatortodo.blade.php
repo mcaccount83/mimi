@@ -26,7 +26,7 @@
               <table id="chapterlist_zapped" class="table table-bordered table-hover">
 				<thead>
 				@php
-                  use Carbon\Carbon;
+                  use Illuminate\Support\Carbon;
 
                   $currentMonth = Carbon::now()->month;
                 @endphp

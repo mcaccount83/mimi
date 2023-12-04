@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 
 
 class ForgotPasswordController extends Controller

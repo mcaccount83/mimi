@@ -3232,8 +3232,8 @@ class ChapterController extends Controller
             $lastYear = $year - 1;
         }
 
-        $rangeStartDate = \Carbon\Carbon::create($lastYear, $monthRangeStart, 1);
-        $rangeEndDate = \Carbon\Carbon::create($year, $monthRangeEnd, 1)->endOfMonth();
+        $rangeStartDate = \Illuminate\Support\Carbon::create($lastYear, $monthRangeStart, 1);
+        $rangeEndDate = \Illuminate\Support\Carbon::create($year, $monthRangeEnd, 1)->endOfMonth();
 
         // Convert $month to words
         $monthInWords = strftime('%B', strtotime("2000-$month-01"));
@@ -3348,8 +3348,8 @@ class ChapterController extends Controller
             $lastYear = $year - 1;
         }
 
-        $rangeStartDate = \Carbon\Carbon::create($lastYear, $monthRangeStart, 1);
-        $rangeEndDate = \Carbon\Carbon::create($year, $monthRangeEnd, 1)->endOfMonth();
+        $rangeStartDate = \Illuminate\Support\Carbon::create($lastYear, $monthRangeStart, 1);
+        $rangeEndDate = \Illuminate\Support\Carbon::create($year, $monthRangeEnd, 1)->endOfMonth();
 
         // Convert $month to words
         $monthInWords = strftime('%B', strtotime("2000-$month-01"));
