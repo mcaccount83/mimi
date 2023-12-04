@@ -163,7 +163,6 @@ return [
         /*
          * Application Service Providers...
          */
-        //App\Http\Controllers\Kunnu\Dropbox\DropboxApp::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
@@ -173,7 +172,7 @@ return [
         App\Providers\LogViewerServiceProvider::class,
     ])->toArray(),
 
-    /*
+     /*
     |--------------------------------------------------------------------------
     | Class Aliases
     |--------------------------------------------------------------------------
@@ -184,5 +183,8 @@ return [
     |
     */
 
+    'aliases' => Facade::defaultAliases()->merge([
+        // 'Example' => App\Facades\Example::class,
+    ])->toArray(),
 
 ];
