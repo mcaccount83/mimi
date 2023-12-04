@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Barryvdh\DomPDF\Facade\pdf as PDF;
+use Illuminate\Support\ServiceProvider;
 
 class DomPDFServiceProvider extends ServiceProvider
 {
@@ -16,5 +16,3 @@ class DomPDFServiceProvider extends ServiceProvider
         $this->app->alias('dompdf', \Barryvdh\DomPDF\Facade::class); // Correct import statement
     }
 }
-
-
