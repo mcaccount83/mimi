@@ -3,15 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Foundation\Auth\ConfirmsPasswords;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Carbon\Carbon;
 
 class ConfirmPasswordController extends Controller
 {
@@ -19,8 +14,6 @@ class ConfirmPasswordController extends Controller
 
     /**
      * Show the confirmation form.
-     *
-     * @return \Illuminate\View\View
      */
     public function showConfirmForm(): View
     {
@@ -29,9 +22,6 @@ class ConfirmPasswordController extends Controller
 
     /**
      * Confirm the user's password.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
      */
     protected function confirm(Request $request): RedirectResponse
     {

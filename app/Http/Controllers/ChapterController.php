@@ -4068,26 +4068,26 @@ class ChapterController extends Controller
                     $userId = DB::table('users')->where('email', $member->email)->value('id');
 
                     // Now you can continue with other operations, e.g., updating outgoing_board_member
-                 //   DB::table('outgoing_board_member')
-                  //      ->where('email', $member->email)
-                  //      ->update(['user_id' => $userId, 'is_active' => 1]);
+                    //   DB::table('outgoing_board_member')
+                    //      ->where('email', $member->email)
+                    //      ->update(['user_id' => $userId, 'is_active' => 1]);
                 }
 
-                  // Update returning board members user_type
-                  $BoardMembers = DB::table('board_details')->get();
-                  foreach ($BoardMembers as $member) {
-                      // Find or create the user based on email
-                      $user = DB::table('users')->updateOrInsert(
-                          ['email' => $member->email],
-                          [
-                              'first_name' => $member->first_name,
-                              'last_name' => $member->last_name,
-                              'password' => Hash::make('TempPass4You'),
-                              'user_type' => 'board',
-                              'is_active' => 1,
-                          ]
-                      );
-                 }
+                // Update returning board members user_type
+                $BoardMembers = DB::table('board_details')->get();
+                foreach ($BoardMembers as $member) {
+                    // Find or create the user based on email
+                    $user = DB::table('users')->updateOrInsert(
+                        ['email' => $member->email],
+                        [
+                            'first_name' => $member->first_name,
+                            'last_name' => $member->last_name,
+                            'password' => Hash::make('TempPass4You'),
+                            'user_type' => 'board',
+                            'is_active' => 1,
+                        ]
+                    );
+                }
 
                 DB::commit();
             } catch (\Illuminate\Database\QueryException $e) {
