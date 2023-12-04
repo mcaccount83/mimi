@@ -877,13 +877,13 @@ class ReportController extends Controller
             ->orderByDesc('cp.id')
             ->get();
 
-            foreach ($coordinatorList as $list) {
-                $reportingData = $this->calculateReporting($list->cor_id, $list->layer_id, $inQryArr);
+        foreach ($coordinatorList as $list) {
+            $reportingData = $this->calculateReporting($list->cor_id, $list->layer_id, $inQryArr);
 
-                $list->direct_report = $reportingData['direct_report'];
-                $list->indirect_report = $reportingData['indirect_report'];
-                $list->total_report = $reportingData['total_report'];
-            }
+            $list->direct_report = $reportingData['direct_report'];
+            $list->indirect_report = $reportingData['indirect_report'];
+            $list->total_report = $reportingData['total_report'];
+        }
 
         $data = ['coordinatorList' => $coordinatorList];
 
@@ -904,7 +904,7 @@ class ReportController extends Controller
         $direct_report = count($coordinator_options);
 
         // Calculate indirect chapter report
-        $sqlLayerId = 'crt.layer' . $corlayerId;
+        $sqlLayerId = 'crt.layer'.$corlayerId;
         $reportIdList = DB::table('coordinator_reporting_tree as crt')
             ->select('crt.id')
             ->where($sqlLayerId, '=', $coordinatorId)
@@ -912,7 +912,7 @@ class ReportController extends Controller
 
         $inQryStr = '';
         foreach ($reportIdList as $key => $val) {
-            $inQryStr .= $val->id . ',';
+            $inQryStr .= $val->id.',';
         }
         $inQryStr = rtrim($inQryStr, ',');
         $inQryArr = explode(',', $inQryStr);
@@ -935,7 +935,6 @@ class ReportController extends Controller
             'total_report' => $total_report,
         ];
     }
-
 
     /**
      * View the Coordinator ToDo List
@@ -1479,8 +1478,8 @@ class ReportController extends Controller
 
         $chapterList = DB::table('chapters as ch')
             ->select('ch.id as chap_id', 'ch.primary_coordinator_id as primary_coordinator_id', 'ch.name as name', 'ch.financial_report_received as financial_report_received',
-            'ch.financial_report_complete as report_complete', 'cd.coordinator_id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state',
-            'fr.review_complete as review_complete', 'fr.post_balance as post_balance', 'cd_reviewer.first_name as pcfname', 'cd_reviewer.last_name as pclname')
+                'ch.financial_report_complete as report_complete', 'cd.coordinator_id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state',
+                'fr.review_complete as review_complete', 'fr.post_balance as post_balance', 'cd_reviewer.first_name as pcfname', 'cd_reviewer.last_name as pclname')
             ->join('state as st', 'ch.state', '=', 'st.id')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
@@ -1497,8 +1496,8 @@ class ReportController extends Controller
                 $checkBoxStatus = 'checked';
                 $chapterList = DB::table('chapters as ch')
                     ->select('ch.id as chap_id', 'ch.primary_coordinator_id as primary_coordinator_id', 'ch.name as name', 'ch.financial_report_received as financial_report_received',
-                    'ch.financial_report_complete as report_complete', 'cd.coordinator_id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state',
-                    'fr.review_complete as review_complete', 'fr.post_balance as post_balance', 'cd_reviewer.first_name as pcfname', 'cd_reviewer.last_name as pclname')
+                        'ch.financial_report_complete as report_complete', 'cd.coordinator_id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state',
+                        'fr.review_complete as review_complete', 'fr.post_balance as post_balance', 'cd_reviewer.first_name as pcfname', 'cd_reviewer.last_name as pclname')
                     ->join('state as st', 'ch.state', '=', 'st.id')
                     ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
                     ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
@@ -1519,8 +1518,8 @@ class ReportController extends Controller
                 $checkBox2Status = 'checked';
                 $chapterList = DB::table('chapters as ch')
                     ->select('ch.id as chap_id', 'ch.primary_coordinator_id as primary_coordinator_id', 'ch.name as name', 'ch.financial_report_received as financial_report_received',
-                    'ch.financial_report_complete as report_complete', 'cd.coordinator_id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state',
-                    'fr.review_complete as review_complete', 'fr.post_balance as post_balance', 'cd_reviewer.first_name as pcfname', 'cd_reviewer.last_name as pclname')
+                        'ch.financial_report_complete as report_complete', 'cd.coordinator_id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state',
+                        'fr.review_complete as review_complete', 'fr.post_balance as post_balance', 'cd_reviewer.first_name as pcfname', 'cd_reviewer.last_name as pclname')
                     ->join('state as st', 'ch.state', '=', 'st.id')
                     ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
                     ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
@@ -1923,7 +1922,7 @@ class ReportController extends Controller
 
     }
 
-     /**
+    /**
      * Activate Board
      */
     public function activateBoard($chapter_id, $lastUpdatedBy)
@@ -2050,20 +2049,20 @@ class ReportController extends Controller
                         ->update(['user_id' => $userId, 'is_active' => 1]);
                 }
 
-                 // Update returning board members user_type
-                 $BoardMembers = DB::table('board_details')->get();
-                 foreach ($BoardMembers as $member) {
-                     // Find or create the user based on email
-                     $user = DB::table('users')->updateOrInsert(
-                         ['email' => $member->email],
-                         [
-                             'first_name' => $member->first_name,
-                             'last_name' => $member->last_name,
-                             'password' => Hash::make('TempPass4You'),
-                             'user_type' => 'board',
-                             'is_active' => 1,
-                         ]
-                     );
+                // Update returning board members user_type
+                $BoardMembers = DB::table('board_details')->get();
+                foreach ($BoardMembers as $member) {
+                    // Find or create the user based on email
+                    $user = DB::table('users')->updateOrInsert(
+                        ['email' => $member->email],
+                        [
+                            'first_name' => $member->first_name,
+                            'last_name' => $member->last_name,
+                            'password' => Hash::make('TempPass4You'),
+                            'user_type' => 'board',
+                            'is_active' => 1,
+                        ]
+                    );
                 }
 
                 DB::commit();
