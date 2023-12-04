@@ -38,7 +38,7 @@ class ResetPasswordController extends Controller
             ->first();
 
         if (! $updatePassword) {
-            return back()->withInput()->with('error', 'Invalid token!');
+            return redirect()->back()->withInput()->with('error', 'Invalid token!');
         }
 
         $user = User::where('email', $request->email)
@@ -46,7 +46,7 @@ class ResetPasswordController extends Controller
 
         DB::table('password_resets')->where(['email' => $request->email])->delete();
 
-        return redirect('/login')->with('message', 'Your password has been changed!');
+        return redirect()->to('/login')->with('message', 'Your password has been changed!');
     }
 
     // Additional methods as needed...

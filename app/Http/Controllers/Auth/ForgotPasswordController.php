@@ -52,7 +52,7 @@ class ForgotPasswordController extends Controller
             $message->subject('Reset Password');
         });
 
-        return back()->with('message', 'We have e-mailed your password reset link!');
+        return redirect()->back()->with('message', 'We have e-mailed your password reset link!');
     }
 
     /**
@@ -76,7 +76,7 @@ class ForgotPasswordController extends Controller
             ->first();
 
         if (! $updatePassword) {
-            return back()->withInput()->with('error', 'Invalid token!');
+            return redirect()->back()->withInput()->with('error', 'Invalid token!');
         }
 
         $user = User::where('email', $request->email)
@@ -84,6 +84,6 @@ class ForgotPasswordController extends Controller
 
         DB::table('password_resets')->where(['email' => $request->email])->delete();
 
-        return redirect('/login')->with('message', 'Your password has been changed!');
+        return redirect()->to('/login')->with('message', 'Your password has been changed!');
     }
 }
