@@ -369,7 +369,7 @@
         </li><?php } ?>
 
         <?php if ($positionid == 13 || $secpositionid == 13 ){ ?>
-        <li class="treeview {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }} {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }} {{ Request::is('adminreports/multipleboard') ? 'active' : '' }} {{ Request::is('adminreports/nopresident') ? 'active' : '' }}">
+        <li class="treeview {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }} {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }} {{ Request::is('adminreports/multipleboard') ? 'active' : '' }} {{ Request::is('adminreports/nopresident') ? 'active' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
             <a href="#"><i class="fa fa-line-chart"></i> <span>Admin Reports</span>
               <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
             </a>
@@ -398,6 +398,12 @@
             <span>No President</span>
           </a>
         </li>
+        <li class="{{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
+            <a href="{{ route('report.outgoingactivate') }}">
+              <i class="fa fa-files-o"></i>
+              <span>Outgoing Board</span>
+            </a>
+          </li>
             </ul>
         </li><?php } ?>
 

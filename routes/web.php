@@ -222,6 +222,9 @@ Route::get('/adminreports/duplicateuser', [ReportController::class, 'showDuplica
 Route::get('/adminreports/duplicateboardid', [ReportController::class, 'showDuplicateId'])->name('report.duplicateboardid');
 Route::get('/adminreports/multipleboard', [ReportController::class, 'showMultiple'])->name('report.multipleboard');
 Route::get('/adminreports/nopresident', [ReportController::class, 'showNoPresident'])->name('report.nopresident');
+Route::get('/adminreports/outgoingboard', [ReportController::class, 'showOutgoingBoard'])->name('report.outgoingboard');
+Route::post('/adminreports/outgoingactivate', [ReportController::class, 'activateOutgoingBoard'])->name('report.outgoingactivate');
+
 
 /**
  * Routes for PDF

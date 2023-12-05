@@ -1922,7 +1922,7 @@ class ReportController extends Controller
 
     }
 
-    /**
+   /**
      * Activate Board
      */
     public function activateBoard($chapter_id, $lastUpdatedBy)
@@ -2029,6 +2029,56 @@ class ReportController extends Controller
 
             }
         }
+
+                    $ChunkSize = 100;
+
+                    // Update or insert for outgoing board members
+                    $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
+                    foreach (array_chunk($outgoingBoardMembers->toArray(), $ChunkSize) as $Chunk) {
+                        foreach ($Chunk as $outgoingMember) {
+                            $outgoingUser = DB::table('users')->where('email', $outgoingMember->email)->first();
+
+                            if ($outgoingUser) {
+                                // Update user_type for existing record
+                                DB::table('users')->where('email', $outgoingMember->email)->update([
+                                    'user_type' => 'outgoing',
+                                ]);
+
+                                // Retrieve the user_id
+                                $userId = $outgoingUser->id;
+                            } else {
+                                // Insert new record
+                                $userId = DB::table('users')->insertGetId([
+                                    'email' => $outgoingMember->email,
+                                    'first_name' => $outgoingMember->first_name,
+                                    'last_name' => $outgoingMember->last_name,
+                                    'password' => Hash::make('TempPass4You'),
+                                    'remember_token' => '',
+                                    'user_type' => 'outgoing',
+                                    'is_active' => 1,
+                                ]);
+                            }
+
+                            // Update outgoing_board_member with user_id
+                            DB::table('outgoing_board_member')->where('email', $outgoingMember->email)->update([
+                                'user_id' => $userId
+                            ]);
+                        }
+                    }
+
+                    // Only update for board members who exist in the users table
+                    $BoardMembers = DB::table('board_details')->get();
+                    foreach ($BoardMembers as $member) {
+                        $user = DB::table('users')->where('email', $member->email)->first();
+
+                        if ($user) {
+                            // Update user_type for existing record
+                            DB::table('users')->where('email', $member->email)->update([
+                                'user_type' => 'board',
+                            ]);
+                        }
+                    }
+
 
                 DB::commit();
             } catch (\Illuminate\Database\QueryException $e) {
@@ -2370,7 +2420,6 @@ class ReportController extends Controller
      */
     public function showNoPresident(): View
     {
-
         $PresId = DB::table('board_details')
             ->where('is_active', '=', '1')
             ->where('board_position_id', '=', '1')
@@ -2389,54 +2438,115 @@ class ReportController extends Controller
      /**
      * Outgoing Board Members
      */
+    public function showOutgoingBoard(): View
+    {
+        $OutgoingBoard = DB::table('outgoing_board_member')
+            ->leftJoin('users', 'outgoing_board_member.email', '=', 'users.email')
+            ->select(
+                'outgoing_board_member.chapter_id as chapter_id',
+                'outgoing_board_member.first_name as first_name',
+                'outgoing_board_member.last_name as last_name',
+                'outgoing_board_member.email as email',
+                'users.user_type as user_type'  // This column will be null if there's no match
+            )
+            ->orderBy('outgoing_board_member.chapter_id')
+            ->get();
 
+            if (isset($_GET['check'])) {
+                if ($_GET['check'] == 'yes') {
+                    $checkBoxStatus = 'checked';
+            $OutgoingBoard = DB::table('outgoing_board_member')
+                ->leftJoin('users', 'outgoing_board_member.email', '=', 'users.email')
+                ->whereNull('users.user_type')  // Only select entries where user_type is null
+                ->select(
+                    'outgoing_board_member.chapter_id as chapter_id',
+                    'outgoing_board_member.first_name as first_name',
+                    'outgoing_board_member.last_name as last_name',
+                    'outgoing_board_member.email as email',
+                    'users.user_type as user_type'  // This column will be null for unmatched entries
+                )
+                ->orderBy('outgoing_board_member.chapter_id')
+                ->get();
+            }
+        } else {
+            $checkBoxStatus = '';
+        }
 
+        $data = ['OutgoingBoard' => $OutgoingBoard, 'checkBoxStatus' => $checkBoxStatus];
+
+        return view('reports.outgoingboard')->with($data);
+    }
 
      /**
      * Activate Outgoing Board
      */
-    public function activateOutgoingBoard($chapter_id, $lastUpdatedBy)
+    public function activateOutgoingBoard(Request $request)
     {
         $message = '';
         DB::beginTransaction();
             try {
-               // Fetch outgoing_board_member records (for access to Financial Report)
-                $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
-                foreach ($outgoingBoardMembers as $member) {
-                    // Find or create the user based on email
-                    $user = DB::table('users')->updateOrInsert(
-                        ['email' => $member->email],
-                        ['first_name' => $member->first_name,
-                            'last_name' => $member->last_name,
-                            'password' => Hash::make('TempPass4You'),
-                            'user_type' => 'outgoing',
-                            'is_active' => 1,
-                        ]
-                    );
-               }
+               $ChunkSize = 100;
 
-                // Update returning board members user_type
-                $BoardMembers = DB::table('board_details')->get();
-                foreach ($BoardMembers as $member) {
-                    // Update the user based on email
-                    $user = DB::table('users')->update(
-                        ['email' => $member->email],
-                        [
-                            'user_type' => 'board',
-                        ]
-                    );
+                 // Update or insert for outgoing board members
+                $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
+                foreach (array_chunk($outgoingBoardMembers->toArray(), $ChunkSize) as $Chunk) {
+                    foreach ($Chunk as $outgoingMember) {
+                        $outgoingUser = DB::table('users')->where('email', $outgoingMember->email)->first();
+
+                        if ($outgoingUser) {
+                            // Update user_type for existing record
+                            DB::table('users')->where('email', $outgoingMember->email)->update([
+                                'user_type' => 'outgoing',
+                            ]);
+
+                            // Retrieve the user_id
+                            $userId = $outgoingUser->id;
+                        } else {
+                            // Insert new record
+                            $userId = DB::table('users')->insertGetId([
+                                'email' => $outgoingMember->email,
+                                'first_name' => $outgoingMember->first_name,
+                                'last_name' => $outgoingMember->last_name,
+                                'password' => Hash::make('TempPass4You'),
+                                'remember_token' => '',
+                                'user_type' => 'outgoing',
+                                'is_active' => 1,
+                            ]);
+                        }
+
+                        // Update outgoing_board_member with user_id
+                        DB::table('outgoing_board_member')->where('email', $outgoingMember->email)->update([
+                            'user_id' => $userId
+                        ]);
+                    }
                 }
 
+                // Only update for board members who exist in the users table
+                $BoardMembers = DB::table('board_details')->get();
+                foreach ($BoardMembers as $member) {
+                    $user = DB::table('users')->where('email', $member->email)->first();
+
+                    if ($user) {
+                        // Update user_type for existing record
+                        DB::table('users')->where('email', $member->email)->update([
+                            'user_type' => 'board',
+                        ]);
+                    }
+                }
 
                 DB::commit();
             } catch (\Exception $e) {
-                DB::rollback();
+                // Rollback Transaction
+                echo $e->getMessage();
+                exit();
+                // Log the error
                 Log::error($e);
 
-                    return $message = 'fail';
-
+                return redirect()->to('adminreports/outgoingboard')->with('fail', 'Something went wrong, Please try again.');
             }
-            return $message = 'success';
+
+            return redirect()->to('adminreports/outgoingboard')->with('success', 'Outgoing Board Members have been Updated.');
+
         }
 
 
