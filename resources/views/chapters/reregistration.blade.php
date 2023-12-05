@@ -128,7 +128,7 @@
                 <div class="form-group">
                     <label style="display: block;"><input type="checkbox" name="showPrimary" id="showPrimary" class="ios-switch green bigswitch" {{$checkBoxStatus}} onclick="showPrimary()" /><div><div></div></div>
                     </label>
-                  <span>  Only show chapters I am primary for</span>
+                  <span>  Show All Chapters</span>
                 </div>
               </div>
               </div>

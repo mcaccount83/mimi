@@ -23,10 +23,11 @@ class ForgotPasswordController extends Controller
      *
      * @return response()
      */
-    public function showForgetPasswordForm(): View
-    {
-        return view('auth.passwords.reset');
-    }
+    public function showResetForm($token): View
+{
+    return view('auth.passwords.reset', ['token' => $token]);
+}
+
 
     /**
      * Write code on Method

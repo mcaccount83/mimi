@@ -1,7 +1,7 @@
 @component('mail::message')
 # MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}
 
-Your chpater's anniversy month is <b>{{$mailData['startMonth']}}</b>.
+Your chapter's anniversy month is <b>{{$mailData['startMonth']}}</b>.
 
 As of today we have not received your chapter’s re-registration fee. All re-registration fees are due annually on the month of your MOMS Club anniversary and it is now considered <b><u>PAST DUE</u></b>.
 
