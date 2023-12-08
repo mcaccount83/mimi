@@ -21,7 +21,7 @@ class ResetPasswordController extends Controller
     /**
      * Display the password reset view.
      */
-    public function showResetForm(string $token)
+    public function showResetForm(string $token): View
     {
         $resetRecord = DB::table('password_reset_tokens')->where('token', $token)->first();
 
