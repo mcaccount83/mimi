@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Requests\Auth\SubmitForgetPasswordFormForgotPasswordRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\RedirectResponse;
@@ -19,11 +20,8 @@ class ForgotPasswordController extends Controller
     /**
      * Display the forgot password view.
      */
-    public function submitForgetPasswordForm(Request $request): RedirectResponse
+    public function submitForgetPasswordForm(SubmitForgetPasswordFormForgotPasswordRequest $request): RedirectResponse
     {
-        $request->validate([
-            'email' => 'required|email|exists:users',
-        ]);
 
         $token = Str::random(64);
 
