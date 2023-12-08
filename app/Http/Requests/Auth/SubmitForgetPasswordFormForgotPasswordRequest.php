@@ -12,9 +12,9 @@ class SubmitForgetPasswordFormForgotPasswordRequest extends FormRequest
     public function rules(): array
     {
         return ['email' => [
-                'required',
-                'email',
-                'exists:users',
-            ],];
+            'required',
+            'email',
+            'exists:users',
+        ], ];
     }
 }

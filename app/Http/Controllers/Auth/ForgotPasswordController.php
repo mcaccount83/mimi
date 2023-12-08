@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Requests\Auth\SubmitForgetPasswordFormForgotPasswordRequest;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\SubmitForgetPasswordFormForgotPasswordRequest;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
