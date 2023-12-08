@@ -3,9 +3,9 @@
 //use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\ConfirmPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\ChapterController;
@@ -41,7 +41,6 @@ Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestF
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
-
 
 // Confirm Password
 Route::get('password/confirm', [ConfirmPasswordController::class, 'showConfirmForm'])->name('password.confirm');
@@ -226,7 +225,6 @@ Route::get('/adminreports/multipleboard', [ReportController::class, 'showMultipl
 Route::get('/adminreports/nopresident', [ReportController::class, 'showNoPresident'])->name('report.nopresident');
 Route::get('/adminreports/outgoingboard', [ReportController::class, 'showOutgoingBoard'])->name('report.outgoingboard');
 Route::post('/adminreports/outgoingactivate', [ReportController::class, 'activateOutgoingBoard'])->name('report.outgoingactivate');
-
 
 /**
  * Routes for PDF

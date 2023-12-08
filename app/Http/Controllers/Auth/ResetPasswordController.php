@@ -16,7 +16,7 @@ use Illuminate\View\View;
 
 class ResetPasswordController extends Controller
 {
-  //  use ResetsPasswords;
+    //  use ResetsPasswords;
 
     /**
      * Display the password reset view.
@@ -25,13 +25,13 @@ class ResetPasswordController extends Controller
     {
         $resetRecord = DB::table('password_reset_tokens')->where('token', $token)->first();
 
-        if (!$resetRecord) {
+        if (! $resetRecord) {
             // Log or dd() statement for debugging
             dd("Token not found for $token");
         }
 
         // Log or dd() statement for debugging
-        dd("Email found: " . $resetRecord->email);
+        dd('Email found: '.$resetRecord->email);
 
         // Pass both token and email to the view
         return view('auth.passwords.reset', [
@@ -55,7 +55,7 @@ class ResetPasswordController extends Controller
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password) {
                 $user->forceFill([
-                    'password' => Hash::make($password)
+                    'password' => Hash::make($password),
                 ])->setRememberToken(Str::random(60));
 
                 $user->save();
@@ -69,5 +69,4 @@ class ResetPasswordController extends Controller
     : back()->withErrors(['email' => [__($status)]])->withInput($request->only('email'));
 
     }
-
 }
