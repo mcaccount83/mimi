@@ -6,6 +6,11 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ isset($url) ? ucwords($url) : ""}} {{ __('Login') }}</div>
+                @if (session('status'))
+    <div class="alert alert-success">
+        {{ session('status') }}
+    </div>
+@endif
 
                 <div class="card-body">
                      @isset($url)
@@ -13,7 +18,7 @@
                         @else
                         <form method="POST" action="{{ route('login') }}" aria-label="{{ __('Login') }}">
                         @endisset
-						
+
                         @csrf
 
                         <div class="form-group row">
@@ -77,12 +82,12 @@
 </div>
 @endsection
 @section('customscript')
-<script> 
+<script>
 window.onload = function () {
     if (typeof history.pushState === "function") {
         history.pushState("jibberish", null, null);
         window.onpopstate = function () {
-            history.pushState('newjibberish', null, null);           
+            history.pushState('newjibberish', null, null);
         };
     }
     else {
@@ -90,10 +95,10 @@ window.onload = function () {
         window.onhashchange = function () {
             if (!ignoreHashChange) {
                 ignoreHashChange = true;
-                window.location.hash = Math.random();                
+                window.location.hash = Math.random();
             }
             else {
-                ignoreHashChange = false;   
+                ignoreHashChange = false;
             }
         };
     }
