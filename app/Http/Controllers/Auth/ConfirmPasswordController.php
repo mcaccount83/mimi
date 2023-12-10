@@ -10,7 +10,7 @@ use Illuminate\View\View;
 
 class ConfirmPasswordController extends Controller
 {
-   use ConfirmsPasswords;
+    use ConfirmsPasswords;
 
     /**
      * Show the confirmation form.

@@ -1922,9 +1922,9 @@ class ReportController extends Controller
 
     }
 
-   /**
-     * Activate Board
-     */
+    /**
+    * Activate Board
+    */
     public function activateBoard($chapter_id, $lastUpdatedBy)
     {
         $message = '';
@@ -1949,47 +1949,47 @@ class ReportController extends Controller
                     $chunkSize = 5;
                     foreach (array_chunk($boardDetails->toArray(), $chunkSize) as $chunk) {
                         foreach ($chunk as $record) {
-                        $board = DB::table('outgoing_board_member')->insert(
-                            ['first_name' => $record->first_name,
-                                'last_name' => $record->last_name,
-                                'email' => $record->email,
-                                'password' => Hash::make('TempPass4You'),
-                                'remember_token' => '',
-                                'board_position_id' => $record->board_position_id,
-                                'chapter_id' => $chapter_id,
-                                'street_address' => $record->street_address,
-                                'city' => $record->city,
-                                'state' => $record->state,
-                                'zip' => $record->zip,
-                                'country' => $record->country,
-                                'phone' => $record->phone,
-                                'last_updated_by' => $lastUpdatedBy,
-                                'last_updated_date' => date('Y-m-d H:i:s'),
-                                'board_id' => $record->board_id,
-                                'user_id' => $record->user_id
-                            ]);
+                            $board = DB::table('outgoing_board_member')->insert(
+                                ['first_name' => $record->first_name,
+                                    'last_name' => $record->last_name,
+                                    'email' => $record->email,
+                                    'password' => Hash::make('TempPass4You'),
+                                    'remember_token' => '',
+                                    'board_position_id' => $record->board_position_id,
+                                    'chapter_id' => $chapter_id,
+                                    'street_address' => $record->street_address,
+                                    'city' => $record->city,
+                                    'state' => $record->state,
+                                    'zip' => $record->zip,
+                                    'country' => $record->country,
+                                    'phone' => $record->phone,
+                                    'last_updated_by' => $lastUpdatedBy,
+                                    'last_updated_date' => date('Y-m-d H:i:s'),
+                                    'board_id' => $record->board_id,
+                                    'user_id' => $record->user_id
+                                ]);
 
                         //Delete Details of Board memebers from users table
                         DB::table('users')->where('id', $record->user_id)->delete();
                     }
 
 
-                //Delete Details of Board memebers from Board Detials table
-                DB::table('board_details')->where('chapter_id', $chapter_id)->delete();
+                    //Delete Details of Board memebers from Board Detials table
+                    DB::table('board_details')->where('chapter_id', $chapter_id)->delete();
 
-                //Create & Activate Details of Board memebers from Incoming Board Members
-                $incomingChunkSize = 5;
-                foreach (array_chunk($incomingBoardDetails->toArray(), $incomingChunkSize) as $incomingChunk) {
-                    foreach ($incomingChunk as $incomingRecord) {
-                    $userId = DB::table('users')->insertGetId(
-                        ['first_name' => $incomingRecord->first_name,
-                            'last_name' => $incomingRecord->last_name,
-                            'email' => $incomingRecord->email,
-                            'password' => Hash::make('TempPass4You'),
-                            'user_type' => 'board',
-                            'is_active' => 1]
-                    );
-                }
+                    //Create & Activate Details of Board memebers from Incoming Board Members
+                    $incomingChunkSize = 5;
+                    foreach (array_chunk($incomingBoardDetails->toArray(), $incomingChunkSize) as $incomingChunk) {
+                        foreach ($incomingChunk as $incomingRecord) {
+                        $userId = DB::table('users')->insertGetId(
+                            ['first_name' => $incomingRecord->first_name,
+                                'last_name' => $incomingRecord->last_name,
+                                'email' => $incomingRecord->email,
+                                'password' => Hash::make('TempPass4You'),
+                                'user_type' => 'board',
+                                'is_active' => 1]
+                        );
+                    }
                     $boardIdArr = DB::table('board_details')
                         ->select('board_details.board_id')
                         ->orderByDesc('board_details.board_id')
@@ -2079,7 +2079,6 @@ class ReportController extends Controller
                         }
                     }
 
-
                 DB::commit();
             } catch (\Illuminate\Database\QueryException $e) {
                 DB::rollback();
@@ -2097,8 +2096,8 @@ class ReportController extends Controller
     }
 
     /**
-     * Boundaires Issues
-     */
+    * Boundaires Issues
+    */
     public function showReportToIssues(Request $request): View
     {
         //Get Coordinators Details
@@ -2166,8 +2165,8 @@ class ReportController extends Controller
     }
 
     /**
-     * List of Chapter Awards
-     */
+    * List of Chapter Awards
+    */
     public function showChapterAwards(Request $request): View
     {
         //Get Coordinators Details
@@ -2265,8 +2264,8 @@ class ReportController extends Controller
     }
 
     /**
-     * Add Chaper Awards -- i don't think we need this anymore
-     */
+    * Add Chaper Awards -- i don't think we need this anymore
+    */
     public function addAwards(Request $request): View
     {
         $user = $request->user();
@@ -2349,8 +2348,8 @@ class ReportController extends Controller
     }
 
     /**
-     * List of Duplicate Users
-     */
+    * List of Duplicate Users
+    */
     public function showDuplicate(): View
     {
 
@@ -2371,8 +2370,8 @@ class ReportController extends Controller
     }
 
     /**
-     *List of duplicate Board IDs
-     */
+    *List of duplicate Board IDs
+    */
     public function showDuplicateId(): View
     {
 
@@ -2394,8 +2393,8 @@ class ReportController extends Controller
     }
 
     /**
-     * VList of users on multiple boards
-     */
+    * VList of users on multiple boards
+    */
     public function showMultiple(): View
     {
 
@@ -2416,8 +2415,8 @@ class ReportController extends Controller
     }
 
     /**
-     * boards with no president
-     */
+    * boards with no president
+    */
     public function showNoPresident(): View
     {
         $PresId = DB::table('board_details')
@@ -2435,9 +2434,9 @@ class ReportController extends Controller
         return view('reports.nopresident')->with($data);
     }
 
-     /**
-     * Outgoing Board Members
-     */
+    /**
+    * Outgoing Board Members
+    */
     public function showOutgoingBoard(): View
     {
         $OutgoingBoard = DB::table('outgoing_board_member')
@@ -2452,21 +2451,21 @@ class ReportController extends Controller
             ->orderBy('outgoing_board_member.chapter_id')
             ->get();
 
-            if (isset($_GET['check'])) {
-                if ($_GET['check'] == 'yes') {
-                    $checkBoxStatus = 'checked';
-            $OutgoingBoard = DB::table('outgoing_board_member')
-                ->leftJoin('users', 'outgoing_board_member.email', '=', 'users.email')
-                ->whereNull('users.user_type')  // Only select entries where user_type is null
-                ->select(
-                    'outgoing_board_member.chapter_id as chapter_id',
-                    'outgoing_board_member.first_name as first_name',
-                    'outgoing_board_member.last_name as last_name',
-                    'outgoing_board_member.email as email',
-                    'users.user_type as user_type'  // This column will be null for unmatched entries
-                )
-                ->orderBy('outgoing_board_member.chapter_id')
-                ->get();
+        if (isset($_GET['check'])) {
+            if ($_GET['check'] == 'yes') {
+                $checkBoxStatus = 'checked';
+                $OutgoingBoard = DB::table('outgoing_board_member')
+                    ->leftJoin('users', 'outgoing_board_member.email', '=', 'users.email')
+                    ->whereNull('users.user_type')  // Only select entries where user_type is null
+                    ->select(
+                        'outgoing_board_member.chapter_id as chapter_id',
+                        'outgoing_board_member.first_name as first_name',
+                        'outgoing_board_member.last_name as last_name',
+                        'outgoing_board_member.email as email',
+                        'users.user_type as user_type'  // This column will be null for unmatched entries
+                    )
+                    ->orderBy('outgoing_board_member.chapter_id')
+                    ->get();
             }
         } else {
             $checkBoxStatus = '';
@@ -2477,10 +2476,10 @@ class ReportController extends Controller
         return view('reports.outgoingboard')->with($data);
     }
 
-     /**
-     * Activate Outgoing Board
-     */
-    public function activateOutgoingBoard(Request $request)
+    /**
+    * Activate Outgoing Board
+    */
+    public function activateOutgoingBoard(Request $request): RedirectResponse
     {
         $message = '';
         DB::beginTransaction();
