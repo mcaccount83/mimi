@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Foundation\Auth\ResetsPasswords;
+//use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,29 +16,22 @@ use Illuminate\View\View;
 
 class ResetPasswordController extends Controller
 {
-  //  use ResetsPasswords;
+
+  //    use ResetsPasswords;
 
     /**
      * Display the password reset view.
      */
-    public function showResetForm(string $token)
+    public function showResetForm(string $token): View
     {
-        $resetRecord = DB::table('password_reset_tokens')->where('token', $token)->first();
+    $resetRecord = DB::table('password_reset_tokens')->where('token', $token)->first();
 
-        if (!$resetRecord) {
-            // Log or dd() statement for debugging
-            dd("Token not found for $token");
-        }
-
-        // Log or dd() statement for debugging
-        dd("Email found: " . $resetRecord->email);
-
-        // Pass both token and email to the view
-        return view('auth.passwords.reset', [
-            'token' => $token,
-            'email' => $resetRecord->email,
-        ]);
-    }
+    // Pass both token and email to the view
+    return view('auth.passwords.reset', [
+        'token' => $token,
+      //  'email' => $resetRecord->email,
+    ]);
+}
 
     /**
      * Reset the given user's password.
@@ -55,7 +48,7 @@ class ResetPasswordController extends Controller
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function (User $user, string $password) {
                 $user->forceFill([
-                    'password' => Hash::make($password)
+                    'password' => Hash::make($password),
                 ])->setRememberToken(Str::random(60));
 
                 $user->save();

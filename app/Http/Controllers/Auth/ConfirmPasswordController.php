@@ -10,7 +10,7 @@ use Illuminate\View\View;
 
 class ConfirmPasswordController extends Controller
 {
-    use ConfirmsPasswords;
+   use ConfirmsPasswords;
 
     /**
      * Show the confirmation form.
@@ -28,8 +28,6 @@ class ConfirmPasswordController extends Controller
         $this->validate($request, [
             'password' => 'required|password',
         ]);
-
-        // Your logic to confirm the password goes here
 
         return redirect()->intended(route('dashboard'));
     }
