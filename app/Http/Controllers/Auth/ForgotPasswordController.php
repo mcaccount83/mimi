@@ -37,5 +37,4 @@ class ForgotPasswordController extends Controller
 
         return redirect()->back()->with('message', 'We have e-mailed your password reset link!');
     }
-
 }

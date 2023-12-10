@@ -16,22 +16,21 @@ use Illuminate\View\View;
 
 class ResetPasswordController extends Controller
 {
-
-  //    use ResetsPasswords;
+    //    use ResetsPasswords;
 
     /**
      * Display the password reset view.
      */
     public function showResetForm(string $token): View
     {
-    $resetRecord = DB::table('password_reset_tokens')->where('token', $token)->first();
+        $resetRecord = DB::table('password_reset_tokens')->where('token', $token)->first();
 
-    // Pass both token and email to the view
-    return view('auth.passwords.reset', [
-        'token' => $token,
-      //  'email' => $resetRecord->email,
-    ]);
-}
+        // Pass both token and email to the view
+        return view('auth.passwords.reset', [
+            'token' => $token,
+            //  'email' => $resetRecord->email,
+        ]);
+    }
 
     /**
      * Reset the given user's password.
@@ -62,5 +61,4 @@ class ResetPasswordController extends Controller
     : back()->withErrors(['email' => [__($status)]])->withInput($request->only('email'));
 
     }
-
 }
