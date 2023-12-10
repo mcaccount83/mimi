@@ -16,7 +16,7 @@ use Illuminate\View\View;
 
 class ResetPasswordController extends Controller
 {
-  //    use ResetsPasswords;
+    //    use ResetsPasswords;
 
     /**
      * Display the password reset view.
@@ -61,5 +61,4 @@ class ResetPasswordController extends Controller
     : back()->withErrors(['email' => [__($status)]])->withInput($request->only('email'));
 
     }
-
 }

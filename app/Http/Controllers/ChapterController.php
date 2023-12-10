@@ -3984,13 +3984,12 @@ class ChapterController extends Controller
                                     'last_updated_by' => $lastUpdatedBy,
                                     'last_updated_date' => date('Y-m-d H:i:s'),
                                     'board_id' => $record->board_id,
-                                    'user_id' => $record->user_id
+                                    'user_id' => $record->user_id,
                                 ]);
 
                             //Delete Details of Board memebers from users table
                             DB::table('users')->where('id', $record->user_id)->delete();
                         }
-
 
                         //Delete Details of Board memebers from Board Detials table
                         DB::table('board_details')->where('chapter_id', $chapter_id)->delete();
@@ -4045,58 +4044,58 @@ class ChapterController extends Controller
                         ->where('chapter_id', $chapter_id)
                         ->delete();
 
+                    }
                 }
-            }
 
-                    $ChunkSize = 100;
+                $ChunkSize = 100;
 
-                    // Update or insert for outgoing board members
-                    $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
-                    foreach (array_chunk($outgoingBoardMembers->toArray(), $ChunkSize) as $Chunk) {
-                        foreach ($Chunk as $outgoingMember) {
-                            $outgoingUser = DB::table('users')->where('email', $outgoingMember->email)->first();
+                // Update or insert for outgoing board members
+                $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
+                foreach (array_chunk($outgoingBoardMembers->toArray(), $ChunkSize) as $Chunk) {
+                    foreach ($Chunk as $outgoingMember) {
+                        $outgoingUser = DB::table('users')->where('email', $outgoingMember->email)->first();
 
-                            if ($outgoingUser) {
-                                // Update user_type for existing record
-                                DB::table('users')->where('email', $outgoingMember->email)->update([
-                                    'user_type' => 'outgoing',
-                                ]);
-
-                                // Retrieve the user_id
-                                $userId = $outgoingUser->id;
-
-                            } else {
-                                // Insert new record
-                                $userId = DB::table('users')->insertGetId([
-                                    'email' => $outgoingMember->email,
-                                    'first_name' => $outgoingMember->first_name,
-                                    'last_name' => $outgoingMember->last_name,
-                                    'password' => Hash::make('TempPass4You'),
-                                    'remember_token' => '',
-                                    'user_type' => 'outgoing',
-                                    'is_active' => 1,
-                                ]);
-                            }
-
-                            // Update outgoing_board_member with user_id
-                            DB::table('outgoing_board_member')->where('email', $outgoingMember->email)->update([
-                                'user_id' => $userId
-                            ]);
-                        }
-                    }
-
-                    // Only update for board members who exist in the users table
-                    $BoardMembers = DB::table('board_details')->get();
-                    foreach ($BoardMembers as $member) {
-                        $user = DB::table('users')->where('email', $member->email)->first();
-
-                        if ($user) {
+                        if ($outgoingUser) {
                             // Update user_type for existing record
-                            DB::table('users')->where('email', $member->email)->update([
-                                'user_type' => 'board',
+                            DB::table('users')->where('email', $outgoingMember->email)->update([
+                                'user_type' => 'outgoing',
+                            ]);
+
+                            // Retrieve the user_id
+                            $userId = $outgoingUser->id;
+
+                        } else {
+                            // Insert new record
+                            $userId = DB::table('users')->insertGetId([
+                                'email' => $outgoingMember->email,
+                                'first_name' => $outgoingMember->first_name,
+                                'last_name' => $outgoingMember->last_name,
+                                'password' => Hash::make('TempPass4You'),
+                                'remember_token' => '',
+                                'user_type' => 'outgoing',
+                                'is_active' => 1,
                             ]);
                         }
+
+                        // Update outgoing_board_member with user_id
+                        DB::table('outgoing_board_member')->where('email', $outgoingMember->email)->update([
+                            'user_id' => $userId
+                        ]);
                     }
+                }
+
+                // Only update for board members who exist in the users table
+                $BoardMembers = DB::table('board_details')->get();
+                foreach ($BoardMembers as $member) {
+                    $user = DB::table('users')->where('email', $member->email)->first();
+
+                    if ($user) {
+                        // Update user_type for existing record
+                        DB::table('users')->where('email', $member->email)->update([
+                            'user_type' => 'board',
+                        ]);
+                    }
+                }
 
                 DB::commit();
             } catch (\Illuminate\Database\QueryException $e) {
