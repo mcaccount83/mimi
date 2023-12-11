@@ -2018,13 +2018,13 @@ class ReportController extends Controller
                         );
                     }
 
-                    //Update Chapter after Board Active
-                    DB::update('UPDATE chapters SET new_board_active = ? where id = ?', [1, $chapter_id]);
+                        //Update Chapter after Board Active
+                        DB::update('UPDATE chapters SET new_board_active = ? where id = ?', [1, $chapter_id]);
 
-                    //Delete Details of Board memebers from Income Board Member table
-                    DB::table('incoming_board_member')
-                        ->where('chapter_id', $chapter_id)
-                        ->delete();
+                        //Delete Details of Board memebers from Income Board Member table
+                        DB::table('incoming_board_member')
+                            ->where('chapter_id', $chapter_id)
+                            ->delete();
 
                     }
                 }
@@ -2060,7 +2060,7 @@ class ReportController extends Controller
 
                         // Update outgoing_board_member with user_id
                         DB::table('outgoing_board_member')->where('email', $outgoingMember->email)->update([
-                            'user_id' => $userId
+                            'user_id' => $userId,
                         ]);
                     }
                 }
