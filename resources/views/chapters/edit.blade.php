@@ -966,38 +966,38 @@ function is_url() {
         }
     }
 
-        function updateWebsiteStatus() {
-            const chWebsiteInput = document.querySelector('input[name="ch_website"]');
-            const chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
-
-            if (chWebsiteInput.value === '') {
-                chWebStatusSelect.value = '0'; // Set to 0 if the input is blank
-            } else if (chWebsiteInput.value !== 'http://www.momsclubofchaptername.com') {
-                // Set to 2 or 3 based on some condition, you can customize this part.
-                // For now, I'm setting it to 2.
-                chWebStatusSelect.value = '2';
-            }
-        }
-
-
-function enableEditField() {
-    const chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
+function updateWebsiteStatus() {
     const chWebsiteInput = document.querySelector('input[name="ch_website"]');
+    const chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
 
-    if (chWebStatusSelect.value === '2') {
-        chWebStatusSelect.disabled = false; // Enable the select field if option 2 is selected
-    } else {
-        chWebStatusSelect.disabled = true; // Disable for other options
-    }
-
-    // You can also add a condition to enable the input field when option 2 is selected.
-    // For example:
-    if (chWebStatusSelect.value === '2') {
-        chWebsiteInput.disabled = false; // Enable the "Chapter Website" input field for option 2
-    } else {
-        chWebsiteInput.disabled = true; // Disable for other options
+    if (chWebsiteInput.value === '') {
+        chWebStatusSelect.value = '0'; // Set to 0 if the input is blank
+    } else if (chWebsiteInput.value !== 'http://www.momsclubofchaptername.com') {
+        // Set to 2 or 3 based on some condition, you can customize this part.
+        // For now, I'm setting it to 2.
+        chWebStatusSelect.value = '2';
     }
 }
+
+
+            // function enableEditField() {
+            //     const chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
+            //     const chWebsiteInput = document.querySelector('input[name="ch_website"]');
+
+            //     if (chWebStatusSelect.value === '2') {
+            //         chWebStatusSelect.disabled = false; // Enable the select field if option 2 is selected
+            //     } else {
+            //         chWebStatusSelect.disabled = true; // Disable for other options
+            //     }
+
+            //     // You can also add a condition to enable the input field when option 2 is selected.
+            //     // For example:
+            //     if (chWebStatusSelect.value === '2') {
+            //         chWebsiteInput.disabled = false; // Enable the "Chapter Website" input field for option 2
+            //     } else {
+            //         chWebsiteInput.disabled = true; // Disable for other options
+            //     }
+            // }
 
 
   $(document ).ready(function() {

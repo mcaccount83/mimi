@@ -634,138 +634,71 @@
 @endsection
 @section('customscript')
 <script>
-// Disable fields and buttons
+/* Disable fields and buttons  */
 $(document).ready(function () {
+        //Update to "true" or "false" to make buttons active or grayed out
         $('input, select, textarea').prop('disabled', false);
         $('#BoardReport').prop('disabled', false);
-        $('#FinancialReport').prop('disabled', true);
+        $('#FinancialReport').prop('disabled', false);
         $('#Save').prop('disabled', false);
 
-// ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report//
+        //ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report
         $('#BoardReportAlwaysDisabled').prop('disabled', true);
 
-// Check the disabled state and show the description div if necessary
+    //Check the disabled status of EOY Buttons and show the "fields are locked" description if necessary
     if ($('input, select, textarea').prop('disabled')) {
             $('.description').show();
         }
 });
 
-
-// Disable Web Link Status option 0 and 1
+/* Disables Web Link Status options 0 and 1  */
+//ALWAYS leave thise fiels set to "true"
 document.getElementById('option0').disabled = true;
 document.getElementById('option1').disabled = true;
 
-
-function formatPhoneNumber(phoneNumber) {
-    // Format the phone number as "xxx-xxx-xxxx" if it's not empty
-    if (phoneNumber) {
-        var x = phoneNumber.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-        return !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
-    }
-    return phoneNumber;
-}
-
-function applyPhoneNumberFormattingToFields(fieldIds) {
-    for (var i = 0; i < fieldIds.length; i++) {
-        var field = document.getElementById(fieldIds[i]);
-        if (field) {
-            field.value = formatPhoneNumber(field.value);
-            field.addEventListener('input', function (e) {
-                e.target.value = formatPhoneNumber(e.target.value);
-            });
-        }
-    }
-}
-
-var phoneFieldIds = ['ch_pre_phone', 'ch_avp_phone', 'ch_mvp_phone', 'ch_trs_phone', 'ch_sec_phone'];
-applyPhoneNumberFormattingToFields(phoneFieldIds);
-
-
-
-function is_url() {
-        var str = $("#validate_url").val().trim(); // Trim leading and trailing whitespace
-        var chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
-
-        if (str === "") {
-            chWebStatusSelect.value = '0'; // Set to 0 if the input is blank
-            chWebStatusSelect.disabled = true; // Disable the select field
-            return true; // Field is empty, so no validation needed
-        }
-
-        var regexp = /^(https?:\/\/)([a-z0-9-]+\.(com|org))$/;
-
-        if (regexp.test(str)) {
-            chWebStatusSelect.disabled = false; // Enable the select field if a valid URL is entered
-            return true;
-        } else {
-            alert("Please Enter URL, Should be http://xxxxxxxx.xxx format");
-            chWebStatusSelect.value = '0'; // Set to 0 if an invalid URL is entered
-            chWebStatusSelect.disabled = true; // Disable the select field
-            return false;
-        }
-    }
-
-        function updateWebsiteStatus() {
-            const chWebsiteInput = document.querySelector('input[name="ch_website"]');
-            const chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
-
-            if (chWebsiteInput.value === '') {
-                chWebStatusSelect.value = '0'; // Set to 0 if the input is blank
-            } else if (chWebsiteInput.value !== 'http://www.momsclubofchaptername.com') {
-                // Set to 2 or 3 based on some condition, you can customize this part.
-                // For now, I'm setting it to 2.
-                chWebStatusSelect.value = '2';
-            }
-        }
-
-function isNumber(evt) {
-    evt = (evt) ? evt : window.event;
-    var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-        return false;
-    }
-    return true;
-}
-
-function isAlphanumeric(e){
-	var k;
-	document.all ? k = e.keyCode : k = e.which;
-	return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
-}
-
-function isPhone() {
-	if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode != 8) {
-		event.keyCode = 0;
-		alert("Please Enter Number Only");
-		return false;
-	}
-}
-
-  $( document ).ready(function() {
+$( document ).ready(function() {
+	var phoneListArr = ["ch_pre_phone", "ch_avp_phone", "ch_mvp_phone", "ch_trs_phone", "ch_sec_phone"];
     for (var i = phoneListArr.length - 1; i >= 0; i--) {
         var inputValue = $("#"+phoneListArr[i]).val();
         if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
         var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
         $("#"+phoneListArr[i]).val(reInputValue);
     }
+	$("ch_pre_phone").keyup(function() {
+        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
+    });
+	$("ch_avp_phone").keyup(function() {
+        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
+    });
+    $("ch_mvp_phone").keyup(function() {
+        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
+    });
+    $("ch_trs_phone").keyup(function() {
+        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
+    });
+    $("ch_sec_phone").keyup(function() {
+        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
+    });
 
-	$('.cls-pswd').on('keypress', function(e) {
-		if (e.which == 32)
-			return false;
-	});
-
-	var pcid = $("#pcid").val();
-	if(pcid !=""){
-		$.ajax({
+    var pcid = $("#pcid").val();
+    if (pcid != "") {
+        $.ajax({
             url: '{{ url("/checkreportid/") }}' + '/' + pcid,
             type: "GET",
-            success: function(result) {
-				$("#display_corlist").html(result);
+            success: function (result) {
+                console.log("AJAX result:", result);
+                $("#display_corlist").html(result);
             },
             error: function (jqXHR, exception) {
+                console.log("AJAX error:", exception);
             }
         });
     }
+
+    $('.cls-pswd').on('keypress', function(e) {
+    if (e.which == 32)
+        return false;
+	});
 
     var avp = $("#ch_avp_fname").val();
     if(avp ==''){
@@ -847,7 +780,67 @@ function isPhone() {
         $("#ch_sec_phone_req").hide();
         $("#ch_sec_state_req").hide();
     }
-  });
+
+    });
+
+function isPhone() {
+    if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode != 8) {
+        event.keyCode = 0;
+        alert("Please Enter Number Only");
+        return false;
+    }
+}
+
+function is_url() {
+        var str = $("#validate_url").val().trim(); // Trim leading and trailing whitespace
+        var chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
+
+        if (str === "") {
+            chWebStatusSelect.value = '0'; // Set to 0 if the input is blank
+            chWebStatusSelect.disabled = true; // Disable the select field
+            return true; // Field is empty, so no validation needed
+        }
+
+        var regexp = /^(https?:\/\/)([a-z0-9-]+\.(com|org))$/;
+
+        if (regexp.test(str)) {
+            chWebStatusSelect.disabled = false; // Enable the select field if a valid URL is entered
+            return true;
+        } else {
+            alert("Please Enter URL, Should be http://xxxxxxxx.xxx format");
+            chWebStatusSelect.value = '0'; // Set to 0 if an invalid URL is entered
+            chWebStatusSelect.disabled = true; // Disable the select field
+            return false;
+        }
+    }
+
+// function updateWebsiteStatus() {
+//     const chWebsiteInput = document.querySelector('input[name="ch_website"]');
+//     const chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
+
+//         if (chWebsiteInput.value === '') {
+//             chWebStatusSelect.value = '0'; // Set to 0 if the input is blank
+//         } else if (chWebsiteInput.value !== 'http://www.momsclubofchaptername.com') {
+//             // Set to 2 or 3 based on some condition, you can customize this part.
+//             // For now, I'm setting it to 2.
+//             chWebStatusSelect.value = '2';
+//         }
+//     }
+
+function isNumber(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+
+function isAlphanumeric(e){
+	var k;
+        document.all ? k = e.keyCode : k = e.which;
+        return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
+    }
 
 function ConfirmVacant(checkboxid) {
     switch(checkboxid){
@@ -1081,8 +1074,7 @@ function ConfirmVacant(checkboxid) {
     }
   }
 
-  //submit validation function
-  function PreSaveValidate(){
+function PreSaveValidate(){
     var errMessage="";
           if($("#ch_pre_email").val() != ""){
             if($("#ch_pre_email").val() == $("#ch_avp_email").val() || $("#ch_pre_email").val() == $("#ch_mvp_email").val() || $("#ch_pre_email").val() == $("#ch_trs_email").val() || $("#ch_pre_email").val() == $("#ch_sec_email").val()) {
@@ -1110,36 +1102,38 @@ function ConfirmVacant(checkboxid) {
             return false;
           }
 
-          var phoneListArr = ["ch_pre_phone", "ch_avp_phone", "ch_mvp_phone", "ch_trs_phone", "ch_sec_phone"];
-            for (var i = 0; i < phoneListArr.length; i++) {
-                    var inputField = document.getElementById(phoneListArr[i]);
-                    var inputValue = inputField.value;
-                    inputValue = inputValue.replace(/-/g, ''); // Remove hyphens
-                    inputValue = inputValue.replace(/\D/g, '').substring(0, 10); // Remove non-digits and limit to 10 digits
-                    inputField.value = inputValue; // Update the input field with the cleaned value
-                }
+    var phoneListArr = ["ch_pre_phone", "ch_avp_phone", "ch_mvp_phone", "ch_trs_phone", "ch_sec_phone"];
 
-          var NewPassword=document.getElementById("ch_pre_pswd").value;
-				//They changed their password
-				if(document.getElementById("ch_pre_pswd").value != document.getElementById("ch_pre_pswd").getAttribute("value")){
-					if(document.getElementById("ch_pre_pswd").value != document.getElementById("ch_pre_pswd_cnf").value){  //Make sure the password and confirmation match
-						alert ("The provided passwords do not match, please re-enter your password.");
-						document.getElementById("ch_pre_pswd_cnf").focus();
-						return false;
-					}
-					// Make sure the password is the right length
-					else if(NewPassword.length < 7){
-						alert("Password must be at least 7 characters.");
-						document.getElementById("ch_pre_pswd").focus();
-						return false;
-					}
-					else{
-						document.getElementById("ch_pre_pswd_chg").value="1";
-					}
-                }
-		//Okay, all validation passed, save the records to the database
-		return true;
-	}
+        for (var i = 0; i < phoneListArr.length; i++) {
+            var inputField = document.getElementById(phoneListArr[i]);
+            var inputValue = inputField.value;
+            inputValue = inputValue.replace(/-/g, ''); // Remove hyphens
+            inputValue = inputValue.replace(/\D/g, '').substring(0, 10); // Remove non-digits and limit to 10 digits
+            inputField.value = inputValue; // Update the input field with the cleaned value
+        }
+
+    var NewPassword=document.getElementById("ch_pre_pswd").value;
+        //They changed their password
+        if(document.getElementById("ch_pre_pswd").value != document.getElementById("ch_pre_pswd").getAttribute("value")){
+            if(document.getElementById("ch_pre_pswd").value != document.getElementById("ch_pre_pswd_cnf").value){  //Make sure the password and confirmation match
+                alert ("The provided passwords do not match, please re-enter your password.");
+                document.getElementById("ch_pre_pswd_cnf").focus();
+                return false;
+            }
+            // Make sure the password is the right length
+            else if(NewPassword.length < 7){
+                alert("Password must be at least 7 characters.");
+                document.getElementById("ch_pre_pswd").focus();
+                return false;
+            }
+            else{
+                document.getElementById("ch_pre_pswd_chg").value="1";
+            }
+        }
+
+    //Okay, all validation passed, save the records to the database
+    return true;
+}
 
 </script>
 @endsection

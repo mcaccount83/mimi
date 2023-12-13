@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\FinancialReport;
 use App\Models\User;
-use Barryvdh\DomPDF\Facade\Pdf;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -140,7 +140,7 @@ class PDFController extends Controller
             ];
 
             // Load the view and generate the PDF
-            $pdf = Pdf::loadView('boards.financial-report', ['pdfData' => $pdfData]);
+            $pdf = PDF::loadView('boards.financial-report', ['pdfData' => $pdfData]);
             // Download the PDF
             return $pdf->stream('Financial Report.pdf');
 

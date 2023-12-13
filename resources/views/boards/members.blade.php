@@ -338,70 +338,36 @@
 @endsection
 @section('customscript')
 <script>
-// Disable fields and buttons
+/* Disable fields and buttons  */
 $(document).ready(function () {
+        //Update to "true" or "false" to make buttons active or grayed out
         $('input, select, textarea').prop('disabled', false);
         $('#BoardReport').prop('disabled', false);
         $('#FinancialReport').prop('disabled', false);
         $('#Save').prop('disabled', false);
 
-// ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report//
+        //ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report
         $('#BoardReportAlwaysDisabled').prop('disabled', true);
 
-// Check the disabled state and show the description div if necessary
+    //Check the disabled status of EOY Buttons and show the "fields are locked" description if necessary
     if ($('input, select, textarea').prop('disabled')) {
             $('.description').show();
         }
  });
 
- function formatPhoneNumber(phoneNumber) {
-    // Format the phone number as "xxx-xxx-xxxx" if it's not empty
-    if (phoneNumber) {
-        var x = phoneNumber.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
-        return !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
-    }
-    return phoneNumber;
-}
-
-var initialPhoneNumber = document.getElementById('bor_phone').value;
-document.getElementById('bor_phone').value = formatPhoneNumber(initialPhoneNumber);
-
-document.getElementById('bor_phone').addEventListener('input', function (e) {
-    e.target.value = formatPhoneNumber(e.target.value);
-});
-
-function isNumber(evt) {
-    evt = (evt) ? evt : window.event;
-    var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-        return false;
-    }
-    return true;
-}
-
-function isAlphanumeric(e){
-	var k;
-	document.all ? k = e.keyCode : k = e.which;
-	return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
-}
-
-function isPhone() {
-	if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode != 8) {
-		event.keyCode = 0;
-		alert("Please Enter Number Only");
-		return false;
-	}
-}
-
-$( document ).ready(function() {
+ $( document ).ready(function() {
+	var phoneListArr = ["bor_phone"];
     for (var i = phoneListArr.length - 1; i >= 0; i--) {
         var inputValue = $("#"+phoneListArr[i]).val();
         if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
         var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
         $("#"+phoneListArr[i]).val(reInputValue);
     }
+	$("bor_phone").keyup(function() {
+        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
+    });
 
-	$('.cls-pswd').on('keypress', function(e) {
+    $('.cls-pswd').on('keypress', function(e) {
 		if (e.which == 32)
 			return false;
 	});
@@ -419,37 +385,60 @@ $( document ).ready(function() {
             }
         });
     }
-});
 
-//submit validation function
+  });
+
+  function isPhone() {
+    if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode != 8) {
+        event.keyCode = 0;
+        alert("Please Enter Number Only");
+        return false;
+    }
+}
+
+function isNumber(evt) {
+    evt = (evt) ? evt : window.event;
+    var charCode = (evt.which) ? evt.which : evt.keyCode;
+    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+        return false;
+    }
+    return true;
+}
+
+function isAlphanumeric(e){
+	var k;
+	document.all ? k = e.keyCode : k = e.which;
+	return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
+}
+
   function PreSaveValidate(){
-          var NewPassword=document.getElementById("bor_pswd").value;
-				//They changed their password
-				if(document.getElementById("bor_pswd").value != document.getElementById("bor_pswd").getAttribute("value")){
-					if(document.getElementById("bor_pswd").value != document.getElementById("bor_pswd_cnf").value){  //Make sure the password and confirmation match
-						alert ("The provided passwords do not match, please re-enter your password.");
-						document.getElementById("bor_pswd_cnf").focus();
-						return false;
-					}
-					// Make sure the password is the right length
-					else if(NewPassword.length < 7){
-						alert("Password must be at least 7 characters.");
-						document.getElementById("bor_pswd").focus();
-						return false;
-					}
-					else{
-						document.getElementById("bor_pswd_chg").value="1";
-					}
-				}
-            var phoneListArr = ["bor_phone"];
+    var phoneListArr = ["bor_phone"];
+        for (var i = 0; i < phoneListArr.length; i++) {
+            var inputField = document.getElementById(phoneListArr[i]);
+            var inputValue = inputField.value;
+            inputValue = inputValue.replace(/-/g, ''); // Remove hyphens
+            inputValue = inputValue.replace(/\D/g, '').substring(0, 10); // Remove non-digits and limit to 10 digits
+            inputField.value = inputValue; // Update the input field with the cleaned value
+        }
 
-                for (var i = 0; i < phoneListArr.length; i++) {
-                    var inputField = document.getElementById(phoneListArr[i]);
-                    var inputValue = inputField.value;
-                    inputValue = inputValue.replace(/-/g, ''); // Remove hyphens
-                    inputValue = inputValue.replace(/\D/g, '').substring(0, 10); // Remove non-digits and limit to 10 digits
-                    inputField.value = inputValue; // Update the input field with the cleaned value
-                }
+    var NewPassword=document.getElementById("bor_pswd").value;
+        //They changed their password
+        if(document.getElementById("bor_pswd").value != document.getElementById("bor_pswd").getAttribute("value")){
+            if(document.getElementById("bor_pswd").value != document.getElementById("bor_pswd_cnf").value){  //Make sure the password and confirmation match
+                alert ("The provided passwords do not match, please re-enter your password.");
+                document.getElementById("bor_pswd_cnf").focus();
+                return false;
+            }
+            // Make sure the password is the right length
+            else if(NewPassword.length < 7){
+                alert("Password must be at least 7 characters.");
+                document.getElementById("bor_pswd").focus();
+                return false;
+            }
+            else{
+                document.getElementById("bor_pswd_chg").value="1";
+            }
+        }
 
 		//Okay, all validation passed, save the records to the database
 		return true;
