@@ -340,11 +340,11 @@
 <script>
 /* Disable fields and buttons  */
 $(document).ready(function () {
-        //Update to "true" or "false" to make buttons active or grayed out
-        $('input, select, textarea').prop('disabled', false);
-        $('#BoardReport').prop('disabled', false);
-        $('#FinancialReport').prop('disabled', false);
-        $('#Save').prop('disabled', false);
+        //Update to "true" or "false"
+        $('input, select, textarea').prop('disabled', false);  /*fields on page (true disables fields for editing)*/
+        $('#BoardReport').prop('disabled', true);  /*board report button (true grays out button)*/
+        $('#FinancialReport').prop('disabled', true);  /*financial report button (true grays out button)*/
+        $('#Save').prop('disabled', false);  /*save button (true grays out button)*/
 
         //ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report
         $('#BoardReportAlwaysDisabled').prop('disabled', true);

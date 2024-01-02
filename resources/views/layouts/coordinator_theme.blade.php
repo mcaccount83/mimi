@@ -338,8 +338,8 @@
             </ul>
         </li><?php } ?>
 
-              <?php if (($positionid >=1 && $positionid <=7) || $positionid ==25){ ?>
-        <li class="treeview {{ Request::is('yearreports/*') ? 'active' : '' }} {{ Request::is('chapter/financial/*') ? 'active' : ''}} {{ Request::is('chapter/boardinfo/*') ? 'active' : ''}}  {{ Request::is('chapter/boundaryview/*') ? 'active' : '' }} {{ Request::is('chapter/statusview/*') ? 'active' : ''}} {{ Request::is('chapter/awardsview/*') ? 'active' : '' }} {{ Request::is('yearreports/addawards') ? 'active' : '' }}">
+                 <?php if ($positionid == 13 || $secpositionid == 13 ){ ?>
+            <li class="treeview {{ Request::is('yearreports/*') ? 'active' : '' }} {{ Request::is('chapter/financial/*') ? 'active' : ''}} {{ Request::is('chapter/boardinfo/*') ? 'active' : ''}}  {{ Request::is('chapter/boundaryview/*') ? 'active' : '' }} {{ Request::is('chapter/statusview/*') ? 'active' : ''}} {{ Request::is('chapter/awardsview/*') ? 'active' : '' }} {{ Request::is('yearreports/addawards') ? 'active' : '' }}">
             <a href="#"><i class="fa fa-line-chart"></i> <span>EOY Reports</span>
               <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
             </a>
@@ -368,7 +368,7 @@
             </ul>
         </li><?php } ?>
 
-        <?php if ($positionid == 13 || $secpositionid == 13 ){ ?>
+                <?php if ($positionid == 13 || $secpositionid == 13 ){ ?>
         <li class="treeview {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }} {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }} {{ Request::is('adminreports/multipleboard') ? 'active' : '' }} {{ Request::is('adminreports/nopresident') ? 'active' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
             <a href="#"><i class="fa fa-line-chart"></i> <span>Admin Reports</span>
               <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>

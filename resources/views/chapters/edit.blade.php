@@ -208,21 +208,21 @@
               </div>
               <div class="box-body">
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 avp-field">
               <div class="form-group">
                 <label>First Name</label>
                 <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control my-colorpicker1" value="{{$AVPDetails[0]->avp_fname != ''  ? $AVPDetails[0]->avp_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 avp-field">
               <div class="form-group">
                 <label>Last Name</label>
                 <input type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control my-colorpicker1" value="{{$AVPDetails[0]->avp_lname != ''  ? $AVPDetails[0]->avp_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 avp-field">
               <div class="form-group">
                 <label>Email</label>
                 <input type="email" name="ch_avp_email" id="ch_avp_email" class="form-control my-colorpicker1" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$AVPDetails[0]->avp_email != ''  ? $AVPDetails[0]->avp_email : ''}}" maxlength="50">
@@ -230,27 +230,27 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 avp-field">
               <div class="form-group">
                 <label>Phone</label>
-                <input type="text" name="ch_avp_phone" id="ch_avp_phone" class="form-control my-colorpicker1" value="{{$AVPDetails[0]->avp_phone != ''  ? $AVPDetails[0]->avp_phone : ''}}" maxlength="12" required onkeypress="return isPhone(event)">
+                <input type="text" name="ch_avp_phone" id="ch_avp_phone" class="form-control my-colorpicker1" value="{{$AVPDetails[0]->avp_phone != ''  ? $AVPDetails[0]->avp_phone : ''}}" maxlength="12" onkeypress="return isPhone(event)">
               </div>
               </div>
               <!-- /.form group -->
-               <div class="col-sm-12 col-xs-12">
+               <div class="col-sm-12 col-xs-12 avp-field">
               <div class="form-group">
                 <label>Street Address</label>
                 <input name="ch_avp_street" id="ch_avp_street" class="form-control my-colorpicker1" rows="4" maxlength="250" value="{{$AVPDetails[0]->avp_addr != ''  ? $AVPDetails[0]->avp_addr : ''}}">
               </div>
               </div>
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 avp-field">
               <div class="form-group">
                 <label>City</label>
                 <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control my-colorpicker1" value="{{$AVPDetails[0]->avp_city != ''  ? $AVPDetails[0]->avp_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 avp-field">
               <div class="form-group">
                 <label>State</label>
                 <select name="ch_avp_state" id="ch_avp_state" class="form-control select2" style="width: 100%;" >
@@ -262,7 +262,7 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 avp-field">
               <div class="form-group">
                 <label>Zip</label>
                 <input type="text" name="ch_avp_zip" id="ch_avp_zip" maxlength="10" class="form-control my-colorpicker1" value="{{$AVPDetails[0]->avp_zip != ''  ? $AVPDetails[0]->avp_zip : ''}}" onkeypress="return isNumber(event)">
@@ -278,7 +278,7 @@
                     </div>
                 </div>
               </div>
-              <div class="box-body text-center">
+              <div class="box-body text-center avp-field">
                 <button type="button" class="btn btn-themeBlue margin" id="{{ $AVPDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$AVPDetails[0]->user_id == ''  ? 'disabled' : ''}} >Reset Password</button>
               </div>
               </div>
@@ -287,21 +287,21 @@
               </div>
               <div class="box-body">
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 mvp-field">
               <div class="form-group">
                 <label>First Name</label>
                 <input type="text" name="ch_mvp_fname" id="ch_mvp_fname"  class="form-control my-colorpicker1" value="{{$MVPDetails[0]->mvp_fname != ''  ? $MVPDetails[0]->mvp_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 mvp-field">
               <div class="form-group">
                 <label>Last Name</label>
                 <input type="text" name="ch_mvp_lname" id="ch_mvp_lname" class="form-control my-colorpicker1" value="{{$MVPDetails[0]->mvp_lname != ''  ? $MVPDetails[0]->mvp_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 mvp-field">
               <div class="form-group">
                 <label>Email</label>
                 <input type="email" name="ch_mvp_email" id="ch_mvp_email" class="form-control my-colorpicker1" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$MVPDetails[0]->mvp_email != ''  ? $MVPDetails[0]->mvp_email : ''}}" maxlength="50">
@@ -309,27 +309,27 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 mvp-field">
               <div class="form-group">
                 <label>Phone</label>
-                <input type="text" name="ch_mvp_phone" id="ch_mvp_phone" class="form-control my-colorpicker1" value="{{$MVPDetails[0]->mvp_phone != ''  ? $MVPDetails[0]->mvp_phone : ''}}" maxlength="12" required onkeypress="return isPhone(event)">
+                <input type="text" name="ch_mvp_phone" id="ch_mvp_phone" class="form-control my-colorpicker1" value="{{$MVPDetails[0]->mvp_phone != ''  ? $MVPDetails[0]->mvp_phone : ''}}" maxlength="12" onkeypress="return isPhone(event)">
               </div>
               </div>
                <!-- /.form group -->
-               <div class="col-sm-12 col-xs-12">
+               <div class="col-sm-12 col-xs-12 mvp-field">
               <div class="form-group">
                 <label>Street Address</label>
                 <input name="ch_mvp_street" id="ch_mvp_street" class="form-control my-colorpicker1" rows="4" value="{{$MVPDetails[0]->mvp_addr != ''  ? $MVPDetails[0]->mvp_addr : ''}}" maxlength="250">
               </div>
               </div>
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 mvp-field">
               <div class="form-group">
                 <label>City</label>
                 <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control my-colorpicker1" value="{{$MVPDetails[0]->mvp_city != ''  ? $MVPDetails[0]->mvp_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 mvp-field">
               <div class="form-group">
                 <label>State</label>
                 <select name="ch_mvp_state" id="ch_mvp_state" class="form-control select2" style="width: 100%;" >
@@ -341,7 +341,7 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 mvp-field">
               <div class="form-group">
                 <label>Zip</label>
                 <input type="text" name="ch_mvp_zip" id="ch_mvp_zip" maxlength="10" class="form-control my-colorpicker1" value="{{$MVPDetails[0]->mvp_zip != ''  ? $MVPDetails[0]->mvp_zip : ''}}" onkeypress="return isNumber(event)" >
@@ -357,7 +357,7 @@
                     </div>
                 </div>
               </div>
-              <div class="box-body text-center">
+              <div class="box-body text-center mvp-field">
                 <button type="button" class="btn btn-themeBlue margin" id="{{ $MVPDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$MVPDetails[0]->user_id == ''  ? 'disabled' : ''}} >Reset Password</button>
               </div>
               </div>
@@ -366,21 +366,21 @@
               </div>
               <div class="box-body">
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 treas-field">
               <div class="form-group">
                 <label>First Name</label>
                 <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control my-colorpicker1" value="{{$TRSDetails[0]->trs_fname != ''  ? $TRSDetails[0]->trs_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)" >
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 treas-field">
               <div class="form-group">
                 <label>Last Name</label>
                 <input type="text" name="ch_trs_lname" id="ch_trs_lname" class="form-control my-colorpicker1" value="{{$TRSDetails[0]->trs_lname != ''  ? $TRSDetails[0]->trs_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)" >
               </div>
               </div>
              <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 treas-field">
               <div class="form-group">
                 <label>Email</label>
                 <input type="email" name="ch_trs_email" id="ch_trs_email" class="form-control my-colorpicker1" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$TRSDetails[0]->trs_email != ''  ? $TRSDetails[0]->trs_email : ''}}" maxlength="50">
@@ -388,27 +388,27 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 treas-field">
               <div class="form-group">
                 <label>Phone</label>
-                <input type="text" name="ch_trs_phone" id="ch_trs_phone" class="form-control my-colorpicker1" value="{{$TRSDetails[0]->trs_phone != ''  ? $TRSDetails[0]->trs_phone : ''}}" maxlength="12" required onkeypress="return isPhone(event)">
+                <input type="text" name="ch_trs_phone" id="ch_trs_phone" class="form-control my-colorpicker1" value="{{$TRSDetails[0]->trs_phone != ''  ? $TRSDetails[0]->trs_phone : ''}}" maxlength="12" onkeypress="return isPhone(event)">
               </div>
               </div>
                <!-- /.form group -->
-               <div class="col-sm-12 col-xs-12">
+               <div class="col-sm-12 col-xs-12 treas-field">
               <div class="form-group">
                 <label>Street Address</label>
                 <input name="ch_trs_street" id="ch_trs_street" class="form-control my-colorpicker1" rows="4" value="{{$TRSDetails[0]->trs_addr != ''  ? $TRSDetails[0]->trs_addr : ''}}" maxlength="250" >
               </div>
               </div>
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 treas-field">
               <div class="form-group">
                 <label>City</label>
                 <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control my-colorpicker1" value="{{$TRSDetails[0]->trs_city != ''  ? $TRSDetails[0]->trs_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 treas-field">
               <div class="form-group">
                 <label>State</label>
                 <select name="ch_trs_state" id="ch_trs_state" class="form-control select2" style="width: 100%;">
@@ -420,7 +420,7 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 treas-field">
               <div class="form-group">
                 <label>Zip</label>
                 <input type="text" name="ch_trs_zip" id="ch_trs_zip" maxlength="10" class="form-control my-colorpicker1" value="{{$TRSDetails[0]->trs_zip != ''  ? $TRSDetails[0]->trs_zip : ''}}" onkeypress="return isNumber(event)">
@@ -436,7 +436,7 @@
                     </div>
                 </div>
               </div>
-              <div class="box-body text-center">
+              <div class="box-body text-center treas-field">
                 <button type="button" class="btn btn-themeBlue margin" id="{{ $TRSDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$TRSDetails[0]->user_id == ''  ? 'disabled' : ''}} >Reset Password</button>
               </div>
               </div>
@@ -445,21 +445,21 @@
               </div>
               <div class="box-body">
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 sec-field">
               <div class="form-group">
                 <label>First Name</label>
                 <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control my-colorpicker1" value="{{$SECDetails[0]->sec_fname != ''  ? $SECDetails[0]->sec_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 sec-field">
               <div class="form-group">
                 <label>Last Name</label>
                 <input type="text" name="ch_sec_lname" id="ch_sec_lname" class="form-control my-colorpicker1" value="{{$SECDetails[0]->sec_lname != ''  ? $SECDetails[0]->sec_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)" >
               </div>
               </div>
              <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 sec-field">
               <div class="form-group">
                 <label>Email</label>
                 <input type="email" name="ch_sec_email" id="ch_sec_email" class="form-control my-colorpicker1" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$SECDetails[0]->sec_email != ''  ? $SECDetails[0]->sec_email : ''}}" maxlength="50" >
@@ -467,27 +467,27 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 sec-field">
               <div class="form-group">
                 <label>Phone</label>
-                <input type="text" name="ch_sec_phone" id="ch_sec_phone" class="form-control my-colorpicker1" value="{{$SECDetails[0]->sec_phone != ''  ? $SECDetails[0]->sec_phone : ''}}" maxlength="12" required onkeypress="return isPhone(event)" >
+                <input type="text" name="ch_sec_phone" id="ch_sec_phone" class="form-control my-colorpicker1" value="{{$SECDetails[0]->sec_phone != ''  ? $SECDetails[0]->sec_phone : ''}}" maxlength="12" onkeypress="return isPhone(event)" >
               </div>
               </div>
                <!-- /.form group -->
-               <div class="col-sm-12 col-xs-12">
+               <div class="col-sm-12 col-xs-12 sec-field">
               <div class="form-group">
                 <label>Street Address</label>
                 <input name="ch_sec_street" id="ch_sec_street" class="form-control my-colorpicker1" rows="4" value="{{$SECDetails[0]->sec_addr != ''  ? $SECDetails[0]->sec_addr : ''}}" maxlength="250" >
               </div>
               </div>
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 sec-field">
               <div class="form-group">
                 <label>City</label>
                 <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control my-colorpicker1" value="{{$SECDetails[0]->sec_city != ''  ? $SECDetails[0]->sec_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)" >
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 sec-field">
               <div class="form-group">
                 <label>State</label>
                 <select name="ch_sec_state" id="ch_sec_state" class="form-control select2" style="width: 100%;" >
@@ -499,7 +499,7 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 col-xs-12 sec-field">
               <div class="form-group">
                 <label>Zip</label>
                 <input type="text" name="ch_sec_zip" id="ch_sec_zip" maxlength="10" class="form-control my-colorpicker1" value="{{$SECDetails[0]->sec_zip != ''  ? $SECDetails[0]->sec_zip : ''}}" onkeypress="return isNumber(event)" >
@@ -515,7 +515,7 @@
                     </div>
                 </div>
               </div>
-              <div class="box-body text-center">
+              <div class="box-body text-center sec-field">
                 <button type="button" class="btn btn-themeBlue margin" id="{{ $SECDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$SECDetails[0]->user_id == ''  ? 'disabled' : ''}} >Reset Password</button>
               </div>
               </div>
@@ -709,12 +709,15 @@
               </div>
               <div class="box-body">
             <br>
+            <div id="reportStatusText" class="description text-center" style="color: red;">
+                <p><strong><?php echo date('Y')-1 .'-'.date('Y');?> Report Status/Links are not available at this time.</strong></p>
+            </div>
               <!-- /.form group -->
               <div class="radio-chk">
               <div class="col-sm-3 col-xs-12">
                   <div class="form-group">
                     <label><?php echo $a = date('Y'); echo "-"; echo $a+1;?> Board Info Received</label>
-                    <label style="display: block;"><input disabled type="checkbox" name="" id="" class="ios-switch green bigswitch" {{$chapterList[0]->new_board_submitted == '1'  ? 'checked' : ''}} /><div><div></div></div>
+                    <label style="display: block;"><input disabled type="checkbox" name="BoardInfo" id="BoardInfo" class="ios-switch green bigswitch" {{$chapterList[0]->new_board_submitted == '1'  ? 'checked' : ''}} /><div><div></div></div>
                                 </label>
                   </div>
               </div>
@@ -724,7 +727,7 @@
                 <div class="col-sm-3 col-xs-12">
                   <div class="form-group">
                     <label><?php echo $a = date('Y'); echo "-"; echo $a+1;?> Board Activated</label>
-                    <label style="display: block;"><input disabled type="checkbox" name="" id="" class="ios-switch green bigswitch" {{$chapterList[0]->new_board_active == '1'  ? 'checked' : ''}} /><div><div></div></div>
+                    <label style="display: block;"><input disabled type="checkbox" name="BoardActive" id="BoardActive" class="ios-switch green bigswitch" {{$chapterList[0]->new_board_active == '1'  ? 'checked' : ''}} /><div><div></div></div>
                                 </label>
                   </div>
                   </div>
@@ -735,7 +738,7 @@
                         <div class="col-sm-3 col-xs-12">
                             <div class="form-group">
                                 <label><?php echo date('Y')-1 .'-'.date('Y');?> Financial Report Received</label>
-                                <label style="display: block;"><input disabled type="checkbox" name="" id="" class="ios-switch green bigswitch" {{$chapterList[0]->financial_report_received == '1'  ? 'checked' : ''}} /><div><div></div></div>
+                                <label style="display: block;"><input disabled type="checkbox" name="FinancialReceived" id="FinancialReceived" class="ios-switch green bigswitch" {{$chapterList[0]->financial_report_received == '1'  ? 'checked' : ''}} /><div><div></div></div>
                                 </label>
                             </div>
                         </div>
@@ -747,7 +750,7 @@
                         <div class="col-sm-3 col-xs-12">
                             <div class="form-group">
                                 <label><?php echo date('Y')-1 .'-'.date('Y');?> Financial Review Completed</label>
-                                <label style="display: block;"><input disabled type="checkbox" name="ch_financial_complete" id="" class="ios-switch green bigswitch" {{$chapterList[0]->financial_report_complete == '1'  ? 'checked' : ''}} /><div><div></div></div>
+                                <label style="display: block;"><input disabled type="checkbox" name="ch_financial_complete" id="FinancialComplete" class="ios-switch green bigswitch" {{$chapterList[0]->financial_report_complete == '1'  ? 'checked' : ''}} /><div><div></div></div>
                                 </label>
                             </div>
                         </div>
@@ -885,11 +888,16 @@
 
   @section('customscript')
   <script>
- // Disable buttons **Change true/false if fields need to be enabled/disabled//
+ // Change true/false or show/hide
  $(document).ready(function () {
-        $('#ReportStatus').prop('disabled', false);
-        $('#BoardReport').prop('disabled', false);
-        $('#FinancialReport').prop('disabled', false);
+        $('#reportStatusText').show();  /*report status text (.show/.hide to change visibility)*/
+        $('#BoardInfo').closest('.radio-chk').hide();  /*board info received toggle (.show/.hide to change visibility)*/
+        $('#BoardActive').closest('.radio-chk').hide();  /*board info activated toggle (.show/.hide to change visibility)*/
+        $('#FinancialReceived').closest('.radio-chk').hide();  /*financial report received toggle (.show/.hide to change visibility)*/
+        $('#FinancialComplete').closest('.radio-chk').hide();  /*financial report complete toggle (.show/.hide to change visibility)*/
+        $('#ReportStatus').prop('disabled', true);  /*report status button (true/false to change disable/enable)*/
+        $('#BoardReport').prop('disabled', true);  /*board report button (true/false to change disable/enable)*/
+        $('#FinancialReport').prop('disabled', true);  /*financial report button (true/false to change disable/enable)*/
 
  // ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report//
         $('#BoardReportAlwaysDisabled').prop('disabled', true);
@@ -979,27 +987,6 @@ function updateWebsiteStatus() {
     }
 }
 
-
-            // function enableEditField() {
-            //     const chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
-            //     const chWebsiteInput = document.querySelector('input[name="ch_website"]');
-
-            //     if (chWebStatusSelect.value === '2') {
-            //         chWebStatusSelect.disabled = false; // Enable the select field if option 2 is selected
-            //     } else {
-            //         chWebStatusSelect.disabled = true; // Disable for other options
-            //     }
-
-            //     // You can also add a condition to enable the input field when option 2 is selected.
-            //     // For example:
-            //     if (chWebStatusSelect.value === '2') {
-            //         chWebsiteInput.disabled = false; // Enable the "Chapter Website" input field for option 2
-            //     } else {
-            //         chWebsiteInput.disabled = true; // Disable for other options
-            //     }
-            // }
-
-
   $(document ).ready(function() {
     var phoneListArr = ["ch_pre_phone","ch_avp_phone","ch_mvp_phone","ch_trs_phone","ch_sec_phone"];
     for (var i = phoneListArr.length - 1; i >= 0; i--) {
@@ -1051,212 +1038,36 @@ function updateWebsiteStatus() {
         });
 
       }
-    var avp = $("#ch_avp_fname").val();
-    if(avp ==''){
-        $("#ch_avp_fname").prop("readonly",true);
-        $("#ch_avp_lname").prop("readonly",true);
-        $("#ch_avp_email").prop("readonly",true);
-        $("#ch_avp_street").prop("readonly",true);
-        $("#ch_avp_city").prop("readonly",true);
-        $("#ch_avp_zip").prop("readonly",true);
-        $("#ch_avp_phone").prop("readonly",true);
-        $("#ch_avp_state").prop("disabled",true);
-    }
-    var mvp = $("#ch_mvp_fname").val();
-    if(mvp ==''){
-        $("#ch_mvp_fname").prop("readonly",true);
-        $("#ch_mvp_lname").prop("readonly",true);
-        $("#ch_mvp_email").prop("readonly",true);
-        $("#ch_mvp_street").prop("readonly",true);
-        $("#ch_mvp_city").prop("readonly",true);
-        $("#ch_mvp_zip").prop("readonly",true);
-        $("#ch_mvp_phone").prop("readonly",true);
-        $("#ch_mvp_state").prop("disabled",true);
-    }
-    var trs = $("#ch_trs_fname").val();
-    if(trs ==''){
-        $("#ch_trs_fname").prop("readonly",true);
-        $("#ch_trs_lname").prop("readonly",true);
-        $("#ch_trs_email").prop("readonly",true);
-        $("#ch_trs_street").prop("readonly",true);
-        $("#ch_trs_city").prop("readonly",true);
-        $("#ch_trs_zip").prop("readonly",true);
-        $("#ch_trs_phone").prop("readonly",true);
-        $("#ch_trs_state").prop("disabled",true);
-    }
-    var sec = $("#ch_sec_fname").val();
-    if(sec ==''){
-        $("#ch_sec_fname").prop("readonly",true);
-        $("#ch_sec_lname").prop("readonly",true);
-        $("#ch_sec_email").prop("readonly",true);
-        $("#ch_sec_street").prop("readonly",true);
-        $("#ch_sec_city").prop("readonly",true);
-        $("#ch_sec_zip").prop("readonly",true);
-        $("#ch_sec_phone").prop("readonly",true);
-        $("#ch_sec_state").prop("disabled",true);
-    }
 
   });
 
-  function ConfirmVacant(checkboxid) {
-    switch(checkboxid){
-                    case "AVPVacant":
-              if($("#AVPVacant").prop("checked") == true){
-                $("#ch_avp_fname").prop("readonly",true);
-                $("#ch_avp_lname").prop("readonly",true);
-                $("#ch_avp_email").prop("readonly",true);
-                $("#ch_avp_street").prop("readonly",true);
-                $("#ch_avp_city").prop("readonly",true);
-                $("#ch_avp_zip").prop("readonly",true);
-                $("#ch_avp_phone").prop("readonly",true);
-                $("#ch_avp_state").prop("disabled",true);
-                $("#ch_avp_fname").val("");
-                $("#ch_avp_lname").val("");
-                $("#ch_avp_email").val("");
-                $("#ch_avp_street").val("");
-                $("#ch_avp_city").val("");
-                $("#ch_avp_zip").val("");
-                $("#ch_avp_phone").val("");
-                $("#ch_avp_state").val("");
-              }
-              else{
-                $("#ch_avp_fname").prop("readonly",false);
-                $("#ch_avp_lname").prop("readonly",false);
-                $("#ch_avp_email").prop("readonly",false);
-                $("#ch_avp_street").prop("readonly",false);
-                $("#ch_avp_city").prop("readonly",false);
-                $("#ch_avp_zip").prop("readonly",false);
-                $("#ch_avp_phone").prop("readonly",false);
-                $("#ch_avp_state").prop("disabled",false);
 
-                $("#ch_avp_fname").prop("required",true);
-                $("#ch_avp_lname").prop("required",true);
-                $("#ch_avp_email").prop("required",true);
-                $("#ch_avp_street").prop("required",true);
-                $("#ch_avp_city").prop("required",true);
-                $("#ch_avp_zip").prop("required",true);
-                $("#ch_avp_phone").prop("required",true);
-                $("#ch_avp_state").prop("required",true);
-              }
-            break;
-          case "MVPVacant":
-              if($("#MVPVacant").prop("checked") == true){
-                $("#ch_mvp_fname").prop("readonly",true);
-                $("#ch_mvp_lname").prop("readonly",true);
-                $("#ch_mvp_email").prop("readonly",true);
-                $("#ch_mvp_street").prop("readonly",true);
-                $("#ch_mvp_city").prop("readonly",true);
-                $("#ch_mvp_zip").prop("readonly",true);
-                $("#ch_mvp_phone").prop("readonly",true);
-                $("#ch_mvp_state").prop("disabled",true);
-                $("#ch_mvp_fname").val("");
-                $("#ch_mvp_lname").val("");
-                $("#ch_mvp_email").val("");
-                $("#ch_mvp_street").val("");
-                $("#ch_mvp_city").val("");
-                $("#ch_mvp_zip").val("");
-                $("#ch_mvp_phone").val("");
-                $("#ch_mvp_state").val("");
-              }
-              else{
-                $("#ch_mvp_fname").prop("readonly",false);
-                $("#ch_mvp_lname").prop("readonly",false);
-                $("#ch_mvp_email").prop("readonly",false);
-                $("#ch_mvp_street").prop("readonly",false);
-                $("#ch_mvp_city").prop("readonly",false);
-                $("#ch_mvp_zip").prop("readonly",false);
-                $("#ch_mvp_phone").prop("readonly",false);
-                $("#ch_mvp_state").prop("disabled",false);
-                $("#ch_mvp_fname").prop("required",true);
-                $("#ch_mvp_lname").prop("required",true);
-                $("#ch_mvp_email").prop("required",true);
-                $("#ch_mvp_street").prop("required",true);
-                $("#ch_mvp_city").prop("required",true);
-                $("#ch_mvp_zip").prop("required",true);
-                $("#ch_mvp_phone").prop("required",true);
-                $("#ch_mvp_state").prop("required",true);
-              }
-            break;
-          case "TreasVacant":
-              if($("#TreasVacant").prop("checked") == true){
-                $("#ch_trs_fname").prop("readonly",true);
-                $("#ch_trs_lname").prop("readonly",true);
-                $("#ch_trs_email").prop("readonly",true);
-                $("#ch_trs_street").prop("readonly",true);
-                $("#ch_trs_city").prop("readonly",true);
-                $("#ch_trs_zip").prop("readonly",true);
-                $("#ch_trs_phone").prop("readonly",true);
-                $("#ch_trs_state").prop("disabled",true);
-                $("#ch_trs_fname").val("");
-                $("#ch_trs_lname").val("");
-                $("#ch_trs_email").val("");
-                $("#ch_trs_street").val("");
-                $("#ch_trs_city").val("");
-                $("#ch_trs_zip").val("");
-                $("#ch_trs_phone").val("");
-                $("#ch_trs_state").val("");
-              }
-              else{
-                $("#ch_trs_fname").prop("readonly",false);
-                $("#ch_trs_lname").prop("readonly",false);
-                $("#ch_trs_email").prop("readonly",false);
-                $("#ch_trs_street").prop("readonly",false);
-                $("#ch_trs_city").prop("readonly",false);
-                $("#ch_trs_zip").prop("readonly",false);
-                $("#ch_trs_phone").prop("readonly",false);
-                $("#ch_trs_state").prop("disabled",false);
-                $("#ch_trs_fname").prop("required",true);
-                $("#ch_trs_lname").prop("required",true);
-                $("#ch_trs_email").prop("required",true);
-                $("#ch_trs_street").prop("required",true);
-                $("#ch_trs_city").prop("required",true);
-                $("#ch_trs_zip").prop("required",true);
-                $("#ch_trs_phone").prop("required",true);
-                $("#ch_trs_state").prop("required",true);
+// Function to handle show/hide logic for vacant checkboxes
+function handleVacantCheckbox(checkboxId, fieldClass) {
+    var fields = $("." + fieldClass);
 
-              }
-            break;
-          case "SecVacant":
-              if($("#SecVacant").prop("checked") == true){
-                $("#ch_sec_fname").prop("readonly",true);
-                $("#ch_sec_lname").prop("readonly",true);
-                $("#ch_sec_email").prop("readonly",true);
-                $("#ch_sec_street").prop("readonly",true);
-                $("#ch_sec_city").prop("readonly",true);
-                $("#ch_sec_zip").prop("readonly",true);
-                $("#ch_sec_phone").prop("readonly",true);
-                $("#ch_sec_state").prop("disabled",true);
-                $("#ch_sec_fname").val("");
-                $("#ch_sec_lname").val("");
-                $("#ch_sec_email").val("");
-                $("#ch_sec_street").val("");
-                $("#ch_sec_city").val("");
-                $("#ch_sec_zip").val("");
-                $("#ch_sec_phone").val("");
-                $("#ch_sec_state").val("");
-              }
-              else{
-                $("#ch_sec_fname").prop("readonly",false);
-                $("#ch_sec_lname").prop("readonly",false);
-                $("#ch_sec_email").prop("readonly",false);
-                $("#ch_sec_street").prop("readonly",false);
-                $("#ch_sec_city").prop("readonly",false);
-                $("#ch_sec_zip").prop("readonly",false);
-                $("#ch_sec_phone").prop("readonly",false);
-                $("#ch_sec_state").prop("disabled",false);
-                $("#ch_sec_fname").prop("required",true);
-                $("#ch_sec_lname").prop("required",true);
-                $("#ch_sec_email").prop("required",true);
-                $("#ch_sec_street").prop("required",true);
-                $("#ch_sec_city").prop("required",true);
-                $("#ch_sec_zip").prop("required",true);
-                $("#ch_sec_phone").prop("required",true);
-                $("#ch_sec_state").prop("required",true);
-              }
-            break;
+    $("#" + checkboxId).change(function () {
+        if ($(this).prop("checked")) {
+            fields.hide().find('input, select, textarea').prop('required', false).val(null);
+        } else {
+            fields.show().find('input, select, textarea').prop('required', true);
+        }
+    });
+
+    // Initial show/hide logic on page load
+    if ($("#" + checkboxId).prop("checked")) {
+        fields.hide().find('input, select, textarea').prop('required', false).val(null);
+    } else {
+        fields.show().find('input, select, textarea').prop('required', true);
     }
+}
 
-  }
+// Apply the logic for each checkbox with a specific class
+handleVacantCheckbox("MVPVacant", "mvp-field");
+handleVacantCheckbox("AVPVacant", "avp-field");
+handleVacantCheckbox("SecVacant", "sec-field");
+handleVacantCheckbox("TreasVacant", "treas-field");
+
 
       function ConfirmCancel(element){
         var result=confirm("Any unsaved changes will be lost. Do you want to continue?");
@@ -1397,22 +1208,6 @@ function UpdateEIN(){
                 }
             }
 
-    function addPrezList(val){
-    $("#prezListBtn").attr("disabled", true);
-          $.ajax({
-            url: 'http://localhost/momsclub-dev/public/prezlist/'+val,
-            type: "GET",
-            success: function(result) {
-              alert('Your request to add this president to the PrezList has been submitted.');
-              $("#prezListBtn").attr("disabled", false);
-                      return true;
-            },
-            error: function (jqXHR, exception) {
-
-            }
-        });
-
-      }
     function PreviousNameReminder(){
 
         alert("If you are changing the chapter name, please be sure to note the old name.");

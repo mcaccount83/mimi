@@ -177,13 +177,13 @@
                 <div class="card-body">
 
                         <div class="row" id="checkRadios">
-                            <div class="col-md-6">
+                            <div class="col-md-6 avp-field">
                                 <div class="form-group">
                                     <label>First Name</label><span id="ch_avp_fname_req" class="field-required">*</span>
                                     <input  type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control" placeholder="First Name" value="{{$AVPDetails[0]->avp_fname != ''  ? $AVPDetails[0]->avp_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)" >
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 avp-field">
                                 <div class="form-group">
                                     <label>Last Name</label><span id="ch_avp_lname_req" class="field-required">*</span>
                                     <input  type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control" placeholder="Last Name" value="{{$AVPDetails[0]->avp_lname != ''  ? $AVPDetails[0]->avp_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
@@ -191,7 +191,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12 avp-field">
                                 <div class="form-group">
                                     <label>Street Address</label><span id="ch_avp_street_req" class="field-required">*</span>
                                     <input  type="text" name="ch_avp_street" id="ch_avp_street" class="form-control" placeholder="Street Address" value="{{$AVPDetails[0]->avp_addr != ''  ? $AVPDetails[0]->avp_addr : ''}}" maxlength="250" >
@@ -199,13 +199,13 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 pr-1">
+                            <div class="col-md-4 pr-1 avp-field">
                                 <div class="form-group">
                                     <label>City</label><span id="ch_avp_city_req" class="field-required">*</span>
                                     <input  type="text" name="ch_avp_city" id="ch_avp_city" class="form-control" placeholder="City" value="{{$AVPDetails[0]->avp_city != ''  ? $AVPDetails[0]->avp_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)" >
                                 </div>
                             </div>
-                            <div class="col-md-4 pr-1">
+                            <div class="col-md-4 pr-1 avp-field">
                                 <div class="form-group">
                                     <label>State</label><span id="ch_avp_state_req" class="field-required">*</span>
                                     <select name="ch_avp_state" id="ch_avp_state" class="form-control select2" style="width: 100%;" >
@@ -216,7 +216,7 @@
 										</select>
                                 </div>
                             </div>
-                            <div class="col-md-4 pl-1">
+                            <div class="col-md-4 pl-1 avp-field">
                                 <div class="form-group">
                                     <label>Zip Code</label><span id="ch_avp_zip_req" class="field-required">*</span>
                                     <input  type="text" name="ch_avp_zip" id="ch_avp_zip" class="form-control" placeholder="ZIP Code" value="{{$AVPDetails[0]->avp_zip != ''  ? $AVPDetails[0]->avp_zip : ''}}" maxlength="10" ="return isNumber(event)" readonly>
@@ -224,14 +224,14 @@
                             </div>
                         </div>
                         <div class="row radio-chk">
-                            <div class="col-md-5">
+                            <div class="col-md-5 avp-field">
                                 <div class="form-group">
                                     <label>Email ID</label><span id="ch_avp_email_req" class="field-required">*</span>
                                     <input  type="email" name="ch_avp_email" id="ch_avp_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$AVPDetails[0]->avp_email != ''  ? $AVPDetails[0]->avp_email : ''}}" maxlength="50">
 									<input  type="hidden" id="ch_avp_email_chk" value="{{ $AVPDetails[0]->avp_email }}" >
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-5 avp-field">
                                 <div class="form-group">
                                     <label>Phone</label><span id="ch_avp_phone_req" class="field-required">*</span>
                                     <input  type="text" name="ch_avp_phone" id="ch_avp_phone" class="form-control" placeholder="Phone" value="{{$AVPDetails[0]->avp_phone != ''  ? $AVPDetails[0]->avp_phone : ''}}" maxlength="12" onkeypress="return isPhone(event)" >
@@ -253,13 +253,13 @@
                 <div class="card-body">
 
                         <div class="row" id="checkRadios">
-                            <div class="col-md-6">
+                            <div class="col-md-6 mvp-field">
                                 <div class="form-group">
                                     <label>First Name</label><span id="ch_mvp_fname_req" class="field-required">*</span>
                                     <input  type="text" name="ch_mvp_fname" id="ch_mvp_fname" class="form-control" placeholder="First Name" value="{{$MVPDetails[0]->mvp_fname != ''  ? $MVPDetails[0]->mvp_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 mvp-field">
                                 <div class="form-group">
                                     <label>Last Name</label><span id="ch_mvp_lname_req" class="field-required">*</span>
                                     <input  type="text" name="ch_mvp_lname" id="ch_mvp_lname" class="form-control" placeholder="Last Name" value="{{$MVPDetails[0]->mvp_lname != ''  ? $MVPDetails[0]->mvp_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
@@ -267,21 +267,21 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
+                            <div class="col-md-12 mvp-field">
+                                <div class="form-group ">
                                     <label>Street Address</label><span id="ch_mvp_street_req" class="field-required">*</span>
                                     <input  type="text" name="ch_mvp_street" id="ch_mvp_street" class="form-control" placeholder="Street Address" value="{{$MVPDetails[0]->mvp_addr != ''  ? $MVPDetails[0]->mvp_addr : ''}}" maxlength="250" >
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 pr-1">
+                            <div class="col-md-4 pr-1 mvp-field">
                                 <div class="form-group">
                                     <label>City</label><span id="ch_mvp_city_req" class="field-required">*</span>
                                     <input  type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control" placeholder="City" value="{{$MVPDetails[0]->mvp_city != ''  ? $MVPDetails[0]->mvp_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
-                            <div class="col-md-4 pr-1">
+                            <div class="col-md-4 pr-1 mvp-field">
                                 <div class="form-group">
                                     <label>State</label><span id="ch_mvp_state_req" class="field-required">*</span>
                                      <select name="ch_mvp_state" id="ch_mvp_state" class="form-control select2" style="width: 100%;">
@@ -292,7 +292,7 @@
 										</select>
                                 </div>
                             </div>
-                            <div class="col-md-4 pl-1">
+                            <div class="col-md-4 pl-1 mvp-field">
                                 <div class="form-group">
                                     <label>Zip Code</label><span id="ch_mvp_zip_req" class="field-required">*</span>
                                     <input  type="text" name="ch_mvp_zip" id="ch_mvp_zip" class="form-control" placeholder="ZIP Code" value="{{$MVPDetails[0]->mvp_zip != ''  ? $MVPDetails[0]->mvp_zip : ''}}" maxlength="10" onkeypress="return isNumber(event)" >
@@ -300,14 +300,14 @@
                             </div>
                         </div>
                         <div class="row radio-chk">
-                            <div class="col-md-5">
+                            <div class="col-md-5 mvp-field">
                                 <div class="form-group">
                                     <label>Email ID</label><span id="ch_mvp_email_req" class="field-required">*</span>
                                     <input  type="email" name="ch_mvp_email" id="ch_mvp_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$MVPDetails[0]->mvp_email != ''  ? $MVPDetails[0]->mvp_email : ''}}" maxlength="50" >
 									<input  type="hidden" id="ch_mvp_email_chk" value="{{ $MVPDetails[0]->mvp_email }}">
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-5 mvp-field">
                                 <div class="form-group">
                                     <label>Phone</label><span id="ch_mvp_phone_req" class="field-required">*</span>
                                     <input  type="text" name="ch_mvp_phone" id="ch_mvp_phone" class="form-control" placeholder="Phone" value="{{$MVPDetails[0]->mvp_phone != ''  ? $MVPDetails[0]->mvp_phone : ''}}" maxlength="12" onkeypress="return isPhone(event)" >
@@ -329,13 +329,13 @@
                 <div class="card-body">
 
                         <div class="row" id="checkRadios">
-                            <div class="col-md-6">
+                            <div class="col-md-6 treas-field">
                                 <div class="form-group">
                                     <label>First Name</label><span id="ch_trs_fname_req" class="field-required">*</span>
                                     <input  type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control" placeholder="First Name" value="{{$TRSDetails[0]->trs_fname != ''  ? $TRSDetails[0]->trs_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)" >
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 treas-field">
                                 <div class="form-group">
                                     <label>Last Name</label><span id="ch_trs_lname_req" class="field-required">*</span>
                                     <input  type="text" name="ch_trs_lname" id="ch_trs_lname" class="form-control" placeholder="Last Name" value="{{$TRSDetails[0]->trs_lname != ''  ? $TRSDetails[0]->trs_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)" >
@@ -343,7 +343,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12 treas-field">
                                 <div class="form-group">
                                     <label>Street Address</label><span id="ch_trs_street_req" class="field-required">*</span>
                                     <input  type="text" name="ch_trs_street" id="ch_trs_street" class="form-control" placeholder="Street Address" value="{{$TRSDetails[0]->trs_addr != ''  ? $TRSDetails[0]->trs_addr : ''}}" maxlength="250" >
@@ -351,13 +351,13 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 pr-1">
+                            <div class="col-md-4 pr-1 treas-field">
                                 <div class="form-group">
                                     <label>City</label><span id="ch_trs_city_req" class="field-required">*</span>
                                     <input  type="text" name="ch_trs_city" id="ch_trs_city" class="form-control" placeholder="City" value="{{$TRSDetails[0]->trs_city != ''  ? $TRSDetails[0]->trs_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
-                            <div class="col-md-4 pr-1">
+                            <div class="col-md-4 pr-1 treas-field">
                                 <div class="form-group">
                                     <label>State</label><span id="ch_trs_state_req" class="field-required">*</span>
                                     <select name="ch_trs_state" id="ch_trs_state" class="form-control select2" style="width: 100%;">
@@ -368,7 +368,7 @@
 										</select>
                                 </div>
                             </div>
-                            <div class="col-md-4 pl-1">
+                            <div class="col-md-4 pl-1 treas-field">
                                 <div class="form-group">
                                     <label>Zip Code</label><span id="ch_trs_zip_req" class="field-required">*</span>
                                     <input  type="text" name="ch_trs_zip" id="ch_trs_zip" class="form-control" placeholder="ZIP Code" value="{{$TRSDetails[0]->trs_zip != ''  ? $TRSDetails[0]->trs_zip : ''}}" maxlength="10" onkeypress="return isNumber(event)" >
@@ -376,14 +376,14 @@
                             </div>
                         </div>
                         <div class="row radio-chk">
-                            <div class="col-md-5">
+                            <div class="col-md-5 treas-field">
                                 <div class="form-group">
                                     <label>Email ID</label><span id="ch_trs_email_req" class="field-required">*</span>
                                     <input  type="email" name="ch_trs_email" id="ch_trs_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$TRSDetails[0]->trs_email != ''  ? $TRSDetails[0]->trs_email : ''}}" maxlength="50" >
 									<input  type="hidden" id="ch_trs_email_chk" value="{{ $TRSDetails[0]->trs_email }}">
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-5 treas-field">
                                 <div class="form-group">
                                     <label>Phone</label><span id="ch_trs_phone_req" class="field-required">*</span>
                                     <input  type="text" name="ch_trs_phone" id="ch_trs_phone" class="form-control" placeholder="Phone" value="{{$TRSDetails[0]->trs_phone != ''  ? $TRSDetails[0]->trs_phone : ''}}" maxlength="12" onkeypress="return isPhone(event)">
@@ -405,13 +405,13 @@
                 <div class="card-body">
 
                         <div class="row" id="checkRadios">
-                            <div class="col-md-6">
+                            <div class="col-md-6 sec-field">
                                 <div class="form-group">
                                     <label>First Name</label><span id="ch_sec_fname_req" class="field-required">*</span>
                                     <input  type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control" placeholder="First Name" value="{{$SECDetails[0]->sec_fname != ''  ? $SECDetails[0]->sec_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 sec-field">
                                 <div class="form-group">
                                     <label>Last Name</label><span id="ch_sec_lname_req" class="field-required">*</span>
                                     <input  type="text" name="ch_sec_lname" id="ch_sec_lname" class="form-control" placeholder="Last Name" value="{{$SECDetails[0]->sec_lname != ''  ? $SECDetails[0]->sec_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
@@ -419,7 +419,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-12 sec-field">
                                 <div class="form-group">
                                     <label>Street Address</label><span id="ch_sec_street_req" class="field-required">*</span>
                                     <input  type="text" name="ch_sec_street" id="ch_sec_street" class="form-control" placeholder="Street Address" value="{{$SECDetails[0]->sec_addr != ''  ? $SECDetails[0]->sec_addr : ''}}" maxlength="250" >
@@ -427,13 +427,13 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 pr-1">
+                            <div class="col-md-4 pr-1 sec-field">
                                 <div class="form-group">
                                     <label>City</label><span id="ch_sec_city_req" class="field-required">*</span>
                                     <input  type="text" name="ch_sec_city" id="ch_sec_city" class="form-control" placeholder="City" value="{{$SECDetails[0]->sec_city != ''  ? $SECDetails[0]->sec_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)" >
                                 </div>
                             </div>
-                            <div class="col-md-4 pr-1">
+                            <div class="col-md-4 pr-1 sec-field">
                                 <div class="form-group">
                                     <label>State</label><span id="ch_sec_state_req" class="field-required">*</span>
                                       <select name="ch_sec_state" id="ch_sec_state" class="form-control select2" style="width: 100%;">
@@ -444,7 +444,7 @@
 										</select>
                                 </div>
                             </div>
-                            <div class="col-md-4 pl-1">
+                            <div class="col-md-4 pl-1 sec-field">
                                 <div class="form-group">
                                     <label>Zip Code</label><span id="ch_sec_zip_req" class="field-required">*</span>
                                     <input  type="text" name="ch_sec_zip" id="ch_sec_zip" class="form-control" placeholder="ZIP Code" value="{{$SECDetails[0]->sec_zip != ''  ? $SECDetails[0]->sec_zip : ''}}" maxlength="10" onkeypress="return isNumber(event)">
@@ -452,14 +452,14 @@
                             </div>
                         </div>
                         <div class="row radio-chk">
-                            <div class="col-md-5">
+                            <div class="col-md-5 sec-field">
                                 <div class="form-group">
                                     <label>Email ID</label><span id="ch_sec_email_req" class="field-required">*</span>
                                     <input  type="email" name="ch_sec_email" id="ch_sec_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$SECDetails[0]->sec_email != ''  ? $SECDetails[0]->sec_email : ''}}" maxlength="50" >
 									<input  type="hidden" id="ch_sec_email_chk" value="{{ $SECDetails[0]->sec_email }}">
                                 </div>
                             </div>
-                            <div class="col-md-5">
+                            <div class="col-md-5 sec-field">
                                 <div class="form-group">
                                     <label>Phone</label><span id="ch_sec_phone_req" class="field-required">*</span>
                                     <input  type="text" name="ch_sec_phone" id="ch_sec_phone" class="form-control" placeholder="Phone" value="{{$SECDetails[0]->sec_phone != ''  ? $SECDetails[0]->sec_phone : ''}}" maxlength="12" onkeypress="return isPhone(event)" >
@@ -636,11 +636,11 @@
 <script>
 /* Disable fields and buttons  */
 $(document).ready(function () {
-        //Update to "true" or "false" to make buttons active or grayed out
-        $('input, select, textarea').prop('disabled', false);
-        $('#BoardReport').prop('disabled', false);
-        $('#FinancialReport').prop('disabled', false);
-        $('#Save').prop('disabled', false);
+        //Update to "true" or "false"
+        $('input, select, textarea').prop('disabled', false);  /*fields on page (true disables fields for editing)*/
+        $('#BoardReport').prop('disabled', true);  /*board report button (true grays out button)*/
+        $('#FinancialReport').prop('disabled', true);  /*financial report button (true grays out button)*/
+        $('#Save').prop('disabled', false);  /*save button (true grays out button)*/
 
         //ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report
         $('#BoardReportAlwaysDisabled').prop('disabled', true);
@@ -651,7 +651,7 @@ $(document).ready(function () {
         }
 });
 
-/* Disables Web Link Status options 0 and 1  */
+/* Disables Web Link Status options 0 and 1 */
 //ALWAYS leave thise fiels set to "true"
 document.getElementById('option0').disabled = true;
 document.getElementById('option1').disabled = true;
@@ -700,88 +700,34 @@ $( document ).ready(function() {
         return false;
 	});
 
-    var avp = $("#ch_avp_fname").val();
-    if(avp ==''){
-        $("#ch_avp_fname").prop("",true);
-        $("#ch_avp_lname").prop("",true);
-        $("#ch_avp_email").prop("",true);
-        $("#ch_avp_street").prop("",true);
-        $("#ch_avp_city").prop("",true);
-        $("#ch_avp_zip").prop("",true);
-        $("#ch_avp_phone").prop("",true);
-        $("#ch_avp_state").prop("disabled",true);
-
-		$("#ch_avp_fname_req").hide();
-        $("#ch_avp_lname_req").hide();
-        $("#ch_avp_email_req").hide();
-        $("#ch_avp_street_req").hide();
-        $("#ch_avp_city_req").hide();
-        $("#ch_avp_zip_req").hide();
-        $("#ch_avp_phone_req").hide();
-        $("#ch_avp_state_req").hide();
-    }
-    var mvp = $("#ch_mvp_fname").val();
-    if(mvp ==''){
-        $("#ch_mvp_fname").prop("",true);
-        $("#ch_mvp_lname").prop("",true);
-        $("#ch_mvp_email").prop("",true);
-        $("#ch_mvp_street").prop("",true);
-        $("#ch_mvp_city").prop("",true);
-        $("#ch_mvp_zip").prop("",true);
-        $("#ch_mvp_phone").prop("",true);
-        $("#ch_mvp_state").prop("disabled",true);
-
-		$("#ch_mvp_fname_req").hide();
-        $("#ch_mvp_lname_req").hide();
-        $("#ch_mvp_email_req").hide();
-        $("#ch_mvp_street_req").hide();
-        $("#ch_mvp_city_req").hide();
-        $("#ch_mvp_zip_req").hide();
-        $("#ch_mvp_phone_req").hide();
-        $("#ch_mvp_state_req").hide();
-    }
-    var trs = $("#ch_trs_fname").val();
-    if(trs ==''){
-        $("#ch_trs_fname").prop("",true);
-        $("#ch_trs_lname").prop("",true);
-        $("#ch_trs_email").prop("",true);
-        $("#ch_trs_street").prop("",true);
-        $("#ch_trs_city").prop("",true);
-        $("#ch_trs_zip").prop("",true);
-        $("#ch_trs_phone").prop("",true);
-        $("#ch_trs_state").prop("disabled",true);
-
-		$("#ch_trs_fname_req").hide();
-        $("#ch_trs_lname_req").hide();
-        $("#ch_trs_email_req").hide();
-        $("#ch_trs_street_req").hide();
-        $("#ch_trs_city_req").hide();
-        $("#ch_trs_zip_req").hide();
-        $("#ch_trs_phone_req").hide();
-        $("#ch_trs_state_req").hide();
-    }
-    var sec = $("#ch_sec_fname").val();
-    if(sec ==''){
-        $("#ch_sec_fname").prop("",true);
-        $("#ch_sec_lname").prop("",true);
-        $("#ch_sec_email").prop("",true);
-        $("#ch_sec_street").prop("",true);
-        $("#ch_sec_city").prop("",true);
-        $("#ch_sec_zip").prop("",true);
-        $("#ch_sec_phone").prop("",true);
-        $("#ch_sec_state").prop("disabled",true);
-
-		$("#ch_sec_fname_req").hide();
-        $("#ch_sec_lname_req").hide();
-        $("#ch_sec_email_req").hide();
-        $("#ch_sec_street_req").hide();
-        $("#ch_sec_city_req").hide();
-        $("#ch_sec_zip_req").hide();
-        $("#ch_sec_phone_req").hide();
-        $("#ch_sec_state_req").hide();
-    }
 
     });
+
+  // Function to handle show/hide logic for vacant checkboxes
+    function handleVacantCheckbox(checkboxId, fieldClass) {
+        var fields = $("." + fieldClass);
+
+        $("#" + checkboxId).change(function () {
+            if ($(this).prop("checked")) {
+                fields.hide().find('input, select, textarea').prop('required', false).val(null);
+            } else {
+                fields.show().find('input, select, textarea').prop('required', true);
+            }
+        });
+
+        // Initial show/hide logic on page load
+        if ($("#" + checkboxId).prop("checked")) {
+            fields.hide().find('input, select, textarea').prop('required', false).val(null);
+        } else {
+            fields.show().find('input, select, textarea').prop('required', true);
+        }
+    }
+
+    // Apply the logic for each checkbox with a specific class
+    handleVacantCheckbox("MVPVacant", "mvp-field");
+    handleVacantCheckbox("AVPVacant", "avp-field");
+    handleVacantCheckbox("SecVacant", "sec-field");
+    handleVacantCheckbox("TreasVacant", "treas-field");
 
 function isPhone() {
     if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode != 8) {
@@ -814,19 +760,6 @@ function is_url() {
         }
     }
 
-// function updateWebsiteStatus() {
-//     const chWebsiteInput = document.querySelector('input[name="ch_website"]');
-//     const chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
-
-//         if (chWebsiteInput.value === '') {
-//             chWebStatusSelect.value = '0'; // Set to 0 if the input is blank
-//         } else if (chWebsiteInput.value !== 'http://www.momsclubofchaptername.com') {
-//             // Set to 2 or 3 based on some condition, you can customize this part.
-//             // For now, I'm setting it to 2.
-//             chWebStatusSelect.value = '2';
-//         }
-//     }
-
 function isNumber(evt) {
     evt = (evt) ? evt : window.event;
     var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -842,237 +775,8 @@ function isAlphanumeric(e){
         return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
     }
 
-function ConfirmVacant(checkboxid) {
-    switch(checkboxid){
-			case "AVPVacant":
-              if($("#AVPVacant").prop("checked") == true){
-				$("#ch_avp_fname").prop("",true);
-                $("#ch_avp_lname").prop("",true);
-                $("#ch_avp_email").prop("",true);
-                $("#ch_avp_street").prop("",true);
-                $("#ch_avp_city").prop("",true);
-                $("#ch_avp_zip").prop("",true);
-                $("#ch_avp_phone").prop("",true);
-                $("#ch_avp_state").prop("disabled",true);
-                $("#ch_avp_fname").val("");
-                $("#ch_avp_lname").val("");
-                $("#ch_avp_email").val("");
-                $("#ch_avp_street").val("");
-                $("#ch_avp_city").val("");
-                $("#ch_avp_zip").val("");
-                $("#ch_avp_phone").val("");
-                $("#ch_avp_state").val("");
 
-				$("#ch_avp_fname_req").hide();
-				$("#ch_avp_lname_req").hide();
-				$("#ch_avp_email_req").hide();
-				$("#ch_avp_street_req").hide();
-				$("#ch_avp_city_req").hide();
-				$("#ch_avp_zip_req").hide();
-				$("#ch_avp_phone_req").hide();
-				$("#ch_avp_state_req").hide();
-			 }
-              else{
 
-                $("#ch_avp_fname").prop("",false);
-                $("#ch_avp_lname").prop("",false);
-                $("#ch_avp_email").prop("",false);
-                $("#ch_avp_street").prop("",false);
-                $("#ch_avp_city").prop("",false);
-                $("#ch_avp_zip").prop("",false);
-                $("#ch_avp_phone").prop("",false);
-                $("#ch_avp_state").prop("disabled",false);
-
-                $("#ch_avp_fname").prop("required",true);
-                $("#ch_avp_lname").prop("required",true);
-                $("#ch_avp_email").prop("required",true);
-                $("#ch_avp_street").prop("required",true);
-                $("#ch_avp_city").prop("required",true);
-                $("#ch_avp_zip").prop("required",true);
-                $("#ch_avp_phone").prop("required",true);
-                $("#ch_avp_state").prop("required",true);
-
-				$("#ch_avp_fname_req").show();
-				$("#ch_avp_lname_req").show();
-				$("#ch_avp_email_req").show();
-				$("#ch_avp_street_req").show();
-				$("#ch_avp_city_req").show();
-				$("#ch_avp_zip_req").show();
-				$("#ch_avp_phone_req").show();
-				$("#ch_avp_state_req").show();
-			  }
-            break;
-          case "MVPVacant":
-              if($("#MVPVacant").prop("checked") == true){
-                $("#ch_mvp_fname").prop("",true);
-                $("#ch_mvp_lname").prop("",true);
-                $("#ch_mvp_email").prop("",true);
-                $("#ch_mvp_street").prop("",true);
-                $("#ch_mvp_city").prop("",true);
-                $("#ch_mvp_zip").prop("",true);
-                $("#ch_mvp_phone").prop("",true);
-                $("#ch_mvp_state").prop("disabled",true);
-                $("#ch_mvp_fname").val("");
-                $("#ch_mvp_lname").val("");
-                $("#ch_mvp_email").val("");
-                $("#ch_mvp_street").val("");
-                $("#ch_mvp_city").val("");
-                $("#ch_mvp_zip").val("");
-                $("#ch_mvp_phone").val("");
-                $("#ch_mvp_state").val("");
-
-				$("#ch_mvp_fname_req").hide();
-				$("#ch_mvp_lname_req").hide();
-				$("#ch_mvp_email_req").hide();
-				$("#ch_mvp_street_req").hide();
-				$("#ch_mvp_city_req").hide();
-				$("#ch_mvp_zip_req").hide();
-				$("#ch_mvp_phone_req").hide();
-				$("#ch_mvp_state_req").hide();
-              }
-              else{
-                $("#ch_mvp_fname").prop("",false);
-                $("#ch_mvp_lname").prop("",false);
-                $("#ch_mvp_email").prop("",false);
-                $("#ch_mvp_street").prop("",false);
-                $("#ch_mvp_city").prop("",false);
-                $("#ch_mvp_zip").prop("",false);
-                $("#ch_mvp_phone").prop("",false);
-                $("#ch_mvp_state").prop("disabled",false);
-                $("#ch_mvp_fname").prop("required",true);
-                $("#ch_mvp_lname").prop("required",true);
-                $("#ch_mvp_email").prop("required",true);
-                $("#ch_mvp_street").prop("required",true);
-                $("#ch_mvp_city").prop("required",true);
-                $("#ch_mvp_zip").prop("required",true);
-                $("#ch_mvp_phone").prop("required",true);
-                $("#ch_mvp_state").prop("required",true);
-
-				$("#ch_mvp_fname_req").show();
-				$("#ch_mvp_lname_req").show();
-				$("#ch_mvp_email_req").show();
-				$("#ch_mvp_street_req").show();
-				$("#ch_mvp_city_req").show();
-				$("#ch_mvp_zip_req").show();
-				$("#ch_mvp_phone_req").show();
-				$("#ch_mvp_state_req").show();
-              }
-            break;
-          case "TreasVacant":
-              if($("#TreasVacant").prop("checked") == true){
-                $("#ch_trs_fname").prop("",true);
-                $("#ch_trs_lname").prop("",true);
-                $("#ch_trs_email").prop("",true);
-                $("#ch_trs_street").prop("",true);
-                $("#ch_trs_city").prop("",true);
-                $("#ch_trs_zip").prop("",true);
-                $("#ch_trs_phone").prop("",true);
-                $("#ch_trs_state").prop("disabled",true);
-                $("#ch_trs_fname").val("");
-                $("#ch_trs_lname").val("");
-                $("#ch_trs_email").val("");
-                $("#ch_trs_street").val("");
-                $("#ch_trs_city").val("");
-                $("#ch_trs_zip").val("");
-                $("#ch_trs_phone").val("");
-                $("#ch_trs_state").val("");
-
-				$("#ch_trs_fname_req").hide();
-				$("#ch_trs_lname_req").hide();
-				$("#ch_trs_email_req").hide();
-				$("#ch_trs_street_req").hide();
-				$("#ch_trs_city_req").hide();
-				$("#ch_trs_zip_req").hide();
-				$("#ch_trs_phone_req").hide();
-				$("#ch_trs_state_req").hide();
-              }
-              else{
-                $("#ch_trs_fname").prop("",false);
-                $("#ch_trs_lname").prop("",false);
-                $("#ch_trs_email").prop("",false);
-                $("#ch_trs_street").prop("",false);
-                $("#ch_trs_city").prop("",false);
-                $("#ch_trs_zip").prop("",false);
-                $("#ch_trs_phone").prop("",false);
-                $("#ch_trs_state").prop("disabled",false);
-                $("#ch_trs_fname").prop("required",true);
-                $("#ch_trs_lname").prop("required",true);
-                $("#ch_trs_email").prop("required",true);
-                $("#ch_trs_street").prop("required",true);
-                $("#ch_trs_city").prop("required",true);
-                $("#ch_trs_zip").prop("required",true);
-                $("#ch_trs_phone").prop("required",true);
-                $("#ch_trs_state").prop("required",true);
-
-				$("#ch_trs_fname_req").show();
-				$("#ch_trs_lname_req").show();
-				$("#ch_trs_email_req").show();
-				$("#ch_trs_street_req").show();
-				$("#ch_trs_city_req").show();
-				$("#ch_trs_zip_req").show();
-				$("#ch_trs_phone_req").show();
-				$("#ch_trs_state_req").show();
-
-              }
-            break;
-          case "SecVacant":
-              if($("#SecVacant").prop("checked") == true){
-                $("#ch_sec_fname").prop("",true);
-                $("#ch_sec_lname").prop("",true);
-                $("#ch_sec_email").prop("",true);
-                $("#ch_sec_street").prop("",true);
-                $("#ch_sec_city").prop("",true);
-                $("#ch_sec_zip").prop("",true);
-                $("#ch_sec_phone").prop("",true);
-                $("#ch_sec_state").prop("disabled",true);
-                $("#ch_sec_fname").val("");
-                $("#ch_sec_lname").val("");
-                $("#ch_sec_email").val("");
-                $("#ch_sec_street").val("");
-                $("#ch_sec_city").val("");
-                $("#ch_sec_zip").val("");
-                $("#ch_sec_phone").val("");
-                $("#ch_sec_state").val("");
-
-				$("#ch_sec_fname_req").hide();
-				$("#ch_sec_lname_req").hide();
-				$("#ch_sec_email_req").hide();
-				$("#ch_sec_street_req").hide();
-				$("#ch_sec_city_req").hide();
-				$("#ch_sec_zip_req").hide();
-				$("#ch_sec_phone_req").hide();
-				$("#ch_sec_state_req").hide();
-              }
-              else{
-                $("#ch_sec_fname").prop("",false);
-                $("#ch_sec_lname").prop("",false);
-                $("#ch_sec_email").prop("",false);
-                $("#ch_sec_street").prop("",false);
-                $("#ch_sec_city").prop("",false);
-                $("#ch_sec_zip").prop("",false);
-                $("#ch_sec_phone").prop("",false);
-                $("#ch_sec_state").prop("disabled",false);
-                $("#ch_sec_fname").prop("required",true);
-                $("#ch_sec_lname").prop("required",true);
-                $("#ch_sec_email").prop("required",true);
-                $("#ch_sec_street").prop("required",true);
-                $("#ch_sec_city").prop("required",true);
-                $("#ch_sec_zip").prop("required",true);
-                $("#ch_sec_phone").prop("required",true);
-                $("#ch_sec_state").prop("required",true);
-
-				$("#ch_sec_fname_req").show();
-				$("#ch_sec_lname_req").show();
-				$("#ch_sec_email_req").show();
-				$("#ch_sec_street_req").show();
-				$("#ch_sec_city_req").show();
-				$("#ch_sec_zip_req").show();
-				$("#ch_sec_phone_req").show();
-				$("#ch_sec_state_req").show();
-              }
-            break;
-    }
-  }
 
 function PreSaveValidate(){
     var errMessage="";
