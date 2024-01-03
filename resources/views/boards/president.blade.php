@@ -41,7 +41,7 @@
                         Welcome, <b>{{$chapterList[0]->first_name}} {{$chapterList[0]->last_name}}</b>, to the MOMS Club MOMS information Management Interface (MIMI)! Here you can view and update your chapter's information, update, add, or remove board members, etc.</p>
 
                              <!-- Display the description text based on the disabled/enabled state -->
-                        <div class="description text-center" style="color: red; display: none;">
+                        <div id="readOnlyText" class="description text-center" style="color: red;">
                             <p><strong>All Board Member Information is READ ONLY at this time.<br>
                             In order to add new board members to MIMI, please complete the Board Election Report.<br>
                             If you need to make updates to your current year officers, please contact your Primary Coordinator.</strong></p>
@@ -54,10 +54,12 @@
         <div class="col-md-12">
 		    <div class="card">
                <div class="card-body">
+                <div id="reportStatusText" class="description text-center" style="color: red;">
+                    <p><strong><?php echo date('Y')-1 .'-'.date('Y');?> Reports are not available at this time.</strong></p>
+                </div>
                     <div class="col-md-12 text-center">
                         @foreach($chapterList as $list)
-
-                   <div class="col-md-4 float-left">
+                    <div class="col-md-4 float-left">
                        @if($list->ein_letter=='1')
                       <a class="btn btn-info btn-fill" href="{{ $chapterList[0]->ein_letter_path }}" target="blank">View/Download EIN Letter</a>
                       	@else
@@ -558,59 +560,57 @@
                     <h4 class="card-title">READ ONLY - PLEASE CONTACT PC IF INCORRECT</h4>
                 </div>
                 <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>FOUNDED MONTH</label>
-                                     <select name="ch_founddate" class="form-control select2" style="width: 100%;" disabled>
-                                        <option value="">Select Date</option>
-                                        @foreach($foundedMonth as $key=>$val)
-                                        <option value="{{$key}}" {{$currentMonth == $key  ? 'selected' : ''}}>{{$val}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>FOUNDED Year</label>
-                                    <input  type="text" class="form-control" value="{{ $chapterList[0]->start_year}}" readonly>
-                                </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>FOUNDED MONTH</label>
+                                <p>{{$currentMonthAbbreviation}}</p>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>RE-REGISTRATION DUES LAST PAID</label>
-                                    <input  type="date" class="form-control" value="{{ $chapterList[0]->dues_last_paid}}" readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>LAST NUMBER OF MEMBERS REGISTERED</label>
-                                    <input  type="text" class="form-control" value="{{ $chapterList[0]->members_paid_for}}" readonly>
-                                </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>FOUNDED YEAR</label>
+                                <p>{{$chapterList[0]->start_year}}</p>
                             </div>
                         </div>
-                        <div class="row radio-chk">
-                            <div class="col-md-6">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>RE-REGISTRATION DUES LAST PAID</label>
+                                <p>{{$chapterList[0]->dues_last_paid}}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>LAST NUMBER OF MEMBERS REGISTERED</label>
+                                <p>{{$chapterList[0]->members_paid_for}}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                        <div class="row">
+                            <div class="col-md-6 BoardInfoStatus">
                                 <div class="form-group">
-                                    <label><?php echo $a = date('Y'); echo "-"; echo $a+1;?> Board Info Received</label>
-                                    <label style="display: block;"><input  type="checkbox" class="ios-switch green bigswitch" disabled {{$chapterList[0]->new_board_submitted == '1'  ? 'checked' : ''}} /><div><div></div></div></label>
+                                    <label><?php echo $a = date('Y'); echo "-"; echo $a + 1;?> Board Info Received</label>
+                                    <p>{{$chapterList[0]->new_board_submitted == '1' ? 'Received' : 'Not Received'}}</p>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 FinancialReportStatus">
                                 <div class="form-group">
-                                    <label><?php echo date('Y')-1 .'-'.date('Y');?> Financial Report Received</label>
-                                    <label style="display: block;"><input  type="checkbox" class="ios-switch green bigswitch" disabled {{$chapterList[0]->financial_report_received == '1'  ? 'checked' : ''}} /><div><div></div></div></label>
+                                    <label><?php echo date('Y') - 1 . '-' . date('Y');?> Financial Report Received</label>
+                                    <p>{{$chapterList[0]->financial_report_received == '1' ? 'Received' : 'Not Received'}}</p>
                                 </div>
-                            </div>
                             </div>
                 </div>
+            </div>
+
                 <div class="card-header">
                     <h4 class="card-title">INTERNATIONAL MOMS CLUB COORDINATORS</h4>
                 </div>
                 <div class="card-body">
-                    <div class="col-md-6 float-left">
+                    <div class="row">
+                    <div class="col-md-6">
 						<input  type="hidden" id="pcid" value="{{ $chapterList[0]->primary_coordinator_id}}">
 						<div id="display_corlist">
 						</div>
@@ -636,11 +636,15 @@
 <script>
 /* Disable fields and buttons  */
 $(document).ready(function () {
-        //Update to "true" or "false"
+        //Update to show/hide for true/false
+        $('#reportStatusText').show();  /*report status text (.show/.hide to change visibility)*/
+        $('#readOnlyText').hide();  /*read only text (.show/.hide to change visibility)*/
         $('input, select, textarea').prop('disabled', false);  /*fields on page (true disables fields for editing)*/
         $('#BoardReport').prop('disabled', true);  /*board report button (true grays out button)*/
         $('#FinancialReport').prop('disabled', true);  /*financial report button (true grays out button)*/
         $('#Save').prop('disabled', false);  /*save button (true grays out button)*/
+        $('.BoardInfoStatus').hide();  /*board info status (.show/.hide to change visibility)*/
+        $('.FinancialReportStatus').hide();  /*financial report status (.show/.hide to change visibility)*/
 
         //ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report
         $('#BoardReportAlwaysDisabled').prop('disabled', true);

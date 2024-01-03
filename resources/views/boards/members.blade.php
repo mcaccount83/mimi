@@ -42,7 +42,7 @@
                        </br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
                     </p>
                                 <!-- Display the description text based on the disabled/enabled state -->
-                            <div class="description text-center" style="color: red; display: none;">
+                            <div id="readOnlyText" class="description text-center" style="color: red;">
                                 <p><strong>All Board Member Information is READ ONLY at this time.<br>
                                 In order to add new board members to MIMI, please complete the Board Election Report.<br>
                                 If you need to make updates to your current year officers, please contact your Primary Coordinator.</strong></p>
@@ -54,6 +54,9 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
+                    <div id="reportStatusText" class="description text-center" style="color: red;">
+                        <p><strong><?php echo date('Y')-1 .'-'.date('Y');?> Reports are not available at this time.</strong></p>
+                    </div>
                     <div class="col-md-12 text-center">
                         <div class="col-md-4 float-left">
                        @if($chapterDetails->ein_letter=='1')
@@ -192,50 +195,53 @@
                 </div>
 
                 <div class="card-header">
-                    <h4 class="card-title">CHAPTER INFORMATION</h4>
+                    <h4 class="card-title">CHAPTER INFORMATION - CONTACT PRESIDENT TO UPDATE</h4>
                 </div>
                 <div class="card-body">
-						<div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>Chapter Website</label>
-                                    <input  type="text" name="ch_website" class="form-control rowheight" maxlength="150" id="ch_website" placeholder="http://www.momsclubofchaptername.com"  value="{{$chapterDetails->website_url}}" readonly>
-                                </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Chapter Website</label>
+                                <p>{{ $chapterDetails->website_url ?? 'N/A' }}</p>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label>ONLINE CHAPTER DISCUSSION GROUP (MEETUP, GOOGLE GROUPS, ETC)</label>
-                                    <input  type="text" class="form-control" maxlength="30"  value="{{ $chapterDetails->egroup}}"readonly>
-                                </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>ONLINE CHAPTER DISCUSSION GROUP (MEETUP, GOOGLE GROUPS, ETC)</label>
+                                <p>{{ $chapterDetails->egroup ?? 'N/A' }}</p>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>FACEBOOK</label>
-                                    <input  type="text" class="form-control" maxlength="30"  value="{{ $chapterDetails->social1}}"readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>TWITTER</label>
-                                    <input  type="text" class="form-control" maxlength="30"  value="{{ $chapterDetails->social2}}"readonly>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label>INSTAGRAM</label>
-                                    <input  type="text" class="form-control" maxlength="30"  value="{{ $chapterDetails->social3}}"readonly>
-                                </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>FACEBOOK</label>
+                                <p>{{ $chapterDetails->social1 ?? 'N/A' }}</p>
                             </div>
                         </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>TWITTER</label>
+                                <p>{{ $chapterDetails->social2 ?? 'N/A' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>INSTAGRAM</label>
+                                <p>{{ $chapterDetails->social3 ?? 'N/A' }}</p>
+                            </div>
+                        </div>
+                    </div>
+
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>CHAPTER E-MAIL ADDRESS</label>
-                                    <input  type="email" class="form-control" maxlength="50"  value="{{ $chapterDetails->email}}"readonly>
+                                    <p>{{ $chapterDetails->email ?? 'N/A' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -243,7 +249,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>E-MAIL ADDRESS TO GIVE TO MOMS INTERESTED IN JOINING YOUR CHAPTER</label>
-                                    <input  type="email" class="form-control" maxlength="50" value="{{ $chapterDetails->inquiries_contact}}"  readonly>
+                                    <p>{{ $chapterDetails->inquiries_contact ?? 'N/A' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -251,7 +257,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>PO BOX</label>
-                                    <input  type="text" class="form-control" value="{{ $chapterDetails->po_box}}" maxlength="30" readonly>
+                                    <p>{{ $chapterDetails->po_box ?? 'N/A' }}</p>
                                 </div>
                             </div>
                         </div>
@@ -265,18 +271,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>FOUNDED MONTH</label>
-                                    <select name="ch_founddate" class="form-control select2" style="width: 100%;" required disabled>
-                                        <option value="">Select Date</option>
-                                        @foreach($foundedMonth as $key=>$val)
-                                        <option value="{{$key}}" {{$currentMonth == $key  ? 'selected' : ''}}>{{$val}}</option>
-                                        @endforeach
-                                    </select>
+                                    <p>{{$currentMonthAbbreviation}}</p>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>FOUNDED Year</label>
-                                    <input  type="text" class="form-control" value="{{ $chapterDetails->start_year}}"  readonly >
+                                    <label>FOUNDED YEAR</label>
+                                    <p>{{$chapterDetails->start_year}}</p>
                                 </div>
                             </div>
                         </div>
@@ -284,37 +285,38 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>RE-REGISTRATION DUES LAST PAID</label>
-                                    <input  type="date" class="form-control" value="{{ $chapterDetails->dues_last_paid}}" readonly  >
+                                    <p>{{$chapterDetails->dues_last_paid}}</p>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>LAST NUMBER OF MEMBERS REGISTERED</label>
-                                    <input  type="text" class="form-control" value="{{ $chapterDetails->members_paid_for}}" readonly >
+                                    <p>{{$chapterDetails->members_paid_for}}</p>
                                 </div>
                             </div>
                         </div>
-						 <div class="row radio-chk">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label><?php echo $a = date('Y'); echo "-"; echo $a+1;?> Board Info Received</label>
-                                    <label style="display: block;"><input  type="checkbox" class="ios-switch green bigswitch" disabled {{$chapterDetails->new_board_submitted == '1'  ? 'checked' : ''}}/><div><div></div></div></label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label><?php echo date('Y')-1 .'-'.date('Y');?> Financial Report Received</label>
-                                    <label style="display: block;"><input  type="checkbox" class="ios-switch green bigswitch" disabled {{$chapterDetails->financial_report_received == '1'  ? 'checked' : ''}}/><div><div></div></div></label>
-                                </div>
-                            </div>
-                            </div>
 
+                            <div class="row">
+                                <div class="col-md-6 BoardInfoStatus">
+                                    <div class="form-group">
+                                        <label><?php echo $a = date('Y'); echo "-"; echo $a + 1;?> Board Info Received</label>
+                                        <p>{{$chapterDetails->new_board_submitted == '1' ? 'Received' : 'Not Received'}}</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 FinancialReportStatus">
+                                    <div class="form-group">
+                                        <label><?php echo date('Y') - 1 . '-' . date('Y');?> Financial Report Received</label>
+                                        <p>{{$chapterDetails->financial_report_received == '1' ? 'Received' : 'Not Received'}}</p>
+                                    </div>
+                                </div>
+                    </div>
                 </div>
                 <div class="card-header">
                     <h4 class="card-title">INTERNATIONAL MOMS CLUB COORDINATORS</h4>
                 </div>
                 <div class="card-body">
-                    <div class="col-md-6 float-left">
+                    <div class="row">
+                    <div class="col-md-6">
 						<input  type="hidden" id="pcid" value="{{ $chapterDetails->primary_coordinator_id}}">
 						<div id="display_corlist">
 						</div>
@@ -340,11 +342,15 @@
 <script>
 /* Disable fields and buttons  */
 $(document).ready(function () {
-        //Update to "true" or "false"
+        //Update to show/hide for true/false
+        $('#reportStatusText').show();  /*report status text (.show/.hide to change visibility)*/
+        $('#readOnlyText').hide();  /*read only text (.show/.hide to change visibility)*/
         $('input, select, textarea').prop('disabled', false);  /*fields on page (true disables fields for editing)*/
         $('#BoardReport').prop('disabled', true);  /*board report button (true grays out button)*/
         $('#FinancialReport').prop('disabled', true);  /*financial report button (true grays out button)*/
         $('#Save').prop('disabled', false);  /*save button (true grays out button)*/
+        $('.BoardInfoStatus').hide();  /*board info status (.show/.hide to change visibility)*/
+        $('.FinancialReportStatus').hide();  /*financial report status (.show/.hide to change visibility)*/
 
         //ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report
         $('#BoardReportAlwaysDisabled').prop('disabled', true);
