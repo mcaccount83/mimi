@@ -98,13 +98,15 @@ class HomeController extends Controller
                 ->where('id', '=', $chapterDetails->state)
                 ->get();
             $chapterState = $chapterState[0]->state_short_name;
-            $foundedMonth = [
-                '1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN',
-                '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'
-            ];
 
+            $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN',
+                '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
             $currentMonthCode = $chapterDetails->start_month_id;
             $currentMonthAbbreviation = isset($foundedMonth[$currentMonthCode]) ? $foundedMonth[$currentMonthCode] : '';
+
+            $boardPosition = ['1' => 'President', '2' => 'AVP', '3' => 'MVP', '4' => 'Treasurer', '5' => 'Secretary' ];
+            $boardPositionCode = $borPositionId;
+            $boardPositionAbbreviation = isset($boardPosition[$boardPositionCode]) ? $boardPosition[$boardPositionCode] : '';
 
             if ($borPositionId == 1 && $isActive == 1) {
                 $chapterList = DB::table('chapters as ch')
@@ -164,12 +166,12 @@ class HomeController extends Controller
                         'sec_state' => '', 'user_id' => ''];
                     $SECDetails = json_decode(json_encode($SECDetails));
                 }
-                $data = ['chapterState' => $chapterState, 'stateArr' => $stateArr, 'currentMonthAbbreviation' => $currentMonthAbbreviation, 'SECDetails' => $SECDetails,
-                    'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'chapterList' => $chapterList];
+                $data = ['chapterState' => $chapterState, 'stateArr' => $stateArr, 'boardPositionAbbreviation' => $boardPositionAbbreviation, 'currentMonthAbbreviation' => $currentMonthAbbreviation,
+                    'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'chapterList' => $chapterList];
 
                 return view('boards.president')->with($data);
             } elseif ($borPositionId != 1 && $isActive == 1) {
-                $data = ['chapterState' => $chapterState, 'chapterDetails' => $chapterDetails,'currentMonthAbbreviation' => $currentMonthAbbreviation,
+                $data = ['chapterState' => $chapterState, 'chapterDetails' => $chapterDetails,'boardPositionAbbreviation' => $boardPositionAbbreviation, 'currentMonthAbbreviation' => $currentMonthAbbreviation,
                     'stateArr' => $stateArr, 'borPositionId' => $borPositionId, 'borDetails' => $borDetails];
 
                 return view('boards.members')->with($data);

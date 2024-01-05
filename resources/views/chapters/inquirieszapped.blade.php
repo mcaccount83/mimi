@@ -20,12 +20,12 @@
               <h3 class="box-title">List of Zapped Chapters</h3>
               </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
-              <table id="chapterlist_zapped" class="table table-bordered table-hover">
-              <thead> 
+              <table id="chapterlist" class="table table-bordered table-hover">
+              <thead>
 			    <tr>
-					
+
                     <th>State</th>
                     <th>Chapter Name</th>
                     <th>Boundaries</th>
@@ -36,13 +36,13 @@
                 <tbody>
                 @foreach($inquiriesList as $list)
                   <tr>
-						
+
                         <td>{{ $list->state }}</td>
                         <td>{{ $list->chapter_name }}</td>
                         <td>{{ $list->terry }}</td>
                         <td>{{ $list->zap_date }}</td>
 
-                      
+
 
                     </tr>
 
@@ -54,9 +54,9 @@
            </div>
           <!-- /.box -->
         </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection

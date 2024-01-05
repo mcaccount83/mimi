@@ -28,13 +28,13 @@
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">M2M & Sustaining Chapter Donations</h3>
-              
+
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
-              <table id="chapterlist_zapped" class="table table-bordered table-hover">
-              <thead> 
+              <table id="chapterlist_donation" class="table table-bordered table-hover">
+              <thead>
 			    <tr>
 					<?php if(Session::get('positionid') >=6 && Session::get('positionid') <=7){ ?><th>Donation</th><?php }?>
 				  <th>State</th>
@@ -66,16 +66,16 @@
               </div>
               </div>
             </div>
-			
+
            </div>
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection
 @section('customscript')
 

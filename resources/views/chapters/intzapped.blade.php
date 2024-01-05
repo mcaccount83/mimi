@@ -24,10 +24,10 @@
               </div>
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
-              <table id="chapterlist_zapped" class="table table-bordered table-hover">
-              <thead> 
+              <table id="chapterlist" class="table table-bordered table-hover">
+              <thead>
 			    <tr>
           <th></th>
 				<th>Conference</th>
@@ -53,18 +53,18 @@
                   </tbody>
                 </table>
             </div>
-           
+
             <div class="box-body text-center">
               <a href="{{ route('export.intzapchapter') }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>>Export Zapped Chapter List</button></a>
              </div>
-            
+
           </div>
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection

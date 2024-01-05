@@ -37,9 +37,13 @@
                             Boundaries: {{ $chapterList[0]->territory }}
                         </p>
                     </div>
-                 <p class="description text-center">
-                        Welcome, <b>{{$chapterList[0]->first_name}} {{$chapterList[0]->last_name}}</b>, to the MOMS Club MOMS information Management Interface (MIMI)! Here you can view and update your chapter's information, update, add, or remove board members, etc.</p>
-
+                        <p class="description text-center">
+                            <b>{{$chapterList[0]->first_name}} {{$chapterList[0]->last_name}}, {{$boardPositionAbbreviation}}</b>
+                        </p>
+                    <p class="description text-center">
+                           Welcome to the MOMS Club's "MOMS information Management Interface" -- MIMI!
+                           </br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
+                        </p>
                              <!-- Display the description text based on the disabled/enabled state -->
                         <div id="readOnlyText" class="description text-center" style="color: red;">
                             <p><strong>All Board Member Information is READ ONLY at this time.<br>
@@ -578,13 +582,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>RE-REGISTRATION DUES LAST PAID</label>
-                                <p>{{$chapterList[0]->dues_last_paid}}</p>
+                                <p>{{\Carbon\Carbon::parse($chapterList[0]->dues_last_paid)->format('m-d-Y')}}</p>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>LAST NUMBER OF MEMBERS REGISTERED</label>
-                                <p>{{$chapterList[0]->members_paid_for}}</p>
+                                <p>{{ $chapterList[0]->members_paid_for}}</p>
                             </div>
                         </div>
                     </div>

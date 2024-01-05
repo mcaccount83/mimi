@@ -18,13 +18,13 @@
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">Report of Coordinator ToDo List</h3>
-             
+
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
-              <table id="chapterlist_zapped" class="table table-bordered table-hover">
-				<thead> 
+              <table id="chapterlist" class="table table-bordered table-hover">
+				<thead>
 			    <tr>
 					<th>Region</th>
 					<th>First Name</th>
@@ -39,7 +39,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    
+
                 @foreach($coordinatorList as $list)
                   <tr>
                     <td>{{ $list->reg }}</td>
@@ -47,7 +47,7 @@
                     <td>{{ $list->cor_lname }}</td>
 					<td>{{ $list->position }}</td>
                     <td>{{ $list->todo_month }}</td>
-                    <td bgcolor="<?php 
+                    <td bgcolor="<?php
 							if($list->todo_send_rereg !='1')
 									echo "#FF0000";
 							?>">
@@ -56,8 +56,8 @@
 							@else
 								NO
 							@endif
-            		</td>        
-                    <td bgcolor="<?php 
+            		</td>
+                    <td bgcolor="<?php
 							if($list->todo_send_late !='1')
 									echo "#FF0000";
 							?>">
@@ -66,8 +66,8 @@
 							@else
 								NO
 							@endif
-            		</td>        
-            		<td bgcolor="<?php 
+            		</td>
+            		<td bgcolor="<?php
 							if($list->todo_record_rereg !='1')
 									echo "#FF0000";
 							?>">
@@ -76,8 +76,8 @@
 							@else
 								NO
 							@endif
-            		</td>        
-            		<td bgcolor="<?php 
+            		</td>
+            		<td bgcolor="<?php
 							if($list->todo_record_m2m !='1')
 									echo "#FF0000";
 							?>">
@@ -86,8 +86,8 @@
 							@else
 								NO
 							@endif
-            		</td>        
-            		<td bgcolor="<?php 
+            		</td>
+            		<td bgcolor="<?php
 							if($list->todo_export_reports !='1')
 									echo "#FF0000";
 							?>">
@@ -96,7 +96,7 @@
 							@else
 								NO
 							@endif
-            		</td>        
+            		</td>
                   </tr>
                   @endforeach
                   </tbody>
@@ -106,9 +106,9 @@
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection

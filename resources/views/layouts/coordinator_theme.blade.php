@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{config('app.name')}}</title>
     <!-- Tell the browser to be responsive to screen width -->
@@ -76,269 +75,291 @@
   $loggedIn = $corDetails['first_name'].' '.$corDetails['last_name'];
    ?>
   <aside class="main-sidebar">
-    <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
-      <!-- /.search form -->
-      <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
         <li class="header"></li>
-        <?php { ?>
+
+        @php
+            $coordinatorCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
+            $founderCondition = $positionid == 7;  //*Founder
+            $conferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 7);  //*CC-Founder
+            $assistConferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*RC-Founder & ACC
+            $regionalCoordinatorCondition = ($positionid >= 5 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*RC-Founder & ACC
+            $supervisingCoordinatorCondition =  ($positionid >= 3 && $positionid <= 7 || $positionid == 25);  //*SC-Founder & ACC
+            $eoyReportCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
+            $eoyReportConditionDISABLED = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
+            $inquiriesCondition = ($positionid == 8 || $secpositionid == 8);  //*Inquiries Coordinator
+            $webReviewCondition = ($positionid == 9 || $secpositionid == 9);  //*Website Reviewer
+            $einCondition = ($positionid == 12 || $secpositionid == 12);  //*EIN Coordinator
+            $adminReportCondition = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
+            $m2mCondition = ($positionid == 21 || $secpositionid == 21);  //*M2M Committee
+            $listAdminCondition = ($positionid == 23 || $secpositionid == 23);  //*ListAdmin
+        @endphp
+
         <li class="{{ Request::is('coordinator/dashboard') ? 'active' : '' }}  ">
           <a href="{{ route('coordinator.showdashboard') }}">
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
           </a>
-        </li><?php } ?>
+        </li>
 
-        <?php if (($positionid >=1 && $positionid <=7) || $positionid ==25){ ?>
-        <li class="{{ Request::is('chapter/list') ? 'active' : '' }} {{ Request::is('chapter/create') ? 'active' : '' }} {{ Request::is('chapter/edit/*') ? 'active' : ''}} {{ Request::is('chapterlist') ? 'active' : '' }}  ">
-          <a href="{{ route('chapter.list') }}">
-            <i class="fa fa-list"></i> <span>Chapter List</span>
-          </a>
-        </li><?php } ?>
-
-        <?php if (($positionid >=5 && $positionid <=7) || $positionid ==25){ ?>
-        <li class="{{ Request::is('chapter/zapped') ? 'active' : '' }} {{ Request::is('chapter/zapped/view/*') ? 'active' : ''}}">
-          <a href="{{ route('chapter.zapped') }}">
-            <i class="fa fa-ban"></i>
-            <span>Zapped Chapter List</span>
-          </a>
-        </li> <?php } ?>
-
-        <?php if (($positionid >=5 && $positionid <=7) || $positionid ==25 || ($positionid == 10 || $secpositionid == 10) || ($corId == 423 && $positionid == 8)){ ?>
-        <li class="{{ Request::is('chapter/re-registration') ? 'active' : '' }} {{ Request::is('chapter/re-registration/payment/*') ? 'active' : '' }}">
-          <a href="{{ route('chapter.registration') }}">
-          <!--<a href="#">-->
-              <i class="fa fa-credit-card"></i> <span>Re-Registrations</span>
-           </a>
-        </li> <?php } ?>
-
-        <?php if (($positionid >=5 && $positionid <=7) || ($positionid == 8 || $secpositionid == 8)){ ?>
-        <li class="{{ Request::is('chapter/inquiries') ? 'active' : '' }} {{ Request::is('chapter/inquiriesview/*') ? 'active' : '' }}">
-          <a href="{{ route('chapter.inquiries') }}">
-            <i class="fa fa-map-marker"></i>
-            <span>Inquiries</span>
-          </a>
-        </li> <?php } ?>
-
-        <?php if (($positionid == 8 || $secpositionid == 8)){ ?>
-        <li class="{{ Request::is('chapter/inquirieszapped') ? 'active' : '' }} ">
-          <a href="{{ route('chapter.inquirieszapped') }}">
-            <i class="fa fa-map-marker"></i>
-            <span>Zapped Chapters</span>
-          </a>
-        </li> <?php } ?>
-
-        <?php if (($positionid >=5 && $positionid <=7) || ($positionid == 9 || $secpositionid == 9) || ($positionid == 25 || $secpositionid == 25)){ ?>
-        <li class="{{ Request::is('chapter/website') ? 'active' : '' }} {{ Request::is('chapter/website/edit/*') ? 'active' : '' }}">
-          <a href="{{ route('chapter.website') }}">
-            <i class="fa fa-laptop"></i><span>Website Review </span>
+        @if ($coordinatorCondition)
+            <li class="{{ Request::is('chapter/list') ? 'active' : '' }} {{ Request::is('chapter/create') ? 'active' : '' }} {{ Request::is('chapter/edit/*') ? 'active' : ''}} {{ Request::is('chapterlist') ? 'active' : '' }}  ">
+            <a href="{{ route('chapter.list') }}">
+                <i class="fa fa-list"></i> <span>Chapter List</span>
             </a>
-        </li> <?php } ?>
+            </li>
+        @endif
 
-        <?php if (($positionid == 13 || $secpositionid == 13) || ($positionid == 23 || $secpositionid == 23)){ ?>
-        <li class="{{ Request::is('reports/boardlist') ? 'active' : '' }}">
-          <a href="{{ route('report.boardlist') }}">
-            <i class="fa fa-list"></i><span>BoardList</span>
-          </a>
-        </li> <?php } ?>
-
-        <?php if (($positionid >=3 && $positionid <=7) || $positionid ==25){ ?>
-        <li class="{{ Request::is('coordinatorlist') ? 'active' : '' }} {{ Request::is('coordinator/create') ? 'active' : '' }} {{ Request::is('coordinator/edit/*') ? 'active' : '' }} {{ Request::is('coordinator/role/*') ? 'active' : '' }}">
-          <a href="{{ route('coordinator.list') }}">
-            <i class="fa fa-user"></i>
-            <span>Coordinator List</span>
-          </a>
-        </li><?php } ?>
-
-        <?php if ($positionid >=6 && $positionid <=7){ ?>
-        <li class="{{ Request::is('coordinator/retired') ? 'active' : '' }} {{ Request::is('coordinator/retired/view/*') ? 'active' : '' }}">
-          <a href="{{ route('coordinator.retired') }}">
-            <i class="fa fa-ban"></i>
-            <span>Retired Coordinator List</span>
-          </a>
-        </li><?php } ?>
-
-                <?php if (($positionid == 12 || $secpositionid ==12) || ($corId == 423 && $positionid == 8)){ ?>
-        <li class="<?php if (($positionid == 12)){ ?> {{ Request::is('home') ? 'active' : '' }}<?php }?> {{ Request::is('chapter/international') ? 'active' : '' }}">
-          <a href="{{ route('chapter.inter') }}">
-            <i class="fa fa-list"></i>
-            <span>International Chapter List</span>
-          </a>
-        </li><?php } ?>
-
-        <?php if ($positionid == 12 || $secpositionid == 12){ ?>
-        <li class="{{ Request::is('chapter/international/zap') ? 'active' : '' }}  {{ Request::is('chapter/international/zapped/view/*') ? 'active' : ''}}">
-          <a href="{{ route('chapter.interzap') }}">
-            <i class="fa fa-ban"></i>
-            <span>International Zapped Chapter List</span>
-          </a>
-        </li>
-        <?php } ?>
-
-        <?php if ($positionid == 0 ){ ?>
-        <li class="{{ Request::is('coordinator/international') ? 'active' : '' }}">
-          <a href="{{ route('coordinator.inter') }}">
-            <i class="fa fa-user"></i>
-            <span>International Coordinator List</span>
-          </a>
-        </li><?php } ?>
-
-        <?php if($positionid == 0){?>
-          <li class="{{ Request::is('coordinator/retiredinternational') ? 'active' : '' }} {{ Request::is('coordinator/retired/view/*') ? 'active' : '' }}">
-          <a href="{{ route('coordinator.retinter') }}">
-            <i class="fa fa-ban"></i>
-            <span>International Retired Coordinator List</span>
-          </a>
-        </li>
-        <?php } ?>
-
-        <?php if ($positionid == 12 || $secpositionid == 12){ ?>
-        <li class="{{ Request::is('reports/inteinstatus') ? 'active' : '' }}">
-          <a href="{{ route('report.inteinstatus') }}">
-                  <i class="fa fa-files-o"></i> <span>Chapter EIN Status</span>
-                  </a>
-        </li>
-        <?php } ?>
-         <?php if ($positionid == 21 || $secpositionid == 21){ ?>
-        <li class="{{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
-          <a href="{{ route('report.intm2mdonation') }}">
-                  <i class="fa fa-files-o"></i> <span>M2M Donations</span>
-                  </a>
-        </li>
-        <?php } ?>
-
-        <?php if ($positionid == 13 || $secpositionid == 13 ){ ?>
-        <li class="treeview {{ Request::is('chapter/international') ? 'active' : '' }} {{ Request::is('chapter/international/*') ? 'active' : '' }} {{ Request::is('coordinator/international') ? 'active' : '' }} {{ Request::is('coordinator/international/view/*') ? 'active' : '' }} {{ Request::is('coordinator/international/*') ? 'active' : '' }} {{ Request::is('coordinator/retiredinternational') ? 'active' : '' }}  {{ Request::is('coordinator/retiredinternational/view/*') ? 'active' : ''}} {{ Request::is('reports/inteinstatus') ? 'active' : '' }} {{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
-            <a href="#"><i class="fa fa-list"></i> <span>International Lists</span>
-              <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+        @if ($assistConferenceCoordinatorCondition)
+            <li class="{{ Request::is('chapter/zapped') ? 'active' : '' }} {{ Request::is('chapter/zapped/view/*') ? 'active' : ''}}">
+            <a href="{{ route('chapter.zapped') }}">
+                <i class="fa fa-ban"></i>
+                <span>Zapped Chapter List</span>
             </a>
-            <ul class="treeview-menu">
-                <li class="{{ Request::is('chapter/international') ? 'active' : '' }} {{ Request::is('chapter/international/view/*') ? 'active' : '' }}">
-          <a href="{{ route('chapter.inter') }}">
-            <i class="fa fa-list"></i>
-            <span>Chapter List</span>
-          </a>
-        </li>
+            </li>
+        @endif
+
+        @if ($regionalCoordinatorCondition || $inquiriesCondition)
+            <li class="{{ Request::is('chapter/re-registration') ? 'active' : '' }} {{ Request::is('chapter/re-registration/payment/*') ? 'active' : '' }}">
+            <a href="{{ route('chapter.registration') }}">
+=                <i class="fa fa-credit-card"></i> <span>Re-Registrations</span>
+            </a>
+            </li>
+        @endif
+
+        @if ($regionalCoordinatorCondition || $inquiriesCondition)
+            <li class="{{ Request::is('chapter/inquiries') ? 'active' : '' }} {{ Request::is('chapter/inquiriesview/*') ? 'active' : '' }}">
+            <a href="{{ route('chapter.inquiries') }}">
+                <i class="fa fa-map-marker"></i>
+                <span>Inquiries</span>
+            </a>
+            </li>
+        @endif
+
+        @if ($inquiriesCondition)
+            <li class="{{ Request::is('chapter/inquirieszapped') ? 'active' : '' }} ">
+            <a href="{{ route('chapter.inquirieszapped') }}">
+                <i class="fa fa-map-marker"></i>
+                <span>Zapped Chapters</span>
+            </a>
+            </li>
+        @endif
+
+        @if ($regionalCoordinatorCondition || $webReviewCondition)
+            <li class="{{ Request::is('chapter/website') ? 'active' : '' }} {{ Request::is('chapter/website/edit/*') ? 'active' : '' }}">
+            <a href="{{ route('chapter.website') }}">
+                <i class="fa fa-laptop"></i><span>Website Review </span>
+                </a>
+            </li>
+        @endif
+
+        @if ($adminReportCondition || $listAdminCondition)
+            <li class="{{ Request::is('reports/boardlist') ? 'active' : '' }}">
+            <a href="{{ route('report.boardlist') }}">
+                <i class="fa fa-list"></i><span>BoardList</span>
+            </a>
+            </li>
+        @endif
+
+        @if ($supervisingCoordinatorCondition)
+            <li class="{{ Request::is('coordinatorlist') ? 'active' : '' }} {{ Request::is('coordinator/create') ? 'active' : '' }} {{ Request::is('coordinator/edit/*') ? 'active' : '' }} {{ Request::is('coordinator/role/*') ? 'active' : '' }}">
+            <a href="{{ route('coordinator.list') }}">
+                <i class="fa fa-user"></i>
+                <span>Coordinator List</span>
+            </a>
+            </li>
+        @endif
+
+        @if ($assistConferenceCoordinatorCondition)
+            <li class="{{ Request::is('coordinator/retired') ? 'active' : '' }} {{ Request::is('coordinator/retired/view/*') ? 'active' : '' }}">
+            <a href="{{ route('coordinator.retired') }}">
+                <i class="fa fa-ban"></i>
+                <span>Retired Coordinator List</span>
+            </a>
+            </li>
+        @endif
+
+         @if ($einCondition || $inquiriesCondition)
+            <li class="<?php if (($positionid == 12)){ ?> {{ Request::is('home') ? 'active' : '' }}<?php }?> {{ Request::is('chapter/international') ? 'active' : '' }}">
+            <a href="{{ route('chapter.inter') }}">
+                <i class="fa fa-list"></i>
+                <span>International Chapter List</span>
+            </a>
+            </li>
+        @endif
+
+        @if ($einCondition)
             <li class="{{ Request::is('chapter/international/zap') ? 'active' : '' }}  {{ Request::is('chapter/international/zapped/view/*') ? 'active' : ''}}">
-          <a href="{{ route('chapter.interzap') }}">
-            <i class="fa fa-ban"></i>
-            <span>Zapped Chapter List</span>
-          </a>
-        </li>
-             <li class="{{ Request::is('coordinator/international') ? 'active' : '' }} {{ Request::is('coordinator/international/view/*') ? 'active' : '' }}">
-          <a href="{{ route('coordinator.inter') }}">
-            <i class="fa fa-user"></i>
-            <span>Coordinator List</span>
-          </a>
-        </li>
-             <li class="{{ Request::is('coordinator/retiredinternational') ? 'active' : '' }} {{ Request::is('coordinator/retiredinternational/view/*') ? 'active' : ''}}">
-          <a href="{{ route('coordinator.retinter') }}">
-            <i class="fa fa-ban"></i>
-            <span>Retired Coordinator List</span>
-          </a>
-              </li>
-              <li class="{{ Request::is('reports/inteinstatus') ? 'active' : '' }}">
-          <a href="{{ route('report.inteinstatus') }}">
-                  <i class="fa fa-files-o"></i> <span>Chapter EIN Status</span>
-                  </a>
-                  </li>
-                  <li class="{{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
-          <a href="{{ route('report.intm2mdonation') }}">
-                  <i class="fa fa-files-o"></i> <span>M2M Donations</span>
-                  </a>
-        </li>
-            </ul>
-        </li><?php } ?>
-
-        <?php if (($positionid >=1 && $positionid <=7) || $positionid ==25){ ?>
-        <li class="treeview {{ Request::is('reports/chapterstatus') ? 'active' : '' }} {{ Request::is('reports/chapternew') ? 'active' : '' }} {{ Request::is('reports/chapterlarge') ? 'active' : '' }} {{ Request::is('reports/chapterprobation') ? 'active' : '' }} {{ Request::is('reports/chaptercoordinators') ? 'active' : '' }} {{ Request::is('reports/m2mdonation') ? 'active' : '' }} {{ Request::is('chapter/m2mdonation/*') ? 'active' : '' }} {{ Request::is('reports/einstatus') ? 'active' : '' }} {{ Request::is('reports/socialmedia') ? 'active' : '' }}">
-            <a href="#"><i class="fa fa-line-chart"></i> <span>Chapter Reports</span>
-              <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+            <a href="{{ route('chapter.interzap') }}">
+                <i class="fa fa-ban"></i>
+                <span>International Zapped Chapter List</span>
             </a>
-            <ul class="treeview-menu">
-              <li class="{{ Request::is('reports/chapterstatus') ? 'active' : '' }}"><a href="{{ route('report.chapterstatus') }}">
-                  <i class="fa fa-files-o"></i> <span>Chapter Status</span>
-                  </a>
-              </li>
-               <li class="{{ Request::is('reports/einstatus') ? 'active' : '' }}"><a href="{{ route('report.einstatus') }}">
-                  <i class="fa fa-files-o"></i> <span>Chapter EIN Status</span>
-                  </a>
-              </li>
-              <?php if (($positionid >=5 && $positionid <=7) || $positionid ==25){ ?>
-              <li class="{{ Request::is('reports/chapternew') ? 'active' : '' }}"><a href="{{ route('report.chapternew') }}">
-                  <i class="fa fa-files-o"></i> <span>New Chapters</span>
-                  </a>
-              </li>
-              <?php } ?>
-              <li class="{{ Request::is('reports/chapterlarge') ? 'active' : '' }}"><a href="{{ route('report.chapterlarge') }}">
-                  <i class="fa fa-files-o"></i> <span>Large Chapters</span>
-                  </a>
-              </li>
-              <li class="{{ Request::is('reports/chapterprobation') ? 'active' : '' }}"><a href="{{ route('report.chapterprobation') }}">
-                  <i class="fa fa-files-o"></i> <span>Probation Chapters</span>
-                  </a>
-              </li>
-              <li class="{{ Request::is('reports/m2mdonation') ? 'active' : '' }} {{ Request::is('chapter/m2mdonation/*') ? 'active' : '' }}"><a href="{{ route('report.m2mdonation') }}">
-                  <i class="fa fa-files-o"></i> <span>M2M Donations</span>
-                  </a>
-              </li>
-              <li class="{{ Request::is('reports/socialmedia') ? 'active' : '' }}"><a href="{{ route('report.socialmedia') }}">
-                  <i class="fa fa-files-o"></i> <span>Social Media</span>
-                  </a>
-              </li>
-              <li class="{{ Request::is('reports/chaptercoordinators') ? 'active' : '' }}"><a href="{{ route('report.chaptercoordinators') }}">
-                  <i class="fa fa-files-o"></i> <span>Chapter Coordinator</span>
-                  </a>
-              </li>
+            </li>
+        @endif
 
-            </ul>
-        </li><?php } ?>
+        @if ($positionid == 0 )
+            <li class="{{ Request::is('coordinator/international') ? 'active' : '' }}">
+            <a href="{{ route('coordinator.inter') }}">
+                <i class="fa fa-user"></i>
+                <span>International Coordinator List</span></a>
+            </li>
+        @endif
 
-                <?php if (($positionid >=1 && $positionid <=7) || $positionid ==25){ ?>
-        <li class="treeview {{ Request::is('reports/chaptervolunteer') ? 'active' : '' }} {{ Request::is('reports/coordinatortodo') ? 'active' : '' }} {{ Request::is('reports/intcoordinatortodo') ? 'active' : '' }} {{ Request::is('reports/appreciation') ? 'active' : '' }} {{ Request::is('reports/birthday') ? 'active' : '' }} {{ Request::is('coordinator/appreciation/*') ? 'active' : '' }} {{ Request::is('reports/reportingtree') ? 'active' : '' }}">
-            <a href="#"><i class="fa fa-line-chart"></i> <span>Coordinator Reports</span>
-              <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+        @if($positionid == 0)
+            <li class="{{ Request::is('coordinator/retiredinternational') ? 'active' : '' }} {{ Request::is('coordinator/retired/view/*') ? 'active' : '' }}">
+            <a href="{{ route('coordinator.retinter') }}">
+                <i class="fa fa-ban"></i>
+                <span>International Retired Coordinator List</span></a>
+            </li>
+        @endif
+
+        @if ($einCondition)
+            <li class="{{ Request::is('reports/inteinstatus') ? 'active' : '' }}">
+            <a href="{{ route('report.inteinstatus') }}">
+                    <i class="fa fa-files-o"></i> <span>Chapter EIN Status</span></a>
+            </li>
+        @endif
+
+        @if ($m2mCondition)
+            <li class="{{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
+            <a href="{{ route('report.intm2mdonation') }}">
+                    <i class="fa fa-files-o"></i> <span>M2M Donations</span></a>
+            </li>
+        @endif
+
+        @if ($adminReportCondition)
+            <li class="treeview {{ Request::is('chapter/international') ? 'active' : '' }} {{ Request::is('chapter/international/*') ? 'active' : '' }} {{ Request::is('coordinator/international') ? 'active' : '' }} {{ Request::is('coordinator/international/view/*') ? 'active' : '' }} {{ Request::is('coordinator/international/*') ? 'active' : '' }} {{ Request::is('coordinator/retiredinternational') ? 'active' : '' }}  {{ Request::is('coordinator/retiredinternational/view/*') ? 'active' : ''}} {{ Request::is('reports/inteinstatus') ? 'active' : '' }} {{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
+                <a href="#"><i class="fa fa-list"></i> <span>International Lists</span>
+                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{ Request::is('chapter/international') ? 'active' : '' }} {{ Request::is('chapter/international/view/*') ? 'active' : '' }}">
+            <a href="{{ route('chapter.inter') }}">
+                <i class="fa fa-list"></i>
+                <span>Chapter List</span>
             </a>
-            <ul class="treeview-menu">
+            </li>
+                <li class="{{ Request::is('chapter/international/zap') ? 'active' : '' }}  {{ Request::is('chapter/international/zapped/view/*') ? 'active' : ''}}">
+            <a href="{{ route('chapter.interzap') }}">
+                <i class="fa fa-ban"></i>
+                <span>Zapped Chapter List</span>
+            </a>
+            </li>
+                <li class="{{ Request::is('coordinator/international') ? 'active' : '' }} {{ Request::is('coordinator/international/view/*') ? 'active' : '' }}">
+            <a href="{{ route('coordinator.inter') }}">
+                <i class="fa fa-user"></i>
+                <span>Coordinator List</span>
+            </a>
+            </li>
+                <li class="{{ Request::is('coordinator/retiredinternational') ? 'active' : '' }} {{ Request::is('coordinator/retiredinternational/view/*') ? 'active' : ''}}">
+            <a href="{{ route('coordinator.retinter') }}">
+                <i class="fa fa-ban"></i>
+                <span>Retired Coordinator List</span>
+            </a>
+                </li>
+                <li class="{{ Request::is('reports/inteinstatus') ? 'active' : '' }}">
+            <a href="{{ route('report.inteinstatus') }}">
+                    <i class="fa fa-files-o"></i> <span>Chapter EIN Status</span>
+                    </a>
+                    </li>
+                    <li class="{{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
+            <a href="{{ route('report.intm2mdonation') }}">
+                    <i class="fa fa-files-o"></i> <span>M2M Donations</span>
+                    </a>
+            </li>
+                </ul>
+            </li>
+        @endif
 
-              <?php if (($positionid >=4 && $positionid <=7) || $positionid ==25){ ?>
-                <li class="{{ Request::is('reports/chaptervolunteer') ? 'active' : '' }}"><a href="{{ route('report.chaptervolunteer') }}">
-                  <i class="fa fa-files-o"></i> <span>Volunteer Utilization</span>
-                  </a>
-              </li>
-              <?php } ?>
-              <?php if (($positionid ==6 || $positionid ==25)){ ?>
-                <li class="{{ Request::is('reports/coordinatortodo') ? 'active' : '' }}"><a href="{{ route('report.coordinatortodo') }}">
-                  <i class="fa fa-files-o"></i> <span>Coordinator ToDo</span>
-                  </a>
-              </li>
-              <?php } ?>
-              <?php if (($positionid ==7) ){ ?>
-                <li class="{{ Request::is('reports/intcoordinatortodo') ? 'active' : '' }}"><a href="{{ route('report.intcoordinatortodo') }}">
-                  <i class="fa fa-files-o"></i> <span>Coordinator ToDo</span>
-                  </a>
-              </li>
-              <?php } ?>
-              <?php if ($positionid >=6 && $positionid <=7){ ?>
-                <li class="{{ Request::is('reports/appreciation') ? 'active' : '' }} {{ Request::is('coordinator/appreciation/*') ? 'active' : '' }}"><a href="{{ route('report.appreciation') }}">
-                  <i class="fa fa-files-o"></i> <span>Volunteer Appreciation</span>
-                  </a>
-              </li>
-              <?php } ?>
-              <?php if (($positionid >=5 && $positionid <=7) || $positionid ==25){ ?>
-                <li class="{{ Request::is('reports/birthday') ? 'active' : '' }} {{ Request::is('coordinator/birthday/*') ? 'active' : '' }}"><a href="{{ route('report.birthday') }}">
-                  <i class="fa fa-files-o"></i> <span>Volunteer Birthdays</span>
-                  </a>
-              </li>
-              <?php } ?>
-              <li class="{{ Request::is('reports/reportingtree') ? 'active' : '' }}"><a href="{{ route('report.reportingtree') }}">
-                  <i class="fa fa-sitemap"></i> <span>Reporting Tree</span>
-                  </a>
-              </li>
-            </ul>
-        </li><?php } ?>
+        @if ($regionalCoordinatorCondition)
+            <li class="treeview {{ Request::is('reports/chapterstatus') ? 'active' : '' }} {{ Request::is('reports/chapternew') ? 'active' : '' }} {{ Request::is('reports/chapterlarge') ? 'active' : '' }} {{ Request::is('reports/chapterprobation') ? 'active' : '' }} {{ Request::is('reports/chaptercoordinators') ? 'active' : '' }} {{ Request::is('reports/m2mdonation') ? 'active' : '' }} {{ Request::is('chapter/m2mdonation/*') ? 'active' : '' }} {{ Request::is('reports/einstatus') ? 'active' : '' }} {{ Request::is('reports/socialmedia') ? 'active' : '' }}">
+                <a href="#"><i class="fa fa-line-chart"></i> <span>Chapter Reports</span>
+                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                <li class="{{ Request::is('reports/chapterstatus') ? 'active' : '' }}"><a href="{{ route('report.chapterstatus') }}">
+                    <i class="fa fa-files-o"></i> <span>Chapter Status</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('reports/einstatus') ? 'active' : '' }}"><a href="{{ route('report.einstatus') }}">
+                    <i class="fa fa-files-o"></i> <span>Chapter EIN Status</span>
+                    </a>
+                </li>
+                @if ($assistConferenceCoordinatorCondition)
+                <li class="{{ Request::is('reports/chapternew') ? 'active' : '' }}"><a href="{{ route('report.chapternew') }}">
+                    <i class="fa fa-files-o"></i> <span>New Chapters</span>
+                    </a>
+                </li>
+                @endif
+                <li class="{{ Request::is('reports/chapterlarge') ? 'active' : '' }}"><a href="{{ route('report.chapterlarge') }}">
+                    <i class="fa fa-files-o"></i> <span>Large Chapters</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('reports/chapterprobation') ? 'active' : '' }}"><a href="{{ route('report.chapterprobation') }}">
+                    <i class="fa fa-files-o"></i> <span>Probation Chapters</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('reports/m2mdonation') ? 'active' : '' }} {{ Request::is('chapter/m2mdonation/*') ? 'active' : '' }}"><a href="{{ route('report.m2mdonation') }}">
+                    <i class="fa fa-files-o"></i> <span>M2M Donations</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('reports/socialmedia') ? 'active' : '' }}"><a href="{{ route('report.socialmedia') }}">
+                    <i class="fa fa-files-o"></i> <span>Social Media</span>
+                    </a>
+                </li>
+                <li class="{{ Request::is('reports/chaptercoordinators') ? 'active' : '' }}"><a href="{{ route('report.chaptercoordinators') }}">
+                    <i class="fa fa-files-o"></i> <span>Chapter Coordinator</span>
+                    </a>
+                </li>
 
-                 <?php if ($positionid == 13 || $secpositionid == 13 ){ ?>
+                </ul>
+            </li>
+        @endif
+
+        @if ($coordinatorCondition)
+            <li class="treeview {{ Request::is('reports/chaptervolunteer') ? 'active' : '' }} {{ Request::is('reports/coordinatortodo') ? 'active' : '' }} {{ Request::is('reports/intcoordinatortodo') ? 'active' : '' }} {{ Request::is('reports/appreciation') ? 'active' : '' }} {{ Request::is('reports/birthday') ? 'active' : '' }} {{ Request::is('coordinator/appreciation/*') ? 'active' : '' }} {{ Request::is('reports/reportingtree') ? 'active' : '' }}">
+                <a href="#"><i class="fa fa-line-chart"></i> <span>Coordinator Reports</span>
+                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
+                <ul class="treeview-menu">
+                @if ($supervisingCoordinatorCondition)
+                    <li class="{{ Request::is('reports/chaptervolunteer') ? 'active' : '' }}"><a href="{{ route('report.chaptervolunteer') }}">
+                        <i class="fa fa-files-o"></i> <span>Volunteer Utilization</span>
+                        </a>
+                    </li>
+                @endif
+                @if (($positionid ==6 || $positionid ==25))
+                    <li class="{{ Request::is('reports/coordinatortodo') ? 'active' : '' }}"><a href="{{ route('report.coordinatortodo') }}">
+                        <i class="fa fa-files-o"></i> <span>Coordinator ToDo</span>
+                        </a>
+                    </li>
+                @endif
+                @if ($founderCondition)
+                    <li class="{{ Request::is('reports/intcoordinatortodo') ? 'active' : '' }}"><a href="{{ route('report.intcoordinatortodo') }}">
+                        <i class="fa fa-files-o"></i> <span>Coordinator ToDo</span>
+                        </a>
+                    </li>
+                @endif
+                @if ($assistConferenceCoordinatorCondition)
+                    <li class="{{ Request::is('reports/appreciation') ? 'active' : '' }} {{ Request::is('coordinator/appreciation/*') ? 'active' : '' }}"><a href="{{ route('report.appreciation') }}">
+                        <i class="fa fa-files-o"></i> <span>Volunteer Appreciation</span>
+                        </a>
+                    </li>
+                @endif
+                @if ($regionalCoordinatorCondition)
+                    <li class="{{ Request::is('reports/birthday') ? 'active' : '' }} {{ Request::is('coordinator/birthday/*') ? 'active' : '' }}"><a href="{{ route('report.birthday') }}">
+                        <i class="fa fa-files-o"></i> <span>Volunteer Birthdays</span>
+                        </a>
+                    </li>
+                @endif
+                <li class="{{ Request::is('reports/reportingtree') ? 'active' : '' }}"><a href="{{ route('report.reportingtree') }}">
+                    <i class="fa fa-sitemap"></i> <span>Reporting Tree</span>
+                    </a>
+                </li>
+                </ul>
+            </li>
+        @endif
+
+        @if ($eoyReportConditionDISABLED)
             <li class="treeview {{ Request::is('yearreports/*') ? 'active' : '' }} {{ Request::is('chapter/financial/*') ? 'active' : ''}} {{ Request::is('chapter/boardinfo/*') ? 'active' : ''}}  {{ Request::is('chapter/boundaryview/*') ? 'active' : '' }} {{ Request::is('chapter/statusview/*') ? 'active' : ''}} {{ Request::is('chapter/awardsview/*') ? 'active' : '' }} {{ Request::is('yearreports/addawards') ? 'active' : '' }}">
             <a href="#"><i class="fa fa-line-chart"></i> <span>EOY Reports</span>
               <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
@@ -366,69 +387,67 @@
                   </a>
               </li>
             </ul>
-        </li><?php } ?>
+            </li>
+        @endif
 
-                <?php if ($positionid == 13 || $secpositionid == 13 ){ ?>
-        <li class="treeview {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }} {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }} {{ Request::is('adminreports/multipleboard') ? 'active' : '' }} {{ Request::is('adminreports/nopresident') ? 'active' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
-            <a href="#"><i class="fa fa-line-chart"></i> <span>Admin Reports</span>
-              <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+        @if ($adminReportCondition)
+            <li class="treeview {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }} {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }} {{ Request::is('adminreports/multipleboard') ? 'active' : '' }} {{ Request::is('adminreports/nopresident') ? 'active' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
+                <a href="#"><i class="fa fa-line-chart"></i> <span>Admin Reports</span>
+                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+                </a>
+                <ul class="treeview-menu">
+                <li class="{{ Request::is('adminreports/duplicateuser') ? 'active' : '' }}">
+            <a href="{{ route('report.duplicateuser') }}">
+                <i class="fa fa-files-o"></i>
+                <span>Duplicate Users</span>
             </a>
-            <ul class="treeview-menu">
-               <li class="{{ Request::is('adminreports/duplicateuser') ? 'active' : '' }}">
-          <a href="{{ route('report.duplicateuser') }}">
-            <i class="fa fa-files-o"></i>
-            <span>Duplicate Users</span>
-          </a>
-        </li>
-        <li class="{{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }}">
-          <a href="{{ route('report.duplicateboardid') }}">
-            <i class="fa fa-files-o"></i>
-            <span>Duplicate Board Id</span>
-          </a>
-        </li>
-        <li class="{{ Request::is('adminreports/multipleboard') ? 'active' : '' }}">
-          <a href="{{ route('report.multipleboard') }}">
-            <i class="fa fa-files-o"></i>
-            <span>Multiple Boards</span>
-          </a>
-        </li>
-        <li class="{{ Request::is('adminreports/nopresident') ? 'active' : '' }}">
-          <a href="{{ route('report.nopresident') }}">
-            <i class="fa fa-files-o"></i>
-            <span>No President</span>
-          </a>
-        </li>
-        <li class="{{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
-            <a href="{{ route('report.outgoingactivate') }}">
-              <i class="fa fa-files-o"></i>
-              <span>Outgoing Board</span>
+            </li>
+            <li class="{{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }}">
+            <a href="{{ route('report.duplicateboardid') }}">
+                <i class="fa fa-files-o"></i>
+                <span>Duplicate Board Id</span>
             </a>
-          </li>
-            </ul>
-        </li><?php } ?>
+            </li>
+            <li class="{{ Request::is('adminreports/multipleboard') ? 'active' : '' }}">
+            <a href="{{ route('report.multipleboard') }}">
+                <i class="fa fa-files-o"></i>
+                <span>Multiple Boards</span>
+            </a>
+            </li>
+            <li class="{{ Request::is('adminreports/nopresident') ? 'active' : '' }}">
+            <a href="{{ route('report.nopresident') }}">
+                <i class="fa fa-files-o"></i>
+                <span>No President</span>
+            </a>
+            </li>
+            <li class="{{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
+                <a href="{{ route('report.outgoingactivate') }}">
+                <i class="fa fa-files-o"></i>
+                <span>Outgoing Board</span>
+                </a>
+            </li>
+                </ul>
+            </li>
+        @endif
 
-        <?php if ($positionid >=6 && $positionid <=7 || ($positionid==25 || $secpositionid ==25)){ ?>
-        <li class="{{ Request::is('reports/downloads') ? 'active' : '' }}">
-          <a href="{{ route('report.downloads') }}">
-                  <i class="fa fa-files-o"></i> <span>Download Reports</span>
-                  </a>
-        </li>
-        <?php } ?>
+        @if ($assistConferenceCoordinatorCondition)
+            <li class="{{ Request::is('reports/downloads') ? 'active' : '' }}">
+                <a href="{{ route('report.downloads') }}"><i class="fa fa-files-o"></i> <span>Download Reports</span></a>
+            </li>
+        @endif
 
-         <div class="too" style="padding-left:15px; padding-top:9px;"><a href="https://momsclub.org/coordinator-toolkit/" target="_blank"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Coordinator Toolkit</a></div>
+        <div class="too" style="padding-left:15px; padding-top:9px;"><a href="https://momsclub.org/coordinator-toolkit/" target="_blank"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Coordinator Toolkit</a></div>
 
         <div class="too" style="padding-left:15px; padding-top:20px;"><a href="https://momsclub.org/elearning/" target="_blank"><i class="fa fa-graduation-cap"></i>&nbsp;&nbsp;eLearning Library</a></div>
 
         <div class="too" style="padding-left:15px; padding-top: 20px;">
-        <?php if ($positionid >=1 && $positionid <=24){ ?>
-        <li class="{{ Request::is('coordinator/profile') ? 'active' : '' }}">
-          <a href="{{ route('coordinator.showprofile') }}">
-            <i class="fa fa-edit"></i>
-            <span>&nbsp; Update Profile </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<sub>(<?php echo $loggedIn;?>)</sub></span>
 
-          </a>
-        </li></div>
-        <?php } ?>
+        @if ($positionid >=1 && $positionid <=24)
+            <li class="{{ Request::is('coordinator/profile') ? 'active' : '' }}">
+                <a href="{{ route('coordinator.showprofile') }}">
+                    <i class="fa fa-edit"></i><span>&nbsp; Update Profile </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<sub>(<?php echo $loggedIn;?>)</sub></span></a>
+            </li></div>
+        @endif
 
         <li class="">
           <a href="{{ route('logout') }}" onclick="event.preventDefault();
@@ -444,19 +463,14 @@
     </section>
     <!-- /.sidebar -->
   </aside>
-
-  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
    @yield('content')
    </div>
-  <!-- /.content-wrapper -->
   <footer class="main-footer">
         <strong>Copyright &copy; <?php echo date('Y');?> <a href="https://momsclub.org/" target="_blank">MOMS Club</a>.</strong> All rights
     reserved.
   </footer>
-  <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
 </div>
-<!-- ./wrapper -->
 </body>
 
 <!-- jQuery 3 -->
@@ -531,109 +545,133 @@
 </script>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-      $('#chapterlist_active').DataTable({
-        'paging'      : true,
-        'lengthChange': true,
-        'searching'   : true,
-        'ordering'    : true,
-        'info'        : false,
-        'autoWidth'   : false
-      });
-      $('#chapterlist_zapped').DataTable({
-         'paging'      : true,
-        'lengthChange': true,
-         'searching'   : true,
-         'ordering'    : true,
-         'info'        : false,
-         'autoWidth'   : false
-
-      });
-      $('#chapterlist_inter').DataTable({
-        'paging'      : true,
-        'lengthChange': true,
-        'searching'   : true,
-        'ordering'    : true,
-        'info'        : false,
-        'autoWidth'   : false,
-      });
-      $('#chapterlist_reReg').DataTable({
-        'paging'      : true,
-        'lengthChange': true,
-        'searching'   : true,
-        'ordering'    : true,
-        'info'        : false,
-        'autoWidth'   : false,
-        "aoColumns": [
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          { "sType": 'date' },
-          null,
-        ]
-      });
-      $('#chapterlist_inquiry').DataTable({
-        'paging'      : true,
-        'lengthChange': true,
-        'searching'   : true,
-        'ordering'    : true,
-        'info'        : false,
-        'autoWidth'   : false
-      });
-      $('#coordinatorlist_active').DataTable({
-        'paging'      : true,
-        'lengthChange': true,
-        'searching'   : true,
-        'ordering'    : true,
-        'info'        : false,
-        'autoWidth'   : false
-      });
-      $('#coordinatorlist_retired').DataTable({
-        'paging'      : true,
-        'lengthChange': true,
-        'searching'   : true,
-        'ordering'    : true,
-        'info'        : false,
-        'autoWidth'   : false
-      });
-      $('#chapterlist_einStatus').DataTable({
-        'paging'      : true,
-        'lengthChange': true,
-         'searching'   : true,
-         'ordering'    : true,
-         'info'        : false,
-         'autoWidth'   : false,
-        "aoColumns": [
-          null,
-          null,
-          { "sType": 'date' },
-          null,
-          null,
-          null,
-        ]
-      });
-      $('#chapterlist_inteinStatus').DataTable({
-        'paging'      : true,
-        'lengthChange': true,
-         'searching'   : true,
-         'ordering'    : true,
-         'info'        : false,
-         'autoWidth'   : false,
-        "aoColumns": [
-          null,
-          null,
-          null,
-          { "sType": 'date' },
-          null,
-          null,
-          null,
-        ]
-      });
-
+//format dates in tables to display as MM-DD-YYYY but stil sort correctly
+function initializeDataTable(selector, options, columnDefs) {
+    $(selector).DataTable({
+        ...options,
+        columnDefs: columnDefs.map(def => {
+            if (def.type === 'date') {
+                return {
+                    ...def,
+                    render: function (data, type, row) {
+                        if (type === 'sort') {
+                            return row[def.targets]; // Use original date for sorting
+                        }
+                        return def.format ? moment(data).format(def.format) : data || def.noPayment || ''; // Format date for display if specified
+                    }
+                };
+            }
+            return def;
+        })
     });
+}
+
+$(document).ready(function() {
+    initializeDataTable('#chapterlist', {
+        paging: true,
+        lengthChange: true,
+        searching: true,
+        ordering: true,
+        info: false,
+        autoWidth: false
+    }, []);
+
+    initializeDataTable('#chapterlist_reReg', {
+        paging: true,
+        lengthChange: true,
+        searching: true,
+        ordering: true,
+        info: false,
+        autoWidth: false,
+        order: [[0, 'asc']]
+    }, [
+        { targets: 6, type: 'date', format: null },
+        { targets: 7, type: 'date', format: 'MM-DD-YYYY', noPayment: 'NO PAYMENT' }
+    ]);
+
+    initializeDataTable('#chapterlist_einStatus', {
+        paging: true,
+        lengthChange: true,
+        searching: true,
+        ordering: true,
+        info: false,
+        autoWidth: false,
+        order: [[0, 'asc']]
+    }, [
+        { targets: 2, type: 'date', format: null },
+    ]);
+
+    initializeDataTable('#chapterlist_inteinStatus', {
+        paging: true,
+        lengthChange: true,
+        searching: true,
+        ordering: true,
+        info: false,
+        autoWidth: false,
+        order: [[0, 'asc']]
+    }, [
+        { targets: 3, type: 'date', format: null },
+    ]);
+
+    initializeDataTable('#chapterlist_large', {
+        paging: true,
+        lengthChange: true,
+        searching: true,
+        ordering: true,
+        info: false,
+        autoWidth: false,
+        order: [[0, 'asc']]
+    }, [
+        { targets: 4, type: 'date', format: 'MM-DD-YYYY', noPayment: 'NO PAYMENT' }
+    ]);
+
+    initializeDataTable('#chapterlist_donation', {
+        paging: true,
+        lengthChange: true,
+        searching: true,
+        ordering: true,
+        info: false,
+        autoWidth: false,
+        order: [[0, 'asc']]
+    }, [
+        { targets: 4, type: 'date', format: 'MM-DD-YYYY', noPayment: 'NO PAYMENT' },
+        { targets: 6, type: 'date', format: 'MM-DD-YYYY', noPayment: 'NO PAYMENT' }
+    ]);
+
+    initializeDataTable('#chapterlist_review', {
+        paging: true,
+        lengthChange: true,
+        searching: true,
+        ordering: true,
+        info: false,
+        autoWidth: false,
+        order: [[0, 'asc']]
+    }, [
+        { targets: 8, type: 'date', format: 'MM-DD-YYYY', noPayment: 'NO PAYMENT' }
+    ]);
+
+    initializeDataTable('#coordinatorlist', {
+        paging: true,
+        lengthChange: true,
+        searching: true,
+        ordering: true,
+        info: false,
+        autoWidth: false
+    }, []);
+
+    initializeDataTable('#coordinatorlist_birthday', {
+        paging: true,
+        lengthChange: true,
+        searching: true,
+        ordering: true,
+        info: false,
+        autoWidth: false,
+        order: [[0, 'asc']]
+    }, [
+        { targets: 5, type: 'date', format: null },
+        { targets: 6, type: 'date', format: 'MM-DD-YYYY', noPayment: 'NO PAYMENT' }
+    ]);
+});
 </script>
 @yield('customscript')
 </html>

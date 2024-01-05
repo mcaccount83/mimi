@@ -19,13 +19,13 @@
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">Social Media</h3>
-              
+
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
-              <table id="chapterlist_zapped" class="table table-bordered table-hover">
-              <thead> 
+              <table id="chapterlist" class="table table-bordered table-hover">
+              <thead>
 			    <tr>
                   <th>State</th>
                   <th>Name</th>
@@ -50,16 +50,16 @@
                 </div>
               </div>
               </div>
-            </div>         
+            </div>
 
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection
 @section('customscript')
 

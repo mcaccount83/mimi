@@ -18,13 +18,13 @@
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">Report of Chapters with no President</h3>
-              
+
             </div>
             <!-- /.box-header -->
-            
+
             <div class="box-body table-responsive">
-              <table id="chapterlist_zapped" class="table table-bordered table-hover">
-              <thead> 
+              <table id="chapterlist" class="table table-bordered table-hover">
+              <thead>
 			    <tr>
                   <th>Chapter ID</th>
                   <th>Chapter Name</th>
@@ -42,18 +42,18 @@
                   @endforeach
                   </tbody>
                 </table>
-		
+
             </div>
-			
+
            </div>
           <!-- /.box -->
         </div>
       </div>
-    </section>    
+    </section>
     <!-- Main content -->
-    
+
     <!-- /.content -->
- 
+
 @endsection
 @section('customscript')
 <script>

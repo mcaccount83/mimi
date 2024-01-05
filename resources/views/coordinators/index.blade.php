@@ -35,7 +35,7 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive">
-              <table id="coordinatorlist_active" class="table table-bordered table-hover">
+              <table id="coordinatorlist" class="table table-bordered table-hover">
                 <thead>
                   <tr>
                     <th></th>

@@ -37,9 +37,12 @@
                             Boundaries: {{$chapterDetails->territory}}
                         </p>
                     </div>
+                    <p class="description text-center">
+                        <b>{{$borDetails->first_name}} {{$borDetails->last_name}}, {{$boardPositionAbbreviation}}</b>
+                    </p>
                 <p class="description text-center">
-                       Welcome, <b>{{$borDetails->first_name}} {{$borDetails->last_name}}</b>, to the MOMS Club MOMS information Management Interface (MIMI)!
-                       </br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
+                    Welcome to the MOMS Club's "MOMS information Management Interface" -- MIMI!
+                </br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
                     </p>
                                 <!-- Display the description text based on the disabled/enabled state -->
                             <div id="readOnlyText" class="description text-center" style="color: red;">
@@ -285,7 +288,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>RE-REGISTRATION DUES LAST PAID</label>
-                                    <p>{{$chapterDetails->dues_last_paid}}</p>
+                                    <p>{{\Carbon\Carbon::parse($chapterDetails->dues_last_paid)->format('m-d-Y')}}</p>
                                 </div>
                             </div>
                             <div class="col-md-6">
