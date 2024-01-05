@@ -161,20 +161,20 @@ function setUseAnsi($argv)
  */
 function outputSupportsColor()
 {
-    if (false !== getenv('NO_COLOR') || ! defined('STDOUT')) {
+    if (getenv('NO_COLOR') !== false || ! defined('STDOUT')) {
         return false;
     }
 
-    if ('Hyper' === getenv('TERM_PROGRAM')) {
+    if (getenv('TERM_PROGRAM') === 'Hyper') {
         return true;
     }
 
     if (defined('PHP_WINDOWS_VERSION_BUILD')) {
         return (function_exists('sapi_windows_vt100_support')
             && sapi_windows_vt100_support(STDOUT))
-            || false !== getenv('ANSICON')
-            || 'ON' === getenv('ConEmuANSI')
-            || 'xterm' === getenv('TERM');
+            || getenv('ANSICON') !== false
+            || getenv('ConEmuANSI') === 'ON'
+            || getenv('TERM') === 'xterm';
     }
 
     if (function_exists('stream_isatty')) {
@@ -186,6 +186,7 @@ function outputSupportsColor()
     }
 
     $stat = fstat(STDOUT);
+
     // Check if formatted mode is S_IFCHR
     return $stat ? 0020000 === ($stat['mode'] & 0170000) : false;
 }
@@ -204,7 +205,7 @@ function getOptValue($opt, $argv, $default)
 
     foreach ($argv as $key => $value) {
         $next = $key + 1;
-        if (0 === strpos($value, $opt)) {
+        if (strpos($value, $opt) === 0) {
             if ($optLength === strlen($value) && isset($argv[$next])) {
                 return trim($argv[$next]);
             } else {
@@ -228,17 +229,17 @@ function checkParams($installDir, $version, $cafile)
 {
     $result = true;
 
-    if (false !== $installDir && ! is_dir($installDir)) {
+    if ($installDir !== false && ! is_dir($installDir)) {
         out("The defined install dir ({$installDir}) does not exist.", 'info');
         $result = false;
     }
 
-    if (false !== $version && 1 !== preg_match('/^\d+\.\d+\.\d+(\-(alpha|beta|RC)\d*)*$/', $version)) {
+    if ($version !== false && preg_match('/^\d+\.\d+\.\d+(\-(alpha|beta|RC)\d*)*$/', $version) !== 1) {
         out("The defined install version ({$version}) does not match release pattern.", 'info');
         $result = false;
     }
 
-    if (false !== $cafile && (! file_exists($cafile) || ! is_readable($cafile))) {
+    if ($cafile !== false && (! file_exists($cafile) || ! is_readable($cafile))) {
         out("The defined Certificate Authority (CA) cert file ({$cafile}) does not exist or is not readable.", 'info');
         $result = false;
     }
@@ -315,7 +316,7 @@ function getPlatformIssues(&$errors, &$warnings, $install)
     if (extension_loaded('suhosin')) {
         $suhosin = ini_get('suhosin.executor.include.whitelist');
         $suhosinBlacklist = ini_get('suhosin.executor.include.blacklist');
-        if (false === stripos($suhosin, 'phar') && (! $suhosinBlacklist || false !== stripos($suhosinBlacklist, 'phar'))) {
+        if (stripos($suhosin, 'phar') === false && (! $suhosinBlacklist || stripos($suhosinBlacklist, 'phar') !== false)) {
             $errors['suhosin'] = [
                 'The suhosin.executor.include.whitelist setting is incorrect.',
                 'Add the following to the end of your `php.ini` or suhosin.ini (Example path [for Debian]: /etc/php5/cli/conf.d/suhosin.ini):',
@@ -467,7 +468,7 @@ function getPlatformIssues(&$errors, &$warnings, $install)
     if (preg_match('{Configure Command(?: *</td><td class="v">| *=> *)(.*?)(?:</td>|$)}m', $phpinfo, $match)) {
         $configure = $match[1];
 
-        if (false !== strpos($configure, '--enable-sigchild')) {
+        if (strpos($configure, '--enable-sigchild') !== false) {
             $warnings['sigchild'] = [
                 'PHP was compiled with --enable-sigchild which can cause issues on some platforms.',
                 'Recompile it without this flag if possible, see also:',
@@ -475,7 +476,7 @@ function getPlatformIssues(&$errors, &$warnings, $install)
             ];
         }
 
-        if (false !== strpos($configure, '--with-curlwrappers')) {
+        if (strpos($configure, '--with-curlwrappers') !== false) {
             $warnings['curlwrappers'] = [
                 'PHP was compiled with --with-curlwrappers which will cause issues with HTTP authentication and GitHub.',
                 'Recompile it without this flag if possible',
@@ -719,7 +720,7 @@ class Installer
             $result = $this->install($version, $channel);
 
             // in case --1 or --2 is passed, we leave the default channel for next self-update to stable
-            if (1 === preg_match('{^\d+$}D', $channel)) {
+            if (preg_match('{^\d+$}D', $channel) === 1) {
                 $channel = 'stable';
             }
 
@@ -1102,12 +1103,12 @@ class Installer
             $path = preg_match('{^[0-9a-f]{40}$}', $version) ? $this->pubKeys['dev'] : $this->pubKeys['tags'];
             $pubkeyid = openssl_pkey_get_public('file://'.$path);
 
-            $result = 1 === openssl_verify(
+            $result = openssl_verify(
                 file_get_contents($file),
                 $signature,
                 $pubkeyid,
                 $this->algo
-            );
+            ) === 1;
 
             // PHP 8 automatically frees the key instance and deprecates the function
             if (PHP_VERSION_ID < 80000) {
@@ -1414,6 +1415,7 @@ class HttpClient
                 $this->options['ssl']['SNI_server_name'] = parse_url($url, PHP_URL_HOST);
             }
         }
+
         // Keeping the above mostly isolated from the code copied from Composer.
         return $this->getMergedStreamContext($url);
     }
@@ -1571,7 +1573,7 @@ class HttpClient
             ];
 
             // add request_fulluri for http requests
-            if ('http' === parse_url($url, PHP_URL_SCHEME)) {
+            if (parse_url($url, PHP_URL_SCHEME) === 'http') {
                 $options['http']['request_fulluri'] = true;
             }
 

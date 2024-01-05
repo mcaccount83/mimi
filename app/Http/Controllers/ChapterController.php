@@ -3998,43 +3998,43 @@ class ChapterController extends Controller
                         $incomingChunkSize = 5;
                         foreach (array_chunk($incomingBoardDetails->toArray(), $incomingChunkSize) as $incomingChunk) {
                             foreach ($incomingChunk as $incomingRecord) {
-                            $userId = DB::table('users')->insertGetId(
-                                ['first_name' => $incomingRecord->first_name,
+                                $userId = DB::table('users')->insertGetId(
+                                    ['first_name' => $incomingRecord->first_name,
+                                        'last_name' => $incomingRecord->last_name,
+                                        'email' => $incomingRecord->email,
+                                        'password' => Hash::make('TempPass4You'),
+                                        'user_type' => 'board',
+                                        'is_active' => 1]
+                                );
+                            }
+                            $boardIdArr = DB::table('board_details')
+                                ->select('board_details.board_id')
+                                ->orderByDesc('board_details.board_id')
+                                ->limit(1)
+                                ->get();
+                            $boardId = $boardIdArr[0]->board_id + 1;
+
+                            $board = DB::table('board_details')->insert(
+                                ['user_id' => $userId,
+                                    'board_id' => $boardId,
+                                    'first_name' => $incomingRecord->first_name,
                                     'last_name' => $incomingRecord->last_name,
                                     'email' => $incomingRecord->email,
                                     'password' => Hash::make('TempPass4You'),
-                                    'user_type' => 'board',
+                                    'remember_token' => '',
+                                    'board_position_id' => $incomingRecord->board_position_id,
+                                    'chapter_id' => $chapter_id,
+                                    'street_address' => $incomingRecord->street_address,
+                                    'city' => $incomingRecord->city,
+                                    'state' => $incomingRecord->state,
+                                    'zip' => $incomingRecord->zip,
+                                    'country' => 'USA',
+                                    'phone' => $incomingRecord->phone,
+                                    'last_updated_by' => $lastUpdatedBy,
+                                    'last_updated_date' => date('Y-m-d H:i:s'),
                                     'is_active' => 1]
                             );
                         }
-                        $boardIdArr = DB::table('board_details')
-                            ->select('board_details.board_id')
-                            ->orderByDesc('board_details.board_id')
-                            ->limit(1)
-                            ->get();
-                        $boardId = $boardIdArr[0]->board_id + 1;
-
-                        $board = DB::table('board_details')->insert(
-                            ['user_id' => $userId,
-                                'board_id' => $boardId,
-                                'first_name' => $incomingRecord->first_name,
-                                'last_name' => $incomingRecord->last_name,
-                                'email' => $incomingRecord->email,
-                                'password' => Hash::make('TempPass4You'),
-                                'remember_token' => '',
-                                'board_position_id' => $incomingRecord->board_position_id,
-                                'chapter_id' => $chapter_id,
-                                'street_address' => $incomingRecord->street_address,
-                                'city' => $incomingRecord->city,
-                                'state' => $incomingRecord->state,
-                                'zip' => $incomingRecord->zip,
-                                'country' => 'USA',
-                                'phone' => $incomingRecord->phone,
-                                'last_updated_by' => $lastUpdatedBy,
-                                'last_updated_date' => date('Y-m-d H:i:s'),
-                                'is_active' => 1]
-                        );
-                    }
 
                         //Update Chapter after Board Active
                         DB::update('UPDATE chapters SET new_board_active = ? where id = ?', [1, $chapter_id]);
