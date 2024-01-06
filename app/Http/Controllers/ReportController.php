@@ -208,7 +208,7 @@ class ReportController extends Controller
     /**
      * View the International EIN Status
      */
-    public function intEINstatus(Request $request): View
+    public function showIntEINstatus(Request $request): View
     {
         //Get Coordinators Details
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -683,7 +683,7 @@ class ReportController extends Controller
     /**
      * View the International M2M Doantions
      */
-    public function intM2Mdonation(Request $request): View
+    public function showIintM2Mdonation(Request $request): View
     {
         //Get Coordinators Details
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -1642,7 +1642,7 @@ class ReportController extends Controller
     /**
      * Board Election Report Reminder Auto Send
      */
-    public function reminderBoardInfo(Request $request): RedirectResponse
+    public function showReminderBoardInfo(Request $request): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -1734,7 +1734,7 @@ class ReportController extends Controller
     /**
      * Financial Report Reminder Auto Send
      */
-    public function reminderFinancialReport(Request $request): RedirectResponse
+    public function showReminderFinancialReport(Request $request): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -1826,7 +1826,7 @@ class ReportController extends Controller
     /**
      * EOY Reports LATE Reminder Auto Send
      */
-    public function reminderEOYReportsLate(Request $request): RedirectResponse
+    public function showReminderEOYReportsLate(Request $request): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -1925,7 +1925,7 @@ class ReportController extends Controller
     /**
      * Activate Board
      */
-    public function activateBoard($chapter_id, $lastUpdatedBy)
+    public function showActivateBoard($chapter_id, $lastUpdatedBy)
     {
         $message = '';
         //Fetching New Board Info from Incoming Board Members
@@ -2265,7 +2265,7 @@ class ReportController extends Controller
     /**
      * Add Chaper Awards -- i don't think we need this anymore
      */
-    public function addAwards(Request $request): View
+    public function showAddAwards(Request $request): View
     {
         $user = $request->user();
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
@@ -2478,7 +2478,7 @@ class ReportController extends Controller
     /**
      * Activate Outgoing Board
      */
-    public function activateOutgoingBoard(Request $request): RedirectResponse
+    public function showActivateOutgoingBoard(Request $request): RedirectResponse
     {
         $message = '';
         DB::beginTransaction();

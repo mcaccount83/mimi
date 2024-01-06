@@ -66,14 +66,6 @@
     </nav>
   </header>
   <!-- Left side column. contains the logo and sidebar -->
- <?php
-  use App\Models\User;
-  $corDetails = User::find(Auth::user()->id)->CoordinatorDetails;
-  $corId = $corDetails['coordinator_id'];
-  $positionid = $corDetails['position_id'];
-  $secpositionid = $corDetails['sec_position_id'];
-  $loggedIn = $corDetails['first_name'].' '.$corDetails['last_name'];
-   ?>
   <aside class="main-sidebar">
     <section class="sidebar">
       <ul class="sidebar-menu" data-widget="tree">

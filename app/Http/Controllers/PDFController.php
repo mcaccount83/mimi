@@ -21,7 +21,7 @@ class PDFController extends Controller
     /**
      * Show Financial Report PDF All Board Members
      */
-    public function financialReport($chapterId)
+    public function showFinancialReport($chapterId)
     {
         try {
             // Retrieve board member details and other necessary data

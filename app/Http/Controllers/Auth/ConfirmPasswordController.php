@@ -25,7 +25,7 @@ class ConfirmPasswordController extends Controller
      */
     protected function confirm(Request $request): RedirectResponse
     {
-        $this->validate($request, [
+        $request->validate([
             'password' => 'required|password',
         ]);
 

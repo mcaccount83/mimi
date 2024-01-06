@@ -21,7 +21,7 @@ class ExportController extends Controller
     /**
      * Export Chapter List
      */
-    public function exportChapter(Request $request, $id)
+    public function indexChapter(Request $request, $id)
     {
         $fileName = 'chapter_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -248,7 +248,7 @@ class ExportController extends Controller
     /**
      * Export Zapped Chapter List
      */
-    public function exportZappedChapter(Request $request)
+    public function indexZappedChapter(Request $request)
     {
         $fileName = 'chapter_zap_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -451,7 +451,7 @@ class ExportController extends Controller
     /**
      * Export Overdue Re-Registration List
      */
-    public function exportReReg(Request $request)
+    public function indexReReg(Request $request)
     {
         $fileName = 'rereg_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -565,7 +565,7 @@ class ExportController extends Controller
     /**
      * Export International Overdue Re-Registration List
      */
-    public function exportIntReReg(Request $request)
+    public function indexIntReReg(Request $request)
     {
         $fileName = 'int_rereg_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -678,7 +678,7 @@ class ExportController extends Controller
     /**
      * Export International Chapter List
      */
-    public function exportInternationalChapter(Request $request)
+    public function indexInternationalChapter(Request $request)
     {
         $fileName = 'int_chapter_'.date('Y-m-d').'.csv';
         $headers = [
@@ -852,7 +852,7 @@ class ExportController extends Controller
     /**
      * Export International Zapped Chapter List
      */
-    public function exportInternationalZapChapter(Request $request)
+    public function indexInternationalZapChapter(Request $request)
     {
         $fileName = 'int_chapter_zap_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1027,7 +1027,7 @@ class ExportController extends Controller
     /**
      * Export EIN Status List
      */
-    public function exportEINStatus(Request $request)
+    public function indexEINStatus(Request $request)
     {
         $fileName = 'ein_status_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1122,7 +1122,7 @@ class ExportController extends Controller
     /**
      * Export International EIN Status List
      */
-    public function exportIntEINStatus(Request $request)
+    public function indexIntEINStatus(Request $request)
     {
         $fileName = 'int_ein_status_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1204,7 +1204,7 @@ class ExportController extends Controller
     /**
      * Export EOY Reports Status List
      */
-    public function exportEOYStatus(Request $request)
+    public function indexEOYStatus(Request $request)
     {
         $fileName = 'eoy_status_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1307,7 +1307,7 @@ class ExportController extends Controller
     /**
      * Export International EOY Reports Status List
      */
-    public function exportIntEOYStatus(Request $request)
+    public function indexIntEOYStatus(Request $request)
     {
         $fileName = 'int_eoy_status_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1393,7 +1393,7 @@ class ExportController extends Controller
     /**
      * Export Coordinator List
      */
-    public function exportCoordinator(Request $request, $id)
+    public function indexCoordinator(Request $request, $id)
     {
         $fileName = 'coordinator_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1490,7 +1490,7 @@ class ExportController extends Controller
     /**
      * Export International Coordinator List
      */
-    public function exportIntCoordinator(Request $request)
+    public function indexIntCoordinator(Request $request)
     {
         $fileName = 'int_coordinator_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1573,7 +1573,7 @@ class ExportController extends Controller
     /**
      * Export International Retired Coordinator List
      */
-    public function exportIntRetCoordinator(Request $request)
+    public function indexIntRetCoordinator(Request $request)
     {
         $fileName = 'int_coordinator_ret_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1658,7 +1658,7 @@ class ExportController extends Controller
     /**
      * Export Retired Coordinator List
      */
-    public function exportRetiredCoordinator(Request $request): StreamedResponse
+    public function indexRetiredCoordinator(Request $request): StreamedResponse
     {
 
         $fileName = 'coordinator_retire_'.date('Y-m-d').'.csv';
@@ -1758,7 +1758,7 @@ class ExportController extends Controller
     /**
      * Export Coordinator Appreciation List
      */
-    public function exportAppreciation(Request $request): StreamedResponse
+    public function indexAppreciation(Request $request): StreamedResponse
     {
         $fileName = 'coordinator_appreciation_'.date('Y-m-d').'.csv';
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -1826,7 +1826,7 @@ class ExportController extends Controller
     /**
      * Export Chapter Coordinator List
      */
-    public function exportChapterCoordinator(Request $request): RedirectResponse
+    public function indexChapterCoordinator(Request $request): RedirectResponse
     {
         // output headers so that the file is downloaded rather than displayed
         header('Content-Type: text/csv; charset=utf-8');
@@ -1988,7 +1988,7 @@ class ExportController extends Controller
     /**
      * Export Board Election Report List
      */
-    public function exportBoardElection(Request $request)
+    public function indexBoardElection(Request $request)
     {
         $fileName = 'board_election_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -2235,7 +2235,7 @@ class ExportController extends Controller
     /**
      * Export Chapter Awards List
      */
-    public function exportChapterAwardList(Request $request)
+    public function indexChapterAwardList(Request $request)
     {
         // output headers so that the file is downloaded rather than displayed
         header('Content-Type: text/csv; charset=utf-8');

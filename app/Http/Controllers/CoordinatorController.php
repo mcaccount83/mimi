@@ -1394,7 +1394,7 @@ class CoordinatorController extends Controller
     /**
      * Coordiantor Appreciation Gifts
      */
-    public function appreciation(Request $request, $id): View
+    public function showAppreciation(Request $request, $id): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -1514,7 +1514,7 @@ class CoordinatorController extends Controller
     /**
      * Coordiantor Birthdays
      */
-    public function birthday(Request $request, $id): View
+    public function showBirthday(Request $request, $id): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];

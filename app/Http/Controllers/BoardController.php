@@ -36,7 +36,7 @@ class BoardController extends Controller
     /**
      * Update Board Details President Login
      */
-    public function update(Request $request, $id): RedirectResponse
+    public function updatePresident(Request $request, $id): RedirectResponse
     {
         $presInfoPre = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name',

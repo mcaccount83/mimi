@@ -46,7 +46,7 @@ class ChapterController extends Controller
     /**
      * Display the Active chapter list mapped with login coordinator
      */
-    public function list(Request $request): View
+    public function index(Request $request): View
     {
         //Get Coordinators Details
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -1558,7 +1558,7 @@ class ChapterController extends Controller
     /**
      * View the Boundary Details
      */
-    public function boundaryview(Request $request, $id): View
+    public function showBoundary(Request $request, $id): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -1880,7 +1880,7 @@ class ChapterController extends Controller
     /**
      * Display the Zapped Inquiries list
      */
-    public function zappedInquiriesChapter(Request $request): View
+    public function showZappedInquiries(Request $request): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -1922,7 +1922,7 @@ class ChapterController extends Controller
     /**
      * Display the Inquiries Detailed Chapter View
      */
-    public function inquiriesview(Request $request, $id): View
+    public function showInquiries(Request $request, $id): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -2489,7 +2489,7 @@ class ChapterController extends Controller
     /**
      * Function for Zapping a Chapter (store)
      */
-    public function chapterDisband(Request $request): RedirectResponse
+    public function storeChapterDisband(Request $request): RedirectResponse
     {
         $input = $request->all();
         $chapterid = $input['chapterid'];
@@ -2661,7 +2661,7 @@ class ChapterController extends Controller
     /**
      * Function for unZapping a Chapter (store)
      */
-    public function unZappedChapter($id): RedirectResponse
+    public function storeUnZappedChapter($id): RedirectResponse
     {
         try {
             DB::beginTransaction();
@@ -2868,7 +2868,7 @@ class ChapterController extends Controller
     /**
      * Reset Password
      */
-    public function chapterResetPassword(Request $request)
+    public function updateChapterResetPassword(Request $request)
     {
 
         $input = $request->all();
@@ -3092,7 +3092,7 @@ class ChapterController extends Controller
     /**
      * ReRegistration Notes (store)
      */
-    public function makeReRegNotes(Request $request, $id): RedirectResponse
+    public function createReRegNotes(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -3149,7 +3149,7 @@ class ChapterController extends Controller
     /**
      * ReRegistration Payment (store)
      */
-    public function makePayment(Request $request, $id): RedirectResponse
+    public function createPayment(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -3208,7 +3208,7 @@ class ChapterController extends Controller
     /**
      * ReRegistration Reminders Auto Send
      */
-    public function reminderReRegistration(Request $request): RedirectResponse
+    public function createReminderReRegistration(Request $request): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -3323,7 +3323,7 @@ class ChapterController extends Controller
     /**
      * ReRegistration Late Notices Auto Send
      */
-    public function lateReRegistration(Request $request): RedirectResponse
+    public function createLateReRegistration(Request $request): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -3481,7 +3481,7 @@ class ChapterController extends Controller
     /**
      * View the Award Details
      */
-    public function awardsView(Request $request, $id): View
+    public function showAwardsView(Request $request, $id): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -4828,7 +4828,7 @@ class ChapterController extends Controller
     /**
      * View the Report Status Details
      */
-    public function statusView(Request $request, $id): View
+    public function showStatusView(Request $request, $id): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
