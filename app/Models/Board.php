@@ -9,8 +9,8 @@ use Illuminate\Notifications\Notifiable;
 
 class Board extends Authenticatable
 {
-    use Notifiable;
     use HasFactory;
+    use Notifiable;
 
     protected $guard = 'board';
 

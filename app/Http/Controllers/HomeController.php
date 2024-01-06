@@ -104,7 +104,7 @@ class HomeController extends Controller
             $currentMonthCode = $chapterDetails->start_month_id;
             $currentMonthAbbreviation = isset($foundedMonth[$currentMonthCode]) ? $foundedMonth[$currentMonthCode] : '';
 
-            $boardPosition = ['1' => 'President', '2' => 'AVP', '3' => 'MVP', '4' => 'Treasurer', '5' => 'Secretary' ];
+            $boardPosition = ['1' => 'President', '2' => 'AVP', '3' => 'MVP', '4' => 'Treasurer', '5' => 'Secretary'];
             $boardPositionCode = $borPositionId;
             $boardPositionAbbreviation = isset($boardPosition[$boardPositionCode]) ? $boardPosition[$boardPositionCode] : '';
 
@@ -171,7 +171,7 @@ class HomeController extends Controller
 
                 return view('boards.president')->with($data);
             } elseif ($borPositionId != 1 && $isActive == 1) {
-                $data = ['chapterState' => $chapterState, 'chapterDetails' => $chapterDetails,'boardPositionAbbreviation' => $boardPositionAbbreviation, 'currentMonthAbbreviation' => $currentMonthAbbreviation,
+                $data = ['chapterState' => $chapterState, 'chapterDetails' => $chapterDetails, 'boardPositionAbbreviation' => $boardPositionAbbreviation, 'currentMonthAbbreviation' => $currentMonthAbbreviation,
                     'stateArr' => $stateArr, 'borPositionId' => $borPositionId, 'borDetails' => $borDetails];
 
                 return view('boards.members')->with($data);
