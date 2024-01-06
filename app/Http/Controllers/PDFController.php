@@ -141,6 +141,7 @@ class PDFController extends Controller
 
             // Load the view and generate the PDF
             $pdf = PDF::loadView('boards.financial-report', ['pdfData' => $pdfData]);
+
             // Download the PDF
             return $pdf->stream('Financial Report.pdf');
 
