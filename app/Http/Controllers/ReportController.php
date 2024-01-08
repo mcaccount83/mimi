@@ -2478,7 +2478,7 @@ class ReportController extends Controller
     /**
      * Activate Outgoing Board
      */
-    public function showActivateOutgoingBoard(Request $request): RedirectResponse
+    public function storeActivateOutgoingBoard(Request $request): RedirectResponse
     {
         $message = '';
         DB::beginTransaction();

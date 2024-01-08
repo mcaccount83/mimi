@@ -215,7 +215,7 @@ Route::get('/adminreports/duplicateboardid', [ReportController::class, 'showDupl
 Route::get('/adminreports/multipleboard', [ReportController::class, 'showMultiple'])->name('report.multipleboard');
 Route::get('/adminreports/nopresident', [ReportController::class, 'showNoPresident'])->name('report.nopresident');
 Route::get('/adminreports/outgoingboard', [ReportController::class, 'showOutgoingBoard'])->name('report.outgoingboard');
-Route::post('/adminreports/outgoingactivate', [ReportController::class, 'showActivateOutgoingBoard'])->name('report.outgoingactivate');
+Route::post('/adminreports/outgoingactivate', [ReportController::class, 'storeActivateOutgoingBoard'])->name('report.outgoingactivate');
 
 /**
  * Routes for PDF

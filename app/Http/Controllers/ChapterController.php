@@ -3223,11 +3223,15 @@ class ChapterController extends Controller
 
         if ($month == 1) {
             $monthRangeStart = 12;
-            $lastYear = $year - 1;
+            $lastYear = $lastYear - 1;
+        }
+        if ($month == 1) {
+            $monthRangeEnd = 12;
+            $thisyear = $year - 1;
         }
 
         $rangeStartDate = Carbon::create($lastYear, $monthRangeStart, 1);
-        $rangeEndDate = Carbon::create($year, $monthRangeEnd, 1)->endOfMonth();
+        $rangeEndDate = Carbon::create($thisyear, $monthRangeEnd, 1)->endOfMonth();
 
         // Convert $month to words
         $monthInWords = strftime('%B', strtotime("2000-$month-01"));
@@ -3338,12 +3342,25 @@ class ChapterController extends Controller
         $lastYear = $year - 1;
 
         if ($month == 1) {
+            $monthRangeStart = 11;
+            $lastYear = $lastYear - 1;
+        }
+        elseif ($month == 2) {
+            $monthRangeStart = 12;
+            $lastYear = $lastYear - 1;
+        }
+
+        if ($month == 1) {
+            $monthRangeEnd = 11;
+            $thisyear = $year - 1;
+        }
+        elseif ($month == 2) {
             $monthRangeEnd = 12;
-            $lastYear = $year - 1;
+            $thisyear = $year - 1;
         }
 
         $rangeStartDate = Carbon::create($lastYear, $monthRangeStart, 1);
-        $rangeEndDate = Carbon::create($year, $monthRangeEnd, 1)->endOfMonth();
+        $rangeEndDate = Carbon::create($thisyear, $monthRangeEnd, 1)->endOfMonth();
 
         // Convert $month to words
         $monthInWords = strftime('%B', strtotime("2000-$month-01"));
@@ -3360,8 +3377,17 @@ class ChapterController extends Controller
             ->join('board_details', 'chapters.id', '=', 'board_details.chapter_id')
             ->whereIn('board_details.board_position_id', [1, 2, 3, 4, 5])
             ->where('chapters.conference', $corConfId)
-            ->where('chapters.start_month_id', $month - 1)
-            ->where('chapters.next_renewal_year', $year)
+            ->where(function ($query) use ($month, $year) {
+                if ($month == 1) {
+                    // January, so get chapters with December start_month_id
+                    $query->where('chapters.start_month_id', 12)
+                        ->where('chapters.next_renewal_year', $year - 1);
+                } else {
+                    // Any other month, get chapters with $month - 1 start_month_id
+                    $query->where('chapters.start_month_id', $month - 1)
+                        ->where('chapters.next_renewal_year', $year);
+                }
+            })
             ->where('chapters.is_active', 1)
             ->get();
 
