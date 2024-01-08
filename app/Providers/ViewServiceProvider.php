@@ -11,13 +11,23 @@ class ViewServiceProvider extends ServiceProvider
     public function boot()
     {
         View::composer('*', function ($view) {
-            $corDetails = User::find(auth()->user()->id)->CoordinatorDetails;
-            $corId = $corDetails['coordinator_id'];
-            $positionid = $corDetails['position_id'];
-            $secpositionid = $corDetails['sec_position_id'];
-            $loggedIn = $corDetails['first_name'].' '.$corDetails['last_name'];
+            if (auth()->check()) {
+                $corDetails = User::find(auth()->user()->id)->CoordinatorDetails;
+                $corId = $corDetails['coordinator_id'];
+                $positionid = $corDetails['position_id'];
+                $secpositionid = $corDetails['sec_position_id'];
+                $loggedIn = $corDetails['first_name'].' '.$corDetails['last_name'];
 
-            $view->with(compact('corId', 'positionid', 'secpositionid', 'loggedIn'));
+                $view->with(compact('corId', 'positionid', 'secpositionid', 'loggedIn'));
+            } else {
+                // Handle the case where the user is not logged in
+                $view->with([
+                    'corId' => null,
+                    'positionid' => null,
+                    'secpositionid' => null,
+                    'loggedIn' => null,
+                ]);
+            }
         });
     }
 
