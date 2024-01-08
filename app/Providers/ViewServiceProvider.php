@@ -8,7 +8,7 @@ use Illuminate\Support\ServiceProvider;
 
 class ViewServiceProvider extends ServiceProvider
 {
-    public function boot()
+    public function boot(): void
     {
         View::composer('*', function ($view) {
             if (auth()->check()) {
@@ -31,7 +31,7 @@ class ViewServiceProvider extends ServiceProvider
         });
     }
 
-    public function register()
+    public function register(): void
     {
         //
     }
