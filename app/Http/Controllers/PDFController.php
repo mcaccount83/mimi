@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\FinancialReport;
-use App\Models\User;
-use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
+use Barryvdh\Snappy\Facades\SnappyPdf;
 
 class PDFController extends Controller
 {
@@ -21,29 +21,26 @@ class PDFController extends Controller
     /**
      * Show Financial Report PDF All Board Members
      */
-    public function showFinancialReport($chapterId)
+    public function generatePdf($chapterId)
     {
         try {
-            // Retrieve board member details and other necessary data
-            $borDetails = User::find(auth()->id())->BoardDetails;
-            $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
-            $isActive = $borDetails['is_active'];
-
             // Load financial report data, chapter details, and any other data you need
             $financial_report_array = FinancialReport::find($chapterId);
 
             $chapterDetails = DB::table('chapters')
-                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state',
+                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'chapters.territory as boundaries',
+                    'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state',
                     'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                 ->where('chapters.is_active', '=', '1')
                 ->where('chapters.id', '=', $chapterId)
                 ->get();
 
-            // Define the $pdfData variable
             $pdfData = [
                 'chapter_name' => $chapterDetails[0]->chapter_name,
                 'state' => $chapterDetails[0]->state,
+                'ein' => $chapterDetails[0]->ein,
+                'boundaries' => $chapterDetails[0]->boundaries,
                 'changed_dues' => $financial_report_array->changed_dues,
                 'different_dues' => $financial_report_array->different_dues,
                 'not_all_full_dues' => $financial_report_array->not_all_full_dues,
@@ -132,19 +129,18 @@ class PDFController extends Controller
                 'bank_statement_included' => $financial_report_array->bank_statement_included,
                 'bank_statement_included_explanation' => $financial_report_array->bank_statement_included_explanation,
                 'wheres_the_money' => $financial_report_array->wheres_the_money,
-                'award_nominations' => $financial_report_array->award_nominations,
-                'farthest_step_visited' => $financial_report_array->farthest_step_visited,
-                'award_1_nomination_type' => $financial_report_array->award_1_nomination_type,
                 'completed_name' => $financial_report_array->completed_name,
                 'completed_email' => $financial_report_array->completed_email,
+                'submitted' => $financial_report_array->submitted,
             ];
 
-            // Load the view and generate the PDF
-            $pdf = PDF::loadView('boards.financial-report', ['pdfData' => $pdfData]);
-            // Download the PDF
-            return $pdf->stream('Financial Report.pdf');
+        $html = View::make('pdf.financialreport')->with('pdfData', $pdfData)->render();
 
-        } catch (\Exception $e) {
+        $filename = date('Y')-1 .'-'.date('Y') . '_' . $pdfData['state'] . '_' . $pdfData['chapter_name'] . '_FinancialReport.pdf';
+
+        return SnappyPdf::loadHTML($html)->inline($filename);
+
+    } catch (\Exception $e) {
             // Handle the exception and log the error message
             Log::error($e);
             // You can also return an error response or take other appropriate actions

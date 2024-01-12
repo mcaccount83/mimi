@@ -102,7 +102,7 @@
             </li>
         @endif
 
-        @if ($assistConferenceCoordinatorCondition)
+        @if ($regionalCoordinatorCondition)
             <li class="{{ Request::is('chapter/zapped') ? 'active' : '' }} {{ Request::is('chapter/zapped/view/*') ? 'active' : ''}}">
             <a href="{{ route('chapter.zapped') }}">
                 <i class="fa fa-ban"></i>

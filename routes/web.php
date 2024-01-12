@@ -88,7 +88,7 @@ Route::post('/chapter/updatezapped/{id}', [ChapterController::class, 'updateZapp
 Route::get('/chapter/international/zap', [ChapterController::class, 'showIntZappedChapter'])->name('chapter.interzap');
 Route::get('/chapter/international/zapped/view/{id}', [ChapterController::class, 'showIntZappedChapterView']);
 Route::get('/chapter/international/view/{id}', [ChapterController::class, 'showIntChapterView']);
-Route::get('/chapter/unzap/{id}', [ChapterController::class, 'unZappedChapter']);
+Route::get('/chapter/unzap/{id}', [ChapterController::class, 'storeUnZappedChapter']);
 Route::get('/chapter/inquiries', [ChapterController::class, 'showInquiriesChapter'])->name('chapter.inquiries');
 Route::get('/chapter/inquirieszapped', [ChapterController::class, 'showZappedInquiries'])->name('chapter.inquirieszapped');
 Route::get('/chapter/inquiriesview/{id}', [ChapterController::class, 'showInquiries'])->name('chapter.inquiriesview');
@@ -220,4 +220,6 @@ Route::post('/adminreports/outgoingactivate', [ReportController::class, 'storeAc
 /**
  * Routes for PDF
  */
-Route::get('/board/financialPDF/{id}', [PDFController::class, 'showFinancialReport'])->name('FinancialReport');
+Route::get('/board/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.Financialreport');
+Route::get('/chapter/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.Financialreport');
+

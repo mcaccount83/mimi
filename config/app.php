@@ -171,6 +171,7 @@ return [
         App\Providers\DomPDFServiceProvider::class,
         App\Providers\LogViewerServiceProvider::class,
         App\Providers\ViewServiceProvider::class,
+        Barryvdh\Snappy\ServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -185,6 +186,8 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
+        'SnappyPdf' => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
