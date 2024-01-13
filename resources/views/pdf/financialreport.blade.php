@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .keep-together {
+        page-break-inside: avoid;
+    }
+    </style>
     <title>{{ $pdfData['chapter_name'] }}, {{ $pdfData['state'] }} | <?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</title>
 </head>
 <body>
@@ -12,8 +17,11 @@
     Boundaries: {{ $pdfData['boundaries'] }}<br>
 
     <br>
+    <div class="keep-together" style="page-break-inside: avoid;">
     <hr>
-    <b><u>CHAPTER DUES</u></b><br>
+    <b>CHAPTER DUES</b>
+    <hr>
+    </div>
     <table width="75%">
         <tbody>
            <tr><td>Did your chparer change dues this year?</td>
@@ -127,8 +135,11 @@
         </tbody>
     </table>
     <br>
+    <div class="keep-together" style="page-break-inside: avoid;">
     <hr>
-    <b><u>MONTHLY MEETING EXPENSES</u></b><br>
+    <b>MONTHLY MEETING EXPENSES</b>
+    <hr>
+    </div>
     <table width="50%">
         <tbody>
             <tr><td>Meeting Room Fees:</td>
@@ -197,8 +208,11 @@
         </tbody>
     </table>
     <br>
+    <div class="keep-together" style="page-break-inside: avoid;">
     <hr>
-    <b><u>SERVICE PROJECTS</u></b><br>
+    <b>SERVICE PROJECTS</b>
+    <hr>
+    </div>
     <table width="100%" style="border-collapse: collapse;">
         <thead>
             <tr style="border-bottom: 1px solid #333;">
@@ -264,8 +278,11 @@
         </tbody>
     </table>
     <br>
+    <div class="keep-together" style="page-break-inside: avoid;">
     <hr>
-    <b><u>PARTIES & MEMBER BENEFITS</u></b><br>
+    <b>PARTIES & MEMBER BENEFITS</b>
+    <hr>
+    </div>
     <table width="75%" style="border-collapse: collapse;">
         <thead>
             <tr style="border-bottom: 1px solid #333;">
@@ -324,9 +341,11 @@
         </tbody>
     </table>
     <br>
+    <div class="keep-together" style="page-break-inside: avoid;">
     <hr>
-    <b><u>OFFICE & OPERATING EXPENSES</u></b><br>
-    <table>
+    <b>OFFICE & OPERATING EXPENSES</b>
+    <hr>
+    </div>
         <table width="100%">
             <tr>
                 <td>Printing Costs:  {{ '$'.sprintf('%0.2f',$pdfData['office_printing_costs']) }}<br></td>
@@ -383,8 +402,11 @@
         </tbody>
     </table>
     <br>
+    <div class="keep-together" style="page-break-inside: avoid;">
     <hr>
-    <b><u>INTERNATIONAL EVENTS & RE-REGISTRATION</u></b><br>
+    <b>INTERNATIONAL EVENTS & RE-REGISTRATION</b>
+    <hr>
+    </div>
     <table width="75%" style="border-collapse: collapse;">
         <thead>
             <tr style="border-bottom: 1px solid #333;">
@@ -442,8 +464,11 @@
         </tbody>
     </table>
     <br>
+    <div class="keep-together" style="page-break-inside: avoid;">
     <hr>
-    <b><u>DONATIONS TO YOUR CHAPTER</u></b><br>
+    <b>DONATIONS TO YOUR CHAPTER</b>
+    <hr>
+    </div>
     <table width="100%" style="border-collapse: collapse;">
         <thead>
             <tr style="border-bottom: 1px solid #333;">
@@ -533,8 +558,11 @@
         </tbody>
     </table>
     <br>
+    <div class="keep-together" style="page-break-inside: avoid;">
     <hr>
-    <b><u>OTHER INCOME & EXPENSES</u></b><br>
+    <b>OTHER INCOME & EXPENSES</b>
+    <hr>
+    </div>
     <table width="75%" style="border-collapse: collapse;">
         <thead>
             <tr style="border-bottom: 1px solid #333;">
@@ -589,8 +617,11 @@
         </tbody>
     </table>
     <br>
+    <div class="keep-together" style="page-break-inside: avoid;">
     <hr>
-    <b><u>FINANCIAL SUMMARY</u></b><br>
+    <b>FINANCIAL SUMMARY</b>
+    <hr>
+    </div>
     <?php
         $totalIncome = $totalDues + $totalServiceIncome + $totalPartyIncome + $totalDonationAmount + $totalEventIncome + $totalOtherIncome;
         $totalExpenses = $pdfData['manditory_meeting_fees_paid'] + $pdfData['voluntary_donations_paid'] + $pdfData['paid_baby_sitters'] + $totalChildrensRoomExpenses + $totalServiceProjectExpenses
@@ -598,7 +629,6 @@
                     $pdfData['office_membership_pins_cost'] + $totalOfficeExpense + $pdfData['annual_registration_fee'] + $totalEventExpense + $totalOtherExpenses;
         $treasuryBalance = $pdfData ['amount_reserved_from_previous_year'] + $totalIncome - $totalExpenses
     ?>
-    <br>
     <table width="50%" style="border-collapse: collapse;">
         <tbody>
             <tr><td><strong>INCOME</strong></td></tr>
@@ -671,8 +701,11 @@
         </tbody>
     </table>
     <br>
+    <div class="keep-together" style="page-break-inside: avoid;">
     <hr>
-    <b><u>BANK RECONCILIATION</u></b><br>
+    <b>BANK RECONCILIATION</b>
+    <hr>
+    </div>
     <table width="100%" >
         <tbody>
             <tr><td>Beginning Balance<td>
@@ -697,7 +730,7 @@
         <thead>
             <tr>Reconcilliation Transactons</tr>
             <tr style="border-bottom: 1px solid #333;">
-                <td><u>Date</td>
+                    <td>Date</td>
                     <td>Check No.</td>
                     <td>Transaction Desc.</td>
                     <td>Payment Amount</td>
@@ -747,8 +780,11 @@
         </tbody>
     </table>
     <br>
+    <div class="keep-together" style="page-break-inside: avoid;">
     <hr>
-    <b><u>CHAPTER QUESTIONS</u></b><br>
+    <b>CHAPTER QUESTIONS</b>
+    <hr>
+    </div>
     <table>
          <tbody>
             <tr><td>1.</td>
@@ -908,11 +944,13 @@
         </tbody>
     </table>
     <br>
+    <div class="keep-together" style="page-break-inside: avoid;">
     <hr>
-    <b><u>SUBMISSION INFORMATION</u></b><br>
+    <b>SUBMISSION INFORMATION</b>
+    <hr>
     Submitted by: {{ $pdfData ['completed_name']}}<br>
     Email: {{ $pdfData ['completed_email']}}<br>
     Date: {{ $pdfData ['submitted']}}
-
+</div>
 </body>
 </html>

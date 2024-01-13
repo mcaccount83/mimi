@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\FinancialReport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\View;
-use Barryvdh\Snappy\Facades\SnappyPdf;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PDFController extends Controller
 {
@@ -134,14 +133,17 @@ class PDFController extends Controller
                 'submitted' => $financial_report_array->submitted,
             ];
 
-        $html = View::make('pdf.financialreport')->with('pdfData', $pdfData)->render();
+            $pdf = Pdf::loadView('pdf.financialreport', compact('pdfData'));
 
-        $filename = date('Y')-1 .'-'.date('Y') . '_' . $pdfData['state'] . '_' . $pdfData['chapter_name'] . '_FinancialReport.pdf';
+            $filename = date('Y')-1 .'-'.date('Y') . '_' . $pdfData['state'] . '_' . $pdfData['chapter_name'] . '_FinancialReport.pdf';
 
-        return SnappyPdf::loadHTML($html)->inline($filename);
+            return $pdf->stream($filename, array('Attachment' => 0));
+
 
     } catch (\Exception $e) {
             // Handle the exception and log the error message
+            dd($e->getMessage());
+
             Log::error($e);
             // You can also return an error response or take other appropriate actions
         }
