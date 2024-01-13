@@ -683,7 +683,7 @@ class ReportController extends Controller
     /**
      * View the International M2M Doantions
      */
-    public function showIintM2Mdonation(Request $request): View
+    public function showIntM2Mdonation(Request $request): View
     {
         //Get Coordinators Details
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;

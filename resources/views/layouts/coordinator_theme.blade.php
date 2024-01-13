@@ -359,24 +359,29 @@
               <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
             </a>
             <ul class="treeview-menu">
-                <li class="{{ Request::is('yearreports/eoystatus') ? 'active' : '' }} {{ Request::is('chapter/statusview/*') ? 'active' : ''}}"><a href="{{ route('report.eoystatus') }}">
+                <li class="{{ Request::is('yearreports/eoystatus') ? 'active' : '' }} {{ Request::is('chapter/statusview/*') ? 'active' : ''}}">
+                    <a href="{{ route('report.eoystatus') }}">
                   <i class="fa fa-files-o"></i> <span>End of Year Status</span>
                   </a>
               </li>
-              <li class="{{ Request::is('yearreports/boardinfo') ? 'active' : '' }} {{ Request::is('chapter/boardinfo/*') ? 'active' : ''}}"><a href="{{ route('report.boardinfo') }}">
+              <li class="{{ Request::is('yearreports/boardinfo') ? 'active' : '' }} {{ Request::is('chapter/boardinfo/*') ? 'active' : ''}}">
+                <a href="{{ route('report.boardinfo') }}">
                   <i class="fa fa-files-o"></i> <span>Board Reports</span>
                   </a>
               </li>
-              <li class="{{ Request::is('yearreports/review') ? 'active' : '' }} {{ Request::is('chapter/financial/*') ? 'active' : ''}}"><a href="{{ route('report.review') }}">
+              <li class="{{ Request::is('yearreports/review') ? 'active' : '' }} {{ Request::is('chapter/financial/*') ? 'active' : ''}}">
+                <a href="{{ route('report.review') }}">
                   <i class="fa fa-files-o"></i> <span>Financial Reports</span>
                   </a>
               </li>
 
-              <li class="{{ Request::is('yearreports/boundaryissue') ? 'active' : '' }}  {{ Request::is('chapter/boundaryview/*') ? 'active' : '' }}"><a href="{{ route('report.issues') }} ">
+              <li class="{{ Request::is('yearreports/boundaryissue') ? 'active' : '' }}  {{ Request::is('chapter/boundaryview/*') ? 'active' : '' }}">
+                <a href="{{ route('report.issues') }} ">
                   <i class="fa fa-files-o"></i> <span>Boundary issues</span>
                   </a>
               </li>
-              <li class="{{ Request::is('yearreports/chapterawards') ? 'active' : '' }} {{ Request::is('yearreports/addawards') ? 'active' : '' }} {{ Request::is('chapter/awardsview/*') ? 'active' : '' }}"><a href="{{ route('report.awards') }}">
+              <li class="{{ Request::is('yearreports/chapteraward') ? 'active' : '' }} {{ Request::is('yearreports/addawards') ? 'active' : '' }} {{ Request::is('chapter/awardsview/*') ? 'active' : '' }}">
+                <a href="{{ route('report.awards') }}">
                   <i class="fa fa-files-o"></i> <span>Chapter Awards</span>
                   </a>
               </li>
@@ -415,7 +420,7 @@
             </a>
             </li>
             <li class="{{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
-                <a href="{{ route('report.outgoingactivate') }}">
+                <a href="{{ route('report.outgoingboard') }}">
                 <i class="fa fa-files-o"></i>
                 <span>Outgoing Board</span>
                 </a>

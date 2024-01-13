@@ -3,6 +3,7 @@
 @section('content')
  <!-- Content Header (Page header) -->
     <section class="content-header">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
       <h1>
       Outgoing Board Report
       </h1>
@@ -99,20 +100,19 @@ var base_url = '{{ url("/adminreports/outgoingboard") }}';
     }
 }
 
-    function activateOutgoing(){
-            $.ajax({
-              url: '{{ route('report.outgoingactivate') }}',
-              type: 'POST',
-              data: { _token: '{{csrf_token()}}' },
-              success: function(response) {
-                    window.location.href = "{{ route('report.outgoingboard') }}";
+     function activateOutgoing(){
+             $.ajax({
+               url: '{{ route('report.outgoingactivate') }}',
+               type: 'POST',
+               data: { _token: '{{csrf_token()}}' },
+               success: function(response) {
+                     window.location.href = "{{ route('report.outgoingboard') }}";
 
-              },
-              error: function (jqXHR, exception) {
-
-              }
-          });
-        }
+               },
+               error: function (jqXHR, exception) {
+               }
+           });
+         }
 
 
 </script>
