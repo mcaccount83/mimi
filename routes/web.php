@@ -120,7 +120,6 @@ Route::post('/chapter/updatestatus/{id}', [ChapterController::class, 'updateStat
 /**
  * Routes for Coordinator
  */
-
 Route::get('/coordinatorlist', [CoordinatorController::class, 'index'])->name('coordinator.list');
 Route::get('/coordinator/create', [CoordinatorController::class, 'create'])->name('coordinator.create');
 Route::post('/coordinator/create', [CoordinatorController::class, 'store'])->name('coordinator.store');
@@ -222,4 +221,3 @@ Route::post('/adminreports/outgoingactivate', [ReportController::class, 'storeAc
  */
 Route::get('/board/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.Financialreport');
 Route::get('/chapter/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.Financialreport');
-

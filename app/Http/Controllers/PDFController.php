@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\FinancialReport;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Barryvdh\DomPDF\Facade\Pdf;
 
 class PDFController extends Controller
 {
@@ -135,12 +135,11 @@ class PDFController extends Controller
 
             $pdf = Pdf::loadView('pdf.financialreport', compact('pdfData'));
 
-            $filename = date('Y')-1 .'-'.date('Y') . '_' . $pdfData['state'] . '_' . $pdfData['chapter_name'] . '_FinancialReport.pdf';
+            $filename = date('Y') - 1 .'-'.date('Y').'_'.$pdfData['state'].'_'.$pdfData['chapter_name'].'_FinancialReport.pdf';
 
-            return $pdf->stream($filename, array('Attachment' => 0));
+            return $pdf->stream($filename, ['Attachment' => 0]);
 
-
-    } catch (\Exception $e) {
+        } catch (\Exception $e) {
             // Handle the exception and log the error message
             dd($e->getMessage());
 
