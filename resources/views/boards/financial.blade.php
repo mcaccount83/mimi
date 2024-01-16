@@ -3424,10 +3424,9 @@ chapter did have Associate Members this year, how many Associate Members did you
                     @endif
                          <button type="button" id="btn-save" class="btn btn-info btn-fill" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
 
-
-                              <!--<button type="button" id="12" class="btn btn-info btn-fill" onClick="printDiv(this.id)">Print</button>-->
-
-    <a href='{{ route("board.printfinancial",Session::get("chapterid")) }}' class=""><button id="buttononclickdisable" class="btn btn-info btn-fill" onClick="this.disabled=true;" <?php if(!$submitted =='1') echo "disabled"; ?>>Print Report</button></a>
+    <a href='{{ url("/board/financial/pdf", ["id" => Session::get("chapterid")]) }}' target="_blank" class="">
+        <button id="buttononclickdisable" class="btn btn-info btn-fill" onClick="this.disabled=true;" <?php if(!$submitted =='1') echo "disabled"; ?>>View PDF</button>
+    </a>
 </div>
 
 @endsection

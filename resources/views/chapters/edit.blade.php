@@ -11,6 +11,18 @@
         <li class="active">Chapter List</li>
       </ol>
     </section>
+    @if ($message = Session::get('success'))
+        <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <p>{{ $message }}</p>
+        </div>
+    @endif
+    @if ($message = Session::get('fail'))
+        <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <p>{{ $message }}</p>
+        </div>
+    @endif
 
     <!-- Main content -->
     <form method="POST" action='{{ route("chapters.update",$chapterList[0]->id) }}'">
@@ -841,14 +853,15 @@
                <?php if ((Session::get('positionid') >=6 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>
                 <button type="button" class="btn btn-themeBlue margin" onclick="return UpdateEIN()">Update EIN</button>
 
+                <!--<button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-ein">Update EIN Letter</button>-->
                 <button type="button" class="btn btn-themeBlue margin" onclick="return EINLetter()">Update EIN Letter</button>
               <?php } ?>
               <?php if ((Session::get('positionid') >=5 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>
-              <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-default">Disband Chapter</button>
+              <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-disband">Disband Chapter</button>
               <?php } ?>
               </div>
 
-
+            </form>
             <!-- /.box-body -->
 
           </div>
@@ -856,34 +869,54 @@
         </div>
       </div>
 
-      <div class="modal fade" id="modal-default">
-          <div class="modal-dialog">
+      <div class="modal fade" id="modal-ein">
+        <div class="modal-dialog">
             <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Chapter Disband Reason</h4>
-              </div>
-              <div class="modal-body">
-                <p>Marking a chapter as disbanded will remove the logins for all board members and remove the chapter.  Please enter their reason for disbanding and press OK
-                <input type="text" id="disband_reason" name="disband_reason" class="form-control my-colorpicker1">
-                <input type="hidden" id="chapter_id" name="chapter_id" class="form-control my-colorpicker1" value="{{ $chapterList[0]->id}}"></p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="return disbandChapter()">OK</button>
-              </div>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Upload EIN Letter</h4>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ url('/files/storeEIN/'. $id) }}" method="post" enctype="multipart/form-data">
+                        @csrf
+                        <input type="file" name='file' required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-ein" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" >Upload</button>
+                    </form>
+                </div>
             </div>
-            <!-- /.modal-content -->
-          </div>
-          <!-- /.modal-dialog -->
         </div>
-        <!-- /.modal -->
+    </div>
 
-
+    <div class="modal fade" id="modal-disband">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Chapter Disband Reason</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <p>Marking a chapter as disbanded will remove the logins for all board members and remove the chapter.  Please enter their reason for disbanding and press OK
+                            <input type="text" id="disband_reason" name="disband_reason" class="form-control my-colorpicker1">
+                            <input type="hidden" id="chapter_id" name="chapter_id" class="form-control my-colorpicker1" value="{{ $chapterList[0]->id}}">
+                        </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-disband" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="return disbandChapter()">OK</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     </section>
-    </form>
+
     @endsection
 
   @section('customscript')

@@ -5104,9 +5104,8 @@ chapter did have Associate Members this year, how many Associate Members did you
 </div>
 <div class="box-body text-center">
 
-              <!--<a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Financial Report Review - MOMS Club of {{ $chapterDetails[0]->chapter_name }}, {{$chapterDetails[0]->state}}" class="btn btn-themeBlue margin">E-mail Board</a>-->
-
               <a href="{{ route('home') }}" class="btn btn-themeBlue margin">Back</a>
+              <a href="{{ url("/chapter/financial/pdf", ["id" => Session::get("chapterid")]) }}" target="_blank" class="btn btn-themeBlue margin" <?php if(!$submitted =='1') echo "disabled"; ?>>View PDF</a>
               </div>
 
 

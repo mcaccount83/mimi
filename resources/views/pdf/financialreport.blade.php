@@ -24,11 +24,11 @@
     </div>
     <table width="75%">
         <tbody>
-           <tr><td>Did your chparer change dues this year?</td>
+           <tr><td>Did your chapter change dues this year?</td>
            <td><strong>{{ $pdfData ['changed_dues'] == 1 ? 'YES' : 'NO' }} </strong></td></tr>
            <tr><td>Did your chapter charge different amounts for new and returning members?</td>
            <td><strong>{{ $pdfData ['different_dues'] == 1 ? 'YES' : 'NO' }} </strong></td></tr>
-           <tr><td>Did your chpater have any members who didn't pay full dues?</td>
+           <tr><td>Did your chapter have any members who didn't pay full dues?</td>
            <td><strong>{{ $pdfData ['not_all_full_dues'] == 1 ? 'YES' : 'NO' }} </strong></td></tr>
            </tbody>
         </table>
@@ -273,7 +273,7 @@
         <tbody>
             <tr><td><strong>Total Service Project Income:</strong></td>
                 <td><strong>{{ '$'.sprintf('%0.2f',$totalServiceIncome) }}</strong></td></tr>
-            <tr><td><strong>Total Service Proejct Expenses:</strong></td>
+            <tr><td><strong>Total Service Project Expenses:</strong></td>
                 <td><strong>{{ '$'.sprintf('%0.2f',$totalServiceProjectExpenses) }}</strong></td></tr>
         </tbody>
     </table>
@@ -357,7 +357,7 @@
     <table width="75%" >
         <thead>
             <tr>
-                <td>Other Office & Operatig Expenses:</td>
+                <td>Other Office & Operating Expenses:</td>
                 <td>&nbsp;</td>
             </tr>
         </thead>
@@ -662,7 +662,7 @@
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Project Expenses</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supplies:</td>
             <td>{{ '$'.sprintf('%0.2f',$totalServiceSupplies) }}</td></tr>
-            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Chariatble Donations</td>
+            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Charitable Donations</td>
             <td>{{ '$'.sprintf('%0.2f',$totalServiceCharity) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;M2M fund Donation</td>
             <td>{{ '$'.sprintf('%0.2f',$totalServiceM2M) }}</td></tr>
@@ -682,7 +682,7 @@
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Office/Operating Expense Total</td>
             <td>{{ '$'.sprintf('%0.2f',$pdfData['office_printing_costs'] + $pdfData['office_postage_costs'] +
                 $pdfData['office_membership_pins_cost'] + $totalOfficeExpense) }}</td></tr>
-            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Annual Chpater Re-registration Fee</td>
+            <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Annual Chapter Re-registration Fee</td>
             <td>{{ '$'.sprintf('%0.2f',$pdfData['annual_registration_fee'])  }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;International Event Registration</td>
             <td>{{ '$'.sprintf('%0.2f',$totalEventExpense) }}</td></tr>
@@ -734,12 +734,12 @@
                     <td>Check No.</td>
                     <td>Transaction Desc.</td>
                     <td>Payment Amount</td>
-                    <td>Desposit Amount</td>
+                    <td>Deposit Amount</td>
                 </tr>
             </thead>
             <tbody>
             <?php
-            $totalPayments = 0; // Initialize total payments outside the loop
+            $totalPayments = 0;
             $totalDeposits = 0;
 
                 if (isset($pdfData['bank_reconciliation_array'])) {

@@ -10,9 +10,11 @@ use App\Http\Controllers\BoardController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -71,6 +73,18 @@ Route::get('/getreporting', [CoordinatorController::class, 'getReportingList'])-
 Route::get('/getdirectreport', [CoordinatorController::class, 'getDirectReportingList'])->name('get.directreport');
 Route::get('/getchapterprimary', [CoordinatorController::class, 'getChapterPrimaryFor'])->name('get.chapterprimary');
 Route::get('/chapter-links', [ChapterController::class, 'chapterLinks'])->name('chapter.links');
+
+/**
+ * Routes for Google Upload Files
+ */
+Route::get('/files', [GoogleController::class, 'index']);
+Route::post('/files/store/{id}', [GoogleController::class, 'store']);
+Route::post('/files/storeEIN/{id}', [GoogleController::class, 'storeEIN']);
+Route::post('/files/storeRoster/{id}', [GoogleController::class, 'storeRoster']);
+Route::post('/files/store990n/{id}', [GoogleController::class, 'store990n']);
+Route::post('/files/storeStatement1/{id}', [GoogleController::class, 'storeStatement1']);
+Route::post('/files/storeStatement2/{id}', [GoogleController::class, 'storeStatement2']);
+Route::get('/files/googletest/{id}', [GoogleController::class, 'show'])->name('files.googletest');
 
 /**
  * Routes for Chapters
@@ -219,5 +233,5 @@ Route::post('/adminreports/outgoingactivate', [ReportController::class, 'storeAc
 /**
  * Routes for PDF
  */
-Route::get('/board/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.Financialreport');
-Route::get('/chapter/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.Financialreport');
+Route::get('/board/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.financialreport');
+Route::get('/chapter/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.financialreport');
