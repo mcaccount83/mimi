@@ -585,7 +585,14 @@ $(document).ready(function() {
         order: [[0, 'asc']]
     }, [
         { targets: 6, type: 'date', format: null },
-        { targets: 7, type: 'date', format: 'MM-DD-YYYY', noPayment: 'NO PAYMENT' }
+        {
+            targets: 7, render: function(data, type, row) {
+                if (type === 'display' && data === 'Invalid date') {
+                    return null;
+                }
+                return data;
+            }
+        }
     ]);
 
     initializeDataTable('#chapterlist_einStatus', {
@@ -621,7 +628,14 @@ $(document).ready(function() {
         autoWidth: false,
         order: [[0, 'asc']]
     }, [
-        { targets: 4, type: 'date', format: 'MM-DD-YYYY', noPayment: 'NO PAYMENT' }
+        {
+            targets: 4, render: function(data, type, row) {
+                if (type === 'display' && data === 'Invalid date') {
+                    return null;
+                }
+                return data;
+            }
+        }
     ]);
 
     initializeDataTable('#chapterlist_donation', {
@@ -633,8 +647,24 @@ $(document).ready(function() {
         autoWidth: false,
         order: [[0, 'asc']]
     }, [
-        { targets: 4, type: 'date', format: 'MM-DD-YYYY', noPayment: 'NO PAYMENT' },
-        { targets: 6, type: 'date', format: 'MM-DD-YYYY', noPayment: 'NO PAYMENT' }
+        {
+            targets: 4,
+            render: function(data, type, row) {
+                if (type === 'display' && data === 'Invalid date') {
+                    return null;
+                }
+                return data;
+            }
+        }, // Note the comma here
+        {
+            targets: 6,
+            render: function(data, type, row) {
+                if (type === 'display' && data === 'Invalid date') {
+                    return null;
+                }
+                return data;
+            }
+        }
     ]);
 
     initializeDataTable('#chapterlist_review', {
@@ -646,7 +676,14 @@ $(document).ready(function() {
         autoWidth: false,
         order: [[0, 'asc']]
     }, [
-        { targets: 8, type: 'date', format: 'MM-DD-YYYY', noPayment: 'NO PAYMENT' }
+        {
+            targets: 9, render: function(data, type, row) {
+                if (type === 'display' && data === 'Invalid date') {
+                    return null;
+                }
+                return data;
+            }
+        }
     ]);
 
     initializeDataTable('#coordinatorlist', {
@@ -668,7 +705,14 @@ $(document).ready(function() {
         order: [[0, 'asc']]
     }, [
         { targets: 5, type: 'date', format: null },
-        { targets: 6, type: 'date', format: 'MM-DD-YYYY', noPayment: 'NO PAYMENT' }
+        {
+            targets: 6, render: function(data, type, row) {
+                if (type === 'display' && data === 'Invalid date') {
+                    return null;
+                }
+                return data;
+            }
+        }
     ]);
 });
 </script>

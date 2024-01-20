@@ -841,36 +841,29 @@
                 <td><strong>{{ $pdfData ['meeting_speakers'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['meeting_speakers_explanation']}}</strong></td></tr>
             <tr><td>14.</td>
                 <td>If you had speakers, check any of the topics that were covered:</td></tr>
-                <tr>
-                    <td></td>
-                    <td>
-                    @if ($pdfData['speaker_child_rearing'] == 1)
-                        <strong>Child&nbsp;Rearing&nbsp;&nbsp;</strong>
-                    @endif
-                    @if ($pdfData['speaker_education'] == 1)
-                        <strong>Schools/Education&nbsp;&nbsp;</strong>
-                    @endif
-                    @if ($pdfData['speaker_homemaking'] == 1)
-                        <strong>Home&nbsp;Management&nbsp;&nbsp;</strong>
-                    @endif
-                    @if ($pdfData['speaker_politics'] == 1)
-                        <strong>Politics&nbsp;</strong>
-                    @endif
-                    @if ($pdfData['speaker_other_np'] == 1)
-                        <strong>Other&nbsp;Non-Profit&nbsp;&nbsp;</strong>
-                    @endif
-                    @if ($pdfData['speaker_other'] == 1)
-                        <strong>Other&nbsp;&nbsp;</strong>
-                    @endif
-                    @if ($pdfData['speaker_child_rearing'] != 1 &&
-                        $pdfData['speaker_education'] != 1 &&
-                        $pdfData['speaker_homemaking'] != 1 &&
-                        $pdfData['speaker_politics'] != 1 &&
-                        $pdfData['speaker_other_np'] != 1 &&
-                        $pdfData['speaker_other'] != 1)
-                        <strong>N/A</strong>
-                    @endif
-                    </td></tr>
+                <tr><td></td>
+                    <td><strong>
+                        @php
+                            $meetingSpeakersArray = json_decode($pdfData['meeting_speakers_array']);
+                            $meetingSpeakersMapping = [
+                                '0' => 'N/A',
+                                '1' => 'Child Rearing',
+                                '2' => 'Schools/Education',
+                                '3' => 'Home Management',
+                                '4' => 'Politics',
+                                '5' => 'Other Non-Profit',
+                                '6' => 'Other',
+                            ];
+                        @endphp
+
+                        @if (!empty($meetingSpeakersArray))
+                            {{ implode(', ', array_map(function($value) use ($meetingSpeakersMapping) {
+                                return $meetingSpeakersMapping[$value];
+                            }, $meetingSpeakersArray)) }}
+                        @else
+                            N/A
+                        @endif
+                    </strong></td></tr>
             <tr><td>15.</td>
                 <td>Did you have any discussion topics at your meetings? If yes, how often?</td></tr>
             <tr><td></td>
@@ -883,36 +876,29 @@
                     (['park_day_frequency'] == 3 ? '7-9 Times' : (['park_day_frequency'] == 4 ? '10+ Times' : 'NO'))) }}</strong></td></tr>
             <tr><td>17.</td>
                 <td>Did your chapter have any of the following activity groups?</td></tr>
-                <tr>
-                    <td></td>
-                    <td>
-                    @if ($pdfData['activity_cooking'] == 1)
-                        <strong>Cooking&nbsp;&nbsp;</strong>
+                <tr><td></td>
+                <td><strong>
+                    @php
+                        $activityArray = json_decode($pdfData['activity_array']);
+                        $activityMapping = [
+                            '0' => 'N/A',
+                            '1' => 'Cooking',
+                            '2' => 'Cost Cutting Tips',
+                            '3' => 'Mommy Playgroup',
+                            '4' => 'Babysitting Co-op',
+                            '5' => 'MOMS Night Out',
+                            '6' => 'Other',
+                        ];
+                    @endphp
+
+                    @if (!empty($activityArray))
+                        {{ implode(', ', array_map(function($value) use ($activityMapping) {
+                            return $activityMapping[$value];
+                        }, $activityArray)) }}
+                    @else
+                        N/A
                     @endif
-                    @if ($pdfData['activity_couponing'] == 1)
-                        <strong>Cost&nbsp;Cutting&nbsp;Tips&nbsp;&nbsp;</strong>
-                    @endif
-                    @if ($pdfData['activity_mommy_playgroup'] == 1)
-                        <strong>Mommy&nbsp;Playgroup&nbsp;&nbsp;</strong>
-                    @endif
-                    @if ($pdfData['activity_babysitting'] == 1)
-                        <strong>Babysitting&nbsp;Co-op&nbsp;&nbsp;</strong>
-                    @endif
-                    @if ($pdfData['activity_mno'] == 1)
-                        <strong>MOMS&nbsp;Night&nbsp;Out&nbsp;&nbsp;</strong>
-                    @endif
-                    @if ($pdfData['activity_other'] == 1)
-                        <strong>Other&nbsp;&nbsp;</strong>
-                    @endif
-                    @if ($pdfData['activity_cooking'] != 1 &&
-                        $pdfData['activity_couponing'] != 1 &&
-                        $pdfData['activity_mommy_playgroup'] != 1 &&
-                        $pdfData['activity_babysitting'] != 1 &&
-                        $pdfData['activity_mno'] != 1 &&
-                        $pdfData['activity_other'] != 1)
-                        <strong>N/A</strong>
-                    @endif
-                </td></tr>
+                </strong></td></tr>
             <tr><td>18.</td>
                 <td>Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity?</td></tr>
             <tr><td></td>

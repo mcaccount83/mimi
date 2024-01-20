@@ -65,108 +65,54 @@
                 <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] <='1') echo "active";?>">
                     <div class="accordion-header js-accordion-header">Section 1 - Chapter Dues</div>
                     <div class="accordion-body js-accordion-body cls-print-1">
-
                         <section>
-
                         	<div class="col-md-12" id="RosterBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['roster_path']) echo "style=\"display: none;\"";} ?>>
                         	    <label class="control-label" for="RosterFile">Attach the chapter's current roster spreadsheet (5 MB max):</label>
 										<input name="RosterFile" id="RosterFile" type="file" accept=".xls, .xlsx, .jpg,.jpeg,.pdf" class="demo1 form-control" />
                         	     <p><a href="{{ URL::to('/roster_template.xlsx') }}" download>Click here to download the roster template file</a>
                             </p>
-
-
 								</div>
 								<input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $financial_report_array['roster_path']; ?>">
-
 								<div class="col-md-12" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['roster_path']) echo "style=\"display: none;\"";} ?>>
-
-
 									<div class="col-md-12" >
 										<label class="control-label" for="RosterLink">Chapter Roster File:</label>
-
 											<a href="<?php echo $financial_report_array['roster_path']; ?>" target="_blank">Chapter Roster</a>
-
 									</div>
-
 									<div class="col-md-6">
 										<button type="button" class="btn btn-info btn-fill" onclick="ReplaceRoster()" <?php if($submitted =='1') echo "disabled"; ?>>Replace Roster</button>
 									</div>
-                        </div>
                         <input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $financial_report_array['roster_path']; ?>">
                         <br>
-                        <div class="form-row form-group">
-                            <div class="form-holder col-sm-12 float-left">
-                                <div class="col-md-12">
-                                    <label for="">
-                                        Did your chapter change your dues this year?
-                                    </label>
-                                </div>
-                                <div class="col-md-6 float-left">
-                                    <div class="form-check form-check-radio">
-                                        <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" name="optChangeDues" id="optChangeDuesNo" value="no" onchange="ChapterDuesQuestionsChange()" <?php if (!is_null($financial_report_array['changed_dues'])) {if ($financial_report_array['changed_dues'] == false || $financial_report_array['changed_dues'] != true) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                            No
-                                        </label>
-                                        <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" name="optChangeDues" id="optChangeDuesYes" value="yes" onchange="ChapterDuesQuestionsChange()" <?php if (!is_null($financial_report_array['changed_dues'])) {if ($financial_report_array['changed_dues'] == true) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                            Yes
-                                        </label>
-                                    </div>
-                                </div>
+                        <div class="col-md-12 float-left">
+                            <div class="form-group">
+                                <label>Did your chapter change your dues this year?<span class="field-required">*</span></label>
+                                <select id="optChangeDues" name="optChangeDues" class="form-control select2" style="width: 25%;" required onchange="ChapterDuesQuestionsChange()">
+                                    <option value="" name="optChangeDues" id="optChangeDuesNo" {{$financial_report_array->changed_dues === null ? 'selected' : ''}}>No</option>
+                                    <option value="1" name="optChangeDues" id="optChangeDuesYes" {{$financial_report_array->changed_dues == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
                             </div>
-                            <div class="form-holder col-sm-12 float-left">
-                                <div class="col-md-12">
-                                    <label for="">
-                                        Did your chapter charge different amounts for new and returning members?
-                                    </label>
-                                </div>
-                                <div class="col-md-6 float-left">
-                                    <div class="form-check form-check-radio">
-                                        <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" name="optNewOldDifferent" id="optNewOldDifferentNo" value="no" onchange="ChapterDuesQuestionsChange()" <?php if (!is_null($financial_report_array['different_dues'])) {if ($financial_report_array['different_dues'] == false || $financial_report_array['different_dues'] != true) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                            No
-                                        </label>
-
-                                        <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" name="optNewOldDifferent" id="optNewOldDifferentYes" value="yes" onchange="ChapterDuesQuestionsChange()" <?php if (!is_null($financial_report_array['different_dues'])) {if ($financial_report_array['different_dues'] == true) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                            Yes
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-holder col-sm-12 float-left">
-                                <div class="col-md-12">
-                                    <label for="">
-                                        Did your chapter have any members who didn't pay full dues? <br>
-                                        <span>(Associate members or members whose dues were reduced or waived)</span>
-                                    </label>
-                                </div>
-                                <div class="col-md-6 float-left">
-                                    <div class="form-check form-check-radio">
-                                        <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" name="optNoFullDues" id="optNoFullDuesNo" value="no" onchange="ChapterDuesQuestionsChange()" <?php if (!is_null($financial_report_array['not_all_full_dues'])) {if ($financial_report_array['not_all_full_dues'] == false || $financial_report_array['not_all_full_dues'] != true) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                            No
-                                        </label>
-                                        <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" name="optNoFullDues" id="optNoFullDuesYes" value="yes" onchange="ChapterDuesQuestionsChange()" <?php if (!is_null($financial_report_array['not_all_full_dues'])) {if ($financial_report_array['not_all_full_dues'] == true) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                            Yes
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr>
                         </div>
+                        <div class="col-md-12 float-left">
+                            <div class="form-group">
+                                <label>Did your chapter charge different amounts for new and returning members?<span class="field-required">*</span></label>
+                                <select id="optNewOldDifferent" name="optNewOldDifferent" class="form-control select2" style="width: 25%;" required onchange="ChapterDuesQuestionsChange()">
+                                    <option value="" id="optNewOldDifferentNo" {{$financial_report_array->different_dues == null ? 'selected' : ''}}>No</option>
+                                    <option value="1" id="optNewOldDifferentYes" {{$financial_report_array->different_dues == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12 float-left">
+                            <div class="form-group">
+                                <label> Did your chapter have any members who didn't pay full dues?<span class="field-required">*</span></label>
+                                <select id="optNoFullDues" name="optNoFullDues" class="form-control select2" style="width: 25%;" required onchange="ChapterDuesQuestionsChange()">
+                                    <option value="" id="optNoFullDuesNo" {{$financial_report_array->not_all_full_dues == null ? 'selected' : ''}}>No</option>
+                                    <option value="1" id="optNoFullDuesYes" {{$financial_report_array->not_all_full_dues == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
                         <div class="form-row">
                            <div class="col-md-12">
-                                 <!--<h4>What dues did your chapter charge its members this year?<br>
-                                Count all members who paid full dues, even if they are not still members.</h4>-->
                             <p><i>Note: Count all members who paid dues, even if they are not still members.</i></p>
                             </div>
                             <div class="col-md-6 float-left nopadding-l">
@@ -206,7 +152,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="MemberDues" id="lblMemberDues">
@@ -229,7 +174,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-md-12" id="ifChangedDuesDifferentPerMemberType" style="display:none">
                                 <div class="col-md-6 float-left nopadding-l">
                                     <div class="form-group">
@@ -250,7 +194,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-md-12" id="ifMembersNoDues" style="display:none">
                                 <div class="col-md-6 float-left nopadding-l">
                                     <div class="form-group">
@@ -278,8 +221,6 @@
                                     </div>
                                     </div>
                                 </div>
-                                <p><i>Note: Associate Members are not dues-waived or reduced members. They are a separate category of members. Many chapters do not have any Associate Members, but if your
-chapter did have Associate Members this year, how many Associate Members did your chapter have?</i></p>
                                 <div class="col-md-6 float-left nopadding-l">
                                     <div class="form-group">
                                     <label for="TotalAssociateMembers">Total Associate Members</label>
@@ -295,6 +236,8 @@ chapter did have Associate Members this year, how many Associate Members did you
                                     </div>
                                     </div>
                                 </div>
+                                <p><small><i>Note: Associate Members are not dues-waived or reduced members. They are a separate category of members. Many chapters do not have any Associate Members, but if your
+                                        chapter did have Associate Members this year, how many Associate Members did your chapter have?</i></small></p>
                             </div>
                             <div class="col-md-6 float-left">
                                 <div class="form-group">
@@ -313,7 +256,6 @@ chapter did have Associate Members this year, how many Associate Members did you
                             </div>
                             <hr>
                         </div>
-
                         <div class="form-row form-group">
                             <div class="card-body">
                                 <div class="col-md-12 text-center">
@@ -1463,7 +1405,6 @@ chapter did have Associate Members this year, how many Associate Members did you
                         <div class="card-body">
                             <div class="col-md-12 text-center">
                               <button type="submit" id="btn-step-8" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
-                               <!--<button type="button" id="8" class="btn btn-info btn-fill" onClick="printDiv(this.id)">Print</button>-->
                             </div>
                         </div>
                 </div>
@@ -1479,743 +1420,470 @@ chapter did have Associate Members this year, how many Associate Members did you
                 <section>
                 <div id="form-step-8" role="form" data-toggle="validator" class="form-row form-group">
                     <p>During the last fiscal year (July 1, <?php echo date('Y')-1 .' - June 30, '.date('Y');?>)</p>
-                        <div class="col-sm-12">
-                        <p>1. Did anyone in your chapter receive any compensation or pay for their work with your chapter?<span class="field-required">*</span></p>
-                        <div class="col-md-4 float-left">
-                            <div class="form-check form-check-radio">
-                                <label class="form-check-label">
-                                    <input id="ReceiveCompensationNo" name="ReceiveCompensation" type="radio" class="form-check-input rd-cls" value="no" onchange="ToggleReceiveCompensationExplanation()" <?php if (!is_null($financial_report_array['receive_compensation'])) {if ($financial_report_array['receive_compensation'] == false) echo "checked";} ?> >
-                                    <span class="form-check-sign"></span>
-                                          No
-                                </label>
-                                <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" id="ReceiveCompensationYes" name="ReceiveCompensation" value="yes" onchange="ToggleReceiveCompensationExplanation()" <?php if (!is_null($financial_report_array['receive_compensation'])) {if ($financial_report_array['receive_compensation'] == true) echo "checked";} ?> required="required">
-                                    <span class="form-check-sign"></span>
-                                          Yes
-                                </label>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                                <label style="display: block;">1. Did anyone in your chapter receive any compensation or pay for their work with your chapter?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="ReceiveCompensation" name="ReceiveCompensation" class="form-control select2" style="width: 100%;" required onchange="ToggleReceiveCompensationExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->receive_compensation) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{ $financial_report_array->receive_compensation === 0 ? 'selected' : '' }}>No</option>
+                                    <option value="1" {{ $financial_report_array->receive_compensation == 1 ? 'selected' : '' }}>Yes</option>
+                                </select>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12" id="divReceiveCompensationExplanation">
-                        <label for="ReceiveCompensationExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
-                            <textarea class="form-control" rows="2" name="ReceiveCompensationExplanation" id="ReceiveCompensationExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['receive_compensation_explanation'];}?></textarea>
-                        <div class="help-block with-errors"></div>
+                    <div class="col-md-12" id="divReceiveCompensationExplanation">
+                        <div class="col-md-12">
+                            <label for="ReceiveCompensationExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
+                                <textarea class="form-control" rows="2" name="ReceiveCompensationExplanation" id="ReceiveCompensationExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['receive_compensation_explanation'];}?></textarea>
+                            <div class="help-block with-errors"></div>
+                        </div>
                     </div>
-
-                    <div class="col-sm-12">
-                        <p>2. Did any officer, member or family of a member benefit financially in any way from the member’s position with your chapter?<span class="field-required">*</span></p>
-                        <div class="col-md-4 float-left">
-                            <div class="form-check form-check-radio">
-                               <label class="form-check-label">
-                                    <input type="radio" class="form-check-input rd-cls" id="FinancialBenefitNo" name="FinancialBenefit" value="no" onchange="ToggleFinancialBenefitExplanation()" <?php if (!is_null($financial_report_array['financial_benefit'])) {if ($financial_report_array['financial_benefit'] == false) echo "checked";} ?>>
-                                    <span class="form-check-sign"></span>
-                                          No
-                               </label>
-                               <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" id="FinancialBenefitYes" name="FinancialBenefit" value="yes" onchange="ToggleFinancialBenefitExplanation()" <?php if (!is_null($financial_report_array['financial_benefit'])) {if ($financial_report_array['financial_benefit'] == true) echo "checked";} ?>>
-                                    <span class="form-check-sign"></span>
-                                          Yes
-                               </label>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                                <label style="display: block;">2. Did any officer, member or family of a member benefit financially in any way from the member’s position with your chapter?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="FinancialBenefit" name="FinancialBenefit" class="form-control select2" style="width: 100%" required onchange="ToggleFinancialBenefitExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->financial_benefit) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{$financial_report_array->financial_benefit === 0 ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{$financial_report_array->financial_benefit == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12" id="divFinancialBenefitExplanation">
-                        <label for="FinancialBenefitExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
-                        <textarea class="form-control" rows="2" name="FinancialBenefitExplanation" id="FinancialBenefitExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['financial_benefit_explanation'];} ?></textarea>
+                    <div class="col-md-12" id="divFinancialBenefitExplanation">
+                        <div class="col-md-12">
+                            <label for="FinancialBenefitExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="FinancialBenefitExplanation" id="FinancialBenefitExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['financial_benefit_explanation'];} ?></textarea>
+                        </div>
                     </div>
-                    <div class="col-sm-12">
-                        <p>3. Did your chapter attempt to influence any national, state/provincial, or local legislation, or did your chapter support any other organization that did?<span class="field-required">*</span></p>
-                        <div class="col-md-4 float-left">
-                         <div class="form-check form-check-radio">
-                           <label class="form-check-label">
-                                <input type="radio" class="form-check-input rd-cls" id="InfluencePoliticalNo" name="InfluencePolitical" value="no" onchange="ToggleInfluencePoliticalExplanation()" <?php if (!is_null($financial_report_array['influence_political'])) {if ($financial_report_array['influence_political'] == false) echo "checked";} ?>>
-                                <span class="form-check-sign"></span>
-                                      No
-                           </label>
-
-                           <label class="form-check-label">
-                                <input type="radio" class="form-check-input" id="InfluencePoliticalYes" name="InfluencePolitical" value="yes" onchange="ToggleInfluencePoliticalExplanation()" <?php if (!is_null($financial_report_array['influence_political'])) {if ($financial_report_array['influence_political'] == true) echo "checked";} ?>>
-                                <span class="form-check-sign"></span>
-                                      Yes
-                           </label>
-                          </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                                <label style="display: block;">3. Did your chapter attempt to influence any national, state/provincial, or local legislation, or did your chapter support any other organization that did?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="InfluencePolitical" name="InfluencePolitical" class="form-control select2" style="width: 100%;" required onchange="ToggleInfluencePoliticalExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->influence_political) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{$financial_report_array->influence_political === 0 ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{$financial_report_array->influence_political == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="col-sm-12" id="divInfluencePoliticalExplanation">
-                        <label for="InfluencePoliticalExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
-                        <textarea class="form-control" rows="2" name="InfluencePoliticalExplanation" id="InfluencePoliticalExplanation" ><?php if (!is_null($financial_report_array)) {echo $financial_report_array['influence_political_explanation'];}?></textarea>
+                        <div class="col-md-12">
+                            <label for="InfluencePoliticalExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="InfluencePoliticalExplanation" id="InfluencePoliticalExplanation" ><?php if (!is_null($financial_report_array)) {echo $financial_report_array['influence_political_explanation'];}?></textarea>
+                        </div>
                     </div>
-
-                    <div class="col-sm-12">
-                        <p>4. Did your chapter vote on all activities and expenditures during the fiscal year?<span class="field-required">*</span></p>
-                        <div class="col-md-4 float-left">
-                            <div class="form-check form-check-radio">
-                               <label class="form-check-label">
-                                    <input type="radio" class="form-check-input rd-cls" id="VoteAllActivitiesNo" name="VoteAllActivities" value="no" onchange="ToggleVoteAllActivitiesExplanation()" <?php if (!is_null($financial_report_array['vote_all_activities'])) {if ($financial_report_array['vote_all_activities'] == false) echo "checked";} ?>>
-                                    <span class="form-check-sign"></span>
-                                          No
-                               </label>
-                              <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" id="VoteAllActivitiesYes" name="VoteAllActivities" value="yes" onchange="ToggleVoteAllActivitiesExplanation()" <?php if (!is_null($financial_report_array['vote_all_activities'])) {if ($financial_report_array['vote_all_activities'] == true) echo "checked";} ?>>
-                                    <span class="form-check-sign"></span>
-                                          Yes
-                                </label>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                                <label style="display: block;">4. Did your chapter vote on all activities and expenditures during the fiscal year?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="VoteAllActivities" name="VoteAllActivities" class="form-control select2" style="width: 100%;" required onchange="ToggleVoteAllActivitiesExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->vote_all_activities) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{$financial_report_array->vote_all_activities === 0 ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{$financial_report_array->vote_all_activities == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-12" id="divVoteAllActivitiesExplanation">
-                        <label for="VoteAllActivitiesExplanation">If no, briefly explain:<span class="field-required">*</span></label>
+                        <div class="col-md-12">
+                            <label for="VoteAllActivitiesExplanation">If no, briefly explain:<span class="field-required">*</span></label>
                             <textarea class="form-control" rows="2" name="VoteAllActivitiesExplanation" id="VoteAllActivitiesExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['vote_all_activities_explanation'];}?></textarea>
-                    </div>
-                    <div class="col-sm-12">
-                        <p>5. Did you purchase pins from International? If No, why not?<span class="field-required">*</span></p>
-                        <div class="col-md-4 float-left">
-                             <div class="form-check form-check-radio">
-                               <label class="form-check-label">
-                                    <input type="radio" class="form-check-input rd-cls" id="BoughtPinsNo" name="BoughtPins" value="no" onchange="ToggleBoughtPinsExplanation()" <?php if (!is_null($financial_report_array['purchase_pins'])) {if ($financial_report_array['purchase_pins'] == false) echo "checked";} ?>>
-                                    <span class="form-check-sign"></span>
-                                          No
-                               </label>
-                               <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" id="BoughtPinsYes" name="BoughtPins" value="yes" <?php if (!is_null($financial_report_array['purchase_pins'])) {if ($financial_report_array['purchase_pins'] == true) echo "checked";} ?> onchange="ToggleBoughtPinsExplanation()">
-                                    <span class="form-check-sign"></span>
-                                          Yes
-                               </label>
-                              </div>
                         </div>
                     </div>
-                    <div class="col-sm-12" id="divBoughtPinsExplanation">
-                        <label for="BoughtPinsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-                        <textarea class="form-control" rows="2" name="BoughtPinsExplanation" id="BoughtPinsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['purchase_pins_explanation'];}?></textarea>
-                    </div>
-                    <div class="col-sm-12">
-                        <p>6. Did you purchase any merchandise from International other than pins? If No, why not?<span class="field-required">*</span></p>
-                        <div class="col-md-4 float-left">
-                            <div class="form-check form-check-radio">
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input rd-cls" id="BoughtMerchNo" name="BoughtMerch" value="no" onchange="ToggleBoughtMerchExplanation()" <?php if (!is_null($financial_report_array['bought_merch'])) {if ($financial_report_array['bought_merch'] == false) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              No
-                                   </label>
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" id="BoughtMerchYes" name="BoughtMerch" value="yes" onchange="ToggleBoughtMerchExplanation()" <?php if (!is_null($financial_report_array['bought_merch'])) {if ($financial_report_array['bought_merch'] == true) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              Yes
-                                   </label>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                                <label style="display: block;">5. Did you purchase pins from International? If No, why not?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="BoughtPins" name="BoughtPins" class="form-control select2" style="width: 100%;" required onchange="ToggleBoughtPinsExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->purchase_pins) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{$financial_report_array->purchase_pins === 0 ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{$financial_report_array->purchase_pins == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12" id="divBoughtMerchExplanation">
-                        <label for="BoughtMerchExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-                        <textarea class="form-control" rows="2" name="BoughtMerchExplanation" id="BoughtMerchExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['bought_merch_explanation'];}?></textarea>
-
-                    </div>
-                    <div class="col-sm-12">
-                        <p>7. Did you offer or inform your members about MOMS Club merchandise?<span class="field-required">*</span></p>
-                        <div class="col-md-4 float-left">
-                             <div class="form-check form-check-radio">
-                                       <label class="form-check-label">
-                                            <input type="radio" class="form-check-input rd-cls" id="OfferedMerchNo" name="OfferedMerch" value="no" onchange="ToggleOfferedMerchExplanation()" <?php if (!is_null($financial_report_array['offered_merch'])) {if ($financial_report_array['offered_merch'] == false) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                                  No
-                                       </label>
-
-                                       <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" id="OfferedMerchYes" name="OfferedMerch" value="yes" onchange="ToggleOfferedMerchExplanation()" <?php if (!is_null($financial_report_array['offered_merch'])) {if ($financial_report_array['offered_merch'] == true) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                                  Yes
-                                       </label>
-                              </div>
+                    <div class="col-md-12">
+                        <div class="col-sm-12" id="divBoughtPinsExplanation">
+                            <label for="BoughtPinsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="BoughtPinsExplanation" id="BoughtPinsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['purchase_pins_explanation'];}?></textarea>
                         </div>
                     </div>
-                    <div class="col-sm-12" id="divOfferedMerchExplanation">
-                        <label for="OfferedMerchExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-                        <textarea class="form-control" rows="2" name="OfferedMerchExplanation" id="OfferedMerchExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['offered_merch_explanation'];}?></textarea>
-                    </div>
-
-                    <div class="col-sm-12">
-                        <p>8. Did you make the Bylaws and/or manual available for any chapter members that requested them?<span class="field-required">*</span></p>
-                        <div class="col-md-4 float-left">
-                             <div class="form-check form-check-radio">
-                                       <label class="form-check-label">
-                                            <input type="radio" class="form-check-input rd-cls" id="ByLawsAvailableNo" name="ByLawsAvailable" value="no" onchange="ToggleByLawsAvailableExplanation()" <?php if (!is_null($financial_report_array['bylaws_available'])) {if ($financial_report_array['bylaws_available'] == false) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                                  No
-                                       </label>
-
-                                       <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" id="ByLawsAvailableYes" name="ByLawsAvailable" value="yes" onchange="ToggleByLawsAvailableExplanation()" <?php if (!is_null($financial_report_array['bylaws_available'])) {if ($financial_report_array['bylaws_available'] == true) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                                  Yes
-                                       </label>
-                              </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                                <label style="display: block;">6. Did you purchase any merchandise from International other than pins? If No, why not?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="BoughtMerch" name="BoughtMerch" class="form-control select2" style="width: 100%;" required onchange="ToggleBoughtMerchExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->bought_merch) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{$financial_report_array->bought_merch === 0 ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{$financial_report_array->bought_merch == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-12" id="divByLawsAvailableExplanation">
-                        <label for="ByLawsAvailableExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-                        <textarea class="form-control" rows="2" name="ByLawsAvailableExplanation" id="ByLawsAvailableExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['bylaws_available_explanation'];}?></textarea>
+                    <div class="col-md-12">
+                        <div class="col-sm-12" id="divBoughtMerchExplanation">
+                            <label for="BoughtMerchExplanation">If no, briefly explain:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="BoughtMerchExplanation" id="BoughtMerchExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['bought_merch_explanation'];}?></textarea>
+                        </div>
                     </div>
-                     <div class="col-sm-12">
-                        <p>9. Did you have a children’s room with babysitters?<span class="field-required">*</span></p>
-                        <div class="col-md-12 float-left">
-                             <div class="form-check form-check-radio">
-                                       <label class="form-check-label">
-                                            <input type="radio" class="form-check-input rd-cls" id="ChildrensRoomYesVol" name="ChildrensRoom" value="no" <?php if (!is_null($financial_report_array['childrens_room_sitters'])) {if ($financial_report_array['childrens_room_sitters'] == false) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                                  No
-                                       </label>
-
-                                       <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" id="ChildrensRoomYesPaid" name="ChildrensRoom" value="yes_vol" <?php if (!is_null($financial_report_array['childrens_room_sitters'])) {if ($financial_report_array['childrens_room_sitters'] == true) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                                  Yes, with volunteer members
-                                       </label>
-                                       <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" id="ChildrensRoomNo" name="ChildrensRoom" value="yes_paid" <?php if (!is_null($financial_report_array)) {if ($financial_report_array['childrens_room_sitters'] == 2) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                                  Yes, with paid sitters
-                                       </label>
-                              </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                                <label style="display: block;">7. Did you offer or inform your members about MOMS Club merchandise?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="OfferedMerch" name="OfferedMerch" class="form-control select2" style="width: 100%;" required onchange="ToggleOfferedMerchExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->offered_merch) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{$financial_report_array->offered_merch === 0 ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{$financial_report_array->offered_merch == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-sm-12" id="divOfferedMerchExplanation">
+                            <label for="OfferedMerchExplanation">If no, briefly explain:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="OfferedMerchExplanation" id="OfferedMerchExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['offered_merch_explanation'];}?></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                                <label style="display: block;">8. Did you make the Bylaws and/or manual available for any chapter members that requested them?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="ByLawsAvailable" name="ByLawsAvailable" class="form-control select2" style="width: 100%;" required onchange="ToggleByLawsAvailableExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->bylaws_available) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{$financial_report_array->bylaws_available === 0 ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{$financial_report_array->bylaws_available == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-">
+                        <div class="col-sm-12" id="divByLawsAvailableExplanation">
+                            <label for="ByLawsAvailableExplanation">If no, briefly explain:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="ByLawsAvailableExplanation" id="ByLawsAvailableExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['bylaws_available_explanation'];}?></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <label style="display: block;">9. Did you have a children’s room with babysitters?<span class="field-required">*</span></label>
+                            <select id="ChildrensRoom" name="ChildrensRoom" class="form-control select2" style="width: 300px;" required>
+                                <option value="" {{ is_null($financial_report_array->childrens_room_sitters) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->childrens_room_sitters === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->childrens_room_sitters == 1 ? 'selected' : ''}}>Yes, with volunteer members</option>
+                                <option value="2" {{$financial_report_array->childrens_room_sitters == 2 ? 'selected' : ''}}>Yes, with paid sitters</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-sm-12">
                         <label for="ChildrensRoomExplanation">Briefly explain, if necessary:</label>
                         <textarea class="form-control" rows="2" name="ChildrensRoomExplanation" id="ChildrensRoomExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['childrens_room_sitters_explanation'];}?></textarea>
                     </div>
-
-
-
-
-                    <div class="col-sm-12">
-                    <p>10. Did you have playgroups? If so, how were they arranged.<span class="field-required">*</span></p>
+                    <div class="col-md-12"><br></div>
                     <div class="col-md-12 float-left">
-                         <div class="form-check form-check-radio">
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input rd-cls" id="Playgroups1" name="Playgroups" value="no" <?php if (!is_null($financial_report_array['playgroups'])) {if ($financial_report_array['playgroups'] == false) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              No
-                                   </label>
-
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" id="Playgroups2" name="Playgroups" value="yes_byage" <?php if (!is_null($financial_report_array['playgroups'])) {if ($financial_report_array['playgroups'] == true) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              Yes, arranged by age
-                                   </label>
-
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" id="Playgroups3" name="Playgroups" value="yes_multiage" <?php if (!is_null($financial_report_array['playgroups'])) {if ($financial_report_array['playgroups'] == 2) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              Yes, multi-aged groups
-                                   </label>
-                          </div>
+                        <div class="form-inline">
+                            <label style="display: block;">10. Did you have playgroups? If so, how were they arranged.<span class="field-required">*</span></label>
+                            <select id="Playgroups" name="Playgroups" class="form-control select2" style="width: 250px;" required>
+                                <option value="" {{ is_null($financial_report_array->playgroups) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->playgroups === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->playgroups == 1 ? 'selected' : ''}}>Yes, arranged by age</option>
+                                <option value="2" {{$financial_report_array->playgroups == 2 ? 'selected' : ''}}>Yes, multi-aged groups</option>
+                            </select>
+                        </div>
                     </div>
-
-                    </div>
-
-
                         <div class="col-sm-12">
                           <div class="form-group">
                                 <label for="PlaygroupsExplanation">Briefly explain, if necessary:</label>
                                 <textarea class="form-control" rows="2" name="PlaygroupsExplanation" id="PlaygroupsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['had_playgroups_explanation'];}?></textarea>
-
                             </div>
                         </div>
-
-                    <div class="col-sm-12">
-                        <p>11. Did you have any child focused outings or activities?<span class="field-required">*</span> (Ex: zoo, library, pumpkin patch, etc.)</p>
-                        <div class="col-md-4 float-left">
-                         <div class="form-check form-check-radio">
-                            <label class="form-check-label">
-                                <input type="radio" class="form-check-input rd-cls" id="ChildOutingsNo" name="ChildOutings" value="no" onchange="ToggleChildOutingsExplanation()" <?php if (!is_null($financial_report_array['child_outings'])) {if ($financial_report_array['child_outings'] == false) echo "checked";} ?>>
-                                <span class="form-check-sign"></span>
-                                      No
-                            </label>
-                            <label class="form-check-label">
-                                <input type="radio" class="form-check-input" id="ChildOutingsYes" name="ChildOutings" value="yes" onchange="ToggleChildOutingsExplanation()" <?php if (!is_null($financial_report_array['child_outings'])) {if ($financial_report_array['child_outings'] == true) echo "checked";} ?>>
-                                <span class="form-check-sign"></span>
-                                      Yes
-                           </label>
-                          </div>
+                        <div class="col-md-12"><br></div>
+                        <div class="col-md-12 float-left">
+                            <div class="form-inline">
+                                <label style="display: block;">11. Did you have any child focused outings or activities?<span class="field-required">*</span></label>
+                                <select id="ChildOutings" name="ChildOutings" class="form-control select2" style="width: 150px;" required onchange="ToggleChildOutingsExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->child_outings) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{$financial_report_array->child_outings === 0 ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{$financial_report_array->child_outings == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
                     <div class="col-sm-12" id="divChildOutingsExplanation">
                         <label for="ChildOutingsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
                         <textarea class="form-control" rows="2" name="ChildOutingsExplanation" id="ChildOutingsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['child_outings_explanation'];}?></textarea>
                     </div>
-                    <div class="col-sm-12">
-                        <p>12. Did you have any mother focused outings or activities?<span class="field-required">*</span> (Ex: mall walks, art museum, etc.)</p>
-                        <div class="col-md-4 float-left">
-                             <div class="form-check form-check-radio">
-                               <label class="form-check-label">
-                                    <input type="radio" class="form-check-input rd-cls" id="MotherOutingsNo" name="MotherOutings" value="no" onchange="ToggleMotherOutingsExplanation()" <?php if (!is_null($financial_report_array['mother_outings'])) {if ($financial_report_array['mother_outings'] == false) echo "checked";} ?>>
-                                    <span class="form-check-sign"></span>
-                                          No
-                               </label>
-                                <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" id="MotherOutingsYes" name="MotherOutings" value="yes" onchange="ToggleMotherOutingsExplanation()" <?php if (!is_null($financial_report_array['mother_outings'])) {if ($financial_report_array['mother_outings'] == true) echo "checked";} ?>>
-                                    <span class="form-check-sign"></span>
-                                          Yes
-                               </label>
-                              </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <label style="display: block;">12. Did you have any mother focused outings or activities?<span class="field-required">*</span></label>
+                            <select id="MotherOutings" name="MotherOutings" class="form-control select2" style="width: 150px;" required onchange="ToggleMotherOutingsExplanation()">
+                                <option value="" {{ is_null($financial_report_array->mother_outings) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->mother_outings === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->mother_outings == 1 ? 'selected' : ''}}>Yes</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-sm-12" id="divMotherOutingsExplanation">
                         <label for="MotherOutingsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
                         <textarea class="form-control" rows="2" name="MotherOutingsExplanation" id="MotherOutingsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['mother_outings_explanation'];}?></textarea>
                     </div>
-                    <div class="col-sm-12">
-                    <p>13. Did you have speakers at any meetings?<span class="field-required">*</span></p>
-                        <div class="col-md-4 float-left">
-                             <div class="form-check form-check-radio">
-                               <label class="form-check-label">
-                                    <input type="radio" class="form-check-input rd-cls" id="MeetingSpeakersNo" name="MeetingSpeakers" value="no" onchange="ToggleMeetingSpeakersExplanation()" <?php if (!is_null($financial_report_array['meeting_speakers'])) {if ($financial_report_array['meeting_speakers'] == false) echo "checked";} ?>>
-                                    <span class="form-check-sign"></span>
-                                          No
-                               </label>
-                                <label class="form-check-label">
-                                    <input type="radio" class="form-check-input" id="MeetingSpeakersYes" name="MeetingSpeakers" value="yes" onchange="ToggleMeetingSpeakersExplanation()" <?php if (!is_null($financial_report_array['meeting_speakers'])) {if ($financial_report_array['meeting_speakers'] == true) echo "checked";} ?>>
-                                    <span class="form-check-sign"></span>
-                                          Yes
-                               </label>
-                              </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <label style="display: block;">13. Did you have speakers at any meetings?<span class="field-required">*</span></label>
+                            <select id="MeetingSpeakers" name="MeetingSpeakers" class="form-control select2" style="width: 150px;" required onchange="ToggleMeetingSpeakersExplanation()">
+                                <option value="" {{ is_null($financial_report_array->meeting_speakers) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->meeting_speakers === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->meeting_speakers == 1 ? 'selected' : ''}}>Yes</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-sm-12" id="divMeetingSpeakersExplanation">
                         <label for="MeetingSpeakersExplanation">If no, briefly explain:<span class="field-required">*</span></label>
                         <textarea class="form-control" rows="2" name="MeetingSpeakersExplanation" id="MeetingSpeakersExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['meeting_speakers_explanation'];}?></textarea>
                     </div>
-                    <div class="col-sm-12">
-                        <p>14. If you had speakers, check any of the topics that were covered:</p>
-                        <div class="col-md-4 float-left">
-                             <div class="">
-                                       <label class="form-check-label">
-                                            <input type="checkbox" class="chk-cls" id="SpeakersChildRearing" name="SpeakersChildRearing" <?php if (!is_null($financial_report_array)) {if (isset($financial_report_array['speaker_child_rearing']) && $financial_report_array['speaker_child_rearing'] == true) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                                  Child Rearing
-                                       </label>
-                              </div>
-                        </div>
-                        <div class="col-md-4 float-left">
-                             <div class="">
-                                       <label class="form-check-label">
-                                            <input type="checkbox" class="chk-cls" id="SpeakersEducation" name="SpeakersEducation" <?php if (!is_null($financial_report_array)) {if (isset($financial_report_array['speaker_education']) && $financial_report_array['speaker_education'] == true) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                                  Schools/Education
-                                       </label>
-                              </div>
-                        </div>
-                        <div class="col-md-4 float-left">
-                             <div class="">
-                                       <label class="form-check-label">
-                                            <input type="checkbox" class="chk-cls" id="SpeakersHomemaking" name="SpeakersHomemaking" <?php if (!is_null($financial_report_array)) {if (isset($financial_report_array['speaker_homemaking']) && $financial_report_array['speaker_homemaking'] == true) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                                  Home Management
-                                       </label>
-                              </div>
-                        </div>
-                        <div class="col-md-4 float-left">
-                             <div class="">
-                                       <label class="form-check-label">
-                                            <input type="checkbox" class="chk-cls" id="SpeakersPolitics" name="SpeakersPolitics" <?php if (!is_null($financial_report_array)) {if (isset($financial_report_array['speaker_politics']) && $financial_report_array['speaker_politics'] == true) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                                  Politics
-                                       </label>
-                              </div>
-                        </div>
-                        <div class="col-md-4 float-left">
-                             <div class="">
-                                       <label class="form-check-label">
-                                            <input type="checkbox" class="chk-cls" id="SpeakersOtherNP" name="SpeakersOtherNP" <?php if (!is_null($financial_report_array)) {if (isset($financial_report_array['speaker_other_np']) && $financial_report_array['speaker_other_np'] == true) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                                  Other Non-Profit
-                                       </label>
-                              </div>
-                        </div>
-                        <div class="col-md-4 float-left">
-                             <div class="">
-                                       <label class="form-check-label">
-                                            <input type="checkbox" class="chk-cls" id="SpeakersOther" name="SpeakersOther" <?php if (!is_null($financial_report_array)) {if (isset($financial_report_array['speaker_other']) && $financial_report_array['speaker_other'] == true) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                                  Other
-                                       </label>
-                              </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-group">
+                            <label style="display: block;">14. If you had speakers, check any of the topics that were covered:<span class="field-required">*</span></label>
+                            <select id="Speakers" name="Speakers[]" class="form-control select2" style="width: 200px; height: 200px;" multiple="multiple" required>
+                                <option value="" {{ is_null($financial_report_array->meeting_speakers_array) ? 'selected' : '' }}>N/A</option>
+                                @php
+                                    $selectedValues = is_null($financial_report_array->meeting_speakers_array)
+                                        ? []
+                                        : json_decode($financial_report_array->meeting_speakers_array);
+                                @endphp
+                                <option value="0" {{ in_array('0', $selectedValues) ? 'selected' : '' }}>Child Rearing</option>
+                                <option value="1" {{ in_array('1', $selectedValues) ? 'selected' : '' }}>Schools/Education</option>
+                                <option value="2" {{ in_array('2', $selectedValues) ? 'selected' : '' }}>Home Management</option>
+                                <option value="3" {{ in_array('3', $selectedValues) ? 'selected' : '' }}>Politics</option>
+                                <option value="4" {{ in_array('4', $selectedValues) ? 'selected' : '' }}>Other Non-Profit</option>
+                                <option value="5" {{ in_array('5', $selectedValues) ? 'selected' : '' }}>Other</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="col-sm-12">
-                        <p>15. Did you have any discussion topics at your meetings? If yes, how often?<span class="field-required">*</span></p>
-                        <div class="col-md-2 float-left">
-                             <div class="form-check form-check-radio">
-                                       <label class="form-check-label">
-                                            <input type="radio" class="form-check-input rd-cls" id="SpeakerFrequency1" name="SpeakerFrequency" value="no" <?php if (!is_null($financial_report_array['discussion_topic_frequency'])) {if ($financial_report_array['discussion_topic_frequency'] == false) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                                  No
-                                       </label>
-                              </div>
-                        </div>
-                        <div class="col-md-2 float-left">
-                             <div class="form-check form-check-radio">
-                                       <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" id="SpeakerFrequency2" name="SpeakerFrequency" value="1_3_times" <?php if (!is_null($financial_report_array['discussion_topic_frequency'])) {if ($financial_report_array['discussion_topic_frequency'] == true) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                                  1-3 Times
-                                       </label>
-                              </div>
-                        </div>
-                        <div class="col-md-2 float-left">
-                             <div class="form-check form-check-radio">
-                                       <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" id="SpeakerFrequency3" name="SpeakerFrequency" value="4_6_times" <?php if (!is_null($financial_report_array['discussion_topic_frequency'])) {if ($financial_report_array['discussion_topic_frequency'] == 2) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                                  4-6 Times
-                                       </label>
-                              </div>
-                        </div>
-                        <div class="col-md-2 float-left">
-                             <div class="form-check form-check-radio">
-                                       <label class="form-check-label">
-                                            <input type="radio" class="form-check-input rd-cls" id="SpeakerFrequency4" name="SpeakerFrequency" value="7_9_times" <?php if (!is_null($financial_report_array['discussion_topic_frequency'])) {if ($financial_report_array['discussion_topic_frequency'] == 3) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                                  7-9 Times
-                                       </label>
-                              </div>
-                        </div>
-                        <div class="col-md-2 float-left">
-                             <div class="form-check form-check-radio">
-                                       <label class="form-check-label">
-                                            <input type="radio" class="form-check-input" id="SpeakerFrequency5" name="SpeakerFrequency" value="10_times" <?php if (!is_null($financial_report_array['discussion_topic_frequency'])) {if ($financial_report_array['discussion_topic_frequency'] == 4) echo "checked";} ?>>
-                                            <span class="form-check-sign"></span>
-                                                  10+ Times
-                                       </label>
-                              </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <label style="display: block;">15. Did you have any discussion topics at your meetings? If yes, how often?<span class="field-required">*</span></label>
+                            <select id="SpeakerFrequency" name="SpeakerFrequency" class="form-control select2" style="width: 150px;" required>
+                                <option value="" {{ is_null($financial_report_array->discussion_topic_frequency) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->discussion_topic_frequency === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->discussion_topic_frequency == 1 ? 'selected' : ''}}>1-3 Times</option>
+                                <option value="2" {{$financial_report_array->discussion_topic_frequency == 2 ? 'selected' : ''}}>4-6 Times</option>
+                                <option value="3" {{$financial_report_array->discussion_topic_frequency == 3 ? 'selected' : ''}}>7-9 Times</option>
+                                <option value="4" {{$financial_report_array->discussion_topic_frequency == 4 ? 'selected' : ''}}>10+ Times</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="col-sm-12">
-                    <p>16. Did your chapter have scheduled park days? If yes, how often?<span class="field-required">*</span></p>
-                    <div class="col-md-2 float-left">
-                         <div class="form-check form-check-radio">
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input rd-cls" id="ParkDays1" name="ParkDays" value="no" <?php if (!is_null($financial_report_array['park_day_frequency'])) {if ($financial_report_array['park_day_frequency'] == false) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              No
-                                   </label>
-                          </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <label style="display: block;">16. Did your chapter have scheduled park days? If yes, how often?<span class="field-required">*</span></label>
+                            <select id="ParkDays" name="ParkDays" class="form-control select2" style="width: 150px;" required>
+                                <option value="" {{ is_null($financial_report_array->park_day_frequency) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->park_day_frequency === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->park_day_frequency == 1 ? 'selected' : ''}}>1-3 Times</option>
+                                <option value="2" {{$financial_report_array->park_day_frequency == 2 ? 'selected' : ''}}>4-6 Times</option>
+                                <option value="3" {{$financial_report_array->park_day_frequency == 3 ? 'selected' : ''}}>7-9 Times</option>
+                                <option value="4" {{$financial_report_array->park_day_frequency == 4 ? 'selected' : ''}}>10+ Times</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="col-md-2 float-left">
-                         <div class="form-check form-check-radio">
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" id="ParkDays2" name="ParkDays" value="1_3_times" <?php if (!is_null($financial_report_array['park_day_frequency'])) {if ($financial_report_array['park_day_frequency'] == true) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              1-3 Times
-                                   </label>
-                          </div>
-                    </div>
-                    <div class="col-md-2 float-left">
-                         <div class="form-check form-check-radio">
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" id="ParkDays3" name="ParkDays" value="4_6_times" <?php if (!is_null($financial_report_array['park_day_frequency'])) {if ($financial_report_array['park_day_frequency'] == 2) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              4-6 Times
-                                   </label>
-                          </div>
-                    </div>
-                    <div class="col-md-2 float-left">
-                         <div class="form-check form-check-radio">
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" id="ParkDays4" name="ParkDays" value="7_9_times" <?php if (!is_null($financial_report_array['park_day_frequency'])) {if ($financial_report_array['park_day_frequency'] == 3) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              7-9 Times
-                                   </label>
-                          </div>
-                    </div>
-                    <div class="col-md-2 float-left">
-                         <div class="form-check form-check-radio">
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" id="ParkDays5" name="ParkDays" value="10_times" <?php if (!is_null($financial_report_array['park_day_frequency'])) {if ($financial_report_array['park_day_frequency'] == 4) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              10+ Times
-                                   </label>
-                          </div>
-                    </div>
-                    </div>
-                    <div class="col-sm-12">
-                    <p>17. Did your chapter have any of the following activity groups?</p>
-                    <div class="col-md-4 float-left">
-                         <div class="">
-                                   <label class="form-check-label">
-                                        <input type="checkbox" class="" id="ActivityCooking" name="ActivityCooking" <?php if (!is_null($financial_report_array)) {if (isset($financial_report_array['activity_cooking']) && $financial_report_array['activity_cooking'] == true) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              Cooking
-                                   </label>
-                          </div>
-                    </div>
-                    <div class="col-md-4 float-left">
-                         <div class="">
-                                   <label class="form-check-label">
-                                        <input type="checkbox" class="" id="ActivityCouponing" name="ActivityCouponing" <?php if (!is_null($financial_report_array)) {if (isset($financial_report_array['activity_couponing']) && $financial_report_array['activity_couponing'] == true) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              Cost Cutting Tips
-                                   </label>
-                          </div>
-                    </div>
-                    <div class="col-md-4 float-left">
-                         <div class="">
-                                   <label class="form-check-label">
-                                        <input type="checkbox" class="" id="ActivityMommyPlaygroup" name="ActivityMommyPlaygroup" <?php if (!is_null($financial_report_array)) {if (isset($financial_report_array['activity_mommy_playgroup']) && $financial_report_array['activity_mommy_playgroup'] == true) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              Mommy Playgroup (moms with all children in school)
-                                   </label>
-                          </div>
-                    </div>
-                    <div class="col-md-4 float-left">
-                         <div class="">
-                                   <label class="form-check-label">
-                                        <input type="checkbox" class="" id="ActivityBabysitting" name="ActivityBabysitting" <?php if (!is_null($financial_report_array)) {if (isset($financial_report_array['activity_babysitting']) && $financial_report_array['activity_babysitting'] == true) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              Babysitting Co-op
-                                   </label>
-                          </div>
-                    </div>
-                    <div class="col-md-4 float-left">
-                         <div class="">
-                                   <label class="form-check-label">
-                                        <input type="checkbox" class="" id="ActivityMNO" name="ActivityMNO" <?php if (!is_null($financial_report_array)) {if (isset($financial_report_array['activity_mno']) && $financial_report_array['activity_mno'] == true) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              MOMS Night Out
-                                   </label>
-                          </div>
-                    </div>
-                    <div class="col-md-4 float-left">
-                         <div class="">
-                                   <label class="form-check-label">
-                                        <input type="checkbox" class="" id="ActivityOther" name="ActivityOther" onChange="ToggleActivityOtherExplanation()"  <?php if (!is_null($financial_report_array)) {if (isset($financial_report_array['activity_other']) && $financial_report_array['activity_other'] == true) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              Other
-                                   </label>
-                          </div>
-                    </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-group">
+                            <label style="display: block;">17. Did your chapter have any of the following activity groups?<span class="field-required">*</span></label>
+                            <select id="Activity" name="Activity[]" class="form-control select2" style="width: 200px; height: 200px;" multiple="multiple" required>
+                                <option value="" {{ is_null($financial_report_array->activity_array) ? 'selected' : '' }}>N/A</option>
+                                @php
+                                    $selectedValues = is_null($financial_report_array->activity_array)
+                                        ? []
+                                        : json_decode($financial_report_array->activity_array);
+                                @endphp
+                                <option value="0" {{ in_array('0', $selectedValues) ? 'selected' : '' }}>Cooking</option>
+                                <option value="1" {{ in_array('1', $selectedValues) ? 'selected' : '' }}>Cost Cutting Tips</option>
+                                <option value="2" {{ in_array('2', $selectedValues) ? 'selected' : '' }}>Mommy Playgroup</option>
+                                <option value="3" {{ in_array('3', $selectedValues) ? 'selected' : '' }}>Babysitting Co-op</option>
+                                <option value="4" {{ in_array('4', $selectedValues) ? 'selected' : '' }}>MOMS Night Out</option>
+                                <option value="5" {{ in_array('5', $selectedValues) ? 'selected' : '' }}>Other</option>
+                            </select>
+                        </div>
                     </div>
                      <div class="col-sm-12" id="divActivityOtherExplanation">
                         <label for="ActivityOtherExplanation">If other, briefly explain:</label>
                         <textarea class="form-control" rows="2" name="ActivityOtherExplanation" id="ActivityOtherExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['activity_other_explanation'];}?></textarea>
                      </div>
-                    <div class="col-sm-12">
-                    <p>18. Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity? If yes, please explain who received the contributions and why you chose them:<span class="field-required">*</span></p>
-                    <div class="col-md-4 float-left">
-                         <div class="form-check form-check-radio">
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input rd-cls" id="ContributionsNotRegNPNo" name="ContributionsNotRegNP" value="no" onChange="ToggleContributionsNotRegNPExplanation()" <?php if (!is_null($financial_report_array['contributions_not_registered_charity'])) {if ($financial_report_array['contributions_not_registered_charity'] == false) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              No
-                                   </label>
-
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" id="ContributionsNotRegNPYes" name="ContributionsNotRegNP" value="yes" onChange="ToggleContributionsNotRegNPExplanation()" <?php if (!is_null($financial_report_array['contributions_not_registered_charity'])) {if ($financial_report_array['contributions_not_registered_charity'] == true) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              Yes
-                                   </label>
-                          </div>
-                    </div>
+                     <div class="col-md-12"><br></div>
+                     <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <label style="display: block;">18. Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity? If yes, please explain who received the contributions and why you chose them:<span class="field-required">*</span></label>
+                            <select id="ContributionsNotRegNP" name="ContributionsNotRegNP" class="form-control select2" style="width: 150px;" required onchange="ToggleContributionsNotRegNPExplanation()">
+                                <option value="" {{ is_null($financial_report_array->contributions_not_registered_charity) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->contributions_not_registered_charity === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->contributions_not_registered_charity == 1 ? 'selected' : ''}}>Yes</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="col-sm-12" id="divContributionsNotRegNPExplanation">
                         <label for="ContributionsNotRegNPExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
                         <textarea class="form-control" rows="2" name="ContributionsNotRegNPExplanation" id="ContributionsNotRegNPExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['contributions_not_registered_charity_explanation'];}?></textarea>
                     </div>
-                    <div class="col-sm-12">
-                    <p>19. Did your chapter perform at least one service project to benefit mothers or children?<span class="field-required">*</span></p>
-                    <div class="col-md-4 float-left">
-                         <div class="form-check form-check-radio">
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input rd-cls" id="PerformServiceProjectNo" name="PerformServiceProject" value="no" onChange="TogglePerformServiceProjectExplanation()" <?php if (!is_null($financial_report_array['at_least_one_service_project'])) {if ($financial_report_array['at_least_one_service_project'] == false) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              No
-                                   </label>
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" id="PerformServiceProjectYes" name="PerformServiceProject" value="yes" onChange="TogglePerformServiceProjectExplanation()" <?php if (!is_null($financial_report_array['at_least_one_service_project'])) {if ($financial_report_array['at_least_one_service_project'] == true) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              Yes
-                                   </label>
-                          </div>
-                    </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <label style="display: block;">19. Did your chapter perform at least one service project to benefit mothers or children?<span class="field-required">*</span></label>
+                            <select id="PerformServiceProject" name="PerformServiceProject" class="form-control select2" style="width: 150px;" required onchange="TogglePerformServiceProjectExplanation()">
+                                <option value="" {{ is_null($financial_report_array->at_least_one_service_project) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->at_least_one_service_project === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->at_least_one_service_project == 1 ? 'selected' : ''}}>Yes</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="col-sm-12" id="divPerformServiceProjectExplanation">
                         <label for="PerformServiceProjectExplanation">If no, briefly explain:<span class="field-required">*</span></label>
                         <textarea class="form-control" rows="2" name="PerformServiceProjectExplanation" id="PerformServiceProjectExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['at_least_one_service_project_explanation'];}?></textarea>
                     </div>
-
-                <div class="col-sm-12">
-                    <p>20. Did your chapter sister another chapter?<span class="field-required">*</span></p>
-                    <div class="col-md-4 float-left">
-                         <div class="form-check form-check-radio">
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input rd-cls" id="SisterChapterNo" name="SisterChapter" value="no" <?php if (!is_null($financial_report_array['sister_chapter'])) {if ($financial_report_array['sister_chapter'] == false) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              No
-                                   </label>
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" id="SisterChapterYes" name="SisterChapter" value="yes" <?php if (!is_null($financial_report_array['sister_chapter'])) {if ($financial_report_array['sister_chapter'] == true) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              Yes
-                                   </label>
-                          </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <label style="display: block;">20. Did your chapter sister another chapter?<span class="field-required">*</span></label>
+                            <select id="SisterChapter" name="SisterChapter" class="form-control select2" style="width: 150px;" required>
+                                <option value="" {{ is_null($financial_report_array->sister_chapter) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->sister_chapter === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->sister_chapter == 1 ? 'selected' : ''}}>Yes</option>
+                            </select>
+                        </div>
                     </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <label style="display: block;">21. Did your chapter attend an International Event (in person or virtual)?<span class="field-required">*</span></label>
+                            <select id="InternationalEvent" name="InternationalEvent" class="form-control select2" style="width: 150px;" required>
+                                <option value="" {{ is_null($financial_report_array->international_event) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->international_event === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->international_event == 1 ? 'selected' : ''}}>Yes</option>
+                            </select>
+                        </div>
                     </div>
-
-
-         <div class="col-sm-12">
-                    <p>21. Did your chapter attend an International Event (in person or virtual)?<span class="field-required">*</span></p>
-                    <div class="col-md-4 float-left">
-                         <div class="form-check form-check-radio">
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input rd-cls" id="InternationalEventNo" name="InternationalEvent" value="no" <?php if (!is_null($financial_report_array['international_event'])) {if ($financial_report_array['international_event'] == false) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              No
-                                   </label>
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" id="InternationalEventYes" name="InternationalEvent" value="yes" <?php if (!is_null($financial_report_array['international_event'])) {if ($financial_report_array['international_event'] == true) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              Yes
-                                   </label>
-                          </div>
-                    </div>
-                    </div>
-                    <div class="col-sm-12">
-
-                    <p>22. Did your chapter file their IRS 990N for <?php echo date('Y')-1 .'-'.date('Y');?> (CANNOT BE DONE BEFORE JULY 1, <?php echo date('Y');?>)?<span class="field-required">*</span></p>
-                    <div class="col-md-4 float-left">
-                         <div class="form-check form-check-radio">
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input rd-cls" id="FileIRSNo" name="FileIRS" value="no" onChange="ToggleFileIRSExplanation()" <?php if (!is_null($financial_report_array['file_irs'])) {if ($financial_report_array['file_irs'] == false) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              No
-                                   </label>
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" id="FileIRSYes" name="FileIRS" value="yes" onChange="ToggleFileIRSExplanation()" <?php if (!is_null($financial_report_array['file_irs'])) {if ($financial_report_array['file_irs'] == true) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              Yes
-                                   </label>
-                          </div>
-                    </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <label style="display: block;">22. Did your chapter file their IRS 990N for <?php echo date('Y')-1 .'-'.date('Y');?> (CANNOT BE DONE BEFORE JULY 1, <?php echo date('Y');?>)?<span class="field-required">*</span></label>
+                            <select id="FileIRS" name="FileIRS" class="form-control select2" style="width: 150px;" required onchange="ToggleFileIRSExplanation()">
+                                <option value="" {{ is_null($financial_report_array->file_irs) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->file_irs === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->file_irs == 1 ? 'selected' : ''}}>Yes</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="col-sm-12" id="divFileIRSExplanation">
                         <label for="FileIRSExplanation">If no, briefly explain:</label>
-                            <textarea class="form-control" rows="2" name="FileIRSExplanation" id="FileIRSExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['file_irs_explanation'];}?></textarea>
+                        <textarea class="form-control" rows="2" name="FileIRSExplanation" id="FileIRSExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['file_irs_explanation'];}?></textarea>
                         <div class="help-block with-errors"></div>
                     </div>
-          <div class="col-md-12" id="990NBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
-                                <label class="control-label" for="990NFiling">Attach a copy of your chapter's 990N filing confirmation here:</label>
-										<input name="990NFiling" id="990NFiling" type="file" accept=".pdf, .jpg, .jpeg" / class="demo1 form-control" />
-
+                    <div class="col-md-12" id="990NBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
+                        <label class="control-label" for="990NFiling">Attach a copy of your chapter's 990N filing confirmation here:</label>
+						    <input name="990NFiling" id="990NFiling" type="file" accept=".pdf, .jpg, .jpeg" / class="demo1 form-control" />
+					    </div>
+							<input type="hidden" name="990NPath" id="990NPath" value="<?php echo $financial_report_array['file_irs_path']; ?>">
+							<div class="col-md-12" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
+								<div class="col-md-12" >
+								    <label class="control-label" for="990NLink">990N:</label>
+									<a href="<?php echo $financial_report_array['file_irs_path']; ?>" target="_blank">990N Filing</a>
 								</div>
-								<input type="hidden" name="990NPath" id="990NPath" value="<?php echo $financial_report_array['file_irs_path']; ?>">
-
-								<div class="col-md-12" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
-
-									<div class="col-md-12" >
-										<label class="control-label" for="990NLink">990N:</label>
-
-										<a href="<?php echo $financial_report_array['file_irs_path']; ?>" target="_blank">990N Filing</a>
-
-									</div>
-
-									<div class="col-md-6">
-										<button type="button" class="btn btn-info btn-fill" onclick="Replace990N()" <?php if($submitted =='1') echo "disabled"; ?>>Replace 990N</button>
-									</div>
-                        </div>
+								<div class="col-md-6">
+									<button type="button" class="btn btn-info btn-fill" onclick="Replace990N()" <?php if($submitted =='1') echo "disabled"; ?>>Replace 990N</button>
+								</div>
+                            </div>
                         <input type="hidden" name="990NPath" id="990NPath" value="<?php echo $financial_report_array['file_irs_path']; ?>">
-
-
-                <div class="col-sm-12">
-                <br>
-                    <p>23. Is a copy of your chapter’s most recent bank statement included with the copy of this report that you are submitting to International?<span class="field-required">*</span></p>
-                    <div class="col-md-4 float-left">
-                         <div class="form-check form-check-radio">
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input rd-cls" id="BankStatementIncludedNo" name="BankStatementIncluded" value="no" onChange="ToggleBankStatementIncludedExplanation()" <?php if (!is_null($financial_report_array['bank_statement_included'])) {if ($financial_report_array['bank_statement_included'] == false) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              No
-                                   </label>
-
-                                   <label class="form-check-label">
-                                        <input type="radio" class="form-check-input" id="BankStatementIncludedYes" name="BankStatementIncluded" value="yes" onChange="ToggleBankStatementIncludedExplanation()" <?php if (!is_null($financial_report_array['bank_statement_included'])) {if ($financial_report_array['bank_statement_included'] == true) echo "checked";} ?>>
-                                        <span class="form-check-sign"></span>
-                                              Yes
-                                   </label>
-                          </div>
-                    </div>
-                    </div>
-                    <div class="col-sm-12" id="divBankStatementIncludedExplanation">
-                    <label for="BankStatementIncludedExplanation">If no, briefly explain:</label>
-                    <textarea class="form-control" rows="2" name="BankStatementIncludedExplanation" id="BankStatementIncludedExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['bank_statement_included_explanation'];}?></textarea>
-                    </div>
-
+                        <div class="col-md-12"><br></div>
+                        <div class="col-md-12 float-left">
+                            <div class="form-inline">
+                                <label style="display: block;">23. Is a copy of your chapter’s most recent bank statement included with the copy of this report that you are submitting to International?<span class="field-required">*</span></label>
+                                <select id="BankStatementIncluded" name="BankStatementIncluded" class="form-control select2" style="width: 150px;" required onchange="ToggleBankStatementIncludedExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->bank_statement_included) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{$financial_report_array->bank_statement_included === 0 ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{$financial_report_array->bank_statement_included == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-12" id="divBankStatementIncludedExplanation">
+                            <label for="BankStatementIncludedExplanation">If no, briefly explain:</label>
+                            <textarea class="form-control" rows="2" name="BankStatementIncludedExplanation" id="BankStatementIncludedExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['bank_statement_included_explanation'];}?></textarea>
+                        </div>
                         <div class="col-md-12" id="Statement1Block" <?php if (!empty($financial_report_array)) {if ($financial_report_array['bank_statement_included_path']) echo "style=\"display: none;\"";} ?>>
-                                <br>
-                        	    <label class="control-label" for="StatementFile">Attach a copy of your primary bank statement here:</label>
-										<input name="StatementFile" id="StatementFile" type="file" accept=".pdf, .jpg, .jpeg" / class="demo1 form-control" />
-
-								</div>
-								<input type="hidden" name="StatementPath" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
-
+                            <br>
+                            <label class="control-label" for="StatementFile">Attach a copy of your primary bank statement here:</label>
+							<input name="StatementFile" id="StatementFile" type="file" accept=".pdf, .jpg, .jpeg" / class="demo1 form-control" />
+						</div>
+							<input type="hidden" name="StatementPath" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
 								<div class="col-md-12" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['bank_statement_included_path']) echo "style=\"display: none;\"";} ?>>
-
 								    <br>
 									<div class="col-md-12" >
 										<label class="control-label" for="StatementLink">Additional Bank Statement:</label>
-
-											<a href="<?php echo $financial_report_array['bank_statement_included_path']; ?>" target="_blank">Bank Statement 1</a>
-
+										<a href="<?php echo $financial_report_array['bank_statement_included_path']; ?>" target="_blank">Bank Statement 1</a>
 									</div>
-
 									<div class="col-md-6">
 										<button type="button" class="btn btn-info btn-fill" onclick="ReplaceStatement1()" <?php if($submitted =='1') echo "disabled"; ?>>Replace Statement 1</button>
 									</div>
-                        </div>
-                        <input type="hidden" name="StatementPath" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
-
-
+                                </div>
+                                <input type="hidden" name="StatementPath" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
                             <div class="col-md-12" id="Statement2Block" <?php if (!empty($financial_report_array)) {if ($financial_report_array['bank_statement_2_included_path']) echo "style=\"display: none;\"";} ?>>
                                 <br>
                         	    <label class="control-label" for="Statement2File">If you have multiple Bank Accounts, attach your secondary statement here:</label>
-										<input name="Statement2File" id="Statement2File" type="file" accept=".pdf, .jpg, .jpeg" / class="demo1 form-control" />
-
-								</div>
-								<input type="hidden" name="Statement2Path" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
-
-								<div class="col-md-12" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['bank_statement_2_included_path']) echo "style=\"display: none;\"";} ?>>
-
-								    <br>
-									<div class="col-md-12" >
-										<label class="control-label" for="Statement2Link">Additional Bank Statement:</label>
-
-											<a href="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" target="_blank">Bank Statement 2</a>
-
-									</div>
-
-									<div class="col-md-6">
-										<button type="button" class="btn btn-info btn-fill" onclick="ReplaceStatement2()" <?php if($submitted =='1') echo "disabled"; ?>>Replace Statement 2</button>
-									</div>
-                        </div>
-                        <input type="hidden" name="Statement2Path" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
-
-
-
-                    <div class="col-sm-12">
-                        <br>
-                    <p>24. If your group does not have any bank accounts, where is the chapter money kept?</p>
-                       <div class="col-sm-12">
-                      <textarea name="WheresTheMoney" id="WheresTheMoney" class="form-control formctrl-h" rows="3" ><?php if (!is_null($financial_report_array)) {echo $financial_report_array['wheres_the_money'];}?></textarea>
-                        </div>
-                    </div>
-                    <hr>
-                 </div>
-                 <div class="form-row form-group">
-                        <div class="card-body">
-                            <div class="col-md-12 text-center">
-                              <button type="button" class="btn btn-info btn-fill" id="btn-step-9" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
-                               <!--<button type="button" id="9" class="btn btn-info btn-fill" onClick="printDiv(this.id)">Print</button>-->
+									<input name="Statement2File" id="Statement2File" type="file" accept=".pdf, .jpg, .jpeg" / class="demo1 form-control" />
+							</div>
+							<input type="hidden" name="Statement2Path" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
+							<div class="col-md-12" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['bank_statement_2_included_path']) echo "style=\"display: none;\"";} ?>>
+								<br>
+							<div class="col-md-12" >
+								<label class="control-label" for="Statement2Link">Additional Bank Statement:</label>
+								<a href="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" target="_blank">Bank Statement 2</a>
+							</div>
+							<div class="col-md-6">
+								<button type="button" class="btn btn-info btn-fill" onclick="ReplaceStatement2()" <?php if($submitted =='1') echo "disabled"; ?>>Replace Statement 2</button>
                             </div>
                         </div>
-              </div>
+                            <input type="hidden" name="Statement2Path" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
+                        <div class="col-md-12"><br></div>
+                        <div class="col-sm-12" >
+                            <label style="display: block;">24. If your group does not have any bank accounts, where is the chapter money kept?:</label>
+                            <textarea class="form-control" rows="2" name="WheresTheMoney" id="WheresTheMoney"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['wheres_the_money'];}?></textarea>
+                        </div>
+                    </div>
+                    <div class="form-row form-group">
+                        <div class="card-body">
+                            <div class="col-md-12 text-center">
+                              <button type="button" class="btn btn-info btn-fill" id="btn-step-9" <?php if($submitted =='1') echo "disabled"; ?>>Save Section</button>
+                            </div>
+                        </div>
+                    </div>
               </section>
           </div><!-- end of accordion body -->
           </div><!-- end of accordion item -->
@@ -3483,22 +3151,16 @@ function printDiv(id) {
     //  window.reload();
     window.location.reload();
 }
-
-
     var accordion = (function(){
+    var $accordion = $('.js-accordion');
+    var $accordion_header = $accordion.find('.js-accordion-header');
+    var $accordion_item = $('.js-accordion-item');
+    // default settings
+    var settings = {
+        speed: 400,   // animation speed
+        oneOpen: false   // close all other accordion items if true
 
-  var $accordion = $('.js-accordion');
-  var $accordion_header = $accordion.find('.js-accordion-header');
-  var $accordion_item = $('.js-accordion-item');
-
-  // default settings
-  var settings = {
-    // animation speed
-    speed: 400,
-
-    // close all other accordion items if true
-    oneOpen: false
-  };
+    };
 
   return {
     // pass configurable object literal
@@ -3508,12 +3170,10 @@ function printDiv(id) {
       });
 
       $.extend(settings, $settings);
-
       // ensure only one accordion is active if oneOpen is true
       if(settings.oneOpen && $('.js-accordion-item.active').length > 1) {
         $('.js-accordion-item.active:not(:first)').removeClass('active');
       }
-
       // reveal the active accordion bodies
       $('.js-accordion-item.active').find('> .js-accordion-body').show();
     },
@@ -3523,10 +3183,10 @@ function printDiv(id) {
         $this.closest('.js-accordion')
                .find('> .js-accordion-item')
                .removeClass('active')
+               .removeClass('closed') // Remove closed class when removing active class
                .find('.js-accordion-body')
                .slideUp()
       }
-
       // show/hide the clicked accordion item
       $this.closest('.js-accordion-item').toggleClass('active');
       $this.next().stop().slideToggle(settings.speed);
@@ -3540,8 +3200,6 @@ $(document).ready(function(){
 
     $(".txt-num").keypress(function (e) {
         var key = e.charCode || e.keyCode || 0;
-        // only numbers
-        //alert(key);
         if(key == 46){
          return true;
         }
@@ -3557,7 +3215,6 @@ $(document).ready(function(){
                 alert("Please select I understand and agree check box");
                 return false;
             }
-
         }
 
         if(document.getElementById('FileIRSYes').checked && document.getElementById('990NPath').value=="" && document.getElementById('990NFiling').files.length <= 0){
@@ -3606,86 +3263,26 @@ $(document).ready(function(){
             return false;
         }
 
+        var result = confirm("This will finalize and submit your report.  You will no longer be able to edit this report.  Do you wish to continue?");
+        if (result) {
+            var fileResult = EnsureFilesWereSubmitted();
 
-
-        <?php
-        if(!$submitted){
-            echo "var result=confirm(\"This will finalize and submit your report.  You will no longer be able to edit this report.  Do you wish to continue?\")\n;
-            if(result){
-                var file_result = EnsureFilesWereSubmitted();
-
-                if(file_result){
-                    var serProject = $(\"#ServiceProjectDesc0\").val();
-                    if(!serProject){
-                        alert('Project Service Description is required in SECTION 3- Service Project');
-                        return false;
-                    }
-                    var reRegister = $(\"#AnnualRegistrationFee\").val();
-                    if(!reRegister){
-                        alert('Chapter Re-registration is required in SECTION 5 - Office and Operating System');
-                        return false;
-                    }
-
-                    if(document.getElementById('MeetingSpeakersYes').checked){
-                        var count = 0;
-                        $(\".chk-cls\").each(function(){
-                        var name = $(this).attr(\"name\");
-                            if($(\"input:checkbox[name=\"+name+\"]:checked\").length == 0){
-
-                            }
-                            else{
-                                count = 1;
-                            }
-                        });
-                    }
-
-
-                    var check = true;
-                    var check1 = true;
-                    $(\".rd-cls\").each(function(){
-                        var name = $(this).attr(\"name\");
-                        //alert(name);
-                        if($(\"input:radio[name=\"+name+\"]:checked\").length == 0){
-                            check = false;
-                        }
-                    });
-                     if(check){
-                         $(\".tx-cls\").each(function(){
-                            var txtAreaName = $(this).attr(\"name\");
-                            var txtAreaVal = $(\"#\"+txtAreaName).val();
-                            if(txtAreaVal === \"\"){
-                                $(\"#\"+txtAreaName).focus();
-                                check1 = false;
-                            }
-                        });
-
-                        if(check1){";
-                            echo "document.getElementById(\"submitted\").value=1;\n
-                            $(\"#financial_report\").submit();
-                        }else{
-                            alert('Please enter explain field in the Section 9 -Tax Exempt & Chapter Questions');
-                            return false;
-                        }
-                    }else{
-                        alert('Oops we still have error in the Section 9 -Tax Exempt & Chapter Questions');
-                        return false;
-                    }\n
-
-                }\n
-                else{
+            if (fileResult) {
+                var serProject = $('#ServiceProjectDesc0').val();
+                if (!serProject) {
+                    alert('Project Service Description is required in SECTION 3- Service Project');
                     return false;
-                }";
-
-                echo "document.getElementById(\"submitted\").value=1;\n
-            }";
+                }
+                var reRegister = $('#AnnualRegistrationFee').val();
+                if (!reRegister) {
+                    alert('Chapter Re-registration is required in SECTION 5 - Office and Operating System');
+                    return false;
+                }
+            }
         }
-        ?>
-        //alert('a');
-        //elmForm = $("financial_report");
+
         $("#FurthestStep").val('13');
         $("#financial_report").submit();
-        //elmForm.submit();
-        //return true;
     });
 
     $("#btn-step-1").click(function() {
@@ -3716,6 +3313,10 @@ $(document).ready(function(){
     });
     $("#btn-step-8").click(function() {
         $("#FurthestStep").val('8');
+        $("#financial_report").submit();
+    });
+    $("#btn-step-9").click(function() {
+        $("#FurthestStep").val('9');
         $("#financial_report").submit();
     });
     $("#btn-step-10").click(function() {
@@ -3803,110 +3404,81 @@ $(document).ready(function(){
             $("#financial_report").submit();
         }
     });
-    $("#btn-step-9").click(function() {
-        if(document.getElementById('FileIRSYes').checked && document.getElementById('990NPath').value=="" && document.getElementById('990NFiling').files.length <= 0){
-            alert("Your chapter's 990N filing confirmation was not attached in TAX EXEMPT & CHAPTER QUESTIONS but you indicated the file was attached.  Please attach the file and save again.");
-            return false;
-        }
+    // $("#btn-step-9").click(function() {
+    //     if(document.getElementById('FileIRSYes').checked && document.getElementById('990NPath').value=="" && document.getElementById('990NFiling').files.length <= 0){
+    //         alert("Your chapter's 990N filing confirmation was not attached in TAX EXEMPT & CHAPTER QUESTIONS but you indicated the file was attached.  Please attach the file and save again.");
+    //         return false;
+    //     }
 
-        if(document.getElementById('BankStatementIncludedYes').checked && document.getElementById('StatementPath').value=="" && document.getElementById('StatementFile').files.length <= 0){
-            alert("Your chapter's Bank Statement was not attached in SECTION 9 - TAX EXEMPT & CHAPTER QUESTIONS but you indicated the file was attached.  Please attach the file and submit again.");
-            return false;
-        }
+    //     if(document.getElementById('BankStatementIncludedYes').checked && document.getElementById('StatementPath').value=="" && document.getElementById('StatementFile').files.length <= 0){
+    //         alert("Your chapter's Bank Statement was not attached in SECTION 9 - TAX EXEMPT & CHAPTER QUESTIONS but you indicated the file was attached.  Please attach the file and submit again.");
+    //         return false;
+    //     }
 
-
-        if(document.getElementById('MeetingSpeakersYes').checked){
-            var count = 0;
-            $(".chk-cls").each(function(){
-            var name = $(this).attr("name");
-                if($("input:checkbox[name="+name+"]:checked").length == 0){
-                    //alert('in');
-                    //count = 0;
-                }
-                else{
-                    count = 1;
-                }
-            });
-        }
-
-
-        var check = true;
-        var check1 = true;
-        $(".rd-cls").each(function(){
-            var name = $(this).attr("name");
-            if($("input:radio[name="+name+"]:checked").length == 0){
-                check = false;
-            }
-        });
-        if(check){
-            $(".tx-cls").each(function(){
-                var txtAreaName = $(this).attr("name");
-                //alert(txtAreaName);
-                var txtAreaVal = $("#"+txtAreaName).val();
-                if(txtAreaVal === ""){
-                    //alert('Please enter explanation');
-                    $("#"+txtAreaName).focus();
-                    //change
-                    return false;
-                    check1 = false;
-                }
-            });
-            if(check1){
-                //return true;
-                $("#FurthestStep").val('9');
-                $("#financial_report").submit();
-            }else{
-                alert('Please enter explain field in the Section 9 -Tax Exempt & Chapter Questions');
-                return false;
-            }
-        }else{
-            alert('Oops we still have error in the Section 9 -Tax Exempt & Chapter Questions');
-            return false;
-        }
-    });
+    //     var check = true;
+    //     var check1 = true;
+    //     $(".rd-cls").each(function(){
+    //         var name = $(this).attr("name");
+    //         if($("input:radio[name="+name+"]:checked").length == 0){
+    //             check = false;
+    //         }
+    //     });
+    //     if(check){
+    //         $(".tx-cls").each(function(){
+    //             var txtAreaName = $(this).attr("name");
+    //             //alert(txtAreaName);
+    //             var txtAreaVal = $("#"+txtAreaName).val();
+    //             if(txtAreaVal === ""){
+    //                 //alert('Please enter explanation');
+    //                 $("#"+txtAreaName).focus();
+    //                 //change
+    //                 return false;
+    //                 check1 = false;
+    //             }
+    //         });
+    //         if(check1){
+    //             //return true;
+    //             $("#FurthestStep").val('9');
+    //             $("#financial_report").submit();
+    //         }else{
+    //             alert('Please enter explain field in the Section 9 -Tax Exempt & Chapter Questions');
+    //             return false;
+    //         }
+    //     }else{
+    //         alert('Oops we still have error in the Section 9 -Tax Exempt & Chapter Questions');
+    //         return false;
+    //     }
+    // });
 });
 </script>
+
 <script>
-
-function ReplaceRoster(){
-
+    function ReplaceRoster(){
 		document.getElementById("RosterBlock").style.display = 'block';
 		document.getElementById("RosterBlock").style.visibility = 'visible';
-
 	}
 
-function Replace990N(){
-
+    function Replace990N(){
 		document.getElementById("990NBlock").style.display = 'block';
 		document.getElementById("990NBlock").style.visibility = 'visible';
-
 	}
 
-
-function ReplaceStatement1(){
-
+    function ReplaceStatement1(){
 		document.getElementById("Statement1Block").style.display = 'block';
 		document.getElementById("Statement1Block").style.visibility = 'visible';
-
 	}
 
-
-function ReplaceStatement2(){
-
+    function ReplaceStatement2(){
 		document.getElementById("Statement2Block").style.display = 'block';
 		document.getElementById("Statement2Block").style.visibility = 'visible';
-
 	}
 
-function ChargeDifferentMembers(ButtonID){
-
+    function ChargeDifferentMembers(ButtonID){
         document.getElementById("chapterid").value=ButtonID;
         return true;
-
     }
 
     function IsValidDate(element){
-
         var strDate="";
 
         strDate = element.value;
@@ -3918,14 +3490,13 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function ChapterDuesQuestionsChange(){
-
         var ChangedMeetingFees=false;
         var ChargedMembersDifferently=false;
         var MembersReducedDues=false;
 
-        ChangedMeetingFees = document.getElementById("optChangeDuesYes").checked;
-        ChargedMembersDifferently = document.getElementById("optNewOldDifferentYes").checked;
-        MembersReducedDues = document.getElementById("optNoFullDuesYes").checked;
+        ChangedMeetingFees = document.getElementById("optChangeDues").value === "1";
+        ChargedMembersDifferently = document.getElementById("optNewOldDifferent").value === "1";
+        MembersReducedDues = document.getElementById("optNoFullDues").value === "1";
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////
         if(ChangedMeetingFees){
@@ -3985,7 +3556,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function ChangeMeetingFees(){
-
         var ManditoryFees;
         var VoluntaryFees;
         var TotalFees;
@@ -4002,7 +3572,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function ChangeMemberCount(){
-
         var ChangedMeetingFees=false;
         var ChargedMembersDifferently=false;
         var MembersReducedDues=false;
@@ -4056,17 +3625,6 @@ function ChargeDifferentMembers(ButtonID){
 
         }
 
-//      else if(ChangedMeetingFees && !ChargedMembersDifferently){
-//          TotalFees = (NewMembers + RenewedMembers) * MemberDues + (NewMembers2 + RenewedMembers2) * NewMemberDues  + AssociateMemberDuesCollected + PartalDuesCollected;
-//      }
-//      else if(!ChangedMeetingFees && ChargedMembersDifferently){
-//          //KAS TO DO
-//          TotalFees = (NewMembers + RenewedMembers) * MemberDues + (NewMembers2 + RenewedMembers2) * NewMemberDues  + AssociateMemberDuesCollected + PartalDuesCollected;
-//      }
-//      else if(ChangedMeetingFees && ChargedMembersDifferently){
-//          //KAS TO DO
-//          TotalFees = (NewMembers + RenewedMembers) * MemberDues + (NewMembers2 + RenewedMembers2) * NewMemberDues  + AssociateMemberDuesCollected + PartalDuesCollected;
-//      }
 
         TotalFees = TotalFees.toFixed(2);
 
@@ -4122,8 +3680,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function AddChildrenExpenseRow(){
-
-
         var ExpenseCount = document.getElementById("ChildrensExpenseRowCount").value;
 
         var table=document.getElementById("childrens-room");
@@ -4153,7 +3709,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function DeleteChildrenExpenseRow(){
-
         var ExpenseCount = document.getElementById("ChildrensExpenseRowCount").value;
 
         //clear the values to make sure they aren't error conditions
@@ -4198,8 +3753,6 @@ function ChargeDifferentMembers(ButtonID){
             M2MTotal += value;
         }
 
-
-
         document.getElementById("ServiceProjectIncomeTotal").value = IncomeTotal.toFixed(2);
         document.getElementById("SumServiceProjectIncome").value = IncomeTotal.toFixed(2);
 
@@ -4217,7 +3770,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function AddServiceProjectRow(){
-
         var ExpenseCount = document.getElementById("ServiceProjectRowCount").value;
 
         var table=document.getElementById("service-projects");
@@ -4250,7 +3802,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function DeleteServiceProjectRow(){
-
         var ExpenseCount = document.getElementById("ServiceProjectRowCount").value;
         if(ExpenseCount>1){
         //clear the values to make sure they aren't error conditions
@@ -4296,9 +3847,7 @@ function ChargeDifferentMembers(ButtonID){
 
     }
 
-
     function AddPartyExpenseRow(){
-
         var ExpenseCount = document.getElementById("PartyExpenseRowCount").value;
 
         var table=document.getElementById("party-expenses");
@@ -4328,7 +3877,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function DeletePartyExpenseRow(){
-
         var ExpenseCount = document.getElementById("PartyExpenseRowCount").value;
 
         //clear the values to make sure they aren't error conditions
@@ -4359,14 +3907,12 @@ function ChargeDifferentMembers(ButtonID){
            //rows would be accessed using the "row" variable assigned in the for loop
             value = Number(row.cells[1].children[0].children[0].children[1].value);
             ExpenseTotal += value;
-
         }
         document.getElementById("OfficeExpenseTotal").value = ExpenseTotal.toFixed(2);
 
         SumPrintingExpense=Number(document.getElementById("PrintingCosts").value);
         SumPostageExpense=Number(document.getElementById("PostageCosts").value);
         SumPinsExpense=Number(document.getElementById("MembershipPins").value);
-
 
         document.getElementById("SumPrintingExpense").value = SumPrintingExpense.toFixed(2);
         document.getElementById("SumPostageExpense").value = SumPostageExpense.toFixed(2);
@@ -4381,7 +3927,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function AddOfficeExpenseRow(){
-
         var ExpenseCount = document.getElementById("OfficeExpenseRowCount").value;
 
         var table=document.getElementById("office-expenses");
@@ -4408,7 +3953,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function DeleteOfficeExpenseRow(){
-
         var ExpenseCount = document.getElementById("OfficeExpenseRowCount").value;
 
         //clear the values to make sure they aren't error conditions
@@ -4443,7 +3987,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function AddMonDonationRow(){
-
         var ExpenseCount = document.getElementById("MonDonationRowCount").value;
 
         var table=document.getElementById("donation-income");
@@ -4453,7 +3996,6 @@ function ChargeDifferentMembers(ButtonID){
         var cell2 = row.insertCell(1);
         var cell3 = row.insertCell(2);
         var cell4 = row.insertCell(3);
-
 
         cell1.innerHTML = "<div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=\"DonationDesc" + ExpenseCount + "\" id=\"DonationDesc" + ExpenseCount + "\"></div>";
         cell2.innerHTML = "<div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=\"DonorInfo" + ExpenseCount + "\" id=\"DonorInfo" + ExpenseCount + "\"></div>";
@@ -4475,7 +4017,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function DeleteMonDonationRow(){
-
         var ExpenseCount = document.getElementById("MonDonationRowCount").value;
 
         //clear the values to make sure they aren't error conditions
@@ -4493,7 +4034,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function AddNonMonDonationRow(){
-
         var ExpenseCount = document.getElementById("NonMonDonationRowCount").value;
 
         var table=document.getElementById("donation-goods");
@@ -4513,7 +4053,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function DeleteNonMonDonationRow(){
-
         var ExpenseCount = document.getElementById("NonMonDonationRowCount").value;
         document.getElementById("donation-goods").deleteRow(ExpenseCount);
 
@@ -4536,7 +4075,6 @@ function ChargeDifferentMembers(ButtonID){
 
             value = Number(row.cells[2].children[0].children[0].children[1].value);
             ExpenseTotal += value;
-
         }
 
         document.getElementById("OtherOfficeExpenseTotal").value = ExpenseTotal.toFixed(2);
@@ -4549,7 +4087,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function ChangeInternationalEventExpense(){
-
         var ExpenseTotal=0;
         var IncomeTotal=0;
 
@@ -4563,7 +4100,6 @@ function ChargeDifferentMembers(ButtonID){
 
             value = Number(row.cells[2].children[0].children[0].children[1].value);
             ExpenseTotal += value;
-
         }
 
         document.getElementById("InternationalEventIncomeTotal").value = IncomeTotal.toFixed(2);
@@ -4577,7 +4113,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function DeleteInternationalEventRow(){
-
         var ExpenseCount = document.getElementById("InternationalEventRowCount").value;
 
         //clear the values to make sure they aren't error conditions
@@ -4596,7 +4131,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function AddInternationalEventRow(){
-
         var ExpenseCount = document.getElementById("InternationalEventRowCount").value;
 
         var table=document.getElementById("international_events");
@@ -4626,7 +4160,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function ChangeReRegistrationExpense(){
-
         var ReRegistrationFee=0;
 
         ReRegistrationFee = Number(document.getElementById("AnnualRegistrationFee").value);
@@ -4634,11 +4167,9 @@ function ChargeDifferentMembers(ButtonID){
         document.getElementById("SumChapterReRegistrationExpense").value = ReRegistrationFee.toFixed(2);
 
         ReCalculateSummaryTotal();
-
     }
 
     function ReCalculateSummaryTotal(){
-
         var SumOtherIncome=0;
 
         var SumMeetingRoomExpense=0;
@@ -4704,7 +4235,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function AddOtherOfficeExpenseRow(){
-
         var ExpenseCount = document.getElementById("OtherOfficeExpenseRowCount").value;
 
         var table=document.getElementById("other-office-expenses");
@@ -4714,11 +4244,9 @@ function ChargeDifferentMembers(ButtonID){
         var cell2 = row.insertCell(1);
         var cell3 = row.insertCell(1);
 
-
         cell1.innerHTML = "<div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=\"OtherOfficeDesc" + ExpenseCount + "\" id=\"OtherOfficeDesc" + ExpenseCount + "\"></div>";
         cell2.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" min=\"0\"  step=\"0.01\" class=\"form-control txt-num\" name=\"OtherOfficeExpenses" + ExpenseCount + "\"  id=\"OtherOfficeExpenses" + ExpenseCount + "\"  oninput=\"ChangeOtherOfficeExpenses()\" onkeydown=\"return event.keyCode !== 69\"></div></div>";
         cell3.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" min=\"0\"  step=\"0.01\" class=\"form-control txt-num\" name=\"OtherOfficeIncome" + ExpenseCount + "\" id=\"OtherOfficeIncome" + ExpenseCount + "\"  oninput=\"ChangeOtherOfficeExpenses()\" onkeydown=\"return event.keyCode !== 69\"></div></div>";
-
 
         ExpenseCount++;
         document.getElementById('OtherOfficeExpenseRowCount').value = ExpenseCount;
@@ -4736,7 +4264,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function DeleteOtherOfficeExpenseRow(){
-
         var ExpenseCount = document.getElementById("OtherOfficeExpenseRowCount").value;
         if(ExpenseCount>1){
 
@@ -4753,9 +4280,7 @@ function ChargeDifferentMembers(ButtonID){
             ChangeOtherOfficeExpenses();
 
             document.getElementById('OtherOfficeExpenseRowCount').value = ExpenseCount;
-
         }
-
     }
 
     function TreasuryBalanceChange(){
@@ -4782,7 +4307,6 @@ function ChargeDifferentMembers(ButtonID){
             DepositTotal += value;
         }
 
-        //PettyCash = Number(document.getElementById("PettyCash").value);
         var BankBalanceNow = Number(document.getElementById("BankBalanceNow").value);
 
         TotalFees = Number(BankBalanceNow - PaymentTotal + DepositTotal).toFixed(2);
@@ -4793,19 +4317,16 @@ function ChargeDifferentMembers(ButtonID){
         if(TotalFees != TreasuryBalanceNow){
             document.getElementById("ReconciledBankBalanceWarning").style.backgroundColor = "yellow";
             document.getElementById("ReconciledBankBalanceWarning").value = "Reconciled Bank Balance does not match treasury balance now."
-            //document.getElementById("ReconciledBankBalanceWarning").style.borderColor = "transparent";
             document.getElementById("ReconciledBankBalanceWarning").style.borderStyle = "none";
         }
         else{
             document.getElementById("ReconciledBankBalanceWarning").style.backgroundColor = "transparent";
-            //document.getElementById("ReconciledBankBalanceWarning").style.borderColor = "transparent";
             document.getElementById("ReconciledBankBalanceWarning").value = ""
             document.getElementById("ReconciledBankBalanceWarning").style.borderStyle = "none";
         }
     }
 
     function AddBankRecRow(){
-
         var ExpenseCount = document.getElementById("BankRecRowCount").value;
 
         var table=document.getElementById("bank-rec");
@@ -4816,7 +4337,6 @@ function ChargeDifferentMembers(ButtonID){
         var cell3 = row.insertCell(2);
         var cell4 = row.insertCell(3);
         var cell5 = row.insertCell(4);
-
 
         cell1.innerHTML = "<div class=\"form-group\"><input type=\"date\" class=\"form-control\" name=\"BankRecDate" + ExpenseCount + "\" id=\"BankRecDate" + ExpenseCount + "\" onchange=\"IsValidDate(this)\"></div>";
         cell2.innerHTML = "<div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=\"BankRecCheckNo" + ExpenseCount + "\" id=\"BankRecCheckNo" + ExpenseCount + "\"  oninput=\"ChangeChildrensRoomExpenses()\"></div>";
@@ -4839,7 +4359,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function DeleteBankRecRow(){
-
         var ExpenseCount = document.getElementById("BankRecRowCount").value;
 
         //clear the values to make sure they aren't error conditions
@@ -4857,256 +4376,206 @@ function ChargeDifferentMembers(ButtonID){
         document.getElementById('BankRecRowCount').value = ExpenseCount;
     }
 
+// Sectiom 9 Questions - Explainations Rquired.
     function ToggleReceiveCompensationExplanation(){
-        // Did they say yes, if so, we need to mark the explanation field as required
-        if (document.getElementById("ReceiveCompensationYes").checked){
-            //document.getElementById("ReceiveCompensationExplanation").required=true;
+        if (document.getElementById("ReceiveCompensation").value == "1"){   //Required if YES
             $('#ReceiveCompensationExplanation').addClass('tx-cls');
             document.getElementById("divReceiveCompensationExplanation").style.display = 'block';
         }
         else{
-            //document.getElementById("ReceiveCompensationExplanation").required=false;
             $('#ReceiveCompensationExplanation').removeClass('tx-cls');
             document.getElementById("divReceiveCompensationExplanation").style.display = 'none';
         }
     }
 
     function ToggleFinancialBenefitExplanation(){
-        // Did they say yes, if so, we need to mark the explanation field as required
-        if (document.getElementById("FinancialBenefitYes").checked){
-            //document.getElementById("FinancialBenefitExplanation").required=true;
+        if (document.getElementById("FinancialBenefit").value == "1"){   //Required if YES
             $('#FinancialBenefitExplanation').addClass('tx-cls');
             document.getElementById("divFinancialBenefitExplanation").style.display = 'block';
         }
         else{
-            //document.getElementById("FinancialBenefitExplanation").required=false;
             $('#FinancialBenefitExplanation').removeClass('tx-cls');
             document.getElementById("divFinancialBenefitExplanation").style.display = 'none';
         }
-
     }
 
     function ToggleInfluencePoliticalExplanation(){
-        // Did they say yes, if so, we need to mark the explanation field as required
-        if (document.getElementById("InfluencePoliticalYes").checked){
-            //document.getElementById("InfluencePoliticalExplanation").required=true;
+        if (document.getElementById("InfluencePolitical").value == "1"){   //Required if YES
             $('#InfluencePoliticalExplanation').addClass('tx-cls');
             document.getElementById("divInfluencePoliticalExplanation").style.display = 'block';
         }
         else{
-            //document.getElementById("InfluencePoliticalExplanation").required=false;
             $('#InfluencePoliticalExplanation').removeClass('tx-cls');
             document.getElementById("divInfluencePoliticalExplanation").style.display = 'none';
         }
     }
 
     function ToggleVoteAllActivitiesExplanation(){
-        // Did they say no, if so, we need to mark the explanation field as required
-        if (document.getElementById("VoteAllActivitiesNo").checked){
-            //document.getElementById("VoteAllActivitiesExplanation").required=true;
+        if (document.getElementById("VoteAllActivities").value == "0"){   //Required if NO
             $('#VoteAllActivitiesExplanation').addClass('tx-cls');
             document.getElementById("divVoteAllActivitiesExplanation").style.display = 'block';
         }
         else{
-            //document.getElementById("VoteAllActivitiesExplanation").required=false;
             $('#VoteAllActivitiesExplanation').removeClass('tx-cls');
             document.getElementById("divVoteAllActivitiesExplanation").style.display = 'none';
         }
     }
 
     function ToggleBoughtPinsExplanation(){
-        // Did they say no, if so, we need to mark the explanation field as required
-        if (document.getElementById("BoughtPinsNo").checked){
-            //document.getElementById("BoughtPinsExplanation").required=true;
+        if (document.getElementById("BoughtPins").value == "0"){   //Required if NO
             $('#BoughtPinsExplanation').addClass('tx-cls');
             document.getElementById("divBoughtPinsExplanation").style.display = 'block';
         }
         else{
-            //document.getElementById("BoughtPinsExplanation").required=false;
             $('#BoughtPinsExplanation').removeClass('tx-cls');
             document.getElementById("divBoughtPinsExplanation").style.display = 'none';
         }
     }
 
     function ToggleBoughtMerchExplanation(){
-        // Did they say no, if so, we need to mark the explanation field as required
-        if (document.getElementById("BoughtMerchNo").checked){
-            //document.getElementById("BoughtMerchExplanation").required=true;
+        if (document.getElementById("BoughtMerch").value == "0"){   //Required if NO
             $('#BoughtMerchExplanation').addClass('tx-cls');
             document.getElementById("divBoughtMerchExplanation").style.display = 'block';
         }
         else{
-            //document.getElementById("BoughtMerchExplanation").required=false;
             $('#BoughtMerchExplanation').removeClass('tx-cls');
             document.getElementById("divBoughtMerchExplanation").style.display = 'none';
         }
     }
 
     function ToggleOfferedMerchExplanation(){
-        // Did they say no, if so, we need to mark the explanation field as required
-        if (document.getElementById("OfferedMerchNo").checked){
-            //document.getElementById("OfferedMerchExplanation").required=true;
+        if (document.getElementById("OfferedMerch").value == "0"){   //Required if NO
             $('#OfferedMerchExplanation').addClass('tx-cls');
             document.getElementById("divOfferedMerchExplanation").style.display = 'block';
         }
         else{
-            //document.getElementById("OfferedMerchExplanation").required=false;
             $('#OfferedMerchExplanation').removeClass('tx-cls');
             document.getElementById("divOfferedMerchExplanation").style.display = 'none';
         }
     }
 
     function ToggleByLawsAvailableExplanation(){
-        // Did they say no, if so, we need to mark the explanation field as required
-        if (document.getElementById("ByLawsAvailableNo").checked){
-            //document.getElementById("ByLawsAvailableExplanation").required=true;
+         if (document.getElementById("ByLawsAvailable").value == "0"){   //Required if NO
             $('#ByLawsAvailableExplanation').addClass('tx-cls');
             document.getElementById("divByLawsAvailableExplanation").style.display = 'block';
         }
         else{
-            //document.getElementById("ByLawsAvailableExplanation").required=false;
             $('#ByLawsAvailableExplanation').removeClass('tx-cls');
             document.getElementById("divByLawsAvailableExplanation").style.display = 'none';
         }
     }
 
     function ToggleChildOutingsExplanation(){
-        // Did they say no, if so, we need to mark the explanation field as required
-        if (document.getElementById("ChildOutingsNo").checked){
-            //document.getElementById("ChildOutingsExplanation").required=true;
+        if (document.getElementById("ChildOutings").value == "0"){   //Required if NO
             $('#ChildOutingsExplanation').addClass('tx-cls');
             document.getElementById("divChildOutingsExplanation").style.display = 'block';
         }
         else{
-            //document.getElementById("ChildOutingsExplanation").required=false;
             $('#ChildOutingsExplanation').removeClass('tx-cls');
             document.getElementById("divChildOutingsExplanation").style.display = 'none';
         }
     }
 
     function ToggleMotherOutingsExplanation(){
-        // Did they say no, if so, we need to mark the explanation field as required
-        if (document.getElementById("MotherOutingsNo").checked){
-            //document.getElementById("MotherOutingsExplanation").required=true;
+        if (document.getElementById("MotherOutings").value == "0"){   //Required if NO
             $('#MotherOutingsExplanation').addClass('tx-cls');
             document.getElementById("divMotherOutingsExplanation").style.display = 'block';
         }
         else{
-            //document.getElementById("MotherOutingsExplanation").required=false;
             $('#MotherOutingsExplanation').removeClass('tx-cls');
             document.getElementById("divMotherOutingsExplanation").style.display = 'none';
         }
     }
 
     function ToggleMeetingSpeakersExplanation(){
-        // Did they say no, if so, we need to mark the explanation field as required
-        if (document.getElementById("MeetingSpeakersNo").checked){
-            //document.getElementById("MeetingSpeakersExplanation").required=true;
+        if (document.getElementById("MeetingSpeakers").value == "0"){   //Required if NO
             $('#MeetingSpeakersExplanation').addClass('tx-cls');
             document.getElementById("divMeetingSpeakersExplanation").style.display = 'block';
         }
         else{
-            //document.getElementById("MeetingSpeakersExplanation").required=false;
             $('#MeetingSpeakersExplanation').removeClass('tx-cls');
             document.getElementById("divMeetingSpeakersExplanation").style.display = 'none';
         }
     }
 
     function ToggleActivityOtherExplanation(){
-        // Did they say no, if so, we need to mark the explanation field as required
-        if (document.getElementById("ActivityOther").checked){
-            //document.getElementById("ActivityOtherExplanation").required=true;
+        if (document.getElementById("ActivityOther").value == "5"){   //Required if Other
             $('#ActivityOtherExplanation').addClass('tx-cls');
             document.getElementById("divActivityOtherExplanation").style.display = 'block';
         }
         else{
-            //document.getElementById("ActivityOtherExplanation").required=false;
             $('#ActivityOtherExplanation').removeClass('tx-cls');
             document.getElementById("divActivityOtherExplanation").style.display = 'none';
         }
     }
 
     function ToggleContributionsNotRegNPExplanation(){
-        // Did they say yes, if so, we need to mark the explanation field as required
-        if (document.getElementById("ContributionsNotRegNPYes").checked){
-            //document.getElementById("ContributionsNotRegNPExplanation").required=true;
+        if (document.getElementById("ContributionsNotRegNP").value == "1"){   //Required if YES
             $('#ContributionsNotRegNPExplanation').addClass('tx-cls');
             document.getElementById("divContributionsNotRegNPExplanation").style.display = 'block';
         }
         else{
-            //document.getElementById("ContributionsNotRegNPExplanation").required=false;
             $('#ContributionsNotRegNPExplanation').removeClass('tx-cls');
             document.getElementById("divContributionsNotRegNPExplanation").style.display = 'none';
         }
     }
 
     function TogglePerformServiceProjectExplanation(){
-        // Did they say no, if so, we need to mark the explanation field as required
-        if (document.getElementById("PerformServiceProjectNo").checked){
-            //document.getElementById("PerformServiceProjectExplanation").required=true;
+        if (document.getElementById("PerformServiceProject").value == "0"){   //Required if NO
             $('#PerformServiceProjectExplanation').addClass('tx-cls');
             document.getElementById("divPerformServiceProjectExplanation").style.display = 'block';
         }
         else{
-            //document.getElementById("PerformServiceProjectExplanation").required=false;
             $('#PerformServiceProjectExplanation').removeClass('tx-cls');
             document.getElementById("divPerformServiceProjectExplanation").style.display = 'none';
         }
     }
 
     function ToggleFileIRSExplanation(){
-        // Did they say no, if so, we need to mark the explanation field as required
-        if (document.getElementById("FileIRSNo").checked){
+        if (document.getElementById("FileIRS").value == "0"){   //Required if NO
             $('#990NFile').hide();
-            //document.getElementById("FileIRSExplanation").required=true;
             $('#FileIRSExplanation').addClass('tx-cls');
             document.getElementById("divFileIRSExplanation").style.display = 'block';
-
         }
-        else if (document.getElementById("FileIRSYes").checked){
+        else if (document.getElementById("FileIRS").value == "1"){   //Required if YES
             $('#990NFile').show();
-            //document.getElementById("FileIRSExplanation").required=true;
             $('#FileIRSExplanation').removeClass('tx-cls');
             document.getElementById("divFileIRSExplanation").style.display = 'none';
-
         }
         else{
             $('#990NFile').hide();
-            //document.getElementById("FileIRSExplanation").required=false;
             $('#FileIRSExplanation').removeClass('tx-cls');
             document.getElementById("divFileIRSExplanation").style.display = 'none';
         }
     }
 
     function ToggleBankStatementIncludedExplanation(){
-        // Did they say no, if so, we need to mark the explanation field as required
-        if (document.getElementById("BankStatementIncludedNo").checked){
+        if (document.getElementById("BankStatementIncluded").value == "0"){   //Required if NO
             $('#BankFile').hide();
-            //document.getElementById("BankStatementIncludedExplanation").required=true;
             //document.getElementById("WheresTheMoney").required=true;
             $('#BankStatementIncludedExplanation').addClass('tx-cls');
             $('#WheresTheMoney').addClass('tx-cls');
             document.getElementById("divBankStatementIncludedExplanation").style.display = 'block';
 
         }
-        else if (document.getElementById("BankStatementIncludedYes").checked){
+        else if (document.getElementById("BankStatementIncluded").value == "1"){   //Required if YES
             $('#BankFile').show();
-            //document.getElementById("BankStatementIncludedExplanation").required=false;
-            //document.getElementById("WheresTheMoney").required=false;
             $('#BankStatementIncludedExplanation').removeClass('tx-cls');
             $('#WheresTheMoney').removeClass('tx-cls');
             document.getElementById("divBankStatementIncludedExplanation").style.display = 'none';
         }
         else{
             $('#BankFile').hide();
-            //document.getElementById("BankStatementIncludedExplanation").required=false;
-            //document.getElementById("WheresTheMoney").required=false;
             $('#BankStatementIncludedExplanation').removeClass('tx-cls');
             $('#WheresTheMoney').removeClass('tx-cls');
             document.getElementById("divBankStatementIncludedExplanation").style.display = 'none';
-
         }
     }
+
+function isFieldVisible(fieldId) {
+    // Customize this function based on your visibility conditions
+    return document.getElementById(fieldId).style.display !== 'none';
+}
 
     function AddAwardNomination(){
         // Did they say no, if so, we need to mark the explanation field as required
@@ -5134,7 +4603,6 @@ function ChargeDifferentMembers(ButtonID){
             document.getElementById("btnAddAwardNomination").disabled = true;
             document.getElementById("NominationType5").required = true;
         }
-
         document.getElementById("TotalAwardNominations").value = Number(document.getElementById("TotalAwardNominations").value) + 1;
     }
 
@@ -5164,13 +4632,10 @@ function ChargeDifferentMembers(ButtonID){
             document.getElementById("NominationType1").required = false;
             document.getElementById("AwardsAgree").required = false;
         }
-
         document.getElementById("TotalAwardNominations").value = Number(document.getElementById("TotalAwardNominations").value) - 1;
-
     }
 
     function ShowOutstandingCriteria(AwardNumber){
-
         var NominationElementName="";
         var CriteriaElementName="";
 
@@ -5206,10 +4671,7 @@ function ChargeDifferentMembers(ButtonID){
         TreasuryBalanceChange();
     }
 
-
-
     function RemoveRequired(){
-
         var x = document.forms[0];
         var i;
         for (i = 0; i < x.length; i++) {
@@ -5217,8 +4679,7 @@ function ChargeDifferentMembers(ButtonID){
         }
     }
 
-        function SetReadOnly(){
-
+    function SetReadOnly(){
         var x = document.forms[1];
         console.log(x);
         var i;
@@ -5236,7 +4697,6 @@ function ChargeDifferentMembers(ButtonID){
     }
 
     function EnsureFilesWereSubmitted(){
-
         //Check for roster, it must ALWAYS be submitted
         if(document.getElementById('RosterPath').value=="" && document.getElementById('RosterFile').files.length <= 0){
             //Roster file was not submitted
@@ -5257,8 +4717,6 @@ function ChargeDifferentMembers(ButtonID){
             alert("Your chapter's Bank Statement was not attached in SECTION 9 - TAX EXEMPT & CHAPTER QUESTIONS but you indicated the file was attached.  Please attach the file and submit again.");
             return false;
         }
-
-
 
         return true;
     }
@@ -5301,15 +4759,12 @@ function ChargeDifferentMembers(ButtonID){
         if(document.getElementById("NominationType5").value==5 || document.getElementById("NominationType5").value==6){
             ShowOutstandingCriteria(5);
         }
-
     }
 
     function InputLoggedInPerson(){
-
     }
 
     function ValidateFiles(){
-
         var fileError="";
         var sizeinbytes=0;
 
@@ -5331,8 +4786,6 @@ function ChargeDifferentMembers(ButtonID){
             }
         }
 
-
-
         inp = document.getElementById('Award1');
         for (var i = 0; i < inp.files.length; ++i) {
             sizeinbytes = inp.files[i].size;
@@ -5341,7 +4794,6 @@ function ChargeDifferentMembers(ButtonID){
                 fileError = "Your 1st award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
                 return fileError;
             }
-
         }
 
         inp = document.getElementById('Award2');
@@ -5352,7 +4804,6 @@ function ChargeDifferentMembers(ButtonID){
                 fileError = "Your 2nd award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
                 return fileError;
             }
-
         }
 
         inp = document.getElementById('Award3');
@@ -5363,7 +4814,6 @@ function ChargeDifferentMembers(ButtonID){
                 fileError = "Your 3rd award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
                 return fileError;
             }
-
         }
 
         inp = document.getElementById('Award4');
@@ -5374,7 +4824,6 @@ function ChargeDifferentMembers(ButtonID){
                 fileError = "Your 4th award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
                 return fileError;
             }
-
         }
 
         inp = document.getElementById('Award5');
@@ -5385,10 +4834,7 @@ function ChargeDifferentMembers(ButtonID){
                 fileError = "Your 5th award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
                 return fileError;
             }
-
         }
-
     }
-
 </script>
 @endsection

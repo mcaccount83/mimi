@@ -741,7 +741,7 @@ class BoardController extends Controller
     /**
      * Update Board Details Board Member Login
      */
-    public function memberUpdate(Request $request, $id): RedirectResponse
+    public function updateMember(Request $request, $id): RedirectResponse
     {
         DB::beginTransaction();
         try {
@@ -1354,288 +1354,288 @@ class BoardController extends Controller
         $chapter_name = $chapterDetails[0]->name;
         $chapter_country = $chapterDetails[0]->country;
 
-        if (basename($_FILES['RosterFile']['name'] != '')) {
-            $target_file = $target_dir.basename($_FILES['RosterFile']['name']);
-            $uploadOk = 1;
-            $uploadedFileObj = $request->file('RosterFile');
-            $uploadedFileName = $request->file('RosterFile')->getClientOriginalName();
-            $uploadedFileSize = $request->file('RosterFile')->getSize();
+        // if (basename($_FILES['RosterFile']['name'] != '')) {
+        //     $target_file = $target_dir.basename($_FILES['RosterFile']['name']);
+        //     $uploadOk = 1;
+        //     $uploadedFileObj = $request->file('RosterFile');
+        //     $uploadedFileName = $request->file('RosterFile')->getClientOriginalName();
+        //     $uploadedFileSize = $request->file('RosterFile')->getSize();
 
-            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-            // Check file size
-            if ($uploadedFileSize > 5000000) {
-                $uploadOk = 0;
+        //     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        //     // Check file size
+        //     if ($uploadedFileSize > 5000000) {
+        //         $uploadOk = 0;
 
-                return redirect()->back()->with('fail', 'Sorry, your file is too large - file not uploaded.');
-            }
-            // Allow certain file formats
-            if ($imageFileType != 'xls' && $imageFileType != 'xlsx' && $imageFileType != 'jpg' && $imageFileType != 'jpeg' && $imageFileType != 'pdf') {
-                $uploadOk = 0;
+        //         return redirect()->back()->with('fail', 'Sorry, your file is too large - file not uploaded.');
+        //     }
+        //     // Allow certain file formats
+        //     if ($imageFileType != 'xls' && $imageFileType != 'xlsx' && $imageFileType != 'jpg' && $imageFileType != 'jpeg' && $imageFileType != 'pdf') {
+        //         $uploadOk = 0;
 
-                return redirect()->back()->with('fail', 'Sorry, only xls, xlsx, jpg, jpeg & pdf files are allowed.');
-            }
-            // Check if $uploadOk is set to 0 by an error
-            if ($uploadOk == 0) {
-                return redirect()->back()->with('fail', 'Sorry, your file was not uploaded.');
-            } else {
-                $uploadedFileObj->move($uploadedFilePath, $uploadedFileName);
-            }
+        //         return redirect()->back()->with('fail', 'Sorry, only xls, xlsx, jpg, jpeg & pdf files are allowed.');
+        //     }
+        //     // Check if $uploadOk is set to 0 by an error
+        //     if ($uploadOk == 0) {
+        //         return redirect()->back()->with('fail', 'Sorry, your file was not uploaded.');
+        //     } else {
+        //         $uploadedFileObj->move($uploadedFilePath, $uploadedFileName);
+        //     }
 
-            if ($uploadOk) {
-                $file = fopen($target_file, 'rb') or exit("can't open file");
+        //     if ($uploadOk) {
+        //         $file = fopen($target_file, 'rb') or exit("can't open file");
 
-                $app = new DropboxApp($dropboxKey, $dropboxSecret, $dropboxToken);
-                $dropbox = new Dropbox($app);
+        //         $app = new DropboxApp($dropboxKey, $dropboxSecret, $dropboxToken);
+        //         $dropbox = new Dropbox($app);
 
-                if ($chapter_state == '**') { //this is an internatioanl chapter, set state to intl_state
-                    $db_chapter_folder = '/Conference '.$chapter_conf.'/International/'.$chapter_country.'/'.trim($chapter_name);
-                } else {
-                    $db_chapter_folder = '/Conference '.$chapter_conf.'/'.$chapter_state.'/'.trim($chapter_name);
-                }
-                try {
-                    $dropbox->createFolder($db_chapter_folder);
-                } catch (\Exception $e) {
-                    // just ignore
-                }
-                $dropboxFile = new DropboxFile($target_file);
-                $dbfile = $dropbox->upload($dropboxFile, $db_chapter_folder.'/Roster.'.$imageFileType, ['autorename' => true]);
+        //         if ($chapter_state == '**') { //this is an internatioanl chapter, set state to intl_state
+        //             $db_chapter_folder = '/Conference '.$chapter_conf.'/International/'.$chapter_country.'/'.trim($chapter_name);
+        //         } else {
+        //             $db_chapter_folder = '/Conference '.$chapter_conf.'/'.$chapter_state.'/'.trim($chapter_name);
+        //         }
+        //         try {
+        //             $dropbox->createFolder($db_chapter_folder);
+        //         } catch (\Exception $e) {
+        //             // just ignore
+        //         }
+        //         $dropboxFile = new DropboxFile($target_file);
+        //         $dbfile = $dropbox->upload($dropboxFile, $db_chapter_folder.'/Roster.'.$imageFileType, ['autorename' => true]);
 
-                //Uploaded File
-                $file_name_assigned = $db_chapter_folder.'/'.$dbfile->getName();
+        //         //Uploaded File
+        //         $file_name_assigned = $db_chapter_folder.'/'.$dbfile->getName();
 
-                $share_existed = false;
-                try {
-                    $response = $dropbox->postToAPI('/sharing/create_shared_link_with_settings', ['path' => $file_name_assigned, 'settings' => ['requested_visibility' => 'public']]);
-                } catch (\Exception $e) { //Share link already exists
-                    $response = $dropbox->postToAPI('/sharing/list_shared_links', ['path' => $file_name_assigned]);
-                    $share_existed = true;
-                }
-                $decoded = $response->getDecodedBody();
+        //         $share_existed = false;
+        //         try {
+        //             $response = $dropbox->postToAPI('/sharing/create_shared_link_with_settings', ['path' => $file_name_assigned, 'settings' => ['requested_visibility' => 'public']]);
+        //         } catch (\Exception $e) { //Share link already exists
+        //             $response = $dropbox->postToAPI('/sharing/list_shared_links', ['path' => $file_name_assigned]);
+        //             $share_existed = true;
+        //         }
+        //         $decoded = $response->getDecodedBody();
 
-                if ($share_existed) {
-                    $roster_path = $decoded['links'][0]['url'];
-                } else {
-                    $roster_path = $decoded['url'];
-                }
-            } else {
-                $roster_path = '';
-            }
-        } else {
-            $roster_path = $input['RosterPath'];
-        }
+        //         if ($share_existed) {
+        //             $roster_path = $decoded['links'][0]['url'];
+        //         } else {
+        //             $roster_path = $decoded['url'];
+        //         }
+        //     } else {
+        //         $roster_path = '';
+        //     }
+        // } else {
+        //     $roster_path = $input['RosterPath'];
+        // }
 
-        if (basename($_FILES['990NFiling']['name'] != '')) {
-            $target_file = $target_dir.basename($_FILES['990NFiling']['name']);
-            $uploadOk = 1;
-            $uploadedFileObj = $request->file('990NFiling');
-            $uploadedFileName = $request->file('990NFiling')->getClientOriginalName();
-            $uploadedFileSize = $request->file('990NFiling')->getSize();
+        // if (basename($_FILES['990NFiling']['name'] != '')) {
+        //     $target_file = $target_dir.basename($_FILES['990NFiling']['name']);
+        //     $uploadOk = 1;
+        //     $uploadedFileObj = $request->file('990NFiling');
+        //     $uploadedFileName = $request->file('990NFiling')->getClientOriginalName();
+        //     $uploadedFileSize = $request->file('990NFiling')->getSize();
 
-            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        //     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
-            // Check file size
-            if ($uploadedFileSize > 5000000) {
-                $uploadOk = 0;
+        //     // Check file size
+        //     if ($uploadedFileSize > 5000000) {
+        //         $uploadOk = 0;
 
-                return redirect()->back()->with('fail', 'Sorry, your file is too large - file not uploaded.');
-            }
-            // Allow certain file formats
-            if ($imageFileType != 'jpg' && $imageFileType != 'jpeg' && $imageFileType != 'pdf') {
-                $uploadOk = 0;
+        //         return redirect()->back()->with('fail', 'Sorry, your file is too large - file not uploaded.');
+        //     }
+        //     // Allow certain file formats
+        //     if ($imageFileType != 'jpg' && $imageFileType != 'jpeg' && $imageFileType != 'pdf') {
+        //         $uploadOk = 0;
 
-                return redirect()->back()->with('fail', 'Sorry, only JPG, JPEG & PDF files are allowed.');
-            }
-            // Check if $uploadOk is set to 0 by an error
-            if ($uploadOk == 0) {
-                return redirect()->back()->with('fail', 'Sorry, your file was not uploaded.');
-            } else {
-                $uploadedFileObj->move($uploadedFilePath, $uploadedFileName);
-            }
+        //         return redirect()->back()->with('fail', 'Sorry, only JPG, JPEG & PDF files are allowed.');
+        //     }
+        //     // Check if $uploadOk is set to 0 by an error
+        //     if ($uploadOk == 0) {
+        //         return redirect()->back()->with('fail', 'Sorry, your file was not uploaded.');
+        //     } else {
+        //         $uploadedFileObj->move($uploadedFilePath, $uploadedFileName);
+        //     }
 
-            if ($uploadOk) {
-                $file = fopen($target_file, 'rb') or exit("can't open file");
+        //     if ($uploadOk) {
+        //         $file = fopen($target_file, 'rb') or exit("can't open file");
 
-                $app = new DropboxApp($dropboxKey, $dropboxSecret, $dropboxToken);
-                $dropbox = new Dropbox($app);
+        //         $app = new DropboxApp($dropboxKey, $dropboxSecret, $dropboxToken);
+        //         $dropbox = new Dropbox($app);
 
-                if ($chapter_state == '**') { //this is an internatioanl chapter, set state to intl_state
-                    $db_chapter_folder = '/Conference '.$chapter_conf.'/International/'.$chapter_country.'/'.trim($chapter_name);
-                } else {
-                    $db_chapter_folder = '/Conference '.$chapter_conf.'/'.$chapter_state.'/'.trim($chapter_name);
-                }
-                try {
-                    $dropbox->createFolder($db_chapter_folder);
-                } catch (\Exception $e) {
-                    // just ignore
-                }
-                $dropboxFile = new DropboxFile($target_file);
-                $dbfile = $dropbox->upload($dropboxFile, $db_chapter_folder.'/990N.'.$imageFileType, ['autorename' => true]);
+        //         if ($chapter_state == '**') { //this is an internatioanl chapter, set state to intl_state
+        //             $db_chapter_folder = '/Conference '.$chapter_conf.'/International/'.$chapter_country.'/'.trim($chapter_name);
+        //         } else {
+        //             $db_chapter_folder = '/Conference '.$chapter_conf.'/'.$chapter_state.'/'.trim($chapter_name);
+        //         }
+        //         try {
+        //             $dropbox->createFolder($db_chapter_folder);
+        //         } catch (\Exception $e) {
+        //             // just ignore
+        //         }
+        //         $dropboxFile = new DropboxFile($target_file);
+        //         $dbfile = $dropbox->upload($dropboxFile, $db_chapter_folder.'/990N.'.$imageFileType, ['autorename' => true]);
 
-                //Uploaded File
-                $file_name_assigned = $db_chapter_folder.'/'.$dbfile->getName();
+        //         //Uploaded File
+        //         $file_name_assigned = $db_chapter_folder.'/'.$dbfile->getName();
 
-                $share_existed = false;
-                try {
-                    $response = $dropbox->postToAPI('/sharing/create_shared_link_with_settings', ['path' => $file_name_assigned, 'settings' => ['requested_visibility' => 'public']]);
-                } catch (\Exception $e) { //Share link already exists
-                    $response = $dropbox->postToAPI('/sharing/list_shared_links', ['path' => $file_name_assigned]);
-                    $share_existed = true;
-                }
-                $decoded = $response->getDecodedBody();
+        //         $share_existed = false;
+        //         try {
+        //             $response = $dropbox->postToAPI('/sharing/create_shared_link_with_settings', ['path' => $file_name_assigned, 'settings' => ['requested_visibility' => 'public']]);
+        //         } catch (\Exception $e) { //Share link already exists
+        //             $response = $dropbox->postToAPI('/sharing/list_shared_links', ['path' => $file_name_assigned]);
+        //             $share_existed = true;
+        //         }
+        //         $decoded = $response->getDecodedBody();
 
-                if ($share_existed) {
-                    $file_irs_path = $decoded['links'][0]['url'];
-                } else {
-                    $file_irs_path = $decoded['url'];
-                }
-            } else {
-                $file_irs_path = '';
-            }
-        } else {
-            $file_irs_path = $input['990NPath'];
-        }
+        //         if ($share_existed) {
+        //             $file_irs_path = $decoded['links'][0]['url'];
+        //         } else {
+        //             $file_irs_path = $decoded['url'];
+        //         }
+        //     } else {
+        //         $file_irs_path = '';
+        //     }
+        // } else {
+        //     $file_irs_path = $input['990NPath'];
+        // }
 
-        /////////////////// Bank Statements ///////////////////
+        // /////////////////// Bank Statements ///////////////////
 
-        if (basename($_FILES['StatementFile']['name'] != '')) {
-            $target_file = $target_dir.basename($_FILES['StatementFile']['name']);
-            $uploadOk = 1;
-            $uploadedFileObj = $request->file('StatementFile');
-            $uploadedFileName = $request->file('StatementFile')->getClientOriginalName();
-            $uploadedFileSize = $request->file('StatementFile')->getSize();
+        // if (basename($_FILES['StatementFile']['name'] != '')) {
+        //     $target_file = $target_dir.basename($_FILES['StatementFile']['name']);
+        //     $uploadOk = 1;
+        //     $uploadedFileObj = $request->file('StatementFile');
+        //     $uploadedFileName = $request->file('StatementFile')->getClientOriginalName();
+        //     $uploadedFileSize = $request->file('StatementFile')->getSize();
 
-            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-            // Check file size
-            if ($uploadedFileSize > 5000000) {
-                $uploadOk = 0;
+        //     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        //     // Check file size
+        //     if ($uploadedFileSize > 5000000) {
+        //         $uploadOk = 0;
 
-                return redirect()->back()->with('fail', 'Sorry, your file is too large - file not uploaded.');
-            }
-            // Allow certain file formats
-            if ($imageFileType != 'jpg' && $imageFileType != 'jpeg' && $imageFileType != 'pdf') {
-                $uploadOk = 0;
+        //         return redirect()->back()->with('fail', 'Sorry, your file is too large - file not uploaded.');
+        //     }
+        //     // Allow certain file formats
+        //     if ($imageFileType != 'jpg' && $imageFileType != 'jpeg' && $imageFileType != 'pdf') {
+        //         $uploadOk = 0;
 
-                return redirect()->back()->with('fail', 'Sorry, only jpg, jpeg & pdf files are allowed.');
-            }
-            // Check if $uploadOk is set to 0 by an error
-            if ($uploadOk == 0) {
-                return redirect()->back()->with('fail', 'Sorry, your file was not uploaded.');
-            } else {
-                $uploadedFileObj->move($uploadedFilePath, $uploadedFileName);
-            }
+        //         return redirect()->back()->with('fail', 'Sorry, only jpg, jpeg & pdf files are allowed.');
+        //     }
+        //     // Check if $uploadOk is set to 0 by an error
+        //     if ($uploadOk == 0) {
+        //         return redirect()->back()->with('fail', 'Sorry, your file was not uploaded.');
+        //     } else {
+        //         $uploadedFileObj->move($uploadedFilePath, $uploadedFileName);
+        //     }
 
-            if ($uploadOk) {
-                $file = fopen($target_file, 'rb') or exit("can't open file");
+        //     if ($uploadOk) {
+        //         $file = fopen($target_file, 'rb') or exit("can't open file");
 
-                $app = new DropboxApp($dropboxKey, $dropboxSecret, $dropboxToken);
-                $dropbox = new Dropbox($app);
+        //         $app = new DropboxApp($dropboxKey, $dropboxSecret, $dropboxToken);
+        //         $dropbox = new Dropbox($app);
 
-                if ($chapter_state == '**') { //this is an internatioanl chapter, set state to intl_state
-                    $db_chapter_folder = '/Conference '.$chapter_conf.'/International/'.$chapter_country.'/'.trim($chapter_name);
-                } else {
-                    $db_chapter_folder = '/Conference '.$chapter_conf.'/'.$chapter_state.'/'.trim($chapter_name);
-                }
-                try {
-                    $dropbox->createFolder($db_chapter_folder);
-                } catch (\Exception $e) {
-                    // just ignore
-                }
-                $dropboxFile = new DropboxFile($target_file);
-                $dbfile = $dropbox->upload($dropboxFile, $db_chapter_folder.'/Statement1.'.$imageFileType, ['autorename' => true]);
+        //         if ($chapter_state == '**') { //this is an internatioanl chapter, set state to intl_state
+        //             $db_chapter_folder = '/Conference '.$chapter_conf.'/International/'.$chapter_country.'/'.trim($chapter_name);
+        //         } else {
+        //             $db_chapter_folder = '/Conference '.$chapter_conf.'/'.$chapter_state.'/'.trim($chapter_name);
+        //         }
+        //         try {
+        //             $dropbox->createFolder($db_chapter_folder);
+        //         } catch (\Exception $e) {
+        //             // just ignore
+        //         }
+        //         $dropboxFile = new DropboxFile($target_file);
+        //         $dbfile = $dropbox->upload($dropboxFile, $db_chapter_folder.'/Statement1.'.$imageFileType, ['autorename' => true]);
 
-                //Uploaded File
-                $file_name_assigned = $db_chapter_folder.'/'.$dbfile->getName();
+        //         //Uploaded File
+        //         $file_name_assigned = $db_chapter_folder.'/'.$dbfile->getName();
 
-                $share_existed = false;
-                try {
-                    $response = $dropbox->postToAPI('/sharing/create_shared_link_with_settings', ['path' => $file_name_assigned, 'settings' => ['requested_visibility' => 'public']]);
-                } catch (\Exception $e) { //Share link already exists
-                    $response = $dropbox->postToAPI('/sharing/list_shared_links', ['path' => $file_name_assigned]);
-                    $share_existed = true;
-                }
-                $decoded = $response->getDecodedBody();
+        //         $share_existed = false;
+        //         try {
+        //             $response = $dropbox->postToAPI('/sharing/create_shared_link_with_settings', ['path' => $file_name_assigned, 'settings' => ['requested_visibility' => 'public']]);
+        //         } catch (\Exception $e) { //Share link already exists
+        //             $response = $dropbox->postToAPI('/sharing/list_shared_links', ['path' => $file_name_assigned]);
+        //             $share_existed = true;
+        //         }
+        //         $decoded = $response->getDecodedBody();
 
-                if ($share_existed) {
-                    $bank_statement_included_path = $decoded['links'][0]['url'];
-                } else {
-                    $bank_statement_included_path = $decoded['url'];
-                }
-            } else {
-                $bank_statement_included_path = '';
-            }
-        } else {
-            $bank_statement_included_path = $input['StatementPath'];
-        }
+        //         if ($share_existed) {
+        //             $bank_statement_included_path = $decoded['links'][0]['url'];
+        //         } else {
+        //             $bank_statement_included_path = $decoded['url'];
+        //         }
+        //     } else {
+        //         $bank_statement_included_path = '';
+        //     }
+        // } else {
+        //     $bank_statement_included_path = $input['StatementPath'];
+        // }
 
-        if (basename($_FILES['Statement2File']['name'] != '')) {
-            $target_file = $target_dir.basename($_FILES['Statement2File']['name']);
-            $uploadOk = 1;
-            $uploadedFileObj = $request->file('Statement2File');
-            $uploadedFileName = $request->file('Statement2File')->getClientOriginalName();
-            $uploadedFileSize = $request->file('Statement2File')->getSize();
+        // if (basename($_FILES['Statement2File']['name'] != '')) {
+        //     $target_file = $target_dir.basename($_FILES['Statement2File']['name']);
+        //     $uploadOk = 1;
+        //     $uploadedFileObj = $request->file('Statement2File');
+        //     $uploadedFileName = $request->file('Statement2File')->getClientOriginalName();
+        //     $uploadedFileSize = $request->file('Statement2File')->getSize();
 
-            $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-            // Check file size
-            if ($uploadedFileSize > 5000000) {
-                $uploadOk = 0;
+        //     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        //     // Check file size
+        //     if ($uploadedFileSize > 5000000) {
+        //         $uploadOk = 0;
 
-                return redirect()->back()->with('fail', 'Sorry, your file is too large - file not uploaded.');
-            }
-            // Allow certain file formats
-            if ($imageFileType != 'jpg' && $imageFileType != 'jpeg' && $imageFileType != 'pdf') {
-                $uploadOk = 0;
+        //         return redirect()->back()->with('fail', 'Sorry, your file is too large - file not uploaded.');
+        //     }
+        //     // Allow certain file formats
+        //     if ($imageFileType != 'jpg' && $imageFileType != 'jpeg' && $imageFileType != 'pdf') {
+        //         $uploadOk = 0;
 
-                return redirect()->back()->with('fail', 'Sorry, only jpg, jpeg & pdf files are allowed.');
-            }
-            // Check if $uploadOk is set to 0 by an error
-            if ($uploadOk == 0) {
-                return redirect()->back()->with('fail', 'Sorry, your file was not uploaded.');
-            } else {
-                $uploadedFileObj->move($uploadedFilePath, $uploadedFileName);
-            }
+        //         return redirect()->back()->with('fail', 'Sorry, only jpg, jpeg & pdf files are allowed.');
+        //     }
+        //     // Check if $uploadOk is set to 0 by an error
+        //     if ($uploadOk == 0) {
+        //         return redirect()->back()->with('fail', 'Sorry, your file was not uploaded.');
+        //     } else {
+        //         $uploadedFileObj->move($uploadedFilePath, $uploadedFileName);
+        //     }
 
-            if ($uploadOk) {
-                $file = fopen($target_file, 'rb') or exit("can't open file");
+        //     if ($uploadOk) {
+        //         $file = fopen($target_file, 'rb') or exit("can't open file");
 
-                $app = new DropboxApp($dropboxKey, $dropboxSecret, $dropboxToken);
-                $dropbox = new Dropbox($app);
+        //         $app = new DropboxApp($dropboxKey, $dropboxSecret, $dropboxToken);
+        //         $dropbox = new Dropbox($app);
 
-                if ($chapter_state == '**') { //this is an internatioanl chapter, set state to intl_state
-                    $db_chapter_folder = '/Conference '.$chapter_conf.'/International/'.$chapter_country.'/'.trim($chapter_name);
-                } else {
-                    $db_chapter_folder = '/Conference '.$chapter_conf.'/'.$chapter_state.'/'.trim($chapter_name);
-                }
-                try {
-                    $dropbox->createFolder($db_chapter_folder);
-                } catch (\Exception $e) {
-                    // just ignore
-                }
-                $dropboxFile = new DropboxFile($target_file);
-                $dbfile = $dropbox->upload($dropboxFile, $db_chapter_folder.'/Statement2.'.$imageFileType, ['autorename' => true]);
+        //         if ($chapter_state == '**') { //this is an internatioanl chapter, set state to intl_state
+        //             $db_chapter_folder = '/Conference '.$chapter_conf.'/International/'.$chapter_country.'/'.trim($chapter_name);
+        //         } else {
+        //             $db_chapter_folder = '/Conference '.$chapter_conf.'/'.$chapter_state.'/'.trim($chapter_name);
+        //         }
+        //         try {
+        //             $dropbox->createFolder($db_chapter_folder);
+        //         } catch (\Exception $e) {
+        //             // just ignore
+        //         }
+        //         $dropboxFile = new DropboxFile($target_file);
+        //         $dbfile = $dropbox->upload($dropboxFile, $db_chapter_folder.'/Statement2.'.$imageFileType, ['autorename' => true]);
 
-                //Uploaded File
-                $file_name_assigned = $db_chapter_folder.'/'.$dbfile->getName();
+        //         //Uploaded File
+        //         $file_name_assigned = $db_chapter_folder.'/'.$dbfile->getName();
 
-                $share_existed = false;
-                try {
-                    $response = $dropbox->postToAPI('/sharing/create_shared_link_with_settings', ['path' => $file_name_assigned, 'settings' => ['requested_visibility' => 'public']]);
-                } catch (\Exception $e) { //Share link already exists
-                    $response = $dropbox->postToAPI('/sharing/list_shared_links', ['path' => $file_name_assigned]);
-                    $share_existed = true;
-                }
-                $decoded = $response->getDecodedBody();
+        //         $share_existed = false;
+        //         try {
+        //             $response = $dropbox->postToAPI('/sharing/create_shared_link_with_settings', ['path' => $file_name_assigned, 'settings' => ['requested_visibility' => 'public']]);
+        //         } catch (\Exception $e) { //Share link already exists
+        //             $response = $dropbox->postToAPI('/sharing/list_shared_links', ['path' => $file_name_assigned]);
+        //             $share_existed = true;
+        //         }
+        //         $decoded = $response->getDecodedBody();
 
-                if ($share_existed) {
-                    $bank_statement_2_included_path = $decoded['links'][0]['url'];
-                } else {
-                    $bank_statement_2_included_path = $decoded['url'];
-                }
-            } else {
-                $bank_statement_2_included_path = '';
-            }
-        } else {
-            $bank_statement_2_included_path = $input['Statement2Path'];
-        }
+        //         if ($share_existed) {
+        //             $bank_statement_2_included_path = $decoded['links'][0]['url'];
+        //         } else {
+        //             $bank_statement_2_included_path = $decoded['url'];
+        //         }
+        //     } else {
+        //         $bank_statement_2_included_path = '';
+        //     }
+        // } else {
+        //     $bank_statement_2_included_path = $input['Statement2Path'];
+        // }
 
         /////////////////// Award 1 ///////////////////
         for ($i = 1; $i <= 1; $i++) {
@@ -2028,7 +2028,7 @@ class BoardController extends Controller
         $chapterDetailsExistArr = DB::table('financial_report')->where('chapter_id', '=', $chapter_id)->get();
         $chapterDetailsExist = $chapterDetailsExistArr->count();
 
-        // Step 1 Fields
+    // Step 1 Fields
         if (isset($input['optChangeDues']) && $input['optChangeDues'] == 'no') {
             $input['changed_dues'] = 0;
         } elseif (isset($input['optChangeDues'])) {
@@ -2070,7 +2070,7 @@ class BoardController extends Controller
         $total_associate_members = $input['TotalAssociateMembers'];
         $associate_member_fee = $input['AssociateMemberDues'];
 
-        //Steps 2 Fields
+    //Steps 2 Fields
         $manditory_meeting_fees_paid = $input['ManditoryMeetingFeesPaid'];
         $voluntary_donations_paid = $input['VoluntaryDonationsPaid'];
         $paid_baby_sitters = $input['PaidBabySitters'];
@@ -2084,7 +2084,7 @@ class BoardController extends Controller
         }
         $childrens_room_expenses = base64_encode(serialize($ChildrenRoomArray));
 
-        // Step 3 Fields
+    // Step 3 Fields
         $ServiceProjectFields = null;
         $FieldCount = $input['ServiceProjectRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
@@ -2096,28 +2096,24 @@ class BoardController extends Controller
         }
         $service_project_array = base64_encode(serialize($ServiceProjectFields));
 
-        // Step 4 Fields
+    // Step 4 Fields
         $PartyExpenseFields = null;
         $FieldCount = $input['PartyExpenseRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
-
             $PartyExpenseFields[$i]['party_expense_desc'] = $input['PartyDesc'.$i];
             $PartyExpenseFields[$i]['party_expense_income'] = $input['PartyIncome'.$i];
             $PartyExpenseFields[$i]['party_expense_expenses'] = $input['PartyExpenses'.$i];
-
         }
         $party_expense_array = base64_encode(serialize($PartyExpenseFields));
 
-        // Step 5 Fields
+    // Step 5 Fields
         $office_printing_costs = $input['PrintingCosts'];
         $office_postage_costs = $input['PostageCosts'];
         $office_membership_pins_cost = $input['MembershipPins'];
 
         $OfficeOtherArray = null;
         $FieldCount = $input['OfficeExpenseRowCount'];
-
         for ($i = 0; $i < $FieldCount; $i++) {
-
             $OfficeOtherArray[$i]['office_other_desc'] = $input['OfficeDesc'.$i];
             $OfficeOtherArray[$i]['office_other_expense'] = $input['OfficeExpenses'.$i];
         }
@@ -2127,7 +2123,6 @@ class BoardController extends Controller
         $InternationalEventArray = null;
         $FieldCount = $input['InternationalEventRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
-
             $InternationalEventArray[$i]['intl_event_desc'] = $input['InternationalEventDesc'.$i];
             $InternationalEventArray[$i]['intl_event_income'] = $input['InternationalEventIncome'.$i];
             $InternationalEventArray[$i]['intl_event_expenses'] = $input['InternationalEventExpense'.$i];
@@ -2135,12 +2130,10 @@ class BoardController extends Controller
         $international_event_array = base64_encode(serialize($InternationalEventArray));
         $annual_registration_fee = $input['AnnualRegistrationFee'];
 
-        // Step 6 Fields
+    // Step 6 Fields
         $MonetaryDonation = null;
         $FieldCount = $input['MonDonationRowCount'];
-
         for ($i = 0; $i < $FieldCount; $i++) {
-
             $MonetaryDonation[$i]['mon_donation_desc'] = $input['DonationDesc'.$i];
             $MonetaryDonation[$i]['mon_donation_info'] = $input['DonorInfo'.$i];
             $MonetaryDonation[$i]['mon_donation_date'] = $input['MonDonationDate'.$i];
@@ -2151,14 +2144,13 @@ class BoardController extends Controller
         $NonMonetaryDonation = null;
         $FieldCount = $input['NonMonDonationRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
-
             $NonMonetaryDonation[$i]['nonmon_donation_desc'] = $input['NonMonDonationDesc'.$i];
             $NonMonetaryDonation[$i]['nonmon_donation_info'] = $input['NonMonDonorInfo'.$i];
             $NonMonetaryDonation[$i]['nonmon_donation_date'] = $input['NonMonDonationDate'.$i];
         }
         $non_monetary_donations_to_chapter = base64_encode(serialize($NonMonetaryDonation));
 
-        // Step 7 Fields
+    // Step 7 Fields
         $OtherOffice = null;
         $FieldCount = $input['OtherOfficeExpenseRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
@@ -2168,7 +2160,7 @@ class BoardController extends Controller
         }
         $other_income_and_expenses_array = base64_encode(serialize($OtherOffice));
 
-        // Step 8 Fields
+    // Step 8 Fields
         $amount_reserved_from_previous_year = $input['AmountReservedFromLastYear'];
         $bank_balance_now = $input['BankBalanceNow'];
         $petty_cash = $input['PettyCash'];
@@ -2185,365 +2177,77 @@ class BoardController extends Controller
         }
         $bank_reconciliation_array = base64_encode(serialize($BankRecArray));
 
-        // Step 9 Fields
-        //Question 1
-        if (isset($input['ReceiveCompensation']) && $input['ReceiveCompensation'] == 'no') {
-            $receive_compensation = 0;
-        } elseif (isset($input['ReceiveCompensation'])) {
-            $receive_compensation = 1;
-        } else {
-            $receive_compensation = null;
-        }
-
+    // Step 9 Fields
+    //Question 1
+        $receive_compensation = isset($input['ReceiveCompensation']) ? $input['ReceiveCompensation'] : null;
         $receive_compensation_explanation = $input['ReceiveCompensationExplanation'];
-
-        //Question 2
-        if (isset($input['FinancialBenefit']) && $input['FinancialBenefit'] == 'no') {
-            $financial_benefit = 0;
-        } elseif (isset($input['FinancialBenefit'])) {
-            $financial_benefit = 1;
-        } else {
-            $financial_benefit = null;
-        }
-
+    //Question 2
+        $financial_benefit = isset($input['FinancialBenefit']) ? $input['FinancialBenefit'] : null;
         $financial_benefit_explanation = $input['FinancialBenefitExplanation'];
-
-        //Question 3
-        if (isset($input['InfluencePolitical']) && $input['InfluencePolitical'] == 'no') {
-            $influence_political = 0;
-        } elseif (isset($input['InfluencePolitical'])) {
-            $influence_political = 1;
-        } else {
-            $influence_political = null;
-        }
-
+    //Question 3
+        $influence_political = isset($input['InfluencePolitical']) ? $input['InfluencePolitical'] : null;
         $influence_political_explanation = $input['InfluencePoliticalExplanation'];
-
-        //Question 4
-        if (isset($input['VoteAllActivities']) && $input['VoteAllActivities'] == 'no') {
-            $vote_all_activities = 0;
-        } elseif (isset($input['VoteAllActivities'])) {
-            $vote_all_activities = 1;
-        } else {
-            $vote_all_activities = null;
-        }
-
+    //Question 4
+        $vote_all_activities = isset($input['VoteAllActivities']) ? $input['VoteAllActivities'] : null;
         $vote_all_activities_explanation = $input['VoteAllActivitiesExplanation'];
-
-        //Question 5
-        if (isset($input['BoughtPins']) && $input['BoughtPins'] == 'no') {
-            $purchase_pins = 0;
-        } elseif (isset($input['BoughtPins'])) {
-            $purchase_pins = 1;
-        } else {
-            $purchase_pins = null;
-        }
-
+    //Question 5
+        $purchase_pins = isset($input['BoughtPins']) ? $input['BoughtPins'] : null;
         $purchase_pins_explanation = $input['BoughtPinsExplanation'];
-
-        //Question 6
-        if (isset($input['BoughtMerch']) && $input['BoughtMerch'] == 'no') {
-            $bought_merch = 0;
-        } elseif (isset($input['BoughtMerch'])) {
-            $bought_merch = 1;
-        } else {
-            $bought_merch = null;
-        }
-
+    //Question 6
+        $bought_merch = isset($input['BoughtMerch']) ? $input['BoughtMerch'] : null;
         $bought_merch_explanation = $input['BoughtMerchExplanation'];
-
-        //Question 7
-        if (isset($input['OfferedMerch']) && $input['OfferedMerch'] == 'no') {
-            $offered_merch = 0;
-        } elseif (isset($input['OfferedMerch'])) {
-            $offered_merch = 1;
-        } else {
-            $offered_merch = null;
-        }
-
+    //Question 7
+        $offered_merch = isset($input['OfferedMerch']) ? $input['OfferedMerch'] : null;
         $offered_merch_explanation = $input['OfferedMerchExplanation'];
-
-        //Question 8
-        if (isset($input['ByLawsAvailable']) && $input['ByLawsAvailable'] == 'no') {
-            $bylaws_available = 0;
-        } elseif (isset($input['ByLawsAvailable'])) {
-            $bylaws_available = 1;
-        } else {
-            $bylaws_available = null;
-        }
-
+    //Question 8
+        $bylaws_available = isset($input['ByLawsAvailable']) ? $input['ByLawsAvailable'] : null;
         $bylaws_available_explanation = $input['ByLawsAvailableExplanation'];
-
-        //Question 9
-        if (isset($input['ChildrensRoom']) && $input['ChildrensRoom'] == 'no') {
-            $childrens_room_sitters = 0;
-        } elseif (isset($input['ChildrensRoom']) && $input['ChildrensRoom'] == 'yes_vol') {
-            $childrens_room_sitters = 1;
-        } elseif (isset($input['ChildrensRoom']) && $input['ChildrensRoom'] == 'yes_paid') {
-            $childrens_room_sitters = 2;
-        } else {
-            $childrens_room_sitters = null;
-        }
-
+    //Question 9
+        $childrens_room_sitters = isset($input['ChildrensRoom']) ? $input['ChildrensRoom'] : null;
         $childrens_room_sitters_explanation = $input['ChildrensRoomExplanation'];
-
-        //Question 10
-        if (isset($input['Playgroups']) && $input['Playgroups'] == 'no') {
-            $playgroups = 0;
-        } elseif (isset($input['Playgroups']) && $input['Playgroups'] == 'yes_byage') {
-            $playgroups = 1;
-        } elseif (isset($input['Playgroups']) && $input['Playgroups'] == 'yes_multiage') {
-            $playgroups = 2;
-        } else {
-            $playgroups = null;
-        }
-
-        //Question 10
-        if (isset($input['PlaygroupsNo']) && $input['PlaygroupsNo'] == 'no') {
-            $had_playgroups = 0;
-        } elseif (isset($input['PlaygroupsYesByAge']) && isset($input['PlaygroupsYesMultiAge']) && $input['PlaygroupsYesByAge'] == 'yes_age' && $input['PlaygroupsYesMultiAge'] == 'yes_multi_age') {
-            $had_playgroups = 3;
-        } elseif (isset($input['PlaygroupsYesByAge']) && $input['PlaygroupsYesByAge'] == 'yes_age') {
-            $had_playgroups = 1;
-        } elseif (isset($input['PlaygroupsYesMultiAge']) && $input['PlaygroupsYesMultiAge'] == 'yes_multi_age') {
-            $had_playgroups = 2;
-        } else {
-            $had_playgroups = null;
-        }
-
+    //Question 10
+        $playgroups = isset($input['Playgroups']) ? $input['Playgroups'] : null;
         $had_playgroups_explanation = $input['PlaygroupsExplanation'];
-
-        //Question 11
-        if (isset($input['ChildOutings']) && $input['ChildOutings'] == 'no') {
-            $child_outings = 0;
-        } elseif (isset($input['ChildOutings'])) {
-            $child_outings = 1;
-        } else {
-            $child_outings = null;
-        }
-
+    //Question 11
+        $child_outings = isset($input['ChildOutings']) ? $input['ChildOutings'] : null;
         $child_outings_explanation = $input['ChildOutingsExplanation'];
-
-        //Question 12
-        if (isset($input['MotherOutings']) && $input['MotherOutings'] == 'no') {
-            $mother_outings = 0;
-        } elseif (isset($input['MotherOutings'])) {
-            $mother_outings = 1;
-        } else {
-            $mother_outings = null;
-        }
-
+    //Question 12
+        $mother_outings = isset($input['MotherOutings']) ? $input['MotherOutings'] : null;
         $mother_outings_explanation = $input['MotherOutingsExplanation'];
-
-        //Question 13
-        if (isset($input['MeetingSpeakers']) && $input['MeetingSpeakers'] == 'no') {
-            $meeting_speakers = 0;
-        } elseif (isset($input['MeetingSpeakers'])) {
-            $meeting_speakers = 1;
-        } else {
-            $meeting_speakers = null;
-        }
-
+    //Question 13
+        $meeting_speakers = isset($input['MeetingSpeakers']) ? $input['MeetingSpeakers'] : null;
         $meeting_speakers_explanation = $input['MeetingSpeakersExplanation'];
-
-        //Question 14
-        if (isset($input['SpeakersChildRearing']) && $input['SpeakersChildRearing'] == false) {
-            $speaker_child_rearing = 0;
-        } elseif (isset($input['SpeakersChildRearing'])) {
-            $speaker_child_rearing = 1;
-        } else {
-            $speaker_child_rearing = null;
-        }
-
-        if (isset($input['SpeakersEducation']) && $input['SpeakersEducation'] == false) {
-            $speaker_education = 0;
-        } elseif (isset($input['SpeakersEducation'])) {
-            $speaker_education = 1;
-        } else {
-            $speaker_education = null;
-        }
-
-        if (isset($input['SpeakersHomemaking']) && $input['SpeakersHomemaking'] == false) {
-            $speaker_homemaking = 0;
-        } elseif (isset($input['SpeakersHomemaking'])) {
-            $speaker_homemaking = 1;
-        } else {
-            $speaker_homemaking = null;
-        }
-
-        if (isset($input['SpeakersPolitics']) && $input['SpeakersPolitics'] == false) {
-            $speaker_politics = 0;
-        } elseif (isset($input['SpeakersPolitics'])) {
-            $speaker_politics = 1;
-        } else {
-            $speaker_politics = null;
-        }
-
-        if (isset($input['SpeakersOtherNP']) && $input['SpeakersOtherNP'] == false) {
-            $speaker_other_np = 0;
-        } elseif (isset($input['SpeakersOtherNP'])) {
-            $speaker_other_np = 1;
-        } else {
-            $speaker_other_np = null;
-        }
-
-        if (isset($input['SpeakersOther']) && $input['SpeakersOther'] == false) {
-            $speaker_other = 0;
-        } elseif (isset($input['SpeakersOther'])) {
-            $speaker_other = 1;
-        } else {
-            $speaker_other = null;
-        }
-
-        //Question 15
-        if (isset($input['SpeakerFrequency']) && $input['SpeakerFrequency'] == 'no') {
-            $discussion_topic_frequency = 0;
-        } elseif (isset($input['SpeakerFrequency']) && $input['SpeakerFrequency'] == '1_3_times') {
-            $discussion_topic_frequency = 1;
-        } elseif (isset($input['SpeakerFrequency']) && $input['SpeakerFrequency'] == '4_6_times') {
-            $discussion_topic_frequency = 2;
-        } elseif (isset($input['SpeakerFrequency']) && $input['SpeakerFrequency'] == '7_9_times') {
-            $discussion_topic_frequency = 3;
-        } elseif (isset($input['SpeakerFrequency']) && $input['SpeakerFrequency'] == '10_times') {
-            $discussion_topic_frequency = 4;
-        } else {
-            $discussion_topic_frequency = null;
-        }
-
-        //Question 16
-        if (isset($input['ParkDays']) && $input['ParkDays'] == 'no') {
-            $park_day_frequency = 0;
-        } elseif (isset($input['ParkDays']) && $input['ParkDays'] == '1_3_times') {
-            $park_day_frequency = 1;
-        } elseif (isset($input['ParkDays']) && $input['ParkDays'] == '4_6_times') {
-            $park_day_frequency = 2;
-        } elseif (isset($input['ParkDays']) && $input['ParkDays'] == '7_9_times') {
-            $park_day_frequency = 3;
-        } elseif (isset($input['ParkDays']) && $input['ParkDays'] == '10_times') {
-            $park_day_frequency = 4;
-        } else {
-            $park_day_frequency = null;
-        }
-
-        //Question 17
-        if (isset($input['ActivityCooking']) && $input['ActivityCooking'] == false) {
-            $activity_cooking = 0;
-        } elseif (isset($input['ActivityCooking'])) {
-            $activity_cooking = 1;
-        } else {
-            $activity_cooking = null;
-        }
-
-        if (isset($input['ActivityCouponing']) && $input['ActivityCouponing'] == false) {
-            $activity_couponing = 0;
-        } elseif (isset($input['ActivityCouponing'])) {
-            $activity_couponing = 1;
-        } else {
-            $activity_couponing = null;
-        }
-
-        if (isset($input['ActivityMommyPlaygroup']) && $input['ActivityMommyPlaygroup'] == false) {
-            $activity_mommy_playgroup = 0;
-        } elseif (isset($input['ActivityMommyPlaygroup'])) {
-            $activity_mommy_playgroup = 1;
-        } else {
-            $activity_mommy_playgroup = null;
-        }
-
-        if (isset($input['ActivityBabysitting']) && $input['ActivityBabysitting'] == false) {
-            $activity_babysitting = 0;
-        } elseif (isset($input['ActivityBabysitting'])) {
-            $activity_babysitting = 1;
-        } else {
-            $activity_babysitting = null;
-        }
-
-        if (isset($input['ActivityMNO']) && $input['ActivityMNO'] == false) {
-            $activity_mno = 0;
-        } elseif (isset($input['ActivityMNO'])) {
-            $activity_mno = 1;
-        } else {
-            $activity_mno = null;
-        }
-
-        if (isset($input['ActivityOther']) && $input['ActivityOther'] == false) {
-            $activity_other = 0;
-        } elseif (isset($input['ActivityOther'])) {
-            $activity_other = 1;
-        } else {
-            $activity_other = null;
-        }
-
+    //Question 14
+        $meeting_speakers_array = isset($input['Speakers']) ? $input['Speakers'] : null;
+    //Question 15
+        $discussion_topic_frequency = isset($input['SpeakerFrequency']) ? $input['SpeakerFrequency'] : null;
+    //Question 16
+        $park_day_frequency = isset($input['ParkDays']) ? $input['ParkDays'] : null;
+    //Question 17
+        $activity_array = isset($input['Activity']) ? $input['Activity'] : null;
         $activity_other_explanation = $input['ActivityOtherExplanation'];
-
-        //Question 18
-        if (isset($input['ContributionsNotRegNP']) && $input['ContributionsNotRegNP'] == 'no') {
-            $contributions_not_registered_charity = 0;
-        } elseif (isset($input['ContributionsNotRegNP'])) {
-            $contributions_not_registered_charity = 1;
-        } else {
-            $contributions_not_registered_charity = null;
-        }
-
+    //Question 18
+        $contributions_not_registered_charity = isset($input['ContributionsNotRegNP']) ? $input['ContributionsNotRegNP'] : null;
         $contributions_not_registered_charity_explanation = $input['ContributionsNotRegNPExplanation'];
-
-        //Question 19
-        if (isset($input['PerformServiceProject']) && $input['PerformServiceProject'] == 'no') {
-            $at_least_one_service_project = 0;
-        } elseif (isset($input['PerformServiceProject'])) {
-            $at_least_one_service_project = 1;
-        } else {
-            $at_least_one_service_project = null;
-        }
-
+    //Question 19
+        $at_least_one_service_project = isset($input['PerformServiceProject']) ? $input['PerformServiceProject'] : null;
         $at_least_one_service_project_explanation = $input['PerformServiceProjectExplanation'];
-
-        //Question 20
-        if (isset($input['SisterChapter']) && $input['SisterChapter'] == 'no') {
-            $sister_chapter = 0;
-        } elseif (isset($input['SisterChapter'])) {
-            $sister_chapter = 1;
-        } else {
-            $sister_chapter = null;
-        }
-
-        //Question 21
-        if (isset($input['InternationalEvent']) && $input['InternationalEvent'] == 'no') {
-            $international_event = 0;
-        } elseif (isset($input['InternationalEvent'])) {
-            $international_event = 1;
-        } else {
-            $international_event = null;
-        }
-
-        //Question 22
-        if (isset($input['FileIRS']) && $input['FileIRS'] == 'no') {
-            $file_irs = 0;
-        } elseif (isset($input['FileIRS'])) {
-            $file_irs = 1;
-        } else {
-            $file_irs = null;
-        }
-
+    //Question 20
+        $sister_chapter = isset($input['SisterChapter']) ? $input['SisterChapter'] : null;
+    //Question 21
+        $international_event = isset($input['InternationalEvent']) ? $input['InternationalEvent'] : null;
+    //Question 22
+        $file_irs = isset($input['FileIRS']) ? $input['FileIRS'] : null;
         $file_irs_explanation = $input['FileIRSExplanation'];
-
-        //Question 23
-        if (isset($input['BankStatementIncluded']) && $input['BankStatementIncluded'] == 'no') {
-            $bank_statement_included = 0;
-        } elseif (isset($input['BankStatementIncluded'])) {
-            $bank_statement_included = 1;
-        } else {
-            $bank_statement_included = null;
-        }
-
+    //Question 23
+        $bank_statement_included = isset($input['BankStatementIncluded']) ? $input['BankStatementIncluded'] : null;
         $bank_statement_included_explanation = $input['BankStatementIncludedExplanation'];
-
-        //Question 24
+    //Question 24
         $wheres_the_money = $input['WheresTheMoney'];
 
-        // Step 11 Fields
+    // Step 11 Fields
         $award_nominations = $input['TotalAwardNominations'];
-        //Award Nomination 1
+    //Award Nomination 1
         if (isset($input['NominationType1'])) {
             $award_1_nomination_type = $input['NominationType1'];
         } else {
@@ -2792,7 +2496,7 @@ class BoardController extends Controller
                     'changed_dues' => $changed_dues,
                     'different_dues' => $different_dues,
                     'not_all_full_dues' => $not_all_full_dues,
-                    'roster_path' => $roster_path,
+                    //'roster_path' => $roster_path,
                     'total_new_members' => $total_new_members,
                     'total_renewed_members' => $total_renewed_members,
                     'dues_per_member' => $dues_per_member,
@@ -2843,7 +2547,6 @@ class BoardController extends Controller
                     'bylaws_available_explanation' => $bylaws_available_explanation,
                     'childrens_room_sitters' => $childrens_room_sitters,
                     'childrens_room_sitters_explanation' => $childrens_room_sitters_explanation,
-                    'had_playgroups' => $had_playgroups,
                     'playgroups' => $playgroups,
                     'had_playgroups_explanation' => $had_playgroups_explanation,
                     'child_outings' => $child_outings,
@@ -2852,20 +2555,10 @@ class BoardController extends Controller
                     'mother_outings_explanation' => $mother_outings_explanation,
                     'meeting_speakers' => $meeting_speakers,
                     'meeting_speakers_explanation' => $meeting_speakers_explanation,
-                    'speaker_child_rearing' => $speaker_child_rearing,
-                    'speaker_education' => $speaker_education,
-                    'speaker_homemaking' => $speaker_homemaking,
-                    'speaker_politics' => $speaker_politics,
-                    'speaker_other_np' => $speaker_other_np,
-                    'speaker_other' => $speaker_other,
+                    'meeting_speakers_array' => $meeting_speakers_array,
                     'discussion_topic_frequency' => $discussion_topic_frequency,
                     'park_day_frequency' => $park_day_frequency,
-                    'activity_cooking' => $activity_cooking,
-                    'activity_couponing' => $activity_couponing,
-                    'activity_mommy_playgroup' => $activity_mommy_playgroup,
-                    'activity_babysitting' => $activity_babysitting,
-                    'activity_mno' => $activity_mno,
-                    'activity_other' => $activity_other,
+                    'activity_array' => $activity_array,
                     'activity_other_explanation' => $activity_other_explanation,
                     'contributions_not_registered_charity' => $contributions_not_registered_charity,
                     'contributions_not_registered_charity_explanation' => $contributions_not_registered_charity_explanation,
@@ -2877,8 +2570,8 @@ class BoardController extends Controller
                     'file_irs_explanation' => $file_irs_explanation,
                     'bank_statement_included' => $bank_statement_included,
                     'bank_statement_included_explanation' => $bank_statement_included_explanation,
-                    'bank_statement_included_path' => $bank_statement_included_path,
-                    'bank_statement_2_included_path' => $bank_statement_2_included_path,
+                    //'bank_statement_included_path' => $bank_statement_included_path,
+                    //'bank_statement_2_included_path' => $bank_statement_2_included_path,
                     'wheres_the_money' => $wheres_the_money,
                     'award_nominations' => $award_nominations,
                     'farthest_step_visited' => $farthest_step_visited,
@@ -2915,13 +2608,12 @@ class BoardController extends Controller
                     'award_5_outstanding_support_international' => $award_5_outstanding_support_international,
                     'award_5_outstanding_project_desc' => $award_5_outstanding_project_desc,
                     'award_agree' => $award_agree,
-                    'file_irs_path' => $file_irs_path,
+                    //'file_irs_path' => $file_irs_path,
                     'award_1_files' => $award_1_files,
                     'award_2_files' => $award_2_files,
                     'award_3_files' => $award_3_files,
                     'award_4_files' => $award_4_files,
                     'award_5_files' => $award_5_files,
-
                 ]);
 
                 DB::commit();
@@ -2933,7 +2625,7 @@ class BoardController extends Controller
                 $report->changed_dues = $changed_dues;
                 $report->different_dues = $different_dues;
                 $report->not_all_full_dues = $not_all_full_dues;
-                $report->roster_path = $roster_path;
+                //$report->roster_path = $roster_path;
                 $report->total_new_members = $total_new_members;
                 $report->total_renewed_members = $total_renewed_members;
                 $report->dues_per_member = $dues_per_member;
@@ -2984,7 +2676,6 @@ class BoardController extends Controller
                 $report->bylaws_available_explanation = $bylaws_available_explanation;
                 $report->childrens_room_sitters = $childrens_room_sitters;
                 $report->childrens_room_sitters_explanation = $childrens_room_sitters_explanation;
-                $report->had_playgroups = $had_playgroups;
                 $report->playgroups = $playgroups;
                 $report->had_playgroups_explanation = $had_playgroups_explanation;
                 $report->child_outings = $child_outings;
@@ -2993,20 +2684,10 @@ class BoardController extends Controller
                 $report->mother_outings_explanation = $mother_outings_explanation;
                 $report->meeting_speakers = $meeting_speakers;
                 $report->meeting_speakers_explanation = $meeting_speakers_explanation;
-                $report->speaker_child_rearing = $speaker_child_rearing;
-                $report->speaker_education = $speaker_education;
-                $report->speaker_homemaking = $speaker_homemaking;
-                $report->speaker_politics = $speaker_politics;
-                $report->speaker_other_np = $speaker_other_np;
-                $report->speaker_other = $speaker_other;
+                $report->meeting_speakers_array = $meeting_speakers_array;
                 $report->discussion_topic_frequency = $discussion_topic_frequency;
                 $report->park_day_frequency = $park_day_frequency;
-                $report->activity_cooking = $activity_cooking;
-                $report->activity_couponing = $activity_couponing;
-                $report->activity_mommy_playgroup = $activity_mommy_playgroup;
-                $report->activity_babysitting = $activity_babysitting;
-                $report->activity_mno = $activity_mno;
-                $report->activity_other = $activity_other;
+                $report->activity_array = $activity_array;
                 $report->activity_other_explanation = $activity_other_explanation;
                 $report->contributions_not_registered_charity = $contributions_not_registered_charity;
                 $report->contributions_not_registered_charity_explanation = $contributions_not_registered_charity_explanation;
@@ -3018,8 +2699,8 @@ class BoardController extends Controller
                 $report->file_irs_explanation = $file_irs_explanation;
                 $report->bank_statement_included = $bank_statement_included;
                 $report->bank_statement_included_explanation = $bank_statement_included_explanation;
-                $report->bank_statement_included_path = $bank_statement_included_path;
-                $report->bank_statement_2_included_path = $bank_statement_2_included_path;
+                //$report->bank_statement_included_path = $bank_statement_included_path;
+                //$report->bank_statement_2_included_path = $bank_statement_2_included_path;
                 $report->wheres_the_money = $wheres_the_money;
                 $report->award_nominations = $award_nominations;
                 $report->award_1_nomination_type = $award_1_nomination_type;
@@ -3053,7 +2734,7 @@ class BoardController extends Controller
                 $report->award_5_outstanding_support_international = $award_5_outstanding_support_international;
                 $report->award_5_outstanding_project_desc = $award_5_outstanding_project_desc;
                 $report->award_agree = $award_agree;
-                $report->file_irs_path = $file_irs_path;
+                //$report->file_irs_path = $file_irs_path;
                 $report->award_1_files = $award_1_files;
                 $report->award_2_files = $award_2_files;
                 $report->award_3_files = $award_3_files;
