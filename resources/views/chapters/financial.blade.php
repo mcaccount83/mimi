@@ -291,43 +291,50 @@
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $childrens_room = null;
-                                    $totalChildrenSupplies = 0;
-                                    $totalChildrenOther = 0;
+                                        $childrens_room = null;
+                                        $totalChildrenSupplies = 0;
+                                        $totalChildrenOther = 0;
 
-                                    if (isset($financial_report_array['childrens_room_expenses'])) {
-                                        $blobData = base64_decode($financial_report_array['childrens_room_expenses']);
-                                        $childrens_room = unserialize($blobData);
+                                        if (isset($financial_report_array['childrens_room_expenses']) && $financial_report_array['childrens_room_expenses'] !== null) {
+                                            $blobData = base64_decode($financial_report_array['childrens_room_expenses']);
+                                            $childrens_room = unserialize($blobData);
 
-                                        if ($childrens_room === false) {
-                                            echo "Error: Failed to unserialize data.";
-                                        } else {
-                                            foreach ($childrens_room as $row) {
-                                                echo "<tr>";
-                                                echo "<td>" . $row['childrens_room_desc'] . "</td>";
-                                                echo "<td>" . ($row['childrens_room_supplies'] ? "$" . number_format($row['childrens_room_supplies'], 2) : "$0.00") . "</td>";
-                                                echo "<td>" . ($row['childrens_room_other'] ? "$" . number_format($row['childrens_room_other'], 2) : "$0.00") . "</td>";
-                                                echo "</tr>";
+                                            if ($childrens_room === false) {
+                                                echo "Error: Failed to unserialize data.";
+                                            } else {
+                                                if (is_array($childrens_room) && count($childrens_room) > 0) {
+                                                    foreach ($childrens_room as $row) {
+                                                        echo "<tr>";
+                                                        echo "<td>" . $row['childrens_room_desc'] . "</td>";
+                                                        echo "<td>" . ($row['childrens_room_supplies'] ? "$" . number_format($row['childrens_room_supplies'], 2) : "$0.00") . "</td>";
+                                                        echo "<td>" . ($row['childrens_room_other'] ? "$" . number_format($row['childrens_room_other'], 2) : "$0.00") . "</td>";
+                                                        echo "</tr>";
 
-                                                $totalChildrenSupplies += floatval($row['childrens_room_supplies']);
-                                                $totalChildrenOther += floatval($row['childrens_room_other']);
+                                                        $totalChildrenSupplies += floatval($row['childrens_room_supplies']);
+                                                        $totalChildrenOther += floatval($row['childrens_room_other']);
+                                                    }
+
+                                                    // Total row
+                                                    echo "<tr style='border-top: 1px solid #333;'>";
+                                                    echo "<td><strong>Total</strong></td>";
+                                                    echo "<td><strong>$" . number_format($totalChildrenSupplies, 2) . "</strong></td>";
+                                                    echo "<td><strong>$" . number_format($totalChildrenOther, 2) . "</strong></td>";
+                                                    echo "</tr>";
+                                                } else {
+                                                    echo "<tr style='border-top: 1px solid #333;'>";
+                                                    echo "<td colspan='3'>No Children's Room Expenses Entered.</td>";
+                                                    echo "</tr>";
+                                                }
                                             }
-
-                                            // Total row
+                                        } else {
                                             echo "<tr style='border-top: 1px solid #333;'>";
-                                            echo "<td><strong>Total</strong></td>";
-                                            echo "<td><strong>$" . number_format($totalChildrenSupplies, 2) . "</strong></td>";
-                                            echo "<td><strong>$" . number_format($totalChildrenOther, 2) . "</strong></td>";
+                                            echo "<td colspan='3'>No Children's Room Expenses Entered.</td>";
                                             echo "</tr>";
                                         }
-                                    } else {
-                                        echo "<tr style='border-top: 1px solid #333;'>";
-                                        echo "<td colspan='3'>No Children's Room Expenses Entered.</td>";
-                                        echo "</tr>";
-                                    }
 
-                                    $totalChildrensRoomExpenses = $totalChildrenSupplies + $totalChildrenOther;
-                                    ?>
+                                        $totalChildrensRoomExpenses = $totalChildrenSupplies + $totalChildrenOther;
+                                        ?>
+
                                 </tbody>
                                 </table>
                             <br>
@@ -648,26 +655,32 @@
                                 $other_office_expenses = null;
                                 $totalOfficeExpense = 0;
 
-                                if (isset($financial_report_array['office_other_expenses'])) {
+                                if (isset($financial_report_array['office_other_expenses']) && $financial_report_array['office_other_expenses'] !== null) {
                                     $blobData = base64_decode($financial_report_array['office_other_expenses']);
                                     $other_office_expenses = unserialize($blobData);
 
                                     if ($other_office_expenses === false) {
                                         echo "Error: Failed to unserialize data.";
                                     } else {
-                                        foreach ($other_office_expenses as $row) {
-                                            echo "<tr>";
-                                            echo "<td>" . $row['office_other_desc'] . "</td>";
-                                            echo "<td>" . ($row['office_other_expense'] ? "$" . number_format($row['office_other_expense'], 2) : "$0.00") . "</td>";
-                                            echo "</tr>";
+                                        if (is_array($other_office_expenses) && count($other_office_expenses) > 0) {
+                                            foreach ($other_office_expenses as $row) {
+                                                echo "<tr>";
+                                                echo "<td>" . $row['office_other_desc'] . "</td>";
+                                                echo "<td>" . ($row['office_other_expense'] ? "$" . number_format($row['office_other_expense'], 2) : "$0.00") . "</td>";
+                                                echo "</tr>";
 
-                                            $totalOfficeExpense += floatval($row['office_other_expense']);
+                                                $totalOfficeExpense += floatval($row['office_other_expense']);
+                                            }
+                                            // Total row
+                                            echo "<tr style='border-top: 1px solid #333;'>";
+                                            echo "<td><strong>Total</strong></td>";
+                                            echo "<td><strong>$" . number_format($totalOfficeExpense, 2) . "</strong></td>";
+                                            echo "</tr>";
+                                        } else {
+                                            echo "<tr style='border-top: 1px solid #333;'>";
+                                            echo "<td colspan='2'>No Other Office/Operating Expenses Entered.</td>";
+                                            echo "</tr>";
                                         }
-                                         // Total row
-                                         echo "<tr style='border-top: 1px solid #333;'>";
-                                echo "<td><strong>Total</strong></td>";
-                                echo "<td><strong>$" . number_format($totalOfficeExpense, 2) . "</strong></td>";
-                                echo "</tr>";
                                     }
                                 } else {
                                     echo "<tr style='border-top: 1px solid #333;'>";
@@ -675,6 +688,7 @@
                                     echo "</tr>";
                                 }
                                 ?>
+
                         </tbody>
                     </table>
                     <br>
@@ -749,36 +763,43 @@
                                     $totalEventIncome = 0;
                                     $totalEventExpense = 0;
 
-                                    if (isset($financial_report_array['international_event_array'])) {
+                                    if (isset($financial_report_array['international_event_array']) && $financial_report_array['international_event_array'] !== null) {
                                         $blobData = base64_decode($financial_report_array['international_event_array']);
                                         $international_event_array = unserialize($blobData);
 
                                         if ($international_event_array === false) {
                                             echo "Error: Failed to unserialize data.";
                                         } else {
-                                            foreach ($international_event_array as $row) {
-                                                echo "<tr>";
-                                                echo "<td>" . $row['intl_event_desc'] . "</td>";
-                                                echo "<td>" . ($row['intl_event_income'] ? "$" . number_format($row['intl_event_income'], 2) : "$0.00") . "</td>";
-                                                echo "<td>" . ($row['intl_event_expenses'] ? "$" . number_format($row['intl_event_expenses'], 2) : "$0.00") . "</td>";
-                                                echo "</tr>";
+                                            if (is_array($international_event_array) && count($international_event_array) > 0) {
+                                                foreach ($international_event_array as $row) {
+                                                    echo "<tr>";
+                                                    echo "<td>" . $row['intl_event_desc'] . "</td>";
+                                                    echo "<td>" . ($row['intl_event_income'] ? "$" . number_format($row['intl_event_income'], 2) : "$0.00") . "</td>";
+                                                    echo "<td>" . ($row['intl_event_expenses'] ? "$" . number_format($row['intl_event_expenses'], 2) : "$0.00") . "</td>";
+                                                    echo "</tr>";
 
-                                                $totalEventIncome += floatval($row['intl_event_income']);
-                                                $totalEventExpense += floatval($row['intl_event_expenses']);;
+                                                    $totalEventIncome += floatval($row['intl_event_income']);
+                                                    $totalEventExpense += floatval($row['intl_event_expenses']);
+                                                }
+                                                // Total row
+                                                echo "<tr style='border-top: 1px solid #333;'>";
+                                                echo "<td><strong>Total</strong></td>";
+                                                echo "<td><strong>$" . number_format($totalEventIncome, 2) . "</strong></td>";
+                                                echo "<td><strong>$" . number_format($totalEventExpense, 2) . "</strong></td>";
+                                                echo "</tr>";
+                                            } else {
+                                                echo "<tr style='border-top: 1px solid #333;'>";
+                                                echo "<td colspan='3'>No International Events Entered.</td>";
+                                                echo "</tr>";
                                             }
-                                            // Total row
-                                            echo "<tr style='border-top: 1px solid #333;'>";
-                                        echo "<td><strong>Total</strong></td>";
-                                        echo "<td><strong>$" . number_format($totalEventIncome, 2) . "</strong></td>";
-                                        echo "<td><strong>$" . number_format($totalEventExpense, 2) . "</strong></td>";
-                                        echo "</tr>";
-                                            }
+                                        }
                                     } else {
                                         echo "<tr style='border-top: 1px solid #333;'>";
                                         echo "<td colspan='3'>No International Events Entered.</td>";
                                         echo "</tr>";
                                     }
-                                    ?>
+                                 ?>
+
                             </tbody>
                         </table>
                         <br>
@@ -853,17 +874,18 @@
                         </thead>
                         <tbody>
                             <?php
-                                $monetary_dontations_to_chapter = null;
-                                $totalDonationAmount = 0;
+                            $monetary_donations_to_chapter = null;
+                            $totalDonationAmount = 0;
 
-                                if (isset($financial_report_array['monetary_donations_to_chapter'])) {
-                                    $blobData = base64_decode($financial_report_array['monetary_donations_to_chapter']);
-                                    $monetary_dontations_to_chapter = unserialize($blobData);
+                            if (isset($financial_report_array['monetary_donations_to_chapter']) && $financial_report_array['monetary_donations_to_chapter'] !== null) {
+                                $blobData = base64_decode($financial_report_array['monetary_donations_to_chapter']);
+                                $monetary_donations_to_chapter = unserialize($blobData);
 
-                                    if ($monetary_dontations_to_chapter === false) {
-                                        echo "Error: Failed to unserialize data.";
-                                    } else {
-                                        foreach ($monetary_dontations_to_chapter as $row) {
+                                if ($monetary_donations_to_chapter === false) {
+                                    echo "Error: Failed to unserialize data.";
+                                } else {
+                                    if (is_array($monetary_donations_to_chapter) && count($monetary_donations_to_chapter) > 0) {
+                                        foreach ($monetary_donations_to_chapter as $row) {
                                             echo "<tr>";
                                             echo "<td>" . $row['mon_donation_desc'] . "</td>";
                                             echo "<td>" . $row['mon_donation_info'] . "</td>";
@@ -873,20 +895,26 @@
 
                                             $totalDonationAmount += floatval($row['mon_donation_amount']);
                                         }
-                                         // Total row
-                                         echo "<tr style='border-top: 1px solid #333;'>";
-                                echo "<td><strong>Total</strong></td>";
-                                echo "<td></td>";
-                                echo "<td></td>";
-                                echo "<td><strong>$" . number_format($totalDonationAmount, 2) . "</strong></td>";
-                                echo "</tr>";
+                                        // Total row
+                                        echo "<tr style='border-top: 1px solid #333;'>";
+                                        echo "<td><strong>Total</strong></td>";
+                                        echo "<td></td>";
+                                        echo "<td></td>";
+                                        echo "<td><strong>$" . number_format($totalDonationAmount, 2) . "</strong></td>";
+                                        echo "</tr>";
+                                    } else {
+                                        echo "<tr style='border-top: 1px solid #333;'>";
+                                        echo "<td colspan='4'>No Monetary Donations Entered.</td>";
+                                        echo "</tr>";
                                     }
-                                } else {
-                                    echo "<tr style='border-top: 1px solid #333;'>";
-                                    echo "<td colspan='4'>No Monetary Donations Entered.</td>";
-                                    echo "</tr>";
                                 }
-                                ?>
+                            } else {
+                                echo "<tr style='border-top: 1px solid #333;'>";
+                                echo "<td colspan='4'>No Monetary Donations Entered.</td>";
+                                echo "</tr>";
+                            }
+                        ?>
+
                         </tbody>
                     </table>
                     <br>
@@ -903,20 +931,26 @@
                         </thead>
                         <tbody>
                             <?php
-                                $non_monetary_dontations_to_chapter = null;
+                                $non_monetary_donations_to_chapter = null;
 
-                                if (isset($financial_report_array['non_monetary_donations_to_chapter'])) {
+                                if (isset($financial_report_array['non_monetary_donations_to_chapter']) && $financial_report_array['non_monetary_donations_to_chapter'] !== null) {
                                     $blobData = base64_decode($financial_report_array['non_monetary_donations_to_chapter']);
-                                    $non_monetary_dontations_to_chapter = unserialize($blobData);
+                                    $non_monetary_donations_to_chapter = unserialize($blobData);
 
-                                    if ($non_monetary_dontations_to_chapter === false) {
+                                    if ($non_monetary_donations_to_chapter === false) {
                                         echo "Error: Failed to unserialize data.";
                                     } else {
-                                        foreach ($non_monetary_dontations_to_chapter as $row) {
+                                        if (is_array($non_monetary_donations_to_chapter) && count($non_monetary_donations_to_chapter) > 0) {
+                                            foreach ($non_monetary_donations_to_chapter as $row) {
+                                                echo "<tr style='border-top: 1px solid #333;'>";
+                                                echo "<td>" . $row['nonmon_donation_desc'] . "</td>";
+                                                echo "<td>" . $row['nonmon_donation_info'] . "</td>";
+                                                echo "<td>" . $row['nonmon_donation_date'] . "</td>";
+                                                echo "</tr>";
+                                            }
+                                        } else {
                                             echo "<tr style='border-top: 1px solid #333;'>";
-                                            echo "<td>" . $row['nonmon_donation_desc'] . "</td>";
-                                            echo "<td>" . $row['nonmon_donation_info'] . "</td>";
-                                            echo "<td>" . $row['nonmon_donation_date'] . "</td>";
+                                            echo "<td colspan='3'>No Non-Monetary Donations Entered.</td>";
                                             echo "</tr>";
                                         }
                                     }
@@ -925,7 +959,8 @@
                                     echo "<td colspan='3'>No Non-Monetary Donations Entered.</td>";
                                     echo "</tr>";
                                 }
-                                ?>
+                            ?>
+
                         </tbody>
                     </table>
                     <br>
@@ -1264,43 +1299,50 @@
                                     $totalPayments = 0;
                                     $totalDeposits = 0;
 
-                                if (isset($financial_report_array['bank_reconciliation_array'])) {
-                                    $blobData = base64_decode($financial_report_array['bank_reconciliation_array']);
-                                    $bank_rec_array = unserialize($blobData);
+                                    if (isset($financial_report_array['bank_reconciliation_array']) && $financial_report_array['bank_reconciliation_array'] !== null) {
+                                        $blobData = base64_decode($financial_report_array['bank_reconciliation_array']);
+                                        $bank_rec_array = unserialize($blobData);
 
-                                    if ($bank_rec_array === false) {
-                                        echo "Error: Failed to unserialize data.";
-                                    } else {
-                                        foreach ($bank_rec_array as $row) {
-                                            echo "<tr>";
-                                            echo "<td>" . $row['bank_rec_date'] . "</td>";
-                                            echo "<td>" . $row['bank_rec_check_no'] . "</td>";
-                                            echo "<td>" . $row['bank_rec_desc'] . "</td>";
-                                            echo "<td>" . ($row['bank_rec_payment_amount'] ? "$" . number_format($row['bank_rec_payment_amount'], 2) : "$0.00") . "</td>";
-                                            echo "<td>" . ($row['bank_rec_desposit_amount'] ? "$" . number_format($row['bank_rec_desposit_amount'], 2) : "$0.00") . "</td>";
-                                            echo "</tr>";
+                                        if ($bank_rec_array === false) {
+                                            echo "Error: Failed to unserialize data.";
+                                        } else {
+                                            if (is_array($bank_rec_array) && count($bank_rec_array) > 0) {
+                                                foreach ($bank_rec_array as $row) {
+                                                    echo "<tr>";
+                                                    echo "<td>" . $row['bank_rec_date'] . "</td>";
+                                                    echo "<td>" . $row['bank_rec_check_no'] . "</td>";
+                                                    echo "<td>" . $row['bank_rec_desc'] . "</td>";
+                                                    echo "<td>" . ($row['bank_rec_payment_amount'] ? "$" . number_format($row['bank_rec_payment_amount'], 2) : "$0.00") . "</td>";
+                                                    echo "<td>" . ($row['bank_rec_desposit_amount'] ? "$" . number_format($row['bank_rec_desposit_amount'], 2) : "$0.00") . "</td>";
+                                                    echo "</tr>";
 
-                                            $totalPayments += floatval($row['bank_rec_payment_amount']);
-                                            $totalDeposits += floatval($row['bank_rec_desposit_amount']);
+                                                    $totalPayments += floatval($row['bank_rec_payment_amount']);
+                                                    $totalDeposits += floatval($row['bank_rec_desposit_amount']);
+                                                }
+
+                                                // Total row
+                                                echo "<tr style='border-top: 1px solid #333;'>";
+                                                echo "<td><strong>Total</strong></td>";
+                                                echo "<td><strong></strong></td>";
+                                                echo "<td><strong></strong></td>";
+                                                echo "<td><strong>$" . number_format($totalPayments, 2) . "</strong></td>";
+                                                echo "<td><strong>$" . number_format($totalDeposits, 2) . "</strong></td>";
+                                                echo "</tr>";
+                                            } else {
+                                                echo "<tr style='border-top: 1px solid #333;'>";
+                                                echo "<td colspan='5'>No Reconciliation Transactions Entered.</td>";
+                                                echo "</tr>";
+                                            }
                                         }
-                                         // Total row
+                                    } else {
                                         echo "<tr style='border-top: 1px solid #333;'>";
-                                        echo "<td><strong>Total</strong></td>";
-                                        echo "<td><strong></strong></td>";
-                                        echo "<td><strong></strong></td>";
-                                        echo "<td><strong>$" . number_format($totalPayments, 2) . "</strong></td>";
-                                        echo "<td><strong>$" . number_format($totalDeposits, 2) . "</strong></td>";
+                                        echo "<td colspan='5'>No Reconciliation Transactions Entered.</td>";
                                         echo "</tr>";
                                     }
-                                } else {
-                                    echo "<tr style='border-top: 1px solid #333;'>";
-                                    echo "<td colspan='5'>No Reconciliation Transactions Entered.</td>";
-                                    echo "</tr>";
-                                }
 
-                                $totalReconciliation = - $totalPayments + $totalDeposits;
+                                    $totalReconciliation = - $totalPayments + $totalDeposits;
+                                    ?>
 
-                            ?>
                             </tbody>
                             </table>
                         <br>
