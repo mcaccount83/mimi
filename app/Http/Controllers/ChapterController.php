@@ -3562,24 +3562,42 @@ class ChapterController extends Controller
         $corId = $corDetails['coordinator_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
+        $award_1_nomination_type = $request->input('checkNominationType1', null);
+        $award_2_nomination_type = $request->input('checkNominationType2', null);
+        $award_3_nomination_type = $request->input('checkNominationType3', null);
+        $award_4_nomination_type = $request->input('checkNominationType4', null);
+        $award_5_nomination_type = $request->input('checkNominationType5', null);
+        $award_1_outstanding_project_desc = $request->input('AwardDesc1', null);
+        $award_2_outstanding_project_desc = $request->input('AwardDesc2', null);
+        $award_3_outstanding_project_desc = $request->input('AwardDesc3', null);
+        $award_4_outstanding_project_desc = $request->input('AwardDesc4', null);
+        $award_5_outstanding_project_desc = $request->input('AwardDesc5', null);
+        $check_award_1_approved = $request->input('checkAward1Approved', null);
+        $check_award_2_approved = $request->input('checkAward2Approved', null);
+        $check_award_3_approved = $request->input('checkAward3Approved', null);
+        $check_award_4_approved = $request->input('checkAward4Approved', null);
+        $check_award_5_approved = $request->input('checkAward5Approved', null);
+
+
+
         $report = FinancialReport::find($id);
         DB::beginTransaction();
         try {
-            $report->award_1_nomination_type = $request->get('NominationType1');
-            $report->award_1_outstanding_project_desc = $request->get('AwardDesc1');
-            $report->check_award_1_approved = (int) $request->has('approved_1');
-            $report->award_2_nomination_type = $request->get('NominationType2');
-            $report->award_2_outstanding_project_desc = $request->get('AwardDesc2');
-            $report->check_award_2_approved = (int) $request->has('approved_2');
-            $report->award_3_nomination_type = $request->get('NominationType3');
-            $report->award_3_outstanding_project_desc = $request->get('AwardDesc3');
-            $report->check_award_3_approved = (int) $request->has('approved_3');
-            $report->award_4_nomination_type = $request->get('NominationType4');
-            $report->award_4_outstanding_project_desc = $request->get('AwardDesc4');
-            $report->check_award_4_approved = (int) $request->has('approved_4');
-            $report->award_5_nomination_type = $request->get('NominationType5');
-            $report->award_5_outstanding_project_desc = $request->get('AwardDesc5');
-            $report->check_award_5_approved = (int) $request->has('approved_5');
+            $report->award_1_nomination_type = $award_1_nomination_type;
+            $report->award_2_nomination_type = $award_2_nomination_type;
+            $report->award_3_nomination_type = $award_3_nomination_type;
+            $report->award_4_nomination_type = $award_4_nomination_type;
+            $report->award_5_nomination_type = $award_5_nomination_type;
+            $report->award_1_outstanding_project_desc = $award_1_outstanding_project_desc;
+            $report->award_2_outstanding_project_desc = $award_2_outstanding_project_desc;
+            $report->award_3_outstanding_project_desc = $award_3_outstanding_project_desc;
+            $report->award_4_outstanding_project_desc = $award_4_outstanding_project_desc;
+            $report->award_5_outstanding_project_desc = $award_5_outstanding_project_desc;
+            $report->check_award_1_approved = $check_award_1_approved;
+            $report->check_award_2_approved = $check_award_2_approved;
+            $report->check_award_3_approved = $check_award_3_approved;
+            $report->check_award_4_approved = $check_award_4_approved;
+            $report->check_award_5_approved = $check_award_5_approved;
             $report->save();
 
             DB::commit();

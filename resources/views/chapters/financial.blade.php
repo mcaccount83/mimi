@@ -590,7 +590,7 @@
 							<div class="col-md-6 mar_bot_20">
                                 <div class="col-md-12">
                                 <div class="form-inline">
-                                    <label style="display: block;">Is the Chapter's Party Expense under 15%<span class="field-required">*</span></label>
+                                    <label style="display: block;">Is the Chapter's Party Expense under 15%?<span class="field-required">*</span></label>
                                     <select id="check_party_percentage" name="check_party_percentage" class="form-control select2" style="width: 300px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
                                         <option value="" {{ is_null($financial_report_array->check_party_percentage) ? 'selected' : '' }} disabled>Please Select</option>
                                         <option value="0" {{$financial_report_array->check_party_percentage === 0 ? 'selected' : ''}}>No, they are over 20%</option>
@@ -1807,6 +1807,12 @@
 								echo "0";
 							} ?>>
 
+							<?php
+                                if (empty($financial_report_array) || $financial_report_array['award_1_nomination_type'] === null || $financial_report_array['award_1_nomination_type'] == 0) {
+                                    echo "No Award Nominations for this Chapter";
+                                }
+                            ?>
+
 						<!-- Award 1 Start -->
 						<div class="box_brd_contentpad" id="Award1Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_nomination_type']==NULL) echo "none;"; else echo "block;";} else echo "none;";?>">
 							<div class="box_brd_title_box">
@@ -1821,8 +1827,13 @@
                             <div class="col-sm-12">
 								 Description:
                                  <div class="col-sm-12">
-                                    <?php if (!empty($financial_report_array)) {echo $financial_report_array['award_1_outstanding_project_desc'];}?>
-                                 </div>
+                                    <?php
+                                        if (!empty($financial_report_array)) {
+                                            $description = $financial_report_array['award_1_outstanding_project_desc'];
+                                            echo ($description !== null) ? $description : "No description entered";
+                                        }
+                                    ?>
+                                </div>
                             </div>
                             <?php if (!empty($financial_report_array) && ($financial_report_array['award_1_nomination_type'] == 5 || $financial_report_array['award_1_nomination_type'] == 6)) : ?>
                             <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
@@ -1857,24 +1868,28 @@
                                     Supporting Award Files:
                                     <div class="form-group col-sm-12">
                                         <?php
-                                        $award_1_files = null;
-                                        $Award1FileCount = 0;
+                                            $award_1_files = null;
+                                            $Award1FileCount = 0;
 
-                                        if (isset($financial_report_array['award_1_files'])) {
-                                            $award_1_files = unserialize(base64_decode($financial_report_array['award_1_files']));
-                                            $Award1FileCount = is_array($award_1_files) ? count($award_1_files) : 0;
+                                            if (isset($financial_report_array['award_1_files'])) {
+                                                $award_1_files = unserialize(base64_decode($financial_report_array['award_1_files']));
+                                                $Award1FileCount = is_array($award_1_files) ? count($award_1_files) : 0;
 
-                                            if ($Award1FileCount > 0) {
-                                                for ($row = 1; $row <= $Award1FileCount; $row++) {
-                                                    $row_id = $row;
-                                                    echo "<a href=\"" . $award_1_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a>";
+                                                if ($Award1FileCount > 0) {
+                                                    for ($row = 1; $row <= $Award1FileCount; $row++) {
+                                                        $row_id = $row;
+                                                        if (isset($award_1_files[$row]['url'])) {
+                                                            echo "<a href=\"" . $award_1_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a>";
+                                                        } else {
+                                                            echo "No files uploaded";
+                                                        }
+                                                    }
+                                                } else {
+                                                    echo "No files uploaded";
                                                 }
                                             } else {
                                                 echo "No files uploaded";
                                             }
-                                        } else {
-                                            echo "No files uploaded";
-                                        }
                                         ?>
                                     </div>
                                 </div>
@@ -1894,8 +1909,13 @@
                             <div class="col-sm-12">
 								 Description:
                                  <div class="col-sm-12">
-                                    <?php if (!empty($financial_report_array)) {echo $financial_report_array['award_2_outstanding_project_desc'];}?>
-                                 </div>
+                                    <?php
+                                        if (!empty($financial_report_array)) {
+                                            $description = $financial_report_array['award_2_outstanding_project_desc'];
+                                            echo ($description !== null) ? $description : "No description entered";
+                                        }
+                                    ?>
+                                </div>
                             </div>
                             <?php if (!empty($financial_report_array) && ($financial_report_array['award_2_nomination_type'] == 5 || $financial_report_array['award_2_nomination_type'] == 6)) : ?>
                             <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
@@ -1961,398 +1981,246 @@
 						<div class="box_brd_contentpad" id="Award3Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_nomination_type']==NULL) echo "none;"; else echo "block;";} else echo "none;";?>">
 							<div class="box_brd_title_box">
 								<div class="form-group">
-								<label for="NominationType3">Award 3 Type:</label>
-									<select class="form-control" id="NominationType3" name="NominationType3" onClick="ShowOutstandingCriteria(3)" disabled>
-									   <option style="display:none" disabled selected>Select an award type</option>
-									   <option value=1 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
-											<option value=2 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
-											<option value=3 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
-											<option value=4 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
-											<option value=5 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, 2018))</option>
-											<option value=6 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, 2018)</option>
-											<option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
-									</select>
+                                    <div class="col-md-12">
+                                        Award #3:&nbsp;&nbsp;&nbsp;{{ is_null($financial_report_array['award_3_nomination_type']) ? 'N/A' : ($financial_report_array['award_3_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                                                : ($financial_report_array['award_3_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_3_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_3_nomination_type'] == 4 ? 'Outstanding Spirit'
+                                                : ($financial_report_array['award_3_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_3_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_3_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                                    </div>
 								</div>
 							</div>
-							<div class="award_acc_con">
-								<div id="OutstandingCriteria3" style="display: none;">
-								<div class="col-sm-12">
-									<h4>Outstanding Chapter Criteria</h4>
-									<p><label for="OutstandingFollowByLaws3">Did you follow the Bylaws and all instructions from International?</label></p>
+                            <div class="col-sm-12">
+								 Description:
+                                 <div class="col-sm-12">
+                                    <?php
+                                        if (!empty($financial_report_array)) {
+                                            $description = $financial_report_array['award_3_outstanding_project_desc'];
+                                            echo ($description !== null) ? $description : "No description entered";
+                                        }
+                                    ?>
+                                </div>
+                            </div>
+                            <?php if (!empty($financial_report_array) && ($financial_report_array['award_3_nomination_type'] == 5 || $financial_report_array['award_3_nomination_type'] == 6)) : ?>
+                            <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
+                            <div class="col-sm-12">
+                                <table>
+                                    <tr><td colspan="2">Did you follow the Bylaws and all instructions from International?</td></tr>
+                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_3_outstanding_follow_bylaws']) ? 'Not Answered' : ($financial_report_array['award_3_outstanding_follow_bylaws'] == 0 ? 'NO'
+                                            : ($financial_report_array['award_3_outstanding_follow_bylaws'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
+                                    </tr>
+                                    <tr><td colspan="2">Did you run a well-rounded program for your members?</td></tr>
+                                    <tr><td>&nbsp;&nbsp;&nbsp;</td>
+                                    <td>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings), a variety of outings, playgroups, other activity groups, service projects, parties/member benefits
+                                        kept under 15% of the dues received -- these are all taken into consideration. A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older
+                                        children (or vice versa) would not be offering a well-rounded program.</td></tr>
+                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_3_outstanding_well_rounded']) ? 'Not Answered' : ($financial_report_array['award_3_outstanding_well_rounded'] == 0 ? 'NO'
+                                            : ($financial_report_array['award_3_outstanding_well_rounded'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
+                                    </tr>
+                                    <tr><td colspan="2">Did you communicate with your Coordinator?</td></tr>
+                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_3_outstanding_communicated']) ? 'Not Answered' : ($financial_report_array['award_3_outstanding_communicated'] == 0 ? 'NO'
+                                        : ($financial_report_array['award_3_outstanding_communicated'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
+                                    </tr>
+                                    <tr><td colspan="2" colspan="2">Did you support the International MOMS Club?</td></tr>
+                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_3_outstanding_support_international']) ? 'Not Answered' : ($financial_report_array['award_3_outstanding_support_international'] == 0 ? 'NO'
+                                        : ($financial_report_array['award_3_outstanding_support_international'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <?php endif; ?>
+                            <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
+							    <input type="hidden" name="Award3Path" id="Award3Path" value="<?php echo $financial_report_array['award_3_files']; ?>">
+                                <div class="col-sm-12">
+                                    Supporting Award Files:
+                                    <div class="form-group col-sm-12">
+                                        <?php
+                                            $award_3_files = null;
+                                            $Award3FileCount = 0;
 
-										<div class="form-check form-check-radio">
-											<label class="form-check-label">
-												<input id="OutstandingFollowByLaws3Yes" name="OutstandingFollowByLaws3" type="radio" class="form-check-input" value="yes"<?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_outstanding_follow_bylaws'] == true) echo "checked";} ?> disabled>
-												<span class="form-check-sign"></span>
-													  Yes
-											</label>
-											<label class="form-check-label">
-												<input type="radio" class="form-check-input" id="OutstandingFollowByLaws3No" name="OutstandingFollowByLaws3" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_outstanding_follow_bylaws'] == false) echo "checked";} ?> value="no" disabled>
-												<span class="form-check-sign"></span>
-													  No
-											</label>
-										</div>
+                                            if (isset($financial_report_array['award_3_files'])) {
+                                                $award_3_files = unserialize(base64_decode($financial_report_array['award_3_files']));
+                                                $Award3FileCount = is_array($award_3_files) ? count($award_3_files) : 0;
 
-								</div>
-								<div class="col-sm-12">
-									<p><label for="OutstandingWellRounded3">Did you run a well-rounded program for your members?</label><br>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings), a variety of outings, playgroups, other activity groups, service projects, parties/member benefits kept under 15% of the dues received -- these are all taken into consideration. A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
-
-										<div class="form-check form-check-radio">
-											<label class="form-check-label">
-												<input id="OutstandingWellRounded3Yes" name="OutstandingWellRounded3" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_2_outstanding_well_rounded'] == true) echo "checked";} ?> disabled>
-												<span class="form-check-sign"></span>
-													  Yes
-											</label>
-											<label class="form-check-label">
-												<input type="radio" class="form-check-input" id="OutstandingWellRounded3No" name="OutstandingWellRounded3" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_outstanding_well_rounded'] == false) echo "checked";} ?> value="no" disabled>
-												<span class="form-check-sign"></span>
-													  No
-											</label>
-										</div>
-
-								</div>
-								<div class="col-sm-12">
-									<p><label for="OutstandingCommunicated3">Did you communicate with your Coordinator?</label><br>Did you send in your newsletter regularly? Send updates? Return telephone calls? A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
-
-										<div class="form-check form-check-radio">
-											<label class="form-check-label">
-												<input id="OutstandingCommunicated3Yes" name="OutstandingCommunicated3" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_outstanding_communicated'] == true) echo "checked";} ?> disabled>
-												<span class="form-check-sign"></span>
-													  Yes
-											</label>
-											<label class="form-check-label">
-												<input type="radio" class="form-check-input"id="OutstandingCommunicated3No" name="OutstandingCommunicated3" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_outstanding_communicated'] == false) echo "checked";} ?> value="no" disabled>
-												<span class="form-check-sign"></span>
-													  No
-											</label>
-										</div>
-
-								</div>
-								<div class="col-sm-12">
-									<p><label for="OutstandingSupportMomsClub3">Did you support the International MOMS Club? Indications of supporting International MAY include but are not limited to:</label></p>
-									<ul>
-										<li>Providing MOMS Club pins to your members</li>
-										<li>Purchasing MOMS Club merchandise from International</li>
-										<li>Forming sister chapters (when possible)</li>
-										<li>Donating to the Mother-to-Mother Fund</li>
-										<li>Participating in Area, State and Regional events.</li>
-									</ul>
-
-										<div class="form-check form-check-radio">
-											<label class="form-check-label">
-												<input id="OutstandingSupportMomsClub3Yes" name="OutstandingSupportMomsClub3" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_outstanding_support_international'] == true) echo "checked";} ?> disabled>
-												<span class="form-check-sign"></span>
-													  Yes
-											</label>
-											<label class="form-check-label">
-												<input type="radio" class="form-check-input" id="OutstandingSupportMomsClub3No" name="OutstandingSupportMomsClub3" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_outstanding_support_international'] == false) echo "checked";} ?> value="no" disabled>
-												<span class="form-check-sign"></span>
-													  No
-											</label>
-										</div>
-
-								</div>
-								</div>
-
-								 <h4>Description</h4>
-								 <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
-								 <div class="form-group">
-									<textarea class="form-control" rows="10" id="AwardDesc3" name="AwardDesc3" readonly><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_3_outstanding_project_desc'];}?></textarea>
-								 </div>
-
-								<input type="hidden" name="Award3Path" id="Award3Path" value="<?php echo $financial_report_array['award_3_files']; ?>">
-
-								 <div class="row" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['award_3_files']) echo "style=\"display: none;\"";} ?>>
-									<div class="form-group col-xs-12">
-										<label class="control-label" for="Award1Link">Supporting Award Files:</label>
-										<div>
-										<?php
-											$award_3_files = null;
-											$Award3FileCount =0;
-											if(isset($financial_report_array['award_3_files'])){
-												$award_3_files=unserialize(base64_decode($financial_report_array['award_3_files']));
-
-												$row = 3;
-												$row_id ='';
-												if (!empty($award_3_files)) {
-                                                    foreach ($award_3_files as $row => $fileInfo) {
-                                                        echo "<p class=\"form-control-static\"><a href=\"" . $award_3_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
+                                                if ($Award3FileCount > 0) {
+                                                    for ($row = 1; $row <= $Award3FileCount; $row++) {
+                                                        $row_id = $row;
+                                                        if (isset($award_3_files[$row]['url'])) {
+                                                            echo "<a href=\"" . $award_3_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a>";
+                                                        } else {
+                                                            echo "No files uploaded";
+                                                        }
                                                     }
                                                 } else {
-                                                    // Handle the case where $award_2_files is empty or null
+                                                    echo "No files uploaded";
                                                 }
+                                            } else {
+                                                echo "No files uploaded";
                                             }
-
-										?>
-										</div>
-									</div>
-								</div>
-							</div>
+                                        ?>
+                                    </div>
+                                </div>
 						</div>
 						<!-- Award 3 Stop -->
 						<!-- Award 4 Start -->
-						<div class="box_brd_contentpad" id="Award4Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==NULL) echo "none;"; else echo "block;";} else echo "none;";?>">
+						<div class="box_brd_contentpad" id="Award1Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==NULL) echo "none;"; else echo "block;";} else echo "none;";?>">
 							<div class="box_brd_title_box">
 								<div class="form-group">
-								<label for="NominationType4">Award 4 Type:</label>
-									<select class="form-control" id="NominationType4" name="NominationType4" onClick="ShowOutstandingCriteria(4)" disabled>
-									   <option style="display:none" disabled selected>Select an award type</option>
-									   <option value=1 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
-											<option value=2 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
-											<option value=3 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
-											<option value=4 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
-											<option value=5 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, 2018))</option>
-											<option value=6 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, 2018)</option>
-											<option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
-									</select>
+                                    <div class="col-md-12">
+                                        Award #4:&nbsp;&nbsp;&nbsp;{{ is_null($financial_report_array['award_4_nomination_type']) ? 'N/A' : ($financial_report_array['award_4_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                                                : ($financial_report_array['award_4_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_4_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_4_nomination_type'] == 4 ? 'Outstanding Spirit'
+                                                : ($financial_report_array['award_4_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_4_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_4_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                                    </div>
 								</div>
 							</div>
-							<div class="award_acc_con">
-								<div id="OutstandingCriteria4" style="display: none;">
-								<div class="col-sm-12">
-									<h4>Outstanding Chapter Criteria</h4>
-									<p><label for="OutstandingFollowByLaws4">Did you follow the Bylaws and all instructions from International?</label></p>
+                            <div class="col-sm-12">
+								 Description:
+                                 <div class="col-sm-12">
+                                    <?php
+                                        if (!empty($financial_report_array)) {
+                                            $description = $financial_report_array['award_4_outstanding_project_desc'];
+                                            echo ($description !== null) ? $description : "No description entered";
+                                        }
+                                    ?>
+                                </div>
+                            </div>
+                            <?php if (!empty($financial_report_array) && ($financial_report_array['award_4_nomination_type'] == 5 || $financial_report_array['award_4_nomination_type'] == 6)) : ?>
+                            <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
+                            <div class="col-sm-12">
+                                <table>
+                                    <tr><td colspan="2">Did you follow the Bylaws and all instructions from International?</td></tr>
+                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_4_outstanding_follow_bylaws']) ? 'Not Answered' : ($financial_report_array['award_4_outstanding_follow_bylaws'] == 0 ? 'NO'
+                                            : ($financial_report_array['award_4_outstanding_follow_bylaws'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
+                                    </tr>
+                                    <tr><td colspan="2">Did you run a well-rounded program for your members?</td></tr>
+                                    <tr><td>&nbsp;&nbsp;&nbsp;</td>
+                                    <td>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings), a variety of outings, playgroups, other activity groups, service projects, parties/member benefits
+                                        kept under 15% of the dues received -- these are all taken into consideration. A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older
+                                        children (or vice versa) would not be offering a well-rounded program.</td></tr>
+                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_4_outstanding_well_rounded']) ? 'Not Answered' : ($financial_report_array['award_4_outstanding_well_rounded'] == 0 ? 'NO'
+                                            : ($financial_report_array['award_4_outstanding_well_rounded'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
+                                    </tr>
+                                    <tr><td colspan="2">Did you communicate with your Coordinator?</td></tr>
+                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_4_outstanding_communicated']) ? 'Not Answered' : ($financial_report_array['award_4_outstanding_communicated'] == 0 ? 'NO'
+                                        : ($financial_report_array['award_4_outstanding_communicated'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
+                                    </tr>
+                                    <tr><td colspan="2" colspan="2">Did you support the International MOMS Club?</td></tr>
+                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_4_outstanding_support_international']) ? 'Not Answered' : ($financial_report_array['award_4_outstanding_support_international'] == 0 ? 'NO'
+                                        : ($financial_report_array['award_4_outstanding_support_international'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <?php endif; ?>
+                            <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
+							    <input type="hidden" name="Award4Path" id="Award4Path" value="<?php echo $financial_report_array['award_4_files']; ?>">
+                                <div class="col-sm-12">
+                                    Supporting Award Files:
+                                    <div class="form-group col-sm-12">
+                                        <?php
+                                            $award_4_files = null;
+                                            $Award4FileCount = 0;
 
-										<div class="form-check form-check-radio">
-											<label class="form-check-label">
-												<input id="OutstandingFollowByLaws4Yes" name="OutstandingFollowByLaws4" type="radio" class="form-check-input" value="yes"<?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_outstanding_follow_bylaws'] == true) echo "checked";} ?> disabled>
-												<span class="form-check-sign"></span>
-													  Yes
-											</label>
-											<label class="form-check-label">
-												<input type="radio" class="form-check-input" id="OutstandingFollowByLaws4No" name="OutstandingFollowByLaws4" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_outstanding_follow_bylaws'] == false) echo "checked";} ?> value="no" disabled>
-												<span class="form-check-sign"></span>
-													  No
-											</label>
-										</div>
+                                            if (isset($financial_report_array['award_4_files'])) {
+                                                $award_4_files = unserialize(base64_decode($financial_report_array['award_4_files']));
+                                                $Award4FileCount = is_array($award_4_files) ? count($award_4_files) : 0;
 
-								</div>
-								<div class="col-sm-12">
-									<p><label for="OutstandingWellRounded4">Did you run a well-rounded program for your members?</label><br>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings), a variety of outings, playgroups, other activity groups, service projects, parties/member benefits kept under 15% of the dues received -- these are all taken into consideration. A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
-
-										<div class="form-check form-check-radio">
-											<label class="form-check-label">
-												<input id="OutstandingWellRounded4Yes" name="OutstandingWellRounded4" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_outstanding_well_rounded'] == true) echo "checked";} ?> disabled>
-												<span class="form-check-sign"></span>
-													  Yes
-											</label>
-											<label class="form-check-label">
-												<input type="radio" class="form-check-input" id="OutstandingWellRounded4No" name="OutstandingWellRounded4" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_outstanding_well_rounded'] == false) echo "checked";} ?> value="no" disabled>
-												<span class="form-check-sign"></span>
-													  No
-											</label>
-										</div>
-
-								</div>
-								<div class="col-sm-12">
-									<p><label for="OutstandingCommunicated4">Did you communicate with your Coordinator?</label><br>Did you send in your newsletter regularly? Send updates? Return telephone calls? A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
-
-										<div class="form-check form-check-radio">
-											<label class="form-check-label">
-												<input id="OutstandingCommunicated4Yes" name="OutstandingCommunicated4" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_outstanding_communicated'] == true) echo "checked";} ?> disabled>
-												<span class="form-check-sign"></span>
-													  Yes
-											</label>
-											<label class="form-check-label">
-												<input type="radio" class="form-check-input"id="OutstandingCommunicated4No" name="OutstandingCommunicated4" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_outstanding_communicated'] == false) echo "checked";} ?> value="no" disabled>
-												<span class="form-check-sign"></span>
-													  No
-											</label>
-										</div>
-
-								</div>
-								<div class="col-sm-12">
-									<p><label for="OutstandingSupportMomsClub4">Did you support the International MOMS Club? Indications of supporting International MAY include but are not limited to:</label></p>
-									<ul>
-										<li>Providing MOMS Club pins to your members</li>
-										<li>Purchasing MOMS Club merchandise from International</li>
-										<li>Forming sister chapters (when possible)</li>
-										<li>Donating to the Mother-to-Mother Fund</li>
-										<li>Participating in Area, State and Regional events.</li>
-									</ul>
-
-										<div class="form-check form-check-radio">
-											<label class="form-check-label">
-												<input id="OutstandingSupportMomsClub4Yes" name="OutstandingSupportMomsClub4" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_outstanding_support_international'] == true) echo "checked";} ?> disabled>
-												<span class="form-check-sign"></span>
-													  Yes
-											</label>
-											<label class="form-check-label">
-												<input type="radio" class="form-check-input" id="OutstandingSupportMomsClub4No" name="OutstandingSupportMomsClub4" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_outstanding_support_international'] == false) echo "checked";} ?> value="no" disabled>
-												<span class="form-check-sign"></span>
-													  No
-											</label>
-										</div>
-
-								</div>
-								</div>
-
-								 <h4>Description</h4>
-								 <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
-								 <div class="form-group">
-									<textarea class="form-control" rows="10" id="AwardDesc4" name="AwardDesc4" readonly><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_4_outstanding_project_desc'];}?></textarea>
-
-								<input type="hidden" name="Award4Path" id="Award4Path" value="<?php echo $financial_report_array['award_4_files']; ?>">
-
-								 <div class="row" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['award_4_files']) echo "style=\"display: none;\"";} ?>>
-									<div class="form-group col-xs-12">
-										<label class="control-label" for="Award1Link">Supporting Award Files:</label>
-										<div>
-										<?php
-											$award_4_files = null;
-											$Award4FileCount =0;
-											if(isset($financial_report_array['award_4_files'])){
-												$award_4_files=unserialize(base64_decode($financial_report_array['award_4_files']));
-
-												$row = 4;
-												$row_id ='';
-												if (!empty($award_4_files)) {
-                                                    foreach ($award_4_files as $row => $fileInfo) {
-                                                        echo "<p class=\"form-control-static\"><a href=\"" . $award_4_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
+                                                if ($Award4FileCount > 0) {
+                                                    for ($row = 1; $row <= $Award4FileCount; $row++) {
+                                                        $row_id = $row;
+                                                        if (isset($award_4_files[$row]['url'])) {
+                                                            echo "<a href=\"" . $award_4_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a>";
+                                                        } else {
+                                                            echo "No files uploaded";
+                                                        }
                                                     }
                                                 } else {
-                                                    // Handle the case where $award_2_files is empty or null
+                                                    echo "No files uploaded";
                                                 }
+                                            } else {
+                                                echo "No files uploaded";
                                             }
-										?>
-										</div>
-									</div>
-								</div>
-							</div>
+                                        ?>
+                                    </div>
+                                </div>
 						</div>
 						<!-- Award 4 Stop -->
 						<!-- Award 5 Start -->
-						<div class="box_brd_contentpad" id="Award5Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==NULL) echo "none;"; else echo "block;";} else echo "none;";?>">
+						<div class="box_brd_contentpad" id="Award1Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==NULL) echo "none;"; else echo "block;";} else echo "none;";?>">
 							<div class="box_brd_title_box">
 								<div class="form-group">
-								<label for="NominationType5">Award 5 Type:</label>
-									<select class="form-control" id="NominationType5" name="NominationType5" onClick="ShowOutstandingCriteria(5)" disabled>
-									   <option style="display:none" disabled selected>Select an award type</option>
-									   <option value=1 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
-											<option value=2 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
-											<option value=3 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
-											<option value=4 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
-											<option value=5 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, 2018))</option>
-											<option value=6 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, 2018)</option>
-											<option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
-									</select>
+                                    <div class="col-md-12">
+                                        Award #5:&nbsp;&nbsp;&nbsp;{{ is_null($financial_report_array['award_5_nomination_type']) ? 'N/A' : ($financial_report_array['award_5_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                                                : ($financial_report_array['award_5_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_5_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_5_nomination_type'] == 4 ? 'Outstanding Spirit'
+                                                : ($financial_report_array['award_5_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_5_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_5_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                                    </div>
 								</div>
 							</div>
-							<div class="award_acc_con">
-								<div id="OutstandingCriteria5" style="display: none;">
-								<div class="col-sm-12">
-									<h4>Outstanding Chapter Criteria</h4>
-									<p><label for="OutstandingFollowByLaws5">Did you follow the Bylaws and all instructions from International?</label></p>
+                            <div class="col-sm-12">
+								 Description:
+                                 <div class="col-sm-12">
+                                    <?php
+                                        if (!empty($financial_report_array)) {
+                                            $description = $financial_report_array['award_5_outstanding_project_desc'];
+                                            echo ($description !== null) ? $description : "No description entered";
+                                        }
+                                    ?>
+                                </div>
+                            </div>
+                            <?php if (!empty($financial_report_array) && ($financial_report_array['award_5_nomination_type'] == 5 || $financial_report_array['award_5_nomination_type'] == 6)) : ?>
+                            <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
+                            <div class="col-sm-12">
+                                <table>
+                                    <tr><td colspan="2">Did you follow the Bylaws and all instructions from International?</td></tr>
+                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_5_outstanding_follow_bylaws']) ? 'Not Answered' : ($financial_report_array['award_5_outstanding_follow_bylaws'] == 0 ? 'NO'
+                                            : ($financial_report_array['award_5_outstanding_follow_bylaws'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
+                                    </tr>
+                                    <tr><td colspan="2">Did you run a well-rounded program for your members?</td></tr>
+                                    <tr><td>&nbsp;&nbsp;&nbsp;</td>
+                                    <td>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings), a variety of outings, playgroups, other activity groups, service projects, parties/member benefits
+                                        kept under 15% of the dues received -- these are all taken into consideration. A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older
+                                        children (or vice versa) would not be offering a well-rounded program.</td></tr>
+                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_5_outstanding_well_rounded']) ? 'Not Answered' : ($financial_report_array['award_5_outstanding_well_rounded'] == 0 ? 'NO'
+                                            : ($financial_report_array['award_5_outstanding_well_rounded'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
+                                    </tr>
+                                    <tr><td colspan="2">Did you communicate with your Coordinator?</td></tr>
+                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_5_outstanding_communicated']) ? 'Not Answered' : ($financial_report_array['award_5_outstanding_communicated'] == 0 ? 'NO'
+                                        : ($financial_report_array['award_5_outstanding_communicated'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
+                                    </tr>
+                                    <tr><td colspan="2" colspan="2">Did you support the International MOMS Club?</td></tr>
+                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_5_outstanding_support_international']) ? 'Not Answered' : ($financial_report_array['award_5_outstanding_support_international'] == 0 ? 'NO'
+                                        : ($financial_report_array['award_5_outstanding_support_international'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <?php endif; ?>
+                            <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
+							    <input type="hidden" name="Award5Path" id="Award5Path" value="<?php echo $financial_report_array['award_5_files']; ?>">
+                                <div class="col-sm-12">
+                                    Supporting Award Files:
+                                    <div class="form-group col-sm-12">
+                                        <?php
+                                            $award_5_files = null;
+                                            $Award5FileCount = 0;
 
-										<div class="form-check form-check-radio">
-											<label class="form-check-label">
-												<input id="OutstandingFollowByLaws5Yes" name="OutstandingFollowByLaws5" type="radio" class="form-check-input" value="yes"<?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_outstanding_follow_bylaws'] == true) echo "checked";} ?> disabled>
-												<span class="form-check-sign"></span>
-													  Yes
-											</label>
-											<label class="form-check-label">
-												<input type="radio" class="form-check-input" id="OutstandingFollowByLaws5No" name="OutstandingFollowByLaws5" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_outstanding_follow_bylaws'] == false) echo "checked";} ?> value="no" disabled>
-												<span class="form-check-sign"></span>
-													  No
-											</label>
-										</div>
+                                            if (isset($financial_report_array['award_5_files'])) {
+                                                $award_5_files = unserialize(base64_decode($financial_report_array['award_5_files']));
+                                                $Award5FileCount = is_array($award_5_files) ? count($award_5_files) : 0;
 
-								</div>
-								<div class="col-sm-12">
-									<p><label for="OutstandingWellRounded5">Did you run a well-rounded program for your members?</label><br>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings), a variety of outings, playgroups, other activity groups, service projects, parties/member benefits kept under 15% of the dues received -- these are all taken into consideration. A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
-
-										<div class="form-check form-check-radio">
-											<label class="form-check-label">
-												<input id="OutstandingWellRounded5Yes" name="OutstandingWellRounded5" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_outstanding_well_rounded'] == true) echo "checked";} ?> disabled>
-												<span class="form-check-sign"></span>
-													  Yes
-											</label>
-											<label class="form-check-label">
-												<input type="radio" class="form-check-input" id="OutstandingWellRounded5No" name="OutstandingWellRounded5" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_outstanding_well_rounded'] == false) echo "checked";} ?> value="no" disabled>
-												<span class="form-check-sign"></span>
-													  No
-											</label>
-										</div>
-
-								</div>
-								<div class="col-sm-12">
-									<p><label for="OutstandingCommunicated5">Did you communicate with your Coordinator?</label><br>Did you send in your newsletter regularly? Send updates? Return telephone calls? A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
-
-										<div class="form-check form-check-radio">
-											<label class="form-check-label">
-												<input id="OutstandingCommunicated5Yes" name="OutstandingCommunicated5" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_outstanding_communicated'] == true) echo "checked";} ?> disabled>
-												<span class="form-check-sign"></span>
-													  Yes
-											</label>
-											<label class="form-check-label">
-												<input type="radio" class="form-check-input"id="OutstandingCommunicated5No" name="OutstandingCommunicated5" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_outstanding_communicated'] == false) echo "checked";} ?> value="no" disabled>
-												<span class="form-check-sign"></span>
-													  No
-											</label>
-										</div>
-
-								</div>
-								<div class="col-sm-12">
-									<p><label for="OutstandingSupportMomsClub5">Did you support the International MOMS Club? Indications of supporting International MAY include but are not limited to:</label></p>
-									<ul>
-										<li>Providing MOMS Club pins to your members</li>
-										<li>Purchasing MOMS Club merchandise from International</li>
-										<li>Forming sister chapters (when possible)</li>
-										<li>Donating to the Mother-to-Mother Fund</li>
-										<li>Participating in Area, State and Regional events.</li>
-									</ul>
-
-										<div class="form-check form-check-radio">
-											<label class="form-check-label">
-												<input id="OutstandingSupportMomsClub5Yes" name="OutstandingSupportMomsClub5" type="radio" class="form-check-input" value="yes" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_outstanding_support_international'] == true) echo "checked";} ?> disabled>
-												<span class="form-check-sign"></span>
-													  Yes
-											</label>
-											<label class="form-check-label">
-												<input type="radio" class="form-check-input" id="OutstandingSupportMomsClub5No" name="OutstandingSupportMomsClub5" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_outstanding_support_international'] == false) echo "checked";} ?> value="no" disabled>
-												<span class="form-check-sign"></span>
-													  No
-											</label>
-										</div>
-
-								</div>
-								</div>
-
-								 <h4>Description</h4>
-								 <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
-								 <div class="form-group">
-									<textarea class="form-control" rows="10" id="AwardDesc5" name="AwardDesc5" readonly><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_5_outstanding_project_desc'];}?></textarea>
-								 </div>
-
-								<input type="hidden" name="Award5Path" id="Award5Path" value="<?php echo $financial_report_array['award_5_files']; ?>">
-
-								 <div class="row" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['award_5_files']) echo "style=\"display: none;\"";} ?>>
-									<div class="form-group col-xs-12">
-										<label class="control-label" for="Award1Link">Supporting Award Files:</label>
-										<div>
-										<?php
-											$award_5_files = null;
-											$Award5FileCount =0;
-											if(isset($financial_report_array['award_5_files'])){
-												$award_5_files=unserialize(base64_decode($financial_report_array['award_5_files']));
-
-
-												$row = 5;
-												$row_id ='';
-												if (!empty($award_5_files)) {
-                                                    foreach ($award_5_files as $row => $fileInfo) {
-                                                        echo "<p class=\"form-control-static\"><a href=\"" . $award_5_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
+                                                if ($Award5FileCount > 0) {
+                                                    for ($row = 1; $row <= $Award5FileCount; $row++) {
+                                                        $row_id = $row;
+                                                        if (isset($award_5_files[$row]['url'])) {
+                                                            echo "<a href=\"" . $award_5_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a>";
+                                                        } else {
+                                                            echo "No files uploaded";
+                                                        }
                                                     }
                                                 } else {
-                                                    // Handle the case where $award_2_files is empty or null
+                                                    echo "No files uploaded";
                                                 }
-
-											}
-										?>
-										</div>
-									</div>
-								</div>
-							</div>
+                                            } else {
+                                                echo "No files uploaded";
+                                            }
+                                        ?>
+                                    </div>
+                                </div>
 						</div>
 						<!-- Award 5 Stop -->
 
@@ -2379,12 +2247,8 @@
 								<div class="col-md-12">
 									<h2>Annual Report Review</h2>
 								</div>
-
 								<div class="form-row">
-
-
-									<div class="col-md-12 mar_bot_20" <?php if ($financial_report_array['award_1_nomination_type']==NULL) echo "style=\"display: none;\""; ?> ?>
-
+									<div class="col-md-12" <?php if ($financial_report_array['award_1_nomination_type']==NULL) echo "style=\"display: none;\""; ?> ?>
 										<div class="form-group col-md-6">
 											<label for="NominationType1">Award #1:</label>
 											<select class="form-control" id="sumcheckNominationType1" name="sumcheckNominationType1" disabled >
@@ -2398,22 +2262,7 @@
 												<option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
 											</select>
 										</div>
-
-										{{-- <div class="form-group col-md-6">
-											<label class="radio control-label">Award Status:</label>
-											<label class="custom-control custom-radio">
-												<input id="sumcheckAward1ApprovedNo" name="sumcheckAward1Approved" type="radio" value="no" class="custom-control-input" onClick="UpdateRelatedControl('checkAward1ApprovedNo')"  <?php if ($financial_report_array['check_award_1_approved'] == false) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-												<span class="custom-control-indicator"></span>
-												<span class="custom-control-description">NOT Approved</span>
-											</label>
-
-											<label class="custom-control custom-radio">
-												<input id="sumcheckAward1ApprovedYes" name="sumcheckAward1Approved" type="radio" value="yes" class="custom-control-input" onClick="UpdateRelatedControl('checkAward1ApprovedYes')" <?php if ($financial_report_array['check_award_1_approved'] == true) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-												<span class="custom-control-indicator"></span>
-												<span class="custom-control-description">Approved</span>
-											</label>
-										</div> --}}
-                                        <div class="col-md-6 mar_bot_20">
+										<div class="col-md-6">
                                             <div class="col-md-12">
                                             <div class="form-inline">
                                                 <label style="display: block;">Award Status:<span class="field-required">*</span></label>
@@ -2425,10 +2274,9 @@
                                             </div>
                                             </div>
                                         </div>
-
 									</div>
-									<div class="col-md-12 mar_bot_20" <?php if ($financial_report_array['award_2_nomination_type']==NULL) echo "style=\"display: none;\""; ?>>
 
+									<div class="col-md-12" <?php if ($financial_report_array['award_2_nomination_type']==NULL) echo "style=\"display: none;\""; ?>>
 										<div class="form-group col-md-6">
 											<label for="NominationType2">Award #2:</label>
 											<select class="form-control" id="sumcheckNominationType2" name="sumcheckNominationType2" disabled >
@@ -2442,25 +2290,21 @@
 												<option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_2_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
 											</select>
 										</div>
-
-										<div class="form-group col-md-6">
-											<label class="radio control-label">Award Status:</label>
-											<label class="custom-control custom-radio">
-												<input id="sumcheckAward2ApprovedNo" name="sumcheckAward2Approved" type="radio" value="no" class="custom-control-input" onClick="UpdateRelatedControl('checkAward2ApprovedNo')"  <?php if ($financial_report_array['check_award_2_approved'] == false) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-												<span class="custom-control-indicator"></span>
-												<span class="custom-control-description">NOT Approved</span>
-											</label>
-
-											<label class="custom-control custom-radio">
-												<input id="sumcheckAward2ApprovedYes" name="sumcheckAward2Approved" type="radio" value="yes" class="custom-control-input" onClick="UpdateRelatedControl('checkAward2ApprovedYes')" <?php if ($financial_report_array['check_award_2_approved'] == true) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-												<span class="custom-control-indicator"></span>
-												<span class="custom-control-description">Approved</span>
-											</label>
-										</div>
-
+                                        <div class="col-md-6">
+                                            <div class="col-md-12">
+                                            <div class="form-inline">
+                                                <label style="display: block;">Award Status:<span class="field-required">*</span></label>
+                                                <select id="checkAward2Approved" name="checkAward2Approved" class="form-control select2" style="width: 150px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
+                                                    <option value="" {{ is_null($financial_report_array->check_award_2_approved) ? 'selected' : '' }} disabled>Please Select</option>
+                                                    <option value="0" {{$financial_report_array->check_award_2_approved === 0 ? 'selected' : ''}}>No</option>
+                                                    <option value="1" {{$financial_report_array->check_award_2_approved == 1 ? 'selected' : ''}}>Yes</option>
+                                                </select>
+                                            </div>
+                                            </div>
+                                        </div>
 									</div>
-									<div class="col-md-12 mar_bot_20" <?php if ($financial_report_array['award_3_nomination_type']==NULL) echo "style=\"display: none;\""; ?>>
 
+									<div class="col-md-12" <?php if ($financial_report_array['award_3_nomination_type']==NULL) echo "style=\"display: none;\""; ?>>
 										<div class="form-group col-md-6">
 											<label for="NominationType3">Award #3:</label>
 											<select class="form-control" id="sumcheckNominationType3" name="sumcheckNominationType3" disabled >
@@ -2474,25 +2318,21 @@
 												<option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
 											</select>
 										</div>
-
-										<div class="form-group col-md-6">
-											<label class="radio control-label">Award Status:</label>
-											<label class="custom-control custom-radio">
-												<input id="sumcheckAward3ApprovedNo" name="sumcheckAward3Approved" type="radio" value="no" class="custom-control-input" onClick="UpdateRelatedControl('checkAward3ApprovedNo')"  <?php if ($financial_report_array['check_award_3_approved'] == false) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-												<span class="custom-control-indicator"></span>
-												<span class="custom-control-description">NOT Approved</span>
-											</label>
-
-											<label class="custom-control custom-radio">
-												<input id="sumcheckAward3ApprovedYes" name="sumcheckAward3Approved" type="radio" value="yes" class="custom-control-input" onClick="UpdateRelatedControl('checkAward3ApprovedYes')" <?php if ($financial_report_array['check_award_3_approved'] == true) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-												<span class="custom-control-indicator"></span>
-												<span class="custom-control-description">Approved</span>
-											</label>
-										</div>
-
+										<div class="col-md-6">
+                                            <div class="col-md-12">
+                                            <div class="form-inline">
+                                                <label style="display: block;">Award Status:<span class="field-required">*</span></label>
+                                                <select id="checkAward3Approved" name="checkAward3Approved" class="form-control select2" style="width: 150px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
+                                                    <option value="" {{ is_null($financial_report_array->check_award_3_approved) ? 'selected' : '' }} disabled>Please Select</option>
+                                                    <option value="0" {{$financial_report_array->check_award_3_approved === 0 ? 'selected' : ''}}>No</option>
+                                                    <option value="1" {{$financial_report_array->check_award_3_approved == 1 ? 'selected' : ''}}>Yes</option>
+                                                </select>
+                                            </div>
+                                            </div>
+                                        </div>
 									</div>
-									<div class="col-md-12 mar_bot_20" <?php if ($financial_report_array['award_4_nomination_type']==NULL) echo "style=\"display: none;\""; ?>>
 
+									<div class="col-md-12" <?php if ($financial_report_array['award_4_nomination_type']==NULL) echo "style=\"display: none;\""; ?>>
 										<div class="form-group col-md-6">
 											<label for="NominationType4">Award #4:</label>
 											<select class="form-control" id="sumcheckNominationType4" name="sumcheckNominationType4" disabled >
@@ -2506,25 +2346,21 @@
 												<option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
 											</select>
 										</div>
-
-										<div class="form-group col-md-6">
-											<label class="radio control-label">Award Status:</label>
-											<label class="custom-control custom-radio">
-												<input id="sumcheckAward4ApprovedNo" name="sumcheckAward4Approved" type="radio" value="no" class="custom-control-input" onClick="UpdateRelatedControl('checkAward4ApprovedNo')"  <?php if ($financial_report_array['check_award_4_approved'] == false) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-												<span class="custom-control-indicator"></span>
-												<span class="custom-control-description">NOT Approved</span>
-											</label>
-
-											<label class="custom-control custom-radio">
-												<input id="sumcheckAward4ApprovedYes" name="sumcheckAward4Approved" type="radio" value="yes" class="custom-control-input" onClick="UpdateRelatedControl('checkAward4ApprovedYes')" <?php if ($financial_report_array['check_award_4_approved'] == true) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-												<span class="custom-control-indicator"></span>
-												<span class="custom-control-description">Approved</span>
-											</label>
-										</div>
-
+										<div class="col-md-6">
+                                            <div class="col-md-12">
+                                            <div class="form-inline">
+                                                <label style="display: block;">Award Status:<span class="field-required">*</span></label>
+                                                <select id="checkAward4Approved" name="checkAward4Approved" class="form-control select2" style="width: 150px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
+                                                    <option value="" {{ is_null($financial_report_array->check_award_4_approved) ? 'selected' : '' }} disabled>Please Select</option>
+                                                    <option value="0" {{$financial_report_array->check_award_4_approved === 0 ? 'selected' : ''}}>No</option>
+                                                    <option value="1" {{$financial_report_array->check_award_4_approved == 1 ? 'selected' : ''}}>Yes</option>
+                                                </select>
+                                            </div>
+                                            </div>
+                                        </div>
 									</div>
-									<div class="col-md-12 mar_bot_20" <?php if ($financial_report_array['award_5_nomination_type']==NULL) echo "style=\"display: none;\""; ?> >
 
+									<div class="col-md-12" <?php if ($financial_report_array['award_5_nomination_type']==NULL) echo "style=\"display: none;\""; ?> >
 										<div class="form-group col-md-6">
 											<label for="NominationType5">Award #5:</label>
 											<select class="form-control" id="sumcheckNominationType5" name="sumcheckNominationType5" disabled >
@@ -2538,22 +2374,27 @@
 												<option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
 											</select>
 										</div>
-
-										<div class="form-group col-md-6">
-											<label class="radio control-label">Award Status:</label>
-											<label class="custom-control custom-radio">
-												<input id="sumcheckAward5ApprovedNo" name="sumcheckAward5Approved" type="radio" value="no" class="custom-control-input" onClick="UpdateRelatedControl('checkAward5ApprovedNo')"  <?php if ($financial_report_array['check_award_5_approved'] == false) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-												<span class="custom-control-indicator"></span>
-												<span class="custom-control-description">NOT Approved</span>
-											</label>
-
-											<label class="custom-control custom-radio">
-												<input id="sumcheckAward5ApprovedYes" name="sumcheckAward5Approved" type="radio" value="yes" class="custom-control-input" onClick="UpdateRelatedControl('checkAward5ApprovedYes')" <?php if ($financial_report_array['check_award_5_approved'] == true) echo "checked"; ?> <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-												<span class="custom-control-indicator"></span>
-												<span class="custom-control-description">Approved</span>
-											</label>
-										</div>
+										<div class="col-md-6">
+                                            <div class="col-md-12">
+                                            <div class="form-inline">
+                                                <label style="display: block;">Award Status:<span class="field-required">*</span></label>
+                                                <select id="checkAward5Approved" name="checkAward5Approved" class="form-control select2" style="width: 150px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
+                                                    <option value="" {{ is_null($financial_report_array->check_award_5_approved) ? 'selected' : '' }} disabled>Please Select</option>
+                                                    <option value="0" {{$financial_report_array->check_award_5_approved === 0 ? 'selected' : ''}}>No</option>
+                                                    <option value="1" {{$financial_report_array->check_award_5_approved == 1 ? 'selected' : ''}}>Yes</option>
+                                                </select>
+                                            </div>
+                                            </div>
+                                        </div>
 									</div>
+
+									<div class="col-md-12" style="margin-top: 20px; margin-bottom: 20px;">
+                                        <div class="col-md-12" >
+                                            <strong style="color:red">Please Note</strong><br>
+                                            This will take you to a new screen - be sure to save all work before clicking button to Add Additional Awards.<br>
+                                            <a id="addAwardsLink" href="{{ url("/chapter/awardsview/{$chapterid}") }}" class="btn btn-themeBlue margin" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Add Awards</a>
+                                        </div>
+                                    </div>
 									<div class="clearfix"></div>
 									<div class="col-md-12 mar_bot_20">
 										<div class="col-md-12">
@@ -2786,7 +2627,7 @@
                                     <span style="display: inline; color: red;">No Reviewer Assigned - Select Reviewer before continuing to prevent errors.<br></span>
                                 <?php endif; ?>
                             <label for="AssignedReviewer"><strong>Assigned Reviewer:</strong></label>
-                                <select class="form-control" name="AssignedReviewer" id="AssignedReviewer" style="width: 250px;" required>
+                                <select class="form-control" name="AssignedReviewer" id="AssignedReviewer" style="width: 250px;" <?php if ($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"?> required>
                                     <option value="" style="display:none" disabled selected>Select a reviewer</option>
                                     @foreach($reviewerList as $pcl)
                                         <option value="{{$pcl['cid']}}" {{$financial_report_array['reviewer_id'] == $pcl['cid']  ? 'selected' : ''}} >{{$pcl['cname']}}</option>
@@ -2830,7 +2671,7 @@
 <div class="box-body text-center">
 
               <a href="{{ route('home') }}" class="btn btn-themeBlue margin">Back</a>
-              <a href="{{ url("/chapter/financial/pdf/{$chapterid}") }}" target="_blank" class="btn btn-themeBlue margin" <?php if(!$submitted =='1') echo "disabled"; ?>>View PDF</a>
+<a id="viewPdfLink" href="{{ url("/chapter/financial/pdf/{$chapterid}") }}" target="_blank" class="btn btn-themeBlue margin" <?php if(!$submitted =='1') echo "disabled"; ?>>View PDF</a>
               </div>
 
 
@@ -3023,6 +2864,19 @@ $(document).ready(function(){
 	// 	document.getElementById(RelatedElementName).checked = true;
 	// }
 
+
+	document.getElementById('addAwardsLink').addEventListener('click', function(event) {
+        if (<?php echo ($financial_report_array['review_complete'] != "" || !$submitted) ? 'true' : 'false'; ?>) {
+            event.preventDefault(); // Prevent the default link behavior
+        }
+    });
+
+    document.getElementById('viewPdfLink').addEventListener('click', function(event) {
+        if (<?php echo (!$submitted == '1') ? 'true' : 'false'; ?>) {
+            event.preventDefault(); // Prevent the default link behavior
+        }
+    });
+
     function EnableNoteLogButton(NoteNumber){
         if(document.getElementById("Step" + NoteNumber + "_Note").value!="")
             document.getElementById("AddNote" + NoteNumber).disabled = false;
@@ -3085,6 +2939,12 @@ $(document).ready(function(){
 		if(!document.getElementById("checkServiceProject").val === null || document.getElementById("checkServiceProject").val === ''){
 			alert("You have not verified a service project was completed.");
 			document.getElementById("checkServiceProject").focus();
+			return false;
+		}
+
+		if(!document.getElementById("chec_party_percentage").val === null || document.getElementById("check_party_percentage").val === ''){
+			alert("You have not indicated if the chapter's party/member benefit percentage was under 15%.");
+			document.getElementById("check_party_percentage").focus();
 			return false;
 		}
 
@@ -3175,4 +3035,3 @@ $(document).ready(function(){
 
 </script>
 @endsection
-
