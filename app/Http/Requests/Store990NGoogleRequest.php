@@ -13,6 +13,8 @@ class Store990NGoogleRequest extends FormRequest
      */
     public function rules()
     {
-        return ['990n' => 'required'];
+        return ['990n' => [
+                'required',
+            ],];
     }
 }

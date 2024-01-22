@@ -13,6 +13,8 @@ class StoreEIN3GoogleRequest extends FormRequest
      */
     public function rules()
     {
-        return ['file' => 'required'];
+        return ['file' => [
+                'required',
+            ],];
     }
 }

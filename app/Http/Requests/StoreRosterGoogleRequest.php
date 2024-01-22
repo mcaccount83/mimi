@@ -13,6 +13,8 @@ class StoreRosterGoogleRequest extends FormRequest
      */
     public function rules()
     {
-        return ['file' => 'required'];
+        return ['file' => [
+                'required',
+            ],];
     }
 }

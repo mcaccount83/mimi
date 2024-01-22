@@ -13,6 +13,8 @@ class StoreStatement2GoogleRequest extends FormRequest
      */
     public function rules()
     {
-        return ['statement2' => 'required'];
+        return ['statement2' => [
+                'required',
+            ],];
     }
 }
