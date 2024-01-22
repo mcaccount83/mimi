@@ -61,14 +61,14 @@ class GoogleController extends Controller
         $accessToken = $this->token();
 
         $fileMetadata = [
-            'name' => $name.'.'.$request->file->getClientOriginalExtension(),
+            'name' => $name.'.'.$request->input('file')->getClientOriginalExtension(),
             'parents' => ['1iwap3d3feX2cYaODJrANEMnT1fjIDHD2'],
-            'mimeType' => $request->file->getMimeType(),
+            'mimeType' => $request->input('file')->getMimeType(),
         ];
 
         Log::info('File Metadata: ', ['file_metadata' => $fileMetadata]);
 
-        $fileContent = file_get_contents($request->file->getRealPath());
+        $fileContent = file_get_contents($request->input('file')->getRealPath());
 
         Log::info('File Content: ', ['file_content' => $fileContent]);
 
@@ -136,10 +136,10 @@ class GoogleController extends Controller
             'parents' => ['1iwap3d3feX2cYaODJrANEMnT1fjIDHD2'],
         ]);
 
-        $fileContent = file_get_contents($request->file->getRealPath());
+        $fileContent = file_get_contents($request->input('file')->getRealPath());
         $createdFile = $driveService->files->create($fileMetadata, [
             'data' => $fileContent,
-            'mimeType' => $request->file->getClientMimeType(),
+            'mimeType' => $request->input('file')->getClientMimeType(),
             'uploadType' => 'multipart',
         ]);
 
@@ -184,7 +184,7 @@ class GoogleController extends Controller
         $stateFolderName = $chapter->state;
         $chapterFolderName = $chapter->name;
         $name = $chapter->name.'_'.$chapter->state.'_Roster';
-        $mime = $request->file->getClientMimeType();
+        $mime = $request->input('file')->getClientMimeType();
 
         $stateFolderResponse = Http::withHeaders([
             'Authorization' => 'Bearer '.$accessToken,
@@ -247,7 +247,7 @@ class GoogleController extends Controller
 
         $accessToken = $this->token();
         $name = $chapter->name.'_'.$chapter->state.'_990n';
-        $mime = $request->file->getClientMimeType();
+        $mime = $request->input('file')->getClientMimeType();
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.$accessToken,
@@ -286,7 +286,7 @@ class GoogleController extends Controller
         $accessToken = $this->token();
 
         $name = $chapter->name.', '.$chapter->state.'_Statement1';
-        $mime = $request->file->getClientMimeType();
+        $mime = $request->input('file')->getClientMimeType();
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.$accessToken,
@@ -325,7 +325,7 @@ class GoogleController extends Controller
         $accessToken = $this->token();
 
         $name = $chapter->name.', '.$chapter->state.'_Statement2';
-        $mime = $request->file->getClientMimeType();
+        $mime = $request->input('file')->getClientMimeType();
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.$accessToken,
@@ -363,7 +363,7 @@ class GoogleController extends Controller
         $validation = $request->validated();
         $accessToken = $this->token();
         $name = $chapter->ein.' | '.$chapter->name.', '.$chapter->state;
-        $mime = $request->file->getClientMimeType();
+        $mime = $request->input('file')->getClientMimeType();
 
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.$accessToken,
