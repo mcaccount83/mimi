@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreGoogleRequest;
 use App\Http\Requests\StoreStatement2GoogleRequest;
 use App\Http\Requests\StoreStatement1GoogleRequest;
@@ -48,7 +49,7 @@ class GoogleController extends Controller
         return $accessToken;
     }
 
-    public function storeEIN(StoreEINGoogleRequest $request, $id)
+    public function storeEIN(StoreEINGoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
             ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
@@ -114,7 +115,7 @@ class GoogleController extends Controller
         }
     }
 
-    public function storeEIN3(StoreEIN3GoogleRequest $request, $id)
+    public function storeEIN3(StoreEIN3GoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
             ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
@@ -168,7 +169,7 @@ class GoogleController extends Controller
         }
     }
 
-    public function storeRoster(StoreRosterGoogleRequest $request, $id)
+    public function storeRoster(StoreRosterGoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
             ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
@@ -234,7 +235,7 @@ class GoogleController extends Controller
         return redirect()->back()->with('success', 'File uploaded successfully!');
     }
 
-    public function store990N(Store990NGoogleRequest $request, $id)
+    public function store990N(Store990NGoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
             ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
@@ -273,7 +274,7 @@ class GoogleController extends Controller
         return redirect()->back()->with('success', 'File uploaded successfully!');
     }
 
-    public function storeStatement1(StoreStatement1GoogleRequest $request, $id)
+    public function storeStatement1(StoreStatement1GoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
             ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
@@ -312,7 +313,7 @@ class GoogleController extends Controller
         return redirect()->back()->with('success', 'File uploaded successfully!');
     }
 
-    public function storeStatement2(StoreStatement2GoogleRequest $request, $id)
+    public function storeStatement2(StoreStatement2GoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
             ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
@@ -351,7 +352,7 @@ class GoogleController extends Controller
         return redirect()->back()->with('success', 'File uploaded successfully!');
     }
 
-    public function store(StoreGoogleRequest $request, $id)
+    public function store(StoreGoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
             ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
