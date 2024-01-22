@@ -2,6 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreGoogleRequest;
+use App\Http\Requests\StoreStatement2GoogleRequest;
+use App\Http\Requests\StoreStatement1GoogleRequest;
+use App\Http\Requests\Store990NGoogleRequest;
+use App\Http\Requests\StoreRosterGoogleRequest;
+use App\Http\Requests\StoreEIN3GoogleRequest;
+use App\Http\Requests\StoreEINGoogleRequest;
 use App\Models\EinUploads;
 use App\Models\EoyUploads;
 use Google\Client;
@@ -41,7 +48,7 @@ class GoogleController extends Controller
         return $accessToken;
     }
 
-    public function storeEIN(Request $request, $id)
+    public function storeEIN(StoreEINGoogleRequest $request, $id)
     {
         $chapter = DB::table('chapters as ch')
             ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
@@ -49,9 +56,7 @@ class GoogleController extends Controller
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $id)
             ->first();
-        $validation = $request->validate([
-            'file' => 'required',
-        ]);
+        $validation = $request->validated();
         $name = $chapter->ein.'_'.$chapter->name.'_'.$chapter->state;
         $accessToken = $this->token();
 
@@ -109,7 +114,7 @@ class GoogleController extends Controller
         }
     }
 
-    public function storeEIN3(Request $request, $id)
+    public function storeEIN3(StoreEIN3GoogleRequest $request, $id)
     {
         $chapter = DB::table('chapters as ch')
             ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
@@ -118,9 +123,7 @@ class GoogleController extends Controller
             ->where('ch.id', '=', $id)
             ->first();
 
-        $validation = $request->validate([
-            'file' => 'required',
-        ]);
+        $validation = $request->validated();
 
         $name = $chapter->ein.'_'.$chapter->name.'_'.$chapter->state;
 
@@ -165,7 +168,7 @@ class GoogleController extends Controller
         }
     }
 
-    public function storeRoster(Request $request, $id)
+    public function storeRoster(StoreRosterGoogleRequest $request, $id)
     {
         $chapter = DB::table('chapters as ch')
             ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
@@ -174,9 +177,7 @@ class GoogleController extends Controller
             ->where('ch.id', '=', $id)
             ->first();
 
-        $validation = $request->validate([
-            'file' => 'required',
-        ]);
+        $validation = $request->validated();
 
         $accessToken = $this->token();
         $parentFolderId = '1YYW1ct6oO1h9v5E7KdaeM-y8NVnTYeT7';  //this needs to change based on the YEAR of the EOY Reports
@@ -233,7 +234,7 @@ class GoogleController extends Controller
         return redirect()->back()->with('success', 'File uploaded successfully!');
     }
 
-    public function store990N(Request $request, $id)
+    public function store990N(Store990NGoogleRequest $request, $id)
     {
         $chapter = DB::table('chapters as ch')
             ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
@@ -242,9 +243,7 @@ class GoogleController extends Controller
             ->where('ch.id', '=', $id)
             ->first();
 
-        $validation = $request->validate([
-            '990n' => 'required',
-        ]);
+        $validation = $request->validated();
 
         $accessToken = $this->token();
         $name = $chapter->name.'_'.$chapter->state.'_990n';
@@ -274,7 +273,7 @@ class GoogleController extends Controller
         return redirect()->back()->with('success', 'File uploaded successfully!');
     }
 
-    public function storeStatement1(Request $request, $id)
+    public function storeStatement1(StoreStatement1GoogleRequest $request, $id)
     {
         $chapter = DB::table('chapters as ch')
             ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
@@ -283,9 +282,7 @@ class GoogleController extends Controller
             ->where('ch.id', '=', $id)
             ->first();
 
-        $validation = $request->validate([
-            'statement1' => 'required',
-        ]);
+        $validation = $request->validated();
         $accessToken = $this->token();
 
         $name = $chapter->name.', '.$chapter->state.'_Statement1';
@@ -315,7 +312,7 @@ class GoogleController extends Controller
         return redirect()->back()->with('success', 'File uploaded successfully!');
     }
 
-    public function storeStatement2(Request $request, $id)
+    public function storeStatement2(StoreStatement2GoogleRequest $request, $id)
     {
         $chapter = DB::table('chapters as ch')
             ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
@@ -324,9 +321,7 @@ class GoogleController extends Controller
             ->where('ch.id', '=', $id)
             ->first();
 
-        $validation = $request->validate([
-            'statement2' => 'required',
-        ]);
+        $validation = $request->validated();
         $accessToken = $this->token();
 
         $name = $chapter->name.', '.$chapter->state.'_Statement2';
@@ -356,7 +351,7 @@ class GoogleController extends Controller
         return redirect()->back()->with('success', 'File uploaded successfully!');
     }
 
-    public function store(Request $request, $id)
+    public function store(StoreGoogleRequest $request, $id)
     {
         $chapter = DB::table('chapters as ch')
             ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
@@ -365,9 +360,7 @@ class GoogleController extends Controller
             ->where('ch.id', '=', $id)
             ->first();
 
-        $validation = $request->validate([
-            'file' => 'required',
-        ]);
+        $validation = $request->validated();
         $accessToken = $this->token();
         $name = $chapter->ein.' | '.$chapter->name.', '.$chapter->state;
         $mime = $request->file->getClientMimeType();
