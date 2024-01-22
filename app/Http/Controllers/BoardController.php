@@ -2028,7 +2028,7 @@ class BoardController extends Controller
         $chapterDetailsExistArr = DB::table('financial_report')->where('chapter_id', '=', $chapter_id)->get();
         $chapterDetailsExist = $chapterDetailsExistArr->count();
 
-    // Step 1 Fields
+        // Step 1 Fields
         if (isset($input['optChangeDues']) && $input['optChangeDues'] == 'no') {
             $input['changed_dues'] = 0;
         } elseif (isset($input['optChangeDues'])) {
@@ -2070,7 +2070,7 @@ class BoardController extends Controller
         $total_associate_members = $input['TotalAssociateMembers'];
         $associate_member_fee = $input['AssociateMemberDues'];
 
-    //Steps 2 Fields
+        //Steps 2 Fields
         $manditory_meeting_fees_paid = $input['ManditoryMeetingFeesPaid'];
         $voluntary_donations_paid = $input['VoluntaryDonationsPaid'];
         $paid_baby_sitters = $input['PaidBabySitters'];
@@ -2084,7 +2084,7 @@ class BoardController extends Controller
         }
         $childrens_room_expenses = base64_encode(serialize($ChildrenRoomArray));
 
-    // Step 3 Fields
+        // Step 3 Fields
         $ServiceProjectFields = null;
         $FieldCount = $input['ServiceProjectRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
@@ -2096,7 +2096,7 @@ class BoardController extends Controller
         }
         $service_project_array = base64_encode(serialize($ServiceProjectFields));
 
-    // Step 4 Fields
+        // Step 4 Fields
         $PartyExpenseFields = null;
         $FieldCount = $input['PartyExpenseRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
@@ -2106,7 +2106,7 @@ class BoardController extends Controller
         }
         $party_expense_array = base64_encode(serialize($PartyExpenseFields));
 
-    // Step 5 Fields
+        // Step 5 Fields
         $office_printing_costs = $input['PrintingCosts'];
         $office_postage_costs = $input['PostageCosts'];
         $office_membership_pins_cost = $input['MembershipPins'];
@@ -2130,7 +2130,7 @@ class BoardController extends Controller
         $international_event_array = base64_encode(serialize($InternationalEventArray));
         $annual_registration_fee = $input['AnnualRegistrationFee'];
 
-    // Step 6 Fields
+        // Step 6 Fields
         $MonetaryDonation = null;
         $FieldCount = $input['MonDonationRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
@@ -2150,7 +2150,7 @@ class BoardController extends Controller
         }
         $non_monetary_donations_to_chapter = base64_encode(serialize($NonMonetaryDonation));
 
-    // Step 7 Fields
+        // Step 7 Fields
         $OtherOffice = null;
         $FieldCount = $input['OtherOfficeExpenseRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
@@ -2160,7 +2160,7 @@ class BoardController extends Controller
         }
         $other_income_and_expenses_array = base64_encode(serialize($OtherOffice));
 
-    // Step 8 Fields
+        // Step 8 Fields
         $amount_reserved_from_previous_year = $input['AmountReservedFromLastYear'];
         $bank_balance_now = $input['BankBalanceNow'];
         $petty_cash = $input['PettyCash'];
@@ -2177,77 +2177,77 @@ class BoardController extends Controller
         }
         $bank_reconciliation_array = base64_encode(serialize($BankRecArray));
 
-    // Step 9 Fields
-    //Question 1
+        // Step 9 Fields
+        //Question 1
         $receive_compensation = isset($input['ReceiveCompensation']) ? $input['ReceiveCompensation'] : null;
         $receive_compensation_explanation = $input['ReceiveCompensationExplanation'];
-    //Question 2
+        //Question 2
         $financial_benefit = isset($input['FinancialBenefit']) ? $input['FinancialBenefit'] : null;
         $financial_benefit_explanation = $input['FinancialBenefitExplanation'];
-    //Question 3
+        //Question 3
         $influence_political = isset($input['InfluencePolitical']) ? $input['InfluencePolitical'] : null;
         $influence_political_explanation = $input['InfluencePoliticalExplanation'];
-    //Question 4
+        //Question 4
         $vote_all_activities = isset($input['VoteAllActivities']) ? $input['VoteAllActivities'] : null;
         $vote_all_activities_explanation = $input['VoteAllActivitiesExplanation'];
-    //Question 5
+        //Question 5
         $purchase_pins = isset($input['BoughtPins']) ? $input['BoughtPins'] : null;
         $purchase_pins_explanation = $input['BoughtPinsExplanation'];
-    //Question 6
+        //Question 6
         $bought_merch = isset($input['BoughtMerch']) ? $input['BoughtMerch'] : null;
         $bought_merch_explanation = $input['BoughtMerchExplanation'];
-    //Question 7
+        //Question 7
         $offered_merch = isset($input['OfferedMerch']) ? $input['OfferedMerch'] : null;
         $offered_merch_explanation = $input['OfferedMerchExplanation'];
-    //Question 8
+        //Question 8
         $bylaws_available = isset($input['ByLawsAvailable']) ? $input['ByLawsAvailable'] : null;
         $bylaws_available_explanation = $input['ByLawsAvailableExplanation'];
-    //Question 9
+        //Question 9
         $childrens_room_sitters = isset($input['ChildrensRoom']) ? $input['ChildrensRoom'] : null;
         $childrens_room_sitters_explanation = $input['ChildrensRoomExplanation'];
-    //Question 10
+        //Question 10
         $playgroups = isset($input['Playgroups']) ? $input['Playgroups'] : null;
         $had_playgroups_explanation = $input['PlaygroupsExplanation'];
-    //Question 11
+        //Question 11
         $child_outings = isset($input['ChildOutings']) ? $input['ChildOutings'] : null;
         $child_outings_explanation = $input['ChildOutingsExplanation'];
-    //Question 12
+        //Question 12
         $mother_outings = isset($input['MotherOutings']) ? $input['MotherOutings'] : null;
         $mother_outings_explanation = $input['MotherOutingsExplanation'];
-    //Question 13
+        //Question 13
         $meeting_speakers = isset($input['MeetingSpeakers']) ? $input['MeetingSpeakers'] : null;
         $meeting_speakers_explanation = $input['MeetingSpeakersExplanation'];
-    //Question 14
+        //Question 14
         $meeting_speakers_array = isset($input['Speakers']) ? $input['Speakers'] : null;
-    //Question 15
+        //Question 15
         $discussion_topic_frequency = isset($input['SpeakerFrequency']) ? $input['SpeakerFrequency'] : null;
-    //Question 16
+        //Question 16
         $park_day_frequency = isset($input['ParkDays']) ? $input['ParkDays'] : null;
-    //Question 17
+        //Question 17
         $activity_array = isset($input['Activity']) ? $input['Activity'] : null;
         $activity_other_explanation = $input['ActivityOtherExplanation'];
-    //Question 18
+        //Question 18
         $contributions_not_registered_charity = isset($input['ContributionsNotRegNP']) ? $input['ContributionsNotRegNP'] : null;
         $contributions_not_registered_charity_explanation = $input['ContributionsNotRegNPExplanation'];
-    //Question 19
+        //Question 19
         $at_least_one_service_project = isset($input['PerformServiceProject']) ? $input['PerformServiceProject'] : null;
         $at_least_one_service_project_explanation = $input['PerformServiceProjectExplanation'];
-    //Question 20
+        //Question 20
         $sister_chapter = isset($input['SisterChapter']) ? $input['SisterChapter'] : null;
-    //Question 21
+        //Question 21
         $international_event = isset($input['InternationalEvent']) ? $input['InternationalEvent'] : null;
-    //Question 22
+        //Question 22
         $file_irs = isset($input['FileIRS']) ? $input['FileIRS'] : null;
         $file_irs_explanation = $input['FileIRSExplanation'];
-    //Question 23
+        //Question 23
         $bank_statement_included = isset($input['BankStatementIncluded']) ? $input['BankStatementIncluded'] : null;
         $bank_statement_included_explanation = $input['BankStatementIncludedExplanation'];
-    //Question 24
+        //Question 24
         $wheres_the_money = $input['WheresTheMoney'];
 
-    // Step 11 Fields
+        // Step 11 Fields
         $award_nominations = $input['TotalAwardNominations'];
-    //Award Nomination 1
+        //Award Nomination 1
         if (isset($input['NominationType1'])) {
             $award_1_nomination_type = $input['NominationType1'];
         } else {
