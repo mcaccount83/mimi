@@ -97,23 +97,23 @@ class BoardController extends Controller
         $chapter = Chapter::find($chapterId);
         DB::beginTransaction();
         try {
-            $chapter->additional_info = $request->get('ch_addinfo');
-            $chapter->website_url = $request->get('ch_website');
-            $chapter->website_status = $request->get('ch_webstatus');
-            $chapter->email = $request->get('ch_email');
-            $chapter->inquiries_contact = $request->get('ch_inqemailcontact');
-            $chapter->inquiries_note = $request->get('ch_inqnote');
-            $chapter->egroup = $request->get('ch_onlinediss');
-            $chapter->social1 = $request->get('ch_social1');
-            $chapter->social2 = $request->get('ch_social2');
-            $chapter->social3 = $request->get('ch_social3');
-            $chapter->po_box = $request->get('ch_pobox');
+            $chapter->additional_info = $request->input('ch_addinfo');
+            $chapter->website_url = $request->input('ch_website');
+            $chapter->website_status = $request->input('ch_webstatus');
+            $chapter->email = $request->input('ch_email');
+            $chapter->inquiries_contact = $request->input('ch_inqemailcontact');
+            $chapter->inquiries_note = $request->input('ch_inqnote');
+            $chapter->egroup = $request->input('ch_onlinediss');
+            $chapter->social1 = $request->input('ch_social1');
+            $chapter->social2 = $request->input('ch_social2');
+            $chapter->social3 = $request->input('ch_social3');
+            $chapter->po_box = $request->input('ch_pobox');
             $chapter->last_updated_by = $lastUpdatedBy;
             $chapter->last_updated_date = date('Y-m-d H:i:s');
 
             $chapter->save();
             //President Info
-            if ($request->get('ch_pre_fname') != '' && $request->get('ch_pre_lname') != '' && $request->get('ch_pre_email') != '') {
+            if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
                 $PREDetails = DB::table('board_details')
                     ->select('board_id', 'user_id')
                     ->where('chapter_id', '=', $chapterId)
@@ -124,11 +124,11 @@ class BoardController extends Controller
                     $boardId = $PREDetails[0]->board_id;
 
                     $user = User::find($userId);
-                    $user->first_name = $request->get('ch_pre_fname');
-                    $user->last_name = $request->get('ch_pre_lname');
-                    $user->email = $request->get('ch_pre_email');
-                    if ($request->get('ch_pre_pswd_chg') == '1') {
-                        $user->password = Hash::make($request->get('ch_pre_pswd_cnf'));
+                    $user->first_name = $request->input('ch_pre_fname');
+                    $user->last_name = $request->input('ch_pre_lname');
+                    $user->email = $request->input('ch_pre_email');
+                    if ($request->input('ch_pre_pswd_chg') == '1') {
+                        $user->password = Hash::make($request->input('ch_pre_pswd_cnf'));
                     }
 
                     $user->updated_at = date('Y-m-d H:i:s');
@@ -136,15 +136,15 @@ class BoardController extends Controller
 
                     DB::table('board_details')
                         ->where('board_id', $boardId)
-                        ->update(['first_name' => $request->get('ch_pre_fname'),
-                            'last_name' => $request->get('ch_pre_lname'),
-                            'email' => $request->get('ch_pre_email'),
-                            'street_address' => $request->get('ch_pre_street'),
-                            'city' => $request->get('ch_pre_city'),
-                            'state' => $request->get('ch_pre_state'),
-                            'zip' => $request->get('ch_pre_zip'),
+                        ->update(['first_name' => $request->input('ch_pre_fname'),
+                            'last_name' => $request->input('ch_pre_lname'),
+                            'email' => $request->input('ch_pre_email'),
+                            'street_address' => $request->input('ch_pre_street'),
+                            'city' => $request->input('ch_pre_city'),
+                            'state' => $request->input('ch_pre_state'),
+                            'zip' => $request->input('ch_pre_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_pre_phone'),
+                            'phone' => $request->input('ch_pre_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s')]);
                 }
@@ -158,7 +158,7 @@ class BoardController extends Controller
             if (count($AVPDetails) != 0) {
                 $userId = $AVPDetails[0]->user_id;
                 $boardId = $AVPDetails[0]->board_id;
-                if ($request->get('AVPVacant') == 'on') {
+                if ($request->input('AVPVacant') == 'on') {
                     //Delete Details of Board memebers
                     DB::table('board_details')
                         ->where('board_id', $boardId)
@@ -169,32 +169,32 @@ class BoardController extends Controller
                         ->delete();
                 } else {
                     $user = User::find($userId);
-                    $user->first_name = $request->get('ch_avp_fname');
-                    $user->last_name = $request->get('ch_avp_lname');
-                    $user->email = $request->get('ch_avp_email');
+                    $user->first_name = $request->input('ch_avp_fname');
+                    $user->last_name = $request->input('ch_avp_lname');
+                    $user->email = $request->input('ch_avp_email');
                     $user->updated_at = date('Y-m-d H:i:s');
                     $user->save();
 
                     DB::table('board_details')
                         ->where('board_id', $boardId)
-                        ->update(['first_name' => $request->get('ch_avp_fname'),
-                            'last_name' => $request->get('ch_avp_lname'),
-                            'email' => $request->get('ch_avp_email'),
-                            'street_address' => $request->get('ch_avp_street'),
-                            'city' => $request->get('ch_avp_city'),
-                            'state' => $request->get('ch_avp_state'),
-                            'zip' => $request->get('ch_avp_zip'),
+                        ->update(['first_name' => $request->input('ch_avp_fname'),
+                            'last_name' => $request->input('ch_avp_lname'),
+                            'email' => $request->input('ch_avp_email'),
+                            'street_address' => $request->input('ch_avp_street'),
+                            'city' => $request->input('ch_avp_city'),
+                            'state' => $request->input('ch_avp_state'),
+                            'zip' => $request->input('ch_avp_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_avp_phone'),
+                            'phone' => $request->input('ch_avp_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s')]);
                 }
             } else {
-                if ($request->get('AVPVacant') != 'on') {
+                if ($request->input('AVPVacant') != 'on') {
                     $userId = DB::table('users')->insertGetId(
-                        ['first_name' => $request->get('ch_avp_fname'),
-                            'last_name' => $request->get('ch_avp_lname'),
-                            'email' => $request->get('ch_avp_email'),
+                        ['first_name' => $request->input('ch_avp_fname'),
+                            'last_name' => $request->input('ch_avp_lname'),
+                            'email' => $request->input('ch_avp_email'),
                             'password' => Hash::make('TempPass4You'),
                             'user_type' => 'board',
                             'is_active' => 1]
@@ -209,19 +209,19 @@ class BoardController extends Controller
                     $board = DB::table('board_details')->insert(
                         ['user_id' => $userId,
                             'board_id' => $boardId,
-                            'first_name' => $request->get('ch_avp_fname'),
-                            'last_name' => $request->get('ch_avp_lname'),
-                            'email' => $request->get('ch_avp_email'),
+                            'first_name' => $request->input('ch_avp_fname'),
+                            'last_name' => $request->input('ch_avp_lname'),
+                            'email' => $request->input('ch_avp_email'),
                             'password' => Hash::make('TempPass4You'),
                             'remember_token' => '',
                             'board_position_id' => 2,
                             'chapter_id' => $chapterId,
-                            'street_address' => $request->get('ch_avp_street'),
-                            'city' => $request->get('ch_avp_city'),
-                            'state' => $request->get('ch_avp_state'),
-                            'zip' => $request->get('ch_avp_zip'),
+                            'street_address' => $request->input('ch_avp_street'),
+                            'city' => $request->input('ch_avp_city'),
+                            'state' => $request->input('ch_avp_state'),
+                            'zip' => $request->input('ch_avp_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_avp_phone'),
+                            'phone' => $request->input('ch_avp_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s'),
                             'is_active' => 1]
@@ -237,7 +237,7 @@ class BoardController extends Controller
             if (count($MVPDetails) != 0) {
                 $userId = $MVPDetails[0]->user_id;
                 $boardId = $MVPDetails[0]->board_id;
-                if ($request->get('MVPVacant') == 'on') {
+                if ($request->input('MVPVacant') == 'on') {
                     //Delete Details of Board memebers
                     DB::table('board_details')
                         ->where('board_id', $boardId)
@@ -248,32 +248,32 @@ class BoardController extends Controller
                         ->delete();
                 } else {
                     $user = User::find($userId);
-                    $user->first_name = $request->get('ch_mvp_fname');
-                    $user->last_name = $request->get('ch_mvp_lname');
-                    $user->email = $request->get('ch_mvp_email');
+                    $user->first_name = $request->input('ch_mvp_fname');
+                    $user->last_name = $request->input('ch_mvp_lname');
+                    $user->email = $request->input('ch_mvp_email');
                     $user->updated_at = date('Y-m-d H:i:s');
                     $user->save();
 
                     DB::table('board_details')
                         ->where('board_id', $boardId)
-                        ->update(['first_name' => $request->get('ch_mvp_fname'),
-                            'last_name' => $request->get('ch_mvp_lname'),
-                            'email' => $request->get('ch_mvp_email'),
-                            'street_address' => $request->get('ch_mvp_street'),
-                            'city' => $request->get('ch_mvp_city'),
-                            'state' => $request->get('ch_mvp_state'),
-                            'zip' => $request->get('ch_mvp_zip'),
+                        ->update(['first_name' => $request->input('ch_mvp_fname'),
+                            'last_name' => $request->input('ch_mvp_lname'),
+                            'email' => $request->input('ch_mvp_email'),
+                            'street_address' => $request->input('ch_mvp_street'),
+                            'city' => $request->input('ch_mvp_city'),
+                            'state' => $request->input('ch_mvp_state'),
+                            'zip' => $request->input('ch_mvp_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_mvp_phone'),
+                            'phone' => $request->input('ch_mvp_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s')]);
                 }
             } else {
-                if ($request->get('MVPVacant') != 'on') {
+                if ($request->input('MVPVacant') != 'on') {
                     $userId = DB::table('users')->insertGetId(
-                        ['first_name' => $request->get('ch_mvp_fname'),
-                            'last_name' => $request->get('ch_mvp_lname'),
-                            'email' => $request->get('ch_mvp_email'),
+                        ['first_name' => $request->input('ch_mvp_fname'),
+                            'last_name' => $request->input('ch_mvp_lname'),
+                            'email' => $request->input('ch_mvp_email'),
                             'password' => Hash::make('TempPass4You'),
                             'user_type' => 'board',
                             'is_active' => 1]
@@ -288,19 +288,19 @@ class BoardController extends Controller
                     $board = DB::table('board_details')->insert(
                         ['user_id' => $userId,
                             'board_id' => $boardId,
-                            'first_name' => $request->get('ch_mvp_fname'),
-                            'last_name' => $request->get('ch_mvp_lname'),
-                            'email' => $request->get('ch_mvp_email'),
+                            'first_name' => $request->input('ch_mvp_fname'),
+                            'last_name' => $request->input('ch_mvp_lname'),
+                            'email' => $request->input('ch_mvp_email'),
                             'password' => Hash::make('TempPass4You'),
                             'remember_token' => '',
                             'board_position_id' => 3,
                             'chapter_id' => $chapterId,
-                            'street_address' => $request->get('ch_mvp_street'),
-                            'city' => $request->get('ch_mvp_city'),
-                            'state' => $request->get('ch_mvp_state'),
-                            'zip' => $request->get('ch_mvp_zip'),
+                            'street_address' => $request->input('ch_mvp_street'),
+                            'city' => $request->input('ch_mvp_city'),
+                            'state' => $request->input('ch_mvp_state'),
+                            'zip' => $request->input('ch_mvp_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_mvp_phone'),
+                            'phone' => $request->input('ch_mvp_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s'),
                             'is_active' => 1]
@@ -316,7 +316,7 @@ class BoardController extends Controller
             if (count($TRSDetails) != 0) {
                 $userId = $TRSDetails[0]->user_id;
                 $boardId = $TRSDetails[0]->board_id;
-                if ($request->get('TreasVacant') == 'on') {
+                if ($request->input('TreasVacant') == 'on') {
                     //Delete Details of Board memebers
                     DB::table('board_details')
                         ->where('board_id', $boardId)
@@ -327,32 +327,32 @@ class BoardController extends Controller
                         ->delete();
                 } else {
                     $user = User::find($userId);
-                    $user->first_name = $request->get('ch_trs_fname');
-                    $user->last_name = $request->get('ch_trs_lname');
-                    $user->email = $request->get('ch_trs_email');
+                    $user->first_name = $request->input('ch_trs_fname');
+                    $user->last_name = $request->input('ch_trs_lname');
+                    $user->email = $request->input('ch_trs_email');
                     $user->updated_at = date('Y-m-d H:i:s');
                     $user->save();
 
                     DB::table('board_details')
                         ->where('board_id', $boardId)
-                        ->update(['first_name' => $request->get('ch_trs_fname'),
-                            'last_name' => $request->get('ch_trs_lname'),
-                            'email' => $request->get('ch_trs_email'),
-                            'street_address' => $request->get('ch_trs_street'),
-                            'city' => $request->get('ch_trs_city'),
-                            'state' => $request->get('ch_trs_state'),
-                            'zip' => $request->get('ch_trs_zip'),
+                        ->update(['first_name' => $request->input('ch_trs_fname'),
+                            'last_name' => $request->input('ch_trs_lname'),
+                            'email' => $request->input('ch_trs_email'),
+                            'street_address' => $request->input('ch_trs_street'),
+                            'city' => $request->input('ch_trs_city'),
+                            'state' => $request->input('ch_trs_state'),
+                            'zip' => $request->input('ch_trs_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_trs_phone'),
+                            'phone' => $request->input('ch_trs_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s')]);
                 }
             } else {
-                if ($request->get('TreasVacant') != 'on') {
+                if ($request->input('TreasVacant') != 'on') {
                     $userId = DB::table('users')->insertGetId(
-                        ['first_name' => $request->get('ch_trs_fname'),
-                            'last_name' => $request->get('ch_trs_lname'),
-                            'email' => $request->get('ch_trs_email'),
+                        ['first_name' => $request->input('ch_trs_fname'),
+                            'last_name' => $request->input('ch_trs_lname'),
+                            'email' => $request->input('ch_trs_email'),
                             'password' => Hash::make('TempPass4You'),
                             'user_type' => 'board',
                             'is_active' => 1]
@@ -367,19 +367,19 @@ class BoardController extends Controller
                     $board = DB::table('board_details')->insert(
                         ['user_id' => $userId,
                             'board_id' => $boardId,
-                            'first_name' => $request->get('ch_trs_fname'),
-                            'last_name' => $request->get('ch_trs_lname'),
-                            'email' => $request->get('ch_trs_email'),
+                            'first_name' => $request->input('ch_trs_fname'),
+                            'last_name' => $request->input('ch_trs_lname'),
+                            'email' => $request->input('ch_trs_email'),
                             'password' => Hash::make('TempPass4You'),
                             'remember_token' => '',
                             'board_position_id' => 4,
                             'chapter_id' => $chapterId,
-                            'street_address' => $request->get('ch_trs_street'),
-                            'city' => $request->get('ch_trs_city'),
-                            'state' => $request->get('ch_trs_state'),
-                            'zip' => $request->get('ch_trs_zip'),
+                            'street_address' => $request->input('ch_trs_street'),
+                            'city' => $request->input('ch_trs_city'),
+                            'state' => $request->input('ch_trs_state'),
+                            'zip' => $request->input('ch_trs_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_trs_phone'),
+                            'phone' => $request->input('ch_trs_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s'),
                             'is_active' => 1]
@@ -395,7 +395,7 @@ class BoardController extends Controller
             if (count($SECDetails) != 0) {
                 $userId = $SECDetails[0]->user_id;
                 $boardId = $SECDetails[0]->board_id;
-                if ($request->get('SecVacant') == 'on') {
+                if ($request->input('SecVacant') == 'on') {
                     //Delete Details of Board memebers
                     DB::table('board_details')
                         ->where('board_id', $boardId)
@@ -406,32 +406,32 @@ class BoardController extends Controller
                         ->delete();
                 } else {
                     $user = User::find($userId);
-                    $user->first_name = $request->get('ch_sec_fname');
-                    $user->last_name = $request->get('ch_sec_lname');
-                    $user->email = $request->get('ch_sec_email');
+                    $user->first_name = $request->input('ch_sec_fname');
+                    $user->last_name = $request->input('ch_sec_lname');
+                    $user->email = $request->input('ch_sec_email');
                     $user->updated_at = date('Y-m-d H:i:s');
                     $user->save();
 
                     DB::table('board_details')
                         ->where('board_id', $boardId)
-                        ->update(['first_name' => $request->get('ch_sec_fname'),
-                            'last_name' => $request->get('ch_sec_lname'),
-                            'email' => $request->get('ch_sec_email'),
-                            'street_address' => $request->get('ch_sec_street'),
-                            'city' => $request->get('ch_sec_city'),
-                            'state' => $request->get('ch_sec_state'),
-                            'zip' => $request->get('ch_sec_zip'),
+                        ->update(['first_name' => $request->input('ch_sec_fname'),
+                            'last_name' => $request->input('ch_sec_lname'),
+                            'email' => $request->input('ch_sec_email'),
+                            'street_address' => $request->input('ch_sec_street'),
+                            'city' => $request->input('ch_sec_city'),
+                            'state' => $request->input('ch_sec_state'),
+                            'zip' => $request->input('ch_sec_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_sec_phone'),
+                            'phone' => $request->input('ch_sec_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s')]);
                 }
             } else {
-                if ($request->get('SecVacant') != 'on') {
+                if ($request->input('SecVacant') != 'on') {
                     $userId = DB::table('users')->insertGetId(
-                        ['first_name' => $request->get('ch_sec_fname'),
-                            'last_name' => $request->get('ch_sec_lname'),
-                            'email' => $request->get('ch_sec_email'),
+                        ['first_name' => $request->input('ch_sec_fname'),
+                            'last_name' => $request->input('ch_sec_lname'),
+                            'email' => $request->input('ch_sec_email'),
                             'password' => Hash::make('TempPass4You'),
                             'user_type' => 'board',
                             'is_active' => 1]
@@ -446,19 +446,19 @@ class BoardController extends Controller
                     $board = DB::table('board_details')->insert(
                         ['user_id' => $userId,
                             'board_id' => $boardId,
-                            'first_name' => $request->get('ch_sec_fname'),
-                            'last_name' => $request->get('ch_sec_lname'),
-                            'email' => $request->get('ch_sec_email'),
+                            'first_name' => $request->input('ch_sec_fname'),
+                            'last_name' => $request->input('ch_sec_lname'),
+                            'email' => $request->input('ch_sec_email'),
                             'password' => Hash::make('TempPass4You'),
                             'remember_token' => '',
                             'board_position_id' => 5,
                             'chapter_id' => $chapterId,
-                            'street_address' => $request->get('ch_sec_street'),
-                            'city' => $request->get('ch_sec_city'),
-                            'state' => $request->get('ch_sec_state'),
-                            'zip' => $request->get('ch_sec_zip'),
+                            'street_address' => $request->input('ch_sec_street'),
+                            'city' => $request->input('ch_sec_city'),
+                            'state' => $request->input('ch_sec_state'),
+                            'zip' => $request->input('ch_sec_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_sec_phone'),
+                            'phone' => $request->input('ch_sec_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s'),
                             'is_active' => 1]
@@ -490,14 +490,14 @@ class BoardController extends Controller
                 $to_email4 = $cor_details[0]->email;
             }
 
-            if ($request->get('ch_webstatus') != $request->get('ch_hid_webstatus')) {
+            if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
                 $mailData = [
-                    'chapter_name' => $request->get('ch_name'),
+                    'chapter_name' => $request->input('ch_name'),
                     'chapter_state' => $chapterState,
-                    'ch_website_url' => $request->get('ch_website'),
+                    'ch_website_url' => $request->input('ch_website'),
                 ];
 
-                if ($request->get('ch_webstatus') == 2) {
+                if ($request->input('ch_webstatus') == 2) {
                     Mail::to($to_email4, 'MOMS Club')
                         ->send(new WebsiteReviewNotice($mailData));
                 }
@@ -746,7 +746,7 @@ class BoardController extends Controller
         DB::beginTransaction();
         try {
             $chapterId = $id;
-            $posId = $request->get('bor_positionid');
+            $posId = $request->input('bor_positionid');
             $boardDetails = DB::table('board_details')
                 ->select('board_id', 'user_id', 'first_name as bor_fname', 'last_name as bor_lname', 'email as bor_email', 'bp.position as bor_position')
                 ->leftJoin('board_position as bp', 'board_details.board_position_id', '=', 'bp.id')
@@ -767,11 +767,11 @@ class BoardController extends Controller
                 $boardId = $boardDetails[0]->board_id;
 
                 $user = User::find($userId);
-                $user->first_name = $request->get('bor_fname');
-                $user->last_name = $request->get('bor_lname');
-                $user->email = $request->get('bor_email');
-                if ($request->get('bor_pswd_cng') == '1') {
-                    $user->password = Hash::make($request->get('bor_pswd_cnf'));
+                $user->first_name = $request->input('bor_fname');
+                $user->last_name = $request->input('bor_lname');
+                $user->email = $request->input('bor_email');
+                if ($request->input('bor_pswd_cng') == '1') {
+                    $user->password = Hash::make($request->input('bor_pswd_cnf'));
                 }
 
                 $user->updated_at = date('Y-m-d H:i:s');
@@ -779,15 +779,15 @@ class BoardController extends Controller
 
                 DB::table('board_details')
                     ->where('board_id', $boardId)
-                    ->update(['first_name' => $request->get('bor_fname'),
-                        'last_name' => $request->get('bor_lname'),
-                        'email' => $request->get('bor_email'),
-                        'street_address' => $request->get('bor_addr'),
-                        'city' => $request->get('bor_city'),
-                        'state' => $request->get('bor_state'),
-                        'zip' => $request->get('bor_zip'),
+                    ->update(['first_name' => $request->input('bor_fname'),
+                        'last_name' => $request->input('bor_lname'),
+                        'email' => $request->input('bor_email'),
+                        'street_address' => $request->input('bor_addr'),
+                        'city' => $request->input('bor_city'),
+                        'state' => $request->input('bor_state'),
+                        'zip' => $request->input('bor_zip'),
                         'country' => 'USA',
-                        'phone' => $request->get('bor_phone'),
+                        'phone' => $request->input('bor_phone'),
                         'last_updated_date' => date('Y-m-d H:i:s')]);
             }
 
@@ -953,8 +953,8 @@ class BoardController extends Controller
         }
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         $chapter = Chapter::find($chapter_id);
-        $boundaryStatus = $request->get('BoundaryStatus');
-        $issue_note = $request->get('BoundaryIssue');
+        $boundaryStatus = $request->input('BoundaryStatus');
+        $issue_note = $request->input('BoundaryIssue');
         //Boundary Issues Correct 0 | Not Correct 1
         if ($boundaryStatus == 0) {
             $issue_note = '';
@@ -962,55 +962,55 @@ class BoardController extends Controller
 
         DB::beginTransaction();
         try {
-            $chapter->inquiries_contact = $request->get('InquiriesContact');
-            $chapter->boundary_issues = $request->get('BoundaryStatus');
+            $chapter->inquiries_contact = $request->input('InquiriesContact');
+            $chapter->boundary_issues = $request->input('BoundaryStatus');
             $chapter->boundary_issue_notes = $issue_note;
-            $chapter->website_url = $request->get('ch_website');
-            $chapter->website_status = $request->get('ch_webstatus');
-            $chapter->egroup = $request->get('ch_onlinediss');
-            $chapter->social1 = $request->get('ch_social1');
-            $chapter->social2 = $request->get('ch_social2');
-            $chapter->social3 = $request->get('ch_social3');
+            $chapter->website_url = $request->input('ch_website');
+            $chapter->website_status = $request->input('ch_webstatus');
+            $chapter->egroup = $request->input('ch_onlinediss');
+            $chapter->social1 = $request->input('ch_social1');
+            $chapter->social2 = $request->input('ch_social2');
+            $chapter->social3 = $request->input('ch_social3');
             $chapter->new_board_submitted = 1;
             $chapter->last_updated_by = $lastUpdatedBy;
             $chapter->last_updated_date = date('Y-m-d H:i:s');
 
             $chapter->save();
             //President Info
-            if ($request->get('ch_pre_fname') != '' && $request->get('ch_pre_lname') != '' && $request->get('ch_pre_email') != '') {
+            if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
                 $PREDetails = DB::table('incoming_board_member')
                     ->select('id')
                     ->where('chapter_id', '=', $chapter_id)
                     ->where('board_position_id', '=', '1')
                     ->get();
-                $id = $request->get('presID');
+                $id = $request->input('presID');
                 if (count($PREDetails) != 0) {
                     DB::table('incoming_board_member')
                         ->where('id', $id)
-                        ->update(['first_name' => $request->get('ch_pre_fname'),
-                            'last_name' => $request->get('ch_pre_lname'),
-                            'email' => $request->get('ch_pre_email'),
-                            'street_address' => $request->get('ch_pre_street'),
-                            'city' => $request->get('ch_pre_city'),
-                            'state' => $request->get('ch_pre_state'),
-                            'zip' => $request->get('ch_pre_zip'),
+                        ->update(['first_name' => $request->input('ch_pre_fname'),
+                            'last_name' => $request->input('ch_pre_lname'),
+                            'email' => $request->input('ch_pre_email'),
+                            'street_address' => $request->input('ch_pre_street'),
+                            'city' => $request->input('ch_pre_city'),
+                            'state' => $request->input('ch_pre_state'),
+                            'zip' => $request->input('ch_pre_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_pre_phone'),
+                            'phone' => $request->input('ch_pre_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s')]);
                 } else {
                     $board = DB::table('incoming_board_member')->insert(
-                        ['first_name' => $request->get('ch_pre_fname'),
-                            'last_name' => $request->get('ch_pre_lname'),
-                            'email' => $request->get('ch_pre_email'),
+                        ['first_name' => $request->input('ch_pre_fname'),
+                            'last_name' => $request->input('ch_pre_lname'),
+                            'email' => $request->input('ch_pre_email'),
                             'board_position_id' => 1,
                             'chapter_id' => $chapter_id,
-                            'street_address' => $request->get('ch_pre_street'),
-                            'city' => $request->get('ch_pre_city'),
-                            'state' => $request->get('ch_pre_state'),
-                            'zip' => $request->get('ch_pre_zip'),
+                            'street_address' => $request->input('ch_pre_street'),
+                            'city' => $request->input('ch_pre_city'),
+                            'state' => $request->input('ch_pre_state'),
+                            'zip' => $request->input('ch_pre_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_pre_phone'),
+                            'phone' => $request->input('ch_pre_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s'),
                         ]
@@ -1019,48 +1019,48 @@ class BoardController extends Controller
 
             }
             //AVP Info
-            if ($request->get('AVPVacant') == 'on') {
-                $id = $request->get('avpID');
+            if ($request->input('AVPVacant') == 'on') {
+                $id = $request->input('avpID');
                 DB::table('incoming_board_member')
                     ->where('id', $id)
                     ->delete();
             }
-            if ($request->get('ch_avp_fname') != '' && $request->get('ch_avp_lname') != '' && $request->get('ch_avp_email') != '') {
+            if ($request->input('ch_avp_fname') != '' && $request->input('ch_avp_lname') != '' && $request->input('ch_avp_email') != '') {
                 $AVPDetails = DB::table('incoming_board_member')
                     ->select('id')
                     ->where('chapter_id', '=', $chapter_id)
                     ->where('board_position_id', '=', '2')
                     ->get();
-                $id = $request->get('avpID');
+                $id = $request->input('avpID');
                 if (count($AVPDetails) != 0) {
                     DB::table('incoming_board_member')
                         ->where('id', $id)
-                        ->update(['first_name' => $request->get('ch_avp_fname'),
-                            'last_name' => $request->get('ch_avp_lname'),
-                            'email' => $request->get('ch_avp_email'),
-                            'street_address' => $request->get('ch_avp_street'),
-                            'city' => $request->get('ch_avp_city'),
-                            'state' => $request->get('ch_avp_state'),
-                            'zip' => $request->get('ch_avp_zip'),
+                        ->update(['first_name' => $request->input('ch_avp_fname'),
+                            'last_name' => $request->input('ch_avp_lname'),
+                            'email' => $request->input('ch_avp_email'),
+                            'street_address' => $request->input('ch_avp_street'),
+                            'city' => $request->input('ch_avp_city'),
+                            'state' => $request->input('ch_avp_state'),
+                            'zip' => $request->input('ch_avp_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_avp_phone'),
+                            'phone' => $request->input('ch_avp_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s')]);
                 } else {
 
                     $board = DB::table('incoming_board_member')->insert(
                         [
-                            'first_name' => $request->get('ch_avp_fname'),
-                            'last_name' => $request->get('ch_avp_lname'),
-                            'email' => $request->get('ch_avp_email'),
+                            'first_name' => $request->input('ch_avp_fname'),
+                            'last_name' => $request->input('ch_avp_lname'),
+                            'email' => $request->input('ch_avp_email'),
                             'board_position_id' => 2,
                             'chapter_id' => $chapter_id,
-                            'street_address' => $request->get('ch_avp_street'),
-                            'city' => $request->get('ch_avp_city'),
-                            'state' => $request->get('ch_avp_state'),
-                            'zip' => $request->get('ch_avp_zip'),
+                            'street_address' => $request->input('ch_avp_street'),
+                            'city' => $request->input('ch_avp_city'),
+                            'state' => $request->input('ch_avp_state'),
+                            'zip' => $request->input('ch_avp_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_avp_phone'),
+                            'phone' => $request->input('ch_avp_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s'),
                         ]
@@ -1068,48 +1068,48 @@ class BoardController extends Controller
                 }
             }
             //MVP Info
-            if ($request->get('MVPVacant') == 'on') {
-                $id = $request->get('mvpID');
+            if ($request->input('MVPVacant') == 'on') {
+                $id = $request->input('mvpID');
                 DB::table('incoming_board_member')
                     ->where('id', $id)
                     ->delete();
             }
-            if ($request->get('ch_mvp_fname') != '' && $request->get('ch_mvp_lname') != '' && $request->get('ch_mvp_email') != '') {
+            if ($request->input('ch_mvp_fname') != '' && $request->input('ch_mvp_lname') != '' && $request->input('ch_mvp_email') != '') {
                 $MVPDetails = DB::table('incoming_board_member')
                     ->select('id')
                     ->where('chapter_id', '=', $chapter_id)
                     ->where('board_position_id', '=', '3')
                     ->get();
-                $id = $request->get('mvpID');
+                $id = $request->input('mvpID');
                 if (count($MVPDetails) != 0) {
                     DB::table('incoming_board_member')
                         ->where('id', $id)
-                        ->update(['first_name' => $request->get('ch_mvp_fname'),
-                            'last_name' => $request->get('ch_mvp_lname'),
-                            'email' => $request->get('ch_mvp_email'),
-                            'street_address' => $request->get('ch_mvp_street'),
-                            'city' => $request->get('ch_mvp_city'),
-                            'state' => $request->get('ch_mvp_state'),
-                            'zip' => $request->get('ch_mvp_zip'),
+                        ->update(['first_name' => $request->input('ch_mvp_fname'),
+                            'last_name' => $request->input('ch_mvp_lname'),
+                            'email' => $request->input('ch_mvp_email'),
+                            'street_address' => $request->input('ch_mvp_street'),
+                            'city' => $request->input('ch_mvp_city'),
+                            'state' => $request->input('ch_mvp_state'),
+                            'zip' => $request->input('ch_mvp_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_mvp_phone'),
+                            'phone' => $request->input('ch_mvp_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s')]);
                 } else {
 
                     $board = DB::table('incoming_board_member')->insert(
                         [
-                            'first_name' => $request->get('ch_mvp_fname'),
-                            'last_name' => $request->get('ch_mvp_lname'),
-                            'email' => $request->get('ch_mvp_email'),
+                            'first_name' => $request->input('ch_mvp_fname'),
+                            'last_name' => $request->input('ch_mvp_lname'),
+                            'email' => $request->input('ch_mvp_email'),
                             'board_position_id' => 3,
                             'chapter_id' => $chapter_id,
-                            'street_address' => $request->get('ch_mvp_street'),
-                            'city' => $request->get('ch_mvp_city'),
-                            'state' => $request->get('ch_mvp_state'),
-                            'zip' => $request->get('ch_mvp_zip'),
+                            'street_address' => $request->input('ch_mvp_street'),
+                            'city' => $request->input('ch_mvp_city'),
+                            'state' => $request->input('ch_mvp_state'),
+                            'zip' => $request->input('ch_mvp_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_mvp_phone'),
+                            'phone' => $request->input('ch_mvp_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s'),
                         ]
@@ -1117,31 +1117,31 @@ class BoardController extends Controller
                 }
             }
             //TRS Info
-            if ($request->get('TreasVacant') == 'on') {
-                $id = $request->get('trsID');
+            if ($request->input('TreasVacant') == 'on') {
+                $id = $request->input('trsID');
                 DB::table('incoming_board_member')
                     ->where('id', $id)
                     ->delete();
             }
-            if ($request->get('ch_trs_fname') != '' && $request->get('ch_trs_lname') != '' && $request->get('ch_trs_email') != '') {
+            if ($request->input('ch_trs_fname') != '' && $request->input('ch_trs_lname') != '' && $request->input('ch_trs_email') != '') {
                 $TRSDetails = DB::table('incoming_board_member')
                     ->select('id')
                     ->where('chapter_id', '=', $chapter_id)
                     ->where('board_position_id', '=', '4')
                     ->get();
-                $id = $request->get('trsID');
+                $id = $request->input('trsID');
                 if (count($TRSDetails) != 0) {
                     DB::table('incoming_board_member')
                         ->where('id', $id)
-                        ->update(['first_name' => $request->get('ch_trs_fname'),
-                            'last_name' => $request->get('ch_trs_lname'),
-                            'email' => $request->get('ch_trs_email'),
-                            'street_address' => $request->get('ch_trs_street'),
-                            'city' => $request->get('ch_trs_city'),
-                            'state' => $request->get('ch_trs_state'),
-                            'zip' => $request->get('ch_trs_zip'),
+                        ->update(['first_name' => $request->input('ch_trs_fname'),
+                            'last_name' => $request->input('ch_trs_lname'),
+                            'email' => $request->input('ch_trs_email'),
+                            'street_address' => $request->input('ch_trs_street'),
+                            'city' => $request->input('ch_trs_city'),
+                            'state' => $request->input('ch_trs_state'),
+                            'zip' => $request->input('ch_trs_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_trs_phone'),
+                            'phone' => $request->input('ch_trs_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s')]);
 
@@ -1149,17 +1149,17 @@ class BoardController extends Controller
 
                     $board = DB::table('incoming_board_member')->insert(
                         [
-                            'first_name' => $request->get('ch_trs_fname'),
-                            'last_name' => $request->get('ch_trs_lname'),
-                            'email' => $request->get('ch_trs_email'),
+                            'first_name' => $request->input('ch_trs_fname'),
+                            'last_name' => $request->input('ch_trs_lname'),
+                            'email' => $request->input('ch_trs_email'),
                             'board_position_id' => 4,
                             'chapter_id' => $chapter_id,
-                            'street_address' => $request->get('ch_trs_street'),
-                            'city' => $request->get('ch_trs_city'),
-                            'state' => $request->get('ch_trs_state'),
-                            'zip' => $request->get('ch_trs_zip'),
+                            'street_address' => $request->input('ch_trs_street'),
+                            'city' => $request->input('ch_trs_city'),
+                            'state' => $request->input('ch_trs_state'),
+                            'zip' => $request->input('ch_trs_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_trs_phone'),
+                            'phone' => $request->input('ch_trs_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s'),
                         ]
@@ -1167,48 +1167,48 @@ class BoardController extends Controller
                 }
             }
             //SEC Info
-            if ($request->get('SecVacant') == 'on') {
-                $id = $request->get('secID');
+            if ($request->input('SecVacant') == 'on') {
+                $id = $request->input('secID');
                 DB::table('incoming_board_member')
                     ->where('id', $id)
                     ->delete();
             }
-            if ($request->get('ch_sec_fname') != '' && $request->get('ch_sec_lname') != '' && $request->get('ch_sec_email') != '') {
+            if ($request->input('ch_sec_fname') != '' && $request->input('ch_sec_lname') != '' && $request->input('ch_sec_email') != '') {
                 $SECDetails = DB::table('incoming_board_member')
                     ->select('id')
                     ->where('chapter_id', '=', $chapter_id)
                     ->where('board_position_id', '=', '5')
                     ->get();
-                $id = $request->get('secID');
+                $id = $request->input('secID');
                 if (count($SECDetails) != 0) {
                     DB::table('incoming_board_member')
                         ->where('id', $id)
-                        ->update(['first_name' => $request->get('ch_sec_fname'),
-                            'last_name' => $request->get('ch_sec_lname'),
-                            'email' => $request->get('ch_sec_email'),
-                            'street_address' => $request->get('ch_sec_street'),
-                            'city' => $request->get('ch_sec_city'),
-                            'state' => $request->get('ch_sec_state'),
-                            'zip' => $request->get('ch_sec_zip'),
+                        ->update(['first_name' => $request->input('ch_sec_fname'),
+                            'last_name' => $request->input('ch_sec_lname'),
+                            'email' => $request->input('ch_sec_email'),
+                            'street_address' => $request->input('ch_sec_street'),
+                            'city' => $request->input('ch_sec_city'),
+                            'state' => $request->input('ch_sec_state'),
+                            'zip' => $request->input('ch_sec_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_sec_phone'),
+                            'phone' => $request->input('ch_sec_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s')]);
 
                 } else {
                     $board = DB::table('incoming_board_member')->insert(
                         [
-                            'first_name' => $request->get('ch_sec_fname'),
-                            'last_name' => $request->get('ch_sec_lname'),
-                            'email' => $request->get('ch_sec_email'),
+                            'first_name' => $request->input('ch_sec_fname'),
+                            'last_name' => $request->input('ch_sec_lname'),
+                            'email' => $request->input('ch_sec_email'),
                             'board_position_id' => 5,
                             'chapter_id' => $chapter_id,
-                            'street_address' => $request->get('ch_sec_street'),
-                            'city' => $request->get('ch_sec_city'),
-                            'state' => $request->get('ch_sec_state'),
-                            'zip' => $request->get('ch_sec_zip'),
+                            'street_address' => $request->input('ch_sec_street'),
+                            'city' => $request->input('ch_sec_city'),
+                            'state' => $request->input('ch_sec_state'),
+                            'zip' => $request->input('ch_sec_zip'),
                             'country' => 'USA',
-                            'phone' => $request->get('ch_sec_phone'),
+                            'phone' => $request->input('ch_sec_phone'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s'),
                         ]

@@ -427,10 +427,10 @@ class CoordinatorController extends Controller
         $corId = $corDetails['coordinator_id'];
         $name = $corDetails['first_name'];
         $cordinatorId = $id;
-        if ($request->get('cord_email') != $request->get('cord_email_chk')) {
+        if ($request->input('cord_email') != $request->input('cord_email_chk')) {
             DB::table('coordinator_details')
                 ->where('coordinator_id', $cordinatorId)
-                ->update(['email' => $request->get('cord_email')]);
+                ->update(['email' => $request->input('cord_email')]);
         }
 
         return redirect()->to('/coordinatorlist')->with('success', 'Coordinator email updated successfully.');
@@ -446,7 +446,7 @@ class CoordinatorController extends Controller
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
         $cordinatorId = $id;
 
-        if ($request->get('cord_fname') != '' && $request->get('cord_lname') != '' && $request->get('cord_email') != '') {
+        if ($request->input('cord_fname') != '' && $request->input('cord_lname') != '' && $request->input('cord_email') != '') {
             $corDetails = DB::table('coordinator_details')
                 ->select('coordinator_id', 'user_id')
                 ->where('coordinator_id', '=', $cordinatorId)
@@ -456,30 +456,30 @@ class CoordinatorController extends Controller
                 $cordId = $corDetails[0]->coordinator_id;
 
                 $user = User::find($userId);
-                $user->first_name = $request->get('cord_fname');
-                $user->last_name = $request->get('cord_lname');
-                $user->email = $request->get('cord_email');
-                if ($request->get('cord_pswd_chg') == '1') {
-                    $user->password = Hash::make($request->get('cord_pswd_cnf'));
+                $user->first_name = $request->input('cord_fname');
+                $user->last_name = $request->input('cord_lname');
+                $user->email = $request->input('cord_email');
+                if ($request->input('cord_pswd_chg') == '1') {
+                    $user->password = Hash::make($request->input('cord_pswd_cnf'));
                 }
                 $user->updated_at = date('Y-m-d H:i:s');
                 $user->save();
 
                 DB::table('coordinator_details')
                     ->where('coordinator_id', $cordinatorId)
-                    ->update(['first_name' => $request->get('cord_fname'),
-                        'last_name' => $request->get('cord_lname'),
-                        'email' => $request->get('cord_email'),
-                        'sec_email' => $request->get('cord_sec_email'),
-                        'address' => $request->get('cord_addr'),
-                        'city' => $request->get('cord_city'),
-                        'state' => $request->get('cord_state'),
-                        'zip' => $request->get('cord_zip'),
+                    ->update(['first_name' => $request->input('cord_fname'),
+                        'last_name' => $request->input('cord_lname'),
+                        'email' => $request->input('cord_email'),
+                        'sec_email' => $request->input('cord_sec_email'),
+                        'address' => $request->input('cord_addr'),
+                        'city' => $request->input('cord_city'),
+                        'state' => $request->input('cord_state'),
+                        'zip' => $request->input('cord_zip'),
                         'country' => 'USA',
-                        'phone' => $request->get('cord_phone'),
-                        'alt_phone' => $request->get('cord_altphone'),
-                        'birthday_month_id' => $request->get('cord_month'),
-                        'birthday_day' => $request->get('cord_day'),
+                        'phone' => $request->input('cord_phone'),
+                        'alt_phone' => $request->input('cord_altphone'),
+                        'birthday_month_id' => $request->input('cord_month'),
+                        'birthday_day' => $request->input('cord_day'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => date('Y-m-d H:i:s')]);
             }
@@ -801,32 +801,32 @@ class CoordinatorController extends Controller
         }
 
         //Reassign Report To / Direct Supervisor that Changed
-        $coordinator_id = $request->get('coordinator_id');
-        $new_coordinator_id = $request->get('cord_report_pc');
+        $coordinator_id = $request->input('coordinator_id');
+        $new_coordinator_id = $request->input('cord_report_pc');
         $this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
 
         //Save other changes
-        $position_id = $request->get('cord_pri_pos');
-        $sec_position_id = $request->get('cord_sec_pos');
-        $old_position_id = $request->get('OldPrimaryPosition');
-        $old_sec_position_id = $request->get('OldSecPosition');
-        $promote_date = $request->get('CoordinatorPromoteDate');
+        $position_id = $request->input('cord_pri_pos');
+        $sec_position_id = $request->input('cord_sec_pos');
+        $old_position_id = $request->input('OldPrimaryPosition');
+        $old_sec_position_id = $request->input('OldSecPosition');
+        $promote_date = $request->input('CoordinatorPromoteDate');
         //$report_id = $request->get('cord_report');
         if ($promote_date == '0000-00-00') {
             $promote_date = null;
         }
         if ($position_id != $old_position_id || $sec_position_id != $old_sec_position_id) {
-            $promote_date = $request->get('CoordinatorPromoteDateNew');
+            $promote_date = $request->input('CoordinatorPromoteDateNew');
         }
         DB::beginTransaction();
         try {
             DB::table('coordinator_details')
                 ->where('coordinator_id', $cordinatorId)
-                ->update(['position_id' => $request->get('cord_pri_pos'),
-                    'sec_position_id' => $request->get('cord_sec_pos'),
-                    'region_id' => $request->get('cord_region'),
-                    'conference_id' => $request->get('cord_conf'),
-                    'home_chapter' => $request->get('cord_chapter'),
+                ->update(['position_id' => $request->input('cord_pri_pos'),
+                    'sec_position_id' => $request->input('cord_sec_pos'),
+                    'region_id' => $request->input('cord_region'),
+                    'conference_id' => $request->input('cord_conf'),
+                    'home_chapter' => $request->input('cord_chapter'),
                     //'report_id' => $report_id,
                     'last_promoted' => $promote_date,
                     'last_updated_by' => $lastUpdatedBy,
@@ -1463,7 +1463,7 @@ class CoordinatorController extends Controller
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
         $cordinatorId = $id;
 
-        if ($request->get('cord_fname') != '' && $request->get('cord_lname') != '') {
+        if ($request->input('cord_fname') != '' && $request->input('cord_lname') != '') {
             $corDetails = DB::table('coordinator_details')
                 ->select('coordinator_id', 'user_id')
                 ->where('coordinator_id', '=', $cordinatorId)
@@ -1474,24 +1474,24 @@ class CoordinatorController extends Controller
                     $cordId = $corDetails[0]->coordinator_id;
 
                     $user = User::find($userId);
-                    $user->first_name = $request->get('cord_fname');
-                    $user->last_name = $request->get('cord_lname');
+                    $user->first_name = $request->input('cord_fname');
+                    $user->last_name = $request->input('cord_lname');
                     $user->updated_at = date('Y-m-d H:i:s');
                     $user->save();
 
                     DB::table('coordinator_details')
                         ->where('coordinator_id', $cordinatorId)
-                        ->update(['recognition_toptier' => $request->get('cord_toptier'),
-                            'recognition_year0' => $request->get('cord_year0'),
-                            'recognition_year1' => $request->get('cord_year1'),
-                            'recognition_year2' => $request->get('cord_year2'),
-                            'recognition_year3' => $request->get('cord_year3'),
-                            'recognition_year4' => $request->get('cord_year4'),
-                            'recognition_year5' => $request->get('cord_year5'),
-                            'recognition_year6' => $request->get('cord_year6'),
-                            'recognition_year7' => $request->get('cord_year7'),
-                            'recognition_year8' => $request->get('cord_year8'),
-                            'recognition_year9' => $request->get('cord_year9'),
+                        ->update(['recognition_toptier' => $request->input('cord_toptier'),
+                            'recognition_year0' => $request->input('cord_year0'),
+                            'recognition_year1' => $request->input('cord_year1'),
+                            'recognition_year2' => $request->input('cord_year2'),
+                            'recognition_year3' => $request->input('cord_year3'),
+                            'recognition_year4' => $request->input('cord_year4'),
+                            'recognition_year5' => $request->input('cord_year5'),
+                            'recognition_year6' => $request->input('cord_year6'),
+                            'recognition_year7' => $request->input('cord_year7'),
+                            'recognition_year8' => $request->input('cord_year8'),
+                            'recognition_year9' => $request->input('cord_year9'),
                             'recognition_necklace' => (int) $request->has('cord_necklace'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s')]);
@@ -1583,7 +1583,7 @@ class CoordinatorController extends Controller
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
         $cordinatorId = $id;
 
-        if ($request->get('cord_fname') != '' && $request->get('cord_lname') != '') {
+        if ($request->input('cord_fname') != '' && $request->input('cord_lname') != '') {
             $corDetails = DB::table('coordinator_details')
                 ->select('coordinator_id', 'user_id')
                 ->where('coordinator_id', '=', $cordinatorId)
@@ -1594,14 +1594,14 @@ class CoordinatorController extends Controller
                     $cordId = $corDetails[0]->coordinator_id;
 
                     $user = User::find($userId);
-                    $user->first_name = $request->get('cord_fname');
-                    $user->last_name = $request->get('cord_lname');
+                    $user->first_name = $request->input('cord_fname');
+                    $user->last_name = $request->input('cord_lname');
                     $user->updated_at = date('Y-m-d H:i:s');
                     $user->save();
 
                     DB::table('coordinator_details')
                         ->where('coordinator_id', $cordinatorId)
-                        ->update(['card_sent' => $request->get('card_sent'),
+                        ->update(['card_sent' => $request->input('card_sent'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s')]);
                     DB::commit();
@@ -1698,7 +1698,7 @@ class CoordinatorController extends Controller
                 DB::table('coordinator_details')
                     ->where('coordinator_id', $cordinatorId)
                     ->update([
-                        'todo_month' => $request->get('todo_month'),
+                        'todo_month' => $request->input('todo_month'),
                         'todo_check_chapters' => $request->has('todo_check_chapters') ? 1 : null,
                         'todo_send_rereg' => $request->has('todo_send_rereg') ? 1 : null,
                         'todo_send_late' => $request->has('todo_send_late') ? 1 : null,
@@ -1791,7 +1791,7 @@ class CoordinatorController extends Controller
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
         $cordinatorId = $id;
 
-        if ($request->get('cord_fname') != '' && $request->get('cord_lname') != '' && $request->get('cord_email') != '') {
+        if ($request->input('cord_fname') != '' && $request->input('cord_lname') != '' && $request->input('cord_email') != '') {
             $corDetails = DB::table('coordinator_details')
                 ->select('coordinator_id', 'user_id')
                 ->where('coordinator_id', '=', $cordinatorId)
@@ -1802,31 +1802,31 @@ class CoordinatorController extends Controller
                     $cordId = $corDetails[0]->coordinator_id;
 
                     $user = User::find($userId);
-                    $user->first_name = $request->get('cord_fname');
-                    $user->last_name = $request->get('cord_lname');
-                    $user->email = $request->get('cord_email');
-                    if ($request->get('cord_pswd_chg') == '1') {
-                        $user->password = Hash::make($request->get('cord_pswd_cnf'));
+                    $user->first_name = $request->input('cord_fname');
+                    $user->last_name = $request->input('cord_lname');
+                    $user->email = $request->input('cord_email');
+                    if ($request->input('cord_pswd_chg') == '1') {
+                        $user->password = Hash::make($request->input('cord_pswd_cnf'));
                     }
                     $user->updated_at = date('Y-m-d H:i:s');
                     $user->save();
 
                     DB::table('coordinator_details')
                         ->where('coordinator_id', $cordinatorId)
-                        ->update(['first_name' => $request->get('cord_fname'),
-                            'last_name' => $request->get('cord_lname'),
-                            'email' => $request->get('cord_email'),
-                            'sec_email' => $request->get('cord_sec_email'),
-                            'address' => $request->get('cord_addr'),
-                            'city' => $request->get('cord_city'),
-                            'state' => $request->get('cord_state'),
-                            'zip' => $request->get('cord_zip'),
-                            'country' => $request->get('cord_country'),
-                            'phone' => $request->get('cord_phone'),
-                            'alt_phone' => $request->get('cord_altphone'),
-                            'birthday_month_id' => $request->get('cord_month'),
-                            'birthday_day' => $request->get('cord_day'),
-                            'home_chapter' => $request->get('cord_chapter'),
+                        ->update(['first_name' => $request->input('cord_fname'),
+                            'last_name' => $request->input('cord_lname'),
+                            'email' => $request->input('cord_email'),
+                            'sec_email' => $request->input('cord_sec_email'),
+                            'address' => $request->input('cord_addr'),
+                            'city' => $request->input('cord_city'),
+                            'state' => $request->input('cord_state'),
+                            'zip' => $request->input('cord_zip'),
+                            'country' => $request->input('cord_country'),
+                            'phone' => $request->input('cord_phone'),
+                            'alt_phone' => $request->input('cord_altphone'),
+                            'birthday_month_id' => $request->input('cord_month'),
+                            'birthday_day' => $request->input('cord_day'),
+                            'home_chapter' => $request->input('cord_chapter'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s')]);
                     DB::commit();

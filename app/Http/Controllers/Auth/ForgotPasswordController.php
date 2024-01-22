@@ -24,14 +24,14 @@ class ForgotPasswordController extends Controller
 
         // Insert both email and token into the password_reset_tokens table
         DB::table('password_reset_tokens')->insert([
-            'email' => $request->email,
+            'email' => $request->input('email'),
             'token' => $token,
             'created_at' => now(),
         ]);
 
         // Pass both email and token to the email view
-        Mail::send('email.forgetPassword', ['token' => $token, 'email' => $request->email], function ($message) use ($request) {
-            $message->to($request->email);
+        Mail::send('email.forgetPassword', ['token' => $token, 'email' => $request->input('email')], function ($message) use ($request) {
+            $message->to($request->input('email'));
             $message->subject('Reset Password');
         });
 
