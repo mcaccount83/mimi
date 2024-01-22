@@ -50,12 +50,17 @@
 					<div class="accordion-header js-accordion-header">CHAPTER DUES</div>
 					<div class="accordion-body js-accordion-body">
 						<section>
+
+
                             Did your chapter change dues this year?&nbsp;&nbsp;&nbsp;
-                            <strong>{{ $financial_report_array ['changed_dues'] == 1 ? 'YES' : 'NO' }}</strong><br>
+                            <strong>{{ is_null($financial_report_array['changed_dues']) ? 'Not Answered' : ($financial_report_array['changed_dues'] == 0 ? 'NO'
+                                : ($financial_report_array ['changed_dues'] == 1 ? 'YES' : 'Not Answered' )) }}</strong><br>
                             Did your chapter charge different amounts for new and returning members?&nbsp;&nbsp;&nbsp;
-                            <strong>{{ $financial_report_array ['different_dues'] == 1 ? 'YES' : 'NO' }}</strong><br>
+                            <strong>{{ is_null($financial_report_array['different_dues']) ? 'Not Answered' : ($financial_report_array['different_dues'] == 0 ? 'NO'
+                                :( $financial_report_array ['different_dues'] == 1 ? 'YES' : 'Not Answered' )) }}</strong><br>
                             Did your chapter have any members who didn't pay full dues?&nbsp;&nbsp;&nbsp;
-                            <strong>{{ $financial_report_array ['not_all_full_dues'] == 1 ? 'YES' : 'NO' }}</strong><br>
+                            <strong>{{ is_null($financial_report_array['different_dues']) ? 'Not Answered' : ($financial_report_array['different_dues'] == 0 ? 'NO'
+                                : ( $financial_report_array ['not_all_full_dues'] == 1 ? 'YES' : 'Not Answered' )) }}</strong><br>
                             <br>
                             <style>
                                 .flex-container {
@@ -1415,7 +1420,7 @@
                                     <div class="col-md-12">
                                     <div class="form-inline">
                                         <label style="display: block;">Current bank statement included and balance matches chapter entry:<span class="field-required">*</span></label>
-                                        <select id="checkBankStatementIncluded" name="checkBankStatementIncluded" class="form-control select2" style="width: 150px;" required >
+                                        <select id="checkBankStatementIncluded" name="checkBankStatementIncluded" class="form-control select2" style="width: 150px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
                                             <option value="" {{ is_null($financial_report_array->check_bank_statement_included) ? 'selected' : '' }} disabled>Please Select</option>
                                             <option value="0" {{$financial_report_array->check_bank_statement_included === 0 ? 'selected' : ''}}>No</option>
                                             <option value="1" {{$financial_report_array->check_bank_statement_included == 1 ? 'selected' : ''}}>Yes</option>
@@ -1427,7 +1432,7 @@
                                     <div class="col-md-12">
                                     <div class="form-inline">
                                         <label style="display: block;">Treasury Balance Now matches Reconciled Bank Balance:<span class="field-required">*</span></label>
-                                        <select id="checkBankStatementMatches" name="checkBankStatementMatches" class="form-control select2" style="width: 150px;" required >
+                                        <select id="checkBankStatementMatches" name="checkBankStatementMatches" class="form-control select2" style="width: 150px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
                                             <option value="" {{ is_null($financial_report_array->check_bank_statement_matches) ? 'selected' : '' }} disabled>Please Select</option>
                                             <option value="0" {{$financial_report_array->check_bank_statement_matches === 0 ? 'selected' : ''}}>No</option>
                                             <option value="1" {{$financial_report_array->check_bank_statement_matches == 1 ? 'selected' : ''}}>Yes</option>
@@ -1500,55 +1505,68 @@
                            <tr><td>1.</td>
                                <td>Did anyone in your chapter receive any compensation or pay for their work with your chapter?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['receive_compensation'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $financial_report_array ['receive_compensation_explanation']}}</strong></td></tr>
+                               <td><strong>{{ is_null($financial_report_array['receive_compensation']) ? 'Not Answered' : ($financial_report_array['receive_compensation'] == 0 ? 'NO'
+                                : ( $financial_report_array ['receive_compensation'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['receive_compensation_explanation']}}</strong></td></tr>
                            <tr><td>2.</td>
                                <td>Did any officer, member or family of a member benefit financially in any way from the member's position with your chapter?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['financial_benefit'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $financial_report_array ['financial_benefit_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['financial_benefit']) ? 'Not Answered' : ($financial_report_array['financial_benefit'] == 0 ? 'NO'
+                                : ( $financial_report_array ['financial_benefit'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['financial_benefit_explanation']}}</strong></td></tr>
                            <tr><td>3.</td>
                                <td>Did your chapter attempt to influence any national, state/provincial, or local legislation, or support any other organization that did?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['influence_political'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $financial_report_array ['influence_political_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['influence_political']) ? 'Not Answered' : ($financial_report_array['influence_political'] == 0 ? 'NO'
+                                : ( $financial_report_array ['influence_political'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['influence_political_explanation']}}</strong></td></tr>
                            <tr><td>4.</td>
                                <td>Did your chapter vote on all activities and expenditures during the fiscal year?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['vote_all_activities'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $financial_report_array ['vote_all_activities_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['vote_all_activities']) ? 'Not Answered' : ($financial_report_array['vote_all_activities'] == 0 ? 'NO'
+                                : ( $financial_report_array ['vote_all_activities'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['vote_all_activities_explanation']}}</strong></td></tr>
                            <tr><td>5.</td>
                                <td>Did you purchase pins from International?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['purchase_pins'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $financial_report_array ['purchase_pins_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['purchase_pins']) ? 'Not Answered' : ($financial_report_array['purchase_pins'] == 0 ? 'NO'
+                                : ( $financial_report_array ['purchase_pins'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['purchase_pins_explanation']}}</strong></td></tr>
                            <tr><td>6.</td>
                                <td>Did you purchase any merchandise from International other than pins?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['bought_merch'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{$financial_report_array ['bought_merch_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['bought_merch']) ? 'Not Answered' : ($financial_report_array['bought_merch'] == 0 ? 'NO'
+                                : ( $financial_report_array ['bought_merch'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{$financial_report_array ['bought_merch_explanation']}}</strong></td></tr>
                            <tr><td>7.</td>
                                <td>Did you offer or inform your members about MOMS Club merchandise?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['offered_merch'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $financial_report_array ['offered_merch_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['offered_merch']) ? 'Not Answered' : ($financial_report_array['offered_merch'] == 0 ? 'NO'
+                                : ( $financial_report_array ['offered_merch'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['offered_merch_explanation']}}</strong></td></tr>
                            <tr><td>8.</td>
                                <td>Did you make the Bylaws and/or manual available for any chapter members that requested them?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['bylaws_available'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $financial_report_array ['bylaws_available_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['bylaws_available']) ? 'Not Answered' : ($financial_report_array['bylaws_available'] == 0 ? 'NO'
+                                : ( $financial_report_array ['bylaws_available'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['bylaws_available_explanation']}}</strong></td></tr>
                            <tr><td>9.</td>
                                <td>Did you have a children's room with babysitters?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['childrens_room_sitters'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $financial_report_array['childrens_room_sitters_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['childrens_room_sitters']) ? 'Not Answered' : ($financial_report_array['childrens_room_sitters'] == 0 ? 'NO'
+                                : ( $financial_report_array ['childrens_room_sitters'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array['childrens_room_sitters_explanation']}}</strong></td></tr>
                            <tr><td>10.</td>
                                <td>Did you have playgroups? If so, how were they arranged.</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['playgroups'] == 1 ? 'YES   Arranged by Age' : (['playgroups'] == 2 ? 'YES   Multi-aged Groups' : 'NO') }}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['playgroups']) ? 'Not Answered' : ($financial_report_array['playgroups'] == 0 ? 'NO'
+                                : ( $financial_report_array ['playgroups'] == 1 ? 'YES   Arranged by Age' : (['playgroups'] == 2 ? 'YES   Multi-aged Groups' : 'Not Answered'))) }}</strong></td></tr>
                            <tr><td>11.</td>
                                <td>Did you have any child focused outings or activities?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['child_outings'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $financial_report_array ['child_outings_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['child_outings']) ? 'Not Answered' : ($financial_report_array['child_outings'] == 0 ? 'NO'
+                                : ( $financial_report_array ['child_outings'] == 1 ? 'YES' : 'Not Answered')) }}&nbsp;&nbsp;  {{ $financial_report_array ['child_outings_explanation']}}</strong></td></tr>
                            <tr><td>12.</td>
                                <td>Did you have any mother focused outings or activities?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['mother_outings'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $financial_report_array ['mother_outings_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['mother_outings']) ? 'Not Answered' : ($financial_report_array['mother_outings'] == 0 ? 'NO'
+                                : ( $financial_report_array ['mother_outings'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['mother_outings_explanation']}}</strong></td></tr>
                            <tr><td>13.</td>
                                <td>Did you have speakers at any meetings?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['meeting_speakers'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $financial_report_array ['meeting_speakers_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['meeting_speakers']) ? 'Not Answered' : ($financial_report_array['meeting_speakers'] == 0 ? 'NO'
+                                : ( $financial_report_array ['meeting_speakers'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['meeting_speakers_explanation']}}</strong></td></tr>
                            <tr><td>14.</td>
                                <td>If you had speakers, check any of the topics that were covered:</td></tr>
                                <tr><td></td>
@@ -1571,19 +1589,21 @@
                                                return $meetingSpeakersMapping[$value];
                                            }, $meetingSpeakersArray)) }}
                                        @else
-                                           N/A
+                                           Not Answered
                                        @endif
                                    </strong></td></tr>
                            <tr><td>15.</td>
                                <td>Did you have any discussion topics at your meetings? If yes, how often?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['discussion_topic_frequency'] == 1 ? '1-3 Times' : (['discussion_topic_frequency'] == 2 ? '4-6 Times' :
-                                   (['discussion_topic_frequency'] == 3 ? '7-9 Times' : (['discussion_topic_frequency'] == 4 ? '10+ Times' : 'NO'))) }}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['discussion_topic_frequency']) ? 'Not Answered' : ($financial_report_array['discussion_topic_frequency'] == 0 ? 'NO'
+                                : ( $financial_report_array ['discussion_topic_frequency'] == 1 ? '1-3 Times' : (['discussion_topic_frequency'] == 2 ? '4-6 Times' :
+                                   (['discussion_topic_frequency'] == 3 ? '7-9 Times' : (['discussion_topic_frequency'] == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong></td></tr>
                            <tr><td>16.</td>
                                <td>Did your chapter have scheduled park days? If yes, how often?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['park_day_frequency'] == 1 ? '1-3 Times' : (['park_day_frequency'] == 2 ? '4-6 Times' :
-                                   (['park_day_frequency'] == 3 ? '7-9 Times' : (['park_day_frequency'] == 4 ? '10+ Times' : 'NO'))) }}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['park_day_frequency']) ? 'Not Answered' : ($financial_report_array['park_day_frequency'] == 0 ? 'NO'
+                                : ( $financial_report_array ['park_day_frequency'] == 1 ? '1-3 Times' : (['park_day_frequency'] == 2 ? '4-6 Times' :
+                                   (['park_day_frequency'] == 3 ? '7-9 Times' : (['park_day_frequency'] == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong></td></tr>
                            <tr><td>17.</td>
                                <td>Did your chapter have any of the following activity groups?</td></tr>
                                <tr><td></td>
@@ -1606,33 +1626,39 @@
                                            return $activityMapping[$value];
                                        }, $activityArray)) }}
                                    @else
-                                       N/A
+                                       Not Answered
                                    @endif
                                </strong></td></tr>
                            <tr><td>18.</td>
                                <td>Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['contributions_not_registered_charity'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $financial_report_array ['contributions_not_registered_charity_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['contributions_not_registered_charity']) ? 'Not Answered' : ($financial_report_array['contributions_not_registered_charity'] == 0 ? 'NO'
+                                : ( $financial_report_array ['contributions_not_registered_charity'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['contributions_not_registered_charity_explanation']}}</strong></td></tr>
                            <tr><td>19.</td>
                                <td>Did your chapter perform at least one service project to benefit mothers or children?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['at_least_one_service_project'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $financial_report_array['at_least_one_service_project_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['at_least_one_service_project']) ? 'Not Answered' : ($financial_report_array['at_least_one_service_project'] == 0 ? 'NO'
+                                : ( $financial_report_array ['at_least_one_service_project'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array['at_least_one_service_project_explanation']}}</strong></td></tr>
                            <tr><td>20.</td>
                                <td>Did your chapter sister another chapter?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['sister_chapter'] == 1 ? 'YES' : 'NO' }}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['sister_chapter']) ? 'Not Answered' : ($financial_report_array['sister_chapter'] == 0 ? 'NO'
+                                : ( $financial_report_array ['sister_chapter'] == 1 ? 'YES' : 'Not Answered' )) }}</strong></td></tr>
                            <tr><td>21.</td>
                                <td>Did your chapter attend an International Event?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array['international_event'] == 1 ? 'YES' : 'NO' }}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['international_event']) ? 'Not Answered' : ($financial_report_array['international_event'] == 0 ? 'NO'
+                                : ( $financial_report_array['international_event'] == 1 ? 'YES' : 'Not Answered' )) }}</strong></td></tr>
                            <tr><td>22.</td>
                                <td>Did your chapter file their IRS 990N?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['file_irs'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{$financial_report_array ['file_irs_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['file_irs']) ? 'Not Answered' : ($financial_report_array['file_irs'] == 0 ? 'NO'
+                                : ( $financial_report_array ['file_irs'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{$financial_report_array ['file_irs_explanation']}}</strong></td></tr>
                            <tr><td>23.</td>
                                <td>Is a copy of your chapter's most recent bank statement included with the copy of this report that you are submitting to International?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ $financial_report_array ['bank_statement_included'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $financial_report_array ['bank_statement_included_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($financial_report_array['bank_statement_included']) ? 'Not Answered' : ($financial_report_array['bank_statement_included'] == 0 ? 'NO'
+                                : ( $financial_report_array ['bank_statement_included'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['bank_statement_included_explanation']}}</strong></td></tr>
                            <tr><td>24.</td>
                                <td>If your group does not have any bank accounts, where is the chapter money kept?</td></tr>
                            <tr><td></td>
@@ -2561,7 +2587,7 @@
                                     <div class="col-md-12">
                                         Award #1 Status:&nbsp;&nbsp;&nbsp;
                                         <strong>{{ is_null($financial_report_array['check_award_1_approved']) ? 'N/A' : ($financial_report_array['check_award_1_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_1_approved'] == 1 ? 'YES' : 'N/A')) }}
-                                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_1_nomination_type']) ? 'N/A' : ($financial_report_array['award_1_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_1_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_1_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
                                                 : ($financial_report_array['award_1_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_1_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_1_nomination_type'] == 4 ? 'Outstanding Spirit'
                                                 : ($financial_report_array['award_1_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_1_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_1_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                                         </strong><br>
@@ -2569,7 +2595,7 @@
 									<div class="col-md-12">
                                         Award #2 Status:&nbsp;&nbsp;&nbsp;
                                         <strong>{{ is_null($financial_report_array['check_award_2_approved']) ? 'N/A' : ($financial_report_array['check_award_2_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_2_approved'] == 1 ? 'YES' : 'N/A')) }}
-                                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_2_nomination_type']) ? 'N/A' : ($financial_report_array['award_2_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_2_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_2_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
                                                 : ($financial_report_array['award_2_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_2_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_2_nomination_type'] == 4 ? 'Outstanding Spirit'
                                                 : ($financial_report_array['award_2_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_2_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_2_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                                         </strong><br>
@@ -2577,7 +2603,7 @@
                                     <div class="col-md-12">
                                         Award #3 Status:&nbsp;&nbsp;&nbsp;
                                         <strong>{{ is_null($financial_report_array['check_award_3_approved']) ? 'N/A' : ($financial_report_array['check_award_3_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_3_approved'] == 1 ? 'YES' : 'N/A')) }}
-                                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_3_nomination_type']) ? 'N/A' : ($financial_report_array['award_3_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_3_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_3_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
                                                 : ($financial_report_array['award_3_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_3_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_3_nomination_type'] == 4 ? 'Outstanding Spirit'
                                                 : ($financial_report_array['award_3_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_3_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_3_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                                         </strong><br>
@@ -2585,7 +2611,7 @@
                                     <div class="col-md-12">
                                         Award #4 Status:&nbsp;&nbsp;&nbsp;
                                         <strong>{{ is_null($financial_report_array['check_award_4_approved']) ? 'N/A' : ($financial_report_array['check_award_4_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_4_approved'] == 1 ? 'YES' : 'N/A')) }}
-                                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_4_nomination_type']) ? 'N/A' : ($financial_report_array['award_4_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_4_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_4_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
                                                 : ($financial_report_array['award_4_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_4_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_4_nomination_type'] == 4 ? 'Outstanding Spirit'
                                                 : ($financial_report_array['award_4_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_4_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_4_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                                         </strong><br>
@@ -2593,7 +2619,7 @@
                                     <div class="col-md-12">
                                         Award #5 Status:&nbsp;&nbsp;&nbsp;
                                         <strong>{{ is_null($financial_report_array['check_award_5_approved']) ? 'N/A' : ($financial_report_array['check_award_5_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_5_approved'] == 1 ? 'YES' : 'N/A')) }}
-                                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_5_nomination_type']) ? 'N/A' : ($financial_report_array['award_5_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_5_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_5_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
                                                 : ($financial_report_array['award_5_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_5_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_5_nomination_type'] == 4 ? 'Outstanding Spirit'
                                                 : ($financial_report_array['award_5_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_5_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_5_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                                         </strong><br>
@@ -2685,7 +2711,7 @@
 </script>
 <!-- JQUERY STEP -->
 <script>
-    var accordion = (function(){
+  var accordion = (function(){
 
   var $accordion = $('.js-accordion');
   var $accordion_header = $accordion.find('.js-accordion-header');
@@ -2766,6 +2792,7 @@ $(document).ready(function(){
 	$("#review-clear").click(function() {
 		var result=confirm("This will clear the 'review complete' flag and coordinators will be able to edit the report again.  Do you wish to continue?");
 		if(result){
+            $("#submitted").val('');
 			$("#submit_type").val('review_clear');
 			$("#FurthestStep").val('13');
 			$("#financial_report").submit();

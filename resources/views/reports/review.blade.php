@@ -50,8 +50,8 @@
 					<th>Email Board</th>
 				  <th>State</th>
                   <th>Name</th>
-                 <th>Assigned Reviewer</th>
                  <th>Primary Coordinator</th>
+                 <th>Assigned Reviewer</th>
                  <th>Report Received</th>
                  <th>Review Completed</th>
                  <th>Date Completed</th>
