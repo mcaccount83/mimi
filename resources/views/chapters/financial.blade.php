@@ -823,25 +823,25 @@
 
                             <div class="col-md-12 mar_bot_20">
                                 <div class="col-md-12">
-                                    <label for="Step5_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                                    <label for="Step12_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                                 </div>
                                 <div class="col-md-12">
-                                    <textarea class="form-control" style="width:100%" rows="8" name="Step5_Log" id="Step5_Log" readonly><?php echo $financial_report_array['step_5_notes_log']; ?></textarea>
-                                </div>
-                            </div>
-
-                            <div class="col-md-12 mar_bot_20">
-                                <div class="col-md-12">
-                                    <label for="Step5_Note">Note:</label>
-                                </div>
-                                <div class="col-md-12">
-                                    <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(5)" name="Step5_Note" id="Step5_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+                                    <textarea class="form-control" style="width:100%" rows="8" name="Step12_Log" id="Step12_Log" readonly><?php echo $financial_report_array['step_12_notes_log']; ?></textarea>
                                 </div>
                             </div>
 
                             <div class="col-md-12 mar_bot_20">
                                 <div class="col-md-12">
-                                    <button type="button" id="AddNote5" class="btn btn-large btn-success" onclick="AddNote(5)" disabled>Add Note to Log</button>
+                                    <label for="Step12_Note">Note:</label>
+                                </div>
+                                <div class="col-md-12">
+                                    <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(12)" name="Step12_Note" id="Step12_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12 mar_bot_20">
+                                <div class="col-md-12">
+                                    <button type="button" id="AddNote12" class="btn btn-large btn-success" onclick="AddNote(12)" disabled>Add Note to Log</button>
                                 </div>
                             </div>
 
@@ -2466,6 +2466,11 @@
 					<div class="accordion-header js-accordion-header">FINAL REVIEW</div>
 					<div class="accordion-body js-accordion-body">
 						<section>
+                            <div class="col-md-12">
+                                <strong style="color:red">Please Note</strong><br>
+                                Answers from questios in previous sections will show up here after they have been saved.<br>
+                            <br>
+                            </div>
 									{{-- <div class="col-md-12">
 										<h2>Annual Report Review</h2>
 									</div> --}}
@@ -2630,7 +2635,7 @@
 										<strong>Reviewer Notes Logged for this Report (not visible to chapter):</strong><br>
                                         <?php
                                         $financial_report_notes = [];
-                                        for ($i = 1; $i <= 11; $i++) {
+                                        for ($i = 1; $i <= 12; $i++) {
                                             $key = 'step_' . $i . '_notes_log';
                                             if (isset($financial_report_array[$key])) {
                                                 $notes = explode("\n", $financial_report_array[$key]);
@@ -2922,9 +2927,26 @@ $(document).ready(function(){
 
         <?php $date = date('m/d/Y'); ?>
 
+        var noteText ={
+            1: 'Dues',
+            2: 'Meetings',
+            3: 'Service Projects',
+            4: 'Parties',
+            5 :'Operating',
+            6: 'Donations',
+            7: 'Other',
+            8: 'Financials',
+            9: 'Reconciliation',
+            10: 'Questions',
+            11: 'Awards',
+            12: 'International',
+        }
+
+        var noteTextValue = noteText[NoteNumber] || NoteNumber;
+
         Note=document.getElementById("Step" + NoteNumber + "_Note").value;
         console.log(Note);
-        Log += "\n" + "Step " + NoteNumber + " Note [<?php echo $date; ?>, <?php echo $loggedInName; ?>] - " + Note;
+        Log += "\n" + noteTextValue + " Section, <?php echo $date; ?>, <?php echo $loggedInName; ?>, " + Note;
 
         document.getElementById("Step" + NoteNumber + "_Log").value += Log;
         document.getElementById("Step" + NoteNumber + "_Note").value = "";

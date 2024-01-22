@@ -4250,6 +4250,7 @@ class ChapterController extends Controller
         $step_9_notes_log = $input['Step9_Log'];
         $step_10_notes_log = $input['Step10_Log'];
         $step_11_notes_log = $input['Step11_Log'];
+        $step_12_notes_log = $input['Step12_Log'];
 
         // Step 1 - Dues
         $check_roster_attached = isset($input['checkRosterAttached']) ? $input['checkRosterAttached'] : null;
@@ -4324,6 +4325,7 @@ class ChapterController extends Controller
             $report->step_9_notes_log = $step_9_notes_log;
             $report->step_10_notes_log = $step_10_notes_log;
             $report->step_11_notes_log = $step_11_notes_log;
+            $report->step_12_notes_log = $step_12_notes_log;
             $report->check_roster_attached = $check_roster_attached;
             $report->check_renewal_seems_right = $check_renewal_seems_right;
             $report->check_minimum_service_project = $check_minimum_service_project;
