@@ -31,9 +31,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
-use Kunnu\Dropbox\Dropbox;
-use Kunnu\Dropbox\DropboxApp;
-use Kunnu\Dropbox\DropboxFile;
 
 class ChapterController extends Controller
 {
@@ -685,7 +682,7 @@ class ChapterController extends Controller
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
         $currentMonth = $chapterList[0]->start_month_id;
 
-        $data = ['id'=>$id, 'positionid' => $positionid, 'corId' => $corId, 'reviewComplete' => $reviewComplete, 'emailListCord' => $emailListCord, 'cc_string' => $cc_string, 'currentMonth' => $currentMonth, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'chapterList' => $chapterList, 'regionList' => $regionList, 'confList' => $confList, 'primaryCoordinatorList' => $primaryCoordinatorList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
+        $data = ['id' => $id, 'positionid' => $positionid, 'corId' => $corId, 'reviewComplete' => $reviewComplete, 'emailListCord' => $emailListCord, 'cc_string' => $cc_string, 'currentMonth' => $currentMonth, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'chapterList' => $chapterList, 'regionList' => $regionList, 'confList' => $confList, 'primaryCoordinatorList' => $primaryCoordinatorList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
 
         return view('chapters.edit')->with($data);
     }
@@ -3578,8 +3575,6 @@ class ChapterController extends Controller
         $check_award_4_approved = $request->input('checkAward4Approved', null);
         $check_award_5_approved = $request->input('checkAward5Approved', null);
 
-
-
         $report = FinancialReport::find($id);
         DB::beginTransaction();
         try {
@@ -4225,9 +4220,7 @@ class ChapterController extends Controller
 
             return redirect()->back()->with('success', 'Report has been successfully Unsubmitted');
             exit;
-        }
-
-        elseif (! $reportReceived && $submitType == 'review_clear') {
+        } elseif (! $reportReceived && $submitType == 'review_clear') {
             DB::update('UPDATE chapters SET financial_report_received = ? where id = ?', [1, $chapter_id]);
             DB::update('UPDATE chapters SET financial_report_complete = ? where id = ?', [null, $chapter_id]);
             DB::update('UPDATE financial_report SET farthest_step_visited_coord = ? where chapter_id = ?', [13, $chapter_id]);
@@ -4235,178 +4228,172 @@ class ChapterController extends Controller
 
             return redirect()->back()->with('success', 'Review Complete has been successfully cleared');
             exit;
-        }
+        } else {
 
-        else {
+            $step_1_notes_log = $input['Step1_Log'];
+            $step_2_notes_log = $input['Step2_Log'];
+            $step_3_notes_log = $input['Step3_Log'];
+            $step_4_notes_log = $input['Step4_Log'];
+            $step_5_notes_log = $input['Step5_Log'];
+            $step_6_notes_log = $input['Step6_Log'];
+            $step_7_notes_log = $input['Step7_Log'];
+            $step_8_notes_log = $input['Step8_Log'];
+            $step_9_notes_log = $input['Step9_Log'];
+            $step_10_notes_log = $input['Step10_Log'];
+            $step_11_notes_log = $input['Step11_Log'];
+            $step_12_notes_log = $input['Step12_Log'];
 
-        $step_1_notes_log = $input['Step1_Log'];
-        $step_2_notes_log = $input['Step2_Log'];
-        $step_3_notes_log = $input['Step3_Log'];
-        $step_4_notes_log = $input['Step4_Log'];
-        $step_5_notes_log = $input['Step5_Log'];
-        $step_6_notes_log = $input['Step6_Log'];
-        $step_7_notes_log = $input['Step7_Log'];
-        $step_8_notes_log = $input['Step8_Log'];
-        $step_9_notes_log = $input['Step9_Log'];
-        $step_10_notes_log = $input['Step10_Log'];
-        $step_11_notes_log = $input['Step11_Log'];
-        $step_12_notes_log = $input['Step12_Log'];
+            // Step 1 - Dues
+            $check_roster_attached = isset($input['checkRosterAttached']) ? $input['checkRosterAttached'] : null;
+            $check_renewal_seems_right = isset($input['checkRenewalSeemsRight']) ? $input['checkRenewalSeemsRight'] : null;
 
-        // Step 1 - Dues
-        $check_roster_attached = isset($input['checkRosterAttached']) ? $input['checkRosterAttached'] : null;
-        $check_renewal_seems_right = isset($input['checkRenewalSeemsRight']) ? $input['checkRenewalSeemsRight'] : null;
+            // Step 3 - Service
+            $check_minimum_service_project = isset($input['checkServiceProject']) ? $input['checkServiceProject'] : null;
+            $check_m2m_donation = isset($input['checkM2MDonation']) ? $input['checkM2MDonation'] : null;
 
-        // Step 3 - Service
-        $check_minimum_service_project = isset($input['checkServiceProject']) ? $input['checkServiceProject'] : null;
-        $check_m2m_donation = isset($input['checkM2MDonation']) ? $input['checkM2MDonation'] : null;
+            // Step 4 - Parties
+            $check_party_percentage = isset($input['check_party_percentage']) ? $input['check_party_percentage'] : null;
 
-        // Step 4 - Parties
-        $check_party_percentage = isset($input['check_party_percentage']) ? $input['check_party_percentage'] : null;
+            //Step - Financials
+            $check_total_income_less = isset($input['checkTotalIncome']) ? $input['checkTotalIncome'] : null;
 
-        //Step - Financials
-        $check_total_income_less = isset($input['checkTotalIncome']) ? $input['checkTotalIncome'] : null;
+            //Step 8 - Reconciliation
+            $check_beginning_balance = isset($input['check_beginning_balance']) ? $input['check_beginning_balance'] : null;
+            $check_bank_statement_included = isset($input['checkBankStatementIncluded']) ? $input['checkBankStatementIncluded'] : null;
+            $check_bank_statement_matches = isset($input['checkBankStatementMatches']) ? $input['checkBankStatementMatches'] : null;
+            $post_balance = isset($input['post_balance']) ? $input['post_balance'] : null;
 
-        //Step 8 - Reconciliation
-        $check_beginning_balance = isset($input['check_beginning_balance']) ? $input['check_beginning_balance'] : null;
-        $check_bank_statement_included = isset($input['checkBankStatementIncluded']) ? $input['checkBankStatementIncluded'] : null;
-        $check_bank_statement_matches = isset($input['checkBankStatementMatches']) ? $input['checkBankStatementMatches'] : null;
-        $post_balance = isset($input['post_balance']) ? $input['post_balance'] : null;
+            //Step 9 - Questions
+            $check_purchased_pins = isset($input['checkPurchasedPins']) ? $input['checkPurchasedPins'] : null;
+            $check_purchased_mc_merch = isset($input['checkPurchasedMCMerch']) ? $input['checkPurchasedMCMerch'] : null;
+            $check_offered_merch = isset($input['checkOfferedMerch']) ? $input['checkOfferedMerch'] : null;
+            $check_bylaws_available = isset($input['checkBylawsMadeAvailable']) ? $input['checkBylawsMadeAvailable'] : null;
+            $check_sistered_another_chapter = isset($input['checkSisteredAnotherChapter']) ? $input['checkSisteredAnotherChapter'] : null;
+            $check_attended_training = isset($input['checkAttendedTraining']) ? $input['checkAttendedTraining'] : null;
+            $check_current_990N_included = isset($input['checkCurrent990NAttached']) ? $input['checkCurrent990NAttached'] : null;
 
-        //Step 9 - Questions
-        $check_purchased_pins = isset($input['checkPurchasedPins']) ? $input['checkPurchasedPins'] : null;
-        $check_purchased_mc_merch = isset($input['checkPurchasedMCMerch']) ? $input['checkPurchasedMCMerch'] : null;
-        $check_offered_merch = isset($input['checkOfferedMerch']) ? $input['checkOfferedMerch'] : null;
-        $check_bylaws_available = isset($input['checkBylawsMadeAvailable']) ? $input['checkBylawsMadeAvailable'] : null;
-        $check_sistered_another_chapter = isset($input['checkSisteredAnotherChapter']) ? $input['checkSisteredAnotherChapter'] : null;
-        $check_attended_training = isset($input['checkAttendedTraining']) ? $input['checkAttendedTraining'] : null;
-        $check_current_990N_included = isset($input['checkCurrent990NAttached']) ? $input['checkCurrent990NAttached'] : null;
+            // Step 10 - Awards
+            $check_award_1_approved = isset($input['checkAward1Approved']) ? $input['checkAward1Approved'] : null;
+            $check_award_2_approved = isset($input['checkAward2Approved']) ? $input['checkAward2Approved'] : null;
+            $check_award_3_approved = isset($input['checkAward3Approved']) ? $input['checkAward3Approved'] : null;
+            $check_award_4_approved = isset($input['checkAward4Approved']) ? $input['checkAward4Approved'] : null;
+            $check_award_5_approved = isset($input['checkAward5Approved']) ? $input['checkAward5Approved'] : null;
 
-        // Step 10 - Awards
-        $check_award_1_approved = isset($input['checkAward1Approved']) ? $input['checkAward1Approved'] : null;
-        $check_award_2_approved = isset($input['checkAward2Approved']) ? $input['checkAward2Approved'] : null;
-        $check_award_3_approved = isset($input['checkAward3Approved']) ? $input['checkAward3Approved'] : null;
-        $check_award_4_approved = isset($input['checkAward4Approved']) ? $input['checkAward4Approved'] : null;
-        $check_award_5_approved = isset($input['checkAward5Approved']) ? $input['checkAward5Approved'] : null;
+            $chapterDetails = DB::table('chapters')
+                ->select('chapters.*', 'st.state_short_name as state_short_name')
+                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                ->where('chapters.id', '=', $chapter_id)
+                ->get();
+            $chapter_conf = $chapterDetails[0]->conference;
+            $chapter_state = $chapterDetails[0]->state_short_name;
+            $chapter_name = $chapterDetails[0]->name;
+            $chapter_country = $chapterDetails[0]->country;
 
+            $Reviewer = DB::table('coordinator_details')
+                ->select('coordinator_details.*')
+                ->where('coordinator_details.coordinator_id', '=', $reviewer_id)
+                ->get();
 
-        $chapterDetails = DB::table('chapters')
-            ->select('chapters.*', 'st.state_short_name as state_short_name')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->where('chapters.id', '=', $chapter_id)
-            ->get();
-        $chapter_conf = $chapterDetails[0]->conference;
-        $chapter_state = $chapterDetails[0]->state_short_name;
-        $chapter_name = $chapterDetails[0]->name;
-        $chapter_country = $chapterDetails[0]->country;
+            //$ReviewerEmail = $Reviewer[0]->email;
 
-        $Reviewer = DB::table('coordinator_details')
-            ->select('coordinator_details.*')
-            ->where('coordinator_details.coordinator_id', '=', $reviewer_id)
-            ->get();
+            DB::beginTransaction();
+            try {
+                $report = FinancialReport::find($chapter_id);
+                // $report->roster_path = $roster_path;
+                // $report->file_irs_path = $file_irs_path;
+                // $report->bank_statement_included_path = $bank_statement_included_path;
+                // $report->bank_statement_2_included_path = $bank_statement_2_included_path;
+                $report->reviewer_id = $reviewer_id;
+                $report->step_1_notes_log = $step_1_notes_log;
+                $report->step_2_notes_log = $step_2_notes_log;
+                $report->step_3_notes_log = $step_3_notes_log;
+                $report->step_4_notes_log = $step_4_notes_log;
+                $report->step_5_notes_log = $step_5_notes_log;
+                $report->step_6_notes_log = $step_6_notes_log;
+                $report->step_7_notes_log = $step_7_notes_log;
+                $report->step_8_notes_log = $step_8_notes_log;
+                $report->step_9_notes_log = $step_9_notes_log;
+                $report->step_10_notes_log = $step_10_notes_log;
+                $report->step_11_notes_log = $step_11_notes_log;
+                $report->step_12_notes_log = $step_12_notes_log;
+                $report->check_roster_attached = $check_roster_attached;
+                $report->check_renewal_seems_right = $check_renewal_seems_right;
+                $report->check_minimum_service_project = $check_minimum_service_project;
+                $report->check_m2m_donation = $check_m2m_donation;
+                $report->check_party_percentage = $check_party_percentage;
+                $report->check_attended_training = $check_attended_training;
+                $report->check_bank_statement_matches = $check_bank_statement_matches;
+                $report->check_bank_statement_included = $check_bank_statement_included;
+                $report->check_beginning_balance = $check_beginning_balance;
+                $report->post_balance = $post_balance;
+                $report->check_purchased_pins = $check_purchased_pins;
+                $report->check_purchased_mc_merch = $check_purchased_mc_merch;
+                $report->check_offered_merch = $check_offered_merch;
+                $report->check_bylaws_available = $check_bylaws_available;
+                $report->check_current_990N_included = $check_current_990N_included;
+                $report->check_total_income_less = $check_total_income_less;
+                $report->check_sistered_another_chapter = $check_sistered_another_chapter;
+                $report->check_award_1_approved = $check_award_1_approved;
+                $report->check_award_2_approved = $check_award_2_approved;
+                $report->check_award_3_approved = $check_award_3_approved;
+                $report->check_award_4_approved = $check_award_4_approved;
+                $report->check_award_5_approved = $check_award_5_approved;
+                $report->farthest_step_visited_coord = $farthest_step_visited_coord;
+                if ($submitType == 'review_complete') {
+                    $report->review_complete = date('Y-m-d H:i:s');
+                }
+                // if ($submitType == 'review_clear') {
+                //     $report->review_complete = null;
+                // }
 
-        //$ReviewerEmail = $Reviewer[0]->email;
+                //    // Send email to new Assigned Reviewer//
+                //    $to_email = $ReviewerEmail;
+                //    $mailData = ['chapter_name' => $chapter_name,
+                //        'chapter_state' => $chapter_state,
+                //         'roster' => $roster,
+                //         'bank_statement_path' => $bank_statement_path,
+                //         'bank_statemet_2_path' => $bank_statemet_2_path,
+                //         'irs_path' => $irs_path
+                //    ];
 
-        DB::beginTransaction();
-        try {
-            $report = FinancialReport::find($chapter_id);
-            // $report->roster_path = $roster_path;
-            // $report->file_irs_path = $file_irs_path;
-            // $report->bank_statement_included_path = $bank_statement_included_path;
-            // $report->bank_statement_2_included_path = $bank_statement_2_included_path;
-            $report->reviewer_id = $reviewer_id;
-            $report->step_1_notes_log = $step_1_notes_log;
-            $report->step_2_notes_log = $step_2_notes_log;
-            $report->step_3_notes_log = $step_3_notes_log;
-            $report->step_4_notes_log = $step_4_notes_log;
-            $report->step_5_notes_log = $step_5_notes_log;
-            $report->step_6_notes_log = $step_6_notes_log;
-            $report->step_7_notes_log = $step_7_notes_log;
-            $report->step_8_notes_log = $step_8_notes_log;
-            $report->step_9_notes_log = $step_9_notes_log;
-            $report->step_10_notes_log = $step_10_notes_log;
-            $report->step_11_notes_log = $step_11_notes_log;
-            $report->step_12_notes_log = $step_12_notes_log;
-            $report->check_roster_attached = $check_roster_attached;
-            $report->check_renewal_seems_right = $check_renewal_seems_right;
-            $report->check_minimum_service_project = $check_minimum_service_project;
-            $report->check_m2m_donation = $check_m2m_donation;
-            $report->check_party_percentage = $check_party_percentage;
-            $report->check_attended_training = $check_attended_training;
-            $report->check_bank_statement_matches = $check_bank_statement_matches;
-            $report->check_bank_statement_included = $check_bank_statement_included;
-            $report->check_beginning_balance = $check_beginning_balance;
-            $report->post_balance = $post_balance;
-            $report->check_purchased_pins = $check_purchased_pins;
-            $report->check_purchased_mc_merch = $check_purchased_mc_merch;
-            $report->check_offered_merch = $check_offered_merch;
-            $report->check_bylaws_available = $check_bylaws_available;
-            $report->check_current_990N_included = $check_current_990N_included;
-            $report->check_total_income_less = $check_total_income_less;
-            $report->check_sistered_another_chapter = $check_sistered_another_chapter;
-            $report->check_award_1_approved = $check_award_1_approved;
-            $report->check_award_2_approved = $check_award_2_approved;
-            $report->check_award_3_approved = $check_award_3_approved;
-            $report->check_award_4_approved = $check_award_4_approved;
-            $report->check_award_5_approved = $check_award_5_approved;
-            $report->farthest_step_visited_coord = $farthest_step_visited_coord;
-            if ($submitType == 'review_complete') {
-                $report->review_complete = date('Y-m-d H:i:s');
+                //    if ($report->isDirty('reviewer_id')) {
+                //        Mail::to($to_email)
+                //            ->send(new EOYReviewrAssigned($mailData));
+                //    }
+
+                $report->save();
+
+                $chapter = Chapter::find($chapter_id);
+
+                if ($submitType == 'review_complete') {
+                    $chapter->financial_report_complete = 1;
+                }
+                // if ($submitType == 'review_clear') {
+                //     $chapter->financial_report_complete = null;
+                // }
+
+                $chapter->save();
+
+                DB::commit();
+                if ($submitType == 'review_complete') {
+                    return redirect()->back()->with('success', 'Report has been successfully Marked as Review Complete');
+                // } elseif ($submitType == 'review_clear') {
+                //     return redirect()->back()->with('success', 'Review Complete has been successfully cleared');
+                } else {
+                    return redirect()->back()->with('success', 'Report has been successfully Updated');
+                }
+
+            } catch (\Exception $e) {
+                DB::rollback();
+                // Log the error
+                Log::error($e);
+                //throw $e;     // Show on screen error intead of message - use only for testing
             }
-            // if ($submitType == 'review_clear') {
-            //     $report->review_complete = null;
-            // }
 
-        //    // Send email to new Assigned Reviewer//
-        //    $to_email = $ReviewerEmail;
-        //    $mailData = ['chapter_name' => $chapter_name,
-        //        'chapter_state' => $chapter_state,
-        //         'roster' => $roster,
-        //         'bank_statement_path' => $bank_statement_path,
-        //         'bank_statemet_2_path' => $bank_statemet_2_path,
-        //         'irs_path' => $irs_path
-        //    ];
-
-        //    if ($report->isDirty('reviewer_id')) {
-        //        Mail::to($to_email)
-        //            ->send(new EOYReviewrAssigned($mailData));
-        //    }
-
-            $report->save();
-
-            $chapter = Chapter::find($chapter_id);
-
-            if ($submitType == 'review_complete') {
-                $chapter->financial_report_complete = 1;
-            }
-            // if ($submitType == 'review_clear') {
-            //     $chapter->financial_report_complete = null;
-            // }
-
-            $chapter->save();
-
-            DB::commit();
-            if ($submitType == 'review_complete') {
-                return redirect()->back()->with('success', 'Report has been successfully Marked as Review Complete');
-            // } elseif ($submitType == 'review_clear') {
-            //     return redirect()->back()->with('success', 'Review Complete has been successfully cleared');
-            } else {
-                return redirect()->back()->with('success', 'Report has been successfully Updated');
-            }
-
-
-        } catch (\Exception $e) {
-            DB::rollback();
-            // Log the error
-            Log::error($e);
-            //throw $e;     // Show on screen error intead of message - use only for testing
+                return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
-
-            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
-        }
-
 
     }
-
 
     /**
      * View the Report Status Details

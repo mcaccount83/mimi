@@ -2,19 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\EoyUploads;
 use App\Models\EinUploads;
+use App\Models\EoyUploads;
 use Google\Client;
 use Google\Service\Drive;
 use Google\Service\Drive\DriveFile;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Carbon;
-use Illuminate\Support\Facades\AccessToken;
+use Illuminate\View\View;
 
 const client_id = 'YOUR_CLIENT_ID';
 const client_secret = 'YOUR_CLIENT_SECRET';
@@ -29,106 +26,103 @@ class GoogleController extends Controller
 
     private function token()
     {
-        $client_id=\config('services.google.client_id');
-        $client_secret=\config('services.google.client_secret');
-        $refresh_token=\config('services.google.refresh_token');
-        $response=Http::post('https://oauth2.googleapis.com/token',[
-            'client_id'=>$client_id,
-            'client_secret'=>$client_secret,
-            'refresh_token'=>$refresh_token,
-            'grant_type'=>'refresh_token',
+        $client_id = \config('services.google.client_id');
+        $client_secret = \config('services.google.client_secret');
+        $refresh_token = \config('services.google.refresh_token');
+        $response = Http::post('https://oauth2.googleapis.com/token', [
+            'client_id' => $client_id,
+            'client_secret' => $client_secret,
+            'refresh_token' => $refresh_token,
+            'grant_type' => 'refresh_token',
         ]);
 
-        $accessToken=json_decode((string)$response->getBody(),true)['access_token'];
+        $accessToken = json_decode((string) $response->getBody(), true)['access_token'];
+
         return $accessToken;
     }
 
     public function storeEIN(Request $request, $id)
-{
-    $chapter = DB::table('chapters as ch')
-        ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-        ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-        ->where('ch.is_active', '=', '1')
-        ->where('ch.id', '=', $id)
-        ->first();
-    $validation = $request->validate([
-        'file' => 'required'
-    ]);
-    $name = $chapter->ein . '_' . $chapter->name . '_' . $chapter->state;
-    $accessToken = $this->token();
+    {
+        $chapter = DB::table('chapters as ch')
+            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->first();
+        $validation = $request->validate([
+            'file' => 'required',
+        ]);
+        $name = $chapter->ein.'_'.$chapter->name.'_'.$chapter->state;
+        $accessToken = $this->token();
 
-    $fileMetadata = [
-        'name' => $name . '.' . $request->file->getClientOriginalExtension(),
-        'parents' => ['1iwap3d3feX2cYaODJrANEMnT1fjIDHD2'],
-        'mimeType' => $request->file->getMimeType(),
-    ];
+        $fileMetadata = [
+            'name' => $name.'.'.$request->file->getClientOriginalExtension(),
+            'parents' => ['1iwap3d3feX2cYaODJrANEMnT1fjIDHD2'],
+            'mimeType' => $request->file->getMimeType(),
+        ];
 
-    Log::info('File Metadata: ', ['file_metadata' => $fileMetadata]);
+        Log::info('File Metadata: ', ['file_metadata' => $fileMetadata]);
 
+        $fileContent = file_get_contents($request->file->getRealPath());
 
-    $fileContent = file_get_contents($request->file->getRealPath());
+        Log::info('File Content: ', ['file_content' => $fileContent]);
 
-    Log::info('File Content: ', ['file_content' => $fileContent]);
+        $headers = [
+            'Authorization' => 'Bearer '.$accessToken,
+            'Content-Type' => 'application/json',
+        ];
 
-
-    $headers = [
-        'Authorization' => 'Bearer ' . $accessToken,
-        'Content-Type' => 'application/json',
-    ];
-
-    $response = Http::withHeaders($headers)
-    ->attach(
-        'file',
-        $fileContent,
-        $fileMetadata['name'],
-        [
-            'Content-Type' => $fileMetadata['mimeType'],
-        ]
-    )
-    ->post('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', [
-        'metadata' => json_encode($fileMetadata),
-    ]);
-
-
-    Log::info('Google Drive API Response: ', $response->json());
-
-
-
-    if ($response->successful()) {
-        $file_id = $response->json()['id'];
-        $existingRecord = EinUploads::where('chapter_id', $id)->first();
-        if ($existingRecord) {
-            $existingRecord->update([
-                'file_name' => $name,
-                'file_id' => $file_id,
+        $response = Http::withHeaders($headers)
+            ->attach(
+                'file',
+                $fileContent,
+                $fileMetadata['name'],
+                [
+                    'Content-Type' => $fileMetadata['mimeType'],
+                ]
+            )
+            ->post('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', [
+                'metadata' => json_encode($fileMetadata),
             ]);
+
+        Log::info('Google Drive API Response: ', $response->json());
+
+        if ($response->successful()) {
+            $file_id = $response->json()['id'];
+            $existingRecord = EinUploads::where('chapter_id', $id)->first();
+            if ($existingRecord) {
+                $existingRecord->update([
+                    'file_name' => $name,
+                    'file_id' => $file_id,
+                ]);
+            } else {
+                $uploadedfile = new EinUploads;
+                $uploadedfile->chapter_id = $id;
+                $uploadedfile->file_name = $name;
+                $uploadedfile->file_id = $file_id;
+                $uploadedfile->save();
+            }
+
+            return redirect()->back()->with('success', 'File uploaded successfully!');
         } else {
-            $uploadedfile = new EinUploads;
-            $uploadedfile->chapter_id = $id;
-            $uploadedfile->file_name = $name;
-            $uploadedfile->file_id = $file_id;
-            $uploadedfile->save();
+            return redirect()->back()->with('error', 'File failed to upload');
         }
-        return redirect()->back()->with('success', 'File uploaded successfully!');
-    } else {
-        return redirect()->back()->with('error', 'File failed to upload');
     }
-}
 
     public function storeEIN3(Request $request, $id)
     {
         $chapter = DB::table('chapters as ch')
-        ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-        ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-        ->where('ch.is_active', '=', '1')
-        ->where('ch.id', '=', $id)
-        ->first();
+            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->first();
 
         $validation = $request->validate([
-            'file' => 'required'
+            'file' => 'required',
         ]);
 
-        $name = $chapter->ein . '_' . $chapter->name . '_' . $chapter->state;
+        $name = $chapter->ein.'_'.$chapter->name.'_'.$chapter->state;
 
         $client = new Client();
         $client->setAccessToken($this->token());
@@ -147,7 +141,7 @@ class GoogleController extends Controller
         ]);
 
         // If the file was created successfully, update database
-        if (!empty($createdFile->id)) {
+        if (! empty($createdFile->id)) {
             $file_id = $createdFile->id;
 
             $existingRecord = EinUploads::where('chapter_id', $id)->first();
@@ -174,26 +168,26 @@ class GoogleController extends Controller
     public function storeRoster(Request $request, $id)
     {
         $chapter = DB::table('chapters as ch')
-        ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-        ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-        ->where('ch.is_active', '=', '1')
-        ->where('ch.id', '=', $id)
-        ->first();
+            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->first();
 
-        $validation=$request->validate([
-            'file'=>'required',
+        $validation = $request->validate([
+            'file' => 'required',
         ]);
 
-        $accessToken=$this->token();
+        $accessToken = $this->token();
         $parentFolderId = '1YYW1ct6oO1h9v5E7KdaeM-y8NVnTYeT7';  //this needs to change based on the YEAR of the EOY Reports
         $stateFolderName = $chapter->state;
         $chapterFolderName = $chapter->name;
-        $name = $chapter->name . '_' . $chapter->state . '_Roster';
-        $mime=$request->file->getClientMimeType();
+        $name = $chapter->name.'_'.$chapter->state.'_Roster';
+        $mime = $request->file->getClientMimeType();
 
         $stateFolderResponse = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $accessToken,
-            'Content-Type' => 'Application/json'
+            'Authorization' => 'Bearer '.$accessToken,
+            'Content-Type' => 'Application/json',
         ])->post('https://www.googleapis.com/drive/v3/files', [
             'name' => $stateFolderName,
             'mimeType' => 'application/vnd.google-apps.folder',
@@ -204,8 +198,8 @@ class GoogleController extends Controller
         $stateFolderId = $stateFolderResponse->json()['id'];
 
         $chapterFolderResponse = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $accessToken,
-            'Content-Type' => 'Application/json'
+            'Authorization' => 'Bearer '.$accessToken,
+            'Content-Type' => 'Application/json',
         ])->post('https://www.googleapis.com/drive/v3/files', [
             'name' => $chapterFolderName,
             'mimeType' => 'application/vnd.google-apps.folder',
@@ -216,8 +210,8 @@ class GoogleController extends Controller
         $chapterFolderId = $chapterFolderResponse->json()['id'];
 
         $fileResponse = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $accessToken,
-            'Content-Type' => 'Application/json'
+            'Authorization' => 'Bearer '.$accessToken,
+            'Content-Type' => 'Application/json',
         ])->post('https://www.googleapis.com/drive/v3/files', [
             'name' => $name,
             'mimeType' => $mime,
@@ -225,56 +219,55 @@ class GoogleController extends Controller
             'parents' => [$chapterFolderId],
         ]);
 
-        if($fileResponse->successful()){
+        if ($fileResponse->successful()) {
 
-            $file_id=json_decode($fileResponse->body())->id;
+            $file_id = json_decode($fileResponse->body())->id;
 
-            $uploadedfile=new EoyUploads;
-            $uploadedfile->chapter_id=$id;
-            $uploadedfile->file_name=$name;
-            $uploadedfile->file_id=$file_id;
+            $uploadedfile = new EoyUploads;
+            $uploadedfile->chapter_id = $id;
+            $uploadedfile->file_name = $name;
+            $uploadedfile->file_id = $file_id;
             $uploadedfile->save();
         }
 
         return redirect()->back()->with('success', 'File uploaded successfully!');
     }
 
-
     public function store990N(Request $request, $id)
     {
         $chapter = DB::table('chapters as ch')
-        ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-        ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-        ->where('ch.is_active', '=', '1')
-        ->where('ch.id', '=', $id)
-        ->first();
+            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->first();
 
-        $validation=$request->validate([
-            '990n'=>'required',
+        $validation = $request->validate([
+            '990n' => 'required',
         ]);
 
-        $accessToken=$this->token();
-        $name = $chapter->name . '_' . $chapter->state . '_990n';
-        $mime=$request->file->getClientMimeType();
+        $accessToken = $this->token();
+        $name = $chapter->name.'_'.$chapter->state.'_990n';
+        $mime = $request->file->getClientMimeType();
 
-        $response=Http::withHeaders([
-            'Authorization'=>'Bearer '.$accessToken,
-            'Content-Type'=> 'Application/json'
-        ])->post('https://www.googleapis.com/drive/v3/files',[
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '.$accessToken,
+            'Content-Type' => 'Application/json',
+        ])->post('https://www.googleapis.com/drive/v3/files', [
             'name' => $name,
-            'mimeType'=>$mime,
-            'uploadType'=>'resumable',
-            'parents'=>['1czyKRfuAzWGOcc_wqROeQSefI5S1ssCX'],
+            'mimeType' => $mime,
+            'uploadType' => 'resumable',
+            'parents' => ['1czyKRfuAzWGOcc_wqROeQSefI5S1ssCX'],
         ]);
 
-        if($response->successful()){
+        if ($response->successful()) {
 
-            $file_id=json_decode($response->body())->id;
+            $file_id = json_decode($response->body())->id;
 
-            $uploadedfile=new EoyUploads;
-            $uploadedfile->chapter_id=$id;
-            $uploadedfile->file_name=$name;
-            $uploadedfile->file_id=$file_id;
+            $uploadedfile = new EoyUploads;
+            $uploadedfile->chapter_id = $id;
+            $uploadedfile->file_name = $name;
+            $uploadedfile->file_id = $file_id;
             $uploadedfile->save();
         }
 
@@ -284,38 +277,38 @@ class GoogleController extends Controller
     public function storeStatement1(Request $request, $id)
     {
         $chapter = DB::table('chapters as ch')
-        ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-        ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-        ->where('ch.is_active', '=', '1')
-        ->where('ch.id', '=', $id)
-        ->first();
+            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->first();
 
-        $validation=$request->validate([
-            'statement1'=>'required',
+        $validation = $request->validate([
+            'statement1' => 'required',
         ]);
-        $accessToken=$this->token();
+        $accessToken = $this->token();
 
-        $name = $chapter->name . ', ' . $chapter->state . '_Statement1';
-        $mime=$request->file->getClientMimeType();
+        $name = $chapter->name.', '.$chapter->state.'_Statement1';
+        $mime = $request->file->getClientMimeType();
 
-        $response=Http::withHeaders([
-            'Authorization'=>'Bearer '.$accessToken,
-            'Content-Type'=> 'Application/json'
-        ])->post('https://www.googleapis.com/drive/v3/files',[
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '.$accessToken,
+            'Content-Type' => 'Application/json',
+        ])->post('https://www.googleapis.com/drive/v3/files', [
             'name' => $name,
-            'mimeType'=>$mime,
-            'uploadType'=>'resumable',
-            'parents'=>['1czyKRfuAzWGOcc_wqROeQSefI5S1ssCX'],
+            'mimeType' => $mime,
+            'uploadType' => 'resumable',
+            'parents' => ['1czyKRfuAzWGOcc_wqROeQSefI5S1ssCX'],
         ]);
 
-        if($response->successful()){
+        if ($response->successful()) {
 
-            $file_id=json_decode($response->body())->id;
+            $file_id = json_decode($response->body())->id;
 
-            $uploadedfile=new EoyUploads;
-            $uploadedfile->chapter_id=$id;
-            $uploadedfile->file_name=$name;
-            $uploadedfile->file_id=$file_id;
+            $uploadedfile = new EoyUploads;
+            $uploadedfile->chapter_id = $id;
+            $uploadedfile->file_name = $name;
+            $uploadedfile->file_id = $file_id;
             $uploadedfile->save();
         }
 
@@ -325,38 +318,38 @@ class GoogleController extends Controller
     public function storeStatement2(Request $request, $id)
     {
         $chapter = DB::table('chapters as ch')
-        ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-        ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-        ->where('ch.is_active', '=', '1')
-        ->where('ch.id', '=', $id)
-        ->first();
+            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->first();
 
-        $validation=$request->validate([
-            'statement2'=>'required',
+        $validation = $request->validate([
+            'statement2' => 'required',
         ]);
-        $accessToken=$this->token();
+        $accessToken = $this->token();
 
-        $name = $chapter->name . ', ' . $chapter->state . '_Statement2';
-        $mime=$request->file->getClientMimeType();
+        $name = $chapter->name.', '.$chapter->state.'_Statement2';
+        $mime = $request->file->getClientMimeType();
 
-        $response=Http::withHeaders([
-            'Authorization'=>'Bearer '.$accessToken,
-            'Content-Type'=> 'Application/json'
-        ])->post('https://www.googleapis.com/drive/v3/files',[
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '.$accessToken,
+            'Content-Type' => 'Application/json',
+        ])->post('https://www.googleapis.com/drive/v3/files', [
             'name' => $name,
-            'mimeType'=>$mime,
-            'uploadType'=>'resumable',
-            'parents'=>['1czyKRfuAzWGOcc_wqROeQSefI5S1ssCX'],
+            'mimeType' => $mime,
+            'uploadType' => 'resumable',
+            'parents' => ['1czyKRfuAzWGOcc_wqROeQSefI5S1ssCX'],
         ]);
 
-        if($response->successful()){
+        if ($response->successful()) {
 
-            $file_id=json_decode($response->body())->id;
+            $file_id = json_decode($response->body())->id;
 
-            $uploadedfile=new EoyUploads;
-            $uploadedfile->chapter_id=$id;
-            $uploadedfile->file_name=$name;
-            $uploadedfile->file_id=$file_id;
+            $uploadedfile = new EoyUploads;
+            $uploadedfile->chapter_id = $id;
+            $uploadedfile->file_name = $name;
+            $uploadedfile->file_id = $file_id;
             $uploadedfile->save();
         }
 
@@ -366,36 +359,36 @@ class GoogleController extends Controller
     public function store(Request $request, $id)
     {
         $chapter = DB::table('chapters as ch')
-        ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-        ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-        ->where('ch.is_active', '=', '1')
-        ->where('ch.id', '=', $id)
-        ->first();
+            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->first();
 
-        $validation=$request->validate([
-            'file'=>'required'
+        $validation = $request->validate([
+            'file' => 'required',
         ]);
-        $accessToken=$this->token();
-        $name = $chapter->ein . ' | ' . $chapter->name . ', ' . $chapter->state;
-        $mime=$request->file->getClientMimeType();
+        $accessToken = $this->token();
+        $name = $chapter->ein.' | '.$chapter->name.', '.$chapter->state;
+        $mime = $request->file->getClientMimeType();
 
-        $response=Http::withHeaders([
-            'Authorization'=>'Bearer '.$accessToken,
-            'Content-Type'=> 'Application/json'
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer '.$accessToken,
+            'Content-Type' => 'Application/json',
         ])->post('https://www.googleapis.com/drive/v3/files', [
             'name' => $name,
-            'mimeType'=>$mime,
-            'uploadType'=>'resumable',
+            'mimeType' => $mime,
+            'uploadType' => 'resumable',
         ])->throw();
 
-        if($response->successful()){
+        if ($response->successful()) {
 
-            $file_id=json_decode($response->body())->id;
+            $file_id = json_decode($response->body())->id;
 
-            $uploadedfile=new EoyUploads;
-            $uploadedfile->chapter_id=$id;
-            $uploadedfile->file_name=$name;
-            $uploadedfile->file_id=$file_id;
+            $uploadedfile = new EoyUploads;
+            $uploadedfile->chapter_id = $id;
+            $uploadedfile->file_name = $name;
+            $uploadedfile->file_id = $file_id;
             $uploadedfile->save();
         }
 
@@ -405,12 +398,13 @@ class GoogleController extends Controller
     public function show($id): View
     {
         $chapter = DB::table('chapters as ch')
-        ->select('ch.*')
-        ->where('ch.is_active', '=', '1')
-        ->where('ch.id', '=', $id)
-        ->get();
+            ->select('ch.*')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->get();
 
-        $data= ['chapter'=>$chapter, 'id'=>$id];
+        $data = ['chapter' => $chapter, 'id' => $id];
+
         return view('files.googletest')->with($data);
     }
 }
