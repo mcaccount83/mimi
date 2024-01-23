@@ -53,7 +53,6 @@ Route::get('email/verify', [VerificationController::class, 'show'])->name('verif
 Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
 Route::get('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
-
 //Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
 //Auth::routes();
