@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Login and Logout Routes...
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/', [LoginController::class, 'showLoginForm'])->name('home');
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
@@ -51,14 +53,15 @@ Route::get('email/verify', [VerificationController::class, 'show'])->name('verif
 Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
 Route::get('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
-//Auth::routes();
 
 //Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::middleware(['preventBackHistory'])->group(function () {
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
-    Route::get('/', [LoginController::class, 'showLoginForm'])->name('home');
-});
+//Auth::routes();
+
+// Route::middleware(['preventBackHistory'])->group(function () {
+//     Route::get('/home', [HomeController::class, 'index'])->name('home');
+//     Route::get('/', [LoginController::class, 'showLoginForm'])->name('home');
+// });
 
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
 

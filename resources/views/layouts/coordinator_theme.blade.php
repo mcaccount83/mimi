@@ -40,6 +40,16 @@
     <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <script>
+        window.onload = function () {
+            if (window.history && window.history.pushState) {
+                window.history.pushState('preventBack', null, '');
+                window.onpopstate = function () {
+                    location.reload();
+                };
+            }
+        };
+    </script>
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini fixed">

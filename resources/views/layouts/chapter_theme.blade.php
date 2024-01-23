@@ -17,6 +17,16 @@
     <link href="{{ asset('chapter_theme/css/demo.css') }}" rel="stylesheet" />
     <link href="{{ asset('chapter_theme/css/custom.css') }}" rel="stylesheet" />
 	<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css'>
+    <script>
+        window.onload = function () {
+            if (window.history && window.history.pushState) {
+                window.history.pushState('preventBack', null, '');
+                window.onpopstate = function () {
+                    location.reload();
+                };
+            }
+        };
+    </script>
 </head>
 
 <body>

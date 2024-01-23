@@ -36,7 +36,7 @@ class ChapterController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('preventBackHistory');
+        //$this->middleware('preventBackHistory');
         $this->middleware('auth')->except('logout', 'chapterLinks');
     }
 

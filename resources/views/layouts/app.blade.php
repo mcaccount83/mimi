@@ -14,7 +14,18 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-   
+
+    <script>
+        window.onload = function () {
+            if (window.history && window.history.pushState) {
+                window.history.pushState('preventBack', null, '');
+                window.onpopstate = function () {
+                    location.reload();
+                };
+            }
+        };
+    </script>
+
 </head>
 <body>
     <div id="app">
@@ -76,8 +87,8 @@
             @yield('content')
         </main>
     </div>
-    
-   
+
+
 </body>
 <!-- Scripts -->
 <script src="{{ asset('js/app.js') }}" defer></script>
