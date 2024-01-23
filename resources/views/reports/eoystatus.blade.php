@@ -63,28 +63,28 @@
                           </td>
 				        <td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
-                        <td style="background-color: @if($list->new_board_submitted == '1') transparent; @else #FF000050; @endif;">
+                        <td style="background-color: @if($list->new_board_submitted == '1') transparent; @else #FFC7CE; @endif;">
                             @if($list->new_board_submitted == '1')
                                 YES
                             @else
                                 NO
                             @endif
                         </td>
-				  	    <td style="background-color: @if($list->new_board_active == '1') transparent; @else #FF000050; @endif;">
+				  	    <td style="background-color: @if($list->new_board_active == '1') transparent; @else #FFC7CE; @endif;">
                             @if($list->new_board_active == '1')
                                 YES
                             @else
                                 NO
                             @endif
                         </td>
-						<td style="background-color: @if($list->financial_report_received == '1') transparent; @else #FF000050; @endif;">
+						<td style="background-color: @if($list->financial_report_received == '1') transparent; @else #FFC7CE; @endif;">
                             @if($list->financial_report_received == '1')
                                 YES
                             @else
                                 NO
                             @endif
                         </td>
-						<td style="background-color: @if($list->financial_report_complete == '1') transparent; @else #FF000050; @endif;">
+						<td style="background-color: @if($list->financial_report_complete == '1') transparent; @else #FFC7CE; @endif;">
                             @if($list->financial_report_complete == '1')
                                 YES
                             @else

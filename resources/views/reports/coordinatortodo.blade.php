@@ -66,7 +66,7 @@
                     <td>{{ $list->cor_lname }}</td>
 					<td>{{ $list->position }}</td>
                     <td>{{ $list->todo_month }}</td>
-                    <td style="background-color: @if($list->todo_check_chapters == '1') transparent; @else #FF000050; @endif;">
+                    <td style="background-color: @if($list->todo_check_chapters == '1') transparent; @else #FFC7CE; @endif;">
                         @if($list->todo_check_chapters == '1')
                             YES
                         @else
@@ -74,7 +74,7 @@
                         @endif
                     </td>
                     @if (($currentMonth == 2) || ($currentMonth == 3))
-                    <td style="background-color: @if($list->todo_election_faq == '1') transparent; @else #FF000050; @endif;">
+                    <td style="background-color: @if($list->todo_election_faq == '1') transparent; @else #FFC7CE; @endif;">
                         @if($list->todo_election_faq == '1')
                             YES
                         @else

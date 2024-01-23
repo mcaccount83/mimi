@@ -41,7 +41,7 @@
 						<td>{{ $list->ch_state }}</td>
                         <td>{{ $list->ch_name }}</td>
 						<td>{{ $list->month_name }} {{ $list->year }}</td>
-                        <td style="background-color: @if($list->ein_letter_path != null) transparent; @else #FF000050; @endif;">
+                        <td style="background-color: @if($list->ein_letter_path != null) transparent; @else #FFC7CE; @endif;">
                             @if($list->ein_letter_path != null)
                                 YES
                             @else

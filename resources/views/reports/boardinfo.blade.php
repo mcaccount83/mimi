@@ -68,14 +68,14 @@
                             <td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
 						<td>{{ $list->cor_fname }} {{ $list->cor_lname }}</td>
-                        <td style="background-color: @if($list->new_board_submitted == '1') transparent; @else #FF000050; @endif;">
+                        <td style="background-color: @if($list->new_board_submitted == '1') transparent; @else #FFC7CE; @endif;">
                             @if($list->new_board_submitted == '1')
                                 YES
                             @else
                                 NO
                             @endif
                         </td>
-                        <td style="background-color: @if($list->new_board_active == '1') transparent; @else #FF000050; @endif;">
+                        <td style="background-color: @if($list->new_board_active == '1') transparent; @else #FFC7CE; @endif;">
                             @if($list->new_board_active == '1')
                                 YES
                             @else

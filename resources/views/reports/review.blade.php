@@ -77,21 +77,21 @@
 						<td>{{ $list->name }}</td>
                         <td>{{ $list->fname }} {{ $list->lname }}</td>
                         <td>{{ $list->pcfname }} {{$list->pclname}}</td>
-                        <td style="background-color: @if($list->financial_report_received == '1') transparent; @else #FF000050; @endif;">
+                        <td style="background-color: @if($list->financial_report_received == '1') transparent; @else #FFC7CE; @endif;">
                             @if($list->financial_report_received == '1')
                                 YES
                             @else
                                 NO
                             @endif
 						</td>
-                        <td style="background-color: @if($list->report_complete == '1') transparent; @else #FF000050; @endif;">
+                        <td style="background-color: @if($list->report_complete == '1') transparent; @else #FFC7CE; @endif;">
                             @if($list->report_complete == '1')
                                 YES
                             @else
                                 NO
                             @endif
 						</td>
-                        <td style="background-color: @if($list->report_complete == '1') transparent; @else #FF000050; @endif;">
+                        <td style="background-color: @if($list->report_complete == '1') transparent; @else #FFC7CE; @endif;">
                             @if($list->review_complete != null)
                                 {{ $list->review_complete }}
                             @else

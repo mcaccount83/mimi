@@ -2541,7 +2541,7 @@
                                         <div class="flex-item2">
                                             Party Percentage:&nbsp;&nbsp;&nbsp;<strong>{{ number_format($partyPercentage * 100, 2) }}%</strong><br>
                                         </div>
-                                        <div class="flex-item2">
+                                        <div class="flex-item2" style="background-color: {{ $financial_report_array['check_party_percentage'] == 0 ? '#FFC7CE' : ($financial_report_array['check_party_percentage'] == 1 ? '#FFEB9C' : '#FFFFFF') }}">
                                             Party Percentage less than 15%:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_party_percentage']) ? 'Please Review' : ($financial_report_array['check_party_percentage'] == 0 ? 'NO, they are over 20%'
                                                 : ($financial_report_array['check_party_percentage'] == 1 ? 'NO, but they are under 20%' : ($financial_report_array['check_party_percentage'] == 2 ? 'YES, they are under 15%' : 'Please Review' ))) }}</strong><br>
                                         </div>
@@ -2589,7 +2589,7 @@
                                     </div>
                                     </div>
                                     <div class="col-md-12"><br></div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-4" style="background-color: {{ $financial_report_array['check_award_1_approved'] == 1 ? '#C6EFCE' : '#FFFFFF' }}">
                                         Award #1 Status:&nbsp;&nbsp;&nbsp;
                                         <strong>{{ is_null($financial_report_array['check_award_1_approved']) ? 'N/A' : ($financial_report_array['check_award_1_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_1_approved'] == 1 ? 'YES' : 'N/A')) }}
                                             &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_1_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_1_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
@@ -2597,7 +2597,8 @@
                                                 : ($financial_report_array['award_1_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_1_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_1_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                                         </strong><br>
                                     </div>
-									<div class="col-md-12">
+                                    <div class="clearfix"></div>
+                                    <div class="col-md-4" style="background-color: {{ $financial_report_array['check_award_2_approved'] == 1 ? '#C6EFCE' : '#FFFFFF' }}">
                                         Award #2 Status:&nbsp;&nbsp;&nbsp;
                                         <strong>{{ is_null($financial_report_array['check_award_2_approved']) ? 'N/A' : ($financial_report_array['check_award_2_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_2_approved'] == 1 ? 'YES' : 'N/A')) }}
                                             &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_2_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_2_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
@@ -2605,24 +2606,24 @@
                                                 : ($financial_report_array['award_2_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_2_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_2_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                                         </strong><br>
                                     </div>
-                                    <div class="col-md-12">
-                                        Award #3 Status:&nbsp;&nbsp;&nbsp;
+                                    <div class="clearfix"></div>
+                                    <div class="col-md-4" style="background-color: {{ $financial_report_array['check_award_3_approved'] == 1 ? '#C6EFCE' : '#FFFFFF' }}">                                        Award #3 Status:&nbsp;&nbsp;&nbsp;
                                         <strong>{{ is_null($financial_report_array['check_award_3_approved']) ? 'N/A' : ($financial_report_array['check_award_3_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_3_approved'] == 1 ? 'YES' : 'N/A')) }}
                                             &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_3_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_3_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
                                                 : ($financial_report_array['award_3_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_3_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_3_nomination_type'] == 4 ? 'Outstanding Spirit'
                                                 : ($financial_report_array['award_3_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_3_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_3_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                                         </strong><br>
                                     </div>
-                                    <div class="col-md-12">
-                                        Award #4 Status:&nbsp;&nbsp;&nbsp;
+                                    <div class="clearfix"></div>
+                                    <div class="col-md-4" style="background-color: {{ $financial_report_array['check_award_4_approved'] == 1 ? '#C6EFCE' : '#FFFFFF' }}">                                        Award #4 Status:&nbsp;&nbsp;&nbsp;
                                         <strong>{{ is_null($financial_report_array['check_award_4_approved']) ? 'N/A' : ($financial_report_array['check_award_4_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_4_approved'] == 1 ? 'YES' : 'N/A')) }}
                                             &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_4_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_4_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
                                                 : ($financial_report_array['award_4_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_4_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_4_nomination_type'] == 4 ? 'Outstanding Spirit'
                                                 : ($financial_report_array['award_4_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_4_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_4_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                                         </strong><br>
                                     </div>
-                                    <div class="col-md-12">
-                                        Award #5 Status:&nbsp;&nbsp;&nbsp;
+                                    <div class="clearfix"></div>
+                                    <div class="col-md-4" style="background-color: {{ $financial_report_array['check_award_5_approved'] == 1 ? '#C6EFCE' : '#FFFFFF' }}">                                        Award #5 Status:&nbsp;&nbsp;&nbsp;
                                         <strong>{{ is_null($financial_report_array['check_award_5_approved']) ? 'N/A' : ($financial_report_array['check_award_5_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_5_approved'] == 1 ? 'YES' : 'N/A')) }}
                                             &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_5_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_5_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
                                                 : ($financial_report_array['award_5_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_5_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_5_nomination_type'] == 4 ? 'Outstanding Spirit'

@@ -49,7 +49,7 @@
                     <td>{{ $list->todo_month }}</td>
                     <td bgcolor="<?php
 							if($list->todo_send_rereg !='1')
-									echo "#FF0000";
+									echo "#FFC7CE";
 							?>">
 							@if($list->todo_send_rereg=='1')
 							YES
@@ -59,7 +59,7 @@
             		</td>
                     <td bgcolor="<?php
 							if($list->todo_send_late !='1')
-									echo "#FF0000";
+									echo "#FFC7CE";
 							?>">
 							@if($list->todo_send_late=='1')
 							YES
@@ -69,7 +69,7 @@
             		</td>
             		<td bgcolor="<?php
 							if($list->todo_record_rereg !='1')
-									echo "#FF0000";
+									echo "#FFC7CE";
 							?>">
 							@if($list->todo_record_rereg=='1')
 							YES
@@ -79,7 +79,7 @@
             		</td>
             		<td bgcolor="<?php
 							if($list->todo_record_m2m !='1')
-									echo "#FF0000";
+									echo "#FFC7CE";
 							?>">
 							@if($list->todo_record_m2m=='1')
 							YES
@@ -89,7 +89,7 @@
             		</td>
             		<td bgcolor="<?php
 							if($list->todo_export_reports !='1')
-									echo "#FF0000";
+									echo "#FFC7CE";
 							?>">
 							@if($list->todo_export_reports=='1')
 							YES

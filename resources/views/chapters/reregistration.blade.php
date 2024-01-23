@@ -111,9 +111,9 @@
                                 $due = $list->month_short_name . " " . $list->next_renewal_year;
                                 $overdue = (date("Y") * 12 + date("m")) - ($list->next_renewal_year * 12 + $list->start_month_id);
                                 if($overdue > 1)
-                                    echo "background-color: #FF000050;";
+                                    echo "background-color: #FFC7CE;";
                                 elseif($overdue == 1)
-                                    echo "background-color: #FFFF0050;";
+                                    echo "background-color: #FFEB9C;";
                             @endphp
                         ">{{ $due }}</td>
 

@@ -68,10 +68,10 @@
 
                             @endif
                                 @if ($list->award_1_approved)
-                                    <div style="background-color: #2c770050;">YES</div>
+                                    <div style="background-color: #C6EFCE;">YES</div>
                                 @else
                                     @if ($list->award_1_nomination_type)
-                                        <div style="background-color: #FF000050;">NO</div>
+                                        <div style="background-color: #FFC7CE;">NO</div>
                                     @endif
                             @endif</td>
 						<td>@if($list->award_2_nomination_type=='1')
@@ -92,10 +92,10 @@
 
 							@endif
                                 @if ($list->award_2_approved)
-                                    <div style="background-color: #2c770050;">YES</div>
+                                    <div style="background-color: #C6EFCE;">YES</div>
                                 @else
                                     @if ($list->award_2_nomination_type)
-                                        <div style="background-color: #FF000050;">NO</div>
+                                        <div style="background-color: #FFC7CE;">NO</div>
                                     @endif
                             @endif</td>
 						<td>@if($list->award_3_nomination_type=='1')
@@ -116,10 +116,10 @@
 
 							@endif
                                 @if ($list->award_3_approved)
-                                    <div style="background-color: #2c770050;">YES</div>
+                                    <div style="background-color: #C6EFCE;">YES</div>
                                 @else
                                     @if ($list->award_3_nomination_type)
-                                        <div style="background-color: #FF000050;">NO</div>
+                                        <div style="background-color: #FFC7CE;">NO</div>
                                     @endif
                             @endif</td>
 						<td>@if($list->award_4_nomination_type=='1')
@@ -140,10 +140,10 @@
 
 							@endif
                                 @if ($list->award_4_approved)
-                                    <div style="background-color: #2c770050;">YES</div>
+                                    <div style="background-color: #C6EFCE;">YES</div>
                                 @else
                                     @if ($list->award_4_nomination_type)
-                                        <div style="background-color: #FF000050;">NO</div>
+                                        <div style="background-color: #FFC7CE;">NO</div>
                                     @endif
                             @endif</td>
 						<td>@if($list->award_5_nomination_type=='1')
@@ -164,10 +164,10 @@
 
 							@endif
                                 @if ($list->award_5_approved)
-                                    <div style="background-color: #2c770050;">YES</div>
+                                    <div style="background-color: #C6EFCE;">YES</div>
                                 @else
                                     @if ($list->award_5_nomination_type)
-                                        <div style="background-color: #FF000050;">NO</div>
+                                        <div style="background-color: #FFC7CE;">NO</div>
                                     @endif
                             @endif</td>
                  </tr>
