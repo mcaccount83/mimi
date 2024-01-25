@@ -78,14 +78,14 @@ Route::get('/chapter-links', [ChapterController::class, 'chapterLinks'])->name('
 /**
  * Routes for Google Upload Files
  */
-Route::get('/files', [GoogleController::class, 'index']);
-Route::post('/files/store/{id}', [GoogleController::class, 'store']);
+//Route::get('/files', [GoogleController::class, 'index']);
+//Route::post('/files/store/{id}', [GoogleController::class, 'store']);
 Route::post('/files/storeEIN/{id}', [GoogleController::class, 'storeEIN']);
 Route::post('/files/storeRoster/{id}', [GoogleController::class, 'storeRoster']);
-Route::post('/files/store990n/{id}', [GoogleController::class, 'store990n']);
+Route::post('/files/store990n/{id}', [GoogleController::class, 'store990N']);
 Route::post('/files/storeStatement1/{id}', [GoogleController::class, 'storeStatement1']);
 Route::post('/files/storeStatement2/{id}', [GoogleController::class, 'storeStatement2']);
-Route::get('/files/googletest/{id}', [GoogleController::class, 'show'])->name('files.googletest');
+//Route::get('/files/googletest/{id}', [GoogleController::class, 'show'])->name('files.googletest');
 
 /**
  * Routes for Chapters

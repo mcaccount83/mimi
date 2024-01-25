@@ -853,8 +853,8 @@
                <?php if ((Session::get('positionid') >=6 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>
                 <button type="button" class="btn btn-themeBlue margin" onclick="return UpdateEIN()">Update EIN</button>
 
-                <!--<button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-ein">Update EIN Letter</button>-->
-                <button type="button" class="btn btn-themeBlue margin" onclick="return EINLetter()">Update EIN Letter</button>
+                <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-ein">Update EIN Letter</button>
+                {{-- <button type="button" class="btn btn-themeBlue margin" onclick="return EINLetter()">Update EIN Letter</button> --}}
               <?php } ?>
               <?php if ((Session::get('positionid') >=5 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>
               <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-disband">Disband Chapter</button>
@@ -883,7 +883,7 @@
                         <input type="file" name='file' required>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-ein" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary" >Upload</button>
                     </form>
                 </div>
@@ -907,7 +907,7 @@
                         </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-disband" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" onclick="return disbandChapter()">OK</button>
                     </form>
                 </div>
@@ -1214,32 +1214,32 @@ function UpdateEIN(){
                 }
             }
 
-    function EINLetter(){
-                var ein=document.getElementById("ch_ein_letter_path").value;
-                var new_ein="";
+    // function EINLetter(){
+    //             var ein=document.getElementById("ch_ein_letter_path").value;
+    //             var new_ein="";
 
-                if (ein==""){
-                    new_ein = prompt("Please enter url path for the chapter's EIN Letter");
+    //             if (ein==""){
+    //                 new_ein = prompt("Please enter url path for the chapter's EIN Letter");
 
-                    if (new_ein != null) {
-                        document.getElementById("ch_ein_letter_path").value = new_ein;
-                        return true;
-                    }
-                }
-                else{
-                    var result=confirm("This chapter already has an EIN Letter.  Are you REALLY sure you want to do this?");
-                    if(result){
-                        new_ein = prompt("Please enter url path for the chapter's EIN Letter");
-                        if (new_ein != null) {
-                            document.getElementById("ch_ein_letter_path").value = new_ein;
-                            return true;
-                        }
-                    }
-                    else{
-                        return false;
-                    }
-                }
-            }
+    //                 if (new_ein != null) {
+    //                     document.getElementById("ch_ein_letter_path").value = new_ein;
+    //                     return true;
+    //                 }
+    //             }
+    //             else{
+    //                 var result=confirm("This chapter already has an EIN Letter.  Are you REALLY sure you want to do this?");
+    //                 if(result){
+    //                     new_ein = prompt("Please enter url path for the chapter's EIN Letter");
+    //                     if (new_ein != null) {
+    //                         document.getElementById("ch_ein_letter_path").value = new_ein;
+    //                         return true;
+    //                     }
+    //                 }
+    //                 else{
+    //                     return false;
+    //                 }
+    //             }
+    //         }
 
     function PreviousNameReminder(){
 

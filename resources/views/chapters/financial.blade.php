@@ -50,8 +50,6 @@
 					<div class="accordion-header js-accordion-header">CHAPTER DUES</div>
 					<div class="accordion-body js-accordion-body">
 						<section>
-
-
                             Did your chapter change dues this year?&nbsp;&nbsp;&nbsp;
                             <strong>{{ is_null($financial_report_array['changed_dues']) ? 'Not Answered' : ($financial_report_array['changed_dues'] == 0 ? 'NO'
                                 : ($financial_report_array ['changed_dues'] == 1 ? 'YES' : 'Not Answered' )) }}</strong><br>
@@ -193,23 +191,25 @@
 								<h2>Annual Report Review</h2>
                             </div>
 							<div class="form-row">
-								{{-- <div class="col-md-12 mar_bot_20" id="RosterBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['roster_path']) echo "style=\"display: none;\"";} ?>>
+								<div class="col-md-12 mar_bot_20" id="RosterBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['roster_path']) echo "style=\"display: none;\"";} ?>>
 									<div class="col-md-12">
-										<label class="control-label" for="RosterFile">Attach the chapter's current roster spreadsheet:</label>
-										<input name="RosterFile" id="RosterFile" type="file" accept=".xls, .xlsx" class="demo1 form-control" />
+                                        <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Upload Roster File.<br>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-roster">Upload Roster File</button>
 									</div>
 								</div>
 								<input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $financial_report_array['roster_path']; ?>">
 								<div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['roster_path']) echo "style=\"display: none;\"";} ?>>
 									<div class="col-md-12" >
 										<div>
-										   <p class="form-control-static"><a href="<?php echo $financial_report_array['roster_path']; ?>" target="_blank">Chapter Roster</a></p>
-									</div>
-									<div class="col-md-6">
-										<button type="button" class="btn btn-info btn-primary btn-sm hide-on-print" onclick="ReplaceRoster()">Replace</button>
+										   <a href="<?php echo $financial_report_array['roster_path']; ?>" target="_blank">View Chapter Roster</a><br>
+                                           <br>
+                                            <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
+                                           <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-roster" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Replace Roster File</button>
 									</div>
                                     </div>
-								</div> --}}
+								</div>
 								<div class="clearfix"></div>
 
                                 <div class="col-md-6 mar_bot_20">
@@ -1360,43 +1360,46 @@
 					<div class="col-md-12">
 						<h2>Annual Report Review</h2>
 					</div>
-						<div class="form-row">
-								{{-- <div class="col-md-12 mar_bot_20" id="StatementBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['bank_statement_included_path']) echo "style=\"display: none;\"";} ?>>
+                            <div class="form-row">
+								<div class="col-md-12 mar_bot_20" id="StatementBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['bank_statement_included_path']) echo "style=\"display: none;\"";} ?>>
 									<div class="col-md-12">
-										<label class="control-label" for="StatementFile">Attach primary bank statement:</label>
-										<input name="StatementFile" id="StatementFile" type="file" accept=".pdf, .jpg, .jpeg" class="demo1 form-control" />
+                                        <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Upload Bank Statment.<br>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-statement1">Upload Bank Statement</button>
 									</div>
 								</div>
-								<input type="hidden" name="StatementPath" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
-
+								<input type="hidden" name="StatementFile" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
 								<div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['bank_statement_included_path']) echo "style=\"display: none;\"";} ?>>
 									<div class="col-md-12" >
 										<div>
-										<p class="form-control-static"><a href="<?php echo $financial_report_array['bank_statement_included_path']; ?>" target="_blank">Primary Bank Statement</a></p>
-										</div>
+										   <a href="<?php echo $financial_report_array['bank_statement_included_path']; ?>" target="_blank">View Bank Statement</a><br>
+                                           <br>
+                                            <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Replace Bank Statement.<br>
+                                           <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-statement1" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Replace Bank Statement</button>
 									</div>
-									<div class="col-md-6 mar_bot_20">
-										<button type="button" class="btn btn-info btn-primary btn-sm hide-on-print" onclick="ReplaceStatement1()">Replace</button>
-									</div>
+                                    </div>
+								</div>
 								<div class="clearfix"></div>
-                                <div class="form-row">
-								<div class="col-md-12 mar_bot_20" id="Statement2Block" <?php if (!empty($financial_report_array)) {if ($financial_report_array['bank_statement_2_included_path']) echo "style=\"display: none;\"";} ?>>
+                                <div class="col-md-12 mar_bot_20" id="Statement2Block" <?php if (!empty($financial_report_array)) {if ($financial_report_array['bank_statement_2_included_path']) echo "style=\"display: none;\"";} ?>>
 									<div class="col-md-12">
-										<label class="control-label" for="Statement2File">If chapter has muliple bank accounts, attach additional statement:</label>
-										<input name="Statement2File" id="Statement2File" type="file" accept=".pdf, .jpg, .jpeg" class="demo1 form-control" />
+                                        <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Upload Additional Bank Statment.<br>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-statement2">Upload Additional Bank Statement</button>
 									</div>
 								</div>
-								<input type="hidden" name="Statement2Path" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
+								<input type="hidden" name="Statement2File" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
 								<div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['bank_statement_2_included_path']) echo "style=\"display: none;\"";} ?>>
 									<div class="col-md-12" >
 										<div>
-										    <p class="form-control-static"><a href="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" target="_blank">Additional Bank Statement</a></p>
-										</div>
+										   <a href="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" target="_blank">View Additional Bank Statement</a><br>
+                                           <br>
+                                            <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Replace Additional Bank Statement.<br>
+                                           <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-statement2" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Replace Additional Bank Statement</button>
 									</div>
-									<div class="col-md-6">
-										<button type="button" class="btn btn-info btn-primary btn-sm hide-on-print" onclick="ReplaceStatement2()">Replace</button>
-									</div>
-								</div> --}}
+                                    </div>
+								</div>
 								<div class="clearfix"></div>
                                 <div class="col-md-6 mar_bot_20">
                                     <div class="col-md-12">
@@ -1589,7 +1592,7 @@
                                                return $meetingSpeakersMapping[$value];
                                            }, $meetingSpeakersArray)) }}
                                        @else
-                                           Not Answered
+                                           N/A
                                        @endif
                                    </strong></td></tr>
                            <tr><td>15.</td>
@@ -1626,7 +1629,7 @@
                                            return $activityMapping[$value];
                                        }, $activityArray)) }}
                                    @else
-                                       Not Answered
+                                       N/A
                                    @endif
                                </strong></td></tr>
                            <tr><td>18.</td>
@@ -1672,27 +1675,27 @@
 						<h2>Annual Report Review</h2>
 					</div>
                     <div class="form-row">
-                        {{-- <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
-							<div class="col-md-12" >
-								<label class="control-label" for="990NLink">990N Confirmation:</label>
-								<div>
-									<p class="form-control-static"><a href="<?php echo $financial_report_array['file_irs_path']; ?>" target="_blank">990N Confirmation File</a></p>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<button type="button" class="btn btn-info btn-primary btn-sm hide-on-print" onclick="Replace990N()">Replace</button>
-							</div>
-						</div>
-                        <div class="form-row">
-
-                            <div class="col-md-12 mar_bot_20" id="990NBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
-                                <div class="col-md-12">
-                                    <label class="control-label" for="990NFiling">Attach the chapter's 990N filing confirmation (5 MB max):</label>
-                                    <input name="990NFiling" id="990NFiling" type="file" accept=".pdf, .jpg, .jpeg" class="demo1 form-control" />
-                                </div>
-                            </div>
-                        </div> --}}
                         <div class="clearfix"></div>
+                                <div class="col-md-12 mar_bot_20" id="990NBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
+									<div class="col-md-12">
+                                        <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Upload 990N Confirmation.<br>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-990N">Upload 990N Confirmation</button>
+									</div>
+								</div>
+								<input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $financial_report_array['file_irs_path']; ?>">
+								<div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
+									<div class="col-md-12" >
+										<div>
+										   <a href="<?php echo $financial_report_array['file_irs_path']; ?>" target="_blank">View 990N Confirmation</a><br>
+                                           <br>
+                                            <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Replace 990N Confirmation.<br>
+                                           <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-990N" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Replace 990N Confirmation</button>
+									</div>
+                                    </div>
+								</div>
+								<div class="clearfix"></div>
                         <div class="col-md-6 mar_bot_20">
                             <div class="col-md-12">
                             <div class="form-inline">
@@ -2471,37 +2474,59 @@
                                 Answers from questios in previous sections will show up here after they have been saved.<br>
                             <br>
                             </div>
-									{{-- <div class="col-md-12">
-										<h2>Annual Report Review</h2>
-									</div> --}}
-									{{-- <div class="col-md-12" <?php if (!empty($financial_report_array) || !is_null($financial_report_array)) {if (!$financial_report_array['roster_path']) echo "style=\"display: none;\"";} echo "style=\"display: block;\""; ?>>
-											<div class="form-group col-xs-12">
-												<label class="control-label" for="RosterLink">Chapter Roster File:</label>
-													<a href="<?php echo $financial_report_array['roster_path']; ?>" target="_blank">Chapter Roster</a>
-											</div>
-									</div>
+                                <div class="col-md-12">
+                                    <?php if (!empty($financial_report_array['roster_path'])): ?>
+                                        <div class="col-xs-12">
+                                            <label class="control-label" for="RosterLink">Chapter Roster File:</label>
+                                            <a href="<?php echo $financial_report_array['roster_path']; ?>" target="_blank">Chapter Roster</a>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="col-xs-12">
+                                            <label class="control-label" for="RosterLink">Chapter Roster File:</label>
+                                            No file attached
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="col-md-12">
+                                    <?php if (!empty($financial_report_array['bank_statement_included_path'])): ?>
+                                        <div class="col-xs-12">
+                                            <label class="control-label" for="Statement1ink">Primary Bank Statement:</label>
+                                            <a href="<?php echo $financial_report_array['bank_statement_included_path']; ?>" target="_blank">Statement 1</a>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="col-xs-12">
+                                            <label class="control-label" for="Statement1Link">Primary Bank Statement:</label>
+                                            No file attached
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="col-md-12">
+                                    <?php if (!empty($financial_report_array['bank_statement_2_included_path'])): ?>
+                                        <div class="col-xs-12">
+                                            <label class="control-label" for="Statement2Link">Additional Bank Statement:</label>
+                                            <a href="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" target="_blank">Statement 2</a>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="col-xs-12">
+                                            <label class="control-label" for="Statement2Link">Additional Bank Statement:</label>
+                                            No file attached
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="col-md-12">
+                                    <?php if (!empty($financial_report_array['file_irs_path'])): ?>
+                                        <div class="col-xs-12">
+                                            <label class="control-label" for="990NLink">990N Filing:</label>
+                                            <a href="<?php echo $financial_report_array['file_irs_path']; ?>" target="_blank">990N Confirmation</a>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="col-xs-12">
+                                            <label class="control-label" for="990NLink">990N Filing:</label>
+                                            No file attached
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
 									<div class="clearfix"></div>
-									<div class="col-md-12" <?php if (!empty($financial_report_array) || !is_null($financial_report_array)) {if (!$financial_report_array['bank_statement_included_path']) echo "style=\"display: none;\"";} echo "style=\"display: block;\""; ?>>
-											<div class="form-group col-xs-12">
-												<label class="control-label" for="RosterLink">Primary Bank Statement:</label>
-													<a href="<?php echo $financial_report_array['bank_statement_included_path']; ?>" target="_blank">Statement 1</a>
-											</div>
-									</div>
-									<div class="clearfix"></div>
-									<div class="col-md-12" <?php if (!empty($financial_report_array) || !is_null($financial_report_array)) {if (!$financial_report_array['bank_statement_2_included_path']) echo "style=\"display: none;\"";} echo "style=\"display: block;\""; ?>>
-											<div class="form-group col-xs-12">
-												<label class="control-label" for="RosterLink">Additional Bank Statement:</label>
-													<a href="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" target="_blank">Statement 2</a>
-											</div>
-									</div>
-									<div class="clearfix"></div>
-									<div class="col-md-12" <?php if (!empty($financial_report_array) || !is_null($financial_report_array)) {if (!$financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} echo "style=\"display: block;\""; ?>>
-											<div class="form-group col-xs-12">
-												<label class="control-label" for="990NLink">990N Filing:</label>
-													<a href="<?php echo $financial_report_array['file_irs_path']; ?>" target="_blank">990N Confirmation</a>
-											</div>
-									</div> --}}
-									{{-- <div class="clearfix"></div> --}}
 
                                     <style>
                                         .flex-container2 {
@@ -2510,6 +2535,8 @@
                                             gap: 0px;
                                             width: 100%;
                                             overflow-x: auto;
+                                            margin-top: 20px;
+
                                         }
 
                                         .flex-item2 {
@@ -2689,13 +2716,100 @@
                                 </div>
                             </div>
                             </div>
-						</section>
+
 					</div>
 				</div>
 		<!------End Step 13 ------>
+    </section>
+
 
 			</div><!-- end of accordion -->
 			</form>
+
+            <div class="modal fade" id="modal-roster">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Upload Roster</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="upload_roster" name="upload_roster" role="form" enctype="multipart/form-data" method="POST" action='{{ url("/files/storeRoster",$chapterid) }}' >
+                                @csrf
+                                <input type="file" name='file' required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" id="btn-roster">Upload</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="modal-statement1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Upload Statement</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="upload_statement1" name="upload_statement1" role="form" enctype="multipart/form-data" method="POST" action='{{ url("/files/storeStatement1",$chapterid) }}' >
+                                @csrf
+                                <input type="file" name='file' required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" id="btn-statement1">Upload</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="modal-statement2">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Upload Additional Statement</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ url('/files/storeStatement2/'. $chapterid) }}" method="post" enctype="multipart/form-data">
+                                @csrf
+                                <input type="file" name='file' required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" id="btn-statement2">Upload</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="modal-990N">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Upload 990N Confirmation</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ url('/files/store990n/'. $chapterid) }}" method="post" enctype="multipart/form-data">
+                                @csrf
+                                <input type="file" name='file' required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" id="btn-990N">Upload</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 		</div>
    	</div>
@@ -2870,6 +2984,7 @@ $(document).ready(function(){
             $("#financial_report").submit();
         }
     });
+
 });
 </script>
 <script>

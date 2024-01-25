@@ -11,7 +11,7 @@ class Store990NGoogleRequest extends FormRequest
      */
     public function rules(): array
     {
-        return ['990n' => [
+        return ['file' => [
             'required',
         ], ];
     }

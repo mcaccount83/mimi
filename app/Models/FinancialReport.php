@@ -14,6 +14,15 @@ class FinancialReport extends Model
     protected $fillable = [
 
         'name',
+        'roster_path',
+        'file_irs_path',
+        'bank_statement_included_path',
+        'bank_statement_2_included_path',
+        'award_1_files',
+        'award_2_files',
+        'award_3_files',
+        'award_4_files',
+        'award_5_files',
 
     ];
 

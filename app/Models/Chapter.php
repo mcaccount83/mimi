@@ -15,6 +15,8 @@ class Chapter extends Model
     protected $fillable = [
 
         'name',
+        'ein_letter_path',
+        'ein_letter'
 
     ];
 }
