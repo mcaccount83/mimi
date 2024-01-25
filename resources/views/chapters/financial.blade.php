@@ -195,7 +195,7 @@
 									<div class="col-md-12">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload Roster File.<br>
-                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-roster">Upload Roster File</button>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-roster" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Upload Roster File</button>
 									</div>
 								</div>
 								<input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $financial_report_array['roster_path']; ?>">
@@ -598,9 +598,9 @@
                                     <label style="display: block;">Is the Chapter's Party Expense under 15%?<span class="field-required">*</span></label>
                                     <select id="check_party_percentage" name="check_party_percentage" class="form-control select2" style="width: 300px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
                                         <option value="" {{ is_null($financial_report_array->check_party_percentage) ? 'selected' : '' }} disabled>Please Select</option>
-                                        <option value="0" {{$financial_report_array->check_party_percentage === 0 ? 'selected' : ''}}>No, they are over 20%</option>
-                                        <option value="1" {{$financial_report_array->check_party_percentage == 1 ? 'selected' : ''}}>No, but they are under 20%</option>
-                                        <option value="2" {{$financial_report_array->check_party_percentage == 2 ? 'selected' : ''}}>Yes, they are under 15%</option>
+                                        <option value="0" {{$financial_report_array->check_party_percentage === 0 ? 'selected' : ''}}>They are over 20%</option>
+                                        <option value="1" {{$financial_report_array->check_party_percentage == 1 ? 'selected' : ''}}>They are between 15-20%</option>
+                                        <option value="2" {{$financial_report_array->check_party_percentage == 2 ? 'selected' : ''}}>They are under 15%</option>
                                     </select>
                                 </div>
                                 </div>
@@ -1365,7 +1365,7 @@
 									<div class="col-md-12">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload Bank Statment.<br>
-                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-statement1">Upload Bank Statement</button>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-statement1" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Upload Bank Statement</button>
 									</div>
 								</div>
 								<input type="hidden" name="StatementFile" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
@@ -1385,7 +1385,7 @@
 									<div class="col-md-12">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload Additional Bank Statment.<br>
-                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-statement2">Upload Additional Bank Statement</button>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-statement2" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Upload Additional Bank Statement</button>
 									</div>
 								</div>
 								<input type="hidden" name="Statement2File" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
@@ -1680,7 +1680,7 @@
 									<div class="col-md-12">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload 990N Confirmation.<br>
-                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-990N">Upload 990N Confirmation</button>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-990N" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Upload 990N Confirmation</button>
 									</div>
 								</div>
 								<input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $financial_report_array['file_irs_path']; ?>">
@@ -2569,8 +2569,8 @@
                                             Party Percentage:&nbsp;&nbsp;&nbsp;<strong>{{ number_format($partyPercentage * 100, 2) }}%</strong><br>
                                         </div>
                                         <div class="flex-item2" style="background-color: {{ $financial_report_array['check_party_percentage'] == 0 ? '#FFC7CE' : ($financial_report_array['check_party_percentage'] == 1 ? '#FFEB9C' : '#FFFFFF') }}">
-                                            Party Percentage less than 15%:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_party_percentage']) ? 'Please Review' : ($financial_report_array['check_party_percentage'] == 0 ? 'NO, they are over 20%'
-                                                : ($financial_report_array['check_party_percentage'] == 1 ? 'NO, but they are under 20%' : ($financial_report_array['check_party_percentage'] == 2 ? 'YES, they are under 15%' : 'Please Review' ))) }}</strong><br>
+                                            Party Percentage less than 15%:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_party_percentage']) ? 'Please Review' : ($financial_report_array['check_party_percentage'] == 0 ? 'They are over 20%'
+                                                : ($financial_report_array['check_party_percentage'] == 1 ? 'They are between 15-20%' : ($financial_report_array['check_party_percentage'] == 2 ? 'They are under 15%' : 'Please Review' ))) }}</strong><br>
                                         </div>
                                         <div class="flex-item2">
                                             Total income/revenue less than $50,000:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_total_income_less']) ? 'Please Review'
