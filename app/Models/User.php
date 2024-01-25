@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -23,17 +24,17 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function CoordinatorDetails()
+    public function CoordinatorDetails(): HasOne
     {
         return $this->hasOne(\App\Models\CoordinatorDetails::class);
     }
 
-    public function BoardDetails()
+    public function BoardDetails(): HasOne
     {
         return $this->hasOne(\App\Models\BoardDetails::class);
     }
 
-    public function OutgoingDetails()
+    public function OutgoingDetails(): HasOne
     {
         return $this->hasOne(\App\Models\OutgoingBoardMember::class);
     }
