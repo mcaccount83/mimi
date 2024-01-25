@@ -16,7 +16,7 @@ class Chapter extends Model
 
         'name',
         'ein_letter_path',
-        'ein_letter'
+        'ein_letter',
 
     ];
 }
