@@ -14,7 +14,6 @@ use GuzzleHttp\Client;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 const client_id = 'YOUR_CLIENT_ID';
@@ -54,174 +53,14 @@ class GoogleController extends Controller
             ->where('ch.id', '=', $id)
             ->first();
 
-            $name = $chapter->ein . '_' . $chapter->name . '_' . $chapter->state;
-            $accessToken = $this->token();
-
-            $file = $request->file('file');
-            $sharedDriveId = '1JAYKfJoo4USrEwkBkRKqIV-2PwouPv-m';   //Shared Drive -> CC Resources->IRS/EIN -> EIN Letters
-
-            $fileMetadata = [
-                'name' => Str::ascii($name . '.' . $file->getClientOriginalExtension()),
-                'parents' => [$sharedDriveId],
-                'mimeType' => $file->getMimeType(),
-            ];
-
-            $metadataJson = json_encode($fileMetadata);
-            $fileContent = file_get_contents($file->getRealPath());
-            $fileContentBase64 = base64_encode($fileContent);
-
-            $client = new Client();
-
-            $response = $client->request('POST', "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true", [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $accessToken,
-                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-                ],
-                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-            ]);
-
-            $bodyContents = $response->getBody()->getContents();
-            $jsonResponse = json_decode($bodyContents, true);
-
-            if ($response->getStatusCode() === 200) { // Check for a successful status code
-                    $file_id = $jsonResponse['id'];
-                    $path = 'https://drive.google.com/file/d/' .  $file_id . '/view?usp=drive_link' ;
-                    $existingRecord = Chapter::where('id', $id)->first();
-
-                        $existingRecord->update([
-                            'ein_letter_path' => $path,
-                            'ein_letter' => "1",
-                        ]);
-
-                        return redirect()->back()->with('success', 'File uploaded successfully!');
-                    } else {
-                        return redirect()->back()->with('error', 'File failed to upload');
-                    }
-            }
-
-    public function storeRoster(StoreRosterGoogleRequest $request, $id): RedirectResponse
-    {
-        $chapter = DB::table('chapters as ch')
-            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('ch.id', '=', $id)
-            ->first();
-
-            $name = $chapter->state.'_'.$chapter->name.'_Roster';
-            $accessToken = $this->token();
-
-            $file = $request->file('file');
-            $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
-
-            $fileMetadata = [
-                'name' => Str::ascii($name . '.' . $file->getClientOriginalExtension()),
-                'parents' => [$sharedDriveId],
-                'mimeType' => $file->getMimeType(),
-            ];
-
-            $metadataJson = json_encode($fileMetadata);
-            $fileContent = file_get_contents($file->getRealPath());
-            $fileContentBase64 = base64_encode($fileContent);
-
-            $client = new Client();
-
-            $response = $client->request('POST', "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true", [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $accessToken,
-                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-                ],
-                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-            ]);
-
-            $bodyContents = $response->getBody()->getContents();
-            $jsonResponse = json_decode($bodyContents, true);
-
-            if ($response->getStatusCode() === 200) { // Check for a successful status code
-                $file_id = $jsonResponse['id'];
-                $path = 'https://drive.google.com/file/d/' . $file_id . '/view?usp=drive_link';
-                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
-
-                $existingRecord->update([
-                    'roster_path' => $path,
-                ]);
-
-                return redirect()->back()->with('success', 'File uploaded successfully!');
-            } else {
-                return redirect()->back()->with('error', 'File failed to upload');
-            }
-        }
-
-    public function store990N(Store990NGoogleRequest $request, $id): RedirectResponse
-    {
-        $chapter = DB::table('chapters as ch')
-            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('ch.id', '=', $id)
-            ->first();
-
-            $name = $chapter->state.'_'.$chapter->name.'_990N';
-            $accessToken = $this->token();
-
-            $file = $request->file('file');
-            $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
-
-            $fileMetadata = [
-                'name' => Str::ascii($name . '.' . $file->getClientOriginalExtension()),
-                'parents' => [$sharedDriveId],
-                'mimeType' => $file->getMimeType(),
-            ];
-
-            $metadataJson = json_encode($fileMetadata);
-            $fileContent = file_get_contents($file->getRealPath());
-            $fileContentBase64 = base64_encode($fileContent);
-
-            $client = new Client();
-
-            $response = $client->request('POST', "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true", [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $accessToken,
-                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-                ],
-                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-            ]);
-
-            $bodyContents = $response->getBody()->getContents();
-            $jsonResponse = json_decode($bodyContents, true);
-
-            if ($response->getStatusCode() === 200) { // Check for a successful status code
-                $file_id = $jsonResponse['id'];
-                $path = 'https://drive.google.com/file/d/' . $file_id . '/view?usp=drive_link';
-                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
-
-                $existingRecord->update([
-                    'file_irs_path' => $path,
-                ]);
-
-                return redirect()->back()->with('success', 'File uploaded successfully!');
-            } else {
-                return redirect()->back()->with('error', 'File failed to upload');
-            }
-        }
-
-    public function storeStatement1(StoreStatement1GoogleRequest $request, $id): RedirectResponse
-    {
-        $chapter = DB::table('chapters as ch')
-        ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-        ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-        ->where('ch.is_active', '=', '1')
-        ->where('ch.id', '=', $id)
-        ->first();
-
-        $name = $chapter->state.'_'.$chapter->name.'_Statement';
+        $name = $chapter->ein.'_'.$chapter->name.'_'.$chapter->state;
         $accessToken = $this->token();
 
         $file = $request->file('file');
-        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+        $sharedDriveId = '1JAYKfJoo4USrEwkBkRKqIV-2PwouPv-m';   //Shared Drive -> CC Resources->IRS/EIN -> EIN Letters
 
         $fileMetadata = [
-            'name' => Str::ascii($name . '.' . $file->getClientOriginalExtension()),
+            'name' => Str::ascii($name.'.'.$file->getClientOriginalExtension()),
             'parents' => [$sharedDriveId],
             'mimeType' => $file->getMimeType(),
         ];
@@ -232,9 +71,9 @@ class GoogleController extends Controller
 
         $client = new Client();
 
-        $response = $client->request('POST', "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true", [
+        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
             'headers' => [
-                'Authorization' => 'Bearer ' . $accessToken,
+                'Authorization' => 'Bearer '.$accessToken,
                 'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
             ],
             'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
@@ -245,7 +84,167 @@ class GoogleController extends Controller
 
         if ($response->getStatusCode() === 200) { // Check for a successful status code
             $file_id = $jsonResponse['id'];
-            $path = 'https://drive.google.com/file/d/' . $file_id . '/view?usp=drive_link';
+            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
+            $existingRecord = Chapter::where('id', $id)->first();
+
+            $existingRecord->update([
+                'ein_letter_path' => $path,
+                'ein_letter' => '1',
+            ]);
+
+            return redirect()->back()->with('success', 'File uploaded successfully!');
+        } else {
+            return redirect()->back()->with('error', 'File failed to upload');
+        }
+    }
+
+    public function storeRoster(StoreRosterGoogleRequest $request, $id): RedirectResponse
+    {
+        $chapter = DB::table('chapters as ch')
+            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->first();
+
+        $name = $chapter->state.'_'.$chapter->name.'_Roster';
+        $accessToken = $this->token();
+
+        $file = $request->file('file');
+        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+
+        $fileMetadata = [
+            'name' => Str::ascii($name.'.'.$file->getClientOriginalExtension()),
+            'parents' => [$sharedDriveId],
+            'mimeType' => $file->getMimeType(),
+        ];
+
+        $metadataJson = json_encode($fileMetadata);
+        $fileContent = file_get_contents($file->getRealPath());
+        $fileContentBase64 = base64_encode($fileContent);
+
+        $client = new Client();
+
+        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+            'headers' => [
+                'Authorization' => 'Bearer '.$accessToken,
+                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+            ],
+            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
+        ]);
+
+        $bodyContents = $response->getBody()->getContents();
+        $jsonResponse = json_decode($bodyContents, true);
+
+        if ($response->getStatusCode() === 200) { // Check for a successful status code
+            $file_id = $jsonResponse['id'];
+            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
+            $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+
+            $existingRecord->update([
+                'roster_path' => $path,
+            ]);
+
+            return redirect()->back()->with('success', 'File uploaded successfully!');
+        } else {
+            return redirect()->back()->with('error', 'File failed to upload');
+        }
+    }
+
+    public function store990N(Store990NGoogleRequest $request, $id): RedirectResponse
+    {
+        $chapter = DB::table('chapters as ch')
+            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->first();
+
+        $name = $chapter->state.'_'.$chapter->name.'_990N';
+        $accessToken = $this->token();
+
+        $file = $request->file('file');
+        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+
+        $fileMetadata = [
+            'name' => Str::ascii($name.'.'.$file->getClientOriginalExtension()),
+            'parents' => [$sharedDriveId],
+            'mimeType' => $file->getMimeType(),
+        ];
+
+        $metadataJson = json_encode($fileMetadata);
+        $fileContent = file_get_contents($file->getRealPath());
+        $fileContentBase64 = base64_encode($fileContent);
+
+        $client = new Client();
+
+        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+            'headers' => [
+                'Authorization' => 'Bearer '.$accessToken,
+                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+            ],
+            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
+        ]);
+
+        $bodyContents = $response->getBody()->getContents();
+        $jsonResponse = json_decode($bodyContents, true);
+
+        if ($response->getStatusCode() === 200) { // Check for a successful status code
+            $file_id = $jsonResponse['id'];
+            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
+            $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+
+            $existingRecord->update([
+                'file_irs_path' => $path,
+            ]);
+
+            return redirect()->back()->with('success', 'File uploaded successfully!');
+        } else {
+            return redirect()->back()->with('error', 'File failed to upload');
+        }
+    }
+
+    public function storeStatement1(StoreStatement1GoogleRequest $request, $id): RedirectResponse
+    {
+        $chapter = DB::table('chapters as ch')
+            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->first();
+
+        $name = $chapter->state.'_'.$chapter->name.'_Statement';
+        $accessToken = $this->token();
+
+        $file = $request->file('file');
+        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+
+        $fileMetadata = [
+            'name' => Str::ascii($name.'.'.$file->getClientOriginalExtension()),
+            'parents' => [$sharedDriveId],
+            'mimeType' => $file->getMimeType(),
+        ];
+
+        $metadataJson = json_encode($fileMetadata);
+        $fileContent = file_get_contents($file->getRealPath());
+        $fileContentBase64 = base64_encode($fileContent);
+
+        $client = new Client();
+
+        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+            'headers' => [
+                'Authorization' => 'Bearer '.$accessToken,
+                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+            ],
+            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
+        ]);
+
+        $bodyContents = $response->getBody()->getContents();
+        $jsonResponse = json_decode($bodyContents, true);
+
+        if ($response->getStatusCode() === 200) { // Check for a successful status code
+            $file_id = $jsonResponse['id'];
+            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
             $existingRecord = FinancialReport::where('chapter_id', $id)->first();
 
             $existingRecord->update([
@@ -267,49 +266,49 @@ class GoogleController extends Controller
             ->where('ch.id', '=', $id)
             ->first();
 
-            $name = $chapter->state.'_'.$chapter->name.'_Statement2';
-            $accessToken = $this->token();
+        $name = $chapter->state.'_'.$chapter->name.'_Statement2';
+        $accessToken = $this->token();
 
-            $file = $request->file('file');
-            $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+        $file = $request->file('file');
+        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
 
-            $fileMetadata = [
-                'name' => Str::ascii($name . '.' . $file->getClientOriginalExtension()),
-                'parents' => [$sharedDriveId],
-                'mimeType' => $file->getMimeType(),
-            ];
+        $fileMetadata = [
+            'name' => Str::ascii($name.'.'.$file->getClientOriginalExtension()),
+            'parents' => [$sharedDriveId],
+            'mimeType' => $file->getMimeType(),
+        ];
 
-            $metadataJson = json_encode($fileMetadata);
-            $fileContent = file_get_contents($file->getRealPath());
-            $fileContentBase64 = base64_encode($fileContent);
+        $metadataJson = json_encode($fileMetadata);
+        $fileContent = file_get_contents($file->getRealPath());
+        $fileContentBase64 = base64_encode($fileContent);
 
-            $client = new Client();
+        $client = new Client();
 
-            $response = $client->request('POST', "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true", [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $accessToken,
-                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-                ],
-                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
+        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+            'headers' => [
+                'Authorization' => 'Bearer '.$accessToken,
+                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+            ],
+            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
+        ]);
+
+        $bodyContents = $response->getBody()->getContents();
+        $jsonResponse = json_decode($bodyContents, true);
+
+        if ($response->getStatusCode() === 200) { // Check for a successful status code
+            $file_id = $jsonResponse['id'];
+            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
+            $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+
+            $existingRecord->update([
+                'bank_statement_2_included_path' => $path,
             ]);
 
-            $bodyContents = $response->getBody()->getContents();
-            $jsonResponse = json_decode($bodyContents, true);
-
-            if ($response->getStatusCode() === 200) { // Check for a successful status code
-                $file_id = $jsonResponse['id'];
-                $path = 'https://drive.google.com/file/d/' . $file_id . '/view?usp=drive_link';
-                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
-
-                $existingRecord->update([
-                    'bank_statement_2_included_path' => $path,
-                ]);
-
-                return redirect()->back()->with('success', 'File uploaded successfully!');
-            } else {
-                return redirect()->back()->with('error', 'File failed to upload');
-            }
+            return redirect()->back()->with('success', 'File uploaded successfully!');
+        } else {
+            return redirect()->back()->with('error', 'File failed to upload');
         }
+    }
 
     // public function store(StoreGoogleRequest $request, $id): RedirectResponse
     // {
