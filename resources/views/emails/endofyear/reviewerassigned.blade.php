@@ -5,10 +5,10 @@ You have been assigned to review the financial report for {{$mailData['chapter_n
 
 Attachments:
 <ul>
-    <li><a href="{{$mailData['roster']}}">Chapter Roster</a></li>
-    <li><a href="{{$mailData['bank_statement_path']}}">Bank Statement</a></li>
-    <li><a href="{{$mailData['bank_statemet_2_path']}}">Addiational Statement</a></li>
-    <li><a href="{{$mailData['irs_path']}}">990N Filing</a></li>
+    <li><a href="{{$mailData['roster_path']}}">Chapter Roster</a></li>
+    <li><a href="{{$mailData['bank_statement_included_path']}}">Bank Statement</a></li>
+    <li><a href="{{$mailData['bank_statement_2_included_path']}}">Addiational Statement</a></li>
+    <li><a href="{{$mailData['file_irs_path']}}">990N Filing</a></li>
 </ul>
 
 **MCL**,<br>

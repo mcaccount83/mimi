@@ -63,25 +63,30 @@
 
                 <!------Start Step 1 ------>
                 <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] <='1') echo "active";?>">
-                    <div class="accordion-header js-accordion-header">Section 1 - Chapter Dues</div>
+                    <div class="accordion-header js-accordion-header">CHAPTER DUES</div>
                     <div class="accordion-body js-accordion-body cls-print-1">
                         <section>
-                        	<div class="col-md-12" id="RosterBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['roster_path']) echo "style=\"display: none;\"";} ?>>
-                        	    <label class="control-label" for="RosterFile">Attach the chapter's current roster spreadsheet (5 MB max):</label>
-										<input name="RosterFile" id="RosterFile" type="file" accept=".xls, .xlsx, .jpg,.jpeg,.pdf" class="demo1 form-control" />
-                        	     <p><a href="{{ URL::to('/roster_template.xlsx') }}" download>Click here to download the roster template file</a>
-                            </p>
-								</div>
-								<input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $financial_report_array['roster_path']; ?>">
-								<div class="col-md-12" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['roster_path']) echo "style=\"display: none;\"";} ?>>
-									<div class="col-md-12" >
-										<label class="control-label" for="RosterLink">Chapter Roster File:</label>
-											<a href="<?php echo $financial_report_array['roster_path']; ?>" target="_blank">Chapter Roster</a>
-									</div>
-									<div class="col-md-6">
-										<button type="button" class="btn btn-info btn-fill" onclick="ReplaceRoster()" <?php if($submitted =='1') echo "disabled"; ?>>Replace Roster</button>
-									</div>
-                        <input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $financial_report_array['roster_path']; ?>">
+
+                            <div class="col-md-12" id="RosterBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['roster_path']) echo "style=\"display: none;\"";} ?>>
+                                <div class="col-md-12">
+                                    <strong style="color:red">Please Note</strong><br>
+                                        This will refresh the screen - be sure to save all work before clicking button to Upload Roster File.<br>
+                                    <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-roster" <?php if($submitted =='1') echo "disabled"; ?>>Upload Roster File</button>
+                                </div>
+                            </div>
+                            <input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $financial_report_array['roster_path']; ?>">
+                            <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['roster_path']) echo "style=\"display: none;\"";} ?>>
+                                <div class="col-md-12" >
+                                    <div>
+                                        <label class="control-label" for="RosterLink">Chapter Roster File:</label>
+                                       <a href="<?php echo $financial_report_array['roster_path']; ?>" target="_blank">View Chapter Roster</a><br>
+                                        <strong style="color:red">Please Note</strong><br>
+                                        This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
+                                       <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-roster" <?php if($submitted =='1') echo "disabled"; ?>>Replace Roster File</button>
+                                </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
                         <br>
                         <div class="col-md-12 float-left">
                             <div class="form-group">
@@ -260,7 +265,6 @@
                             <div class="card-body">
                                 <div class="col-md-12 text-center">
                                   <button type="button" id="btn-step-1" class="btn btn-info btn-fill" onSubmit="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
-                                 <!--<button type="button" id="1" class="btn btn-info btn-fill" onClick="printDiv(this.id)">Print</button>-->
                                 </div>
                             </div>
                         </div>
@@ -271,7 +275,7 @@
 
                 <!------Start Step 2 ------>
                 <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='2') echo "active";?>">
-                    <div class="accordion-header js-accordion-header">Section 2 - Monthly Meeting Expenses</div>
+                    <div class="accordion-header js-accordion-header">MONTHLY MEETING EXPENSES</div>
                     <div class="accordion-body js-accordion-body cls-print-2">
                         <section>
                             <div class="form-row form-group">
@@ -342,7 +346,6 @@
                                             $childrens_room = null;
                                             if(isset($financial_report_array['childrens_room_expenses'])){
                                                 $childrens_room=unserialize(base64_decode($financial_report_array['childrens_room_expenses']));
-                                                //$ChildrensExpenseRowCount = count($childrens_room);
                                                 $ChildrensExpenseRowCount = is_array($childrens_room) ? count($childrens_room) : 0;
                                             }
                                             else{
@@ -403,7 +406,6 @@
                                 <div class="card-body">
                                     <div class="col-md-12 text-center">
                                         <button type="submit" id="btn-step-2" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
-                                         <!--<button type="button" id="2" class="btn btn-info btn-fill" onClick="printDiv(this.id)">Print</button>-->
                                     </div>
                                 </div>
 
@@ -415,7 +417,7 @@
 
                 <!------Start Step 3 ------>
                 <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='3') echo "active";?>">
-                    <div class="accordion-header js-accordion-header">Section 3 - Service Projects</div>
+                    <div class="accordion-header js-accordion-header">SERVICE PROJECTS</div>
                     <div class="accordion-body js-accordion-body cls-print-3">
                     <section>
                         <div class="form-row form-group">
@@ -444,7 +446,6 @@
                                         $service_projects = null;
                                         if(isset($financial_report_array['service_project_array'])){
                                             $service_projects=unserialize(base64_decode($financial_report_array['service_project_array']));
-                                            //$ServiceProjectRowCount = count($service_projects);
                                             $ServiceProjectRowCount = is_array($service_projects) ? count($service_projects) : 0;
                                         }
                                         else{
@@ -599,7 +600,6 @@
                         <div class="card-body">
                         <div class="col-md-12 text-center">
                           <button type="button" class="btn btn-info btn-fill" id="btn-step-3" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
-                           <!--<button type="button" id="3" class="btn btn-info btn-fill" onClick="printDiv(this.id)">Print</button>-->
                         </div>
                         </div>
                     </div>
@@ -610,7 +610,7 @@
 
                 <!------Start Step 4 ------>
                 <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='4') echo "active";?>">
-                <div class="accordion-header js-accordion-header">Section 4 - Parties and Member Benefits</div>
+                <div class="accordion-header js-accordion-header">PARTIES & MEMBER BENEFITS</div>
                 <div class="accordion-body js-accordion-body cls-print-4">
                 <section>
                     <div class="form-row form-group">
@@ -638,7 +638,6 @@
                                 $party_expenses = null;
                                 if(isset($financial_report_array['party_expense_array'])){
                                     $party_expenses=unserialize(base64_decode($financial_report_array['party_expense_array']));
-                                    //$PartyExpenseRowCount = count($party_expenses);
                                     $PartyExpenseRowCount = is_array($party_expenses) ? count($party_expenses) : 0;
                                 }
                                 else{
@@ -711,7 +710,6 @@
                         <div class="card-body">
                             <div class="col-md-12 text-center">
                               <button type="submit" id="btn-step-4" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
-                               <!--<button type="button" id="4" class="btn btn-info btn-fill" onClick="printDiv(this.id)">Print</button>-->
                             </div>
                         </div>
                     </div>
@@ -722,7 +720,7 @@
 
                 <!------Start Step 5 ------>
             <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='5') echo "active";?>">
-                <div class="accordion-header js-accordion-header">Section 5 - Office and Operating Expenses</div>
+                <div class="accordion-header js-accordion-header">OFFICE & OPERATING EXPENSES</div>
                 <div class="accordion-body js-accordion-body cls-print-5">
                     <section>
                     <div class="form-row form-group">
@@ -826,14 +824,28 @@
                 </div>
                 <input type="hidden" name="OfficeExpenseRowCount" id="OfficeExpenseRowCount" value="<?php echo $OfficeExpenseRowCount; ?>" />
                 <div class="form-row form-group">
-                    <div class="col-md-12">
-                      <h4>
-                        International Event Registration
-                      </h4>
+                    <div class="card-body">
+                        <div class="col-md-12 text-center">
+                          <button type="button" id="btn-step-5" class="btn btn-info btn-fill" onSubmit="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                        </div>
                     </div>
-                    <p>
-                      International Events include any State/Regional/Conference Luncheons, Workshops or other events sponsored or organized by the International MOMS Club. “Event income” includes all money paid to your treasury by members for their reservations at those events and any income from fundraisers held to help offset the expense of members attending an International event. Also include any donations to your chapter to help build your raffle basket or chapter display. “Event expenses” includes all money paid by your treasury to International for reservations or for members attending the event, raffle basket and display expenses, and any travel costs. If your chapter paid for all reservations from its treasury and did not charge members for attending, it will have expenses, but no income, in this category.
-                    </p>
+                </div>
+                </section>
+                </div><!-- end of accordion body -->
+            </div><!-- end of accordion item -->
+            <!------End Step 5 ------>
+
+            <!------Start Step 5 ------>
+            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='55') echo "active";?>">
+                <div class="accordion-header js-accordion-header">INTERNATIONAL EVENTS & RE-REGISTRATION</div>
+                <div class="accordion-body js-accordion-body cls-print-55">
+                    <section>
+                    <div class="form-row form-group">
+                      <p>
+                        Use this section to list individually any Internaitonal Events (in person or virtual).
+                        International Events include any State/Regional/Conference Luncheons, Workshops or other events sponsored or organized by the International MOMS Club. “Event income” includes all money paid to your treasury by members for their reservations at those events and any income from fundraisers held to help offset the expense of members attending an International event. Also include any donations to your chapter to help build your raffle basket or chapter display. “Event expenses” includes all money paid by your treasury to International for reservations or for members attending the event, raffle basket and display expenses, and any travel costs. If your chapter paid for all reservations from its treasury and did not charge members for attending, it will have expenses, but no income, in this category.
+                      </p>
+
                     <div class="form-group">
                        <label for="">
                             International Event Registrations
@@ -945,8 +957,7 @@
                 <div class="form-row form-group">
                     <div class="card-body">
                         <div class="col-md-12 text-center">
-                          <button type="button" id="btn-step-5" class="btn btn-info btn-fill" onSubmit="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
-                           <!--<button type="button" id="5" class="btn btn-info btn-fill" onClick="printDiv(this.id)">Print</button>-->
+                          <button type="button" id="btn-step-55" class="btn btn-info btn-fill" onSubmit="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
                         </div>
                     </div>
                 </div>
@@ -957,12 +968,12 @@
 
             <!------Start Step 6 ------>
             <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='6') echo "active";?>">
-                <div class="accordion-header js-accordion-header">Section 6 - Donations to Your Chapter</div>
+                <div class="accordion-header js-accordion-header">DONATIONS TO YOUR CHAPTER</div>
                 <div class="accordion-body js-accordion-body cls-print-6">
                 <section>
                 <div class="form-row form-group">
                     <label for="donation-income">
-                        Monetary:
+                        Monetary Donations:
                     </label>
                     <p>For each donation of money (cash or checks), please list Donor Name, Address, Date of Donation and Amount. If the money was donated for a specific purpose, list that, too. If you received grants, include that income here.</p>
                     <table id="donation-income" width="100%" class="table table-bordered">
@@ -979,7 +990,6 @@
                                 $monetary_dontations_to_chapter = null;
                                 if(isset($financial_report_array['monetary_donations_to_chapter'])){
                                     $monetary_dontations_to_chapter=unserialize(base64_decode($financial_report_array['monetary_donations_to_chapter']));
-                                    //$MonDonationRowCount = count($monetary_dontations_to_chapter);
                                     $MonDonationRowCount = is_array($monetary_dontations_to_chapter) ? count($monetary_dontations_to_chapter) : 0;
                                 }
                                 else{
@@ -1039,7 +1049,7 @@
                 </div>
                 <div class="form-row form-group">
                     <label for="donation-goods">
-                        Non-Monetary:
+                        Non-Monetary Donations:
                     </label>
                     <p>For each donation, please list Donor Name, Address, Date of Donation, Items Donated, and purpose of donation. Do not include a value for items donated except in the case of gift cards. Do list the value of any gift cards received in the description.</p>
                     <table id="donation-goods" width="100%" class="table table-bordered">
@@ -1055,7 +1065,6 @@
                             $non_monetary_dontations_to_chapter = null;
                             if(isset($financial_report_array['non_monetary_donations_to_chapter'])){
                                 $non_monetary_dontations_to_chapter=unserialize(base64_decode($financial_report_array['non_monetary_donations_to_chapter']));
-                                //$NonMonDonationRowCount = count($non_monetary_dontations_to_chapter);
                                 $NonMonDonationRowCount = is_array($non_monetary_dontations_to_chapter) ? count($non_monetary_dontations_to_chapter) : 0;
                             }
                             else{
@@ -1098,7 +1107,6 @@
                         <div class="card-body">
                             <div class="col-md-12 text-center">
                               <button type="submit" id="btn-step-6" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
-                               <!--<button type="button" id="6" class="btn btn-info btn-fill" onClick="printDiv(this.id)">Print</button>-->
                             </div>
                         </div>
                     </div>
@@ -1109,7 +1117,7 @@
 
                 <!------Start Step 7 ------>
                 <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='7') echo "active";?>">
-                    <div class="accordion-header js-accordion-header">Section 7 - Other Income & Expenses</div>
+                    <div class="accordion-header js-accordion-header">OTHER INCOME & EXPENSES</div>
                     <div class="accordion-body js-accordion-body cls-print-7">
                     <section>
                     <div class="form-row form-group">
@@ -1128,7 +1136,6 @@
                                 $other_income_and_expenses_array = null;
                                 if(isset($financial_report_array['other_income_and_expenses_array'])){
                                     $other_income_and_expenses_array=unserialize(base64_decode($financial_report_array['other_income_and_expenses_array']));
-                                    //$OtherOfficeExpenseRowCount = count($other_income_and_expenses_array);
                                     $OtherOfficeExpenseRowCount = is_array($other_income_and_expenses_array) ? count($other_income_and_expenses_array) : 0;
                                 }
                                 else{
@@ -1226,7 +1233,6 @@
                         <div class="card-body">
                             <div class="col-md-12 text-center">
                               <button type="submit" id="btn-step-7" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
-                               <!--<button type="button" id="7" class="btn btn-info btn-fill" onClick="printDiv(this.id)">Print</button>-->
                             </div>
                         </div>
 
@@ -1236,660 +1242,8 @@
               </div><!-- end of accordion item -->
                 <!------End Step 7 ------>
 
-                <!------Start Step 8 ------>
-                <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='8') echo "active";?>">
-                    <div class="accordion-header js-accordion-header">Section 8 - Bank Reconciliation</div>
-                    <div class="accordion-body js-accordion-body cls-print-8">
-                    <section>
-                    <div class="form-row form-group">
-                    <div class="col-md-6 float-left">
-                        <div class="form-group">
-                            <label for="AmountReservedFromLastYear">
-                                This Year's Beginning Balance (July 1, <?php echo date('Y')-1;?>):
-                            </label>
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" oninput="TreasuryBalanceChange()" min="0" step="0.01" name="AmountReservedFromLastYear" id="AmountReservedFromLastYear" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['amount_reserved_from_previous_year'] ?>">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 float-left">
-                        <div class="form-group">
-                            <label for="BankBalanceNow">
-                                Last Bank Statement Balance (June 30, <?php echo date('Y');?>):
-                            </label>
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0" step="0.01" name="BankBalanceNow" id="BankBalanceNow" oninput="ChangeBankRec()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['bank_balance_now'] ?>">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 float-left" style="display:none" >
-                        <div class="form-group">
-                            <label for="PettyCash">
-                                Petty Cash on Hand (if any):
-                            </label>
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0" step="0.01" name="PettyCash" id="PettyCash" oninput="ChangeBankRec()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['petty_cash'] ?>">
-                            </div>
-                        </div>
-                   </div>
-                    <div class="col-md-6 float-left">
-                        <div class="form-group">
-                            <label for="TreasuryBalanceNow">
-                                Treasury Balance Now:
-                            </label>
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0" step="0.01" name="TreasuryBalanceNow" id="TreasuryBalanceNow" disabled>
-                            </div>
-                        </div>
 
-                    <!--<div class="col-md-12 float-left">
-                        <div class="form-group">
-                            <label for="LargeBalance">
-                                Explaination of Large Balance
-                            </label>
-                            <div class="input-group">
-                            <textarea class="form-control" rows="6" cols="30" name="LargeBalance" id="LargeBalance"></textarea>
-                            </div>
-                        </div>
-                    </div>-->
-                    </div>
-                    <hr>
-                </div>
-                <div class="form-row form-group">
-                  <p>If your most recent bank statement’s ending balance does not match your “Treasury Balance Now”, you must reconcile your checking account using the worksheet below so that the balances match.</p>
-                  <p>To balance your account, start with your bank statement’s ending balance, then list any deposits and any outstanding payments. When done, the new reconciled balance will match your treasury balance.</p>
-                  <p>View a step by step instruction video <a href="https://momsclub.org/elearning/courses/annual-financial-report-bank-reconciliation/">HERE</a>.</p>
-                  <br>
-                  <label for="bank-rec">
-                  Bank Reconciliation:
-                </label>
-                    <table id="bank-rec" width="100%" class="table table-bordered">
-                        <thead>
-                            <tr>
-                              <td>Date</td>
-                              <td>Check No.</td>
-                              <td>Transaction Desc.</td>
-                              <td>Payment Amount</td>
-                              <td>Desposit Amount</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <?php
-                            $bank_rec_array = null;
-                            if(isset($financial_report_array['bank_reconciliation_array'])){
-                                $bank_rec_array=unserialize(base64_decode($financial_report_array['bank_reconciliation_array']));
-                                //$BankRecRowCount = count($bank_rec_array);
-                                $BankRecRowCount = is_array($bank_rec_array) ? count($bank_rec_array) : 0;
-                            }
-                            else{
-                                $BankRecRowCount = 1;
-                            }
-
-                                for ($row = 0; $row < $BankRecRowCount; $row++){
-                                    echo "<tr>";
-                                    echo "<td>
-                                    <div class=\"form-group\">
-                                    <input type=\"date\" class=\"form-control\" min='2021-07-01' max='2022-06-30' name=\"BankRecDate" . $row . "\" id=\"BankRecDate" . $row . "\"value=\"" . $bank_rec_array[$row]['bank_rec_date'] . "\"  onchange=\"IsValidDate(this)\">
-                                    </div>
-                                    </td>";
-
-                                    echo "<td>
-                                    <div class=\"form-group\">
-                                    <input type=\"text\" class=\"form-control\" name=\"BankRecCheckNo" . $row . "\" id=\"BankRecCheckNo" . $row . "\"value=\"" . $bank_rec_array[$row]['bank_rec_check_no'] . "\">
-                                    </div>
-                                    </td>";
-
-                                    echo "<td>
-                                    <div class=\"form-group\">
-                                    <input type=\"text\" class=\"form-control\" name=\"BankRecDesc" . $row . "\" id=\"BankRecDesc" . $row . "\"value=\"" . $bank_rec_array[$row]['bank_rec_desc'] . "\">
-                                    </div>
-                                    </td>";
-
-                                    echo "<td>
-                                    <div class=\"form-group\">
-                                    <div class=\"input-group\">";
-                                    echo "<span class = \"input-group-addon\">$</span>";
-                                    echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"BankRecPaymentAmount" . $row . "\" id=\"BankRecPaymentAmount" . $row . "\" oninput=\"ChangeBankRec()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $bank_rec_array[$row]['bank_rec_payment_amount'] . "\">";
-                                    echo "</div>
-                                    </div>
-                                    </td>";
-
-                                    echo "<td>
-                                    <div class=\"form-group\">
-                                    <div class=\"input-group\">";
-                                    echo "<span class = \"input-group-addon\">$</span>";
-                                    echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"BankRecDepositAmount" . $row . "\" id=\"BankRecDepositAmount" . $row . "\" oninput=\"ChangeBankRec()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $bank_rec_array[$row]['bank_rec_desposit_amount'] . "\">";
-                                    echo "</div>
-                                    </div>
-                                    </td>";
-                                    echo "</tr>";
-                                }
-                                ?>
-                        </tbody>
-                    </table>
-                    <div class="col-md-12 float-left">
-                        <button type="button" class="btn btn-large btn-success btn-add-remove
-" onclick="AddBankRecRow()" <?php if($submitted) echo "disabled"; ?>>Add</button>
-                        <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteBankRecRow()" <?php if($submitted) echo "disabled"; ?>>Remove</button>
-                    </div>
-                    <div class="col-md-6 float-left">
-                        <div class="form-group">
-                            <label for="ReconciledBankBalance">
-                                Reconciled Bank Balance:
-                            </label>
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" class="form-control" min="0" step="0.01" name="ReconciledBankBalance" id="ReconciledBankBalance" disabled>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
-                    <div class="col-md-12 float-right">
-                        <div class="form-group">
-                            <label for="ReconciledBankBalance" style="visibility:hidden">
-                                Message
-                            </label>
-                            <div class="input-group">
-                            <textarea class="form-control" rows="6" cols="30" name="ReconciledBankBalanceWarning" id="ReconciledBankBalanceWarning" disabled></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <input type="hidden" name="BankRecRowCount" id="BankRecRowCount" value="<?php echo $BankRecRowCount; ?>" />
-                    <hr>
-                </div>
-                 <div class="form-row form-group">
-                        <div class="card-body">
-                            <div class="col-md-12 text-center">
-                              <button type="submit" id="btn-step-8" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
-                            </div>
-                        </div>
-                </div>
-            </section>
-            </div><!-- end of accordion body -->
-            </div><!-- end of accordion item -->
-            <!------End Step 8 ------>
-
-            <!------Start Step 9 ------>
-            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='9') echo "active";?>">
-            <div class="accordion-header js-accordion-header">Section 9 - Tax Exempt & Chapter Questions</div>
-                <div class="accordion-body js-accordion-body cls-print-9">
-                <section>
-                <div id="form-step-8" role="form" data-toggle="validator" class="form-row form-group">
-                    <p>During the last fiscal year (July 1, <?php echo date('Y')-1 .' - June 30, '.date('Y');?>)</p>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                                <label style="display: block;">1. Did anyone in your chapter receive any compensation or pay for their work with your chapter?<span class="field-required">*</span></label>
-                            </div>
-                            <div class="col-md-3">
-                                <select id="ReceiveCompensation" name="ReceiveCompensation" class="form-control select2" style="width: 100%;" required onchange="ToggleReceiveCompensationExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->receive_compensation) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{ $financial_report_array->receive_compensation === 0 ? 'selected' : '' }}>No</option>
-                                    <option value="1" {{ $financial_report_array->receive_compensation == 1 ? 'selected' : '' }}>Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12" id="divReceiveCompensationExplanation">
-                        <div class="col-md-12">
-                            <label for="ReceiveCompensationExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
-                                <textarea class="form-control" rows="2" name="ReceiveCompensationExplanation" id="ReceiveCompensationExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['receive_compensation_explanation'];}?></textarea>
-                            <div class="help-block with-errors"></div>
-                        </div>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                                <label style="display: block;">2. Did any officer, member or family of a member benefit financially in any way from the member’s position with your chapter?<span class="field-required">*</span></label>
-                            </div>
-                            <div class="col-md-3">
-                                <select id="FinancialBenefit" name="FinancialBenefit" class="form-control select2" style="width: 100%" required onchange="ToggleFinancialBenefitExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->financial_benefit) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->financial_benefit === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->financial_benefit == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12" id="divFinancialBenefitExplanation">
-                        <div class="col-md-12">
-                            <label for="FinancialBenefitExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
-                            <textarea class="form-control" rows="2" name="FinancialBenefitExplanation" id="FinancialBenefitExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['financial_benefit_explanation'];} ?></textarea>
-                        </div>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                                <label style="display: block;">3. Did your chapter attempt to influence any national, state/provincial, or local legislation, or did your chapter support any other organization that did?<span class="field-required">*</span></label>
-                            </div>
-                            <div class="col-md-3">
-                                <select id="InfluencePolitical" name="InfluencePolitical" class="form-control select2" style="width: 100%;" required onchange="ToggleInfluencePoliticalExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->influence_political) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->influence_political === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->influence_political == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12" id="divInfluencePoliticalExplanation">
-                        <div class="col-md-12">
-                            <label for="InfluencePoliticalExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
-                            <textarea class="form-control" rows="2" name="InfluencePoliticalExplanation" id="InfluencePoliticalExplanation" ><?php if (!is_null($financial_report_array)) {echo $financial_report_array['influence_political_explanation'];}?></textarea>
-                        </div>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                                <label style="display: block;">4. Did your chapter vote on all activities and expenditures during the fiscal year?<span class="field-required">*</span></label>
-                            </div>
-                            <div class="col-md-3">
-                                <select id="VoteAllActivities" name="VoteAllActivities" class="form-control select2" style="width: 100%;" required onchange="ToggleVoteAllActivitiesExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->vote_all_activities) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->vote_all_activities === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->vote_all_activities == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12" id="divVoteAllActivitiesExplanation">
-                        <div class="col-md-12">
-                            <label for="VoteAllActivitiesExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-                            <textarea class="form-control" rows="2" name="VoteAllActivitiesExplanation" id="VoteAllActivitiesExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['vote_all_activities_explanation'];}?></textarea>
-                        </div>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                                <label style="display: block;">5. Did you purchase pins from International? If No, why not?<span class="field-required">*</span></label>
-                            </div>
-                            <div class="col-md-3">
-                                <select id="BoughtPins" name="BoughtPins" class="form-control select2" style="width: 100%;" required onchange="ToggleBoughtPinsExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->purchase_pins) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->purchase_pins === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->purchase_pins == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="col-sm-12" id="divBoughtPinsExplanation">
-                            <label for="BoughtPinsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-                            <textarea class="form-control" rows="2" name="BoughtPinsExplanation" id="BoughtPinsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['purchase_pins_explanation'];}?></textarea>
-                        </div>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                                <label style="display: block;">6. Did you purchase any merchandise from International other than pins? If No, why not?<span class="field-required">*</span></label>
-                            </div>
-                            <div class="col-md-3">
-                                <select id="BoughtMerch" name="BoughtMerch" class="form-control select2" style="width: 100%;" required onchange="ToggleBoughtMerchExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->bought_merch) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->bought_merch === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->bought_merch == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="col-sm-12" id="divBoughtMerchExplanation">
-                            <label for="BoughtMerchExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-                            <textarea class="form-control" rows="2" name="BoughtMerchExplanation" id="BoughtMerchExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['bought_merch_explanation'];}?></textarea>
-                        </div>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                                <label style="display: block;">7. Did you offer or inform your members about MOMS Club merchandise?<span class="field-required">*</span></label>
-                            </div>
-                            <div class="col-md-3">
-                                <select id="OfferedMerch" name="OfferedMerch" class="form-control select2" style="width: 100%;" required onchange="ToggleOfferedMerchExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->offered_merch) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->offered_merch === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->offered_merch == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="col-sm-12" id="divOfferedMerchExplanation">
-                            <label for="OfferedMerchExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-                            <textarea class="form-control" rows="2" name="OfferedMerchExplanation" id="OfferedMerchExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['offered_merch_explanation'];}?></textarea>
-                        </div>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                                <label style="display: block;">8. Did you make the Bylaws and/or manual available for any chapter members that requested them?<span class="field-required">*</span></label>
-                            </div>
-                            <div class="col-md-3">
-                                <select id="ByLawsAvailable" name="ByLawsAvailable" class="form-control select2" style="width: 100%;" required onchange="ToggleByLawsAvailableExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->bylaws_available) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->bylaws_available === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->bylaws_available == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-">
-                        <div class="col-sm-12" id="divByLawsAvailableExplanation">
-                            <label for="ByLawsAvailableExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-                            <textarea class="form-control" rows="2" name="ByLawsAvailableExplanation" id="ByLawsAvailableExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['bylaws_available_explanation'];}?></textarea>
-                        </div>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <label style="display: block;">9. Did you have a children’s room with babysitters?<span class="field-required">*</span></label>
-                            <select id="ChildrensRoom" name="ChildrensRoom" class="form-control select2" style="width: 300px;" required>
-                                <option value="" {{ is_null($financial_report_array->childrens_room_sitters) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->childrens_room_sitters === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->childrens_room_sitters == 1 ? 'selected' : ''}}>Yes, with volunteer members</option>
-                                <option value="2" {{$financial_report_array->childrens_room_sitters == 2 ? 'selected' : ''}}>Yes, with paid sitters</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                        <label for="ChildrensRoomExplanation">Briefly explain, if necessary:</label>
-                        <textarea class="form-control" rows="2" name="ChildrensRoomExplanation" id="ChildrensRoomExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['childrens_room_sitters_explanation'];}?></textarea>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <label style="display: block;">10. Did you have playgroups? If so, how were they arranged.<span class="field-required">*</span></label>
-                            <select id="Playgroups" name="Playgroups" class="form-control select2" style="width: 250px;" required>
-                                <option value="" {{ is_null($financial_report_array->playgroups) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->playgroups === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->playgroups == 1 ? 'selected' : ''}}>Yes, arranged by age</option>
-                                <option value="2" {{$financial_report_array->playgroups == 2 ? 'selected' : ''}}>Yes, multi-aged groups</option>
-                            </select>
-                        </div>
-                    </div>
-                        <div class="col-sm-12">
-                          <div class="form-group">
-                                <label for="PlaygroupsExplanation">Briefly explain, if necessary:</label>
-                                <textarea class="form-control" rows="2" name="PlaygroupsExplanation" id="PlaygroupsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['had_playgroups_explanation'];}?></textarea>
-                            </div>
-                        </div>
-                        <div class="col-md-12"><br></div>
-                        <div class="col-md-12 float-left">
-                            <div class="form-inline">
-                                <label style="display: block;">11. Did you have any child focused outings or activities?<span class="field-required">*</span></label>
-                                <select id="ChildOutings" name="ChildOutings" class="form-control select2" style="width: 150px;" required onchange="ToggleChildOutingsExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->child_outings) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->child_outings === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->child_outings == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                    <div class="col-sm-12" id="divChildOutingsExplanation">
-                        <label for="ChildOutingsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-                        <textarea class="form-control" rows="2" name="ChildOutingsExplanation" id="ChildOutingsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['child_outings_explanation'];}?></textarea>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <label style="display: block;">12. Did you have any mother focused outings or activities?<span class="field-required">*</span></label>
-                            <select id="MotherOutings" name="MotherOutings" class="form-control select2" style="width: 150px;" required onchange="ToggleMotherOutingsExplanation()">
-                                <option value="" {{ is_null($financial_report_array->mother_outings) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->mother_outings === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->mother_outings == 1 ? 'selected' : ''}}>Yes</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-12" id="divMotherOutingsExplanation">
-                        <label for="MotherOutingsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-                        <textarea class="form-control" rows="2" name="MotherOutingsExplanation" id="MotherOutingsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['mother_outings_explanation'];}?></textarea>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <label style="display: block;">13. Did you have speakers at any meetings?<span class="field-required">*</span></label>
-                            <select id="MeetingSpeakers" name="MeetingSpeakers" class="form-control select2" style="width: 150px;" required onchange="ToggleMeetingSpeakersExplanation()">
-                                <option value="" {{ is_null($financial_report_array->meeting_speakers) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->meeting_speakers === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->meeting_speakers == 1 ? 'selected' : ''}}>Yes</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-12" id="divMeetingSpeakersExplanation">
-                        <label for="MeetingSpeakersExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-                        <textarea class="form-control" rows="2" name="MeetingSpeakersExplanation" id="MeetingSpeakersExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['meeting_speakers_explanation'];}?></textarea>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-group">
-                            <label style="display: block;">14. If you had speakers, check any of the topics that were covered:<span class="field-required">*</span></label>
-                            <select id="Speakers" name="Speakers[]" class="form-control select2" style="width: 200px; height: 200px;" multiple="multiple" required>
-                                <option value="" {{ is_null($financial_report_array->meeting_speakers_array) ? 'selected' : '' }}>N/A</option>
-                                @php
-                                    $selectedValues = is_null($financial_report_array->meeting_speakers_array)
-                                        ? []
-                                        : json_decode($financial_report_array->meeting_speakers_array);
-                                @endphp
-                                <option value="0" {{ in_array('0', $selectedValues) ? 'selected' : '' }}>Child Rearing</option>
-                                <option value="1" {{ in_array('1', $selectedValues) ? 'selected' : '' }}>Schools/Education</option>
-                                <option value="2" {{ in_array('2', $selectedValues) ? 'selected' : '' }}>Home Management</option>
-                                <option value="3" {{ in_array('3', $selectedValues) ? 'selected' : '' }}>Politics</option>
-                                <option value="4" {{ in_array('4', $selectedValues) ? 'selected' : '' }}>Other Non-Profit</option>
-                                <option value="5" {{ in_array('5', $selectedValues) ? 'selected' : '' }}>Other</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <label style="display: block;">15. Did you have any discussion topics at your meetings? If yes, how often?<span class="field-required">*</span></label>
-                            <select id="SpeakerFrequency" name="SpeakerFrequency" class="form-control select2" style="width: 150px;" required>
-                                <option value="" {{ is_null($financial_report_array->discussion_topic_frequency) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->discussion_topic_frequency === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->discussion_topic_frequency == 1 ? 'selected' : ''}}>1-3 Times</option>
-                                <option value="2" {{$financial_report_array->discussion_topic_frequency == 2 ? 'selected' : ''}}>4-6 Times</option>
-                                <option value="3" {{$financial_report_array->discussion_topic_frequency == 3 ? 'selected' : ''}}>7-9 Times</option>
-                                <option value="4" {{$financial_report_array->discussion_topic_frequency == 4 ? 'selected' : ''}}>10+ Times</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <label style="display: block;">16. Did your chapter have scheduled park days? If yes, how often?<span class="field-required">*</span></label>
-                            <select id="ParkDays" name="ParkDays" class="form-control select2" style="width: 150px;" required>
-                                <option value="" {{ is_null($financial_report_array->park_day_frequency) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->park_day_frequency === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->park_day_frequency == 1 ? 'selected' : ''}}>1-3 Times</option>
-                                <option value="2" {{$financial_report_array->park_day_frequency == 2 ? 'selected' : ''}}>4-6 Times</option>
-                                <option value="3" {{$financial_report_array->park_day_frequency == 3 ? 'selected' : ''}}>7-9 Times</option>
-                                <option value="4" {{$financial_report_array->park_day_frequency == 4 ? 'selected' : ''}}>10+ Times</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-group">
-                            <label style="display: block;">17. Did your chapter have any of the following activity groups?<span class="field-required">*</span></label>
-                            <select id="Activity" name="Activity[]" class="form-control select2" style="width: 200px; height: 200px;" multiple="multiple" required>
-                                <option value="" {{ is_null($financial_report_array->activity_array) ? 'selected' : '' }}>N/A</option>
-                                @php
-                                    $selectedValues = is_null($financial_report_array->activity_array)
-                                        ? []
-                                        : json_decode($financial_report_array->activity_array);
-                                @endphp
-                                <option value="0" {{ in_array('0', $selectedValues) ? 'selected' : '' }}>Cooking</option>
-                                <option value="1" {{ in_array('1', $selectedValues) ? 'selected' : '' }}>Cost Cutting Tips</option>
-                                <option value="2" {{ in_array('2', $selectedValues) ? 'selected' : '' }}>Mommy Playgroup</option>
-                                <option value="3" {{ in_array('3', $selectedValues) ? 'selected' : '' }}>Babysitting Co-op</option>
-                                <option value="4" {{ in_array('4', $selectedValues) ? 'selected' : '' }}>MOMS Night Out</option>
-                                <option value="5" {{ in_array('5', $selectedValues) ? 'selected' : '' }}>Other</option>
-                            </select>
-                        </div>
-                    </div>
-                     <div class="col-sm-12" id="divActivityOtherExplanation">
-                        <label for="ActivityOtherExplanation">If other, briefly explain:</label>
-                        <textarea class="form-control" rows="2" name="ActivityOtherExplanation" id="ActivityOtherExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['activity_other_explanation'];}?></textarea>
-                     </div>
-                     <div class="col-md-12"><br></div>
-                     <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <label style="display: block;">18. Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity? If yes, please explain who received the contributions and why you chose them:<span class="field-required">*</span></label>
-                            <select id="ContributionsNotRegNP" name="ContributionsNotRegNP" class="form-control select2" style="width: 150px;" required onchange="ToggleContributionsNotRegNPExplanation()">
-                                <option value="" {{ is_null($financial_report_array->contributions_not_registered_charity) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->contributions_not_registered_charity === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->contributions_not_registered_charity == 1 ? 'selected' : ''}}>Yes</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-12" id="divContributionsNotRegNPExplanation">
-                        <label for="ContributionsNotRegNPExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
-                        <textarea class="form-control" rows="2" name="ContributionsNotRegNPExplanation" id="ContributionsNotRegNPExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['contributions_not_registered_charity_explanation'];}?></textarea>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <label style="display: block;">19. Did your chapter perform at least one service project to benefit mothers or children?<span class="field-required">*</span></label>
-                            <select id="PerformServiceProject" name="PerformServiceProject" class="form-control select2" style="width: 150px;" required onchange="TogglePerformServiceProjectExplanation()">
-                                <option value="" {{ is_null($financial_report_array->at_least_one_service_project) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->at_least_one_service_project === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->at_least_one_service_project == 1 ? 'selected' : ''}}>Yes</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-12" id="divPerformServiceProjectExplanation">
-                        <label for="PerformServiceProjectExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-                        <textarea class="form-control" rows="2" name="PerformServiceProjectExplanation" id="PerformServiceProjectExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['at_least_one_service_project_explanation'];}?></textarea>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <label style="display: block;">20. Did your chapter sister another chapter?<span class="field-required">*</span></label>
-                            <select id="SisterChapter" name="SisterChapter" class="form-control select2" style="width: 150px;" required>
-                                <option value="" {{ is_null($financial_report_array->sister_chapter) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->sister_chapter === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->sister_chapter == 1 ? 'selected' : ''}}>Yes</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <label style="display: block;">21. Did your chapter attend an International Event (in person or virtual)?<span class="field-required">*</span></label>
-                            <select id="InternationalEvent" name="InternationalEvent" class="form-control select2" style="width: 150px;" required>
-                                <option value="" {{ is_null($financial_report_array->international_event) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->international_event === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->international_event == 1 ? 'selected' : ''}}>Yes</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <label style="display: block;">22. Did your chapter file their IRS 990N for <?php echo date('Y')-1 .'-'.date('Y');?> (CANNOT BE DONE BEFORE JULY 1, <?php echo date('Y');?>)?<span class="field-required">*</span></label>
-                            <select id="FileIRS" name="FileIRS" class="form-control select2" style="width: 150px;" required onchange="ToggleFileIRSExplanation()">
-                                <option value="" {{ is_null($financial_report_array->file_irs) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->file_irs === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->file_irs == 1 ? 'selected' : ''}}>Yes</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-12" id="divFileIRSExplanation">
-                        <label for="FileIRSExplanation">If no, briefly explain:</label>
-                        <textarea class="form-control" rows="2" name="FileIRSExplanation" id="FileIRSExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['file_irs_explanation'];}?></textarea>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                    <div class="col-md-12" id="990NBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
-                        <label class="control-label" for="990NFiling">Attach a copy of your chapter's 990N filing confirmation here:</label>
-						    <input name="990NFiling" id="990NFiling" type="file" accept=".pdf, .jpg, .jpeg" / class="demo1 form-control" />
-					    </div>
-							<input type="hidden" name="990NPath" id="990NPath" value="<?php echo $financial_report_array['file_irs_path']; ?>">
-							<div class="col-md-12" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
-								<div class="col-md-12" >
-								    <label class="control-label" for="990NLink">990N:</label>
-									<a href="<?php echo $financial_report_array['file_irs_path']; ?>" target="_blank">990N Filing</a>
-								</div>
-								<div class="col-md-6">
-									<button type="button" class="btn btn-info btn-fill" onclick="Replace990N()" <?php if($submitted =='1') echo "disabled"; ?>>Replace 990N</button>
-								</div>
-                            </div>
-                        <input type="hidden" name="990NPath" id="990NPath" value="<?php echo $financial_report_array['file_irs_path']; ?>">
-                        <div class="col-md-12"><br></div>
-                        <div class="col-md-12 float-left">
-                            <div class="form-inline">
-                                <label style="display: block;">23. Is a copy of your chapter’s most recent bank statement included with the copy of this report that you are submitting to International?<span class="field-required">*</span></label>
-                                <select id="BankStatementIncluded" name="BankStatementIncluded" class="form-control select2" style="width: 150px;" required onchange="ToggleBankStatementIncludedExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->bank_statement_included) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->bank_statement_included === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->bank_statement_included == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-sm-12" id="divBankStatementIncludedExplanation">
-                            <label for="BankStatementIncludedExplanation">If no, briefly explain:</label>
-                            <textarea class="form-control" rows="2" name="BankStatementIncludedExplanation" id="BankStatementIncludedExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['bank_statement_included_explanation'];}?></textarea>
-                        </div>
-                        <div class="col-md-12" id="Statement1Block" <?php if (!empty($financial_report_array)) {if ($financial_report_array['bank_statement_included_path']) echo "style=\"display: none;\"";} ?>>
-                            <br>
-                            <label class="control-label" for="StatementFile">Attach a copy of your primary bank statement here:</label>
-							<input name="StatementFile" id="StatementFile" type="file" accept=".pdf, .jpg, .jpeg" / class="demo1 form-control" />
-						</div>
-							<input type="hidden" name="StatementPath" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
-								<div class="col-md-12" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['bank_statement_included_path']) echo "style=\"display: none;\"";} ?>>
-								    <br>
-									<div class="col-md-12" >
-										<label class="control-label" for="StatementLink">Additional Bank Statement:</label>
-										<a href="<?php echo $financial_report_array['bank_statement_included_path']; ?>" target="_blank">Bank Statement 1</a>
-									</div>
-									<div class="col-md-6">
-										<button type="button" class="btn btn-info btn-fill" onclick="ReplaceStatement1()" <?php if($submitted =='1') echo "disabled"; ?>>Replace Statement 1</button>
-									</div>
-                                </div>
-                                <input type="hidden" name="StatementPath" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
-                            <div class="col-md-12" id="Statement2Block" <?php if (!empty($financial_report_array)) {if ($financial_report_array['bank_statement_2_included_path']) echo "style=\"display: none;\"";} ?>>
-                                <br>
-                        	    <label class="control-label" for="Statement2File">If you have multiple Bank Accounts, attach your secondary statement here:</label>
-									<input name="Statement2File" id="Statement2File" type="file" accept=".pdf, .jpg, .jpeg" / class="demo1 form-control" />
-							</div>
-							<input type="hidden" name="Statement2Path" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
-							<div class="col-md-12" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['bank_statement_2_included_path']) echo "style=\"display: none;\"";} ?>>
-								<br>
-							<div class="col-md-12" >
-								<label class="control-label" for="Statement2Link">Additional Bank Statement:</label>
-								<a href="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" target="_blank">Bank Statement 2</a>
-							</div>
-							<div class="col-md-6">
-								<button type="button" class="btn btn-info btn-fill" onclick="ReplaceStatement2()" <?php if($submitted =='1') echo "disabled"; ?>>Replace Statement 2</button>
-                            </div>
-                        </div>
-                            <input type="hidden" name="Statement2Path" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
-                        <div class="col-md-12"><br></div>
-                        <div class="col-sm-12" >
-                            <label style="display: block;">24. If your group does not have any bank accounts, where is the chapter money kept?:</label>
-                            <textarea class="form-control" rows="2" name="WheresTheMoney" id="WheresTheMoney"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['wheres_the_money'];}?></textarea>
-                        </div>
-                    </div>
-                    <div class="form-row form-group">
-                        <div class="card-body">
-                            <div class="col-md-12 text-center">
-                              <button type="button" class="btn btn-info btn-fill" id="btn-step-9" <?php if($submitted =='1') echo "disabled"; ?>>Save Section</button>
-                            </div>
-                        </div>
-                    </div>
-              </section>
-          </div><!-- end of accordion body -->
-          </div><!-- end of accordion item -->
-            <!------End Step 9 ------>
-
-            <!------Start Step 10 ------>
+                  <!------Start Step 10 ------>
             <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='10') echo "active";?>">
                 <div class="accordion-header js-accordion-header">Section 10 - Financial Summary</div>
                 <div class="accordion-body js-accordion-body cls-print-10">
@@ -2269,8 +1623,746 @@
             </div><!-- end of accordion body -->
             </div><!-- end of accordion item -->
 
+                <!------Start Step 8 ------>
+                <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='8') echo "active";?>">
+                    <div class="accordion-header js-accordion-header">BANK RECONCILIATION</div>
+                    <div class="accordion-body js-accordion-body cls-print-8">
+                    <section>
+
+                        <div class="col-md-12 mar_bot_20" id="StatementBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['bank_statement_included_path']) echo "style=\"display: none;\"";} ?>>
+                            <div class="col-md-12">
+                                <strong style="color:red">Please Note</strong><br>
+                                    This will refresh the screen - be sure to save all work before clicking button to Upload Bank Statment.<br>
+                                <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-statement1" <?php if($submitted =='1') echo "disabled"; ?>>Upload Bank Statement</button>
+                            </div>
+                        </div>
+                        <input type="hidden" name="StatementFile" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
+                        <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['bank_statement_included_path']) echo "style=\"display: none;\"";} ?>>
+                            <div class="col-md-12" >
+                                <div>
+                                   <a href="<?php echo $financial_report_array['bank_statement_included_path']; ?>" target="_blank">View Bank Statement</a><br>
+                                    <strong style="color:red">Please Note</strong><br>
+                                    This will refresh the screen - be sure to save all work before clicking button to Replace Bank Statement.<br>
+                                   <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-statement1" <?php if($submitted =='1') echo "disabled"; ?>>Replace Bank Statement</button>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br>
+                        <div class="col-md-12 mar_bot_20" id="Statement2Block" <?php if (!empty($financial_report_array)) {if ($financial_report_array['bank_statement_2_included_path']) echo "style=\"display: none;\"";} ?>>
+                            <div class="col-md-12">
+                                <strong style="color:red">Please Note</strong><br>
+                                    This will refresh the screen - be sure to save all work before clicking button to Upload Additional Bank Statment.<br>
+                                <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-statement2" <?php if($submitted =='1') echo "disabled"; ?>>Upload Additional Bank Statement</button>
+                            </div>
+                        </div>
+                        <input type="hidden" name="Statement2File" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
+                        <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['bank_statement_2_included_path']) echo "style=\"display: none;\"";} ?>>
+                            <div class="col-md-12" >
+                                <div>
+                                   <a href="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" target="_blank">View Additional Bank Statement</a><br>
+                                    <strong style="color:red">Please Note</strong><br>
+                                    This will refresh the screen - be sure to save all work before clicking button to Replace Additional Bank Statement.<br>
+                                   <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-statement2" <?php if($submitted =='1') echo "disabled"; ?>>Replace Additional Bank Statement</button>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br>
+                        <div class="form-row form-group">
+                    <div class="col-md-6 float-left">
+                        <div class="form-group">
+                            <label for="AmountReservedFromLastYear">
+                                This Year's Beginning Balance (July 1, <?php echo date('Y')-1;?>):
+                            </label>
+                            <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" oninput="TreasuryBalanceChange()" min="0" step="0.01" name="AmountReservedFromLastYear" id="AmountReservedFromLastYear" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['amount_reserved_from_previous_year'] ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 float-left">
+                        <div class="form-group">
+                            <label for="BankBalanceNow">
+                                Last Bank Statement Balance (June 30, <?php echo date('Y');?>):
+                            </label>
+                            <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0" step="0.01" name="BankBalanceNow" id="BankBalanceNow" oninput="ChangeBankRec()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['bank_balance_now'] ?>">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 float-left" style="display:none" >
+                        <div class="form-group">
+                            <label for="PettyCash">
+                                Petty Cash on Hand (if any):
+                            </label>
+                            <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0" step="0.01" name="PettyCash" id="PettyCash" oninput="ChangeBankRec()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['petty_cash'] ?>">
+                            </div>
+                        </div>
+                   </div>
+                    <div class="col-md-6 float-left">
+                        <div class="form-group">
+                            <label for="TreasuryBalanceNow">
+                                Treasury Balance Now:
+                            </label>
+                            <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="number" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0" step="0.01" name="TreasuryBalanceNow" id="TreasuryBalanceNow" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+                <div class="form-row form-group">
+                  <p>If your most recent bank statement’s ending balance does not match your “Treasury Balance Now”, you must reconcile your checking account using the worksheet below so that the balances match.</p>
+                  <p>To balance your account, start with your bank statement’s ending balance, then list any deposits and any outstanding payments. When done, the new reconciled balance will match your treasury balance.</p>
+                  <p>View a step by step instruction video <a href="https://momsclub.org/elearning/courses/annual-financial-report-bank-reconciliation/">HERE</a>.</p>
+                  <br>
+                  <label for="bank-rec">
+                  Bank Reconciliation:
+                </label>
+                    <table id="bank-rec" width="100%" class="table table-bordered">
+                        <thead>
+                            <tr>
+                              <td>Date</td>
+                              <td>Check No.</td>
+                              <td>Transaction Desc.</td>
+                              <td>Payment Amount</td>
+                              <td>Desposit Amount</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                            $bank_rec_array = null;
+                            if(isset($financial_report_array['bank_reconciliation_array'])){
+                                $bank_rec_array=unserialize(base64_decode($financial_report_array['bank_reconciliation_array']));
+                                $BankRecRowCount = is_array($bank_rec_array) ? count($bank_rec_array) : 0;
+                            }
+                            else{
+                                $BankRecRowCount = 1;
+                            }
+
+                                for ($row = 0; $row < $BankRecRowCount; $row++){
+                                    echo "<tr>";
+                                    echo "<td>
+                                    <div class=\"form-group\">
+                                    <input type=\"date\" class=\"form-control\" min='2021-07-01' max='2022-06-30' name=\"BankRecDate" . $row . "\" id=\"BankRecDate" . $row . "\"value=\"" . $bank_rec_array[$row]['bank_rec_date'] . "\"  onchange=\"IsValidDate(this)\">
+                                    </div>
+                                    </td>";
+
+                                    echo "<td>
+                                    <div class=\"form-group\">
+                                    <input type=\"text\" class=\"form-control\" name=\"BankRecCheckNo" . $row . "\" id=\"BankRecCheckNo" . $row . "\"value=\"" . $bank_rec_array[$row]['bank_rec_check_no'] . "\">
+                                    </div>
+                                    </td>";
+
+                                    echo "<td>
+                                    <div class=\"form-group\">
+                                    <input type=\"text\" class=\"form-control\" name=\"BankRecDesc" . $row . "\" id=\"BankRecDesc" . $row . "\"value=\"" . $bank_rec_array[$row]['bank_rec_desc'] . "\">
+                                    </div>
+                                    </td>";
+
+                                    echo "<td>
+                                    <div class=\"form-group\">
+                                    <div class=\"input-group\">";
+                                    echo "<span class = \"input-group-addon\">$</span>";
+                                    echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"BankRecPaymentAmount" . $row . "\" id=\"BankRecPaymentAmount" . $row . "\" oninput=\"ChangeBankRec()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $bank_rec_array[$row]['bank_rec_payment_amount'] . "\">";
+                                    echo "</div>
+                                    </div>
+                                    </td>";
+
+                                    echo "<td>
+                                    <div class=\"form-group\">
+                                    <div class=\"input-group\">";
+                                    echo "<span class = \"input-group-addon\">$</span>";
+                                    echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"BankRecDepositAmount" . $row . "\" id=\"BankRecDepositAmount" . $row . "\" oninput=\"ChangeBankRec()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $bank_rec_array[$row]['bank_rec_desposit_amount'] . "\">";
+                                    echo "</div>
+                                    </div>
+                                    </td>";
+                                    echo "</tr>";
+                                }
+                                ?>
+                        </tbody>
+                    </table>
+                    <div class="col-md-12 float-left">
+                        <button type="button" class="btn btn-large btn-success btn-add-remove
+" onclick="AddBankRecRow()" <?php if($submitted) echo "disabled"; ?>>Add</button>
+                        <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteBankRecRow()" <?php if($submitted) echo "disabled"; ?>>Remove</button>
+                    </div>
+                    <div class="col-md-6 float-left">
+                        <div class="form-group">
+                            <label for="ReconciledBankBalance">
+                                Reconciled Bank Balance:
+                            </label>
+                            <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="number" class="form-control" min="0" step="0.01" name="ReconciledBankBalance" id="ReconciledBankBalance" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="col-md-12 float-right">
+                        <div class="form-group">
+                            <label for="ReconciledBankBalance" style="visibility:hidden">
+                                Message
+                            </label>
+                            <div class="input-group">
+                            <textarea class="form-control" rows="6" cols="30" name="ReconciledBankBalanceWarning" id="ReconciledBankBalanceWarning" disabled></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="BankRecRowCount" id="BankRecRowCount" value="<?php echo $BankRecRowCount; ?>" />
+                    <hr>
+                </div>
+                 <div class="form-row form-group">
+                        <div class="card-body">
+                            <div class="col-md-12 text-center">
+                              <button type="submit" id="btn-step-8" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                            </div>
+                        </div>
+                </div>
+            </section>
+            </div><!-- end of accordion body -->
+            </div><!-- end of accordion item -->
+            <!------End Step 8 ------>
+
+            <!------Start Step 9 ------>
+            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='9') echo "active";?>">
+            <div class="accordion-header js-accordion-header">CHAPTER QUESTIONS</div>
+                <div class="accordion-body js-accordion-body cls-print-9">
+                <section>
+                <div id="form-step-8" role="form" data-toggle="validator" class="form-row form-group">
+                    <p>During the last fiscal year (July 1, <?php echo date('Y')-1 .' - June 30, '.date('Y');?>)</p>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                                <label style="display: block;"><strong>1.</strong> Did anyone in your chapter receive any compensation or pay for their work with your chapter?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="ReceiveCompensation" name="ReceiveCompensation" class="form-control select2" style="width: 100%;" required onchange="ToggleReceiveCompensationExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->receive_compensation) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{ $financial_report_array->receive_compensation === 0 ? 'selected' : '' }}>No</option>
+                                    <option value="1" {{ $financial_report_array->receive_compensation == 1 ? 'selected' : '' }}>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" id="divReceiveCompensationExplanation">
+                        <div class="col-md-12">
+                            <label for="ReceiveCompensationExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
+                                <textarea class="form-control" rows="2" name="ReceiveCompensationExplanation" id="ReceiveCompensationExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['receive_compensation_explanation'];}?></textarea>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                                <label style="display: block;"><strong>2.</strong> Did any officer, member or family of a member benefit financially in any way from the member’s position with your chapter?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="FinancialBenefit" name="FinancialBenefit" class="form-control select2" style="width: 100%" required onchange="ToggleFinancialBenefitExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->financial_benefit) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{$financial_report_array->financial_benefit === 0 ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{$financial_report_array->financial_benefit == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" id="divFinancialBenefitExplanation">
+                        <div class="col-md-12">
+                            <label for="FinancialBenefitExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="FinancialBenefitExplanation" id="FinancialBenefitExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['financial_benefit_explanation'];} ?></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                                <label style="display: block;"><strong>3.</strong> Did your chapter attempt to influence any national, state/provincial, or local legislation, or did your chapter support any other organization that did?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="InfluencePolitical" name="InfluencePolitical" class="form-control select2" style="width: 100%;" required onchange="ToggleInfluencePoliticalExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->influence_political) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{$financial_report_array->influence_political === 0 ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{$financial_report_array->influence_political == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12" id="divInfluencePoliticalExplanation">
+                        <div class="col-md-12">
+                            <label for="InfluencePoliticalExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="InfluencePoliticalExplanation" id="InfluencePoliticalExplanation" ><?php if (!is_null($financial_report_array)) {echo $financial_report_array['influence_political_explanation'];}?></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                                <label style="display: block;"><strong>4.</strong> Did your chapter vote on all activities and expenditures during the fiscal year?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="VoteAllActivities" name="VoteAllActivities" class="form-control select2" style="width: 100%;" required onchange="ToggleVoteAllActivitiesExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->vote_all_activities) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{$financial_report_array->vote_all_activities === 0 ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{$financial_report_array->vote_all_activities == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12" id="divVoteAllActivitiesExplanation">
+                        <div class="col-md-12">
+                            <label for="VoteAllActivitiesExplanation">If no, briefly explain:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="VoteAllActivitiesExplanation" id="VoteAllActivitiesExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['vote_all_activities_explanation'];}?></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                                <label style="display: block;"><strong>5.</strong> Did you purchase pins from International? If No, why not?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="BoughtPins" name="BoughtPins" class="form-control select2" style="width: 100%;" required onchange="ToggleBoughtPinsExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->purchase_pins) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{$financial_report_array->purchase_pins === 0 ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{$financial_report_array->purchase_pins == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-sm-12" id="divBoughtPinsExplanation">
+                            <label for="BoughtPinsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="BoughtPinsExplanation" id="BoughtPinsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['purchase_pins_explanation'];}?></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                                <label style="display: block;"><strong>6.</strong> Did you purchase any merchandise from International other than pins? If No, why not?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="BoughtMerch" name="BoughtMerch" class="form-control select2" style="width: 100%;" required onchange="ToggleBoughtMerchExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->bought_merch) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{$financial_report_array->bought_merch === 0 ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{$financial_report_array->bought_merch == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-sm-12" id="divBoughtMerchExplanation">
+                            <label for="BoughtMerchExplanation">If no, briefly explain:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="BoughtMerchExplanation" id="BoughtMerchExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['bought_merch_explanation'];}?></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                                <label style="display: block;"><strong>7.</strong> Did you offer or inform your members about MOMS Club merchandise?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="OfferedMerch" name="OfferedMerch" class="form-control select2" style="width: 100%;" required onchange="ToggleOfferedMerchExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->offered_merch) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{$financial_report_array->offered_merch === 0 ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{$financial_report_array->offered_merch == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-sm-12" id="divOfferedMerchExplanation">
+                            <label for="OfferedMerchExplanation">If no, briefly explain:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="OfferedMerchExplanation" id="OfferedMerchExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['offered_merch_explanation'];}?></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                                <label style="display: block;"><strong>8.</strong> Did you make the Bylaws and/or manual available for any chapter members that requested them?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select id="ByLawsAvailable" name="ByLawsAvailable" class="form-control select2" style="width: 100%;" required onchange="ToggleByLawsAvailableExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->bylaws_available) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{$financial_report_array->bylaws_available === 0 ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{$financial_report_array->bylaws_available == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-sm-12" id="divByLawsAvailableExplanation">
+                            <label for="ByLawsAvailableExplanation">If no, briefly explain:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="ByLawsAvailableExplanation" id="ByLawsAvailableExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['bylaws_available_explanation'];}?></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                            <label style="display: block;"><strong>9.</strong> Did you have a children’s room with babysitters?<span class="field-required">*</span></label>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="ChildrensRoom" name="ChildrensRoom" class="form-control select2" style="width: 100%;" required>
+                                <option value="" {{ is_null($financial_report_array->childrens_room_sitters) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->childrens_room_sitters === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->childrens_room_sitters == 1 ? 'selected' : ''}}>Yes, with volunteer members</option>
+                                <option value="2" {{$financial_report_array->childrens_room_sitters == 2 ? 'selected' : ''}}>Yes, with paid sitters</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-sm-12">
+                        <div class="col-sm-12" id="ChildrensRoomExplanation">
+                        <label for="ChildrensRoomExplanation">Briefly explain, if necessary:</label>
+                        <textarea class="form-control" rows="2" name="ChildrensRoomExplanation" id="ChildrensRoomExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['childrens_room_sitters_explanation'];}?></textarea>
+                    </div>
+                </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                            <label style="display: block;"><strong>10.</strong> Did you have playgroups? If so, how were they arranged.<span class="field-required">*</span></label>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="Playgroups" name="Playgroups" class="form-control select2" style="width: 100%;" required>
+                                <option value="" {{ is_null($financial_report_array->playgroups) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->playgroups === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->playgroups == 1 ? 'selected' : ''}}>Yes, arranged by age</option>
+                                <option value="2" {{$financial_report_array->playgroups == 2 ? 'selected' : ''}}>Yes, multi-aged groups</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                        <div class="col-sm-12">
+                            <div class="col-sm-12" id="PlaygroupsExplanation">
+                                <label for="PlaygroupsExplanation">Briefly explain, if necessary:</label>
+                                <textarea class="form-control" rows="2" name="PlaygroupsExplanation" id="PlaygroupsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['had_playgroups_explanation'];}?></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12"><br></div>
+                        <div class="col-md-12 float-left">
+                            <div class="form-inline">
+                                <div class="col-md-9">
+                                <label style="display: block;"><strong>11.</strong> Did you have any child focused outings or activities?<span class="field-required">*</span></label>
+                                </div>
+                                <div class="col-md-3">
+                                <select id="ChildOutings" name="ChildOutings" class="form-control select2" style="width: 100%;" required onchange="ToggleChildOutingsExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->child_outings) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{$financial_report_array->child_outings === 0 ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{$financial_report_array->child_outings == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                    <div class="col-sm-12" id="divChildOutingsExplanation">
+                        <label for="ChildOutingsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
+                        <textarea class="form-control" rows="2" name="ChildOutingsExplanation" id="ChildOutingsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['child_outings_explanation'];}?></textarea>
+                    </div>
+                </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-md-9">
+                            <label style="display: block;"><strong>12.</strong> Did you have any mother focused outings or activities?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-md-3">
+                            <select id="MotherOutings" name="MotherOutings" class="form-control select2" style="width: 100%;" required onchange="ToggleMotherOutingsExplanation()">
+                                <option value="" {{ is_null($financial_report_array->mother_outings) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->mother_outings === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->mother_outings == 1 ? 'selected' : ''}}>Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-12" id="divMotherOutingsExplanation">
+                        <label for="MotherOutingsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
+                        <textarea class="form-control" rows="2" name="MotherOutingsExplanation" id="MotherOutingsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['mother_outings_explanation'];}?></textarea>
+                    </div>
+                </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-sm-9">
+                            <label style="display: block;"><strong>13.</strong> Did you have speakers at any meetings?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                            <select id="MeetingSpeakers" name="MeetingSpeakers" class="form-control select2" style="width: 100%;" required onchange="ToggleMeetingSpeakersExplanation()">
+                                <option value="" {{ is_null($financial_report_array->meeting_speakers) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->meeting_speakers === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->meeting_speakers == 1 ? 'selected' : ''}}>Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-12" id="divMeetingSpeakersExplanation">
+                        <label for="MeetingSpeakersExplanation">If no, briefly explain:<span class="field-required">*</span></label>
+                        <textarea class="form-control" rows="2" name="MeetingSpeakersExplanation" id="MeetingSpeakersExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['meeting_speakers_explanation'];}?></textarea>
+                    </div>
+                </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                            <label style="display: block;"><strong>14.</strong> If you had speakers, check any of the topics that were covered:<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-sm-12">
+                            <div class="col-sm-12">
+                            <select id="Speakers" name="Speakers[]" class="form-control select2" style="width: 200px; height: 200px;" multiple="multiple" required>
+                                <option value="" {{ is_null($financial_report_array->meeting_speakers_array) ? 'selected' : '' }}>N/A</option>
+                                @php
+                                    $selectedValues = is_null($financial_report_array->meeting_speakers_array)
+                                        ? []
+                                        : json_decode($financial_report_array->meeting_speakers_array);
+                                @endphp
+                                <option value="0" {{ in_array('0', $selectedValues) ? 'selected' : '' }}>Child Rearing</option>
+                                <option value="1" {{ in_array('1', $selectedValues) ? 'selected' : '' }}>Schools/Education</option>
+                                <option value="2" {{ in_array('2', $selectedValues) ? 'selected' : '' }}>Home Management</option>
+                                <option value="3" {{ in_array('3', $selectedValues) ? 'selected' : '' }}>Politics</option>
+                                <option value="4" {{ in_array('4', $selectedValues) ? 'selected' : '' }}>Other Non-Profit</option>
+                                <option value="5" {{ in_array('5', $selectedValues) ? 'selected' : '' }}>Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-sm-9">
+                            <label style="display: block;"><strong>15.</strong> Did you have any discussion topics at your meetings? If yes, how often?<span class="field-required">*</span></label>
+                        </div>
+                        <div class="col-sm-3">
+                            <select id="SpeakerFrequency" name="SpeakerFrequency" class="form-control select2" style="width: 100%;" required>
+                                <option value="" {{ is_null($financial_report_array->discussion_topic_frequency) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->discussion_topic_frequency === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->discussion_topic_frequency == 1 ? 'selected' : ''}}>1-3 Times</option>
+                                <option value="2" {{$financial_report_array->discussion_topic_frequency == 2 ? 'selected' : ''}}>4-6 Times</option>
+                                <option value="3" {{$financial_report_array->discussion_topic_frequency == 3 ? 'selected' : ''}}>7-9 Times</option>
+                                <option value="4" {{$financial_report_array->discussion_topic_frequency == 4 ? 'selected' : ''}}>10+ Times</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-sm-9">
+                            <label style="display: block;"><strong>16.</strong> Did your chapter have scheduled park days? If yes, how often?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                            <select id="ParkDays" name="ParkDays" class="form-control select2" style="width: 100%;" required>
+                                <option value="" {{ is_null($financial_report_array->park_day_frequency) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->park_day_frequency === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->park_day_frequency == 1 ? 'selected' : ''}}>1-3 Times</option>
+                                <option value="2" {{$financial_report_array->park_day_frequency == 2 ? 'selected' : ''}}>4-6 Times</option>
+                                <option value="3" {{$financial_report_array->park_day_frequency == 3 ? 'selected' : ''}}>7-9 Times</option>
+                                <option value="4" {{$financial_report_array->park_day_frequency == 4 ? 'selected' : ''}}>10+ Times</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                            <label style="display: block;">17. Did your chapter have any of the following activity groups?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="col-sm-12">
+                            <select id="Activity" name="Activity[]" class="form-control select2" style="width: 200px; height: 200px;" multiple="multiple" required>
+                                <option value="" {{ is_null($financial_report_array->activity_array) ? 'selected' : '' }}>N/A</option>
+                                @php
+                                    $selectedValues = is_null($financial_report_array->activity_array)
+                                        ? []
+                                        : json_decode($financial_report_array->activity_array);
+                                @endphp
+                                <option value="0" {{ in_array('0', $selectedValues) ? 'selected' : '' }}>Cooking</option>
+                                <option value="1" {{ in_array('1', $selectedValues) ? 'selected' : '' }}>Cost Cutting Tips</option>
+                                <option value="2" {{ in_array('2', $selectedValues) ? 'selected' : '' }}>Mommy Playgroup</option>
+                                <option value="3" {{ in_array('3', $selectedValues) ? 'selected' : '' }}>Babysitting Co-op</option>
+                                <option value="4" {{ in_array('4', $selectedValues) ? 'selected' : '' }}>MOMS Night Out</option>
+                                <option value="5" {{ in_array('5', $selectedValues) ? 'selected' : '' }}>Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="col-sm-12">
+                     <div class="col-sm-12" id="divActivityOtherExplanation">
+                        <label for="ActivityOtherExplanation">If other, briefly explain:</label>
+                        <textarea class="form-control" rows="2" name="ActivityOtherExplanation" id="ActivityOtherExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['activity_other_explanation'];}?></textarea>
+                     </div>
+                    </div>
+                    <div class="clearfix"></div>
+                     <div class="col-md-12"><br></div>
+                     <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-sm-9">
+                            <label style="display: block;">18. Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity? If yes, please explain who received the contributions and why you chose them:<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                            <select id="ContributionsNotRegNP" name="ContributionsNotRegNP" class="form-control select2" style="width: 100%;" required onchange="ToggleContributionsNotRegNPExplanation()">
+                                <option value="" {{ is_null($financial_report_array->contributions_not_registered_charity) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->contributions_not_registered_charity === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->contributions_not_registered_charity == 1 ? 'selected' : ''}}>Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-12" id="divContributionsNotRegNPExplanation">
+                        <label for="ContributionsNotRegNPExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
+                        <textarea class="form-control" rows="2" name="ContributionsNotRegNPExplanation" id="ContributionsNotRegNPExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['contributions_not_registered_charity_explanation'];}?></textarea>
+                    </div>
+                </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-sm-9">
+                            <label style="display: block;">19. Did your chapter perform at least one service project to benefit mothers or children?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                            <select id="PerformServiceProject" name="PerformServiceProject" class="form-control select2" style="width: 100%;" required onchange="TogglePerformServiceProjectExplanation()">
+                                <option value="" {{ is_null($financial_report_array->at_least_one_service_project) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->at_least_one_service_project === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->at_least_one_service_project == 1 ? 'selected' : ''}}>Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-12" id="divPerformServiceProjectExplanation">
+                        <label for="PerformServiceProjectExplanation">If no, briefly explain:<span class="field-required">*</span></label>
+                        <textarea class="form-control" rows="2" name="PerformServiceProjectExplanation" id="PerformServiceProjectExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['at_least_one_service_project_explanation'];}?></textarea>
+                    </div>
+                </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-sm-9">
+                            <label style="display: block;">20. Did your chapter sister another chapter?<span class="field-required">*</span></label>
+                            </div><div class="col-sm-3">
+                            <select id="SisterChapter" name="SisterChapter" class="form-control select2" style="width: 100%;" required>
+                                <option value="" {{ is_null($financial_report_array->sister_chapter) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->sister_chapter === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->sister_chapter == 1 ? 'selected' : ''}}>Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-sm-9">
+                            <label style="display: block;">21. Did your chapter attend an International Event (in person or virtual)?<span class="field-required">*</span></label>
+                            </div><div class="col-sm-3">
+                            <select id="InternationalEvent" name="InternationalEvent" class="form-control select2" style="width: 100%;" required>
+                                <option value="" {{ is_null($financial_report_array->international_event) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->international_event === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->international_event == 1 ? 'selected' : ''}}>Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 float-left">
+                        <div class="form-inline">
+                            <div class="col-sm-9">
+                            <label style="display: block;">22. Did your chapter file their IRS 990N for <?php echo date('Y')-1 .'-'.date('Y');?> (CANNOT BE DONE BEFORE JULY 1, <?php echo date('Y');?>)?<span class="field-required">*</span></label>
+                            </div>
+                            <div class="col-sm-3">
+                            <select id="FileIRS" name="FileIRS" class="form-control select2" style="width: 100%;" required onchange="ToggleFileIRSExplanation()">
+                                <option value="" {{ is_null($financial_report_array->file_irs) ? 'selected' : '' }} disabled>Please Select</option>
+                                <option value="0" {{$financial_report_array->file_irs === 0 ? 'selected' : ''}}>No</option>
+                                <option value="1" {{$financial_report_array->file_irs == 1 ? 'selected' : ''}}>Yes</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="col-sm-12" id="divFileIRSExplanation">
+                        <label for="FileIRSExplanation">If no, briefly explain:</label>
+                        <textarea class="form-control" rows="2" name="FileIRSExplanation" id="FileIRSExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['file_irs_explanation'];}?></textarea>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12 mar_bot_20" id="990NBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
+                        <div class="col-md-12">
+                            <strong style="color:red">Please Note</strong><br>
+                                This will refresh the screen - be sure to save all work before clicking button to Upload 990N Confirmation.<br>
+                            <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-990N" <?php if($submitted =='1') echo "disabled"; ?>>Upload 990N Confirmation</button>
+                        </div>
+                    </div>
+                    <input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $financial_report_array['file_irs_path']; ?>">
+                    <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
+                        <div class="col-md-12" >
+                            <div>
+                               <a href="<?php echo $financial_report_array['file_irs_path']; ?>" target="_blank">View 990N Confirmation</a><br>
+                               <br>
+                                <strong style="color:red">Please Note</strong><br>
+                                This will refresh the screen - be sure to save all work before clicking button to Replace 990N Confirmation.<br>
+                               <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-990N" <?php if($submitted =='1') echo "disabled"; ?>>Replace 990N Confirmation</button>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                        <div class="col-md-12"><br></div>
+                        <div class="col-md-12 float-left">
+                            <div class="form-inline">
+                                <div class="col-sm-9">
+                                <label style="display: block;">23. Is a copy of your chapter’s most recent bank statement included with the copy of this report that you are submitting to International?<span class="field-required">*</span></label>
+                                </div>
+                                <div class="col-sm-3">
+                                <select id="BankStatementIncluded" name="BankStatementIncluded" class="form-control select2" style="width: 100%;" required onchange="ToggleBankStatementIncludedExplanation()">
+                                    <option value="" {{ is_null($financial_report_array->bank_statement_included) ? 'selected' : '' }} disabled>Please Select</option>
+                                    <option value="0" {{$financial_report_array->bank_statement_included === 0 ? 'selected' : ''}}>No</option>
+                                    <option value="1" {{$financial_report_array->bank_statement_included == 1 ? 'selected' : ''}}>Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="col-sm-12" id="divBankStatementIncludedExplanation">
+                            <label for="BankStatementIncludedExplanation">If no, briefly explain:</label>
+                            <textarea class="form-control" rows="2" name="BankStatementIncludedExplanation" id="BankStatementIncludedExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['bank_statement_included_explanation'];}?></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-12"><br></div>
+                        <div class="col-sm-12" >
+                            <div class="col-sm-12" id="WheresTheMoney">
+                            <label style="display: block;">24. If your group does not have any bank accounts, where is the chapter money kept?:</label>
+                            <textarea class="form-control" rows="2" name="WheresTheMoney" id="WheresTheMoney"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['wheres_the_money'];}?></textarea>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="form-row form-group">
+                        <div class="card-body">
+                            <div class="col-md-12 text-center">
+                              <button type="button" class="btn btn-info btn-fill" id="btn-step-9" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                            </div>
+                        </div>
+                    </div>
+              </section>
+          </div><!-- end of accordion body -->
+          </div><!-- end of accordion item -->
+            <!------End Step 9 ------>
+
+            <!------Begin Step 11 ------>
             <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='11') echo "active";?>">
-                <div class="accordion-header js-accordion-header">Section 11 - Award Nominations</div>
+                <div class="accordion-header js-accordion-header">AWARD NOMINATIONS</div>
                 <div class="accordion-body js-accordion-body cls-print-11">
                     <section>
                     <div class="form-row form-group">
@@ -2442,8 +2534,6 @@
                                             $Award1FileCount =0;
                                             if(isset($financial_report_array['award_1_files'])){
                                                 $award_1_files=unserialize(base64_decode($financial_report_array['award_1_files']));
-                                                //print_r($award_1_files); die;
-                                                //$Award1FileCount = count($award_1_files);
                                                 $Award1FileCount = is_array($award_1_files) ? count($award_1_files) : 0;
 
                                                 for ($row = 1; $row <= $Award1FileCount; $row++){
@@ -3025,7 +3115,6 @@
                     <div class="form-row form-group">
                        <div class="card-body">
                           <div class="col-md-12 text-center">
-                            <!-- <button type="button" id="btn-step-11" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>-->
                              <button type="button" id="btn-step-11" class="btn btn-info btn-fill" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
 
                             </div>
@@ -3038,7 +3127,7 @@
 
                 <!------Start Step 12 ------>
                 <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='12') echo "active";?>">
-                    <div class="accordion-header js-accordion-header">Section 12 - Submit Report</div>
+                    <div class="accordion-header js-accordion-header">SUBMIT REPORT</div>
                     <div class="accordion-body js-accordion-body cls-print-12">
                         <section>
                     <div class="form-row form-group">
@@ -3062,15 +3151,8 @@
                  <div class="form-row form-group">
                         <div class="card-body">
                             <div class="col-md-12 text-center">
-
                              <button type="button" class="btn btn-info btn-fill" id="btn-step-12" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
-
-                             <!--Disabled Submit Button-->
-                             <!--<button type="button" class="btn btn-info btn-fill" <?php echo "disabled"; ?>>Submit</button>-->
-
-                             <!--LIVE Submit Button-->
                              <button type="button" class="btn btn-info btn-fill" id="final-submit" <?php if($submitted =='1') echo "disabled"; ?>>Submit</button>
-
                           </div>
                 <hr style="height:3px;border:none;color:#0c71c3;background-color:#0c71c3;" />
                         </div>
@@ -3081,25 +3163,108 @@
                 </div>
             </div><!-- end of accordion -->
             </form>
+            <div class="col-md-12 text-center">
+                <br>
+                    @if($user_type !== 'outgoing')
+                        <a href="{{ route('home') }}" class="btn btn-info btn-fill">Back</a>
+                    @endif
+                    <button type="button" id="btn-save" class="btn btn-info btn-fill" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                    <a href='{{ url("/board/financial/pdf", ["id" => Session::get("chapterid")]) }}' target="_blank" class="">
+                    <button id="buttononclickdisable" class="btn btn-info btn-fill" onClick="this.disabled=true;" <?php if(!$submitted =='1') echo "disabled"; ?>>View PDF</button>
+                    </a>
+            </div>
+
+            <!-- Modal Popups for Uploading Files -->
+            <div class="modal fade" id="modal-roster">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Upload Roster</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="upload_roster" name="upload_roster" role="form" enctype="multipart/form-data" method="POST" action='{{ url("/files/storeRoster",$financial_report_array['chapter_id']) }}' >
+                                @csrf
+                                <input type="file" name='file' required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-info btn-fill" id="btn-roster">Upload</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="modal-statement1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Upload Statement</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="upload_statement1" name="upload_statement1" role="form" enctype="multipart/form-data" method="POST" action='{{ url("/files/storeStatement1",$financial_report_array['chapter_id']) }}' >
+                                @csrf
+                                <input type="file" name='file' required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-info btn-fill" id="btn-statement1">Upload</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="modal-statement2">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Upload Additional Statement</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ url('/files/storeStatement2/'. $financial_report_array['chapter_id']) }}" method="post" enctype="multipart/form-data">
+                                @csrf
+                                <input type="file" name='file' required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-info btn-fill" id="btn-statement2">Upload</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="modal-990N">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Upload 990N Confirmation</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ url('/files/store990n/'. $financial_report_array['chapter_id']) }}" method="post" enctype="multipart/form-data">
+                                @csrf
+                                <input type="file" name='file' required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-info btn-fill" id="btn-990N">Upload</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Modal Popups -->
 
         </div>
     </div>
 </div>
-<div class="box-body text-center">
-    <br>
-                        @if($user_type !== 'outgoing')
-                        <a href="{{ route('home') }}" class="btn btn-info btn-fill">Back</a>
-                    @endif
-                         <button type="button" id="btn-save" class="btn btn-info btn-fill" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
-
-    <a href='{{ url("/board/financial/pdf", ["id" => Session::get("chapterid")]) }}' target="_blank" class="">
-        <button id="buttononclickdisable" class="btn btn-info btn-fill" onClick="this.disabled=true;" <?php if(!$submitted =='1') echo "disabled"; ?>>View PDF</button>
-    </a>
-</div>
-
 @endsection
 @section('customscript')
 <script>
+    /* Disable fields and buttons  */
+    $(document).ready(function () {
+            //Update to show/hide for true/false
+            $('#final-submit').show();  /*report status text (.show/.hide to change visibility)*/
+    });
+
     $('.demo1').fileselect();
 
      $(window).on("load", function() {
@@ -3109,48 +3274,41 @@
     function getConfirmation() {
                var retVal = confirm("Do you want to continue ?");
                if( retVal == true ) {
-                  //document.write ("User wants to continue!");
-
                   document.getElementById("submitted").value='1';
                   return true;
                } else {
-                 // document.write ("User does not want to continue!");
                   return false;
                }
             }
-
 </script>
 
 <!-- JQUERY STEP -->
 <script>
-function fullPrintDiv() {
-    $("#full-print-div").show();
-    $("#test").hide();
-    var printContents = $("#full-print-div").html();
-    var originalContents = document.body.innerHTML;
-    document.body.innerHTML = printContents;
-    window.print();
-    //window.reload();
-    document.body.innerHTML = originalContents;
-    //  window.reload();
-    window.location.reload();
-}
+// function fullPrintDiv() {
+//     $("#full-print-div").show();
+//     $("#test").hide();
+//     var printContents = $("#full-print-div").html();
+//     var originalContents = document.body.innerHTML;
+//     document.body.innerHTML = printContents;
+//     window.print();
+//     document.body.innerHTML = originalContents;
+//     window.location.reload();
+// }
 
-function printDiv(id) {
-    $(".card-body").hide();
-    $(".award_sec_btn").hide();
-    $(".btn-add-remove").hide();
-    $(".demo1").hide();
-    $("#990NFile").hide();
-    var printContents = $(".cls-print-"+id).html();
-    var originalContents = document.body.innerHTML;
-    document.body.innerHTML = printContents;
-    window.print();
-    //window.reload();
-    document.body.innerHTML = originalContents;
-    //  window.reload();
-    window.location.reload();
-}
+// function printDiv(id) {
+//     $(".card-body").hide();
+//     $(".award_sec_btn").hide();
+//     $(".btn-add-remove").hide();
+//     $(".demo1").hide();
+//     $("#990NFile").hide();
+//     var printContents = $(".cls-print-"+id).html();
+//     var originalContents = document.body.innerHTML;
+//     document.body.innerHTML = printContents;
+//     window.print();
+//     document.body.innerHTML = originalContents;
+//     window.location.reload();
+// }
+
     var accordion = (function(){
     var $accordion = $('.js-accordion');
     var $accordion_header = $accordion.find('.js-accordion-header');
@@ -3159,7 +3317,6 @@ function printDiv(id) {
     var settings = {
         speed: 400,   // animation speed
         oneOpen: false   // close all other accordion items if true
-
     };
 
   return {
@@ -3183,7 +3340,6 @@ function printDiv(id) {
         $this.closest('.js-accordion')
                .find('> .js-accordion-item')
                .removeClass('active')
-               .removeClass('closed') // Remove closed class when removing active class
                .find('.js-accordion-body')
                .slideUp()
       }
@@ -3195,7 +3351,7 @@ function printDiv(id) {
 })();
 
 $(document).ready(function(){
-    $("#full-print-div").hide();
+    // $("#full-print-div").hide();
     accordion.init({ speed: 300, oneOpen: true });
 
     $(".txt-num").keypress(function (e) {
@@ -3208,87 +3364,93 @@ $(document).ready(function(){
         }
     });
 
+
+
+
+
+
     $("#final-submit").click(function() {
-        var agreeChk = $("#TotalAwardNominations").val();
-        if(agreeChk > 0){
-            if (($("input[name='AwardsAgree']:checked").length)<=0) {
-                alert("Please select I understand and agree check box");
-                return false;
-            }
-        }
+        // var agreeChk = $("#TotalAwardNominations").val();
+        // if(agreeChk > 0){
+        //     if (($("input[name='AwardsAgree']:checked").length)<=0) {
+        //         alert("Please select I understand and agree check box");
+        //         return false;
+        //     }
+        // }
 
-        if(document.getElementById('FileIRSYes').checked && document.getElementById('990NPath').value=="" && document.getElementById('990NFiling').files.length <= 0){
-            alert("Your chapter's 990N filing confirmation was not attached in TAX EXEMPT & CHAPTER QUESTIONS but you indicated the file was attached.  Please attach the file and save again.");
-            return false;
-        }
+    //     if(document.getElementById('FileIRSYes').checked && document.getElementById('990NPath').value=="" && document.getElementById('990NFiling').files.length <= 0){
+    //         alert("Your chapter's 990N filing confirmation was not attached in CHAPTER QUESTIONS SECTION but you indicated the file was attached.  Please attach the file and save again.");
+    //         return false;
+    //     }
 
-       if(document.getElementById('BankStatementIncludedYes').checked && document.getElementById('StatementPath').value=="" && document.getElementById('StatementFile').files.length <= 0){
-            alert("Your chapter's Bank Statement was not attached in SECTION 9 - TAX EXEMPT & CHAPTER QUESTIONS but you indicated the file was attached.  Please attach the file and submit again.");
-            return false;
-        }
+    //    if(document.getElementById('BankStatementIncludedYes').checked && document.getElementById('StatementPath').value=="" && document.getElementById('StatementFile').files.length <= 0){
+    //         alert("Your chapter's Bank Statement was not attached in RECONCILIATION SECTION but you indicated the file was attached.  Please attach the file and submit again.");
+    //         return false;
+    //     }
 
+        //  if(document.getElementById('ServiceProjectDesc0').value==""){
+        //     alert("Project Description is required in SERVICE PROJECTS SECTION.");
+        //     $("#ServiceProjectDesc0").focus();
+        //     return false;
+        // }
+        // else if(document.getElementById('ServiceProjectIncome0').value==""){
+        //     alert("Income is required in SERVICE PROJECTS SECTION.");
+        //     $("#ServiceProjectIncome0").focus();
+        //     return false;
+        // }
+        // else if(document.getElementById('ServiceProjectSupplies0').value==""){
+        //     alert("Supplies & Expenses is required in SERVICE PROJECTS SECTION.");
+        //     $("#ServiceProjectSupplies0").focus();
+        //     return false;
+        // }
+        // else if(document.getElementById('ServiceProjectDonatedCharity0').value==""){
+        //     alert("Charity Donation is required in SERVICE PROJECTS SECTION.");
+        //     $("#ServiceProjectDonatedCharity0").focus();
+        //     return false;
+        // }
+        // else if(document.getElementById('ServiceProjectDonatedM2M0').value==""){
+        //     alert("M2M Donation is required in SERVICE PROJECTS SECTION.");
+        //     $("#ServiceProjectDonatedM2M0").focus();
+        //     return false;
+        // }
 
-         if(document.getElementById('ServiceProjectDesc0').value==""){
-            alert("Project Description is required in SECTION 3 - Service Projects.");
-            $("#ServiceProjectDesc0").focus();
-            return false;
-        }
-        else if(document.getElementById('ServiceProjectIncome0').value==""){
-            alert("Income is required in SECTION 3 - Service Projects.");
-            $("#ServiceProjectIncome0").focus();
-            return false;
-        }
-        else if(document.getElementById('ServiceProjectSupplies0').value==""){
-            alert("Supplies & Expenses is required in SECTION 3 - Service Projects.");
-            $("#ServiceProjectSupplies0").focus();
-            return false;
-        }
-        else if(document.getElementById('ServiceProjectDonatedCharity0').value==""){
-            alert("Charity Donation is required in SECTION 3 - Service Projects.");
-            $("#ServiceProjectDonatedCharity0").focus();
-            return false;
-        }
-        else if(document.getElementById('ServiceProjectDonatedM2M0').value==""){
-            alert("M2M is required in SECTION 3 - Service Projects.");
-            $("#ServiceProjectDonatedM2M0").focus();
-            return false;
-        }
-
-        if(document.getElementById('CompletedName').value==""){
-            alert("Please include the name of the person submitting the report.");
-            return false;
-        }
-        if(document.getElementById('CompletedEmail').value==""){
-            alert("Please include the eamil address of the person submitting the report.");
-            return false;
-        }
+        // if(document.getElementById('CompletedName').value==""){
+        //     alert("Please include the name of the person submitting the report.");
+        //     return false;
+        // }
+        // if(document.getElementById('CompletedEmail').value==""){
+        //     alert("Please include the eamil address of the person submitting the report.");
+        //     return false;
+        // }
 
         var result = confirm("This will finalize and submit your report.  You will no longer be able to edit this report.  Do you wish to continue?");
         if (result) {
-            var fileResult = EnsureFilesWereSubmitted();
+            //var fileResult = EnsureFilesWereSubmitted();
 
-            if (fileResult) {
-                var serProject = $('#ServiceProjectDesc0').val();
-                if (!serProject) {
-                    alert('Project Service Description is required in SECTION 3- Service Project');
-                    return false;
-                }
-                var reRegister = $('#AnnualRegistrationFee').val();
-                if (!reRegister) {
-                    alert('Chapter Re-registration is required in SECTION 5 - Office and Operating System');
-                    return false;
-                }
-            }
+
+        //     if (fileResult) {
+        //         var serProject = $('#ServiceProjectDesc0').val();
+        //         if (!serProject) {
+        //             alert('Project Service Description is required in SERVICE PROJECTS SECTION');
+        //             return false;
+        //         }
+        //         var reRegister = $('#AnnualRegistrationFee').val();
+        //         if (!reRegister) {
+        //             alert('Chapter Re-registration is required in OFFICE & OPERATING EXPENSES SECTION');
+        //             return false;
+        //         }
+        //     }
+        // }
+            $("#submitted").val('1');
+            $("#FurthestStep").val('12');
+            $("#financial_report").submit();
         }
-
-        $("#FurthestStep").val('13');
-        $("#financial_report").submit();
     });
 
     $("#btn-step-1").click(function() {
         if(document.getElementById('RosterPath').value=="" && document.getElementById('RosterFile').files.length <= 0){
             //Roster file was not submitted
-            alert("Your chapter's roster was not attached in SECTION 1 - CHAPTER DUES.  This is a required file for all reports.  Please attach the file and save again.");
+            alert("Your chapter's roster was not attached in CHAPTER DUES SECTION.  This is a required file for all reports.  Please attach the file and save again.");
             return false;
         }else{
             $("#FurthestStep").val('1');
@@ -3303,6 +3465,10 @@ $(document).ready(function(){
         $("#FurthestStep").val('4');
         $("#financial_report").submit();
     });
+    $("#btn-step-5").click(function() {
+        $("#FurthestStep").val('5');
+        $("#financial_report").submit();
+    });
     $("#btn-step-6").click(function() {
         $("#FurthestStep").val('6');
         $("#financial_report").submit();
@@ -3315,11 +3481,7 @@ $(document).ready(function(){
         $("#FurthestStep").val('8');
         $("#financial_report").submit();
     });
-    $("#btn-step-9").click(function() {
-        $("#FurthestStep").val('9');
-        $("#financial_report").submit();
-    });
-    $("#btn-step-10").click(function() {
+       $("#btn-step-10").click(function() {
         $("#FurthestStep").val('10');
         $("#financial_report").submit();
     });
@@ -3363,27 +3525,27 @@ $(document).ready(function(){
     $("#btn-step-3").click(function() {
 
         if(document.getElementById('ServiceProjectDesc0').value==""){
-            alert("Project Description is required in SECTION 3 - Service Projects.");
+            alert("Project Description is required in SERVICE PROJECTS SECTION.");
             $("#ServiceProjectDesc0").focus();
             return false;
         }
         else if(document.getElementById('ServiceProjectIncome0').value==""){
-            alert("Income is required in SECTION 3 - Service Projects.");
+            alert("Income is required in SERVICE PROJECTS SECTION.");
             $("#ServiceProjectIncome0").focus();
             return false;
         }
         else if(document.getElementById('ServiceProjectSupplies0').value==""){
-            alert("Supplies & Expenses is required in SECTION 3 - Service Projects.");
+            alert("Supplies & Expenses is required in SERVICE PROJECTS SECTION.");
             $("#ServiceProjectSupplies0").focus();
             return false;
         }
         else if(document.getElementById('ServiceProjectDonatedCharity0').value==""){
-            alert("Charity Donation is required in SECTION 3 - Service Projects.");
+            alert("Charity Donation is required in SERVICE PROJECTS SECTION.");
             $("#ServiceProjectDonatedCharity0").focus();
             return false;
         }
         else if(document.getElementById('ServiceProjectDonatedM2M0').value==""){
-            alert("M2M is required in SECTION 3 - Service Projects.");
+            alert("M2M is required in SERVICE PROJECTS SECTION.");
             $("#ServiceProjectDonatedM2M0").focus();
             return false;
         }
@@ -3394,16 +3556,22 @@ $(document).ready(function(){
         }
     });
 
-    $("#btn-step-5").click(function() {
+    $("#btn-step-55").click(function() {
         if(document.getElementById('AnnualRegistrationFee').value==""){
-            alert("Chapter Re-registration is required in SECTION 5 - Office and Operating System.");
+            alert("Chapter Re-registration is required in INTERNATIONAL EVENTS & RE-REGISTRATION.");
             $("#AnnualRegistrationFee").focus();
             return false;
         }else{
-            $("#FurthestStep").val('5');
+            $("#FurthestStep").val('55');
             $("#financial_report").submit();
         }
     });
+
+    $("#btn-step-9").click(function() {
+        $("#FurthestStep").val('9');
+        $("#financial_report").submit();
+    });
+
     // $("#btn-step-9").click(function() {
     //     if(document.getElementById('FileIRSYes').checked && document.getElementById('990NPath').value=="" && document.getElementById('990NFiling').files.length <= 0){
     //         alert("Your chapter's 990N filing confirmation was not attached in TAX EXEMPT & CHAPTER QUESTIONS but you indicated the file was attached.  Please attach the file and save again.");
@@ -4549,28 +4717,40 @@ $(document).ready(function(){
         }
     }
 
+
     function ToggleBankStatementIncludedExplanation(){
         if (document.getElementById("BankStatementIncluded").value == "0"){   //Required if NO
-            $('#BankFile').hide();
-            //document.getElementById("WheresTheMoney").required=true;
             $('#BankStatementIncludedExplanation').addClass('tx-cls');
-            $('#WheresTheMoney').addClass('tx-cls');
             document.getElementById("divBankStatementIncludedExplanation").style.display = 'block';
-
-        }
-        else if (document.getElementById("BankStatementIncluded").value == "1"){   //Required if YES
-            $('#BankFile').show();
-            $('#BankStatementIncludedExplanation').removeClass('tx-cls');
-            $('#WheresTheMoney').removeClass('tx-cls');
-            document.getElementById("divBankStatementIncludedExplanation").style.display = 'none';
         }
         else{
-            $('#BankFile').hide();
-            $('#BankStatementIncludedExplanation').removeClass('tx-cls');
-            $('#WheresTheMoney').removeClass('tx-cls');
+            $('#BankStatementIncludedExplanationn').removeClass('tx-cls');
             document.getElementById("divBankStatementIncludedExplanation").style.display = 'none';
         }
     }
+
+    // function ToggleBankStatementIncludedExplanation(){
+    //     if (document.getElementById("BankStatementIncluded").value == "0"){   //Required if NO
+    //         $('#BankFile').hide();
+    //         //document.getElementById("WheresTheMoney").required=true;
+    //         $('#BankStatementIncludedExplanation').addClass('tx-cls');
+    //         $('#WheresTheMoney').addClass('tx-cls');
+    //         document.getElementById("divBankStatementIncludedExplanation").style.display = 'block';
+
+    //     }
+    //     // else if (document.getElementById("BankStatementIncluded").value == "1"){   //Required if YES
+    //     //     $('#BankFile').show();
+    //     //     $('#BankStatementIncludedExplanation').removeClass('tx-cls');
+    //     //     $('#WheresTheMoney').removeClass('tx-cls');
+    //     //     document.getElementById("divBankStatementIncludedExplanation").style.display = 'none';
+    //     // }
+    //     else{
+    //         $('#BankFile').hide();
+    //         $('#BankStatementIncludedExplanation').removeClass('tx-cls');
+    //         $('#WheresTheMoney').removeClass('tx-cls');
+    //         document.getElementById("divBankStatementIncludedExplanation").style.display = 'none';
+    //     }
+    // }
 
 function isFieldVisible(fieldId) {
     // Customize this function based on your visibility conditions

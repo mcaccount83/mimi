@@ -1268,59 +1268,59 @@ class BoardController extends Controller
         }
     }
 
-    public function printFinancialReport(Request $request, $chapterId)
-    {
-        $borDetails = User::find($request->user()->id)->BoardDetails;
-        $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
-        $isActive = $borDetails['is_active'];
-        if ($isActive != 1) {
-            Auth::logout();
-            $request->session()->flush();
+    // public function printFinancialReport(Request $request, $chapterId)
+    // {
+    //     $borDetails = User::find($request->user()->id)->BoardDetails;
+    //     $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
+    //     $isActive = $borDetails['is_active'];
+    //     if ($isActive != 1) {
+    //         Auth::logout();
+    //         $request->session()->flush();
 
-            return redirect()->to('/login');
-        }
+    //         return redirect()->to('/login');
+    //     }
 
-        $financial_report_array = FinancialReport::find($chapterId);
+    //     $financial_report_array = FinancialReport::find($chapterId);
 
-        $chapterDetails = DB::table('chapters')
-            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->where('chapters.is_active', '=', '1')
-            ->where('chapters.id', '=', $chapterId)
-            ->get();
+    //     $chapterDetails = DB::table('chapters')
+    //         ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state')
+    //         ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+    //         ->where('chapters.is_active', '=', '1')
+    //         ->where('chapters.id', '=', $chapterId)
+    //         ->get();
 
-        $submitted = $chapterDetails[0]->financial_report_received;
-        $data = ['financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails];
+    //     $submitted = $chapterDetails[0]->financial_report_received;
+    //     $data = ['financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails];
 
-        return view('boards.printfinancial')->with($data);
-    }
+    //     return view('boards.printfinancial')->with($data);
+    // }
 
-    public function printFinancialReport2(Request $request, $chapterId)
-    {
-        $borDetails = User::find($request->user()->id)->BoardDetails;
-        $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
-        $isActive = $borDetails['is_active'];
-        if ($isActive != 1) {
-            Auth::logout();
-            $request->session()->flush();
+    // public function printFinancialReport2(Request $request, $chapterId)
+    // {
+    //     $borDetails = User::find($request->user()->id)->BoardDetails;
+    //     $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
+    //     $isActive = $borDetails['is_active'];
+    //     if ($isActive != 1) {
+    //         Auth::logout();
+    //         $request->session()->flush();
 
-            return redirect()->to('/login');
-        }
+    //         return redirect()->to('/login');
+    //     }
 
-        $financial_report_array = FinancialReport::find($chapterId);
+    //     $financial_report_array = FinancialReport::find($chapterId);
 
-        $chapterDetails = DB::table('chapters')
-            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->where('chapters.is_active', '=', '1')
-            ->where('chapters.id', '=', $chapterId)
-            ->get();
+    //     $chapterDetails = DB::table('chapters')
+    //         ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state')
+    //         ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+    //         ->where('chapters.is_active', '=', '1')
+    //         ->where('chapters.id', '=', $chapterId)
+    //         ->get();
 
-        $submitted = $chapterDetails[0]->financial_report_received;
-        $data = ['financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails];
+    //     $submitted = $chapterDetails[0]->financial_report_received;
+    //     $data = ['financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails];
 
-        return view('boards.printfinancial2')->with($data);
-    }
+    //     return view('boards.printfinancial2')->with($data);
+    // }
 
     /**
      * Save EOY Financial Report All Board Members
@@ -1329,12 +1329,6 @@ class BoardController extends Controller
     {
         $borDetails = User::find($request->user()->id)->BoardDetails;
         $isActive = $borDetails['is_active'];
-
-        $target_dir = $uploadedFilePath = '/home/momsclub/public_html/mimi/uploads/';  //Live
-        //Configure Dropbox Application
-        $dropboxKey = '7naxrobjsc02z0c';
-        $dropboxSecret = 'd3xuzouwlv0p7rm';
-        $dropboxToken = '__DhDVdXdTIAAAAAAAAAAQY4Muzhmj5mMaz0k6zXInYJU8CMG8m5HzRxmBI_d27t';
 
         $input = $request->all();
         $chName = $input['ch_name'];
@@ -1354,681 +1348,10 @@ class BoardController extends Controller
         $chapter_name = $chapterDetails[0]->name;
         $chapter_country = $chapterDetails[0]->country;
 
-        // if (basename($_FILES['RosterFile']['name'] != '')) {
-        //     $target_file = $target_dir.basename($_FILES['RosterFile']['name']);
-        //     $uploadOk = 1;
-        //     $uploadedFileObj = $request->file('RosterFile');
-        //     $uploadedFileName = $request->file('RosterFile')->getClientOriginalName();
-        //     $uploadedFileSize = $request->file('RosterFile')->getSize();
-
-        //     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        //     // Check file size
-        //     if ($uploadedFileSize > 5000000) {
-        //         $uploadOk = 0;
-
-        //         return redirect()->back()->with('fail', 'Sorry, your file is too large - file not uploaded.');
-        //     }
-        //     // Allow certain file formats
-        //     if ($imageFileType != 'xls' && $imageFileType != 'xlsx' && $imageFileType != 'jpg' && $imageFileType != 'jpeg' && $imageFileType != 'pdf') {
-        //         $uploadOk = 0;
-
-        //         return redirect()->back()->with('fail', 'Sorry, only xls, xlsx, jpg, jpeg & pdf files are allowed.');
-        //     }
-        //     // Check if $uploadOk is set to 0 by an error
-        //     if ($uploadOk == 0) {
-        //         return redirect()->back()->with('fail', 'Sorry, your file was not uploaded.');
-        //     } else {
-        //         $uploadedFileObj->move($uploadedFilePath, $uploadedFileName);
-        //     }
-
-        //     if ($uploadOk) {
-        //         $file = fopen($target_file, 'rb') or exit("can't open file");
-
-        //         $app = new DropboxApp($dropboxKey, $dropboxSecret, $dropboxToken);
-        //         $dropbox = new Dropbox($app);
-
-        //         if ($chapter_state == '**') { //this is an internatioanl chapter, set state to intl_state
-        //             $db_chapter_folder = '/Conference '.$chapter_conf.'/International/'.$chapter_country.'/'.trim($chapter_name);
-        //         } else {
-        //             $db_chapter_folder = '/Conference '.$chapter_conf.'/'.$chapter_state.'/'.trim($chapter_name);
-        //         }
-        //         try {
-        //             $dropbox->createFolder($db_chapter_folder);
-        //         } catch (\Exception $e) {
-        //             // just ignore
-        //         }
-        //         $dropboxFile = new DropboxFile($target_file);
-        //         $dbfile = $dropbox->upload($dropboxFile, $db_chapter_folder.'/Roster.'.$imageFileType, ['autorename' => true]);
-
-        //         //Uploaded File
-        //         $file_name_assigned = $db_chapter_folder.'/'.$dbfile->getName();
-
-        //         $share_existed = false;
-        //         try {
-        //             $response = $dropbox->postToAPI('/sharing/create_shared_link_with_settings', ['path' => $file_name_assigned, 'settings' => ['requested_visibility' => 'public']]);
-        //         } catch (\Exception $e) { //Share link already exists
-        //             $response = $dropbox->postToAPI('/sharing/list_shared_links', ['path' => $file_name_assigned]);
-        //             $share_existed = true;
-        //         }
-        //         $decoded = $response->getDecodedBody();
-
-        //         if ($share_existed) {
-        //             $roster_path = $decoded['links'][0]['url'];
-        //         } else {
-        //             $roster_path = $decoded['url'];
-        //         }
-        //     } else {
-        //         $roster_path = '';
-        //     }
-        // } else {
-        //     $roster_path = $input['RosterPath'];
-        // }
-
-        // if (basename($_FILES['990NFiling']['name'] != '')) {
-        //     $target_file = $target_dir.basename($_FILES['990NFiling']['name']);
-        //     $uploadOk = 1;
-        //     $uploadedFileObj = $request->file('990NFiling');
-        //     $uploadedFileName = $request->file('990NFiling')->getClientOriginalName();
-        //     $uploadedFileSize = $request->file('990NFiling')->getSize();
-
-        //     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-
-        //     // Check file size
-        //     if ($uploadedFileSize > 5000000) {
-        //         $uploadOk = 0;
-
-        //         return redirect()->back()->with('fail', 'Sorry, your file is too large - file not uploaded.');
-        //     }
-        //     // Allow certain file formats
-        //     if ($imageFileType != 'jpg' && $imageFileType != 'jpeg' && $imageFileType != 'pdf') {
-        //         $uploadOk = 0;
-
-        //         return redirect()->back()->with('fail', 'Sorry, only JPG, JPEG & PDF files are allowed.');
-        //     }
-        //     // Check if $uploadOk is set to 0 by an error
-        //     if ($uploadOk == 0) {
-        //         return redirect()->back()->with('fail', 'Sorry, your file was not uploaded.');
-        //     } else {
-        //         $uploadedFileObj->move($uploadedFilePath, $uploadedFileName);
-        //     }
-
-        //     if ($uploadOk) {
-        //         $file = fopen($target_file, 'rb') or exit("can't open file");
-
-        //         $app = new DropboxApp($dropboxKey, $dropboxSecret, $dropboxToken);
-        //         $dropbox = new Dropbox($app);
-
-        //         if ($chapter_state == '**') { //this is an internatioanl chapter, set state to intl_state
-        //             $db_chapter_folder = '/Conference '.$chapter_conf.'/International/'.$chapter_country.'/'.trim($chapter_name);
-        //         } else {
-        //             $db_chapter_folder = '/Conference '.$chapter_conf.'/'.$chapter_state.'/'.trim($chapter_name);
-        //         }
-        //         try {
-        //             $dropbox->createFolder($db_chapter_folder);
-        //         } catch (\Exception $e) {
-        //             // just ignore
-        //         }
-        //         $dropboxFile = new DropboxFile($target_file);
-        //         $dbfile = $dropbox->upload($dropboxFile, $db_chapter_folder.'/990N.'.$imageFileType, ['autorename' => true]);
-
-        //         //Uploaded File
-        //         $file_name_assigned = $db_chapter_folder.'/'.$dbfile->getName();
-
-        //         $share_existed = false;
-        //         try {
-        //             $response = $dropbox->postToAPI('/sharing/create_shared_link_with_settings', ['path' => $file_name_assigned, 'settings' => ['requested_visibility' => 'public']]);
-        //         } catch (\Exception $e) { //Share link already exists
-        //             $response = $dropbox->postToAPI('/sharing/list_shared_links', ['path' => $file_name_assigned]);
-        //             $share_existed = true;
-        //         }
-        //         $decoded = $response->getDecodedBody();
-
-        //         if ($share_existed) {
-        //             $file_irs_path = $decoded['links'][0]['url'];
-        //         } else {
-        //             $file_irs_path = $decoded['url'];
-        //         }
-        //     } else {
-        //         $file_irs_path = '';
-        //     }
-        // } else {
-        //     $file_irs_path = $input['990NPath'];
-        // }
-
-        // /////////////////// Bank Statements ///////////////////
-
-        // if (basename($_FILES['StatementFile']['name'] != '')) {
-        //     $target_file = $target_dir.basename($_FILES['StatementFile']['name']);
-        //     $uploadOk = 1;
-        //     $uploadedFileObj = $request->file('StatementFile');
-        //     $uploadedFileName = $request->file('StatementFile')->getClientOriginalName();
-        //     $uploadedFileSize = $request->file('StatementFile')->getSize();
-
-        //     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        //     // Check file size
-        //     if ($uploadedFileSize > 5000000) {
-        //         $uploadOk = 0;
-
-        //         return redirect()->back()->with('fail', 'Sorry, your file is too large - file not uploaded.');
-        //     }
-        //     // Allow certain file formats
-        //     if ($imageFileType != 'jpg' && $imageFileType != 'jpeg' && $imageFileType != 'pdf') {
-        //         $uploadOk = 0;
-
-        //         return redirect()->back()->with('fail', 'Sorry, only jpg, jpeg & pdf files are allowed.');
-        //     }
-        //     // Check if $uploadOk is set to 0 by an error
-        //     if ($uploadOk == 0) {
-        //         return redirect()->back()->with('fail', 'Sorry, your file was not uploaded.');
-        //     } else {
-        //         $uploadedFileObj->move($uploadedFilePath, $uploadedFileName);
-        //     }
-
-        //     if ($uploadOk) {
-        //         $file = fopen($target_file, 'rb') or exit("can't open file");
-
-        //         $app = new DropboxApp($dropboxKey, $dropboxSecret, $dropboxToken);
-        //         $dropbox = new Dropbox($app);
-
-        //         if ($chapter_state == '**') { //this is an internatioanl chapter, set state to intl_state
-        //             $db_chapter_folder = '/Conference '.$chapter_conf.'/International/'.$chapter_country.'/'.trim($chapter_name);
-        //         } else {
-        //             $db_chapter_folder = '/Conference '.$chapter_conf.'/'.$chapter_state.'/'.trim($chapter_name);
-        //         }
-        //         try {
-        //             $dropbox->createFolder($db_chapter_folder);
-        //         } catch (\Exception $e) {
-        //             // just ignore
-        //         }
-        //         $dropboxFile = new DropboxFile($target_file);
-        //         $dbfile = $dropbox->upload($dropboxFile, $db_chapter_folder.'/Statement1.'.$imageFileType, ['autorename' => true]);
-
-        //         //Uploaded File
-        //         $file_name_assigned = $db_chapter_folder.'/'.$dbfile->getName();
-
-        //         $share_existed = false;
-        //         try {
-        //             $response = $dropbox->postToAPI('/sharing/create_shared_link_with_settings', ['path' => $file_name_assigned, 'settings' => ['requested_visibility' => 'public']]);
-        //         } catch (\Exception $e) { //Share link already exists
-        //             $response = $dropbox->postToAPI('/sharing/list_shared_links', ['path' => $file_name_assigned]);
-        //             $share_existed = true;
-        //         }
-        //         $decoded = $response->getDecodedBody();
-
-        //         if ($share_existed) {
-        //             $bank_statement_included_path = $decoded['links'][0]['url'];
-        //         } else {
-        //             $bank_statement_included_path = $decoded['url'];
-        //         }
-        //     } else {
-        //         $bank_statement_included_path = '';
-        //     }
-        // } else {
-        //     $bank_statement_included_path = $input['StatementPath'];
-        // }
-
-        // if (basename($_FILES['Statement2File']['name'] != '')) {
-        //     $target_file = $target_dir.basename($_FILES['Statement2File']['name']);
-        //     $uploadOk = 1;
-        //     $uploadedFileObj = $request->file('Statement2File');
-        //     $uploadedFileName = $request->file('Statement2File')->getClientOriginalName();
-        //     $uploadedFileSize = $request->file('Statement2File')->getSize();
-
-        //     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        //     // Check file size
-        //     if ($uploadedFileSize > 5000000) {
-        //         $uploadOk = 0;
-
-        //         return redirect()->back()->with('fail', 'Sorry, your file is too large - file not uploaded.');
-        //     }
-        //     // Allow certain file formats
-        //     if ($imageFileType != 'jpg' && $imageFileType != 'jpeg' && $imageFileType != 'pdf') {
-        //         $uploadOk = 0;
-
-        //         return redirect()->back()->with('fail', 'Sorry, only jpg, jpeg & pdf files are allowed.');
-        //     }
-        //     // Check if $uploadOk is set to 0 by an error
-        //     if ($uploadOk == 0) {
-        //         return redirect()->back()->with('fail', 'Sorry, your file was not uploaded.');
-        //     } else {
-        //         $uploadedFileObj->move($uploadedFilePath, $uploadedFileName);
-        //     }
-
-        //     if ($uploadOk) {
-        //         $file = fopen($target_file, 'rb') or exit("can't open file");
-
-        //         $app = new DropboxApp($dropboxKey, $dropboxSecret, $dropboxToken);
-        //         $dropbox = new Dropbox($app);
-
-        //         if ($chapter_state == '**') { //this is an internatioanl chapter, set state to intl_state
-        //             $db_chapter_folder = '/Conference '.$chapter_conf.'/International/'.$chapter_country.'/'.trim($chapter_name);
-        //         } else {
-        //             $db_chapter_folder = '/Conference '.$chapter_conf.'/'.$chapter_state.'/'.trim($chapter_name);
-        //         }
-        //         try {
-        //             $dropbox->createFolder($db_chapter_folder);
-        //         } catch (\Exception $e) {
-        //             // just ignore
-        //         }
-        //         $dropboxFile = new DropboxFile($target_file);
-        //         $dbfile = $dropbox->upload($dropboxFile, $db_chapter_folder.'/Statement2.'.$imageFileType, ['autorename' => true]);
-
-        //         //Uploaded File
-        //         $file_name_assigned = $db_chapter_folder.'/'.$dbfile->getName();
-
-        //         $share_existed = false;
-        //         try {
-        //             $response = $dropbox->postToAPI('/sharing/create_shared_link_with_settings', ['path' => $file_name_assigned, 'settings' => ['requested_visibility' => 'public']]);
-        //         } catch (\Exception $e) { //Share link already exists
-        //             $response = $dropbox->postToAPI('/sharing/list_shared_links', ['path' => $file_name_assigned]);
-        //             $share_existed = true;
-        //         }
-        //         $decoded = $response->getDecodedBody();
-
-        //         if ($share_existed) {
-        //             $bank_statement_2_included_path = $decoded['links'][0]['url'];
-        //         } else {
-        //             $bank_statement_2_included_path = $decoded['url'];
-        //         }
-        //     } else {
-        //         $bank_statement_2_included_path = '';
-        //     }
-        // } else {
-        //     $bank_statement_2_included_path = $input['Statement2Path'];
-        // }
-
-        /////////////////// Award 1 ///////////////////
-        for ($i = 1; $i <= 1; $i++) {
-            $total = count(array_filter($_FILES['Award1']['name']));
-            $AwardFiles = null;
-            if ($total > 0) {
-                for ($j = 0; $j < $total; $j++) {
-                    $target_file = $target_dir.basename($_FILES['Award'.$i]['name'][$j]);
-                    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-                    $uploadOk = 1;
-                    if (trim($_FILES['Award'.$i]['name'][$j]) == '') {
-                        $uploadOk = 0;
-                    }
-                    // Check file size
-                    if ($_FILES['Award'.$i]['size'][$j] > 5000000) {
-                        echo "Sorry, your file is too large - file not uploaded.\n";
-
-                        return redirect()->back()->with('fail', 'Sorry, your file is too large - file not uploaded.');
-                        $uploadOk = 0;
-                    }
-
-                    // Allow certain file formats
-                    if ($imageFileType != 'jpg' && $imageFileType != 'jpeg' && $imageFileType != 'pdf') {
-                        $uploadOk = 0;
-
-                        return redirect()->back()->with('fail', 'Sorry, only JPG, JPEG & PDF files are allowed.');
-                    }
-                    // Check if $uploadOk is set to 0 by an error
-                    if ($uploadOk == 0) {
-                        return redirect()->back()->with('fail', 'Sorry, your file was not uploaded.');
-                    } else {
-                        move_uploaded_file($_FILES['Award'.$i]['tmp_name'][$j], $target_file);
-                    }
-
-                    if ($uploadOk) {
-                        $file = fopen($target_file, 'rb') or exit("can't open file");
-
-                        $app = new DropboxApp($dropboxKey, $dropboxSecret, $dropboxToken);
-                        $dropbox = new Dropbox($app);
-
-                        if ($chapter_state == '**') { //this is an internatioanl chapter, set state to intl_state
-                            $db_chapter_folder = '/Conference '.$chapter_conf.'/International/'.$chapter_country.'/'.trim($chapter_name);
-                        } else {
-                            $db_chapter_folder = '/Conference '.$chapter_conf.'/'.$chapter_state.'/'.trim($chapter_name);
-                        }
-                        try {
-                            $dropbox->createFolder($db_chapter_folder);
-                        } catch (\Exception $e) {
-                            // just ignore
-                        }
-                        $dropboxFile = new DropboxFile($target_file);
-                        $dbfile = $dropbox->upload($dropboxFile, $db_chapter_folder.'/Award_'.$i.'.'.$imageFileType, ['autorename' => true]);
-
-                        //Uploaded File
-                        $file_name_assigned = $db_chapter_folder.'/'.$dbfile->getName();
-
-                        $share_existed = false;
-                        try {
-                            $response = $dropbox->postToAPI('/sharing/create_shared_link_with_settings', ['path' => $file_name_assigned, 'settings' => ['requested_visibility' => 'public']]);
-                        } catch (\Exception $e) { //Share link already exists
-                            $response = $dropbox->postToAPI('/sharing/list_shared_links', ['path' => $file_name_assigned]);
-                            $share_existed = true;
-                        }
-                        $decoded = $response->getDecodedBody();
-
-                        if ($share_existed) {
-                            $AwardFiles[$i]['url'] = $decoded['links'][0]['url'];
-                        } else {
-                            $AwardFiles[$i]['url'] = $decoded['url'];
-                        }
-                        $award_1_files = base64_encode(serialize($AwardFiles));
-                    }
-                }
-            } else {
-                $award_1_files = ltrim(rtrim($_POST['Award'.$i.'Path'], ','), "'");
-            }
-        }
-        /////////////////// Award 2 ///////////////////
-        for ($i = 2; $i <= 2; $i++) {
-            $total = count(array_filter($_FILES['Award2']['name']));
-            $AwardFiles = null;
-            if ($total > 0) {
-                for ($j = 0; $j < $total; $j++) {
-                    $target_file = $target_dir.basename($_FILES['Award'.$i]['name'][$j]);
-                    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-                    $uploadOk = 1;
-                    if (trim($_FILES['Award'.$i]['name'][$j]) == '') {
-                        $uploadOk = 0;
-                    }
-                    // Check file size
-                    if ($_FILES['Award'.$i]['size'][$j] > 5000000) {
-                        echo "Sorry, your file is too large - file not uploaded.\n";
-
-                        return redirect()->back()->with('fail', 'Sorry, your file is too large - file not uploaded.');
-                        $uploadOk = 0;
-                    }
-
-                    // Allow certain file formats
-                    if ($imageFileType != 'jpg' && $imageFileType != 'jpeg' && $imageFileType != 'pdf') {
-                        $uploadOk = 0;
-
-                        return redirect()->back()->with('fail', 'Sorry, only JPG, JPEG & PDF files are allowed.');
-                    }
-                    // Check if $uploadOk is set to 0 by an error
-                    if ($uploadOk == 0) {
-                        return redirect()->back()->with('fail', 'Sorry, your file was not uploaded.');
-                    } else {
-                        move_uploaded_file($_FILES['Award'.$i]['tmp_name'][$j], $target_file);
-                    }
-
-                    if ($uploadOk) {
-                        $file = fopen($target_file, 'rb') or exit("can't open file");
-
-                        $app = new DropboxApp($dropboxKey, $dropboxSecret, $dropboxToken);
-                        $dropbox = new Dropbox($app);
-
-                        if ($chapter_state == '**') { //this is an internatioanl chapter, set state to intl_state
-                            $db_chapter_folder = '/Conference '.$chapter_conf.'/International/'.$chapter_country.'/'.trim($chapter_name);
-                        } else {
-                            $db_chapter_folder = '/Conference '.$chapter_conf.'/'.$chapter_state.'/'.trim($chapter_name);
-                        }
-                        try {
-                            $dropbox->createFolder($db_chapter_folder);
-                        } catch (\Exception $e) {
-                            // just ignore
-                        }
-                        $dropboxFile = new DropboxFile($target_file);
-                        $dbfile = $dropbox->upload($dropboxFile, $db_chapter_folder.'/Award_'.$i.'.'.$imageFileType, ['autorename' => true]);
-
-                        //Uploaded File
-                        $file_name_assigned = $db_chapter_folder.'/'.$dbfile->getName();
-
-                        $share_existed = false;
-                        try {
-                            $response = $dropbox->postToAPI('/sharing/create_shared_link_with_settings', ['path' => $file_name_assigned, 'settings' => ['requested_visibility' => 'public']]);
-                        } catch (\Exception $e) { //Share link already exists
-                            $response = $dropbox->postToAPI('/sharing/list_shared_links', ['path' => $file_name_assigned]);
-                            $share_existed = true;
-                        }
-                        $decoded = $response->getDecodedBody();
-
-                        if ($share_existed) {
-                            $AwardFiles[$i]['url'] = $decoded['links'][0]['url'];
-                        } else {
-                            $AwardFiles[$i]['url'] = $decoded['url'];
-                        }
-
-                        // fclose($file);
-                        //unlink($target_file);
-                        $award_2_files = base64_encode(serialize($AwardFiles));
-                    }
-                }
-            } else {
-                $award_2_files = ltrim(rtrim($_POST['Award'.$i.'Path'], ','), "'");
-            }
-        }
-        /////////////////// Award 3 ///////////////////
-        for ($i = 3; $i <= 3; $i++) {
-            $total = count(array_filter($_FILES['Award3']['name']));
-            $AwardFiles = null;
-            if ($total > 0) {
-                for ($j = 0; $j < $total; $j++) {
-                    $target_file = $target_dir.basename($_FILES['Award'.$i]['name'][$j]);
-                    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-                    $uploadOk = 1;
-                    if (trim($_FILES['Award'.$i]['name'][$j]) == '') {
-                        $uploadOk = 0;
-                    }
-                    // Check file size
-                    if ($_FILES['Award'.$i]['size'][$j] > 5000000) {
-                        echo "Sorry, your file is too large - file not uploaded.\n";
-
-                        return redirect()->back()->with('fail', 'Sorry, your file is too large - file not uploaded.');
-                        $uploadOk = 0;
-                    }
-
-                    // Allow certain file formats
-                    if ($imageFileType != 'jpg' && $imageFileType != 'jpeg' && $imageFileType != 'pdf') {
-                        $uploadOk = 0;
-
-                        return redirect()->back()->with('fail', 'Sorry, only JPG, JPEG & PDF files are allowed.');
-                    }
-                    // Check if $uploadOk is set to 0 by an error
-                    if ($uploadOk == 0) {
-                        return redirect()->back()->with('fail', 'Sorry, your file was not uploaded.');
-                    } else {
-                        move_uploaded_file($_FILES['Award'.$i]['tmp_name'][$j], $target_file);
-                    }
-
-                    if ($uploadOk) {
-                        $file = fopen($target_file, 'rb') or exit("can't open file");
-
-                        $app = new DropboxApp($dropboxKey, $dropboxSecret, $dropboxToken);
-                        $dropbox = new Dropbox($app);
-
-                        if ($chapter_state == '**') { //this is an internatioanl chapter, set state to intl_state
-                            $db_chapter_folder = '/Conference '.$chapter_conf.'/International/'.$chapter_country.'/'.trim($chapter_name);
-                        } else {
-                            $db_chapter_folder = '/Conference '.$chapter_conf.'/'.$chapter_state.'/'.trim($chapter_name);
-                        }
-                        try {
-                            $dropbox->createFolder($db_chapter_folder);
-                        } catch (\Exception $e) {
-                            // just ignore
-                        }
-                        $dropboxFile = new DropboxFile($target_file);
-                        $dbfile = $dropbox->upload($dropboxFile, $db_chapter_folder.'/Award_'.$i.'.'.$imageFileType, ['autorename' => true]);
-
-                        //Uploaded File
-                        $file_name_assigned = $db_chapter_folder.'/'.$dbfile->getName();
-
-                        $share_existed = false;
-                        try {
-                            $response = $dropbox->postToAPI('/sharing/create_shared_link_with_settings', ['path' => $file_name_assigned, 'settings' => ['requested_visibility' => 'public']]);
-                        } catch (\Exception $e) { //Share link already exists
-                            $response = $dropbox->postToAPI('/sharing/list_shared_links', ['path' => $file_name_assigned]);
-                            $share_existed = true;
-                        }
-                        $decoded = $response->getDecodedBody();
-
-                        if ($share_existed) {
-                            $AwardFiles[$i]['url'] = $decoded['links'][0]['url'];
-                        } else {
-                            $AwardFiles[$i]['url'] = $decoded['url'];
-                        }
-                        $award_3_files = base64_encode(serialize($AwardFiles));
-                    }
-                }
-            } else {
-                $award_3_files = ltrim(rtrim($_POST['Award'.$i.'Path'], ','), "'");
-            }
-        }
-
-        /////////////////// Award 4 ///////////////////
-        for ($i = 4; $i <= 4; $i++) {
-            $total = count(array_filter($_FILES['Award4']['name']));
-            $AwardFiles = null;
-            if ($total > 0) {
-                for ($j = 0; $j < $total; $j++) {
-                    $target_file = $target_dir.basename($_FILES['Award'.$i]['name'][$j]);
-                    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-                    $uploadOk = 1;
-                    if (trim($_FILES['Award'.$i]['name'][$j]) == '') {
-                        $uploadOk = 0;
-                    }
-                    // Check file size
-                    if ($_FILES['Award'.$i]['size'][$j] > 5000000) {
-                        echo "Sorry, your file is too large - file not uploaded.\n";
-
-                        return redirect()->back()->with('fail', 'Sorry, your file is too large - file not uploaded.');
-                        $uploadOk = 0;
-                    }
-
-                    // Allow certain file formats
-                    if ($imageFileType != 'jpg' && $imageFileType != 'jpeg' && $imageFileType != 'pdf') {
-                        $uploadOk = 0;
-
-                        return redirect()->back()->with('fail', 'Sorry, only JPG, JPEG & PDF files are allowed.');
-                    }
-                    // Check if $uploadOk is set to 0 by an error
-                    if ($uploadOk == 0) {
-                        return redirect()->back()->with('fail', 'Sorry, your file was not uploaded.');
-                    } else {
-                        move_uploaded_file($_FILES['Award'.$i]['tmp_name'][$j], $target_file);
-                    }
-
-                    if ($uploadOk) {
-                        $file = fopen($target_file, 'rb') or exit("can't open file");
-
-                        $app = new DropboxApp($dropboxKey, $dropboxSecret, $dropboxToken);
-                        $dropbox = new Dropbox($app);
-
-                        if ($chapter_state == '**') { //this is an internatioanl chapter, set state to intl_state
-                            $db_chapter_folder = '/Conference '.$chapter_conf.'/International/'.$chapter_country.'/'.trim($chapter_name);
-                        } else {
-                            $db_chapter_folder = '/Conference '.$chapter_conf.'/'.$chapter_state.'/'.trim($chapter_name);
-                        }
-                        try {
-                            $dropbox->createFolder($db_chapter_folder);
-                        } catch (\Exception $e) {
-                            // just ignore
-                        }
-                        $dropboxFile = new DropboxFile($target_file);
-                        $dbfile = $dropbox->upload($dropboxFile, $db_chapter_folder.'/Award_'.$i.'.'.$imageFileType, ['autorename' => true]);
-
-                        //Uploaded File
-                        $file_name_assigned = $db_chapter_folder.'/'.$dbfile->getName();
-
-                        $share_existed = false;
-                        try {
-                            $response = $dropbox->postToAPI('/sharing/create_shared_link_with_settings', ['path' => $file_name_assigned, 'settings' => ['requested_visibility' => 'public']]);
-                        } catch (\Exception $e) { //Share link already exists
-                            $response = $dropbox->postToAPI('/sharing/list_shared_links', ['path' => $file_name_assigned]);
-                            $share_existed = true;
-                        }
-                        $decoded = $response->getDecodedBody();
-
-                        if ($share_existed) {
-                            $AwardFiles[$i]['url'] = $decoded['links'][0]['url'];
-                        } else {
-                            $AwardFiles[$i]['url'] = $decoded['url'];
-                        }
-                        $award_4_files = base64_encode(serialize($AwardFiles));
-                    }
-                }
-            } else {
-                $award_4_files = ltrim(rtrim($_POST['Award'.$i.'Path'], ','), "'");
-            }
-        }
-
-        /////////////////// Award 5 ///////////////////
-        for ($i = 5; $i <= 5; $i++) {
-            $total = count(array_filter($_FILES['Award5']['name']));
-            $AwardFiles = null;
-            if ($total > 0) {
-                for ($j = 0; $j < $total; $j++) {
-                    $target_file = $target_dir.basename($_FILES['Award'.$i]['name'][$j]);
-                    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-                    $uploadOk = 1;
-                    if (trim($_FILES['Award'.$i]['name'][$j]) == '') {
-                        $uploadOk = 0;
-                    }
-                    // Check file size
-                    if ($_FILES['Award'.$i]['size'][$j] > 5000000) {
-                        echo "Sorry, your file is too large - file not uploaded.\n";
-
-                        return redirect()->back()->with('fail', 'Sorry, your file is too large - file not uploaded.');
-                        $uploadOk = 0;
-                    }
-
-                    // Allow certain file formats
-                    if ($imageFileType != 'jpg' && $imageFileType != 'jpeg' && $imageFileType != 'pdf') {
-                        // echo "Sorry, only xls & xlsx files are allowed.\n";
-                        $uploadOk = 0;
-
-                        return redirect()->back()->with('fail', 'Sorry, only JPG, JPEG & PDF files are allowed.');
-                    }
-                    // Check if $uploadOk is set to 0 by an error
-                    if ($uploadOk == 0) {
-                        // echo "Sorry, your file was not uploaded.";
-                        return redirect()->back()->with('fail', 'Sorry, your file was not uploaded.');
-                    } else {
-                        move_uploaded_file($_FILES['Award'.$i]['tmp_name'][$j], $target_file);
-                    }
-
-                    if ($uploadOk) {
-                        $file = fopen($target_file, 'rb') or exit("can't open file");
-
-                        $app = new DropboxApp($dropboxKey, $dropboxSecret, $dropboxToken);
-                        $dropbox = new Dropbox($app);
-
-                        if ($chapter_state == '**') { //this is an internatioanl chapter, set state to intl_state
-                            $db_chapter_folder = '/Conference '.$chapter_conf.'/International/'.$chapter_country.'/'.trim($chapter_name);
-                        } else {
-                            $db_chapter_folder = '/Conference '.$chapter_conf.'/'.$chapter_state.'/'.trim($chapter_name);
-                        }
-                        try {
-                            $dropbox->createFolder($db_chapter_folder);
-                        } catch (\Exception $e) {
-                            // just ignore
-                        }
-                        $dropboxFile = new DropboxFile($target_file);
-                        $dbfile = $dropbox->upload($dropboxFile, $db_chapter_folder.'/Award_'.$i.'.'.$imageFileType, ['autorename' => true]);
-
-                        //Uploaded File
-                        $file_name_assigned = $db_chapter_folder.'/'.$dbfile->getName();
-
-                        $share_existed = false;
-                        try {
-                            $response = $dropbox->postToAPI('/sharing/create_shared_link_with_settings', ['path' => $file_name_assigned, 'settings' => ['requested_visibility' => 'public']]);
-                        } catch (\Exception $e) { //Share link already exists
-                            $response = $dropbox->postToAPI('/sharing/list_shared_links', ['path' => $file_name_assigned]);
-                            $share_existed = true;
-                        }
-                        $decoded = $response->getDecodedBody();
-
-                        if ($share_existed) {
-                            $AwardFiles[$i]['url'] = $decoded['links'][0]['url'];
-                        } else {
-                            $AwardFiles[$i]['url'] = $decoded['url'];
-                        }
-                        $award_5_files = base64_encode(serialize($AwardFiles));
-                    }
-                }
-            } else {
-                $award_5_files = ltrim(rtrim($_POST['Award'.$i.'Path'], ','), "'");
-            }
-        }
-
         $chapterDetailsExistArr = DB::table('financial_report')->where('chapter_id', '=', $chapter_id)->get();
         $chapterDetailsExist = $chapterDetailsExistArr->count();
 
-        // Step 1 Fields
+        // CHAPTER DUES
         if (isset($input['optChangeDues']) && $input['optChangeDues'] == 'no') {
             $input['changed_dues'] = 0;
         } elseif (isset($input['optChangeDues'])) {
@@ -2070,7 +1393,7 @@ class BoardController extends Controller
         $total_associate_members = $input['TotalAssociateMembers'];
         $associate_member_fee = $input['AssociateMemberDues'];
 
-        //Steps 2 Fields
+        // MONTHLY MEETING EXPENSES
         $manditory_meeting_fees_paid = $input['ManditoryMeetingFeesPaid'];
         $voluntary_donations_paid = $input['VoluntaryDonationsPaid'];
         $paid_baby_sitters = $input['PaidBabySitters'];
@@ -2084,7 +1407,7 @@ class BoardController extends Controller
         }
         $childrens_room_expenses = base64_encode(serialize($ChildrenRoomArray));
 
-        // Step 3 Fields
+        // SERVICE PROJECTS
         $ServiceProjectFields = null;
         $FieldCount = $input['ServiceProjectRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
@@ -2096,7 +1419,7 @@ class BoardController extends Controller
         }
         $service_project_array = base64_encode(serialize($ServiceProjectFields));
 
-        // Step 4 Fields
+        // PARTIES & MEMBER BENEFITS
         $PartyExpenseFields = null;
         $FieldCount = $input['PartyExpenseRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
@@ -2106,7 +1429,7 @@ class BoardController extends Controller
         }
         $party_expense_array = base64_encode(serialize($PartyExpenseFields));
 
-        // Step 5 Fields
+        // OFFICE & OPERATING EXPENSES
         $office_printing_costs = $input['PrintingCosts'];
         $office_postage_costs = $input['PostageCosts'];
         $office_membership_pins_cost = $input['MembershipPins'];
@@ -2120,6 +1443,7 @@ class BoardController extends Controller
 
         $office_other_expenses = base64_encode(serialize($OfficeOtherArray));
 
+        // INTERNATIONAL EVENTS & RE-REGISTRATION
         $InternationalEventArray = null;
         $FieldCount = $input['InternationalEventRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
@@ -2130,7 +1454,7 @@ class BoardController extends Controller
         $international_event_array = base64_encode(serialize($InternationalEventArray));
         $annual_registration_fee = $input['AnnualRegistrationFee'];
 
-        // Step 6 Fields
+        // DONATIONS TO CHAPTER
         $MonetaryDonation = null;
         $FieldCount = $input['MonDonationRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
@@ -2150,7 +1474,7 @@ class BoardController extends Controller
         }
         $non_monetary_donations_to_chapter = base64_encode(serialize($NonMonetaryDonation));
 
-        // Step 7 Fields
+        // OTHER INCOME & EXPENSES
         $OtherOffice = null;
         $FieldCount = $input['OtherOfficeExpenseRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
@@ -2160,7 +1484,7 @@ class BoardController extends Controller
         }
         $other_income_and_expenses_array = base64_encode(serialize($OtherOffice));
 
-        // Step 8 Fields
+        // BANK RECONCILLIATION
         $amount_reserved_from_previous_year = $input['AmountReservedFromLastYear'];
         $bank_balance_now = $input['BankBalanceNow'];
         $petty_cash = $input['PettyCash'];
@@ -2177,7 +1501,7 @@ class BoardController extends Controller
         }
         $bank_reconciliation_array = base64_encode(serialize($BankRecArray));
 
-        // Step 9 Fields
+        // CHPATER QUESTIONS
         //Question 1
         $receive_compensation = isset($input['ReceiveCompensation']) ? $input['ReceiveCompensation'] : null;
         $receive_compensation_explanation = $input['ReceiveCompensationExplanation'];
@@ -2245,7 +1569,7 @@ class BoardController extends Controller
         //Question 24
         $wheres_the_money = $input['WheresTheMoney'];
 
-        // Step 11 Fields
+        // AWARDS
         $award_nominations = $input['TotalAwardNominations'];
         //Award Nomination 1
         if (isset($input['NominationType1'])) {
@@ -2432,7 +1756,7 @@ class BoardController extends Controller
             $award_5_nomination_type = $input['NominationType5'];
         } else {
             $award_5_nomination_type = null;
-        }http://localhost/chapter/boardinfo/2152#
+        }
 
         if (isset($input['OutstandingFollowByLaws5']) && $input['OutstandingFollowByLaws5'] == 'no') {
             $award_5_outstanding_follow_bylaws = 0;
@@ -2480,13 +1804,30 @@ class BoardController extends Controller
             $award_agree = null;
         }
 
-        // Step 12 Fields
+        // SUBMISSION INFORMATION
         $completed_name = $input['CompletedName'];
         $completed_email = $input['CompletedEmail'];
 
         if ($reportReceived == 1) {
             DB::update('UPDATE chapters SET financial_report_received = ? where id = ?', [1, $chapter_id]);
         }
+
+        // Links for uploaded documents
+        $files = DB::table('financial_report')
+                ->select('*')
+                ->where('chapter_id', '=', $chapter_id)
+                ->get();
+
+        $roster_path = $files[0]->roster_path;
+        $file_irs_path = $files[0]->file_irs_path;
+        $bank_statement_included_path = $files[0]->bank_statement_included_path;
+        $bank_statement_2_included_path = $files[0]->bank_statement_2_included_path;
+
+        // Call the load_coordinators function
+        $chId = $chapter_id;
+        $coordinatorData = $this->load_coordinators($chId, $chName, $chState, $chConf, $chPcid);
+        $ReviewerEmail = $coordinatorData['ReviewerEmail'];
+        $coordinator_array = $coordinatorData['coordinator_array'];
 
         DB::beginTransaction();
         try {
@@ -2496,7 +1837,6 @@ class BoardController extends Controller
                     'changed_dues' => $changed_dues,
                     'different_dues' => $different_dues,
                     'not_all_full_dues' => $not_all_full_dues,
-                    //'roster_path' => $roster_path,
                     'total_new_members' => $total_new_members,
                     'total_renewed_members' => $total_renewed_members,
                     'dues_per_member' => $dues_per_member,
@@ -2570,8 +1910,6 @@ class BoardController extends Controller
                     'file_irs_explanation' => $file_irs_explanation,
                     'bank_statement_included' => $bank_statement_included,
                     'bank_statement_included_explanation' => $bank_statement_included_explanation,
-                    //'bank_statement_included_path' => $bank_statement_included_path,
-                    //'bank_statement_2_included_path' => $bank_statement_2_included_path,
                     'wheres_the_money' => $wheres_the_money,
                     'award_nominations' => $award_nominations,
                     'farthest_step_visited' => $farthest_step_visited,
@@ -2608,12 +1946,6 @@ class BoardController extends Controller
                     'award_5_outstanding_support_international' => $award_5_outstanding_support_international,
                     'award_5_outstanding_project_desc' => $award_5_outstanding_project_desc,
                     'award_agree' => $award_agree,
-                    //'file_irs_path' => $file_irs_path,
-                    'award_1_files' => $award_1_files,
-                    'award_2_files' => $award_2_files,
-                    'award_3_files' => $award_3_files,
-                    'award_4_files' => $award_4_files,
-                    'award_5_files' => $award_5_files,
                 ]);
 
                 DB::commit();
@@ -2625,7 +1957,6 @@ class BoardController extends Controller
                 $report->changed_dues = $changed_dues;
                 $report->different_dues = $different_dues;
                 $report->not_all_full_dues = $not_all_full_dues;
-                //$report->roster_path = $roster_path;
                 $report->total_new_members = $total_new_members;
                 $report->total_renewed_members = $total_renewed_members;
                 $report->dues_per_member = $dues_per_member;
@@ -2699,8 +2030,6 @@ class BoardController extends Controller
                 $report->file_irs_explanation = $file_irs_explanation;
                 $report->bank_statement_included = $bank_statement_included;
                 $report->bank_statement_included_explanation = $bank_statement_included_explanation;
-                //$report->bank_statement_included_path = $bank_statement_included_path;
-                //$report->bank_statement_2_included_path = $bank_statement_2_included_path;
                 $report->wheres_the_money = $wheres_the_money;
                 $report->award_nominations = $award_nominations;
                 $report->award_1_nomination_type = $award_1_nomination_type;
@@ -2734,21 +2063,31 @@ class BoardController extends Controller
                 $report->award_5_outstanding_support_international = $award_5_outstanding_support_international;
                 $report->award_5_outstanding_project_desc = $award_5_outstanding_project_desc;
                 $report->award_agree = $award_agree;
-                //$report->file_irs_path = $file_irs_path;
-                $report->award_1_files = $award_1_files;
-                $report->award_2_files = $award_2_files;
-                $report->award_3_files = $award_3_files;
-                $report->award_4_files = $award_4_files;
-                $report->award_5_files = $award_5_files;
                 $report->farthest_step_visited = $farthest_step_visited;
                 $report->completed_name = $completed_name;
                 $report->completed_email = $completed_email;
 
+                // Send email to Assigned Reviewer//
+                $to_email = $ReviewerEmail;
+                $mailData = ['chapter_name' => $chapter_name,
+                    'chapter_state' => $chapter_state,
+                    'completed_name' => $completed_name,
+                    'completed_email' => $completed_email,
+                    'roster_path' => $roster_path,
+                    'file_irs_path' => $file_irs_path,
+                    'bank_statement_included_path' => $bank_statement_included_path,
+                    'bank_statement_2_included_path' => $bank_statement_2_included_path,
+                ];
+
+                if ($reportReceived == 1) {
+                Mail::to($to_email)
+                ->send(new EOYFinancialSubmitted($mailData, $coordinator_array));
+                }
+
                 $report->save();
+
                 DB::commit();
                 if ($reportReceived == 1) {
-                    $this->load_coordinators($chapter_id, $chName, $chState, $chConf, $chPcid);
-
                     return redirect()->back()->with('success', 'Report has been successfully Submitted');
                 } else {
                     return redirect()->back()->with('success', 'Report has been successfully updated');
@@ -2766,11 +2105,11 @@ class BoardController extends Controller
 
     public function load_coordinators($chId, $chName, $chState, $chConf, $chPcid)
     {
-
         $financial_report_array = FinancialReport::find($chId);
 
         $chapterDetails = DB::table('chapters')
-            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state', 'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
+            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state',
+            'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('chapters.id', '=', $chId)
@@ -2847,25 +2186,10 @@ class BoardController extends Controller
 
         DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$reviewer_id, $chId]);
 
-        $fiancialReport = DB::table('financial_report')
-            ->select('*')
-            ->where('id', '=', $chId)
-            ->get();
-
-        $mailData = [
-            'chapter_name' => $fiancialReport->get('ch_name'),
-            'chapter_state' => $fiancialReport->get('ch_state'),
-            'roster_path' => $fiancialReport->get('roster_path'),
-            'file_irs_path' => $fiancialReport->get('file_irs_path'),
-            'bank_statement_included_path' => $fiancialReport->get('bank_statement_included_path'),
-            'bank_statement_2_included_path' => $fiancialReport->get('bank_statement_2_included_path'),
+        return [
+            'ReviewerEmail' => $to_email,
+            'coordinator_array' => $coordinator_array,
         ];
-
-        //Send email to new Assigned Reviewer//
-        Mail::to($to_email)
-            ->send(new EOYFinancialSubmitted($mailData, $coordinator_array));
-
-        return true;
     }
 
     public function getRosterfile(): BinaryFileResponse

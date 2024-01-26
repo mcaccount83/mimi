@@ -4,6 +4,10 @@
 {{ $mailData['chapter_name'] }}, {{ $mailData['chapter_state'] }} has submitted their Financial Report. It is ready to be reviewed.
 <br>
 Submitted by:
+<ul>
+    <li>{{$mailData['completed_name']}}</li>
+    <li>{{$mailData['completed_email']}}</li>
+</ul>
 <br>
 Attachments:
 <ul>

@@ -58,9 +58,6 @@
         <div class="col-md-12">
 		    <div class="card">
                <div class="card-body">
-                <div id="reportStatusText" class="description text-center" style="color: red;">
-                    <p><strong><?php echo date('Y')-1 .'-'.date('Y');?> Reports are not available at this time.</strong></p>
-                </div>
                     <div class="col-md-12 text-center">
                         @foreach($chapterList as $list)
                     <div class="col-md-4 float-left">
@@ -70,6 +67,9 @@
                        <a class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>>No EIN Letter on File</a>
                        	@endif
                       </div>
+                      <div id="reportStatusText" class="description text-center" style="color: red;">
+                        <p><strong><?php echo date('Y')-1 .'-'.date('Y');?> Reports are not available at this time.</strong></p>
+                    </div>
                     <div class="col-md-4 float-left">
                         @if($list->new_board_active=='1')
                         <button id="BoardReportAlwaysDisabled" type="button"  class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $list->id]) }}'">
@@ -641,12 +641,15 @@
 /* Disable fields and buttons  */
 $(document).ready(function () {
         //Update to show/hide for true/false
-        $('#reportStatusText').show();  /*report status text (.show/.hide to change visibility)*/
         $('#readOnlyText').hide();  /*read only text (.show/.hide to change visibility)*/
         $('input, select, textarea').prop('disabled', false);  /*fields on page (true disables fields for editing)*/
-        $('#BoardReport').prop('disabled', true);  /*board report button (true grays out button)*/
-        $('#FinancialReport').prop('disabled', true);  /*financial report button (true grays out button)*/
         $('#Save').prop('disabled', false);  /*save button (true grays out button)*/
+
+        $('#reportStatusText').show();  /*report status text (.show/.hide to change visibility)*/
+        $('#BoardReport').hide();  /*board report button (.show/.hide to change visibility)*/
+        $('#BoardReportAlwaysDisabled').hide();  /*board report button (.show/.hide to change visibility)*/
+        $('#FinancialReport').hide();  /*inancial report button (.show/.hide to change visibility)*/
+
         $('.BoardInfoStatus').hide();  /*board info status (.show/.hide to change visibility)*/
         $('.FinancialReportStatus').hide();  /*financial report status (.show/.hide to change visibility)*/
 

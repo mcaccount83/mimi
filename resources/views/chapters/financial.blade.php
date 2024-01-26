@@ -93,6 +93,11 @@
                                     <div class="flex-item">
                                         Renewed Members:&nbsp;&nbsp;&nbsp;<strong>{{ $financial_report_array['total_renewed_members'] }}</strong>
                                     </div>
+                                    @if ($financial_report_array['different_dues'] != 1)
+                                        <div class="flex-item">
+                                           &nbsp;&nbsp;&nbsp;
+                                        </div>
+                                    @endif
                                     @if ($financial_report_array['different_dues'] == 1)
                                         <div class="flex-item">
                                             Renewal Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.sprintf('%0.2f',$financial_report_array['dues_per_member_renewal']) }}</strong>
