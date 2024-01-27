@@ -190,8 +190,8 @@ Route::get('/boardinfo', [BoardController::class, 'showBoardInfo'])->name('board
 Route::post('/boardinfo/{id}', [BoardController::class, 'createBoardInfo'])->name('boardinfo.createboardinfo');
 Route::get('/board/financial/{id}', [BoardController::class, 'showFinancialReport'])->name('board.showfinancial');
 Route::post('/board/financial/{id}', [BoardController::class, 'storeFinancialReport'])->name('board.storefinancial');
-Route::get('/board/financial/print/{id}', [BoardController::class, 'printFinancialReport'])->name('board.printfinancial');
-Route::get('/board/financial/print2/{id}', [BoardController::class, 'printFinancialReport2'])->name('board.printfinancial2');
+// Route::get('/board/financial/print/{id}', [BoardController::class, 'printFinancialReport'])->name('board.printfinancial');
+// Route::get('/board/financial/print2/{id}', [BoardController::class, 'printFinancialReport2'])->name('board.printfinancial2');
 
 /**
  * Routes for Reports

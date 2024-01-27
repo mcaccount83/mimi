@@ -20,37 +20,25 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card card-user">
-                <div class="card-image color_header">
-
-                </div>
+                <div class="card-image color_header"></div>
                 <div class="card-body">
                     <div class="author">
-                        <a href="#">
                             <div class="border-gray avatar">
 								<img src="{{ asset('chapter_theme/img/logo.png') }}" alt="...">
 							</div>
-                           <h2 class="moms-c"> MOMS Club of {{ $chapterDetails[0]->chapter_name }}, {{$chapterDetails[0]->state}} </h2>
-                           <h2 class="moms-c"> <?php echo date('Y')-1 .'-'.date('Y');?> Financial Report </h2>
-                        </a>
-                        <br>
-                        <p class="description">
-                            Please complete the report below with finanacial information about your chapter.
-                        </p>
-                      <h4><center><?php if($chapterDetails[0]->financial_report_received) echo "<br><font color=\"red\">Thank You! Your chapter's Financial Report has been Submitted!</font>"; ?></center></h4>
-
+                        <h2 class="moms-c"> MOMS Club of {{ $chapterDetails[0]->chapter_name }}, {{$chapterDetails[0]->state}}</h2>
+                        <h2 class="moms-c"> <?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</h2>
+                        <h4><center><?php if(!$chapterDetails[0]->financial_report_received) echo "<br>Please complete the report below with finanacial information about your chapter."; ?></center></h4>
+                        <h4><center><?php if($chapterDetails[0]->financial_report_received) echo "<br><font color=\"red\">Your chapter's Financial Report has been Submitted!<br>
+                            Please save a copy of the PDF for your records.</font>"; ?></center></h4>
                     </div>
-
                 </div>
-
             </div>
         </div>
-    <!--<h4 class="moms-c">MOMS Club of {{ $chapterDetails[0]->chapter_name }}, {{$chapterDetails[0]->state}} Financial Report</h4>-->
+    </div>
     <div class="row">
-
         <div class="col-md-12">
-            <!--<form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST"  action='{{ route("board.storefinancial",Session::get("chapterid")) }}' novalidate>-->
             <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board.storefinancial", ["id" => Session::get("chapterid")]) }}' novalidate>
-
             @csrf
             <input type="hidden" name="ch_name" value="<?php echo $chapterDetails[0]->chapter_name; ?>" />
             <input type="hidden" name="ch_state" value="<?php echo $chapterDetails[0]->state; ?>" />
@@ -60,13 +48,11 @@
             <input type="hidden" name="FurthestStep" id="FurthestStep" value="<?php if($financial_report_array['farthest_step_visited'] > 0) echo $financial_report_array['farthest_step_visited']; else echo "0"; ?>" />
 
             <div class="accordion js-accordion">
-
                 <!------Start Step 1 ------>
-                <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] <='1') echo "active";?>">
+                <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] <='1') echo "active";?>" >
                     <div class="accordion-header js-accordion-header">CHAPTER DUES</div>
-                    <div class="accordion-body js-accordion-body cls-print-1">
+                    <div class="accordion-body js-accordion-body">
                         <section>
-
                             <div class="col-md-12" id="RosterBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['roster_path']) echo "style=\"display: none;\"";} ?>>
                                 <div class="col-md-12">
                                     <strong style="color:red">Please Note</strong><br>
@@ -276,7 +262,7 @@
                 <!------Start Step 2 ------>
                 <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='2') echo "active";?>">
                     <div class="accordion-header js-accordion-header">MONTHLY MEETING EXPENSES</div>
-                    <div class="accordion-body js-accordion-body cls-print-2">
+                    <div class="accordion-body js-accordion-body">
                         <section>
                             <div class="form-row form-group">
                                 <div class="col-md-6 float-left">
@@ -418,7 +404,7 @@
                 <!------Start Step 3 ------>
                 <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='3') echo "active";?>">
                     <div class="accordion-header js-accordion-header">SERVICE PROJECTS</div>
-                    <div class="accordion-body js-accordion-body cls-print-3">
+                    <div class="accordion-body js-accordion-body ">
                     <section>
                         <div class="form-row form-group">
                           <p>
@@ -438,7 +424,7 @@
                                   <td width="16%">Income<span class="field-required">*</span></td>
                                   <td width="16%">Supplies & Expenses<span class="field-required">*</span></td>
                                   <td width="16%">Charity Donation<span class="field-required">*</span></td>
-                                  <td width="16%">M2M & Sustaining Chapter Donation<span class="field-required">*</span></td>
+                                  <td width="16%">M2M Donation<span class="field-required">*</span></td>
                                 </tr>
                                 </thead>
 
@@ -611,7 +597,7 @@
                 <!------Start Step 4 ------>
                 <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='4') echo "active";?>">
                 <div class="accordion-header js-accordion-header">PARTIES & MEMBER BENEFITS</div>
-                <div class="accordion-body js-accordion-body cls-print-4">
+                <div class="accordion-body js-accordion-body ">
                 <section>
                     <div class="form-row form-group">
                       <p>
@@ -721,7 +707,7 @@
                 <!------Start Step 5 ------>
             <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='5') echo "active";?>">
                 <div class="accordion-header js-accordion-header">OFFICE & OPERATING EXPENSES</div>
-                <div class="accordion-body js-accordion-body cls-print-5">
+                <div class="accordion-body js-accordion-body">
                     <section>
                     <div class="form-row form-group">
                       <p>
@@ -838,7 +824,7 @@
             <!------Start Step 5 ------>
             <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='55') echo "active";?>">
                 <div class="accordion-header js-accordion-header">INTERNATIONAL EVENTS & RE-REGISTRATION</div>
-                <div class="accordion-body js-accordion-body cls-print-55">
+                <div class="accordion-body js-accordion-body ">
                     <section>
                     <div class="form-row form-group">
                       <p>
@@ -902,8 +888,7 @@
                         </tbody>
                     </table>
                     <div class="col-md-12 float-left">
-                    <button type="button" class="btn btn-large btn-success btn-add-remove
-    " onclick="AddInternationalEventRow()" <?php if($submitted) echo "disabled"; ?>>Add</button>
+                    <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddInternationalEventRow()" <?php if($submitted) echo "disabled"; ?>>Add</button>
                     <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteInternationalEventRow()" <?php if($submitted) echo "disabled"; ?>>Remove</button>
                     </div>
                     <hr>
@@ -969,7 +954,7 @@
             <!------Start Step 6 ------>
             <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='6') echo "active";?>">
                 <div class="accordion-header js-accordion-header">DONATIONS TO YOUR CHAPTER</div>
-                <div class="accordion-body js-accordion-body cls-print-6">
+                <div class="accordion-body js-accordion-body ">
                 <section>
                 <div class="form-row form-group">
                     <label for="donation-income">
@@ -1031,8 +1016,7 @@
                         </tbody>
                     </table>
                     <div class="col-md-12">
-                        <button type="button" class="btn btn-large btn-success btn-add-remove
-" onclick="AddMonDonationRow()" <?php if($submitted) echo "disabled"; ?>>Add</button>
+                        <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddMonDonationRow()" <?php if($submitted) echo "disabled"; ?>>Add</button>
                         <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteMonDonationRow()" <?php if($submitted) echo "disabled"; ?>>Remove</button>
                     </div>
                     <div class="col-md-4 float-left">
@@ -1118,7 +1102,7 @@
                 <!------Start Step 7 ------>
                 <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='7') echo "active";?>">
                     <div class="accordion-header js-accordion-header">OTHER INCOME & EXPENSES</div>
-                    <div class="accordion-body js-accordion-body cls-print-7">
+                    <div class="accordion-body js-accordion-body ">
                     <section>
                     <div class="form-row form-group">
 
@@ -1238,395 +1222,14 @@
 
                     </div>
                 </section>
-              </div><!-- end of accordion body -->
-              </div><!-- end of accordion item -->
+                </div><!-- end of accordion body -->
+                </div><!-- end of accordion item -->
                 <!------End Step 7 ------>
 
-
-                  <!------Start Step 10 ------>
-            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='10') echo "active";?>">
-                <div class="accordion-header js-accordion-header">Section 10 - Financial Summary</div>
-                <div class="accordion-body js-accordion-body cls-print-10">
-                <section>
-                <div class="form-row form-group">
-                  <div class="col-sm-12">
-                    <h3>July 1, <?php echo date('Y')-1 .' - June 30, '.date('Y');?></h3>
-                  </div>
-                    <div class="col-sm-12 float-left">
-                        <div class="form-group">
-                            <div class="col-sm-6 float-left">
-                              <label for="">
-                                  Amount Reserved from Previous Year:
-                                  <span class="f-sm">(Treasury Balance 7/1/<?php echo date('Y')-1;?>)</span>
-                              </label>
-                            </div>
-                            <div class="col-sm-6 float-left">
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" name="SumAmountReservedFromPreviousYear" id="SumAmountReservedFromPreviousYear" class="form-control" value="0.00" aria-describedby="sizing-addon1" disabled>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-12">
-                      <div class="box-brd">
-                        <h4>Income</h4>
-                        <div class="col-sm-6 float-left">
-                            <p style="margin-left:10%;">Membership Dues Income:</p>
-                        </div>
-                        <div class="col-sm-6 float-left">
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                            <span class="input-group-addon">$</span>
-                                            <input type="number" class="form-control" aria-describedby="sizing-addon1" name="SumMembershipDuesIncome" id="SumMembershipDuesIncome" disabled>
-                                            </div>
-                                        </div>
-                      </div>
-                        <div class="col-sm-6 float-left">
-                            <p style="margin-left:10%;">Service Project Income:</p>
-                        </div>
-                        <div class="col-sm-6 float-left">
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                            <span class="input-group-addon">$</span>
-                                            <input type="number" class="form-control" name="SumServiceProjectIncome" id="SumServiceProjectIncome" disabled>
-                                            </div>
-                                        </div>
-                      </div>
-                        <div class="col-sm-6 float-left">
-                            <p style="margin-left:10%;">Party Income:</p>
-                        </div>
-                        <div class="col-sm-6 float-left">
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                            <span class="input-group-addon">$</span>
-                                            <input type="number" class="form-control" name="SumPartyIncome" id="SumPartyIncome" disabled>
-                                            </div>
-                                        </div>
-                      </div>
-                        <div class="col-sm-6 float-left">
-                            <p style="margin-left:10%;">Monetary Donations to Chapter:</p>
-                        </div>
-                        <div class="col-sm-6 float-left">
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                            <span class="input-group-addon">$</span>
-                                            <input type="number" class="form-control" name="SumMonetaryDonationIncome" id="SumMonetaryDonationIncome" disabled>
-                                            </div>
-                                        </div>
-                      </div>
-                        <div class="col-sm-6 float-left">
-                            <p style="margin-left:10%;">International Event Reservation Income:</p>
-                        </div>
-                        <div class="col-sm-6 float-left">
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                            <span class="input-group-addon">$</span>
-                                            <input type="number" class="form-control" name="SumInternationalEventIncome" id="SumInternationalEventIncome" disabled>
-                                            </div>
-                                        </div>
-                      </div>
-                        <div class="col-sm-6 float-left">
-                            <p style="margin-left:10%;">Other Income:</p>
-                        </div>
-                        <div class="col-sm-6 float-left">
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                            <span class="input-group-addon">$</span>
-                                            <input type="number" class="form-control" name="SumOtherIncome" id="SumOtherIncome" disabled>
-                                            </div>
-                                        </div>
-                      </div>
-                        <div class="bg-color">
-                        <div class="col-sm-6 float-left">
-                            <p>Total Income:</p>
-                        </div>
-                        <div class="col-sm-6 float-left">
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                            <span class="input-group-addon">$</span>
-                                            <input type="number" class="form-control" name="SumTotalIncome" id="SumTotalIncome" disabled>
-                                            </div>
-                                        </div>
-                      </div>
-                        </div>
-                      </div>
-
-                    </div>
-            <div class="col-sm-12">
-              <div class="box-brd">
-                <h4>Expenses</h4>
-                <div class="col-sm-12 nopadding">
-                <div class="col-sm-6 float-left">
-                    <p style="margin-left:10%;">Meeting Room Expense:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumMeetingRoomExpense" id="SumMeetingRoomExpense" disabled>
-                                    </div>
-                                </div>
-
-                </div>
-               </div>
-                <div class="col-sm-12 nopadding">
-                <div class="col-sm-6">
-                  <p style="margin-left:10%;">Children's Room Expenses:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                    <p style="margin-left:15%;">Supplies:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumChildrensSuppliesExpense" id="SumChildrensSuppliesExpense" disabled>
-                                    </div>
-                                </div>
-              </div>
-                <div class="col-sm-6 float-left">
-                    <p style="margin-left:15%;">Paid Sitters:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumPaidSittersExpense" id="SumPaidSittersExpense" disabled>
-                                    </div>
-                                </div>
-              </div>
-                <div class="col-sm-6 float-left">
-                    <p style="margin-left:15%;">Other:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumChildrensOtherExpense" id="SumChildrensOtherExpense" disabled>
-                                    </div>
-                                </div>
-                </div>
-                  <div class="col-sm-6 float-left">
-                    <p style="margin-left:10%;">Children's Room Expense Total:</p>
-                  </div>
-                  <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumTotalChildrensRoomExpense" id="SumTotalChildrensRoomExpense" disabled>
-                                    </div>
-                                </div>
-                  </div>
-                </div>
-                <div class="col-sm-12 nopadding">
-                <div class="col-sm-6">
-                  <p  style="margin-left:10%;">
-                      Service Project Expenses:
-                  </p>
-                </div>
-                <div class="col-sm-6 float-left">
-                    <p style="margin-left:15%;">Supplies:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumServiceProjectExpense" id="SumServiceProjectExpense" disabled>
-                                    </div>
-                                </div>
-              </div>
-                <div class="col-sm-6 float-left">
-                    <p style="margin-left:15%;">Amount Donated to Charity/Recipients:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumDonationExpense" id="SumDonationExpense" disabled>
-                                    </div>
-                                </div>
-                </div>
-                <div class="col-sm-6 float-left">
-                    <p style="margin-left:15%;">Mother-to-Mother Fund Donation:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumM2MExpense" id="SumM2MExpense" disabled>
-                                    </div>
-                                </div>
-                </div>
-                <div class="col-sm-6 float-left">
-                    <p style="margin-left:10%;">Service Project Expense Total:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumTotalServiceProjectExpense" id="SumTotalServiceProjectExpense" disabled>
-                                    </div>
-                                </div>
-                </div>
-                </div>
-                <div class="col-sm-6 float-left">
-                    <p style="margin-left:10%;">Party/Members Only Expense:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumPartyExpense" id="SumPartyExpense" disabled>
-                                    </div>
-                                </div>
-                </div>
-                <div class="col-sm-12 nopadding">
-                <div class="col-sm-6">
-                  <p style="margin-left:10%;">
-                      Office and Operating Expenses:
-                  </p>
-                </div>
-                <div class="col-sm-6 float-left">
-                    <p style="margin-left:15%;">Printing:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumPrintingExpense" id="SumPrintingExpense" disabled>
-                                    </div>
-                                </div>
-              </div>
-                <div class="col-sm-6 float-left">
-                    <p style="margin-left:15%;">Postage:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumPostageExpense" id="SumPostageExpense" disabled>
-                                    </div>
-                                </div>
-                </div>
-                <div class="col-sm-6 float-left">
-                    <p style="margin-left:15%;">Membership Pins:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumPinsExpense" id="SumPinsExpense" disabled>
-                                    </div>
-                                </div>
-                </div>
-                <div class="col-sm-6 float-left">
-                    <p style="margin-left:15%;">Other:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumOtherOperatingExpense" id="SumOtherOperatingExpense" disabled>
-                                    </div>
-                                </div>
-                </div>
-                <div class="col-sm-6 float-left">
-                    <p style="margin-left:10%;">Office/Operating Expense Total:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumOperatingExpense" id="SumOperatingExpense" disabled>
-                                    </div>
-                                </div>
-                </div>
-                <div class="col-sm-6 float-left">
-                    <p style="margin-left:10%;">Annual Chapter Registration Fee:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumChapterReRegistrationExpense" id="SumChapterReRegistrationExpense" disabled>
-                                    </div>
-                                </div>
-                </div>
-                <div class="col-sm-6 float-left">
-                    <p style="margin-left:10%;">International Event Registration:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumInternationalEventExpense" id="SumInternationalEventExpense" disabled>
-                                    </div>
-                                </div>
-                </div>
-                <div class="col-sm-6 float-left">
-                    <p style="margin-left:10%;">Other Expense:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumOtherExpense" id="SumOtherExpense" disabled>
-                                    </div>
-                                </div>
-                </div>
-                <div class="bg-color">
-                <div class="col-sm-6 float-left">
-                    <p>Total Expenses:</p>
-                </div>
-                <div class="col-sm-6 float-left">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumTotalExpense" id="SumTotalExpense" disabled>
-                                    </div>
-                                </div>
-                </div>
-                </div>
-                </div>
-                </div>
-                <div class="box-brd">
-                  <div class="col-sm-12 float-left">
-                        <div class="form-group">
-                            <div class="col-sm-6 float-left">
-                              <label for="">
-                                  Treasury Balance Now
-
-                              </label>
-                            </div>
-                            <div class="col-sm-6 float-left">
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" class="form-control" name="SumTreasuryBalanceNow" id="SumTreasuryBalanceNow" disabled>
-                            </div>
-                            </div>
-                        </div>
-                  </div>
-                  </div>
-            </div>
-
-         </div>
-         <div class="form-row form-group">
-                                <div class="card-body">
-                                    <div class="col-md-12 text-center">
-                                      <button type="submit" id="btn-step-10" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
-                                       <!--<button type="button" id="10" class="btn btn-info btn-fill" onClick="printDiv(this.id)">Print</button>-->
-                                    </div>
-                                </div>
-                                </div>
-                </section>
-            </div><!-- end of accordion body -->
-            </div><!-- end of accordion item -->
-
                 <!------Start Step 8 ------>
-                <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='8') echo "active";?>">
+                  <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='8') echo "active";?>">
                     <div class="accordion-header js-accordion-header">BANK RECONCILIATION</div>
-                    <div class="accordion-body js-accordion-body cls-print-8">
+                    <div class="accordion-body js-accordion-body ">
                     <section>
 
                         <div class="col-md-12 mar_bot_20" id="StatementBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['bank_statement_included_path']) echo "style=\"display: none;\"";} ?>>
@@ -1703,10 +1306,21 @@
                             </div>
                         </div>
                    </div>
+                   <div class="col-md-6 float-left">
+                    <div class="form-group">
+                        <label for="TotalNetIncome">
+                            Profit/Loss:
+                        </label>
+                        <div class="input-group">
+                        <span class="input-group-addon">$</span>
+                        <input type="number" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0" step="0.01" name="TotalNetIncome" id="TotalNetIncome" disabled>
+                        </div>
+                    </div>
+                </div>
                     <div class="col-md-6 float-left">
                         <div class="form-group">
                             <label for="TreasuryBalanceNow">
-                                Treasury Balance Now:
+                                Ending Balance (Treasury Balance Now):
                             </label>
                             <div class="input-group">
                             <span class="input-group-addon">$</span>
@@ -1788,8 +1402,7 @@
                         </tbody>
                     </table>
                     <div class="col-md-12 float-left">
-                        <button type="button" class="btn btn-large btn-success btn-add-remove
-" onclick="AddBankRecRow()" <?php if($submitted) echo "disabled"; ?>>Add</button>
+                        <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddBankRecRow()" <?php if($submitted) echo "disabled"; ?>>Add</button>
                         <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteBankRecRow()" <?php if($submitted) echo "disabled"; ?>>Remove</button>
                     </div>
                     <div class="col-md-6 float-left">
@@ -1803,15 +1416,21 @@
                             </div>
                         </div>
                     </div>
-                    <div class="clearfix"></div>
-                    <div class="col-md-12 float-right">
+                    <div class="col-md-6"><br></div>
+                    <div class="col-md-6 float-left">
                         <div class="form-group">
-                            <label for="ReconciledBankBalance" style="visibility:hidden">
-                                Message
+                            <label for="TreasuryBalanceNowR">
+                                Treasury Balance Now:
                             </label>
                             <div class="input-group">
-                            <textarea class="form-control" rows="6" cols="30" name="ReconciledBankBalanceWarning" id="ReconciledBankBalanceWarning" disabled></textarea>
+                            <span class="input-group-addon">$</span>
+                            <input type="number" class="form-control" min="0" step="0.01" name="TreasuryBalanceNowR" id="TreasuryBalanceNowR" disabled>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 float-right">
+                        <div class="form-group">
+                            <textarea class="form-control" style="width:100%" rows="3" name="ReconciledBankBalanceWarning" id="ReconciledBankBalanceWarning" disabled></textarea>
                         </div>
                     </div>
                     <input type="hidden" name="BankRecRowCount" id="BankRecRowCount" value="<?php echo $BankRecRowCount; ?>" />
@@ -1829,10 +1448,400 @@
             </div><!-- end of accordion item -->
             <!------End Step 8 ------>
 
+            <!------Start Step 10 ------>
+            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='10') echo "active";?>">
+                <div class="accordion-header js-accordion-header">FINANCIAL SUMMARY</div>
+                <div class="accordion-body js-accordion-body ">
+                <section>
+                <div class="form-row form-group">
+                  <div class="col-sm-12">
+                    <h3>July 1, <?php echo date('Y')-1 .' - June 30, '.date('Y');?></h3>
+                  </div>
+                    <div class="col-sm-12 float-left">
+                        <div class="form-group">
+                            <div class="col-sm-6 float-left">
+                              <label for="">
+                                  Amount Reserved from Previous Year:
+                                  <span class="f-sm">(Beginning Balance 7/1/<?php echo date('Y')-1;?>)</span>
+                              </label>
+                            </div>
+                            <div class="col-sm-6 float-left">
+                            <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="number" name="SumAmountReservedFromPreviousYear" id="SumAmountReservedFromPreviousYear" class="form-control" value="0.00" aria-describedby="sizing-addon1" disabled>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="box-brd">
+                        <h4>Income</h4>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:10%;">Membership Dues Income:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" aria-describedby="sizing-addon1" name="SumMembershipDuesIncome" id="SumMembershipDuesIncome" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:10%;">Service Project Income:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumServiceProjectIncome" id="SumServiceProjectIncome" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:10%;">Party Income:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumPartyIncome" id="SumPartyIncome" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:10%;">Monetary Donations to Chapter:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumMonetaryDonationIncome" id="SumMonetaryDonationIncome" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:10%;">International Event Reservation Income:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumInternationalEventIncome" id="SumInternationalEventIncome" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:10%;">Other Income:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumOtherIncome" id="SumOtherIncome" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-color">
+                        <div class="col-sm-6 float-left">
+                            <p>Total Income:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumTotalIncome" id="SumTotalIncome" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="box-brd">
+                        <h4>Expenses</h4>
+                        <div class="col-sm-12 nopadding">
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:10%;">Meeting Room Expense:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumMeetingRoomExpense" id="SumMeetingRoomExpense" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-sm-12 nopadding">
+                        <div class="col-sm-6">
+                        <p style="margin-left:10%;">Children's Room Expenses:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:15%;">Supplies:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                            <div class="input-group">
+                            <span class="input-group-addon">$</span>
+                            <input type="number" class="form-control" name="SumChildrensSuppliesExpense" id="SumChildrensSuppliesExpense" disabled>
+                            </div>
+                        </div>
+                    </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:15%;">Paid Sitters:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumPaidSittersExpense" id="SumPaidSittersExpense" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:15%;">Other:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumChildrensOtherExpense" id="SumChildrensOtherExpense" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:10%;">Children's Room Expense Total:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumTotalChildrensRoomExpense" id="SumTotalChildrensRoomExpense" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-sm-12 nopadding">
+                        <div class="col-sm-6">
+                        <p  style="margin-left:10%;">
+                            Service Project Expenses:
+                        </p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:15%;">Supplies:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumServiceProjectExpense" id="SumServiceProjectExpense" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:15%;">Amount Donated to Charity/Recipients:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumDonationExpense" id="SumDonationExpense" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:15%;">Mother-to-Mother Fund Donation:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumM2MExpense" id="SumM2MExpense" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:10%;">Service Project Expense Total:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumTotalServiceProjectExpense" id="SumTotalServiceProjectExpense" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:10%;">Party/Members Only Expense:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumPartyExpense" id="SumPartyExpense" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 nopadding">
+                        <div class="col-sm-6">
+                            <p style="margin-left:10%;">Office and Operating Expenses:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:15%;">Printing:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumPrintingExpense" id="SumPrintingExpense" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:15%;">Postage:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumPostageExpense" id="SumPostageExpense" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:15%;">Membership Pins:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumPinsExpense" id="SumPinsExpense" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:15%;">Other:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumOtherOperatingExpense" id="SumOtherOperatingExpense" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:10%;">Office/Operating Expense Total:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumOperatingExpense" id="SumOperatingExpense" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:10%;">Annual Chapter Registration Fee:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumChapterReRegistrationExpense" id="SumChapterReRegistrationExpense" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:10%;">International Event Registration:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumInternationalEventExpense" id="SumInternationalEventExpense" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <p style="margin-left:10%;">Other Expense:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumOtherExpense" id="SumOtherExpense" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-color">
+                        <div class="col-sm-6 float-left">
+                            <p>Total Expenses:</p>
+                        </div>
+                        <div class="col-sm-6 float-left">
+                            <div class="form-group">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" class="form-control" name="SumTotalExpense" id="SumTotalExpense" disabled>
+                                </div>
+                            </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="box-brd">
+                            <h4>Net Income</h4>
+                            <div class="col-sm-6 float-left">
+                                <p style="margin-left:10%;">Profit/Loss:</p>
+                            </div>
+                            <div class="col-sm-6 float-left">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                    <span class="input-group-addon">$</span>
+                                    <input type="number" class="form-control" name="SumTotalNetIncome" id="SumTotalNetIncome" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 float-left">
+                            <div class="form-group">
+                                <div class="col-sm-6 float-left">
+                                <label for="">
+                                    Treasury Balance Now:
+                                    <span class="f-sm">(Ending Balance 6/30/<?php echo date('Y');?>)</span>
+                                </label>
+                                </div>
+                                <div class="col-sm-6 float-left">
+                                <div class="input-group">
+                                <span class="input-group-addon">$</span>
+                                <input type="number" name="SumTreasuryBalanceNow" id="SumTreasuryBalanceNow" class="form-control" aria-describedby="sizing-addon1" disabled>
+                                </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row form-group">
+                            <div class="card-body">
+                                <div class="col-md-12 text-center">
+                                <button type="submit" id="btn-step-10" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                                </div>
+                            </div>
+                        </div>
+                </section>
+            </div><!-- end of accordion body -->
+            </div><!-- end of accordion item -->
+            <!------End Step 10 ------>
+
+
             <!------Start Step 9 ------>
             <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='9') echo "active";?>">
             <div class="accordion-header js-accordion-header">CHAPTER QUESTIONS</div>
-                <div class="accordion-body js-accordion-body cls-print-9">
+                <div class="accordion-body js-accordion-body">
                 <section>
                 <div id="form-step-8" role="form" data-toggle="validator" class="form-row form-group">
                     <p>During the last fiscal year (July 1, <?php echo date('Y')-1 .' - June 30, '.date('Y');?>)</p>
@@ -2363,7 +2372,7 @@
             <!------Begin Step 11 ------>
             <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='11') echo "active";?>">
                 <div class="accordion-header js-accordion-header">AWARD NOMINATIONS</div>
-                <div class="accordion-body js-accordion-body cls-print-11">
+                <div class="accordion-body js-accordion-body ">
                     <section>
                     <div class="form-row form-group">
                         <div class="box_brd_contentpad">
@@ -3110,7 +3119,6 @@
                                     </div>
                                 </div>
                             </div>
-
                     </div>
                     <div class="form-row form-group">
                        <div class="card-body">
@@ -3121,48 +3129,48 @@
                        </div>
                     </div>
                      </section>
-                    </div>
-                </div>
+                    </div><!-- end of accordion body -->
+                </div><!-- end of accordion item -->
                 <!------End Step 11 ------>
 
                 <!------Start Step 12 ------>
                 <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='12') echo "active";?>">
                     <div class="accordion-header js-accordion-header">SUBMIT REPORT</div>
-                    <div class="accordion-body js-accordion-body cls-print-12">
+                    <div class="accordion-body js-accordion-body ">
                         <section>
-                    <div class="form-row form-group">
-
-                    <p>Contact information for the person completing the reports for your chapter:</p>
-                       <div class="col-md-6 float-left">
-                           <label for="CompletedName">
+                            <div class="form-row form-group">
+                            <p>Contact information for the person completing the reports for your chapter:</p>
+                                <div class="col-md-6 float-left">
+                                    <label for="CompletedName">
                                         Name (First & Last)
                                     </label><span class="field-required">*</span>
-                      <input type="text" name="CompletedName" id="CompletedName" class="form-control" value="<?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_name'];}?>" required >
-                        </div>
-                        <div class="col-md-6 float-left">
-                           <label for="CompletedEmail">
+                                <input type="text" name="CompletedName" id="CompletedName" class="form-control" value="<?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_name'];}?>" required >
+                                </div>
+                                <div class="col-md-6 float-left">
+                                    <label for="CompletedEmail">
                                         Email Address
                                     </label><span class="field-required">*</span>
-                      <input type="text" name="CompletedEmail" id="CompletedEmail" class="form-control" value="<?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_email'];}?>" required >
-                        </div>
-                    </div>
-                    <hr>
-
-                 <div class="form-row form-group">
-                        <div class="card-body">
-                            <div class="col-md-12 text-center">
-                             <button type="button" class="btn btn-info btn-fill" id="btn-step-12" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
-                             <button type="button" class="btn btn-info btn-fill" id="final-submit" <?php if($submitted =='1') echo "disabled"; ?>>Submit</button>
-                          </div>
-                <hr style="height:3px;border:none;color:#0c71c3;background-color:#0c71c3;" />
-                        </div>
+                                 <input type="text" name="CompletedEmail" id="CompletedEmail" class="form-control" value="<?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_email'];}?>" required >
+                                </div>
                             </div>
-                        </div>
+                            <hr>
+                            <div class="form-row form-group">
+                                <div class="card-body">
+                                    <div class="col-md-12 text-center">
+                                        <button type="button" class="btn btn-info btn-fill" id="btn-step-12" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                                        <button type="button" class="btn btn-info btn-fill" id="final-submit" <?php if($submitted =='1') echo "disabled"; ?>>Submit</button>
+                                    </div>
+                                    <hr style="height:3px;border:none;color:#0c71c3;background-color:#0c71c3;" />
+                                </div>
+                            </div>
                         </section>
-                    </div>
-                </div>
-            </div><!-- end of accordion -->
+                    </div><!-- end of accordion body -->
+                </div><!-- end of accordion item -->
+                <!------End Step 12 ------>
+
+                </div><!-- end of accordion -->
             </form>
+        </div>
             <div class="col-md-12 text-center">
                 <br>
                     @if($user_type !== 'outgoing')
@@ -3173,87 +3181,85 @@
                     <button id="buttononclickdisable" class="btn btn-info btn-fill" onClick="this.disabled=true;" <?php if(!$submitted =='1') echo "disabled"; ?>>View PDF</button>
                     </a>
             </div>
-
-            <!-- Modal Popups for Uploading Files -->
-            <div class="modal fade" id="modal-roster">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Upload Roster</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form id="upload_roster" name="upload_roster" role="form" enctype="multipart/form-data" method="POST" action='{{ url("/files/storeRoster",$financial_report_array['chapter_id']) }}' >
-                                @csrf
-                                <input type="file" name='file' required>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-info btn-fill" id="btn-roster">Upload</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade" id="modal-statement1">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Upload Statement</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form id="upload_statement1" name="upload_statement1" role="form" enctype="multipart/form-data" method="POST" action='{{ url("/files/storeStatement1",$financial_report_array['chapter_id']) }}' >
-                                @csrf
-                                <input type="file" name='file' required>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-info btn-fill" id="btn-statement1">Upload</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade" id="modal-statement2">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Upload Additional Statement</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{ url('/files/storeStatement2/'. $financial_report_array['chapter_id']) }}" method="post" enctype="multipart/form-data">
-                                @csrf
-                                <input type="file" name='file' required>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-info btn-fill" id="btn-statement2">Upload</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade" id="modal-990N">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Upload 990N Confirmation</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{ url('/files/store990n/'. $financial_report_array['chapter_id']) }}" method="post" enctype="multipart/form-data">
-                                @csrf
-                                <input type="file" name='file' required>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-info btn-fill" id="btn-990N">Upload</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Modal Popups -->
-
         </div>
+        <!-- Modal Popups for Uploading Files -->
+        <div class="modal fade" id="modal-roster">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Upload Roster</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="upload_roster" name="upload_roster" role="form" enctype="multipart/form-data" method="POST" action='{{ url("/files/storeRoster",$financial_report_array['chapter_id']) }}' >
+                            @csrf
+                            <input type="file" name='file' required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-info btn-fill" id="btn-roster">Upload</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modal-statement1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Upload Statement</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="upload_statement1" name="upload_statement1" role="form" enctype="multipart/form-data" method="POST" action='{{ url("/files/storeStatement1",$financial_report_array['chapter_id']) }}' >
+                            @csrf
+                            <input type="file" name='file' required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-info btn-fill" id="btn-statement1">Upload</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modal-statement2">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Upload Additional Statement</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url('/files/storeStatement2/'. $financial_report_array['chapter_id']) }}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <input type="file" name='file' required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-info btn-fill" id="btn-statement2">Upload</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modal-990N">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Upload 990N Confirmation</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url('/files/store990n/'. $financial_report_array['chapter_id']) }}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <input type="file" name='file' required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-info btn-fill" id="btn-990N">Upload</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Modal Popups -->
     </div>
 </div>
 @endsection
@@ -3261,7 +3267,6 @@
 <script>
     /* Disable fields and buttons  */
     $(document).ready(function () {
-            //Update to show/hide for true/false
             $('#final-submit').show();  /*report status text (.show/.hide to change visibility)*/
     });
 
@@ -3281,34 +3286,7 @@
                }
             }
 </script>
-
-<!-- JQUERY STEP -->
 <script>
-// function fullPrintDiv() {
-//     $("#full-print-div").show();
-//     $("#test").hide();
-//     var printContents = $("#full-print-div").html();
-//     var originalContents = document.body.innerHTML;
-//     document.body.innerHTML = printContents;
-//     window.print();
-//     document.body.innerHTML = originalContents;
-//     window.location.reload();
-// }
-
-// function printDiv(id) {
-//     $(".card-body").hide();
-//     $(".award_sec_btn").hide();
-//     $(".btn-add-remove").hide();
-//     $(".demo1").hide();
-//     $("#990NFile").hide();
-//     var printContents = $(".cls-print-"+id).html();
-//     var originalContents = document.body.innerHTML;
-//     document.body.innerHTML = printContents;
-//     window.print();
-//     document.body.innerHTML = originalContents;
-//     window.location.reload();
-// }
-
     var accordion = (function(){
     var $accordion = $('.js-accordion');
     var $accordion_header = $accordion.find('.js-accordion-header');
@@ -3364,101 +3342,22 @@ $(document).ready(function(){
         }
     });
 
-
-
-
-
-
-    $("#final-submit").click(function() {
-        // var agreeChk = $("#TotalAwardNominations").val();
-        // if(agreeChk > 0){
-        //     if (($("input[name='AwardsAgree']:checked").length)<=0) {
-        //         alert("Please select I understand and agree check box");
-        //         return false;
-        //     }
-        // }
-
-    //     if(document.getElementById('FileIRSYes').checked && document.getElementById('990NPath').value=="" && document.getElementById('990NFiling').files.length <= 0){
-    //         alert("Your chapter's 990N filing confirmation was not attached in CHAPTER QUESTIONS SECTION but you indicated the file was attached.  Please attach the file and save again.");
-    //         return false;
-    //     }
-
-    //    if(document.getElementById('BankStatementIncludedYes').checked && document.getElementById('StatementPath').value=="" && document.getElementById('StatementFile').files.length <= 0){
-    //         alert("Your chapter's Bank Statement was not attached in RECONCILIATION SECTION but you indicated the file was attached.  Please attach the file and submit again.");
-    //         return false;
-    //     }
-
-        //  if(document.getElementById('ServiceProjectDesc0').value==""){
-        //     alert("Project Description is required in SERVICE PROJECTS SECTION.");
-        //     $("#ServiceProjectDesc0").focus();
-        //     return false;
-        // }
-        // else if(document.getElementById('ServiceProjectIncome0').value==""){
-        //     alert("Income is required in SERVICE PROJECTS SECTION.");
-        //     $("#ServiceProjectIncome0").focus();
-        //     return false;
-        // }
-        // else if(document.getElementById('ServiceProjectSupplies0').value==""){
-        //     alert("Supplies & Expenses is required in SERVICE PROJECTS SECTION.");
-        //     $("#ServiceProjectSupplies0").focus();
-        //     return false;
-        // }
-        // else if(document.getElementById('ServiceProjectDonatedCharity0').value==""){
-        //     alert("Charity Donation is required in SERVICE PROJECTS SECTION.");
-        //     $("#ServiceProjectDonatedCharity0").focus();
-        //     return false;
-        // }
-        // else if(document.getElementById('ServiceProjectDonatedM2M0').value==""){
-        //     alert("M2M Donation is required in SERVICE PROJECTS SECTION.");
-        //     $("#ServiceProjectDonatedM2M0").focus();
-        //     return false;
-        // }
-
-        // if(document.getElementById('CompletedName').value==""){
-        //     alert("Please include the name of the person submitting the report.");
-        //     return false;
-        // }
-        // if(document.getElementById('CompletedEmail').value==""){
-        //     alert("Please include the eamil address of the person submitting the report.");
-        //     return false;
-        // }
-
-        var result = confirm("This will finalize and submit your report.  You will no longer be able to edit this report.  Do you wish to continue?");
-        if (result) {
-            //var fileResult = EnsureFilesWereSubmitted();
-
-
-        //     if (fileResult) {
-        //         var serProject = $('#ServiceProjectDesc0').val();
-        //         if (!serProject) {
-        //             alert('Project Service Description is required in SERVICE PROJECTS SECTION');
-        //             return false;
-        //         }
-        //         var reRegister = $('#AnnualRegistrationFee').val();
-        //         if (!reRegister) {
-        //             alert('Chapter Re-registration is required in OFFICE & OPERATING EXPENSES SECTION');
-        //             return false;
-        //         }
-        //     }
-        // }
-            $("#submitted").val('1');
-            $("#FurthestStep").val('12');
-            $("#financial_report").submit();
-        }
-    });
-
     $("#btn-step-1").click(function() {
-        if(document.getElementById('RosterPath').value=="" && document.getElementById('RosterFile').files.length <= 0){
-            //Roster file was not submitted
-            alert("Your chapter's roster was not attached in CHAPTER DUES SECTION.  This is a required file for all reports.  Please attach the file and save again.");
-            return false;
-        }else{
-            $("#FurthestStep").val('1');
-            $("#financial_report").submit();
+        if (!EnsureRoster()) {
+        return false;
         }
+        $("#FurthestStep").val('1');
+        $("#financial_report").submit();
     });
     $("#btn-step-2").click(function() {
         $("#FurthestStep").val('2');
+        $("#financial_report").submit();
+    });
+    $("#btn-step-3").click(function() {
+        if (!EnsureServiceProject()) {
+        return false;
+        }
+        $("#FurthestStep").val('3');
         $("#financial_report").submit();
     });
     $("#btn-step-4").click(function() {
@@ -3467,6 +3366,13 @@ $(document).ready(function(){
     });
     $("#btn-step-5").click(function() {
         $("#FurthestStep").val('5');
+        $("#financial_report").submit();
+    });
+    $("#btn-step-55").click(function() {
+        if (!EnsureReRegistration()) {
+        return false;
+        }
+        $("#FurthestStep").val('55');
         $("#financial_report").submit();
     });
     $("#btn-step-6").click(function() {
@@ -3478,7 +3384,17 @@ $(document).ready(function(){
         $("#financial_report").submit();
     });
     $("#btn-step-8").click(function() {
+        if (!EnsureReconciliation()) {
+        return false;
+        }
         $("#FurthestStep").val('8');
+        $("#financial_report").submit();
+    });
+    $("#btn-step-9").click(function() {
+        if (!EnsureChapterQuestions()) {
+        return false;
+        }
+        $("#FurthestStep").val('9');
         $("#financial_report").submit();
     });
        $("#btn-step-10").click(function() {
@@ -3503,7 +3419,108 @@ $(document).ready(function(){
 
     });
         $("#btn-step-12").click(function() {
-            if(document.getElementById('CompletedName').value==""){
+        if (!EnsureSubmitInformation()) {
+        return false;
+        }
+        $("#FurthestStep").val('12');
+        $("#financial_report").submit();
+    });
+        $("#btn-save").click(function() {
+        $("#FurthestStep").val('13');
+        $("#financial_report").submit();
+    });
+    $("#final-submit").click(function() {
+        if (!EnsureRoster()) {
+            return false;
+        }
+        else if (!EnsureServiceProject()) {
+            return false;
+        }
+        else if (!EnsureReRegistration()) {
+            return false;
+        }
+        else if (!EnsureReconciliation()) {
+            return false;
+        }
+        else if (!EnsureChapterQuestions()) {
+            return false;
+        }
+        else if (!EnsureSubmitInformation()) {
+            return false;
+        }
+        var result = confirm("This will finalize and submit your report.  You will no longer be able to edit this report.  Do you wish to continue?");
+        if (result) {
+            $("#submitted").val('1');
+            $("#FurthestStep").val('12');
+            $("#financial_report").submit();
+        }
+    });
+});
+
+    function EnsureRoster(){
+        if(document.getElementById('RosterPath').value==""){
+            alert("Your chapter's roster was not uploaded in CHAPTER DUES section.");
+            return false;
+        }
+        return true; // All checks passed, allow submission
+    }
+
+    function EnsureServiceProject(){
+        if(document.getElementById('ServiceProjectDesc0').value==""){
+            alert("Project Description is required in SERVICE PROJECT section.");
+            $("#ServiceProjectDesc0").focus();
+            return false;
+        }
+        else if(document.getElementById('ServiceProjectIncome0').value==""){
+            alert("Income amount is required in SERVICE PROJECT section.");
+            $("#ServiceProjectIncome0").focus();
+            return false;
+        }
+        else if(document.getElementById('ServiceProjectSupplies0').value==""){
+            alert("Supplies & Expenses amount is required in SERVICE PROJECT section.");
+            $("#ServiceProjectSupplies0").focus();
+            return false;
+        }
+        else if(document.getElementById('ServiceProjectDonatedCharity0').value==""){
+            alert("Charity Donation amount is required in SERVICE PROJECT section.");
+            $("#ServiceProjectDonatedCharity0").focus();
+            return false;
+        }
+        else if(document.getElementById('ServiceProjectDonatedM2M0').value==""){
+            alert("M2M Donation amount is required in SERVICE PROJECT section.");
+            $("#ServiceProjectDonatedM2M0").focus();
+            return false;
+        }
+        return true; // All checks passed, allow submission
+    }
+
+    function EnsureReRegistration(){
+        if(document.getElementById('AnnualRegistrationFee').value==""){
+            alert("Chapter Re-registration is required in INTERNATIONAL EVENTS & RE-REGISTRATION section.");
+            $("#AnnualRegistrationFee").focus();
+            return false;
+        }
+        return true; // All checks passed, allow submission
+    }
+
+    function EnsureReconciliation(){
+        if(document.getElementById('BankStatementIncluded').value=="" && document.getElementById('StatementPath').value=="" ){
+            alert("Your chapter's Bank Statement was not uploaded in the BANK RECONCILIATION section, but you indicated the file was attached.");
+            return false;
+        }
+        return true; // All checks passed, allow submission
+    }
+
+    function EnsureChapterQuestions(){
+        if(document.getElementById('FileIRS').value=="" && document.getElementById('990NPath').value=="" ){
+            alert("Your chapter's 990N filing confirmation was not uploaded in the CHAPTER QUESTIONS section, but you indicated the file was attached.");
+            return false;
+        }
+        return true; // All checks passed, allow submission
+    }
+
+    function EnsureSubmitInformation(){
+        if(document.getElementById('CompletedName').value==""){
             alert("Please include the name of the person submitting the report.");
             return false;
         }
@@ -3511,140 +3528,15 @@ $(document).ready(function(){
             alert("Please include the eamil address of the person submitting the report.");
             return false;
         }
-        else
-        $("#FurthestStep").val('12');
-        $("#financial_report").submit();
-    });
-
-        $("#btn-save").click(function() {
-        $("#FurthestStep").val('13');
-        $("#financial_report").submit();
-    });
-
-
-    $("#btn-step-3").click(function() {
-
-        if(document.getElementById('ServiceProjectDesc0').value==""){
-            alert("Project Description is required in SERVICE PROJECTS SECTION.");
-            $("#ServiceProjectDesc0").focus();
-            return false;
-        }
-        else if(document.getElementById('ServiceProjectIncome0').value==""){
-            alert("Income is required in SERVICE PROJECTS SECTION.");
-            $("#ServiceProjectIncome0").focus();
-            return false;
-        }
-        else if(document.getElementById('ServiceProjectSupplies0').value==""){
-            alert("Supplies & Expenses is required in SERVICE PROJECTS SECTION.");
-            $("#ServiceProjectSupplies0").focus();
-            return false;
-        }
-        else if(document.getElementById('ServiceProjectDonatedCharity0').value==""){
-            alert("Charity Donation is required in SERVICE PROJECTS SECTION.");
-            $("#ServiceProjectDonatedCharity0").focus();
-            return false;
-        }
-        else if(document.getElementById('ServiceProjectDonatedM2M0').value==""){
-            alert("M2M is required in SERVICE PROJECTS SECTION.");
-            $("#ServiceProjectDonatedM2M0").focus();
-            return false;
-        }
-
-        else{
-            $("#FurthestStep").val('3');
-            $("#financial_report").submit();
-        }
-    });
-
-    $("#btn-step-55").click(function() {
-        if(document.getElementById('AnnualRegistrationFee').value==""){
-            alert("Chapter Re-registration is required in INTERNATIONAL EVENTS & RE-REGISTRATION.");
-            $("#AnnualRegistrationFee").focus();
-            return false;
-        }else{
-            $("#FurthestStep").val('55');
-            $("#financial_report").submit();
-        }
-    });
-
-    $("#btn-step-9").click(function() {
-        $("#FurthestStep").val('9');
-        $("#financial_report").submit();
-    });
-
-    // $("#btn-step-9").click(function() {
-    //     if(document.getElementById('FileIRSYes').checked && document.getElementById('990NPath').value=="" && document.getElementById('990NFiling').files.length <= 0){
-    //         alert("Your chapter's 990N filing confirmation was not attached in TAX EXEMPT & CHAPTER QUESTIONS but you indicated the file was attached.  Please attach the file and save again.");
-    //         return false;
-    //     }
-
-    //     if(document.getElementById('BankStatementIncludedYes').checked && document.getElementById('StatementPath').value=="" && document.getElementById('StatementFile').files.length <= 0){
-    //         alert("Your chapter's Bank Statement was not attached in SECTION 9 - TAX EXEMPT & CHAPTER QUESTIONS but you indicated the file was attached.  Please attach the file and submit again.");
-    //         return false;
-    //     }
-
-    //     var check = true;
-    //     var check1 = true;
-    //     $(".rd-cls").each(function(){
-    //         var name = $(this).attr("name");
-    //         if($("input:radio[name="+name+"]:checked").length == 0){
-    //             check = false;
-    //         }
-    //     });
-    //     if(check){
-    //         $(".tx-cls").each(function(){
-    //             var txtAreaName = $(this).attr("name");
-    //             //alert(txtAreaName);
-    //             var txtAreaVal = $("#"+txtAreaName).val();
-    //             if(txtAreaVal === ""){
-    //                 //alert('Please enter explanation');
-    //                 $("#"+txtAreaName).focus();
-    //                 //change
-    //                 return false;
-    //                 check1 = false;
-    //             }
-    //         });
-    //         if(check1){
-    //             //return true;
-    //             $("#FurthestStep").val('9');
-    //             $("#financial_report").submit();
-    //         }else{
-    //             alert('Please enter explain field in the Section 9 -Tax Exempt & Chapter Questions');
-    //             return false;
-    //         }
-    //     }else{
-    //         alert('Oops we still have error in the Section 9 -Tax Exempt & Chapter Questions');
-    //         return false;
-    //     }
-    // });
-});
+        return true; // All checks passed, allow submission
+    }
 </script>
 
 <script>
-    function ReplaceRoster(){
-		document.getElementById("RosterBlock").style.display = 'block';
-		document.getElementById("RosterBlock").style.visibility = 'visible';
-	}
-
-    function Replace990N(){
-		document.getElementById("990NBlock").style.display = 'block';
-		document.getElementById("990NBlock").style.visibility = 'visible';
-	}
-
-    function ReplaceStatement1(){
-		document.getElementById("Statement1Block").style.display = 'block';
-		document.getElementById("Statement1Block").style.visibility = 'visible';
-	}
-
-    function ReplaceStatement2(){
-		document.getElementById("Statement2Block").style.display = 'block';
-		document.getElementById("Statement2Block").style.visibility = 'visible';
-	}
-
-    function ChargeDifferentMembers(ButtonID){
-        document.getElementById("chapterid").value=ButtonID;
-        return true;
-    }
+    // function ChargeDifferentMembers(ButtonID){
+    //     document.getElementById("chapterid").value=ButtonID;
+    //     return true;
+    // }
 
     function IsValidDate(element){
         var strDate="";
@@ -4348,8 +4240,10 @@ $(document).ready(function(){
         var SumOtherExpense=0;
         var SumOperatingExpense=0;
 
-        var SumTotalExpense=0
-        var SumTotalIncome=0
+        var SumTotalExpense=0;
+        var SumTotalIncome=0;
+
+        var SumTotalNetIncome=0;
 
         var SumPartyExpense=0;
         var SumPartyIncome=0;
@@ -4385,7 +4279,6 @@ $(document).ready(function(){
         SumMonetaryDonationIncome = Number(document.getElementById("SumMonetaryDonationIncome").value);
         SumChapterReRegistrationExpense = Number(document.getElementById("SumChapterReRegistrationExpense").value);
 
-
         SumTotalExpense = SumTotalChildrensRoomExpense + SumMeetingRoomExpense + ServiceExpenseTotal + SumOtherExpense + SumPartyExpense + SumOperatingExpense + SumInternationalEventExpense + SumChapterReRegistrationExpense;
         SumTotalIncome = ServiceIncomeTotal + SumOtherIncome + SumPartyIncome + SumMembershipDuesIncome + SumInternationalEventIncome + SumMonetaryDonationIncome ;
 
@@ -4394,9 +4287,13 @@ $(document).ready(function(){
         document.getElementById("SumTotalExpense").value = SumTotalExpense.toFixed(2);
         document.getElementById("SumTotalIncome").value = SumTotalIncome.toFixed(2);
 
+        SumTotalNetIncome = SumTotalIncome - SumTotalExpense;
         TreasuryBalanceNow = TreasuryBalance - SumTotalExpense + SumTotalIncome;
 
+        document.getElementById("TotalNetIncome").value = SumTotalNetIncome.toFixed(2);
+        document.getElementById("SumTotalNetIncome").value = SumTotalNetIncome.toFixed(2);
         document.getElementById("TreasuryBalanceNow").value = TreasuryBalanceNow.toFixed(2);
+        document.getElementById("TreasuryBalanceNowR").value = TreasuryBalanceNow.toFixed(2);
         document.getElementById("SumTreasuryBalanceNow").value = TreasuryBalanceNow.toFixed(2);
 
         ChangeBankRec();
@@ -4484,7 +4381,7 @@ $(document).ready(function(){
 
         if(TotalFees != TreasuryBalanceNow){
             document.getElementById("ReconciledBankBalanceWarning").style.backgroundColor = "yellow";
-            document.getElementById("ReconciledBankBalanceWarning").value = "Reconciled Bank Balance does not match treasury balance now."
+            document.getElementById("ReconciledBankBalanceWarning").value = "Reconciled Bank Balance does not match treasury balance now. These numbers must match for your report to be in balance"
             document.getElementById("ReconciledBankBalanceWarning").style.borderStyle = "none";
         }
         else{
@@ -4705,18 +4602,12 @@ $(document).ready(function(){
             $('#FileIRSExplanation').addClass('tx-cls');
             document.getElementById("divFileIRSExplanation").style.display = 'block';
         }
-        else if (document.getElementById("FileIRS").value == "1"){   //Required if YES
-            $('#990NFile').show();
-            $('#FileIRSExplanation').removeClass('tx-cls');
-            document.getElementById("divFileIRSExplanation").style.display = 'none';
-        }
         else{
             $('#990NFile').hide();
             $('#FileIRSExplanation').removeClass('tx-cls');
             document.getElementById("divFileIRSExplanation").style.display = 'none';
         }
     }
-
 
     function ToggleBankStatementIncludedExplanation(){
         if (document.getElementById("BankStatementIncluded").value == "0"){   //Required if NO
@@ -4729,33 +4620,10 @@ $(document).ready(function(){
         }
     }
 
-    // function ToggleBankStatementIncludedExplanation(){
-    //     if (document.getElementById("BankStatementIncluded").value == "0"){   //Required if NO
-    //         $('#BankFile').hide();
-    //         //document.getElementById("WheresTheMoney").required=true;
-    //         $('#BankStatementIncludedExplanation').addClass('tx-cls');
-    //         $('#WheresTheMoney').addClass('tx-cls');
-    //         document.getElementById("divBankStatementIncludedExplanation").style.display = 'block';
-
-    //     }
-    //     // else if (document.getElementById("BankStatementIncluded").value == "1"){   //Required if YES
-    //     //     $('#BankFile').show();
-    //     //     $('#BankStatementIncludedExplanation').removeClass('tx-cls');
-    //     //     $('#WheresTheMoney').removeClass('tx-cls');
-    //     //     document.getElementById("divBankStatementIncludedExplanation").style.display = 'none';
-    //     // }
-    //     else{
-    //         $('#BankFile').hide();
-    //         $('#BankStatementIncludedExplanation').removeClass('tx-cls');
-    //         $('#WheresTheMoney').removeClass('tx-cls');
-    //         document.getElementById("divBankStatementIncludedExplanation").style.display = 'none';
-    //     }
-    // }
-
-function isFieldVisible(fieldId) {
-    // Customize this function based on your visibility conditions
-    return document.getElementById(fieldId).style.display !== 'none';
-}
+// function isFieldVisible(fieldId) {
+//     // Customize this function based on your visibility conditions
+//     return document.getElementById(fieldId).style.display !== 'none';
+// }
 
     function AddAwardNomination(){
         // Did they say no, if so, we need to mark the explanation field as required
@@ -4876,31 +4744,6 @@ function isFieldVisible(fieldId) {
         return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
     }
 
-    function EnsureFilesWereSubmitted(){
-        //Check for roster, it must ALWAYS be submitted
-        if(document.getElementById('RosterPath').value=="" && document.getElementById('RosterFile').files.length <= 0){
-            //Roster file was not submitted
-            alert("Your chapter's roster was not attached in SECTION 1 - CHAPTER DUES.  This is a required file for all reports.  Please attach the file and submit again.");
-            return false;
-        }
-
-        //Check for 990N, it must be submitted unless they said it was
-        if(document.getElementById('FileIRSYes').checked && document.getElementById('990NPath').value=="" && document.getElementById('990NFiling').files.length <= 0){
-            //Roster file was not submitted
-            alert("Your chapter's 990N filing confirmation was not attached in SECTION 9 - TAX EXEMPT & CHAPTER QUESTIONS but you indicated the file was attached.  Please attach the file and submit again.");
-            return false;
-        }
-
-        //Check for Bank Statement, it must be submitted unless they said it was
-        if(document.getElementById('BankStatementIncludedYes').checked && document.getElementById('StatementPath').value=="" && document.getElementById('StatementFile').files.length <= 0){
-            //Bank Statement was not submitted
-            alert("Your chapter's Bank Statement was not attached in SECTION 9 - TAX EXEMPT & CHAPTER QUESTIONS but you indicated the file was attached.  Please attach the file and submit again.");
-            return false;
-        }
-
-        return true;
-    }
-
     function LoadSteps(){
         UpdateCalculatedValues();
         if(<?php if($submitted) echo "1"; else echo "0"; ?>){
@@ -4944,77 +4787,77 @@ function isFieldVisible(fieldId) {
     function InputLoggedInPerson(){
     }
 
-    function ValidateFiles(){
-        var fileError="";
-        var sizeinbytes=0;
+    // function ValidateFiles(){
+    //     var fileError="";
+    //     var sizeinbytes=0;
 
-        if(document.getElementById('990NFiling').files.length>0){
-            sizeinbytes = document.getElementById('990NFiling').files[0].size;
+    //     if(document.getElementById('990NFiling').files.length>0){
+    //         sizeinbytes = document.getElementById('990NFiling').files[0].size;
 
-            if(sizeinbytes>5000000){
-                fileError = "Your 990N confirmation file is too large.  Please submit a file less than 5MB.";
-                return fileError;
-            }
-        }
+    //         if(sizeinbytes>5000000){
+    //             fileError = "Your 990N confirmation file is too large.  Please submit a file less than 5MB.";
+    //             return fileError;
+    //         }
+    //     }
 
-        if(document.getElementById('RosterFile').files.length>0){
-            sizeinbytes = document.getElementById('RosterFile').files[0].size;
+    //     if(document.getElementById('RosterFile').files.length>0){
+    //         sizeinbytes = document.getElementById('RosterFile').files[0].size;
 
-            if(sizeinbytes>5000000){
-                fileError = "Your chapter roster file is too large.  Please submit a file less than 5MB.";
-                return fileError;
-            }
-        }
+    //         if(sizeinbytes>5000000){
+    //             fileError = "Your chapter roster file is too large.  Please submit a file less than 5MB.";
+    //             return fileError;
+    //         }
+    //     }
 
-        inp = document.getElementById('Award1');
-        for (var i = 0; i < inp.files.length; ++i) {
-            sizeinbytes = inp.files[i].size;
+    //     inp = document.getElementById('Award1');
+    //     for (var i = 0; i < inp.files.length; ++i) {
+    //         sizeinbytes = inp.files[i].size;
 
-            if(sizeinbytes>5000000){
-                fileError = "Your 1st award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
-                return fileError;
-            }
-        }
+    //         if(sizeinbytes>5000000){
+    //             fileError = "Your 1st award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
+    //             return fileError;
+    //         }
+    //     }
 
-        inp = document.getElementById('Award2');
-        for (var i = 0; i < inp.files.length; ++i) {
-            sizeinbytes = inp.files[i].size;
+    //     inp = document.getElementById('Award2');
+    //     for (var i = 0; i < inp.files.length; ++i) {
+    //         sizeinbytes = inp.files[i].size;
 
-            if(sizeinbytes>5000000){
-                fileError = "Your 2nd award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
-                return fileError;
-            }
-        }
+    //         if(sizeinbytes>5000000){
+    //             fileError = "Your 2nd award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
+    //             return fileError;
+    //         }
+    //     }
 
-        inp = document.getElementById('Award3');
-        for (var i = 0; i < inp.files.length; ++i) {
-            sizeinbytes = inp.files[i].size;
+    //     inp = document.getElementById('Award3');
+    //     for (var i = 0; i < inp.files.length; ++i) {
+    //         sizeinbytes = inp.files[i].size;
 
-            if(sizeinbytes>5000000){
-                fileError = "Your 3rd award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
-                return fileError;
-            }
-        }
+    //         if(sizeinbytes>5000000){
+    //             fileError = "Your 3rd award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
+    //             return fileError;
+    //         }
+    //     }
 
-        inp = document.getElementById('Award4');
-        for (var i = 0; i < inp.files.length; ++i) {
-            sizeinbytes = inp.files[i].size;
+    //     inp = document.getElementById('Award4');
+    //     for (var i = 0; i < inp.files.length; ++i) {
+    //         sizeinbytes = inp.files[i].size;
 
-            if(sizeinbytes>5000000){
-                fileError = "Your 4th award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
-                return fileError;
-            }
-        }
+    //         if(sizeinbytes>5000000){
+    //             fileError = "Your 4th award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
+    //             return fileError;
+    //         }
+    //     }
 
-        inp = document.getElementById('Award5');
-        for (var i = 0; i < inp.files.length; ++i) {
-            sizeinbytes = inp.files[i].size;
+    //     inp = document.getElementById('Award5');
+    //     for (var i = 0; i < inp.files.length; ++i) {
+    //         sizeinbytes = inp.files[i].size;
 
-            if(sizeinbytes>5000000){
-                fileError = "Your 5th award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
-                return fileError;
-            }
-        }
-    }
+    //         if(sizeinbytes>5000000){
+    //             fileError = "Your 5th award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
+    //             return fileError;
+    //         }
+    //     }
+    // }
 </script>
 @endsection
