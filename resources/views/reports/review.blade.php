@@ -66,13 +66,13 @@
                     $cc_string = $emailDetails['cc_string'];
                 @endphp
                   <tr>
-						<td><a href="<?php echo url("/chapter/financial/{$list->chap_id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
+						<td><center><a href="<?php echo url("/chapter/financial/{$list->chap_id}") ?>"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a></center></td>
                         <td><center>
                                 @if($list->financial_report_received == '1')
-                                    <a href="{{ url("/chapter/financial/pdf/{$list->chap_id}") }}" target="_blank"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
+                                    <a href="{{ url("/chapter/financial/pdf/{$list->chap_id}") }}" target="_blank"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></a>
                                 @endif
                             </center></td>
-                        <td><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Financial Report Review - MOMS Club of {{ $list->name }}, {{ $list->state }}"><i class="fa fa-envelope" aria-hidden="true"></i></a></i></td>
+                        <td><center><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Financial Report Review - MOMS Club of {{ $list->name }}, {{ $list->state }}"><i class="fa fa-envelope-o fa-lg" aria-hidden="true"></i></a></i></center></td>
                         <td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
                         <td>{{ $list->fname }} {{ $list->lname }}</td>

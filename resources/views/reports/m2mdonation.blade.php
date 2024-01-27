@@ -49,7 +49,7 @@
                 @foreach($chapterList as $list)
                   <tr>
 	                    <?php if(Session::get('positionid') >=6 && Session::get('positionid') <=7){ ?><td>
-	                    <a href="<?php echo url("/chapter/m2mdonation/{$list->id}") ?>"><i class="fa fa-credit-card" aria-hidden="true"></i></a><?php }?>
+	                        <center><a href="<?php echo url("/chapter/m2mdonation/{$list->id}") ?>"><i class="fa fa-credit-card fa-lg" aria-hidden="true"></i></a></center><?php }?>
 	                    </td>
 						<td>{{ $list->state }}</td>
                         <td>{{ $list->name }}</td>

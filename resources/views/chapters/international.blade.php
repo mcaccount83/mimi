@@ -56,7 +56,7 @@
                 @endif
                 @foreach($intChapterList as $list)
                   <tr>
-                        <td><a href="<?php echo url("/chapter/international/view/{$list->id}") ?>"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
+                        <td><center><a href="<?php echo url("/chapter/international/view/{$list->id}") ?>"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></a></center></td>
                         <td>{{ $list->cor_cid }}</td>
                         <td>{{ $list->state }}</td>
                         <td>{{ $list->name }}</td>

@@ -48,7 +48,7 @@
                 <tbody>
                 @foreach($retiredCoordinatorList as $list)
                   <tr>
-                        <td><a href="<?php echo url("/coordinator/retired/view/{$list->cor_id}") ?>"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
+                        <td><center><a href="<?php echo url("/coordinator/retired/view/{$list->cor_id}") ?>"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></a></center></td>
                         <td>{{ $list->cor_fname }}</td>
                         <td>{{ $list->cor_lname }}</td>
                         <td>{{ $list->position }}</td>

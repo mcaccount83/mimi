@@ -61,7 +61,7 @@
                          @if($list->new_board_active=='1')
 								<a href="#" <?php echo "disabled";?>></a>
 							@else
-								<a href="<?php echo url("/chapter/boardinfo/{$list->id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a>
+								<center><a href="<?php echo url("/chapter/boardinfo/{$list->id}") ?>"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a></center>
 							@endif
                         <?php }?>
                           </td>

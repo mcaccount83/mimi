@@ -37,7 +37,7 @@
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
-						<td><a href="<?php echo url("/chapter/edit/{$list->ch_id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
+						<td><center><a href="<?php echo url("/chapter/edit/{$list->ch_id}") ?>"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a></center></td>
 						<td>{{ $list->ch_state }}</td>
                         <td>{{ $list->ch_name }}</td>
 						<td>{{ $list->month_name }} {{ $list->year }}</td>

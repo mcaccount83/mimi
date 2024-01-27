@@ -34,7 +34,7 @@
                 <tbody>
                     @foreach($chapterList as $list)
                         <tr>
-                            <td><a href="{{ url("/chapter/edit/{$list->id}") }}"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
+                            <td><center><a href="{{ url("/chapter/edit/{$list->id}") }}"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a></center></td>
                             <td>{{ $list->state }}</td>
                             <td>{{ $list->name }}</td>
                             @switch($list->status)

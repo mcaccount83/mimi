@@ -90,7 +90,7 @@ label { margin-bottom: 0;}
 .form-check.form-check-radio {
     margin-top: 5px;
 }
-.radio-chk input[type="checkbox"] { 
+.radio-chk input[type="checkbox"] {
 	position: absolute;
 	opacity: 0;
 }

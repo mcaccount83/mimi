@@ -94,15 +94,15 @@
                   <tr>
                         <td>
                         <?php if (Session::get('positionid') ==6 ){ ?>
-                                <a href="<?php echo url("/chapter/re-registration/payment/{$list->id}") ?>"><i class="fa fa-credit-card" aria-hidden="true"></i> </a>
+                            <center><a href="<?php echo url("/chapter/re-registration/payment/{$list->id}") ?>"><i class="fa fa-credit-card fa-lg" aria-hidden="true"></i></a></center>
                         <?php }?>
                         </td>
                         <td>
                         <?php if (Session::get('positionid') ==6 ){ ?>
-                                <a href="<?php echo url("/chapter/re-registration/notes/{$list->id}") ?>"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                            <center><a href="<?php echo url("/chapter/re-registration/notes/{$list->id}") ?>"><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></a></center>
                         <?php }?>
                         </td>
-                        <td><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Re-Registration Reminder - MOMS Club of {{ $list->name }}, {{ $list->state_short_name }}&body={{ urlencode($mail_message) }}"><i class="fa fa-envelope" aria-hidden="true"></i></a></td>
+                        <td><center><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Re-Registration Reminder - MOMS Club of {{ $list->name }}, {{ $list->state_short_name }}&body={{ urlencode($mail_message) }}"><i class="fa fa-envelope-o fa-lg" aria-hidden="true"></i></a></center></td>
                         <td>{{ $list->state_short_name }}</td>
                         <td>{{ $list->name }}</td>
                         <td>{{ $list->reg_notes }}</td>

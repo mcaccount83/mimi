@@ -42,7 +42,7 @@
                 @foreach($chapterList as $list)
                 @if($list->boundary_issue_notes != '')
                   <tr>
-						<td><a href="<?php echo url("/chapter/boundaryview/{$list->id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
+						<td><center><a href="<?php echo url("/chapter/boundaryview/{$list->id}") ?>"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a></center></td>
 						<td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
                         <td>{{ $list->boundary_issue_notes}}</td>

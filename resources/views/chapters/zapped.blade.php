@@ -54,7 +54,7 @@
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
-                        <td><a href="<?php echo url("/chapter/zapped/view/{$list->id}") ?>"><i class="fa fa-eye" aria-hidden="true"></i></a></td>
+                        <td><center><a href="<?php echo url("/chapter/zapped/view/{$list->id}") ?>"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></a></center></td>
 						<td>{{ $list->state }}</td>
 					   <td>{{ $list->name }}</td>
                        <td>{{ $list->ein }}</td>

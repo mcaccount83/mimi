@@ -71,8 +71,8 @@
                     $cc_string = $emailDetails['cc_string'];
                 @endphp
                 <tr>
-                <td><a href="<?php echo url("/chapter/edit/{$list->id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
-                <td><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=MOMS Club of {{ $list->name }}, {{ $list->state }}"><i class="fa fa-envelope" aria-hidden="true"></i></a></td>
+                <td><center><a href="<?php echo url("/chapter/edit/{$list->id}") ?>"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a></center></td>
+                <td><center><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=MOMS Club of {{ $list->name }}, {{ $list->state }}"><i class="fa fa-envelope-o fa-lg" aria-hidden="true"></i></a></center></td>
                       <td>{{ $list->state }}</td>
                       <td>{{ $list->name }}</td>
                       <td>{{ $list->ein }}</td>

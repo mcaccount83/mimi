@@ -53,7 +53,7 @@
 
                 @foreach($coordinatorList as $list)
                   <tr>
-                    <td><a href="<?php echo url("/coordinator/appreciation/{$list->cor_id}") ?>"><i class="fa fa-pencil-square" aria-hidden="true"></i></a></td>
+                    <td><center><a href="<?php echo url("/coordinator/appreciation/{$list->cor_id}") ?>"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a></center></td>
                     <td>{{ $list->cor_fname }}</td>
                     <td>{{ $list->cor_lname }}</td>
                     <td>{{ $list->start_date }}</td>
