@@ -722,7 +722,7 @@
               <div class="box-body">
             <br>
             <div id="reportStatusText" class="description text-center" style="color: red;">
-                <p><strong><?php echo date('Y')-1 .'-'.date('Y');?> Report Status/Links are not available at this time.</strong></p>
+                <h4><strong><?php echo date('Y')-1 .'-'.date('Y');?> Report Status/Links are not available at this time.</strong></h4>
             </div>
               <!-- /.form group -->
               <div class="radio-chk">
@@ -921,16 +921,17 @@
 
   @section('customscript')
   <script>
- // Change true/false or show/hide
+ // Change .show/.hide to update visibility
  $(document).ready(function () {
-        $('#reportStatusText').show();  /*report status text (.show/.hide to change visibility)*/
-        $('#BoardInfo').closest('.radio-chk').hide();  /*board info received toggle (.show/.hide to change visibility)*/
-        $('#BoardActive').closest('.radio-chk').hide();  /*board info activated toggle (.show/.hide to change visibility)*/
-        $('#FinancialReceived').closest('.radio-chk').hide();  /*financial report received toggle (.show/.hide to change visibility)*/
-        $('#FinancialComplete').closest('.radio-chk').hide();  /*financial report complete toggle (.show/.hide to change visibility)*/
-        $('#ReportStatus').prop('disabled', true);  /*report status button (true/false to change disable/enable)*/
-        $('#BoardReport').prop('disabled', true);  /*board report button (true/false to change disable/enable)*/
-        $('#FinancialReport').prop('disabled', true);  /*financial report button (true/false to change disable/enable)*/
+        $('#reportStatusText').show();  /* report status text */
+        $('#BoardInfo').closest('.radio-chk').hide();  /* board info received toggle */
+        $('#BoardActive').closest('.radio-chk').hide();  /* board info activated toggle */
+        $('#FinancialReceived').closest('.radio-chk').hide();  /* financial report received toggle */
+        $('#FinancialComplete').closest('.radio-chk').hide();  /* financial report complete toggle */
+        $('#ReportStatus').hide();  /* update report status button */
+        $('#BoardReport').hide();  /* board report button */
+        $('#BoardReportAlwaysDisabled').hide();  /* board report button */
+        $('#FinancialReport').hide();  /* financial report button */
 
  // ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report//
         $('#BoardReportAlwaysDisabled').prop('disabled', true);

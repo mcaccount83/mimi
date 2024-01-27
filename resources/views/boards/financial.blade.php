@@ -3451,7 +3451,7 @@ $(document).ready(function(){
         var result = confirm("This will finalize and submit your report.  You will no longer be able to edit this report.  Do you wish to continue?");
         if (result) {
             $("#submitted").val('1');
-            $("#FurthestStep").val('12');
+            $("#FurthestStep").val('13');
             $("#financial_report").submit();
         }
     });
