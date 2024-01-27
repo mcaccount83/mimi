@@ -1358,6 +1358,11 @@
                         <br>
                         Reconciled Bank Statement:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.sprintf('%0.2f',$financial_report_array ['bank_balance_now'] + $totalReconciliation) }}</strong><br>
                         Treasury Balance Now:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.($treasuryBalance)}}</strong><br>
+                        <div class="col-md-12 float-right">
+                            <div class="form-group">
+                                <textarea class="form-control" style="width:100%" rows="3" name="ReconciledBankBalanceWarning" id="ReconciledBankBalanceWarning" disabled></textarea>
+                            </div>
+                        </div>
 				    <hr>
 
 				<!-- start:report_review -->
@@ -2993,29 +2998,21 @@ $(document).ready(function(){
 });
 </script>
 <script>
-	// function ReplaceStatement1(){
-	// 	document.getElementById("StatementBlock").style.display = 'block';
-	// 	document.getElementById("StatementBlock").style.visibility = 'visible';
-	// }
 
-	// 	function ReplaceStatement2(){
-	// 	document.getElementById("Statement2Block").style.display = 'block';
-	// 	document.getElementById("Statement2Block").style.visibility = 'visible';
-	// }
 
-	// function ReplaceRoster(){
-	// 	document.getElementById("RosterBlock").style.display = 'block';
-	// 	document.getElementById("RosterBlock").style.visibility = 'visible';
-	// }
 
-	// function Replace990N(){
-	// 	document.getElementById("990NBlock").style.display = 'block';
-	// 	document.getElementById("990NBlock").style.visibility = 'visible';
-	// }
+    if(TotalFees != TreasuryBalanceNow){
+            document.getElementById("ReconciledBankBalanceWarning").style.backgroundColor = "yellow";
+            document.getElementById("ReconciledBankBalanceWarning").value = "Reconciled Bank Balance does not match treasury balance now. These numbers must match for your report to be in balance"
+            document.getElementById("ReconciledBankBalanceWarning").style.borderStyle = "none";
+        }
+        else{
+            document.getElementById("ReconciledBankBalanceWarning").style.backgroundColor = "transparent";
+            document.getElementById("ReconciledBankBalanceWarning").value = ""
+            document.getElementById("ReconciledBankBalanceWarning").style.borderStyle = "none";
+        }
 
-	// function UpdateRelatedControl(RelatedElementName){
-	// 	document.getElementById(RelatedElementName).checked = true;
-	// }
+
 
 
 	document.getElementById('addAwardsLink').addEventListener('click', function(event) {
