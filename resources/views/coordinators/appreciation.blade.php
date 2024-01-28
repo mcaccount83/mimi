@@ -11,7 +11,7 @@
         <li class="active">Coordinator Appreciation</li>
       </ol>
     </section>
- 
+
 
     <!-- Main content -->
     <form method="POST" action='{{ route("coordinator.updateappreciation",$coordinatorDetails[0]->coordinator_id) }}'>
@@ -107,7 +107,7 @@
 						</select>
 						</div>
 					</div>
-					
+
 
 				<div class="box-header with-border mrg-t-10">
 					<h3 class="box-title">Appreciation Gift History</h3>
@@ -193,8 +193,8 @@
 				</div>
 		<!-- /.box-body -->
 		<div class="box-body text-center">
-            <button type="submit" class="btn btn-themeBlue margin">Save</button>
-            <a href="{{ route('report.appreciation') }}" class="btn btn-themeBlue margin">Back</a>
+            <button type="submit" class="btn btn-themeBlue margin"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+            <a href="{{ route('report.appreciation') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
 				  </div>
 					</div>
 				</div>
@@ -202,7 +202,7 @@
         </div>
     </section>
 </form>
- 
+
 @endsection
 @section('customscript')
 

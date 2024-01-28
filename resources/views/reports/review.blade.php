@@ -45,9 +45,9 @@
               <table id="chapterlist_review" class="table table-bordered table-hover">
               <thead>
 			    <tr>
-					<th></th>
-                    <th></th>
-					<th>Email Board</th>
+					<th>Review</th>
+                    <th>PDF</th>
+					<th>Email</th>
 				  <th>State</th>
                   <th>Name</th>
                  <th>Primary Coordinator</th>
@@ -109,19 +109,17 @@
                     <label style="display: block;"><input type="checkbox" name="showPrimary" id="showPrimary" class="ios-switch green bigswitch" {{$checkBoxStatus}} onchange="showPrimary()" /><div><div></div></div>
                   </label>
                   <span> Only show chapters I am Assigned Reviewer for</span>
-                </div>
               <div class="radio-chk labelcheck">
-                <div class="form-group">
                         <label style="display: block;"><input type="checkbox" name="show2Primary" id="show2Primary" class="ios-switch green bigswitch" {{$checkBox2Status}} onchange="show2Primary()" /><div><div></div></div>
                         </label>
                     <span> Only show chapters I am Primary Coordinator for</span>
                 </div>
             </div>
             </div>
+            </div>
+        </div>
               <div class="box-body text-center">
-              <a title="Financial Report reminders will be sent to all chapters who have not submitted a report." href="{{ route('report.financialreminder') }}"><button class="btn btn-themeBlue margin">Send Financial Report Reminders</button></a>
-              </div>
-             </div>
+              <a title="Financial Report reminders will be sent to all chapters who have not submitted a report." href="{{ route('report.financialreminder') }}"><button class="btn btn-themeBlue margin"><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; Send Financial Report Reminders</button></a>
            </div>
           <!-- /.box -->
         </div>

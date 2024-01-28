@@ -29,7 +29,7 @@
               <table id="chapterlist" class="table table-bordered table-hover">
               <thead>
 			    <tr>
-					<th></th>
+					<th>Details</th>
 					<th>Conference</th>
 					  <th>State</th>
 				<th>Name</th>
@@ -73,7 +73,7 @@
             </div>
 
             <div class="box-body text-center">
-            <a href="{{ route('export.intchapter') }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>>Export Chapter List</button></a>
+            <a href="{{ route('export.intchapter') }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export Chapter List</button></a>
               </div>
             </div>
           <!-- /.box -->

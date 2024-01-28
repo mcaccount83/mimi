@@ -2826,8 +2826,8 @@
 </div>
 <div class="box-body text-center">
 
-              <a href="{{ route('home') }}" class="btn btn-themeBlue margin">Back</a>
-<a id="viewPdfLink" href="{{ url("/chapter/financial/pdf/{$chapterid}") }}" target="_blank" class="btn btn-themeBlue margin" <?php if(!$submitted =='1') echo "disabled"; ?>>View PDF</a>
+              <a href="{{ route('home') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
+<a id="viewPdfLink" href="{{ url("/chapter/financial/pdf/{$chapterid}") }}" target="_blank" class="btn btn-themeBlue margin" <?php if(!$submitted =='1') echo "disabled"; ?>><i class="fa fa-file-pdf-o fa-fw" aria-hidden="true" ></i>&nbsp; View PDF</a>
               </div>
 
 

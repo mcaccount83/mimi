@@ -25,7 +25,7 @@
               <table id="coordinatorlist" class="table table-bordered table-hover">
               <thead>
 			    <tr>
-			      <th></th>
+			      <th>Details</th>
 			      <th>Conference</th>
                   <th>Region</th>
 				  <th>First Name</th>

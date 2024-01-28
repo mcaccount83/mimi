@@ -30,7 +30,7 @@
               <table id="chapterlist" class="table table-bordered table-hover">
               <thead>
 			    <tr>
-					<th></th>
+					<th>Review</th>
 				  <th>State</th>
                   <th>Name</th>
                  <th>Reported Issue</th>

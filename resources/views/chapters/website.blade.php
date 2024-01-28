@@ -38,7 +38,7 @@
               <table id="chapterlist" class="table table-bordered table-hover">
               <thead>
 			    <tr>
-					<th></th>
+					<th>Review</th>
 					<th>Chapter State</th>
 					<th>Chapter Name</th>
                     <th>Status</th>
@@ -75,7 +75,7 @@
             </div>
             <div class="box-body text-center">
 
-			<button type="button" class="btn btn-themeBlue margin" onclick="window.open('https://momsclub.org/chapters/chapter-links/')">View Chapter Links Page</button>
+			<button type="button" class="btn btn-themeBlue margin" onclick="window.open('https://momsclub.org/chapters/chapter-links/')"><i class="fa fa-eye fa-fw" aria-hidden="true" ></i>&nbsp; View Chapter Links Page</button>
 		</div>
 
           <!-- /.box -->

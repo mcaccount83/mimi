@@ -375,19 +375,19 @@
 
 		<!-- /.box-body -->
 		<div class="box-body text-center">
-			<button type="submit" class="btn btn-themeBlue margin">Save</button>
-			<button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);">Reset</button>
+			<button type="submit" class="btn btn-themeBlue margin"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+			<button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);"><i class="fa fa-undo fa-fw" aria-hidden="true" ></i>&nbsp; Reset</button>
 
-			<a href='{{ route("coordinator.edit",$coordinatorDetails[0]->coordinator_id) }}' class="btn btn-themeBlue margin">Back</a>
+			<a href='{{ route("coordinator.edit",$coordinatorDetails[0]->coordinator_id) }}' class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
 
 		</div>
 		<div class="box-body text-center">
 			<?php if ($coordinatorDetails[0]->on_leave) {?>
-			<button type="button" class="btn btn-themeBlue margin" id="remove-leave">Remove Volunteer on Leave</button> <?php }
+			<button type="button" class="btn btn-themeBlue margin" id="remove-leave"><i class="fa fa-user-plus fa-fw" aria-hidden="true" ></i>&nbsp; Remove Volunteer on Leave</button> <?php }
 			else { ?>
-			<button type="submit" class="btn btn-themeBlue margin" onclick="return PreRetireValidate(true)">Put Volunteer on Leave</button>
+			<button type="submit" class="btn btn-themeBlue margin" onclick="return PreRetireValidate(true)"><i class="fa fa-user-times fa-fw" aria-hidden="true" ></i>&nbsp; Put Volunteer on Leave</button>
 			<?php } ?>
-			<button type="submit" class="btn btn-themeBlue margin" onclick="return PreRetireValidate()">Retire Volunteer</button>
+			<button type="submit" class="btn btn-themeBlue margin" onclick="return PreRetireValidate()"><i class="fa fa-user-times fa-fw" aria-hidden="true" ></i>&nbsp; Retire Volunteer</button>
 		</div>
         <!-- /.box-body -->
         </div>

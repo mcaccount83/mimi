@@ -26,7 +26,7 @@
               <table id="chapterlist" class="table table-bordered table-hover">
               <thead>
 			    <tr>
-				  <th></th>
+				  <th>Details</th>
 				  <th>State</th>
                   <th>Name</th>
 				   <th>Conference Coordinator</th>
@@ -69,7 +69,7 @@
                         $cord_row_count = count($coordinator_array);
 
                         echo "<tr>";
-                        echo "<td><a href='/mimi/chapter/edit/{$row->id}'><i class='fa fa-pencil-square' aria-hidden='true'></i></a></td> \n";
+                        echo "<td><center><a href='/chapter/edit/{$row->id}'><i class='fa fa-edit fa-lg' aria-hidden='true'></i></a></center></td> \n";
                         echo "<td>{$row->state}</td>\n";
                         echo "<td>{$row->name}</td>\n";
 
@@ -111,11 +111,12 @@
                 </div>
               </div>
               </div>
+            </div>
+
 			  <div class="box-body text-center">
 
-              <a href="{{ route('export.chaptercoordinator') }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>>Export Chapter Coordinator List</button></a>
+              <a href="{{ route('export.chaptercoordinator') }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export Chapter Coordinator List</button></a>
              </div>
-            </div>
 
            </div>
           <!-- /.box -->

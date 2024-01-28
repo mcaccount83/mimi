@@ -28,7 +28,7 @@
               <table id="chapterlist" class="table table-bordered table-hover">
               <thead>
 			    <tr>
-				<th>Add/Edit</th>
+				<th>Add/Review</th>
 				<th>State</th>
                 <th>Name</th>
                 <th>Award 1</th>

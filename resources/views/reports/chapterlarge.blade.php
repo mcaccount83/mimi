@@ -26,7 +26,7 @@
               <table id="chapterlist_large" class="table table-bordered table-hover">
               <thead>
 			    <tr>
-					<th></th>
+					<th>Details</th>
 				  <th>State</th>
                   <th>Name</th>
                  <th>Chapter Size</th>

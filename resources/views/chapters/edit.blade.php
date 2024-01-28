@@ -838,26 +838,26 @@
             <!-- /.box-body -->
             <div class="box-body text-center">
             <?php if (Session::get('positionid') <=7 || Session::get('positionid') == 25) {?>
-              <button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate()" >Save</button>
+              <button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate()" ><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
               <?php }?>
               <?php if (Session::get('positionid') <=7 || Session::get('positionid') == 25) {?>
-              <a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=MOMS Club of {{ $chapterList[0]->name }}" class="btn btn-themeBlue margin">E-mail Board</a>
+              <a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=MOMS Club of {{ $chapterList[0]->name }}" class="btn btn-themeBlue margin"><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; E-mail Board</a>
              <?php }?>
               <?php if ((Session::get('positionid') >=4 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>
-              <button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);" >Reset</button>
+              <button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);" ><i class="fa fa-undo fa-fw" aria-hidden="true" ></i>&nbsp; Reset</button>
                 <?php }?>
-              <a href="{{ route('chapter.list') }}" class="btn btn-themeBlue margin">Back</a>
+              <a href="{{ route('chapter.list') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
               </div>
 
               <div class="box-body text-center">
                <?php if ((Session::get('positionid') >=6 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>
-                <button type="button" class="btn btn-themeBlue margin" onclick="return UpdateEIN()">Update EIN</button>
+                <button type="button" class="btn btn-themeBlue margin" onclick="return UpdateEIN()"><i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; Update EIN</button>
 
-                <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-ein">Update EIN Letter</button>
+                <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-ein"><i class="fa fa-file fa-fw" aria-hidden="true" ></i>&nbsp; Update EIN Letter</button>
                 {{-- <button type="button" class="btn btn-themeBlue margin" onclick="return EINLetter()">Update EIN Letter</button> --}}
               <?php } ?>
               <?php if ((Session::get('positionid') >=5 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>
-              <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-disband">Disband Chapter</button>
+              <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-disband"><i class="fa fa-ban fa-fw" aria-hidden="true" ></i>&nbsp; Disband Chapter</button>
               <?php } ?>
               </div>
 

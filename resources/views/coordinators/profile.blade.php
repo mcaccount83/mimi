@@ -231,13 +231,13 @@
 
 		<!-- /.box-body -->
 		<div class="box-body text-center">
-			<button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate();">Save</button>
-			<button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);">Reset</button>
-			<a href="{{ route('home') }}" class="btn btn-themeBlue margin">Back</a>
+			<button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate();"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+			<button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);"><i class="fa fa-undo fa-fw" aria-hidden="true" ></i>&nbsp; Reset</button>
+			<a href="{{ route('home') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
 		</div>
 		 <div class="box-body text-center">
-			<button type="button" class="btn btn-themeBlue margin" onclick="window.open('https://momsclub.org/coordinator-toolkit/')">Coordinator Toolkit</button>
-			<button type="button" class="btn btn-themeBlue margin" onclick="window.open('https://momsclub.org/elearning/')">eLearning Library</button>
+			<button type="button" class="btn btn-themeBlue margin" onclick="window.open('https://momsclub.org/coordinator-toolkit/')"><i class="fa fa-briefcase fa-fw" aria-hidden="true" ></i>&nbsp; Coordinator Toolkit</button>
+			<button type="button" class="btn btn-themeBlue margin" onclick="window.open('https://momsclub.org/elearning/')"><i class="fa fa-graduation-cap fa-fw" aria-hidden="true" ></i>&nbsp; eLearning Library</button>
 		</div>
         <!-- /.box-body -->
         </div>

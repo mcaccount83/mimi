@@ -43,7 +43,7 @@
               <table id="chapterlist" class="table table-bordered table-hover">
               <thead>
 			    <tr>
-				<th></th>
+				<th>Edit</th>
 				<th>State</th>
                 <th>Name</th>
                 <th>Board Report Received</th>
@@ -105,8 +105,8 @@
               </div>
               </div>
               <div class="box-body text-center">
-              <a title="EOY Late Notices will be sent to all chapters who have not submitted reports." href="{{ route('report.eoylatereminder') }}"><button class="btn btn-themeBlue margin">Send EOY Late Notices</button></a>
-          <a href="{{ route('export.eoystatus')}}"><button class="btn btn-themeBlue margin">Export EOY Status List</button></a>
+              <a title="EOY Late Notices will be sent to all chapters who have not submitted reports." href="{{ route('report.eoylatereminder') }}"><button class="btn btn-themeBlue margin"><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; Send EOY Late Notices</button></a>
+          <a href="{{ route('export.eoystatus')}}"><button class="btn btn-themeBlue margin"><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export EOY Status List</button></a>
             </div>
            </div>
           <!-- /.box -->

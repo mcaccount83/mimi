@@ -25,7 +25,7 @@
               <table id="chapterlist" class="table table-bordered table-hover">
               <thead>
 			    <tr>
-					<th>View Details</th>
+					<th>Details</th>
 			        <th>COPY Inquiries Email</th>
 					<th>YES Chapter Response</th>
 					<th>Status</th>
@@ -88,7 +88,7 @@
 
             <div class="box-body text-center">
 
-              <button type="button" class="btn btn-themeBlue margin" onclick="CopyNoChapter()" id="btnNoChapter" name="nochapter">Copy NO Chapter Response</button>
+              <button type="button" class="btn btn-themeBlue margin" onclick="CopyNoChapter()" id="btnNoChapter" name="nochapter"><i class="fa fa-files-o fa-fw" aria-hidden="true" ></i>&nbsp; Copy NO Chapter Response</button>
 
 
           </div>

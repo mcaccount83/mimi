@@ -30,7 +30,7 @@
               <table id="coordinatorlist_birthday" class="table table-bordered table-hover">
 				<thead>
 			    <tr>
-			        <th></th>
+			        <th>Edit</th>
 			        <th>Conference</th>
 					<th>Reigon</th>
 					<th>First Name</th>

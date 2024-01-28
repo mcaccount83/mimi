@@ -91,9 +91,9 @@
 
 
               <div class="box-body text-center">
-                          <button type="submit" class="btn btn-themeBlue margin">Save</button>
+                          <button type="submit" class="btn btn-themeBlue margin"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
 
-              <a href="{{ route('report.issues') }}" class="btn btn-themeBlue margin">Back</a>
+              <a href="{{ route('report.issues') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
 
               </div>
               </div>

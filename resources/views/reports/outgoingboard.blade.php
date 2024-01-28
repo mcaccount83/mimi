@@ -73,11 +73,12 @@
                       </div>
                     </div>
                     </div>
-                <div class="modal-footer">
-                <button type="button" id="outgoing-active" class="btn btn-themeBlue margin" onclick="return activateOutgoing()">Update Outgoing Board Members</button>
+                </div>
+
+                <div class="box-body text-center">
+                    <button type="button" id="outgoing-active" class="btn btn-themeBlue margin" onclick="return activateOutgoing()"><i class="fa fa-play fa-fw" aria-hidden="true" ></i>&nbsp; Update Outgoing Board Members</button>
             </div>
 
-           </div>
           <!-- /.box -->
         </div>
       </div>

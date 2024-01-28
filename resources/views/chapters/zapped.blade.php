@@ -37,38 +37,35 @@
               </div>
             </div>
             <!-- /.box-header -->
-
             <div class="box-body table-responsive">
               <table id="chapterlist" class="table table-bordered table-hover">
               <thead>
 			    <tr>
-          <th></th>
-				<th>State</th>
-                <th>Name</th>
-                  <th>EIN</th>
-                  <th>Disband Date</th>
-                  <th>Reason</th>
-
+                    <th>Details</th>
+                    <th>State</th>
+                    <th>Name</th>
+                    <th>EIN</th>
+                    <th>Disband Date</th>
+                    <th>Reason</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
-                        <td><center><a href="<?php echo url("/chapter/zapped/view/{$list->id}") ?>"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></a></center></td>
-						<td>{{ $list->state }}</td>
-					   <td>{{ $list->name }}</td>
-                       <td>{{ $list->ein }}</td>
-                        <td>{{ $list->zap_date }}</td>
-                        <td>{{ $list->disband_reason }}</td>
-
-                    </tr>
+                    <td><center><a href="<?php echo url("/chapter/zapped/view/{$list->id}") ?>"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></a></center></td>
+                    <td>{{ $list->state }}</td>
+                    <td>{{ $list->name }}</td>
+                    <td>{{ $list->ein }}</td>
+                    <td>{{ $list->zap_date }}</td>
+                    <td>{{ $list->disband_reason }}</td>
+                </tr>
                   @endforeach
                   </tbody>
                 </table>
             </div>
 
             <div class="box-body text-center">
-              <a href="{{ route('export.zapchapter') }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>>Export Zapped Chapter List</button></a>
+              <a href="{{ route('export.zapchapter') }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export Zapped Chapter List</button></a>
              </div>
 
           </div>

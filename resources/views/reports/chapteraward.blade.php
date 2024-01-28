@@ -195,15 +195,15 @@
               </div>
 
 			   <div class="box-body text-center">
-                          <a class="btn btn-themeBlue margin" href="{{ route('report.addawards') }}">View All Chapers</a>
+                          <a class="btn btn-themeBlue margin" href="{{ route('report.addawards') }}"><i class="fa fa-eye fa-fw" aria-hidden="true" ></i>&nbsp; View All Chapers</a>
 
 			  <?php
 			 if($checkBoxStatus){ ?>
-				<a href="{{ route('export.chapteraward',$corId) }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>>Export Award List</button></a>
+				<a href="{{ route('export.chapteraward',$corId) }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; Export Award List</button></a>
 			<?php
 			 }
 			 else{ ?>
-				<a href="{{ route('export.chapteraward','0') }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>>Export Award List</button></a>
+				<a href="{{ route('export.chapteraward','0') }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; Export Award List</button></a>
 			 <?php } ?>
 
 

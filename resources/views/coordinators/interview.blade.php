@@ -281,9 +281,7 @@
 						<input type="text" name="cord_altphone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->leave_date }}" disabled>
 					  </div>
 					</div>
-
 					<div class="clearfix"></div>
-
 					<div class="col-sm-6 col-xs-12">
 					  <div class="form-group">
 						<label>Last Updated By</label>
@@ -299,15 +297,10 @@
 				</div>
             </div>
 		</div>
-
 		<!-- /.box-body -->
 		<div class="box-body text-center">
-
-
-
-			<a href="{{ route('coordinator.list') }}" class="btn btn-themeBlue margin">Back</a>
+			<a href="{{ route('coordinator.list') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
 		</div>
-
         <!-- /.box-body -->
         </div>
     </section>

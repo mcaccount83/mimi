@@ -240,7 +240,7 @@
 
 		<!-- /.box-body -->
 		<div class="box-body text-center">
-		<a href="{{ route('coordinator.retired') }}" class="btn btn-themeBlue margin">Back</a>
+		<a href="{{ route('coordinator.retired') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
 
 		</div>
         <!-- /.box-body -->

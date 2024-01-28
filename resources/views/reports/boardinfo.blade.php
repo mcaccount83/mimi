@@ -44,7 +44,7 @@
               <table id="chapterlist" class="table table-bordered table-hover">
               <thead>
 			    <tr>
-				<th></th>
+				<th>Review</th>
 				<th>State</th>
                 <th>Name</th>
                 <th>Primary Coordinator</th>
@@ -96,15 +96,14 @@
                 </div>
               </div>
               </div>
-
+            </div>
 			  <div class="box-body text-center">
 				<?php if (Session::get('positionid') >=5 && Session::get('positionid') <=7){ ?>
-                    <a title="Board Election Report reminders will be sent to all chapters who have not submitted a report." href="{{ route('report.boardinforeminder') }}"><button class="btn btn-themeBlue margin">Send Board Election Reminders</button></a>
-				    <button type="button" id="board-active" class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>>Make Received Boards Active</button>
-				    <a href="{{ route('export.boardelection')}}"><button class="btn btn-themeBlue margin">Export UN-Activated Board List</button></a>
+                    <a title="Board Election Report reminders will be sent to all chapters who have not submitted a report." href="{{ route('report.boardinforeminder') }}"><button class="btn btn-themeBlue margin"><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; Send Board Election Reminders</button></a>
+				    <button type="button" id="board-active" class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>><i class="fa fa-play fa-fw" aria-hidden="true" ></i>&nbsp; Make Received Boards Active</button>
+				    <a href="{{ route('export.boardelection')}}"><button class="btn btn-themeBlue margin"><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export UN-Activated Board List</button></a>
 				<?php }?>
              </div>
-            </div>
            </div>
           <!-- /.box -->
         </div>

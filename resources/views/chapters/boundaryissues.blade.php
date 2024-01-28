@@ -63,7 +63,7 @@
                 <input type="text" name="ch_territory" class="form-control my-colorpicker1" value="{{ $chapterList[0]->territory }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" disabled >
 			</div>
 			</div>
-			
+
 			<div class="col-sm-12 col-xs-12">
               <div class="form-group">
                 <label>Boundary Issues Reported by Chapter</label>
@@ -82,25 +82,25 @@
                 <h3 class="box-title">International MOMS Club Coordinators</h3>
               </div>
                             <div class="box-body">
-               
+
               <!-- /.form group -->
 
                     <div class="col-md-6 float-left">
 						<input  type="hidden" id="pcid" value="{{ $chapterList[0]->primary_coordinator_id}}">
 						<div id="display_corlist">
 						</div>
-                        
-                    </div>    
-                    </div>    
+
+                    </div>
+                    </div>
                 </div>
               </div>
               </div>
-              
+
 
               <div class="box-body text-center">
-              <button type="submit" class="btn btn-themeBlue margin">Save</button>
-              <a href="{{ route('report.m2mdonation') }}" class="btn btn-themeBlue margin">Back</a>
-        
+              <button type="submit" class="btn btn-themeBlue margin"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+              <a href="{{ route('report.m2mdonation') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
+
               </div>
               </div>
               </div>
@@ -121,6 +121,6 @@ $(document).ready(function(){
 		}
 	});
 });
-    
+
 </script>
 @endsection

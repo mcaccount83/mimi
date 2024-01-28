@@ -83,10 +83,10 @@
                     <a href="#" onclick="uncheckAll();"><i class="fa fa-times"></i> Uncheck All</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="#" id="save-btn"><i class="fa fa-save"></i> Save</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <?php if ($positionid == 6 || $secpositionid == 25) {?>
-                        <a href="{{ url('/reports/coordinatortodo') }}"><i class="fa fa-files-o"></i> View Report</a>
+                        <a href="{{ url('/reports/coordinatortodo') }}"><i class="fa fa-check-square-o"></i> View Report</a>
                     <?php } ?>
                     <?php if ($positionid == 7) {?>
-                        <a href="{{ url('/reports/intcoordinatortodo') }}"><i class="fa fa-files-o"></i> View Report</a>
+                        <a href="{{ url('/reports/intcoordinatortodo') }}"><i class="fa fa-check-square-o"></i> View Report</a>
                     <?php } ?>
                 </div>
 				</div>

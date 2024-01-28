@@ -11,7 +11,7 @@
         <li class="active">Coordinator Appreciation</li>
       </ol>
     </section>
- 
+
 
     <!-- Main content -->
     <form method="POST" action='{{ route("coordinator.updatebirthday",$coordinatorDetails[0]->coordinator_id) }}'>
@@ -64,15 +64,15 @@
 						</select>
 					  </div>
 					</div>
-				
+
 					<div class="col-sm-4 col-xs-12">
 					  <div class="form-group">
 						<label>Zip</label><span class="field-required">*</span>
 						<input type="text" name="cord_zip" class="form-control my-colorpicker1" maxlength="10" value="{{ $coordinatorDetails[0]->zip }}" required onkeypress="return isNumber(event)" autocomplete="nope" readonly>
 					  </div>
 					</div>
-				
-					
+
+
 
                 	<div class="col-sm-6 col-xs-12">
 					  <div class="form-group">
@@ -80,22 +80,22 @@
 						<input type="text" name="cord_bday" class="form-control my-colorpicker1" maxlength="10" value="{{ $coordinatorDetails[0]->birthday_month_id }} / {{ $coordinatorDetails[0]->birthday_day }}" required onkeypress="return isNumber(event)" autocomplete="nope" readonly>
 					  </div>
 					</div>
-				    
+
 				<div class="col-sm-6 col-xs-12">
 					  <div class="form-group">
 						<label>Date Card Sent</label>
 						<input type="date" name="card_sent" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->card_sent }}" maxlength="50" onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
-			      
-					
+
+
 				</div>
 	  </div>
 				</div>
 		<!-- /.box-body -->
 		<div class="box-body text-center">
-            <button type="submit" class="btn btn-themeBlue margin">Save</button>
-            <a href="{{ route('report.birthday') }}" class="btn btn-themeBlue margin">Back</a>
+            <button type="submit" class="btn btn-themeBlue margin"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+            <a href="{{ route('report.birthday') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
 				  </div>
 					</div>
 				</div>
@@ -103,7 +103,7 @@
         </div>
     </section>
 </form>
- 
+
 @endsection
 @section('customscript')
 

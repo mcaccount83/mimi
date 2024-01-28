@@ -99,8 +99,8 @@
 
 
               <div class="box-body text-center">
-              <button type="submit" class="btn btn-themeBlue margin">Save</button>
-              <a href="{{ route('report.m2mdonation') }}" class="btn btn-themeBlue margin">Back</a>
+              <button type="submit" class="btn btn-themeBlue margin"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+              <a href="{{ route('report.m2mdonation') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
 
               </div>
               </div>

@@ -497,9 +497,9 @@
 
             <!-- /.box-body -->
             <div class="box-body text-center">
-              <button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate(true)">Save</button>
-              <button type="button" class="btn btn-themeBlue margin" onclick="return PreSaveValidate(false)" >Activate Board</button>
-              <a href="{{ route('report.boardinfo') }}" class="btn btn-themeBlue margin">Back</a>
+              <button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate(true)"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+              <button type="button" class="btn btn-themeBlue margin" onclick="return PreSaveValidate(false)" ><i class="fa fa-user-plus fa-fw" aria-hidden="true" ></i>&nbsp; Activate Board</button>
+              <a href="{{ route('report.boardinfo') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
             </div>
 
             <!-- /.box-body -->

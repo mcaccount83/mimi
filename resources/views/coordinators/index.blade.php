@@ -38,7 +38,7 @@
               <table id="coordinatorlist" class="table table-bordered table-hover">
                 <thead>
                   <tr>
-                    <th></th>
+                    <th>Details</th>
                     <th>Region</th>
                     <th>First Name</th>
 					<th>Last Name</th>
@@ -79,18 +79,18 @@
             </div>
 			<div class="clearfix"></div>
             <div class="box-body text-center">
-              <a class="btn btn-themeBlue margin" href="{{ route('coordinator.create') }}">New Coordinator</a>
+              <a class="btn btn-themeBlue margin" href="{{ route('coordinator.create') }}"><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add New Coordinator</a>
               <?php
 			 if($checkBoxStatus){ ?>
-				<a href="{{ route('export.coordinator',$corId) }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>>Export Coordinator List</button></a>
+				<a href="{{ route('export.coordinator',$corId) }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export Coordinator List</button></a>
 			<?php
 			 }
 			 else{ ?>
-				<a href="{{ route('export.coordinator','0') }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>>Export Coordinator List</button></a>
+				<a href="{{ route('export.coordinator','0') }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export Coordinator List</button></a>
 			 <?php } ?>
 
 
-              <a class="btn btn-themeBlue margin" href="mailto:{{ $emailListCord }}">E-mail Listed Coordinators</a>
+              <a class="btn btn-themeBlue margin" href="mailto:{{ $emailListCord }}"><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; E-mail Listed Coordinators</a>
             </div>
          </div>
           <!-- /.box -->

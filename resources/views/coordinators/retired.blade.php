@@ -37,7 +37,7 @@
               <table id="coordinatorlist" class="table table-bordered table-hover">
               <thead>
 			    <tr>
-				  <th></th>
+				  <th>Details</th>
 				   <th>First Name</th>
                   <th>Last Name</th>
                   <th>Position</th>
@@ -62,7 +62,7 @@
             </div>
 
 
-          <div class="box-body text-center"><a href="{{ route('export.retiredcoordinator')}}"><button class="btn btn-themeBlue margin">Export Retired Coordinator List</button></a>
+          <div class="box-body text-center"><a href="{{ route('export.retiredcoordinator')}}"><button class="btn btn-themeBlue margin"><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export Retired Coordinator List</button></a>
         </div>
             </div>
 

@@ -11,7 +11,7 @@
         <li class="active">Chapter Re-Registrations</li>
       </ol>
     </section>
-   
+
     <!-- Main content -->
     <form method="POST" action='{{ route("chapter.makepayment",$chapterList[0]->id) }}'>
     @csrf
@@ -27,27 +27,27 @@
               <!-- /.form group -->
               <div class="col-sm-12 col-xs-12">
               <div class="form-group">
-			  
+
 				<input type="hidden" name="ch_nxt_renewalyear" value="{{ $chapterList[0]->next_renewal_year }}">
-			  
+
 				<input type="hidden" name="ch_pre_email" value="{{ $chapterList[0]->bor_email }}">
-				<input type="hidden" name="ch_pc_fname" value="{{ $chapterList[0]->cor_fname }}">              
-				<input type="hidden" name="ch_pc_lname" value="{{ $chapterList[0]->cor_lname }}">              
-				<input type="hidden" name="ch_pc_email" value="{{ $chapterList[0]->cor_email }}">              
-				<input type="hidden" name="ch_pc_confid" value="{{ $chapterList[0]->cor_confid }}">              
-				<input type="hidden" name="ch_name" value="{{ $chapterList[0]->name }}">              
-				<input type="hidden" name="ch_state" value="{{ $chapterList[0]->statename }}">              
-			  
+				<input type="hidden" name="ch_pc_fname" value="{{ $chapterList[0]->cor_fname }}">
+				<input type="hidden" name="ch_pc_lname" value="{{ $chapterList[0]->cor_lname }}">
+				<input type="hidden" name="ch_pc_email" value="{{ $chapterList[0]->cor_email }}">
+				<input type="hidden" name="ch_pc_confid" value="{{ $chapterList[0]->cor_confid }}">
+				<input type="hidden" name="ch_name" value="{{ $chapterList[0]->name }}">
+				<input type="hidden" name="ch_state" value="{{ $chapterList[0]->statename }}">
+
 					<label>Chapter name</label>
                		<input type="text" name="ch_fullname" class="form-control my-colorpicker1" maxlength="200" required value="{{ $chapterList[0]->statename }} - {{ $chapterList[0]->name }}" readonly>
-				
+
               </div>
 			  </div>
 			  <div class="col-sm-12 col-xs-12">
               <div class="form-group">
 			  	<label>Last Payment</label>
                		<input type="text" name="ch_lastpay" class="form-control my-colorpicker1" maxlength="200" required value="{{ $chapterList[0]->dues_last_paid }}" readonly>
-				
+
               </div>
 			  </div>
 			                <!-- /.form group -->
@@ -63,7 +63,7 @@
                 <label>Postmark Date of Payment</label> <span class="field-required">*</span>
                 <!-- max="<?php echo $maxDateLimit;?>" -->
                 <input type="date" class="form-control my-colorpicker1" name="PaymentDate" id="PaymentDate" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" value="" min="<?php echo $minDateLimit;?>"  required />
-				
+
               </div>
               </div>
               <!-- /.form group -->
@@ -73,11 +73,11 @@
                <input type="number" name="MembersPaidFor" id="MembersPaidFor" onKeyPress="if(this.value.length==9) return false;" class="form-control my-colorpicker1 txt-num" onkeydown="return event.keyCode !== 69" min=0 required />
               </div>
               </div>
-             
+
               <!-- /.form group -->
               <div class="col-sm-12 col-xs-12">
-             
-			  
+
+
 			   <div class="radio-chk">
 				<div class="col-sm-12 col-xs-12">
 					<div class="form-group">
@@ -87,23 +87,23 @@
                     </div>
 				</div>
               </div>
-			  
+
               </div>
             </div>
            </div>
       </div>
-            
+
             <!-- /.box-body -->
             <div class="box-body text-center">
-              <button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate()">Save</button>
-              <a href="{{ route('chapter.registration') }}" class="btn btn-themeBlue margin">Back</a>
+              <button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate()"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+              <a href="{{ route('chapter.registration') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
               </div>
-			 
+
             <!-- /.box-body -->
-            
+
           </div>
           <!-- /.box -->
-       
+
     </section>
     </form>
 @endsection
@@ -118,9 +118,9 @@ $(document).ready(function(){
 		}
 	});
 });
-    
+
 </script>
-@endsection	
-  
+@endsection
+
 
 

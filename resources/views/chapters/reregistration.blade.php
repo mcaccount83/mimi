@@ -58,7 +58,7 @@
       			    <tr>
           			<th>Payment</th>
           			<th>Notes</th>
-          			<th>Email Board</th>
+          			<th>Email</th>
           			<th>Chapter State</th>
                     <th>Chapter Name</th>
                     <th>Re-Registration Notes</th>
@@ -132,18 +132,17 @@
                 </div>
               </div>
               </div>
+            </div>
+
 						 <div class="box-body text-center">
-
-
             <?php if(Session::get('positionid') ==6 || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>
-              <a title="Re-registration reminders will be sent to all unpaid chapters in your conference with renewal dates this month." href="{{ route('chapter.reminder') }}"><button class="btn btn-themeBlue margin"   <?php if($checkBoxStatus) echo "disabled";?>>Send Current Month Reminders</button></a>
+              <a title="Re-registration reminders will be sent to all unpaid chapters in your conference with renewal dates this month." href="{{ route('chapter.reminder') }}"><button class="btn btn-themeBlue margin"   <?php if($checkBoxStatus) echo "disabled";?>><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; Send Current Month Reminders</button></a>
 			<?php }?>
 	        <?php if(Session::get('positionid') ==6 || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>
-			 	<a href="{{route('chapter.latereminder')}}" class="btn btn-themeBlue margin" <?php if($checkBoxStatus) echo "disabled";?>>Send One Month Late Notices</a>
+			 	<a href="{{route('chapter.latereminder')}}" class="btn btn-themeBlue margin" <?php if($checkBoxStatus) echo "disabled";?>><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; Send One Month Late Notices</a>
 			<?php }?>
-					<a href="{{ route('export.rereg')}}"><button class="btn btn-themeBlue margin">Export Overdue Chapter List</button></a>
+					<a href="{{ route('export.rereg')}}"><button class="btn btn-themeBlue margin"><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export Overdue Chapter List</button></a>
 
-            </div>
             </div>
 
 

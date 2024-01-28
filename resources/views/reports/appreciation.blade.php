@@ -31,7 +31,7 @@
               <table id="coordinatorlist" class="table table-bordered table-hover">
 				<thead>
 			    <tr>
-			        <th></th>
+			        <th>Edit</th>
 					<th>First Name</th>
 					<th>Last Name</th>
 					<th>Start Date</th>
@@ -78,7 +78,7 @@
                 </table>
             </div>
            </div>
-                     <div class="box-body text-center"><a href="{{ route('export.appreciation')}}"><button class="btn btn-themeBlue margin">Export Coordinator Appreciation List</button></a>
+                     <div class="box-body text-center"><a href="{{ route('export.appreciation')}}"><button class="btn btn-themeBlue margin"><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export Coordinator Appreciation List</button></a>
         </div>
           <!-- /.box -->
         </div>

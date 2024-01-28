@@ -38,8 +38,8 @@
               <table id="chapterlist" class="table table-bordered table-hover">
                 <thead>
                   <tr>
-                    <th></th>
-                    <th>Email Board</th>
+                    <th>Details</th>
+                    <th>Email</th>
                     <th>State</th>
                     <th>Name</th>
                     <th>EIN</th>
@@ -85,7 +85,6 @@
                   @endforeach
                 </tbody>
               </table>
-            </div>
             <div class="radio-chk labelcheck">
               <div class="col-sm-6 col-xs-12">
                 <div class="form-group">
@@ -95,9 +94,11 @@
                 </div>
               </div>
               </div>
+            </div>
+
             <div class="box-body text-center">
             <?php if (Session::get('positionid') >=5 && Session::get('positionid') <=7){ ?>
-              <a class="btn btn-themeBlue margin" href="{{ route('chapters.create') }}">New Chapter</a>
+              <a class="btn btn-themeBlue margin" href="{{ route('chapters.create') }}"><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add New Chapter</a>
 			<?php }?>
 			<?php
 			 if($checkBoxStatus){ ?>
@@ -105,7 +106,7 @@
 			<?php
 			 }
 			 else{ ?>
-				<a href="{{ route('export.chapter','0') }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>>Export Chapter List</button></a>
+				<a href="{{ route('export.chapter','0') }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export Chapter List</button></a>
 			 <?php } ?>
 
             </div>
