@@ -62,9 +62,9 @@
                         @foreach($chapterList as $list)
                     <div class="col-md-4 float-left">
                        @if($list->ein_letter=='1')
-                      <a class="btn btn-info btn-fill" href="{{ $chapterList[0]->ein_letter_path }}" target="blank">View/Download EIN Letter</a>
+                      <a class="btn btn-info btn-fill" href="{{ $chapterList[0]->ein_letter_path }}" target="blank"><i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; View/Download EIN Letter</a>
                       	@else
-                       <a class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>>No EIN Letter on File</a>
+                       <a class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>><i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; No EIN Letter on File</a>
                        	@endif
                       </div>
                       <div id="reportStatusText" class="description text-center" style="color: red;">
@@ -73,17 +73,17 @@
                     <div class="col-md-4 float-left">
                         @if($list->new_board_active=='1')
                         <button id="BoardReportAlwaysDisabled" type="button"  class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $list->id]) }}'">
-                            {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
+                            <i class="fa fa-user-plus fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
                         </button>
                     @else
                         <button id="BoardReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $list->id]) }}'">
-                            {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
+                            <i class="fa fa-user-plus fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
                         </button>
                     @endif
                 </div>
                 <div class="col-md-4 float-left">
                         <button id="FinancialReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $list->id]) }}'">
-                            {{ date('Y')-1 .'-'.date('Y') }} Financial Report
+                            <i class="fa fa-usd fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y')-1 .'-'.date('Y') }} Financial Report
                         </button>
                     @endforeach
 					</div>
@@ -623,10 +623,10 @@
 
                 <div class="card-body card-b"><hr></div>
                    <div class="box-body text-center">
-                    <button id="Save" type="submit" class="btn btn-info btn-fill" onclick="return PreSaveValidate()">Save</button></div><br>
+                    <button id="Save" type="submit" class="btn btn-info btn-fill" onclick="return PreSaveValidate()"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button></div><br>
                     <div class="box-body text-center">
-                    <button type="button" class="btn btn-info btn-fill" onclick="window.open('https://groups.google.com/a/momsclub.org/g/2023-24boardlist)">BoardList Forum</button>
-                    <button type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-info btn-fill">eLearning Library</button></div>
+                    <button type="button" class="btn btn-info btn-fill" onclick="window.open('https://groups.google.com/a/momsclub.org/g/2023-24boardlist)"><i class="fa fa-list fa-fw" aria-hidden="true" ></i>&nbsp; BoardList Forum</button>
+                    <button type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-info btn-fill"><i class="fa fa-graduation-cap fa-fw" aria-hidden="true" ></i>&nbsp; eLearning Library</button></div>
                     </div>
                 </div>
 			</form>

@@ -200,7 +200,7 @@
 									<div class="col-md-12">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload Roster File.<br>
-                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-roster" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Upload Roster File</button>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-roster" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Roster File</button>
 									</div>
 								</div>
 								<input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $financial_report_array['roster_path']; ?>">
@@ -211,7 +211,7 @@
                                            <br>
                                             <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
-                                           <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-roster" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Replace Roster File</button>
+                                           <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-roster" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Roster File</button>
 									</div>
                                     </div>
 								</div>
@@ -259,7 +259,7 @@
 								</div>
 								<div class="col-md-12 mar_bot_20">
 									<div class="col-md-12">
-										<button type="button" id="AddNote1" class="btn btn-large btn-success" onclick="AddNote(1)" disabled>Add Note to Log</button>
+										<button type="button" id="AddNote1" class="btn btn-large btn-success" onclick="AddNote(1)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 									</div>
 								</div>
 							</div>
@@ -269,7 +269,7 @@
 						<div class="form-row form-group">
 							<div class="card-body">
 								<div class="col-md-12 text-center">
-								  <button type="submit" id="btn-step-1" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>Save</button>
+								  <button type="submit" id="btn-step-1" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
 								</div>
 							</div>
 						</div>
@@ -377,7 +377,7 @@
 
 										<div class="col-md-12 mar_bot_20">
 											<div class="col-md-12">
-												<button type="button" id="AddNote2" class="btn btn-large btn-success" onclick="AddNote(2)" disabled>Add Note to Log</button>
+												<button type="button" id="AddNote2" class="btn btn-large btn-success" onclick="AddNote(2)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 											</div>
 										</div>
 									</div>
@@ -387,7 +387,7 @@
 							<div class="form-row form-group">
 								<div class="card-body">
                                     <div class="col-md-12 text-center">
-										<button type="submit" id="btn-step-2" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>Save</button>
+										<button type="submit" id="btn-step-2" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                                     </div>
                                 </div>
                             </div>
@@ -512,7 +512,7 @@
 
 								<div class="col-md-12 mar_bot_20">
 									<div class="col-md-12">
-                                        <button type="button" id="AddNote3" class="btn btn-large btn-success" onclick="AddNote(3)" disabled>Add Note to Log</button>
+                                        <button type="button" id="AddNote3" class="btn btn-large btn-success" onclick="AddNote(3)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 									</div>
 								</div>
 							</div>
@@ -522,7 +522,7 @@
 					<div class="form-row form-group">
 						<div class="card-body">
 						<div class="col-md-12 text-center">
-						  <button type="submit" id="btn-step-3" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>Save</button>
+						  <button type="submit" id="btn-step-3" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
 						</div>
 						</div>
 					</div>
@@ -630,7 +630,7 @@
 
 							<div class="col-md-12 mar_bot_20">
 								<div class="col-md-12">
-									<button type="button" id="AddNote4" class="btn btn-large btn-success" onclick="AddNote(4)" disabled>Add Note to Log</button>
+									<button type="button" id="AddNote4" class="btn btn-large btn-success" onclick="AddNote(4)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 								</div>
 							</div>
 						</div>
@@ -640,7 +640,7 @@
 					<div class="form-row form-group">
 						<div class="card-body">
 							<div class="col-md-12 text-center">
-							  <button type="submit" id="btn-step-4" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>Save</button>
+							  <button type="submit" id="btn-step-4" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
 							</div>
 						</div>
 					</div>
@@ -733,7 +733,7 @@
 
 						<div class="col-md-12 mar_bot_20">
 							<div class="col-md-12">
-								<button type="button" id="AddNote5" class="btn btn-large btn-success" onclick="AddNote(5)" disabled>Add Note to Log</button>
+								<button type="button" id="AddNote5" class="btn btn-large btn-success" onclick="AddNote(5)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 							</div>
 						</div>
 
@@ -745,7 +745,7 @@
 			<div class="form-row form-group">
 				<div class="card-body">
 					<div class="col-md-12 text-center">
-					  <button type="submit" id="btn-step-5" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>Save</button>
+					  <button type="submit" id="btn-step-5" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
 					</div>
 				</div>
 			</div>
@@ -846,7 +846,7 @@
 
                             <div class="col-md-12 mar_bot_20">
                                 <div class="col-md-12">
-                                    <button type="button" id="AddNote12" class="btn btn-large btn-success" onclick="AddNote(12)" disabled>Add Note to Log</button>
+                                    <button type="button" id="AddNote12" class="btn btn-large btn-success" onclick="AddNote(12)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                 </div>
                             </div>
 
@@ -858,7 +858,7 @@
                 <div class="form-row form-group">
                     <div class="card-body">
                         <div class="col-md-12 text-center">
-                          <button type="submit" id="btn-step-5" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>Save</button>
+                          <button type="submit" id="btn-step-5" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                         </div>
                     </div>
                 </div>
@@ -999,7 +999,7 @@
 								</div>
 								<div class="col-md-12 mar_bot_20">
 									<div class="col-md-12">
-										<button type="button" id="AddNote6" class="btn btn-large btn-success" onclick="AddNote(6)" disabled>Add Note to Log</button>
+										<button type="button" id="AddNote6" class="btn btn-large btn-success" onclick="AddNote(6)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 									</div>
 								</div>
 
@@ -1009,7 +1009,7 @@
 					<div class="form-row form-group">
 						<div class="card-body">
 							<div class="col-md-12 text-center">
-							  <button type="submit" id="btn-step-6" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>Save</button>
+							  <button type="submit" id="btn-step-6" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
 							</div>
 						</div>
 					</div>
@@ -1098,7 +1098,7 @@
 							</div>
 							<div class="col-md-12 mar_bot_20">
 								<div class="col-md-12">
-									<button type="button" id="AddNote7" class="btn btn-large btn-success" onclick="AddNote(7)" disabled>Add Note to Log</button>
+									<button type="button" id="AddNote7" class="btn btn-large btn-success" onclick="AddNote(7)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 								</div>
 							</div>
 						</div>
@@ -1108,7 +1108,7 @@
 					<div class="form-row form-group">
 						<div class="card-body">
 							<div class="col-md-12 text-center">
-							  <button type="submit" id="btn-step-7" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>Save</button>
+							  <button type="submit" id="btn-step-7" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
 							</div>
 						</div>
 					</div>
@@ -1244,7 +1244,7 @@
 				</div>
 				<div class="col-md-12 mar_bot_20">
 					<div class="col-md-12">
-						<button type="button" id="AddNote10" class="btn btn-large btn-success" onclick="AddNote(10)" disabled>Add Note to Log</button>
+						<button type="button" id="AddNote10" class="btn btn-large btn-success" onclick="AddNote(10)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 					</div>
 				</div>
 			</div>
@@ -1253,7 +1253,7 @@
          <div class="form-row form-group">
                                 <div class="card-body">
                                     <div class="col-md-12 text-center">
-                                      <button type="submit" id="btn-step-10" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>Save</button>
+                                      <button type="submit" id="btn-step-10" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                                     </div>
                                 </div>
                         </div>
@@ -1375,7 +1375,7 @@
 									<div class="col-md-12">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload Bank Statment.<br>
-                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-statement1" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Upload Bank Statement</button>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-statement1" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Bank Statement</button>
 									</div>
 								</div>
 								<input type="hidden" name="StatementFile" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
@@ -1386,7 +1386,7 @@
                                            <br>
                                             <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace Bank Statement.<br>
-                                           <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-statement1" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Replace Bank Statement</button>
+                                           <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-statement1" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Bank Statement</button>
 									</div>
                                     </div>
 								</div>
@@ -1395,7 +1395,7 @@
 									<div class="col-md-12">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload Additional Bank Statment.<br>
-                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-statement2" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Upload Additional Bank Statement</button>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-statement2" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Additional Bank Statement</button>
 									</div>
 								</div>
 								<input type="hidden" name="Statement2File" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
@@ -1406,7 +1406,7 @@
                                            <br>
                                             <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace Additional Bank Statement.<br>
-                                           <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-statement2" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Replace Additional Bank Statement</button>
+                                           <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-statement2" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Additional Bank Statement</button>
 									</div>
                                     </div>
 								</div>
@@ -1487,7 +1487,7 @@
 
 						<div class="col-md-12 mar_bot_20">
 							<div class="col-md-12">
-								<button type="button" id="AddNote8" class="btn btn-large btn-success" onclick="AddNote(8)" disabled>Add Note to Log</button>
+								<button type="button" id="AddNote8" class="btn btn-large btn-success" onclick="AddNote(8)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 							</div>
 						</div>
 
@@ -1499,7 +1499,7 @@
 				 <div class="form-row form-group">
 						<div class="card-body">
 							<div class="col-md-12 text-center">
-							  <button type="submit" id="btn-step-8" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>Save</button>
+							  <button type="submit" id="btn-step-8" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
 							</div>
 						</div>
 				</div>
@@ -1690,7 +1690,7 @@
 									<div class="col-md-12">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload 990N Confirmation.<br>
-                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-990N" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Upload 990N Confirmation</button>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-990N" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload 990N Confirmation</button>
 									</div>
 								</div>
 								<input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $financial_report_array['file_irs_path']; ?>">
@@ -1701,7 +1701,7 @@
                                            <br>
                                             <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace 990N Confirmation.<br>
-                                           <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-990N" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Replace 990N Confirmation</button>
+                                           <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-990N" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace 990N Confirmation</button>
 									</div>
                                     </div>
 								</div>
@@ -1808,7 +1808,7 @@
 						</div>
 						<div class="col-md-12 mar_bot_20">
 							<div class="col-md-12">
-								<button type="button" id="AddNote9" class="btn btn-large btn-success" onclick="AddNote(9)" disabled>Add Note to Log</button>
+								<button type="button" id="AddNote9" class="btn btn-large btn-success" onclick="AddNote(9)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 							</div>
 						</div>
 
@@ -1818,7 +1818,7 @@
 				 <div class="form-row form-group">
 						<div class="card-body">
 							<div class="col-md-12 text-center">
-							  <button type="submit" id="btn-step-9" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>Save</button>
+							  <button type="submit" id="btn-step-9" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
 							</div>
 						</div>
 				</div>
@@ -2431,7 +2431,7 @@
                                         <div class="col-md-12" >
                                             <strong style="color:red">Please Note</strong><br>
                                             This will take you to a new screen - be sure to save all work before clicking button to Add Additional Awards.<br>
-                                            <a id="addAwardsLink" href="{{ url("/chapter/awardsview/{$chapterid}") }}" class="btn btn-themeBlue margin" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Add Awards</a>
+                                            <a id="addAwardsLink" href="{{ url("/chapter/awardsview/{$chapterid}") }}" class="btn btn-themeBlue margin" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fa fa-trophy fa-fw" aria-hidden="true" ></i>&nbsp; Add/Edit Awards</a>
                                         </div>
                                     </div>
 									<div class="clearfix"></div>
@@ -2455,7 +2455,7 @@
 
 									<div class="col-md-12 mar_bot_20">
 										<div class="col-md-12">
-											<button type="button" id="AddNote11" class="btn btn-large btn-success" onclick="AddNote(11)" disabled>Add Note to Log</button>
+											<button type="button" id="AddNote11" class="btn btn-large btn-success" onclick="AddNote(11)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 										</div>
 									</div>
 
@@ -2466,7 +2466,7 @@
 					<div class="form-row form-group">
 					   <div class="card-body">
 						  <div class="col-md-12 text-center">
-							 <button type="submit" id="btn-step-11" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>Save</button>
+							 <button type="submit" id="btn-step-11" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
 						  </div>
 					   </div>
 				    </div>
@@ -2709,18 +2709,18 @@
 								<div class="card-body">
                                     <div class="col-md-12 text-center">
                                         <br>
-                                        <button type="submit" id="btn-step-13" class="btn btn-info margin btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>Save</button>
+                                        <button type="submit" id="btn-step-13" class="btn btn-info margin btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
 
 										<?php
 										if ($financial_report_array['review_complete']!="" && $submitted && (Session::get('positionid') ==5 ||Session::get('positionid') ==6 || Session::get('positionid') ==7)){ ?>
-											<button type="button" class="btn btn-info margin btn-green" id="review-clear" <?php if(!$submitted) echo "disabled"; ?>>Clear Review Complete</button>
+											<button type="button" class="btn btn-info margin btn-green" id="review-clear" <?php if(!$submitted) echo "disabled"; ?>><i class="fa fa-minus fa-fw" aria-hidden="true" ></i>&nbsp; Clear Review Complete</button>
 
 										<?php }
 										else{
 											?>
-											<button type="button" class="btn btn-info margin btn-green" id="review-complete" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>Mark as Review Complete</button>
+											<button type="button" class="btn btn-info margin btn-green" id="review-complete" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-check fa-fw" aria-hidden="true" ></i>&nbsp; Mark as Review Complete</button>
 										<?php } ?>
-										<button type="button" class="btn btn-info margin btn-red" id="unsubmit" <?php if ($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"?>>UnSubmit Report</button>
+										<button type="button" class="btn btn-info margin btn-red" id="unsubmit" <?php if ($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"?>><i class="fa fa-times fa-fw" aria-hidden="true" ></i>&nbsp; UnSubmit Report</button>
 										 <p style="color:red;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></p>
                                     </div>
                                 </div>
@@ -2826,7 +2826,7 @@
 </div>
 <div class="box-body text-center">
 
-              <a href="{{ route('home') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
+              <a href="{{ route('home') }}" class="btn btn-themeBlue margin"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
 <a id="viewPdfLink" href="{{ url("/chapter/financial/pdf/{$chapterid}") }}" target="_blank" class="btn btn-themeBlue margin" <?php if(!$submitted =='1') echo "disabled"; ?>><i class="fa fa-file-pdf-o fa-fw" aria-hidden="true" ></i>&nbsp; View PDF</a>
               </div>
 

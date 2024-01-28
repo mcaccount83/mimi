@@ -322,7 +322,7 @@
 		<div class="box-body text-center">
 			<button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate();"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
 			<button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);"><i class="fa fa-undo fa-fw" aria-hidden="true" ></i>&nbsp; Reset</button>
-			<a href="{{ route('coordinator.list') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
+			<a href="{{ route('coordinator.list') }}" class="btn btn-themeBlue margin"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
         </div>
             <div class="box-body text-center">
                 <a href="{{ route('coordinator.role',$coordinatorDetails[0]->coordinator_id) }}" class="btn btn-themeBlue margin"><i class="fa fa-share fa-fw" aria-hidden="true" ></i>&nbsp; Update Coordinator Role</a>

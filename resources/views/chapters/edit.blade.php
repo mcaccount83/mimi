@@ -846,7 +846,7 @@
               <?php if ((Session::get('positionid') >=4 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>
               <button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);" ><i class="fa fa-undo fa-fw" aria-hidden="true" ></i>&nbsp; Reset</button>
                 <?php }?>
-              <a href="{{ route('chapter.list') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
+              <a href="{{ route('chapter.list') }}" class="btn btn-themeBlue margin"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
               </div>
 
               <div class="box-body text-center">

@@ -508,18 +508,15 @@
                                 <div class="form-group">
                                     <label>Vacant</label>
                                     <label style="display: block;"><input type="checkbox" name="SecVacant" id="SecVacant" class="ios-switch green bigswitch" {{$SECDetails[0]->sec_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)"/><div><div></div></div></label>
-
                                 </div>
                             </div>
                             </div>
 						<input type="hidden" name="secID" id="secID" value="<?php echo $SECDetails[0]->ibd_id; ?>" />
-                </div>
-
-                <div class="card-body">
+                    </div>
+                    <div class="card-body">
                     <div class="col-md-12 text-center">
-
-                    <button type="submit" class="btn btn-info btn-fill" onclick="return PreSaveValidate()" <?php if($chapterList[0]->new_board_submitted) echo "disabled"; ?>>Submit</button>
-                    <a href="{{ route('home') }}" class="btn btn-info btn-fill">Back</a>
+                        <a href="{{ route('home') }}" class="btn btn-info btn-fill"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
+                        <button type="submit" class="btn btn-info btn-fill" onclick="return PreSaveValidate()" <?php if($chapterList[0]->new_board_submitted) echo "disabled"; ?>><i class="fa fa-mail-forward fa-fw" aria-hidden="true" ></i>&nbsp; Submit</button>
                     </div>
                 </div>
 				</form>

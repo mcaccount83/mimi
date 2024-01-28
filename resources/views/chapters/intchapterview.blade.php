@@ -741,7 +741,7 @@
             <!-- /.box-body -->
             <div class="box-body text-center">
 
-              <a href="{{ route('chapter.inter') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
+              <a href="{{ route('chapter.inter') }}" class="btn btn-themeBlue margin"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
               </div>
 
             <!-- /.box-body -->

@@ -194,7 +194,7 @@
 		<!-- /.box-body -->
 		<div class="box-body text-center">
             <button type="submit" class="btn btn-themeBlue margin"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-            <a href="{{ route('report.appreciation') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
+            <a href="{{ route('report.appreciation') }}" class="btn btn-themeBlue margin"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
 				  </div>
 					</div>
 				</div>

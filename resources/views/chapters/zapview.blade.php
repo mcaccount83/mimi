@@ -626,7 +626,7 @@
             <!-- /.box-body -->
             <div class="box-body text-center">
                <a href="<?php echo url("/chapter/unzap/{$chapterList[0]->id}") ?>" class="btn btn-themeBlue margin"><i class="fa fa-undo fa-fw" aria-hidden="true" ></i>&nbsp; UnZap</a>
-              <a href="{{ route('chapter.zapped') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
+              <a href="{{ route('chapter.zapped') }}" class="btn btn-themeBlue margin"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
               </div>
               <div class="box-body text-center">
                     <button type="button" class="btn btn-themeBlue margin" onclick="return UpdateEmail()"><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; Update President Email</button>

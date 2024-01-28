@@ -154,7 +154,7 @@
 		<div class="box-body text-center">
 			<button type="submit" id="btn-save" class="btn btn-themeBlue margin"><i class="fa fa-user-plus fa-fw" aria-hidden="true" ></i>&nbsp; Create</button>
 			<button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);"><i class="fa fa-undo fa-fw" aria-hidden="true" ></i>&nbsp; Clear Form</button>
-			<a href="{{ route('coordinator.list') }}" class="btn btn-themeBlue margin"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
+			<a href="{{ route('coordinator.list') }}" class="btn btn-themeBlue margin"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
 		</div>
         <!-- /.box-body -->
         </div>

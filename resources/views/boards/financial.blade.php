@@ -57,7 +57,7 @@
                                 <div class="col-md-12">
                                     <strong style="color:red">Please Note</strong><br>
                                         This will refresh the screen - be sure to save all work before clicking button to Upload Roster File.<br>
-                                    <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-roster" <?php if($submitted =='1') echo "disabled"; ?>>Upload Roster File</button>
+                                    <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-roster" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Roster File</button>
                                 </div>
                             </div>
                             <input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $financial_report_array['roster_path']; ?>">
@@ -68,7 +68,7 @@
                                        <a href="<?php echo $financial_report_array['roster_path']; ?>" target="_blank">View Chapter Roster</a><br>
                                         <strong style="color:red">Please Note</strong><br>
                                         This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
-                                       <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-roster" <?php if($submitted =='1') echo "disabled"; ?>>Replace Roster File</button>
+                                       <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-roster" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Roster File</button>
                                 </div>
                                 </div>
                             </div>
@@ -250,7 +250,7 @@
                         <div class="form-row form-group">
                             <div class="card-body">
                                 <div class="col-md-12 text-center">
-                                  <button type="button" id="btn-step-1" class="btn btn-info btn-fill" onSubmit="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                                  <button type="button" id="btn-step-1" class="btn btn-info btn-fill" onSubmit="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                                 </div>
                             </div>
                         </div>
@@ -391,7 +391,7 @@
                             <div class="form-row form-group">
                                 <div class="card-body">
                                     <div class="col-md-12 text-center">
-                                        <button type="submit" id="btn-step-2" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                                        <button type="submit" id="btn-step-2" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                                     </div>
                                 </div>
 
@@ -585,7 +585,7 @@
                     <div class="form-row form-group">
                         <div class="card-body">
                         <div class="col-md-12 text-center">
-                          <button type="button" class="btn btn-info btn-fill" id="btn-step-3" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                          <button type="button" class="btn btn-info btn-fill" id="btn-step-3" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                         </div>
                         </div>
                     </div>
@@ -695,7 +695,7 @@
                     <div class="form-row form-group">
                         <div class="card-body">
                             <div class="col-md-12 text-center">
-                              <button type="submit" id="btn-step-4" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                              <button type="submit" id="btn-step-4" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                             </div>
                         </div>
                     </div>
@@ -812,7 +812,7 @@
                 <div class="form-row form-group">
                     <div class="card-body">
                         <div class="col-md-12 text-center">
-                          <button type="button" id="btn-step-5" class="btn btn-info btn-fill" onSubmit="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                          <button type="button" id="btn-step-5" class="btn btn-info btn-fill" onSubmit="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                         </div>
                     </div>
                 </div>
@@ -942,7 +942,7 @@
                 <div class="form-row form-group">
                     <div class="card-body">
                         <div class="col-md-12 text-center">
-                          <button type="button" id="btn-step-55" class="btn btn-info btn-fill" onSubmit="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                          <button type="button" id="btn-step-55" class="btn btn-info btn-fill" onSubmit="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                         </div>
                     </div>
                 </div>
@@ -1090,7 +1090,7 @@
                     <div class="form-row form-group">
                         <div class="card-body">
                             <div class="col-md-12 text-center">
-                              <button type="submit" id="btn-step-6" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                              <button type="submit" id="btn-step-6" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                             </div>
                         </div>
                     </div>
@@ -1216,7 +1216,7 @@
                     <div class="form-row form-group">
                         <div class="card-body">
                             <div class="col-md-12 text-center">
-                              <button type="submit" id="btn-step-7" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                              <button type="submit" id="btn-step-7" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                             </div>
                         </div>
 
@@ -1236,7 +1236,7 @@
                             <div class="col-md-12">
                                 <strong style="color:red">Please Note</strong><br>
                                     This will refresh the screen - be sure to save all work before clicking button to Upload Bank Statment.<br>
-                                <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-statement1" <?php if($submitted =='1') echo "disabled"; ?>>Upload Bank Statement</button>
+                                <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-statement1" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Bank Statement</button>
                             </div>
                         </div>
                         <input type="hidden" name="StatementFile" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
@@ -1246,7 +1246,7 @@
                                    <a href="<?php echo $financial_report_array['bank_statement_included_path']; ?>" target="_blank">View Bank Statement</a><br>
                                     <strong style="color:red">Please Note</strong><br>
                                     This will refresh the screen - be sure to save all work before clicking button to Replace Bank Statement.<br>
-                                   <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-statement1" <?php if($submitted =='1') echo "disabled"; ?>>Replace Bank Statement</button>
+                                   <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-statement1" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Bank Statement</button>
                             </div>
                             </div>
                         </div>
@@ -1256,7 +1256,7 @@
                             <div class="col-md-12">
                                 <strong style="color:red">Please Note</strong><br>
                                     This will refresh the screen - be sure to save all work before clicking button to Upload Additional Bank Statment.<br>
-                                <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-statement2" <?php if($submitted =='1') echo "disabled"; ?>>Upload Additional Bank Statement</button>
+                                <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-statement2" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Additional Bank Statement</button>
                             </div>
                         </div>
                         <input type="hidden" name="Statement2File" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
@@ -1266,7 +1266,7 @@
                                    <a href="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" target="_blank">View Additional Bank Statement</a><br>
                                     <strong style="color:red">Please Note</strong><br>
                                     This will refresh the screen - be sure to save all work before clicking button to Replace Additional Bank Statement.<br>
-                                   <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-statement2" <?php if($submitted =='1') echo "disabled"; ?>>Replace Additional Bank Statement</button>
+                                   <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-statement2" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Additional Bank Statement</button>
                             </div>
                             </div>
                         </div>
@@ -1439,7 +1439,7 @@
                  <div class="form-row form-group">
                         <div class="card-body">
                             <div class="col-md-12 text-center">
-                              <button type="submit" id="btn-step-8" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                              <button type="submit" id="btn-step-8" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                             </div>
                         </div>
                 </div>
@@ -1825,13 +1825,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-row form-group">
+                        {{-- <div class="form-row form-group">
                             <div class="card-body">
                                 <div class="col-md-12 text-center">
-                                <button type="submit" id="btn-step-10" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                                <button type="submit" id="btn-step-10" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                 </section>
             </div><!-- end of accordion body -->
             </div><!-- end of accordion item -->
@@ -2312,7 +2312,7 @@
                         <div class="col-md-12">
                             <strong style="color:red">Please Note</strong><br>
                                 This will refresh the screen - be sure to save all work before clicking button to Upload 990N Confirmation.<br>
-                            <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-990N" <?php if($submitted =='1') echo "disabled"; ?>>Upload 990N Confirmation</button>
+                            <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-990N" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload 990N Confirmation</button>
                         </div>
                     </div>
                     <input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $financial_report_array['file_irs_path']; ?>">
@@ -2323,7 +2323,7 @@
                                <br>
                                 <strong style="color:red">Please Note</strong><br>
                                 This will refresh the screen - be sure to save all work before clicking button to Replace 990N Confirmation.<br>
-                               <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-990N" <?php if($submitted =='1') echo "disabled"; ?>>Replace 990N Confirmation</button>
+                               <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-990N" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace 990N Confirmation</button>
                         </div>
                         </div>
                     </div>
@@ -2360,7 +2360,7 @@
                     <div class="form-row form-group">
                         <div class="card-body">
                             <div class="col-md-12 text-center">
-                              <button type="button" class="btn btn-info btn-fill" id="btn-step-9" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                              <button type="button" class="btn btn-info btn-fill" id="btn-step-9" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                             </div>
                         </div>
                     </div>
@@ -3123,7 +3123,7 @@
                     <div class="form-row form-group">
                        <div class="card-body">
                           <div class="col-md-12 text-center">
-                             <button type="button" id="btn-step-11" class="btn btn-info btn-fill" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                             <button type="button" id="btn-step-11" class="btn btn-info btn-fill" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
 
                             </div>
                        </div>
@@ -3157,8 +3157,8 @@
                             <div class="form-row form-group">
                                 <div class="card-body">
                                     <div class="col-md-12 text-center">
-                                        <button type="button" class="btn btn-info btn-fill" id="btn-step-12" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
-                                        <button type="button" class="btn btn-info btn-fill" id="final-submit" <?php if($submitted =='1') echo "disabled"; ?>>Submit</button>
+                                        <button type="button" class="btn btn-info btn-fill" id="btn-step-12" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+                                        <button type="button" class="btn btn-info btn-fill" id="final-submit" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-mail-forward fa-fw" aria-hidden="true" ></i>&nbsp; Submit</button>
                                     </div>
                                     <hr style="height:3px;border:none;color:#0c71c3;background-color:#0c71c3;" />
                                 </div>
@@ -3174,11 +3174,11 @@
             <div class="col-md-12 text-center">
                 <br>
                     @if($user_type !== 'outgoing')
-                        <a href="{{ route('home') }}" class="btn btn-info btn-fill">Back</a>
+                        <a href="{{ route('home') }}" class="btn btn-info btn-fill"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
                     @endif
-                    <button type="button" id="btn-save" class="btn btn-info btn-fill" <?php if($submitted =='1') echo "disabled"; ?>>Save</button>
+                    <button type="button" id="btn-save" class="btn btn-info btn-fill" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                     <a href='{{ url("/board/financial/pdf", ["id" => Session::get("chapterid")]) }}' target="_blank" class="">
-                    <button id="buttononclickdisable" class="btn btn-info btn-fill" onClick="this.disabled=true;" <?php if(!$submitted =='1') echo "disabled"; ?>>View PDF</button>
+                    <button id="buttononclickdisable" class="btn btn-info btn-fill" onClick="this.disabled=true;" <?php if(!$submitted =='1') echo "disabled"; ?>><i class="fa fa-file-pdf-o fa-fw" aria-hidden="true" ></i>&nbsp; View PDF</button>
                     </a>
             </div>
         </div>

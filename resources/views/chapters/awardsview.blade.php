@@ -225,7 +225,7 @@
                 </div>
               <div class="box-body text-center">
                     <button type="submit" class="btn btn-themeBlue margin"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-                    <button type="button" class="btn btn-themeBlue margin" onclick="window.history.go(-1); return false;"><i class="fa fa-backward fa-fw" aria-hidden="true" ></i>&nbsp; Back</button>
+                    <button type="button" class="btn btn-themeBlue margin" onclick="window.history.go(-1); return false;"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</button>
               </div>
               </div>
             </div>
