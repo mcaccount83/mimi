@@ -20,9 +20,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Illuminate\View\View;
-use Kunnu\Dropbox\Dropbox;
-use Kunnu\Dropbox\DropboxApp;
-use Kunnu\Dropbox\DropboxFile;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class BoardController extends Controller
@@ -1814,9 +1811,9 @@ class BoardController extends Controller
 
         // Links for uploaded documents
         $files = DB::table('financial_report')
-                ->select('*')
-                ->where('chapter_id', '=', $chapter_id)
-                ->get();
+            ->select('*')
+            ->where('chapter_id', '=', $chapter_id)
+            ->get();
 
         $roster_path = $files[0]->roster_path;
         $file_irs_path = $files[0]->file_irs_path;
@@ -2080,8 +2077,8 @@ class BoardController extends Controller
                 ];
 
                 if ($reportReceived == 1) {
-                Mail::to($to_email)
-                ->send(new EOYFinancialSubmitted($mailData, $coordinator_array));
+                    Mail::to($to_email)
+                        ->send(new EOYFinancialSubmitted($mailData, $coordinator_array));
                 }
 
                 $report->save();
@@ -2109,7 +2106,7 @@ class BoardController extends Controller
 
         $chapterDetails = DB::table('chapters')
             ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state',
-            'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
+                'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('chapters.id', '=', $chId)
