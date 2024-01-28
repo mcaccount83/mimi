@@ -4346,20 +4346,20 @@ class ChapterController extends Controller
                 //     $report->review_complete = null;
                 // }
 
-                   // Send email to new Assigned Reviewer//
-                   $to_email = $ReviewerEmail;
-                   $mailData = ['chapter_name' => $chapter_name,
-                       'chapter_state' => $chapter_state,
-                       'roster_path' => $report->get('roster_path'),
-                       'file_irs_path' => $report->get('file_irs_path'),
-                       'bank_statement_included_path' => $report->get('bank_statement_included_path'),
-                       'bank_statement_2_included_path' => $report->get('bank_statement_2_included_path'),
-                   ];
+                // Send email to new Assigned Reviewer//
+                $to_email = $ReviewerEmail;
+                $mailData = ['chapter_name' => $chapter_name,
+                    'chapter_state' => $chapter_state,
+                    'roster_path' => $report->get('roster_path'),
+                    'file_irs_path' => $report->get('file_irs_path'),
+                    'bank_statement_included_path' => $report->get('bank_statement_included_path'),
+                    'bank_statement_2_included_path' => $report->get('bank_statement_2_included_path'),
+                ];
 
-                   if ($report->isDirty('reviewer_id')) {
-                       Mail::to($to_email)
-                           ->send(new EOYReviewrAssigned($mailData));
-                   }
+                if ($report->isDirty('reviewer_id')) {
+                    Mail::to($to_email)
+                        ->send(new EOYReviewrAssigned($mailData));
+                }
 
                 $report->save();
 
