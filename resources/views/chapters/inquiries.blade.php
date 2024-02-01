@@ -43,12 +43,11 @@
                 @foreach($inquiriesList as $list)
                   <tr>
 						<td><center><a href="<?php echo url("/chapter/inquiriesview/{$list->id}") ?>"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></a></center></td>
-                        <td><center><button type="button" class="btn btn-xs" onclick="return CopyEmail(<?php echo $row?>);"><i class="fa fa-files-o fa-lg" aria-hidden="true"></i></button></center></td>
+                        <td><center><button type="button" class="btn btn-xs" onclick="return CopyEmail(<?php echo $row?>);" style="background-color: transparent; border: none;">
+                            <i class="fa fa-files-o fa-lg text-primary" aria-hidden="true"></i></button></center></td>
 
-						<td><center><button type="button" class="btn btn-xs" onclick="return CopyInquiryResp(<?php echo $row?>);"><i class="fa fa-files-o fa-lg" aria-hidden="true"></i></button></center></td>
-						<!--<td><a href="mailto:{{ $list->inq_con }}"><i class="fa fa-envelope" aria-hidden="true"></i></a></td>
-						<td><a href="mailto:{{ $list->inq_con }}" onclick="return CopyInquiryResp(<?php echo $row?>);"><i class="fa fa-envelope" aria-hidden="true"></i></a></td>-->
-						<!--<td><a href="mailto:{{ $list->inq_con }}"><i class="fa fa-envelope" aria-hidden="true"></i></a></td>-->
+						<td><center><button type="button" class="btn btn-xs" onclick="return CopyInquiryResp(<?php echo $row?>);" style="background-color: transparent; border: none;">
+                            <i class="fa fa-files-o fa-lg text-primary" aria-hidden="true"></i></button></center></td>
 						<td bgcolor="<?php
 							if($list->status=='4' || $list->status=='6')
 									echo "#FF0000";
