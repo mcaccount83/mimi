@@ -3217,6 +3217,7 @@ class ChapterController extends Controller
         $monthRangeStart = $month;
         $monthRangeEnd = $month - 1;
         $lastYear = $year - 1;
+        $thisyear = $year;
 
         if ($month == 1) {
             $monthRangeStart = 12;
@@ -3337,6 +3338,7 @@ class ChapterController extends Controller
         $monthRangeStart = $month - 1;
         $monthRangeEnd = $month - 2;
         $lastYear = $year - 1;
+        $thisyear = $year;
 
         if ($month == 1) {
             $monthRangeStart = 11;
