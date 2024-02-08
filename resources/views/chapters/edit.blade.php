@@ -108,7 +108,7 @@
                  @if(empty($chapterList[0]->ein_letter_path))
 					<a class="btn btn-themeBlue margin" href=href="#" <?php echo "disabled";?>>No EIN Letter on File</a>
 						    @else
-						    <a class="btn btn-themeBlue margin" href="{{ $chapterList[0]->ein_letter_path }}" target="blank">View/Download EIN Letter</a>
+						    <a class="btn btn-themeBlue margin" href="{{ $chapterList[0]->ein_letter_path }}" target="blank"><i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; View/Download EIN Letter</a>
 						    @endif
                 <input type="hidden" id="ch_ein_letter_path" name="ch_ein_letter_path" class="form-control my-colorpicker1" value="{{ $chapterList[0]->ein_letter_path }}" maxlength="250" readonly>
               </div>
@@ -212,7 +212,7 @@
               </div>
 
               <div class="box-body text-center">
-                <button type="button" class="btn btn-themeBlue margin" id="{{ $chapterList[0]->user_id }}" onclick="return resetPassword(this.id)">Reset Password</button>
+                <button type="button" class="btn btn-themeBlue margin" id="{{ $chapterList[0]->user_id }}" onclick="return resetPassword(this.id)"><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Reset Password</button>
               </div>
               </div>
               <div class="box-header with-border mrg-t-10">
@@ -291,7 +291,7 @@
                 </div>
               </div>
               <div class="box-body text-center avp-field">
-                <button type="button" class="btn btn-themeBlue margin" id="{{ $AVPDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$AVPDetails[0]->user_id == ''  ? 'disabled' : ''}} >Reset Password</button>
+                <button type="button" class="btn btn-themeBlue margin" id="{{ $AVPDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$AVPDetails[0]->user_id == ''  ? 'disabled' : ''}} ><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Reset Password</button>
               </div>
               </div>
               <div class="box-header with-border mrg-t-10">
@@ -370,7 +370,7 @@
                 </div>
               </div>
               <div class="box-body text-center mvp-field">
-                <button type="button" class="btn btn-themeBlue margin" id="{{ $MVPDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$MVPDetails[0]->user_id == ''  ? 'disabled' : ''}} >Reset Password</button>
+                <button type="button" class="btn btn-themeBlue margin" id="{{ $MVPDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$MVPDetails[0]->user_id == ''  ? 'disabled' : ''}} ><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Reset Password</button>
               </div>
               </div>
               <div class="box-header with-border mrg-t-10">
@@ -449,7 +449,7 @@
                 </div>
               </div>
               <div class="box-body text-center treas-field">
-                <button type="button" class="btn btn-themeBlue margin" id="{{ $TRSDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$TRSDetails[0]->user_id == ''  ? 'disabled' : ''}} >Reset Password</button>
+                <button type="button" class="btn btn-themeBlue margin" id="{{ $TRSDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$TRSDetails[0]->user_id == ''  ? 'disabled' : ''}} ><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Reset Password</button>
               </div>
               </div>
               <div class="box-header with-border mrg-t-10">
@@ -528,7 +528,7 @@
                 </div>
               </div>
               <div class="box-body text-center sec-field">
-                <button type="button" class="btn btn-themeBlue margin" id="{{ $SECDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$SECDetails[0]->user_id == ''  ? 'disabled' : ''}} >Reset Password</button>
+                <button type="button" class="btn btn-themeBlue margin" id="{{ $SECDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$SECDetails[0]->user_id == ''  ? 'disabled' : ''}} ><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Reset Password</button>
               </div>
               </div>
               <div class="box-header with-border mrg-t-10">
@@ -844,7 +844,7 @@
               <a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=MOMS Club of {{ $chapterList[0]->name }}" class="btn btn-themeBlue margin"><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; E-mail Board</a>
              <?php }?>
               <?php if ((Session::get('positionid') >=4 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>
-              <button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);" ><i class="fa fa-undo fa-fw" aria-hidden="true" ></i>&nbsp; Reset</button>
+              <button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);" ><i class="fa fa-undo fa-fw" aria-hidden="true" ></i>&nbsp; Reset Data</button>
                 <?php }?>
               <a href="{{ route('chapter.list') }}" class="btn btn-themeBlue margin"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
               </div>
@@ -853,7 +853,7 @@
                <?php if ((Session::get('positionid') >=6 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>
                 <button type="button" class="btn btn-themeBlue margin" onclick="return UpdateEIN()"><i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; Update EIN</button>
 
-                <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-ein"><i class="fa fa-file fa-fw" aria-hidden="true" ></i>&nbsp; Update EIN Letter</button>
+                <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-ein"><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload EIN Letter</button>
                 {{-- <button type="button" class="btn btn-themeBlue margin" onclick="return EINLetter()">Update EIN Letter</button> --}}
               <?php } ?>
               <?php if ((Session::get('positionid') >=5 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>

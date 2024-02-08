@@ -57,10 +57,10 @@
                                         @foreach($admin->where('status', 1) as $adminItem)
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-7">
                                                     <h4>{{ $adminItem->task }}</h4>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-2">
                                                     <h5 style="background-color:
                                                         @if ($adminItem->priority == 1)
                                                             #C6EFCE     /*GREEN*/
@@ -148,7 +148,7 @@
                         <div class="col-md-4">
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">In Progress</h3>
+                                    <h3 class="box-title">In Production</h3>
                                 </div>
                                 <div class="box-body">
                                     @if($admin->where('status', 2)->isEmpty())
@@ -157,10 +157,10 @@
                                         @foreach($admin->where('status', 2) as $adminItem)
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-7">
                                                     <h4>{{ $adminItem->task }}</h4>
                                                     </div>
-                                                    <div class="col-md-3">
+                                                    <div class="col-md-2">
                                                     <h5 style="background-color:
                                                         @if ($adminItem->priority == 1)
                                                             #C6EFCE     /*GREEN*/
@@ -257,10 +257,10 @@
                                             @foreach($admin->where('status', 3) as $adminItem)
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <div class="col-md-6">
+                                                        <div class="col-md-7">
                                                         <h4>{{ $adminItem->task }}</h4>
                                                         </div>
-                                                        <div class="col-md-3">
+                                                        <div class="col-md-2">
                                                         <h5 style="background-color:
                                                             @if ($adminItem->priority == 1)
                                                                 #C6EFCE     /*GREEN*/
@@ -305,7 +305,7 @@
                                                                     <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label for="taskNotes">IT Dept Notes</label>
-                                                                        <textarea class="form-control" id="taskNotes{{ $adminItem->id }}" rows="5" {{ $canEditDetails ? '' : 'disabled' }}>{{ $adminItem->notes }}</textarea>
+                                                                        <textarea class="form-control" id="taskNotes{{ $adminItem->id }}" rows="5" disabled>{{ $adminItem->notes }}</textarea>
                                                                     </div>
                                                                     </div>
                                                                     <div class="col-md-6">
@@ -318,7 +318,7 @@
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                     <label>Priority</label>
-                                                                    <select name="taskPriority" class="form-control select2" style="width: 100%;" id="taskPriority{{ $adminItem->id }}" {{ $canEditDetails ? '' : 'disabled' }}>
+                                                                    <select name="taskPriority" class="form-control select2" style="width: 100%;" id="taskPriority{{ $adminItem->id }}" disabled>
                                                                         <option value="1" {{$adminItem->priority == 1 ? 'selected' : ''}}>Low</option>
                                                                         <option value="2" {{$adminItem->priority == 2 ? 'selected' : ''}}>Normal</option>
                                                                         <option value="3" {{$adminItem->priority == 3 ? 'selected' : ''}}>High</option>
@@ -351,8 +351,6 @@
                                 </div>
                             </div>
           </div>    {{-- END ROW --}}
-
-          {{-- <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-task"><i class="fa fa-file fa-fw" aria-hidden="true" ></i>&nbsp; Add Task</button> --}}
           </div>
           </div>
           </div>
@@ -402,12 +400,29 @@
     var taskDetailsNew = document.getElementById('taskDetailsNew').value;
     var taskPriorityNew = document.getElementById('taskPriorityNew').value;
 
+    if (taskNameNew == '') {
+        alert('Task Name is Required.');
+        return false; // Prevent form submission
+    }
+    if (taskNameNew.length > 50) {
+        alert('Name cannot exceed 50 characters.');
+        return false; // Prevent form submission
+    }
+    if (taskDetailsNew == '') {
+        alert('Task Description is Required.');
+        return false; // Prevent form submission
+    }
+    if (taskDetailsNew.length > 255) {
+        alert('Description cannot exceed 255 characters.');
+        return false; // Prevent form submission
+    }
+
     // Get the CSRF token value from the meta tag
     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     // Send an AJAX request to Laravel backend to create a new task
     $.ajax({
-        url: '/admin/addprogression',
+        url: '{{ route('admin.addprogression') }}',
         method: 'POST',
         headers: {
             'X-CSRF-TOKEN': csrfToken
@@ -436,25 +451,18 @@
     return false;
 }
 
-
-function updateTask(id) {
-    console.log('Updating task with ID:', id);
-    var taskDetailsElement = document.getElementById('taskDetails' + id);
-    console.log('taskDetailsElement:', taskDetailsElement);
-    var taskDetails = taskDetailsElement ? taskDetailsElement.value : '';
-    console.log('taskDetails:', taskDetails);
-
+  function updateTask(id) {
+    var taskDetails = document.getElementById('taskDetails' + id).value;
     var taskNotes = document.getElementById('taskNotes' + id).value;
     var taskStatus = document.getElementById('taskStatus' + id).value;
     var taskPriority = document.getElementById('taskPriority' + id).value;
-
 
     // Get the CSRF token value from the meta tag
     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     // Send an AJAX request to update the task
     $.ajax({
-        url: '/admin/updateprogression/' + id,
+        url: '{{ route('admin.updateprogression', '') }}' + '/' + id,
         method: 'POST',
         data: {
             taskDetails: taskDetails,
@@ -483,7 +491,6 @@ function updateTask(id) {
     // Prevent form submission
     return false;
 }
-
 
 
 </script>

@@ -79,6 +79,18 @@ class AdminController extends Controller
         $task->details = $validatedData['taskDetailsNew'];
         $task->priority = $validatedData['taskPriorityNew'];
         $task->reported_id = $corId;
+
+        $mailData = [
+            'taskNameNew' => $task->task,
+            'taskDetailsNew' => $task->details,
+            'ReportedId' => $task->reported_id,
+            'ReportedDate' => $task->reported_date,
+        ];
+
+        // Send the email only if the status is 3
+        $to_email = 'jackie.mchenry@momsclub.org';
+        Mail::to($to_email)->send(new AdminNewMIMIBugWish($mailData));
+
         $task->save();
 
       }
@@ -103,17 +115,6 @@ class AdminController extends Controller
 
         if ($validatedData['taskStatus'] == 3) {
             $task->completed_date = Carbon::today();
-
-            $mailData = [
-                'taskName' => $task->task,
-                'taskDetails' => $task->details,
-                'ReportedId' => $task->reported_id,
-                'ReportedDate' => $task->reported_date,
-            ];
-
-            // Send the email only if the status is 3
-            $to_email = 'jackie.mchenry@momsclub.org';
-            Mail::to($to_email)->send(new AdminNewMIMIBugWish($mailData));
         }
 
         $task->save();

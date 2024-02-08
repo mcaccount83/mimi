@@ -3,8 +3,8 @@
 
 A new Bug or Wish has been added to the To Do list.
 
-<h4>{{$mailData['taskName']}}</h4>
-{{$mailData['taskDetails']}}
+<h4>{{$mailData['taskNameNew']}}</h4>
+{{$mailData['taskDetailsNew']}}
 
 Reported by: {{$mailData['ReportedId']}} on {{ \Carbon\Carbon::parse($mailData['ReportedDate'])->format('m-d-Y') }}
 

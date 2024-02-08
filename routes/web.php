@@ -179,7 +179,7 @@ Route::get('/export/rereg', [ExportController::class, 'indexReReg'])->name('expo
 Route::get('/export/eoystatus', [ExportController::class, 'indexEOYStatus'])->name('export.eoystatus');
 Route::get('/export/chaptercoordinator', [ExportController::class, 'indexChapterCoordinator'])->name('export.chaptercoordinator');
 Route::get('/export/chapteraward/{id}', [ExportController::class, 'indexChapterAwardList'])->name('export.chapteraward');
-Route::get('/export/appreciation', [ExportController::class, 'ndexAppreciation'])->name('export.appreciation');
+Route::get('/export/appreciation', [ExportController::class, 'indexAppreciation'])->name('export.appreciation');
 Route::get('/export/intchapter', [ExportController::class, 'indexInternationalChapter'])->name('export.intchapter');
 Route::get('/export/intzapchapter', [ExportController::class, 'indexInternationalZapChapter'])->name('export.intzapchapter');
 Route::get('/export/intcoordinator', [ExportController::class, 'indexIntCoordinator'])->name('export.intcoordinator');
