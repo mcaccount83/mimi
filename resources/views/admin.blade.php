@@ -32,7 +32,7 @@
           <div class="box card">
 
             <div class="box-header with-border">
-              <h3 class="box-title">Bugs & Enhancements</h3>
+              <h3 class="box-title">MIMI Bugs & Wishes</h3>
             </div>
 
             <!-- /.box-header -->
