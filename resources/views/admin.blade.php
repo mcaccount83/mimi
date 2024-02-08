@@ -198,7 +198,7 @@
                                                                 <div class="col-md-12">
                                                                 <div class="form-group">
                                                                     <label for="taskDetails">Description</label>
-                                                                    <textarea class="form-control" id="taskDetails{{ $adminItem->id }}">{{ $adminItem->details }}</textarea>
+                                                                    <textarea class="form-control" id="taskDetails{{ $adminItem->id }}" {{ $canEditDetails ? '' : 'disabled' }}>{{ $adminItem->details }}</textarea>
                                                                 </div>
                                                                 </div>
                                                                 <div class="col-md-12">
@@ -299,7 +299,7 @@
                                                                     <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         <label for="taskDetails">Description</label>
-                                                                        <textarea class="form-control" id="taskDetails{{ $adminItem->id }}">{{ $adminItem->details }}</textarea>
+                                                                        <textarea class="form-control" id="taskDetails{{ $adminItem->id }}" disabled>{{ $adminItem->details }}</textarea>
                                                                     </div>
                                                                     </div>
                                                                     <div class="col-md-12">
@@ -328,6 +328,11 @@
                                                                     <div class="col-md-12">
                                                                     <div class="form-group">
                                                                         Reported by <strong>{{ $adminItem->reported_by }}</strong> on <strong>{{ \Carbon\Carbon::parse($adminItem->reported_date)->format('m-d-Y') }}</strong>
+                                                                    </div>
+                                                                    </div>
+                                                                    <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        Completed on <strong>{{ \Carbon\Carbon::parse($adminItem->completed_date)->format('m-d-Y') }}</strong>
                                                                     </div>
                                                                     </div>
                                                                 </form>

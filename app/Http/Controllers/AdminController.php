@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -107,6 +108,12 @@ class AdminController extends Controller
         $task->notes = $validatedData['taskNotes'];
         $task->status = $validatedData['taskStatus'];
         $task->priority = $validatedData['taskPriority'];
+
+        // If the status is 3, set the completed_date as today's date
+        if ($validatedData['taskStatus'] == 3) {
+            $task->completed_date = Carbon::today();
+        }
+
         $task->save();
 
     }
