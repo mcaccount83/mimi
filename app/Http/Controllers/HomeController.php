@@ -7,6 +7,7 @@ use App\Models\FinancialReport;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -108,6 +109,43 @@ class HomeController extends Controller
             $boardPositionCode = $borPositionId;
             $boardPositionAbbreviation = isset($boardPosition[$boardPositionCode]) ? $boardPosition[$boardPositionCode] : '';
 
+            $year = date('Y');
+            $month = date('m');
+
+            $next_renewal_year = $chapterDetails['next_renewal_year'];
+            $start_month = $chapterDetails['start_month_id'];
+            $late_month = $start_month + 1;
+
+            $due_date = Carbon::create($next_renewal_year, $start_month, 1);
+            $late_date = Carbon::create($next_renewal_year, $late_month, 1);
+
+            // Convert $start_month to words
+            $start_monthInWords = strftime('%B', strtotime("2000-$start_month-01"));
+
+            // Determine the range start and end months correctly
+            $monthRangeStart = $start_month;
+            $monthRangeEnd = $start_month - 1;
+
+            // Adjust range for January
+            if ($start_month == 1) {
+                $monthRangeStart = 12;
+            } else {
+                $monthRangeEnd = $start_month - 1;
+            }
+
+            // Adjust range for January
+            if ($month == 1) {
+                $monthRangeEnd = 12;
+            }
+
+            // Create Carbon instances for start and end dates
+            $rangeStartDate = Carbon::create($year, $monthRangeStart, 1);
+            $rangeEndDate = Carbon::create($year, $monthRangeEnd, 1)->endOfMonth();
+
+            // Format the dates as words
+            $rangeStartDateFormatted = $rangeStartDate->format('F jS');
+            $rangeEndDateFormatted = $rangeEndDate->format('F jS');
+
             if ($borPositionId == 1 && $isActive == 1) {
                 $chapterList = DB::table('chapters as ch')
                     ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip',
@@ -167,12 +205,14 @@ class HomeController extends Controller
                     $SECDetails = json_decode(json_encode($SECDetails));
                 }
                 $data = ['chapterState' => $chapterState, 'stateArr' => $stateArr, 'boardPositionAbbreviation' => $boardPositionAbbreviation, 'currentMonthAbbreviation' => $currentMonthAbbreviation,
-                    'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'chapterList' => $chapterList];
+                    'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'chapterList' => $chapterList,
+                    'startMonth' => $start_monthInWords, 'thisMonth' => $month, 'due_date' => $due_date, 'late_date' => $late_date];
 
                 return view('boards.president')->with($data);
             } elseif ($borPositionId != 1 && $isActive == 1) {
                 $data = ['chapterState' => $chapterState, 'chapterDetails' => $chapterDetails, 'boardPositionAbbreviation' => $boardPositionAbbreviation, 'currentMonthAbbreviation' => $currentMonthAbbreviation,
-                    'stateArr' => $stateArr, 'borPositionId' => $borPositionId, 'borDetails' => $borDetails];
+                    'stateArr' => $stateArr, 'borPositionId' => $borPositionId, 'borDetails' => $borDetails,
+                    'startMonth' => $start_monthInWords, 'thisMonth' => $month, 'due_date' => $due_date, 'late_date' => $late_date ];
 
                 return view('boards.members')->with($data);
             } else {

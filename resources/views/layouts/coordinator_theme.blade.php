@@ -405,7 +405,7 @@
                 <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
                 <ul class="treeview-menu">
-                <li class="{{ Request::is('adminreports/duplicateuser') ? 'active' : '' }}">
+            <li class="{{ Request::is('adminreports/duplicateuser') ? 'active' : '' }}">
             <a href="{{ route('report.duplicateuser') }}">
                 <i class="fa fa-user-plus"></i>
                 <span>Duplicate Users</span>
@@ -440,8 +440,17 @@
         @endif
 
         @if ($assistConferenceCoordinatorCondition)
-            <li class="{{ Request::is('reports/downloads') ? 'active' : '' }}">
-                <a href="{{ route('report.downloads') }}"><i class="fa fa-download"></i> <span>Download Reports</span></a>
+        <li class="{{ Request::is('reports/downloads') ? 'active' : '' }}">
+            <a href="{{ route('report.downloads') }}"><i class="fa fa-download"></i> <span>Download Reports</span></a>
+        </li>
+        @endif
+
+        @if ($regionalCoordinatorCondition)
+            <li class="{{ Request::is('admin/progression') ? 'active' : '' }}">
+            <a href="{{ route('admin.progression') }}">
+                <i class="fa fa-bug"></i>
+                <span>MIMI Bugs & Wishes</span>
+            </a>
             </li>
         @endif
 

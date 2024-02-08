@@ -6,12 +6,14 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
@@ -35,8 +37,8 @@ Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 // Registration Routes...
-Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-Route::post('register', [RegisterController::class, 'register']);
+// Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+// Route::post('register', [RegisterController::class, 'register']);
 
 // Password Reset Routes...
 Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
@@ -45,13 +47,13 @@ Route::get('password/reset/{token}', [ResetPasswordController::class, 'showReset
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
 // Confirm Password
-Route::get('password/confirm', [ConfirmPasswordController::class, 'showConfirmForm'])->name('password.confirm');
-Route::post('password/confirm', [ConfirmPasswordController::class, 'confirm']);
+// Route::get('password/confirm', [ConfirmPasswordController::class, 'showConfirmForm'])->name('password.confirm');
+// Route::post('password/confirm', [ConfirmPasswordController::class, 'confirm']);
 
 // Email Verification Routes...
-Route::get('email/verify', [VerificationController::class, 'show'])->name('verification.notice');
-Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
-Route::get('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+// Route::get('email/verify', [VerificationController::class, 'show'])->name('verification.notice');
+// Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+// Route::get('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
 //Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
@@ -74,18 +76,24 @@ Route::get('/getreporting', [CoordinatorController::class, 'getReportingList'])-
 Route::get('/getdirectreport', [CoordinatorController::class, 'getDirectReportingList'])->name('get.directreport');
 Route::get('/getchapterprimary', [CoordinatorController::class, 'getChapterPrimaryFor'])->name('get.chapterprimary');
 Route::get('/chapter-links', [ChapterController::class, 'chapterLinks'])->name('chapter.links');
+Route::get('/admin/progression', [AdminController::class, 'showProgression'])->name('admin.progression');
+Route::post('/admin/addprogression', [AdminController::class, 'addProgression'])->name('admin.addprogression');
+Route::post('/admin/updateprogression/{id}', [AdminController::class, 'updateProgression'])->name('admin.updateprogression');
+
+
+/**
+ * Routes for Payment Processing
+ */
+Route::post('/process-payment', [PaymentController::class, 'processPayment'])->name('process.payment');
 
 /**
  * Routes for Google Upload Files
  */
-//Route::get('/files', [GoogleController::class, 'index']);
-//Route::post('/files/store/{id}', [GoogleController::class, 'store']);
 Route::post('/files/storeEIN/{id}', [GoogleController::class, 'storeEIN']);
 Route::post('/files/storeRoster/{id}', [GoogleController::class, 'storeRoster']);
 Route::post('/files/store990n/{id}', [GoogleController::class, 'store990N']);
 Route::post('/files/storeStatement1/{id}', [GoogleController::class, 'storeStatement1']);
 Route::post('/files/storeStatement2/{id}', [GoogleController::class, 'storeStatement2']);
-//Route::get('/files/googletest/{id}', [GoogleController::class, 'show'])->name('files.googletest');
 
 /**
  * Routes for Chapters
@@ -190,6 +198,7 @@ Route::get('/boardinfo', [BoardController::class, 'showBoardInfo'])->name('board
 Route::post('/boardinfo/{id}', [BoardController::class, 'createBoardInfo'])->name('boardinfo.createboardinfo');
 Route::get('/board/financial/{id}', [BoardController::class, 'showFinancialReport'])->name('board.showfinancial');
 Route::post('/board/financial/{id}', [BoardController::class, 'storeFinancialReport'])->name('board.storefinancial');
+Route::get('/board/reregpayment', [BoardController::class, 'showReregistrationPaymentForm'])->name('board.showreregpayment');
 
 /**
  * Routes for Reports

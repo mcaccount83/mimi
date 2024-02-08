@@ -58,17 +58,36 @@
         <div class="col-md-12">
 		    <div class="card">
                <div class="card-body">
+                @foreach($chapterList as $list)
+
+                {{-- @php
+                    $thisDate = \Carbon\Carbon::now();
+                @endphp
+                @if ($thisDate->gte($due_date))
+                    @if ($due_date->month === $thisDate->month)
+                        <div class="col-md-12" style="color: green;"><center>Your chapter's anniversary month is <strong>{{ $startMonth }}</strong>.&nbsp; Your Re-registration payment is due now.</center></div>
+                    @else
+                        <div class="col-md-12" style="color: red;"><center>Your chapter's anniversary month was <strong>{{ $startMonth }}</strong>.&nbsp; Your Re-registration payment is now considered overdue.</center></div>
+                    @endif
+                    <div class="col-md-12"><br></div>
                     <div class="col-md-12 text-center">
-                        @foreach($chapterList as $list)
+                        <a href="{{ route('board.showreregpayment') }}" class="btn btn-info btn-fill"><i class="fa fa-money fa-fw" aria-hidden="true" ></i>&nbsp; PAY HERE</a>
+                    </div>
+                    <hr>
+                <div class="col-md-12"><br></div>
+                @endif --}}
+
+                <div class="col-md-12"><br></div>
+                    <div class="col-md-12 text-center">
                     <div class="col-md-4 float-left">
-                       @if($list->ein_letter=='1')
+                        @if($list->ein_letter=='1')
                       <a class="btn btn-info btn-fill" href="{{ $chapterList[0]->ein_letter_path }}" target="blank"><i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; View/Download EIN Letter</a>
                       	@else
                        <a class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>><i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; No EIN Letter on File</a>
                        	@endif
                       </div>
-                      <div id="reportStatusText" class="description text-center" style="color: red;">
-                        <p><strong><?php echo date('Y')-1 .'-'.date('Y');?> Reports are not available at this time.</strong></p>
+                      <div id="reportStatusText" class="description text-center">
+                        <p><strong><?php echo date('Y')-1 .'-'.date('Y');?> EOY Reports are not available at this time.</strong></p>
                     </div>
                     <div class="col-md-4 float-left">
                         @if($list->new_board_active=='1')
