@@ -26,7 +26,7 @@ class AdminNewMIMIBugWish extends Mailable
     public function build(): static
     {
         return $this
-            ->subject('New MIMI Bugs & Wishes')
+            ->subject('New MIMI Bugs & Wishes Submitted')
             ->markdown('emails.admin.newmimibugwish');
     }
 

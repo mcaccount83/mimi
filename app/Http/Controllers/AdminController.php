@@ -67,6 +67,19 @@ class AdminController extends Controller
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
+        // Fetch coordinator details
+        $coordinatorDetails = DB::table('coordinator_details as cd')
+            ->select('cd.*')
+            ->where('cd.is_active', '=', '1')
+            ->where('cd.coordinator_id', '=', $corId)
+            ->first(); // Fetch only one record
+
+        // Fetch admin details
+        $admin = DB::table('admin')
+            ->select('admin.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS reported_by'))
+            ->leftJoin('coordinator_details as cd', 'admin.reported_id', '=', 'cd.coordinator_id')
+            ->orderBy('priority', 'desc')
+            ->first(); // Fetch only one record
 
         $validatedData = $request->validate([
             'taskNameNew' => 'required|string|max:255',
@@ -83,17 +96,15 @@ class AdminController extends Controller
         $mailData = [
             'taskNameNew' => $task->task,
             'taskDetailsNew' => $task->details,
-            'ReportedId' => $task->reported_id,
+            'ReportedId' => $admin->reported_by,
             'ReportedDate' => $task->reported_date,
         ];
 
-        // Send the email only if the status is 3
         $to_email = 'jackie.mchenry@momsclub.org';
         Mail::to($to_email)->send(new AdminNewMIMIBugWish($mailData));
 
         $task->save();
-
-      }
+    }
 
     /**
      * Update Task on Bugs & Enhancements List
