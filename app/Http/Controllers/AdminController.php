@@ -6,6 +6,7 @@ use App\Mail\CoordinatorRetireAdmin;
 use App\Models\FinancialReport;
 use App\Models\User;
 use App\Models\Admin;
+use App\Mail\AdminNewMIMIBugWish;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -67,14 +68,12 @@ class AdminController extends Controller
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
 
-        // Validate request data
         $validatedData = $request->validate([
             'taskNameNew' => 'required|string|max:255',
             'taskDetailsNew' => 'required|string',
             'taskPriorityNew' => 'required',
         ]);
 
-        // Create a new task
         $task = new Admin;
         $task->task = $validatedData['taskNameNew'];
         $task->details = $validatedData['taskDetailsNew'];
@@ -89,10 +88,6 @@ class AdminController extends Controller
      */
     public function updateProgression(Request $request, $id)
     {
-        // $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        // $corId = $corDetails['coordinator_id'];
-
-         // Validate request data
         $validatedData = $request->validate([
             'taskDetails' => 'required|string',
             'taskNotes' => 'nullable|string',
@@ -100,21 +95,28 @@ class AdminController extends Controller
             'taskPriority' => 'required',
         ]);
 
-        // Find the task by ID
         $task = Admin::findOrFail($id);
-
-        // Update task attributes
         $task->details = $validatedData['taskDetails'];
         $task->notes = $validatedData['taskNotes'];
         $task->status = $validatedData['taskStatus'];
         $task->priority = $validatedData['taskPriority'];
 
-        // If the status is 3, set the completed_date as today's date
         if ($validatedData['taskStatus'] == 3) {
             $task->completed_date = Carbon::today();
+
+            $mailData = [
+                'taskName' => $task->task,
+                'taskDetails' => $task->details,
+                'ReportedId' => $task->reported_id,
+                'ReportedDate' => $task->reported_date,
+            ];
+
+            // Send the email only if the status is 3
+            $to_email = 'jackie.mchenry@momsclub.org';
+            Mail::to($to_email)->send(new AdminNewMIMIBugWish($mailData));
         }
 
         $task->save();
-
     }
+
 }
