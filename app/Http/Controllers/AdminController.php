@@ -92,6 +92,7 @@ class AdminController extends Controller
         $task->details = $validatedData['taskDetailsNew'];
         $task->priority = $validatedData['taskPriorityNew'];
         $task->reported_id = $corId;
+        $task->reported_date = Carbon::today();
 
         $mailData = [
             'taskNameNew' => $task->task,

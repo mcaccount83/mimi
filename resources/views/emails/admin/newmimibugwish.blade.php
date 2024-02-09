@@ -2,12 +2,12 @@
 # New MIMI Bugs & Wishes Admin Notice
 
 A new Bug or Wish has been added to the To Do list.
-
-<h4>{{$mailData['taskNameNew']}}</h4>
+<br>
+<strong>{{$mailData['taskNameNew']}}</strong>
 {{$mailData['taskDetailsNew']}}
-
+<br>
 Reported by: {{$mailData['ReportedId']}} on {{ \Carbon\Carbon::parse($mailData['ReportedDate'])->format('m-d-Y') }}
-
+<br>
 **MCL**,<br>
 MIMI Database Administrator
 <br>

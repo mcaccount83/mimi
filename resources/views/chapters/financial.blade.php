@@ -2750,8 +2750,8 @@
                                 <input type="file" name='file' required>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary" id="btn-roster">Upload</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success" id="btn-roster">Upload</button>
                             </form>
                         </div>
                     </div>
@@ -2771,8 +2771,8 @@
                                 <input type="file" name='file' required>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary" id="btn-statement1">Upload</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success" id="btn-statement1">Upload</button>
                             </form>
                         </div>
                     </div>
@@ -2792,8 +2792,8 @@
                                 <input type="file" name='file' required>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary" id="btn-statement2">Upload</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success" id="btn-statement2">Upload</button>
                             </form>
                         </div>
                     </div>
@@ -2813,8 +2813,8 @@
                                 <input type="file" name='file' required>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary" id="btn-990N">Upload</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success" id="btn-990N">Upload</button>
                             </form>
                         </div>
                     </div>

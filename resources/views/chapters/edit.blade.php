@@ -883,8 +883,8 @@
                         <input type="file" name='file' required>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" >Upload</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-success" >Upload</button>
                     </form>
                 </div>
             </div>
@@ -907,8 +907,8 @@
                         </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="return disbandChapter()">OK</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" onclick="return disbandChapter()">OK</button>
                     </form>
                 </div>
             </div>
