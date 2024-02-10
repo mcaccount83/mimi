@@ -5,16 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CoordinatorDetails extends Model
+class BoardList extends Model
 {
     use HasFactory;
 
-    //
-    public $timestamps = false;
+    protected $table = 'board_list';
 
     protected $fillable = [
-
-        'name', 'email',
-
+        'title',
+        'content',
+        // Add other fillable fields as needed
     ];
+
 }

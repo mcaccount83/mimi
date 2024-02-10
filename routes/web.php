@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BoardListController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\CoordinatorController;
@@ -243,3 +244,10 @@ Route::post('/adminreports/outgoingactivate', [ReportController::class, 'storeAc
  */
 Route::get('/board/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.financialreport');
 Route::get('/chapter/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.financialreport');
+
+/**
+ * Routes for BoardList
+ */
+Route::get('/boardlist', [BoardListController::class, 'index'])->name('boardlist.index');
+Route::get('/boardlist/{id}', [BoardListController::class, 'show'])->name('boardlist.show');
+// Add routes for other methods as needed

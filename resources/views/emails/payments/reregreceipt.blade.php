@@ -1,0 +1,13 @@
+@component('mail::message')
+# MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}
+
+Your chapter's online annual re-registration payment for {{$mailData['members']}} members was processed on {{$mailData['datePaid']}} and has been applied to your account.
+
+Thank you for submtting it!
+
+You can view/update your chapter details at any time by logging into MIMI at https://momsclub.org/mimi.
+
+**MCL,**<br>
+MIMI Database Administrator
+<br>
+@endcomponent

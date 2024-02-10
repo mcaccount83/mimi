@@ -119,7 +119,7 @@
                         <div class="form-group row">
                             <div class="col-md-4">
                                 <label>Optional Sustaining Chapter Donation</label>
-                                <input type="text" name="sustaining" id="sustaining" class="form-control" >
+                                <input type="text" name="sustaining" id="sustaining" class="form-control" value="$0.00" oninput="formatCurrency(this)">
                             </div>
                             <div class="col-md-4">
                                 <label>Online Processing Fee</label>
@@ -132,39 +132,29 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="card_number" class="col-md-4 col-form-label text-md-right">{{ __('Card Number') }}</label> <span class="field-required">*</span>
-
                             <div class="col-md-6">
+                            <label for="card_number" >{{ __('Card Number') }}</label> <span class="field-required">*</span>
                                 <input id="card_number" type="text" class="form-control @error('card_number') is-invalid @enderror" name="card_number" required autocomplete="off" maxlength="16">
-
                                 @error('card_number')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
                             </div>
-                        </div>
 
-                        <div class="form-group row">
-                            <label for="expiration_date" class="col-md-4 col-form-label text-md-right">{{ __('Expiration Date (MM/YY)') }}</label> <span class="field-required">*</span>
-
-                            <div class="col-md-6">
+                            <div class="col-md-3">
+                            <label for="expiration_date" ">{{ __('Expiration Date (MM/YY)') }}</label> <span class="field-required">*</span>
                                 <input id="expiration_date" type="text" class="form-control @error('expiration_date') is-invalid @enderror" name="expiration_date" required autocomplete="off" maxlength="5">
-
                                 @error('expiration_date')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
                             </div>
-                        </div>
 
-                        <div class="form-group row">
-                            <label for="cvv" class="col-md-4 col-form-label text-md-right">{{ __('CVV') }}</label> <span class="field-required">*</span>
-
-                            <div class="col-md-6">
+                            <div class="col-md-3">
+                            <label for="cvv" >{{ __('CVV') }}</label> <span class="field-required">*</span>
                                 <input id="cvv" type="text" class="form-control @error('cvv') is-invalid @enderror" name="cvv" required autocomplete="off" maxlength="4">
-
                                 @error('cvv')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -173,12 +163,45 @@
                             </div>
                         </div>
 
-                        <div class="form-group row mb-0">
-                            <div class="col-md-12 ">
-                                <center><button type="submit" class="btn btn-info btn-fill"><i class="fa fa-share fa-fw" aria-hidden="true" ></i>&nbsp;
-                                    {{ __('Submit Payment') }}
-                                </button></center>
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <label>Cardholder First Name</label> <span class="field-required">*</span>
+                                <input type="text" name="first_name" id="first_name" class="form-control"  required >
                             </div>
+                            <div class="col-md-4">
+                                <label>Cardholder Last Name</label> <span class="field-required">*</span>
+                                <input type="text" name="last_name" id="last_name" class="form-control"  required >
+                            </div>
+                            <div class="col-md-4">
+                                <label>Cardholder Email</label> <span class="field-required">*</span>
+                                <input type="text" name="email" id="email" class="form-control"  required >
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-12">
+                                <label>Cardholder Address</label> <span class="field-required">*</span>
+                                <input type="text" name="address" id="address" class="form-control"  required >
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <label>City</label> <span class="field-required">*</span>
+                                <input type="text" name="city" id="city" class="form-control"  required >
+                            </div>
+                            <div class="col-md-4">
+                                <label>State</label> <span class="field-required">*</span>
+                                <input type="text" name="state" id="state" class="form-control"  required >
+                            </div>
+                            <div class="col-md-4">
+                                <label>Zip</label> <span class="field-required">*</span>
+                                <input type="text" name="zip" id="zip" class="form-control"  required >
+                            </div>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-info btn-fill"><i class="fa fa-share fa-fw" aria-hidden="true" ></i>&nbsp;{{ __('Submit Payment') }}</button>
+                            <a href="{{ route('home') }}" class="btn btn-info btn-fill"><i class="fa fa-home fa-fw" aria-hidden="true" ></i>&nbsp; Back to HOME</a>
                         </div>
                     </form>
                 </div>
@@ -187,16 +210,14 @@
     </div>
 </div>
 {{-- End of Payment Form --}}
-<div class="col-md-12">You can pay with confidence! We have partnered with <a href="http://www.authorize.net" target="blank">Authorize.Net</a>, a leading payment gateway since 1996,
+<img src="\uploads\authorize-net-seal.png" alt="authorizze-net-seal" style="float: left; margin-right: 20px;">
+<div class="col-md-12" style="font-size: 0.8em"></div>
+<div class="col-md-12" style="font-size: 0.8em">
+    You can pay with confidence! We have partnered with <a href="http://www.authorize.net" target="blank">Authorize.Net</a>, a leading payment gateway since 1996,
     to accept credit cards and electronic check payments safely and securely for our chapters.</div>
-    <div class="col-md-12 "><br></div>
-<div class="col-md-12">The Authorize.Net Payment Gateway manages the complex routing of sensitive customer information through the electronic check and credit card processing networks.
+    <div class="col-md-12" style="font-size: 0.8em"><br></div>
+<div class="col-md-12" style="font-size: 0.8em">The Authorize.Net Payment Gateway manages the complex routing of sensitive customer information through the electronic check and credit card processing networks.
     See an <a href="http://www.authorize.net/resources/howitworksdiagram/" target="blank">online payments diagram</a> to see how it works.</div>
-</div>
-<div class="col-md-12"><br></div>
-
-<div class="col-md-12 text-center">
-    <a href="{{ route('home') }}" class="btn btn-info btn-fill"><i class="fa fa-home fa-fw" aria-hidden="true" ></i>&nbsp; Back to HOME</a>
 </div>
 <div class="col-md-12"><br></div>
 
@@ -207,6 +228,12 @@
 @section('customscript')
 
 <script>
+    function formatCurrency(input) {
+        let value = input.value.replace(/\D/g, '');
+        value = (value / 100).toFixed(2);
+        input.value = '$' + value;
+    }
+
     // Function to calculate total re-registration fees
     function calculateTotalRR() {
         var membersInput = document.getElementById('members');
