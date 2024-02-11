@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use net\authorize\api\contract\v1 as AnetAPI;
 use net\authorize\api\controller as AnetController;
-use App\Mail\PaymentsReRegReceipt;
+//use App\Mail\PaymentsReRegReceipt;
 use App\Mail\PaymentsReRegOnline;
+use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Models\Chapter;
 use App\Models\User;
@@ -30,6 +31,8 @@ class PaymentController extends Controller
             ->get();
         $chapterState = $chapterState[0]->state_short_name;
         $chapterName = $chapterDetails['name'];
+        $chConf = $chapterDetails['conference'];
+        $chPcid = $chapterDetails['primary_coordinator_id'];
 
         $company = $chapterName . ', ' . $chapterState;
         $next_renewal_year = $chapterDetails['next_renewal_year'];
@@ -58,6 +61,11 @@ class PaymentController extends Controller
         $email = $request->input('email');
         $total = $request->input('total');
         $amount = (float) preg_replace('/[^\d.]/', '', $total);
+
+        // Call the load_coordinators function
+        $coordinatorData = $this->load_coordinators($chapterId, $chConf, $chPcid);
+        $ConfCoorEmail = $coordinatorData['ConfCoorEmail'];
+        $coordinator_array = $coordinatorData['coordinator_array'];
 
         /* Create a merchantAuthenticationType object with authentication details
             retrieved from the constants file */
@@ -150,17 +158,20 @@ class PaymentController extends Controller
                         'chapterState' => $chapterState,
                         'members' => $members,
                         'late' => $late,
-                        'sustaining' => $sustaining,
+                        'sustaining' => $donation,
                         'reregTotal' =>$rereg,
                         'processing' => $fee,
                         'totalPaid' => $total,
                         'datePaid' => Carbon::today()->format('m-d-Y'),
+                        'chapterMembers' => Carbon::today()->format('m-d-Y'),
+                        'chapterDate' => $members,
                         'chapterTotal' => $sustaining,
                     ];
 
                     $to_email = $email;
                     $to_email2 = $cor_email;
-                    $to_email3 = "dragonmom@msn.com";
+                    $to_email3 = $ConfCoorEmail;
+                    $to_email4 = "dragonmom@msn.com";
 
                     $existingRecord = Chapter::where('id', $chapterId)->first();
                         $existingRecord->members_paid_for = $members;
@@ -168,13 +179,11 @@ class PaymentController extends Controller
                         $existingRecord->dues_last_paid = Carbon::today();
 
                         Mail::to($to_email)
-                            ->send(new PaymentsReRegReceipt($mailData));
+                            ->cc($to_email2)
+                            ->send(new PaymentsReRegChapterThankYou($mailData));
 
-                        Mail::to($to_email2)
-                            ->send(new PaymentsReRegOnline($mailData));
-
-                        Mail::to($to_email3)
-                            ->send(new PaymentsReRegOnline($mailData));
+                        Mail::to([$to_email3, $to_email4])
+                            ->send(new PaymentsReRegOnline($mailData, $coordinator_array));
 
                         if ($sustaining > 0.00) {
                             $existingRecord->sustaining_donation = $sustaining;
@@ -222,4 +231,82 @@ class PaymentController extends Controller
             return redirect()->to('/board/showreregpayment')->with('fail', 'No response returned');
         }
     }
+
+    public function load_coordinators($chapterId, $chConf, $chPcid)
+    {
+        $chapterDetails = Chapter::find($chapterId)
+            ->select('chapters.id as id', 'chapters.name as chapter_name', 'st.state_short_name as state',
+                'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->where('chapters.is_active', '=', '1')
+            ->first();
+
+        $reportingList = DB::table('coordinator_reporting_tree')
+            ->select('*')
+            ->where('id', '=', $chPcid)
+            ->get();
+
+        foreach ($reportingList as $key => $value) {
+            $reportingList[$key] = (array) $value;
+        }
+        $filterReportingList = array_filter($reportingList[0]);
+        unset($filterReportingList['id']);
+        unset($filterReportingList['layer0']);
+        $filterReportingList = array_reverse($filterReportingList);
+        $str = '';
+        $array_rows = count($filterReportingList);
+        $i = 0;
+        $coordinator_array = [];
+        foreach ($filterReportingList as $key => $val) {
+            $corList = DB::table('coordinator_details as cd')
+                ->select('cd.coordinator_id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cd.email as email', 'cp.short_title as pos')
+                ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                ->where('cd.coordinator_id', '=', $val)
+                ->get();
+            $coordinator_array[$i] = ['id' => $corList[0]->cid,
+                'first_name' => $corList[0]->fname,
+                'last_name' => $corList[0]->lname,
+                'email' => $corList[0]->email,
+                'position' => $corList[0]->pos];
+
+            $i++;
+        }
+        $coordinator_count = count($coordinator_array);
+
+        for ($i = 0; $i < $coordinator_count; $i++) {
+            if ($coordinator_array[$i]['position'] == 'RC') {
+                $rc_email = $coordinator_array[$i]['email'];
+                $rc_id = $coordinator_array[$i]['id'];
+            } elseif ($coordinator_array[$i]['position'] == 'CC') {
+                $cc_email = $coordinator_array[$i]['email'];
+                $cc_id = $coordinator_array[$i]['id'];
+            }
+        }
+
+        switch ($chConf) {
+            case 1:
+                $to_email = $cc_email;
+                break;
+            case 2:
+                $to_email = $cc_email;
+                break;
+            case 3:
+                $to_email = $cc_email;
+                break;
+            case 4:
+                $to_email = $cc_email;
+                break;
+            case 5:
+                $to_email = $cc_email;
+                break;
+            default:
+                $to_email = 'admin@momsclub.org';
+        }
+
+        return [
+            'ConfCoorEmail' => $to_email,
+            'coordinator_array' => $coordinator_array,
+        ];
+    }
+
 }

@@ -35,12 +35,10 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}
         </strong></tr>
     </tbody>
 </table>
-<br>
-The Re-Registration Payment and Sustaining Chapter Donation (if they made one) have been entered into MIMI automatically, this is for notification purposes only.
-<br>
 
-**MCL,**<br>
+<p>The Re-Registration Payment and Sustaining Chapter Donation (if they made one) have been entered into MIMI automatically, this is for notification purposes only.</p>
+
+<strong>MCL,</strong><br>
 MIMI Database Administrator
-<br>
 @endcomponent
 

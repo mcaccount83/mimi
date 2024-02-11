@@ -8,6 +8,6 @@ Thank you for sending it in!
 You can view/update your chapter details at any time by logging into MIMI at https://momsclub.org/mimi.
 
 **MCL,**<br>
-MIMI Database Administrator
+International MOMS Club
 <br>
 @endcomponent

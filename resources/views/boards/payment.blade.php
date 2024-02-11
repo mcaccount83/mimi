@@ -210,7 +210,11 @@
     </div>
 </div>
 {{-- End of Payment Form --}}
-<img src="\uploads\authorize-net-seal.png" alt="authorizze-net-seal" style="float: left; margin-right: 20px;">
+@if(app()->environment('local'))
+    <img src="/uploads/authorize-net-seal.png" alt="authorizze-net-seal" style="float: left; margin-right: 20px;">
+@else
+    <img src="/mimi/uploads/authorize-net-seal.png" alt="authorizze-net-seal" style="float: left; margin-right: 20px;">
+@endif
 <div class="col-md-12" style="font-size: 0.8em"></div>
 <div class="col-md-12" style="font-size: 0.8em">
     You can pay with confidence! We have partnered with <a href="http://www.authorize.net" target="blank">Authorize.Net</a>, a leading payment gateway since 1996,
