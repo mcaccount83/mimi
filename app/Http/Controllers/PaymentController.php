@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use net\authorize\api\contract\v1 as AnetAPI;
 use net\authorize\api\controller as AnetController;
-//use App\Mail\PaymentsReRegReceipt;
+use App\Mail\PaymentsReRegReceipt;
 use App\Mail\PaymentsReRegOnline;
 use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsSustainingChapterThankYou;
@@ -14,11 +14,16 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
-
 use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
+    public function __construct()
+    {
+        // Set the timezone explicitly for the whole controller
+        Carbon::setTimezone('America/New_York');
+    }
+
     public function processPayment(Request $request)
     {
         $borDetails = User::find($request->user()->id)->BoardDetails;
@@ -86,9 +91,11 @@ class PaymentController extends Controller
         $paymentOne = new AnetAPI\PaymentType();
         $paymentOne->setCreditCard($creditCard);
 
+        // Generate a random invoice number
+        $randomInvoiceNumber = mt_rand(100000, 999999);
         // Create order information
         $order = new AnetAPI\OrderType();
-        $order->setInvoiceNumber($chapterId);
+        $order->setInvoiceNumber($randomInvoiceNumber);
         $order->setDescription("Re-Registration Payment");
 
         // Set the customer's Bill To address
@@ -143,7 +150,6 @@ class PaymentController extends Controller
 
         // Create the controller and get the response
         $controller = new AnetController\CreateTransactionController($request);
-        //$response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::SANDBOX);
         $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
 
         if ($response != null) {
@@ -162,9 +168,14 @@ class PaymentController extends Controller
                         'reregTotal' =>$rereg,
                         'processing' => $fee,
                         'totalPaid' => $total,
+                        'fname' => $first,
+                        'lname' => $last,
+                        'email' => $email,
+                        'chapterId' => $chapterId,
+                        'invoice' => $randomInvoiceNumber,
                         'datePaid' => Carbon::today()->format('m-d-Y'),
-                        'chapterMembers' => Carbon::today()->format('m-d-Y'),
-                        'chapterDate' => $members,
+                        'chapterMembers' => $members,
+                        'chapterDate' => Carbon::today()->format('m-d-Y'),
                         'chapterTotal' => $sustaining,
                     ];
 

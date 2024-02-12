@@ -1,7 +1,7 @@
 @component('mail::message')
 # Financial Report Check-In Notification
 
-{{ $mailData['chapter_name'] }}, {{ $mailData['chapter_state'] }} has submitted their Financial Report. It is ready to be reviewed.
+{{ $mailData['chapter_name'] }}, {{ $mailData['chapter_state'] }} has submitted their Financial Report. It is ready to be reviewed.<br>
 <br>
 Submitted by:
 <ul>

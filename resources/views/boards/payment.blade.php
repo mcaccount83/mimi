@@ -34,6 +34,17 @@
                         <div class="col-md-12"><br></div>
                         <div class="col-md-12"><center>Your chapter's anniversary month is <strong>{{ $startMonth }}</strong>.</center></div>
                         <div class="col-md-12"><center>Re-registration payments are due each year by the last day of your anniversary month.</center></div>
+                        <div class="col-md-12"><center>Your next due date: <strong>{{ $startMonth }} {{ $chapterList[0]->next_renewal_year }}</strong></center></div>
+                        @php
+                           $thisDate = \Carbon\Carbon::now();
+                        @endphp
+                        @if ($thisDate->gte($due_date))
+                            @if ($due_date->month === $thisDate->month)
+                                <div class="col-md-12" style="color: green;"><center>Your chapter's re-registration payment is due this month!</center></div>
+                            @else
+                                <div class="col-md-12" style="color: red;"><center>Your chapter's re-registration payment is now considered overdue.</center></div>
+                            @endif
+                        @endif
                         </div>
 
                     <div class="card-body">
@@ -283,6 +294,18 @@
     document.getElementById('sustaining').addEventListener('input', calculateTotal);
     // Call calculateTotal function initially to calculate total based on default values
     calculateTotal();
+
+    // Additional email validation
+    document.getElementById('email').addEventListener('blur', function() {
+        let emailInput = this.value.trim();
+        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(emailInput)) {
+            document.getElementById('emailHelp').innerHTML = 'Please enter a valid email address.';
+        } else {
+            document.getElementById('emailHelp').innerHTML = '';
+        }
+    });
 
 </script>
 @endsection

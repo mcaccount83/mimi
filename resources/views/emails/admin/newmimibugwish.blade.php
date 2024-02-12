@@ -1,14 +1,13 @@
 @component('mail::message')
 # New MIMI Bugs & Wishes Admin Notice
 
-A new Bug or Wish has been added to the To Do list.
+A new Bug or Wish has been added to the To Do list.<br>
 <br>
-<strong>{{$mailData['taskNameNew']}}</strong>
-{{$mailData['taskDetailsNew']}}
+<strong>{{$mailData['taskNameNew']}}</strong><br>
+{{$mailData['taskDetailsNew']}}<br>
 <br>
-Reported by: {{$mailData['ReportedId']}} on {{ \Carbon\Carbon::parse($mailData['ReportedDate'])->format('m-d-Y') }}
+Reported by: {{$mailData['ReportedId']}} on {{ \Carbon\Carbon::parse($mailData['ReportedDate'])->format('m-d-Y') }}<br>
 <br>
-**MCL**,<br>
+<strong>MCL,</strong><br>
 MIMI Database Administrator
-<br>
 @endcomponent

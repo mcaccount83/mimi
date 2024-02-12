@@ -1,12 +1,12 @@
 @component('mail::message')
 # MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}
 
-Your chapter's anniversy month is <b>{{$mailData['startMonth']}}</b>.
-
-As of today we have not received your chapter’s re-registration fee. All re-registration fees are due annually on the month of your MOMS Club anniversary and it is now considered <b><u>PAST DUE</u></b>.
-
-Below is information for how to calculate your payment as well as the different options available to submit payment.
-
+Your chapter's anniversy month is <b>{{$mailData['startMonth']}}</b>.<br>
+<br>
+As of today we have not received your chapter’s re-registration fee. All re-registration fees are due annually on the month of your MOMS Club anniversary and it is now considered <b><u>PAST DUE</u></b>.<br>
+<br>
+Below is information for how to calculate your payment as well as the different options available to submit payment.<br>
+<br>
 If you have already submitted your payment, please let us know. Sometimes clerical errors are made and payments do not get applied correctly.
 <ul><li>If you paid online, please forward the receipt you received via email.</li>
 <li>If you paid via check, please send a copy of your cleared check.</li>
@@ -21,9 +21,9 @@ To calculate your payment:
 <li>If this total amount of members is 10 or more, multiply the number by $5.00 to get your total amount due</li></ul>
 
 Pay online: https://momsclub.org/resources/re-registration-payment<br>
-Password: daytime support
-
-OR to pay by mail:
+Password: daytime support<br>
+<br>
+OR to pay by mail:<br>
 Be sure your full chapter name, including state abbreviation, is on your check so that the re-registration can be credited properly.
 <ul><li>Make check payable to MOMS Club</li>
 <li>Please write "Chapter Re-Registration" in the Memo field of your check</li>
@@ -32,7 +32,7 @@ Be sure your full chapter name, including state abbreviation, is on your check s
 <center>International MOMS Club<br>
 Chapter Re-Registration<br>
 208 Hewitt Dr., Ste 103 #328<br>
-Waco, TX 76712</center>
+Waco, TX 76712</center><br>
 <br>
 <table style="border:1px solid #000;"><td><b>MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}</b><br>
 Anniversary Month: <b>{{$mailData['startMonth']}}</b></td></tr>
@@ -48,13 +48,13 @@ Sustaining chapter donations are voluntary and in addition to your chapter's re-
 </p>
 </td></tr></table>
 <br>
-If payment is not recevied by the last day of <b>{{$mailData['dueMonth']}}</b> your chapter will be placed on probation.
-
-You can view/update your chapter details at any time by logging into MIMI at https://momsclub.org/mimi.
-
-If you have any questions at all, do not hesitate to ask.
-
-**MCL,**<br>
+<p>If payment is not recevied by the last day of <b>{{$mailData['dueMonth']}}</b> your chapter will be placed on probation.</p>
+<br>
+You can view/update your chapter details at any time by logging into MIMI at https://momsclub.org/mimi.<br>
+<br>
+If you have any questions at all, do not hesitate to ask.<br>
+<br>
+<strong>MCL,</strong><br>
 MIMI Database Administrator
 <br>
 @endcomponent

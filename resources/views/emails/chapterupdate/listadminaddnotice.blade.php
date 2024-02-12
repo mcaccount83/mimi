@@ -1,11 +1,11 @@
 @component('mail::message')
 # ListAdmin Update Notification
 
-The follownig chapter has added to MIMI:  MOMS Club of {{$mailData['chapter_name']}}, {{$mailData['chapter_state']}}, Conference {{$mailData['conf']}}.
-
-Please add members of this chapter to any groups, forums and mailing lists.
-
-**MCL,**<br>
+The follownig chapter has added to MIMI:  MOMS Club of {{$mailData['chapter_name']}}, {{$mailData['chapter_state']}}, Conference {{$mailData['conf']}}.<br>
+<br>
+Please add members of this chapter to any groups, forums and mailing lists.<br>
+<br>
+<strong>MCL,</strong><br>
 International MOMS Club
 <br>
 @component('mail::table')

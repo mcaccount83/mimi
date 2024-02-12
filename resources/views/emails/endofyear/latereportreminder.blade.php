@@ -1,7 +1,7 @@
 @component('mail::message')
 # MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}
 
-At this time, we have not received one or more of your chapter's End of Year Reports. They are now considered PAST DUE.
+At this time, we have not received one or more of your chapter's End of Year Reports. They are now considered PAST DUE.<br>
 <br>
 <ul>
     @if($mailData['boardElectionReportReceived'] == 0)
@@ -17,11 +17,10 @@ At this time, we have not received one or more of your chapter's End of Year Rep
         <li>Copy of EIN Letter</li>
     @endif
 </ul>
-Please submit your report through MIMI (https://momsclub.org/mimi) as soon as possible. If you are having trouble submitting, have any questions, or need more time, please contact your Primary Coordinator.
+<p>Please submit your report through MIMI (https://momsclub.org/mimi) as soon as possible. If you are having trouble submitting, have any questions, or need more time, please contact your Primary Coordinator.</p>
 <br>
-**MCL**,<br>
+<strong>MCL,</strong><br>
 MIMI Database Administrator
-<br>
 @endcomponent
 
 

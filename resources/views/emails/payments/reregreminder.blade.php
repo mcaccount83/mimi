@@ -1,10 +1,10 @@
 @component('mail::message')
 # MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}
 
-Your chapter has celebrated another year of offering support to the at-home mothers in your area!
-
-This is the reminder that <b>{{$mailData['startMonth']}}</b> is your chapter's anniversary with the International MOMS Club and it is time to pay the chapter's re-registration fee, if you haven't done so already.
-
+Your chapter has celebrated another year of offering support to the at-home mothers in your area!<br>
+<br>
+This is the reminder that <b>{{$mailData['startMonth']}}</b> is your chapter's anniversary with the International MOMS Club and it is time to pay the chapter's re-registration fee, if you haven't done so already.<br>
+<br>
 To calculate your payment:
 <ul><li>Determine how many people paid dues to your chapter from <b>{{$mailData['startRange']}}</b> through <b>{{$mailData['endRange']}}</b></li>
 <li>Add in any people who paid reduced dues or had their dues waived due to financial hardship</li>
@@ -13,8 +13,8 @@ To calculate your payment:
 <li>Payments received after the last day of <b>{{$mailData['startMonth']}}</b> should include a late fee of $10</li></ul>
 
 You online: https://momsclub.org/resources/re-registration-payment<br>
-Password: daytime support
-
+Password: daytime support<br>
+<br>
 OR to pay by mail:<br>
 Be sure your full chapter name, including state abbreviation, is on your check so that the re-registration can be credited properly.
 <ul><li>Make check payable to MOMS Club</li>
@@ -24,7 +24,7 @@ Be sure your full chapter name, including state abbreviation, is on your check s
 <center>International MOMS Club<br>
 Chapter Re-Registration<br>
 208 Hewitt Dr., Ste 103 #328<br>
-Waco, TX 76712</center>
+Waco, TX 76712</center><br>
 <br>
 <table style="border:1px solid #000;"><td><b>MOMS Club of {{$mailData['chapterName']}}, {{$mailData['chapterState']}}</b><br>
 Anniversary Month: <b>{{$mailData['startMonth']}}</b></td></tr>
@@ -40,11 +40,11 @@ Sustaining chapter donations are <u>voluntary</u> and in addition to your chapte
 </p>
 </td></tr></table>
 <br>
-Thank you for your prompt renewal payment and/or sustaining chapter donation! If you have any questions, please do not hesitate to contact your chapter's Primary Coordinator.
-
-You can view/update your chapter details at any time by logging into MIMI at https://momsclub.org/mimi.
-
-**MCL,**<br>
+<p>Thank you for your prompt renewal payment and/or sustaining chapter donation! If you have any questions, please do not hesitate to contact your chapter's Primary Coordinator.</p>
+<br>
+You can view/update your chapter details at any time by logging into MIMI at https://momsclub.org/mimi.<br>
+<br>
+<strong>MCL,</strong><br>
 MIMI Database Administrator
 <br>
 @endcomponent
