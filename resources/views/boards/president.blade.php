@@ -60,7 +60,7 @@
                <div class="card-body">
                 @foreach($chapterList as $list)
 
-                {{-- @php
+                @php
                     $thisDate = \Carbon\Carbon::now();
                 @endphp
                 @if ($thisDate->gte($due_date))
@@ -75,7 +75,7 @@
                     </div>
                     <hr>
                 <div class="col-md-12"><br></div>
-                @endif --}}
+                @endif
 
                 <div class="col-md-12"><br></div>
                     <div class="col-md-12 text-center">

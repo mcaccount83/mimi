@@ -77,10 +77,16 @@ Route::get('/getreporting', [CoordinatorController::class, 'getReportingList'])-
 Route::get('/getdirectreport', [CoordinatorController::class, 'getDirectReportingList'])->name('get.directreport');
 Route::get('/getchapterprimary', [CoordinatorController::class, 'getChapterPrimaryFor'])->name('get.chapterprimary');
 Route::get('/chapter-links', [ChapterController::class, 'chapterLinks'])->name('chapter.links');
+
+/**
+ * Routes for Admin Actions/Reporting
+ */
 Route::get('/admin/progression', [AdminController::class, 'showProgression'])->name('admin.progression');
 Route::post('/admin/addprogression', [AdminController::class, 'addProgression'])->name('admin.addprogression');
 Route::post('/admin/updateprogression/{id}', [AdminController::class, 'updateProgression'])->name('admin.updateprogression');
-
+Route::get('/admin/resources', [AdminController::class, 'showResources'])->name('admin.resources');
+Route::post('/admin/addresources', [AdminController::class, 'addResources'])->name('admin.addresources');
+Route::post('/admin/updateresources/{id}', [AdminController::class, 'updateResources'])->name('admin.updateresources');
 
 /**
  * Routes for Payment Processing

@@ -54,7 +54,7 @@ return [
     'channels' => [
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single'],
+            'channels' => ['single', 'email'],
             'ignore_exceptions' => false,
         ],
 
@@ -116,6 +116,12 @@ return [
             'driver' => 'errorlog',
             'level' => env('LOG_LEVEL', 'debug'),
             'replace_placeholders' => true,
+        ],
+
+        'email' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/email.log'),
+            'level' => env('EMAIL_LOG_LEVEL', 'info'),
         ],
 
         'null' => [
