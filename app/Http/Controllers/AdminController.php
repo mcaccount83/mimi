@@ -190,22 +190,29 @@ class AdminController extends Controller
         // Fetch admin details
         $file = DB::table('resources')
             ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
-            ->leftJoin('coordinator_details as cd', 'file.updated_id', '=', 'cd.coordinator_id')
-            ->orderBy('priority', 'desc')
+            ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
             ->first(); // Fetch only one record
 
         $validatedData = $request->validate([
-            'fileNameNew' => 'required|string|max:255',
-            'fileDescriptionNew' => 'required|string',
-            'fileVersionNew' => 'required',
+            'fileCategoryNew' => 'required',
+            'fileNameNew' => 'required|string|max:50',
+            'fileDescriptionNew' => 'required|string|max:255',
+            'fileTypeNew' => 'required',
+            'fileVersionNew' => 'nullable|string|max:25',
+            'LinkNew' => 'nullable|string|max:255',
+            'filePathNew' => 'nullable|string|max:255',
         ]);
 
         $file = new Resources;
-        $file->file = $validatedData['fileNameNew'];
+        $file->category = $validatedData['fileCategoryNew'];
+        $file->name = $validatedData['fileNameNew'];
         $file->description = $validatedData['fileDescriptionNew'];
-        $file->version = $validatedData['fileVersionNew'];
-        $file->reported_id = $corId;
-        $file->reported_date = Carbon::today();
+        $file->file_type = $validatedData['fileTypeNew'];
+        $file->version = $validatedData['fileVersionNew'] ?? null;
+        $file->link = $validatedData['LinkNew'] ?? null;
+        $file->file_path = $validatedData['filePathNew'] ?? null;
+        $file->updated_id = $corId;
+        $file->updated_date = Carbon::today();
 
         $file->save();
     }
@@ -215,12 +222,36 @@ class AdminController extends Controller
      */
     public function updateResources(Request $request, $id)
     {
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corId = $corDetails['coordinator_id'];
+        // Fetch coordinator details
+        $coordinatorDetails = DB::table('coordinator_details as cd')
+            ->select('cd.*')
+            ->where('cd.is_active', '=', '1')
+            ->where('cd.coordinator_id', '=', $corId)
+            ->first(); // Fetch only one record
+
+        // Fetch admin details
+        $file = DB::table('resources')
+            ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
+            ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
+            ->first(); // Fetch only one record
         $validatedData = $request->validate([
-            'fileVersion' => 'required',
+            'fileDescription' => 'required|string|max:255',
+            'fileType' => 'required',
+            'fileVersion' => 'nullable|string|max:25',
+            'link' => 'nullable|string|max:255',
+            'filePath' => 'nullable|string|max:255',
         ]);
 
         $file = Resources::findOrFail($id);
-        $file->version = $validatedData['fileVersion'];
+        $file->description = $validatedData['fileDescription'];
+        $file->file_type = $validatedData['fileType'];
+        $file->version = $validatedData['fileVersion'] ?? null;
+        $file->link = $validatedData['link'] ?? null;
+        $file->file_path = $validatedData['filePath'] ?? null;
+        $file->updated_id = $corId;
+        $file->updated_date = Carbon::today();
 
         $file->save();
     }
