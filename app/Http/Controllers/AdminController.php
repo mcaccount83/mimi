@@ -58,7 +58,7 @@ class AdminController extends Controller
 
         $data = ['admin' => $admin, 'canEditDetails' => $canEditDetails, 'coordinatorDetails' => $coordinatorDetails];
 
-        return view('admin')->with($data);
+        return view('admin.progression')->with($data);
     }
 
     /**
@@ -170,7 +170,7 @@ class AdminController extends Controller
 
         $data = ['resources' => $resources, 'canEditFiles' => $canEditFiles, 'coordinatorDetails' => $coordinatorDetails];
 
-        return view('resources')->with($data);
+        return view('admin.resources')->with($data);
     }
 
     /**
@@ -255,5 +255,130 @@ class AdminController extends Controller
 
         $file->save();
     }
+
+
+     /**
+     * View Toolkit List
+     */
+    public function showToolkit(Request $request): View
+    {
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corId = $corDetails['coordinator_id'];
+        $coordinatorDetails = DB::table('coordinator_details as cd')
+            ->select('cd.*')
+            ->where('cd.is_active', '=', '1')
+            ->where('cd.coordinator_id', '=', $corId)
+            ->get();
+
+        $resources = DB::table('resources')
+            ->select('resources.*',
+                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),
+                DB::raw('CASE
+                    WHEN category = 1 THEN "BYLAWS"
+                    WHEN category = 2 THEN "FACT SHEETS"
+                    WHEN category = 3 THEN "COPY READY MATERIAL"
+                    WHEN category = 4 THEN "IDEAS AND INSPIRATION"
+                    WHEN category = 5 THEN "CHAPTER RESOURCES"
+                    WHEN category = 6 THEN "SAMPLE CHPATER FILES"
+                    WHEN category = 7 THEN "END OF YEAR"
+                    ELSE "Unknown"
+                END as priority_word'))
+            ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
+            ->orderBy('name', 'asc')
+            ->get();
+
+        // Determine if the user is allowed to edit notes and status
+        $positionId = $corDetails['position_id'];
+        $secPositionId = $corDetails['sec_position_id'];
+        $canEditFiles = ($positionId == 13 || $secPositionId == 13);  //IT Coordinator
+
+        $data = ['resources' => $resources, 'canEditFiles' => $canEditFiles, 'coordinatorDetails' => $coordinatorDetails];
+
+        return view('admin.toolkit')->with($data);
+    }
+
+    /**
+     * Add New Files or Links to the Toolkit List
+     */
+    public function addToolkit(Request $request)
+    {
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corId = $corDetails['coordinator_id'];
+        // Fetch coordinator details
+        $coordinatorDetails = DB::table('coordinator_details as cd')
+            ->select('cd.*')
+            ->where('cd.is_active', '=', '1')
+            ->where('cd.coordinator_id', '=', $corId)
+            ->first(); // Fetch only one record
+
+        // Fetch admin details
+        $file = DB::table('resources')
+            ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
+            ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
+            ->first(); // Fetch only one record
+
+        $validatedData = $request->validate([
+            'fileCategoryNew' => 'required',
+            'fileNameNew' => 'required|string|max:50',
+            'fileDescriptionNew' => 'required|string|max:255',
+            'fileTypeNew' => 'required',
+            'fileVersionNew' => 'nullable|string|max:25',
+            'LinkNew' => 'nullable|string|max:255',
+            'filePathNew' => 'nullable|string|max:255',
+        ]);
+
+        $file = new Resources;
+        $file->category = $validatedData['fileCategoryNew'];
+        $file->name = $validatedData['fileNameNew'];
+        $file->description = $validatedData['fileDescriptionNew'];
+        $file->file_type = $validatedData['fileTypeNew'];
+        $file->version = $validatedData['fileVersionNew'] ?? null;
+        $file->link = $validatedData['LinkNew'] ?? null;
+        $file->file_path = $validatedData['filePathNew'] ?? null;
+        $file->updated_id = $corId;
+        $file->updated_date = Carbon::today();
+
+        $file->save();
+    }
+
+    /**
+     * Update Files or Links on the Toolkit List
+     */
+    public function updateToolkit(Request $request, $id)
+    {
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corId = $corDetails['coordinator_id'];
+        // Fetch coordinator details
+        $coordinatorDetails = DB::table('coordinator_details as cd')
+            ->select('cd.*')
+            ->where('cd.is_active', '=', '1')
+            ->where('cd.coordinator_id', '=', $corId)
+            ->first(); // Fetch only one record
+
+        // Fetch admin details
+        $file = DB::table('resources')
+            ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
+            ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
+            ->first(); // Fetch only one record
+        $validatedData = $request->validate([
+            'fileDescription' => 'required|string|max:255',
+            'fileType' => 'required',
+            'fileVersion' => 'nullable|string|max:25',
+            'link' => 'nullable|string|max:255',
+            'filePath' => 'nullable|string|max:255',
+        ]);
+
+        $file = Resources::findOrFail($id);
+        $file->description = $validatedData['fileDescription'];
+        $file->file_type = $validatedData['fileType'];
+        $file->version = $validatedData['fileVersion'] ?? null;
+        $file->link = $validatedData['link'] ?? null;
+        $file->file_path = $validatedData['filePath'] ?? null;
+        $file->updated_id = $corId;
+        $file->updated_date = Carbon::today();
+
+        $file->save();
+    }
+
 
 }

@@ -920,6 +920,61 @@ class BoardController extends Controller
         return view('boards.payment')->with($data);
     }
 
+
+    /**
+     * Show Chater Resources
+     */
+    public function showResources(Request $request): View
+    {
+        $borDetails = User::find($request->user()->id)->BoardDetails;
+        $borPositionId = $borDetails['board_position_id'];
+        $chapterId = $borDetails['chapter_id'];
+        $isActive = $borDetails['is_active'];
+
+        $chapterDetails = Chapter::find($chapterId);
+        $stateArr = DB::table('state')
+            ->select('state.*')
+            ->orderBy('id')
+            ->get();
+
+        $chapterState = DB::table('state')
+            ->select('state_short_name')
+            ->where('id', '=', $chapterDetails->state)
+            ->get();
+        $chapterState = $chapterState[0]->state_short_name;
+
+        $chapterList = DB::table('chapters as ch')
+            ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address',
+                'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
+            ->leftJoin('board_details as bd', 'ch.id', '=', 'bd.chapter_id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '1')
+            ->get();
+
+        $resources = DB::table('resources')
+            ->select('resources.*',
+                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),
+                DB::raw('CASE
+                    WHEN category = 1 THEN "BYLAWS"
+                    WHEN category = 2 THEN "FACT SHEETS"
+                    WHEN category = 3 THEN "COPY READY MATERIAL"
+                    WHEN category = 4 THEN "IDEAS AND INSPIRATION"
+                    WHEN category = 5 THEN "CHAPTER RESOURCES"
+                    WHEN category = 6 THEN "SAMPLE CHPATER FILES"
+                    WHEN category = 7 THEN "END OF YEAR"
+                    ELSE "Unknown"
+                END as priority_word'))
+            ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
+            ->orderBy('name', 'asc')
+            ->get();
+
+        $data = ['chapterState' => $chapterState,'chapterList' => $chapterList, 'resources' => $resources,];
+
+        return view('boards.resources')->with($data);
+    }
+
+
     /**
      * Show EOY BoardInfo All Board Members
      */

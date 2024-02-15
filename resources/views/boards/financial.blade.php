@@ -2528,32 +2528,26 @@
                                     <textarea class="form-control" rows="20" id="AwardDesc1" name="AwardDesc1"><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_1_outstanding_project_desc'];}?></textarea>
                                  </div>
 
-                                 <div class="form-group" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_files']) echo "style=\"display: none;\"";} ?>>
-                                    <label>Award Files for this Nomination (each file 5MB max):</label>
-                                    <input type="file" class="demo1" name="Award1[]" id="Award1" accept=".pdf, .jpg, .jpeg">
-                                 </div>
-                                 <input type="hidden" name="Award1Path" id="Award1Path" value="<?php echo $financial_report_array['award_1_files']; ?>">
-
-                                 <div class="row" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['award_1_files']) echo "style=\"display: none;\"";} ?>>
-                                    <div class="form-group col-xs-12">
-                                        <label class="control-label" for="Award1Link">Supporting Award Files:</label>
-                                        <div>
-                                        <?php
-                                            $award_1_files = null;
-                                            $Award1FileCount =0;
-                                            if(isset($financial_report_array['award_1_files'])){
-                                                $award_1_files=unserialize(base64_decode($financial_report_array['award_1_files']));
-                                                $Award1FileCount = is_array($award_1_files) ? count($award_1_files) : 0;
-
-                                                for ($row = 1; $row <= $Award1FileCount; $row++){
-                                                    $row_id = $row;
-                                                    echo "<p class=\"form-control-static\"><a href=\"" . $award_1_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
-                                                }
-                                            }
-                                        ?>
-                                        </div>
+                                 <div class="col-md-12" id="Award1Block" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_files']) echo "style=\"display: none;\"";} ?>>
+                                    <div class="col-md-12">
+                                        <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Upload Award 1 Files.<br>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award1" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 1 Files</button>
                                     </div>
                                 </div>
+                                <input type="hidden" name="Award1Path" id="Award1Path" value="<?php echo $financial_report_array['award_1_files']; ?>">
+                                <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['award_1_files']) echo "style=\"display: none;\"";} ?>>
+                                    <div class="col-md-12" >
+                                        <div>
+                                            <label class="control-label" for="Award1Link">Award 1 Files:</label>
+                                           <a href="<?php echo $financial_report_array['award_1_files']; ?>" target="_blank">View Award 1 Files</a><br>
+                                            <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Replace Award 1 Files.<br>
+                                           <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-award1" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 1 Files</button>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
 
                             </div>
                         </div>
@@ -2661,35 +2655,27 @@
                                     <textarea class="form-control" rows="20" id="AwardDesc2" name="AwardDesc2"><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_2_outstanding_project_desc'];}?></textarea>
                                  </div>
 
-                                 <div class="form-group" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_2_files']) echo "style=\"display: none;\"";} ?>>
-                                    <label>Award Files for this Nomination (each file 5MB max):</label>
-                                    <input type="file" class="demo1" name="Award2[]" id="Award2" accept=".pdf, .jpg, .jpeg">
-                                 </div>
-                                 <input type="hidden" name="Award2Path" id="Award2Path" value="<?php echo $financial_report_array['award_2_files']; ?>">
-
-                                 <div class="row" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['award_2_files']) echo "style=\"display: none;\"";} ?>>
-                                    <div class="form-group col-xs-12">
-                                        <label class="control-label" for="Award1Link">Supporting Award Files:</label>
-                                        <div>
-                                            <?php
-											$award_2_files = null;
-											$Award2FileCount =0;
-											if(isset($financial_report_array['award_2_files'])){
-												$award_2_files=unserialize(base64_decode($financial_report_array['award_2_files']));
-
-                                                $row = 2;
-												$row_id ='';
-                                                if (!empty($award_2_files)) {
-                                                    foreach ($award_2_files as $row => $fileInfo) {
-                                                        echo "<p class=\"form-control-static\"><a href=\"" . $award_2_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";                                                    }
-                                                } else {
-                                                    // Handle the case where $award_2_files is empty or null
-                                                }
-                                            }
-    										?>
-                                        </div>
+                                 <div class="col-md-12" id="Award2Block" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_2_files']) echo "style=\"display: none;\"";} ?>>
+                                    <div class="col-md-12">
+                                        <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Upload Award 2 Files.<br>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award2" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 2 Files</button>
                                     </div>
                                 </div>
+                                <input type="hidden" name="Award2Path" id="Award2Path" value="<?php echo $financial_report_array['award_2_files']; ?>">
+                                <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['award_2_files']) echo "style=\"display: none;\"";} ?>>
+                                    <div class="col-md-12" >
+                                        <div>
+                                            <label class="control-label" for="Award2Link">Award 2 Files:</label>
+                                           <a href="<?php echo $financial_report_array['award_2_files']; ?>" target="_blank">View Award 2 Files</a><br>
+                                            <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Replace Award 2 Files.<br>
+                                           <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-award2" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 2 Files</button>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+
                             </div>
                         </div>
                         <!-- Award 2 Stop -->
@@ -2795,37 +2781,28 @@
                                  <div class="form-group">
                                     <textarea class="form-control" rows="20" id="AwardDesc3" name="AwardDesc3"><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_3_outstanding_project_desc'];}?></textarea>
                                  </div>
-                                 <div class="form-group" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_files']) echo "style=\"display: none;\"";} ?>>
-                                    <label>Award Files for this Nomination (each file 5MB max):</label>
-                                    <input type="file" class="demo1" name="Award3[]" id="Award3" accept=".pdf, .jpg, .jpeg">
-                                 </div>
-                                <input type="hidden" name="Award3Path" id="Award3Path" value="<?php echo $financial_report_array['award_3_files']; ?>">
 
-                                 <div class="row" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['award_3_files']) echo "style=\"display: none;\"";} ?>>
-                                    <div class="form-group col-xs-12">
-                                        <label class="control-label" for="Award1Link">Supporting Award Files:</label>
-                                        <div>
-                                            <?php
-											$award_3_files = null;
-											$Award3FileCount =0;
-											if(isset($financial_report_array['award_3_files'])){
-												$award_3_files=unserialize(base64_decode($financial_report_array['award_3_files']));
-
-												$row = 3;
-												$row_id ='';
-												if (!empty($award_3_files)) {
-                                                    foreach ($award_3_files as $row => $fileInfo) {
-                                                        echo "<p class=\"form-control-static\"><a href=\"" . $award_3_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
-                                                    }
-                                                } else {
-                                                    // Handle the case where $award_2_files is empty or null
-                                                }
-                                            }
-
-										?>
-                                        </div>
+                                 <div class="col-md-12" id="Award3Block" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_files']) echo "style=\"display: none;\"";} ?>>
+                                    <div class="col-md-12">
+                                        <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Upload Award 3 Files.<br>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award3" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 3 Files</button>
                                     </div>
                                 </div>
+                                <input type="hidden" name="Award3Path" id="Award3Path" value="<?php echo $financial_report_array['award_3_files']; ?>">
+                                <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['award_3_files']) echo "style=\"display: none;\"";} ?>>
+                                    <div class="col-md-12" >
+                                        <div>
+                                            <label class="control-label" for="Award3Link">Award 3 Files:</label>
+                                           <a href="<?php echo $financial_report_array['award_3_files']; ?>" target="_blank">View Award 3 Files</a><br>
+                                            <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Replace Award 3 Files.<br>
+                                           <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-award3" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 3 Files</button>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+
                             </div>
                         </div>
                         <!-- Award 3 Stop -->
@@ -2932,36 +2909,27 @@
                                     <textarea class="form-control" rows="20" id="AwardDesc4" name="AwardDesc4"><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_4_outstanding_project_desc'];}?></textarea>
                                  </div>
 
-                                <div class="form-group" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_files']) echo "style=\"display: none;\"";} ?>>
-                                    <label>Award Files for this Nomination (each file 5MB max):</label>
-                                    <input type="file" class="demo1" name="Award4[]" id="Award4" accept=".pdf, .jpg, .jpeg">
-                                 </div>
-                                <input type="hidden" name="Award4Path" id="Award4Path" value="<?php echo $financial_report_array['award_4_files']; ?>">
-
-                                 <div class="row" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['award_4_files']) echo "style=\"display: none;\"";} ?>>
-                                    <div class="form-group col-xs-12">
-                                        <label class="control-label" for="Award1Link">Supporting Award Files:</label>
-                                        <div>
-                                            <?php
-											$award_4_files = null;
-											$Award4FileCount =0;
-											if(isset($financial_report_array['award_4_files'])){
-												$award_4_files=unserialize(base64_decode($financial_report_array['award_4_files']));
-
-												$row = 4;
-												$row_id ='';
-												if (!empty($award_4_files)) {
-                                                    foreach ($award_4_files as $row => $fileInfo) {
-                                                        echo "<p class=\"form-control-static\"><a href=\"" . $award_4_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
-                                                    }
-                                                } else {
-                                                    // Handle the case where $award_2_files is empty or null
-                                                }
-                                            }
-										?>
-                                        </div>
+                                 <div class="col-md-12" id="Award4Block" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_files']) echo "style=\"display: none;\"";} ?>>
+                                    <div class="col-md-12">
+                                        <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Upload Award 4 Files.<br>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award4" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 4 Files</button>
                                     </div>
                                 </div>
+                                <input type="hidden" name="Award1Path" id="Award4Path" value="<?php echo $financial_report_array['award_4_files']; ?>">
+                                <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['award_4_files']) echo "style=\"display: none;\"";} ?>>
+                                    <div class="col-md-12" >
+                                        <div>
+                                            <label class="control-label" for="Award4Link">Award 4 Files:</label>
+                                           <a href="<?php echo $financial_report_array['award_4_files']; ?>" target="_blank">View Award 4 Files</a><br>
+                                            <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Replace Award 4 Files.<br>
+                                           <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-award4" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 4 Files</button>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+
                             </div>
                         </div>
                         <!-- Award 4 Stop -->
@@ -3068,38 +3036,27 @@
                                     <textarea class="form-control" rows="20" id="AwardDesc5" name="AwardDesc5"><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_5_outstanding_project_desc'];}?></textarea>
                                  </div>
 
-                                <div class="form-group" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_files']) echo "style=\"display: none;\"";} ?>>
-                                    <label>Award Files for this Nomination (each file 5MB max):</label>
-                                    <input type="file" class="demo1" name="Award5[]" id="Award5" accept=".pdf, .jpg, .jpeg">
-                                 </div>
-                                <input type="hidden" name="Award5Path" id="Award5Path" value="<?php echo $financial_report_array['award_5_files']; ?>">
-
-                                 <div class="row" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['award_5_files']) echo "style=\"display: none;\"";} ?>>
-                                    <div class="form-group col-xs-12">
-                                        <label class="control-label" for="Award1Link">Supporting Award Files:</label>
-                                        <div>
-                                            <?php
-											$award_5_files = null;
-											$Award5FileCount =0;
-											if(isset($financial_report_array['award_5_files'])){
-												$award_5_files=unserialize(base64_decode($financial_report_array['award_5_files']));
-
-
-												$row = 5;
-												$row_id ='';
-												if (!empty($award_5_files)) {
-                                                    foreach ($award_5_files as $row => $fileInfo) {
-                                                        echo "<p class=\"form-control-static\"><a href=\"" . $award_5_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a></p>";
-                                                    }
-                                                } else {
-                                                    // Handle the case where $award_2_files is empty or null
-                                                }
-
-											}
-										?>
-                                        </div>
+                                 <div class="col-md-12" id="Award5Block" <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_files']) echo "style=\"display: none;\"";} ?>>
+                                    <div class="col-md-12">
+                                        <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Upload Award 5 Files.<br>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award5" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 5 Files</button>
                                     </div>
                                 </div>
+                                <input type="hidden" name="Award5Path" id="Award5Path" value="<?php echo $financial_report_array['award_5_files']; ?>">
+                                <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['award_5_files']) echo "style=\"display: none;\"";} ?>>
+                                    <div class="col-md-12" >
+                                        <div>
+                                            <label class="control-label" for="Award5Link">Award 1 Files:</label>
+                                           <a href="<?php echo $financial_report_array['award_5_files']; ?>" target="_blank">View Award 5 Files</a><br>
+                                            <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Replace Award 5 Files.<br>
+                                           <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-award5" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 5 Files</button>
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+
                             </div>
                         </div>
                         <!-- Award 5 Stop -->
@@ -3254,6 +3211,101 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-info btn-fill" id="btn-990N">Upload</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modal-award1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Upload Award 1 Files</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url('/files/storeAward1/'. $financial_report_array['chapter_id']) }}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <input type="file" name='file' required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-info btn-fill" id="btn-award1">Upload</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modal-award2">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Upload Award 2 Files</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url('/files/storeAward2/'. $financial_report_array['chapter_id']) }}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <input type="file" name='file' required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-info btn-fill" id="btn-award2">Upload</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modal-award3">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Upload Award 3 Files</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url('/files/storeAward3/'. $financial_report_array['chapter_id']) }}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <input type="file" name='file' required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-info btn-fill" id="btn-award3">Upload</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modal-award4">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Upload Award 4 Files</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url('/files/storeAward4/'. $financial_report_array['chapter_id']) }}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <input type="file" name='file' required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-info btn-fill" id="btn-award4">Upload</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="modal-award5">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Upload Award 5 Files</h4>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url('/files/storeAward5/'. $financial_report_array['chapter_id']) }}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <input type="file" name='file' required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-info btn-fill" id="btn-award5">Upload</button>
                         </form>
                     </div>
                 </div>
@@ -3533,11 +3585,6 @@ $(document).ready(function(){
 </script>
 
 <script>
-    // function ChargeDifferentMembers(ButtonID){
-    //     document.getElementById("chapterid").value=ButtonID;
-    //     return true;
-    // }
-
     function IsValidDate(element){
         var strDate="";
 
@@ -3685,7 +3732,6 @@ $(document).ready(function(){
 
         }
 
-
         TotalFees = TotalFees.toFixed(2);
 
         TotalMembers = NewMembers + RenewedMembers + MembersNoDues + AssociateMembers + PartialDuesMembers + NewMembers2 + RenewedMembers2;
@@ -3696,7 +3742,6 @@ $(document).ready(function(){
         document.getElementById("SumMembershipDuesIncome").value = TotalFees;
 
         ReCalculateSummaryTotal();
-
     }
 
     function ChangeChildrensRoomExpenses(){
@@ -3904,7 +3949,6 @@ $(document).ready(function(){
         document.getElementById("SumPartyExpense").value = ExpenseTotal.toFixed(2);
 
         ReCalculateSummaryTotal();
-
     }
 
     function AddPartyExpenseRow(){
@@ -3983,7 +4027,6 @@ $(document).ready(function(){
         document.getElementById("SumOperatingExpense").value = ExpenseTotal.toFixed(2);
 
         ReCalculateSummaryTotal();
-
     }
 
     function AddOfficeExpenseRow(){
@@ -4620,11 +4663,6 @@ $(document).ready(function(){
         }
     }
 
-// function isFieldVisible(fieldId) {
-//     // Customize this function based on your visibility conditions
-//     return document.getElementById(fieldId).style.display !== 'none';
-// }
-
     function AddAwardNomination(){
         // Did they say no, if so, we need to mark the explanation field as required
         if (document.getElementById("Award1Panel").style.display === 'none'){
@@ -4786,78 +4824,5 @@ $(document).ready(function(){
 
     function InputLoggedInPerson(){
     }
-
-    // function ValidateFiles(){
-    //     var fileError="";
-    //     var sizeinbytes=0;
-
-    //     if(document.getElementById('990NFiling').files.length>0){
-    //         sizeinbytes = document.getElementById('990NFiling').files[0].size;
-
-    //         if(sizeinbytes>5000000){
-    //             fileError = "Your 990N confirmation file is too large.  Please submit a file less than 5MB.";
-    //             return fileError;
-    //         }
-    //     }
-
-    //     if(document.getElementById('RosterFile').files.length>0){
-    //         sizeinbytes = document.getElementById('RosterFile').files[0].size;
-
-    //         if(sizeinbytes>5000000){
-    //             fileError = "Your chapter roster file is too large.  Please submit a file less than 5MB.";
-    //             return fileError;
-    //         }
-    //     }
-
-    //     inp = document.getElementById('Award1');
-    //     for (var i = 0; i < inp.files.length; ++i) {
-    //         sizeinbytes = inp.files[i].size;
-
-    //         if(sizeinbytes>5000000){
-    //             fileError = "Your 1st award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
-    //             return fileError;
-    //         }
-    //     }
-
-    //     inp = document.getElementById('Award2');
-    //     for (var i = 0; i < inp.files.length; ++i) {
-    //         sizeinbytes = inp.files[i].size;
-
-    //         if(sizeinbytes>5000000){
-    //             fileError = "Your 2nd award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
-    //             return fileError;
-    //         }
-    //     }
-
-    //     inp = document.getElementById('Award3');
-    //     for (var i = 0; i < inp.files.length; ++i) {
-    //         sizeinbytes = inp.files[i].size;
-
-    //         if(sizeinbytes>5000000){
-    //             fileError = "Your 3rd award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
-    //             return fileError;
-    //         }
-    //     }
-
-    //     inp = document.getElementById('Award4');
-    //     for (var i = 0; i < inp.files.length; ++i) {
-    //         sizeinbytes = inp.files[i].size;
-
-    //         if(sizeinbytes>5000000){
-    //             fileError = "Your 4th award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
-    //             return fileError;
-    //         }
-    //     }
-
-    //     inp = document.getElementById('Award5');
-    //     for (var i = 0; i < inp.files.length; ++i) {
-    //         sizeinbytes = inp.files[i].size;
-
-    //         if(sizeinbytes>5000000){
-    //             fileError = "Your 5th award nomination file (" + inp.files[i].name + ") is too large.  Please submit a file less than 5MB.";
-    //             return fileError;
-    //         }
-    //     }
-    // }
 </script>
 @endsection

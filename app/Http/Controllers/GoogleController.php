@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAward1GoogleRequest;
+use App\Http\Requests\StoreAward2GoogleRequest;
+use App\Http\Requests\StoreAward3GoogleRequest;
+use App\Http\Requests\StoreAward4GoogleRequest;
+use App\Http\Requests\StoreAward5GoogleRequest;
 use App\Http\Requests\Store990NGoogleRequest;
 use App\Http\Requests\StoreEINGoogleRequest;
-use App\Http\Requests\StoreGoogleRequest;
 use App\Http\Requests\StoreRosterGoogleRequest;
 use App\Http\Requests\StoreStatement1GoogleRequest;
 use App\Http\Requests\StoreStatement2GoogleRequest;
@@ -310,53 +314,271 @@ class GoogleController extends Controller
         }
     }
 
-    // public function store(StoreGoogleRequest $request, $id): RedirectResponse
-    // {
-    //     $chapter = DB::table('chapters as ch')
-    //         ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-    //         ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-    //         ->where('ch.is_active', '=', '1')
-    //         ->where('ch.id', '=', $id)
-    //         ->first();
+    public function storeAward1(StoreAward1GoogleRequest $request, $id): RedirectResponse
+    {
+        $chapter = DB::table('chapters as ch')
+            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->first();
 
-    //     $validation = $request->validated();
-    //     $accessToken = $this->token();
-    //     $name = $chapter->ein.' | '.$chapter->name.', '.$chapter->state;
-    //     $mime = $request->input('file')->getClientMimeType();
+        $name = $chapter->state.'_'.$chapter->name.'_Award1';
+        $accessToken = $this->token();
 
-    //     $response = Http::withHeaders([
-    //         'Authorization' => 'Bearer '.$accessToken,
-    //         'Content-Type' => 'Application/json',
-    //     ])->post('https://www.googleapis.com/drive/v3/files', [
-    //         'name' => $name,
-    //         'mimeType' => $mime,
-    //         'uploadType' => 'resumable',
-    //     ])->throw();
+        $file = $request->file('file');
+        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
 
-    //     if ($response->successful()) {
+        $fileMetadata = [
+            'name' => Str::ascii($name.'.'.$file->getClientOriginalExtension()),
+            'parents' => [$sharedDriveId],
+            'mimeType' => $file->getMimeType(),
+        ];
 
-    //         $file_id = json_decode($response->body())->id;
+        $metadataJson = json_encode($fileMetadata);
+        $fileContent = file_get_contents($file->getRealPath());
+        $fileContentBase64 = base64_encode($fileContent);
 
-    //         $uploadedfile = new EoyUploads;
-    //         $uploadedfile->chapter_id = $id;
-    //         $uploadedfile->file_name = $name;
-    //         $uploadedfile->file_id = $file_id;
-    //         $uploadedfile->save();
-    //     }
+        $client = new Client();
 
-    //     return redirect()->back()->with('success', 'File uploaded successfully!');
-    // }
+        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+            'headers' => [
+                'Authorization' => 'Bearer '.$accessToken,
+                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+            ],
+            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
+        ]);
 
-    // public function show($id): View
-    // {
-    //     $chapter = DB::table('chapters as ch')
-    //         ->select('ch.*')
-    //         ->where('ch.is_active', '=', '1')
-    //         ->where('ch.id', '=', $id)
-    //         ->get();
+        $bodyContents = $response->getBody()->getContents();
+        $jsonResponse = json_decode($bodyContents, true);
 
-    //     $data = ['chapter' => $chapter, 'id' => $id];
+        if ($response->getStatusCode() === 200) { // Check for a successful status code
+            $file_id = $jsonResponse['id'];
+            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
+            $existingRecord = FinancialReport::where('chapter_id', $id)->first();
 
-    //     return view('files.googletest')->with($data);
-    // }
+            $existingRecord->update([
+                'award_1_files' => $path,
+            ]);
+
+            return redirect()->back()->with('success', 'File uploaded successfully!');
+        } else {
+            return redirect()->back()->with('error', 'File failed to upload');
+        }
+    }
+
+    public function storeAward2(StoreAward2GoogleRequest $request, $id): RedirectResponse
+    {
+        $chapter = DB::table('chapters as ch')
+            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->first();
+
+        $name = $chapter->state.'_'.$chapter->name.'_Award2';
+        $accessToken = $this->token();
+
+        $file = $request->file('file');
+        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+
+        $fileMetadata = [
+            'name' => Str::ascii($name.'.'.$file->getClientOriginalExtension()),
+            'parents' => [$sharedDriveId],
+            'mimeType' => $file->getMimeType(),
+        ];
+
+        $metadataJson = json_encode($fileMetadata);
+        $fileContent = file_get_contents($file->getRealPath());
+        $fileContentBase64 = base64_encode($fileContent);
+
+        $client = new Client();
+
+        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+            'headers' => [
+                'Authorization' => 'Bearer '.$accessToken,
+                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+            ],
+            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
+        ]);
+
+        $bodyContents = $response->getBody()->getContents();
+        $jsonResponse = json_decode($bodyContents, true);
+
+        if ($response->getStatusCode() === 200) { // Check for a successful status code
+            $file_id = $jsonResponse['id'];
+            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
+            $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+
+            $existingRecord->update([
+                'award_2_files' => $path,
+            ]);
+
+            return redirect()->back()->with('success', 'File uploaded successfully!');
+        } else {
+            return redirect()->back()->with('error', 'File failed to upload');
+        }
+    }
+
+
+    public function storeAward3(StoreAward3GoogleRequest $request, $id): RedirectResponse
+    {
+        $chapter = DB::table('chapters as ch')
+            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->first();
+
+        $name = $chapter->state.'_'.$chapter->name.'_Award3';
+        $accessToken = $this->token();
+
+        $file = $request->file('file');
+        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+
+        $fileMetadata = [
+            'name' => Str::ascii($name.'.'.$file->getClientOriginalExtension()),
+            'parents' => [$sharedDriveId],
+            'mimeType' => $file->getMimeType(),
+        ];
+
+        $metadataJson = json_encode($fileMetadata);
+        $fileContent = file_get_contents($file->getRealPath());
+        $fileContentBase64 = base64_encode($fileContent);
+
+        $client = new Client();
+
+        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+            'headers' => [
+                'Authorization' => 'Bearer '.$accessToken,
+                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+            ],
+            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
+        ]);
+
+        $bodyContents = $response->getBody()->getContents();
+        $jsonResponse = json_decode($bodyContents, true);
+
+        if ($response->getStatusCode() === 200) { // Check for a successful status code
+            $file_id = $jsonResponse['id'];
+            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
+            $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+
+            $existingRecord->update([
+                'award_3_files' => $path,
+            ]);
+
+            return redirect()->back()->with('success', 'File uploaded successfully!');
+        } else {
+            return redirect()->back()->with('error', 'File failed to upload');
+        }
+    }
+
+
+    public function storeAward4(StoreAward4GoogleRequest $request, $id): RedirectResponse
+    {
+        $chapter = DB::table('chapters as ch')
+            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->first();
+
+        $name = $chapter->state.'_'.$chapter->name.'_Award4';
+        $accessToken = $this->token();
+
+        $file = $request->file('file');
+        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+
+        $fileMetadata = [
+            'name' => Str::ascii($name.'.'.$file->getClientOriginalExtension()),
+            'parents' => [$sharedDriveId],
+            'mimeType' => $file->getMimeType(),
+        ];
+
+        $metadataJson = json_encode($fileMetadata);
+        $fileContent = file_get_contents($file->getRealPath());
+        $fileContentBase64 = base64_encode($fileContent);
+
+        $client = new Client();
+
+        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+            'headers' => [
+                'Authorization' => 'Bearer '.$accessToken,
+                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+            ],
+            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
+        ]);
+
+        $bodyContents = $response->getBody()->getContents();
+        $jsonResponse = json_decode($bodyContents, true);
+
+        if ($response->getStatusCode() === 200) { // Check for a successful status code
+            $file_id = $jsonResponse['id'];
+            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
+            $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+
+            $existingRecord->update([
+                'award_4_files' => $path,
+            ]);
+
+            return redirect()->back()->with('success', 'File uploaded successfully!');
+        } else {
+            return redirect()->back()->with('error', 'File failed to upload');
+        }
+    }
+
+
+    public function storeAward5(StoreAward5GoogleRequest $request, $id): RedirectResponse
+    {
+        $chapter = DB::table('chapters as ch')
+            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->first();
+
+        $name = $chapter->state.'_'.$chapter->name.'_Award5';
+        $accessToken = $this->token();
+
+        $file = $request->file('file');
+        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+
+        $fileMetadata = [
+            'name' => Str::ascii($name.'.'.$file->getClientOriginalExtension()),
+            'parents' => [$sharedDriveId],
+            'mimeType' => $file->getMimeType(),
+        ];
+
+        $metadataJson = json_encode($fileMetadata);
+        $fileContent = file_get_contents($file->getRealPath());
+        $fileContentBase64 = base64_encode($fileContent);
+
+        $client = new Client();
+
+        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+            'headers' => [
+                'Authorization' => 'Bearer '.$accessToken,
+                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+            ],
+            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
+        ]);
+
+        $bodyContents = $response->getBody()->getContents();
+        $jsonResponse = json_decode($bodyContents, true);
+
+        if ($response->getStatusCode() === 200) { // Check for a successful status code
+            $file_id = $jsonResponse['id'];
+            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
+            $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+
+            $existingRecord->update([
+                'award_5_files' => $path,
+            ]);
+
+            return redirect()->back()->with('success', 'File uploaded successfully!');
+        } else {
+            return redirect()->back()->with('error', 'File failed to upload');
+        }
+    }
 }

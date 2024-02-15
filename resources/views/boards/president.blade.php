@@ -77,6 +77,7 @@
                 <div class="col-md-12"><br></div>
                 @endif
 
+                @if($thisDate->month >= 1 && $thisDate->month <= 5)
                 <div class="col-md-12"><br></div>
                     <div class="col-md-12 text-center">
                     <div class="col-md-4 float-left">
@@ -89,6 +90,9 @@
                       <div id="reportStatusText" class="description text-center">
                         <p><strong><?php echo date('Y')-1 .'-'.date('Y');?> EOY Reports are not available at this time.</strong></p>
                     </div>
+                @endif
+
+                @if($thisDate->month >= 6 && $thisDate->month <= 12)
                     <div class="col-md-4 float-left">
                         @if($list->new_board_active=='1')
                         <button id="BoardReportAlwaysDisabled" type="button"  class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $list->id]) }}'">
@@ -104,8 +108,10 @@
                         <button id="FinancialReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $list->id]) }}'">
                             <i class="fa fa-usd fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y')-1 .'-'.date('Y') }} Financial Report
                         </button>
-                    @endforeach
 					</div>
+                @endif
+
+                @endforeach
 
                     </div>
                 </div>
@@ -644,9 +650,10 @@
                    <div class="box-body text-center">
                     <button id="Save" type="submit" class="btn btn-info btn-fill" onclick="return PreSaveValidate()"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button></div><br>
                     <div class="box-body text-center">
-                    <button type="button" class="btn btn-info btn-fill" onclick="window.open('https://groups.google.com/a/momsclub.org/g/2023-24boardlist)"><i class="fa fa-list fa-fw" aria-hidden="true" ></i>&nbsp; BoardList Forum</button>
-                    <button type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-info btn-fill"><i class="fa fa-graduation-cap fa-fw" aria-hidden="true" ></i>&nbsp; eLearning Library</button></div>
-                    </div>
+                    {{-- <button type="button" class="btn btn-info btn-fill" onclick="window.open('https://groups.google.com/a/momsclub.org/g/2023-24boardlist)"><i class="fa fa-list fa-fw" aria-hidden="true" ></i>&nbsp; BoardList Forum</button> --}}
+                    <button type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-info btn-fill"><i class="fa fa-graduation-cap fa-fw" aria-hidden="true" ></i>&nbsp; eLearning Library</button>
+                    <a href="{{ route('board.resources') }}" class="btn btn-info btn-fill"><i class="fa fa-briefcase fa-fw" aria-hidden="true" ></i>&nbsp; Chapter Resources</a>
+                </div>
                 </div>
 			</form>
             </div>
@@ -659,21 +666,21 @@
 <script>
 /* Disable fields and buttons  */
 $(document).ready(function () {
-        //Update to show/hide for true/false
-        $('#readOnlyText').hide();  /*read only text (.show/.hide to change visibility)*/
-        $('input, select, textarea').prop('disabled', false);  /*fields on page (true disables fields for editing)*/
-        $('#Save').prop('disabled', false);  /*save button (true grays out button)*/
+        // //Update to show/hide for true/false
+        // $('#readOnlyText').hide();  /*read only text (.show/.hide to change visibility)*/
+        // $('input, select, textarea').prop('disabled', false);  /*fields on page (true disables fields for editing)*/
+        // $('#Save').prop('disabled', false);  /*save button (true grays out button)*/
 
-        $('#reportStatusText').show();  /*report status text (.show/.hide to change visibility)*/
-        $('#BoardReport').hide();  /*board report button (.show/.hide to change visibility)*/
-        $('#BoardReportAlwaysDisabled').hide();  /*board report button (.show/.hide to change visibility)*/
-        $('#FinancialReport').hide();  /*inancial report button (.show/.hide to change visibility)*/
+        // $('#reportStatusText').show();  /*report status text (.show/.hide to change visibility)*/
+        // $('#BoardReport').hide();  /*board report button (.show/.hide to change visibility)*/
+        // $('#BoardReportAlwaysDisabled').hide();  /*board report button (.show/.hide to change visibility)*/
+        // $('#FinancialReport').hide();  /*inancial report button (.show/.hide to change visibility)*/
 
-        $('.BoardInfoStatus').hide();  /*board info status (.show/.hide to change visibility)*/
-        $('.FinancialReportStatus').hide();  /*financial report status (.show/.hide to change visibility)*/
+        // $('.BoardInfoStatus').hide();  /*board info status (.show/.hide to change visibility)*/
+        // $('.FinancialReportStatus').hide();  /*financial report status (.show/.hide to change visibility)*/
 
-        //ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report
-        $('#BoardReportAlwaysDisabled').prop('disabled', true);
+        // //ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report
+        // $('#BoardReportAlwaysDisabled').prop('disabled', true);
 
     //Check the disabled status of EOY Buttons and show the "fields are locked" description if necessary
     if ($('input, select, textarea').prop('disabled')) {

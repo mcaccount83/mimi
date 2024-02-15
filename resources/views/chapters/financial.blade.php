@@ -1868,11 +1868,24 @@
                                  <div class="col-sm-12">
                                     <?php
                                         if (!empty($financial_report_array)) {
-                                            $description = $financial_report_array['award_1_outstanding_project_desc'];
-                                            echo ($description !== null) ? $description : "No description entered";
+                                            $award_1_files = $financial_report_array['award_1_outstanding_project_desc'];
+                                            echo ($award_1_files !== null) ? $award_1_files : "No description entered";
                                         }
                                     ?>
                                 </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <?php if (!empty($financial_report_array['award_1_files'])): ?>
+                                        <label class="control-label" for="Award1Files">File Attachment:</label>
+                                        <div class="col-sm-12">
+                                            <a href="<?php echo $financial_report_array['award_1_files']; ?>" target="_blank">Award 1 Files</a>
+                                        </div>
+                                <?php else: ?>
+                                        <label class="control-label" for="Award1Files">File Attachment:</label>
+                                        <div class="col-sm-12">
+                                            No files attached
+                                        </div>
+                                <?php endif; ?>
                             </div>
                             <?php if (!empty($financial_report_array) && ($financial_report_array['award_1_nomination_type'] == 5 || $financial_report_array['award_1_nomination_type'] == 6)) : ?>
                             <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
@@ -1901,37 +1914,6 @@
                                 </table>
                             </div>
                             <?php endif; ?>
-                            <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
-							    <input type="hidden" name="Award1Path" id="Award1Path" value="<?php echo $financial_report_array['award_1_files']; ?>">
-                                <div class="col-sm-12">
-                                    Supporting Award Files:
-                                    <div class="form-group col-sm-12">
-                                        <?php
-                                            $award_1_files = null;
-                                            $Award1FileCount = 0;
-
-                                            if (isset($financial_report_array['award_1_files'])) {
-                                                $award_1_files = unserialize(base64_decode($financial_report_array['award_1_files']));
-                                                $Award1FileCount = is_array($award_1_files) ? count($award_1_files) : 0;
-
-                                                if ($Award1FileCount > 0) {
-                                                    for ($row = 1; $row <= $Award1FileCount; $row++) {
-                                                        $row_id = $row;
-                                                        if (isset($award_1_files[$row]['url'])) {
-                                                            echo "<a href=\"" . $award_1_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a>";
-                                                        } else {
-                                                            echo "No files uploaded";
-                                                        }
-                                                    }
-                                                } else {
-                                                    echo "No files uploaded";
-                                                }
-                                            } else {
-                                                echo "No files uploaded";
-                                            }
-                                        ?>
-                                    </div>
-                                </div>
 						</div>
 						<!-- Award 1 Stop -->
 						<!-- Award 2 Start -->
@@ -1955,6 +1937,19 @@
                                         }
                                     ?>
                                 </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <?php if (!empty($financial_report_array['award_2_files'])): ?>
+                                        <label class="control-label" for="Award2Files">File Attachment:</label>
+                                        <div class="col-sm-12">
+                                            <a href="<?php echo $financial_report_array['award_2_files']; ?>" target="_blank">Award 2 Files</a>
+                                        </div>
+                                <?php else: ?>
+                                        <label class="control-label" for="Award2Files">File Attachment:</label>
+                                        <div class="col-sm-12">
+                                            No files attached
+                                        </div>
+                                <?php endif; ?>
                             </div>
                             <?php if (!empty($financial_report_array) && ($financial_report_array['award_2_nomination_type'] == 5 || $financial_report_array['award_2_nomination_type'] == 6)) : ?>
                             <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
@@ -1983,37 +1978,6 @@
                                 </table>
                             </div>
                             <?php endif; ?>
-                            <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
-							    <input type="hidden" name="Award2Path" id="Award2Path" value="<?php echo $financial_report_array['award_2_files']; ?>">
-                                <div class="col-sm-12">
-                                    Supporting Award Files:
-                                    <div class="form-group col-sm-12">
-                                        <?php
-                                            $award_2_files = null;
-                                            $Award2FileCount = 0;
-
-                                            if (isset($financial_report_array['award_2_files'])) {
-                                                $award_2_files = unserialize(base64_decode($financial_report_array['award_2_files']));
-                                                $Award2FileCount = is_array($award_2_files) ? count($award_2_files) : 0;
-
-                                                if ($Award2FileCount > 0) {
-                                                    for ($row = 1; $row <= $Award2FileCount; $row++) {
-                                                        $row_id = $row;
-                                                        if (isset($award_2_files[$row]['url'])) {
-                                                            echo "<a href=\"" . $award_2_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a>";
-                                                        } else {
-                                                            echo "No files uploaded";
-                                                        }
-                                                    }
-                                                } else {
-                                                    echo "No files uploaded";
-                                                }
-                                            } else {
-                                                echo "No files uploaded";
-                                            }
-                                        ?>
-                                    </div>
-                                </div>
 						</div>
 						<!-- Award 2 Stop -->
 						<!-- Award 3 Start -->
@@ -2037,6 +2001,19 @@
                                         }
                                     ?>
                                 </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <?php if (!empty($financial_report_array['award_3_files'])): ?>
+                                        <label class="control-label" for="Award3Files">File Attachment:</label>
+                                        <div class="col-sm-12">
+                                            <a href="<?php echo $financial_report_array['award_3_files']; ?>" target="_blank">Award 3 Files</a>
+                                        </div>
+                                <?php else: ?>
+                                        <label class="control-label" for="Award3Files">File Attachment:</label>
+                                        <div class="col-sm-12">
+                                            No files attached
+                                        </div>
+                                <?php endif; ?>
                             </div>
                             <?php if (!empty($financial_report_array) && ($financial_report_array['award_3_nomination_type'] == 5 || $financial_report_array['award_3_nomination_type'] == 6)) : ?>
                             <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
@@ -2065,37 +2042,6 @@
                                 </table>
                             </div>
                             <?php endif; ?>
-                            <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
-							    <input type="hidden" name="Award3Path" id="Award3Path" value="<?php echo $financial_report_array['award_3_files']; ?>">
-                                <div class="col-sm-12">
-                                    Supporting Award Files:
-                                    <div class="form-group col-sm-12">
-                                        <?php
-                                            $award_3_files = null;
-                                            $Award3FileCount = 0;
-
-                                            if (isset($financial_report_array['award_3_files'])) {
-                                                $award_3_files = unserialize(base64_decode($financial_report_array['award_3_files']));
-                                                $Award3FileCount = is_array($award_3_files) ? count($award_3_files) : 0;
-
-                                                if ($Award3FileCount > 0) {
-                                                    for ($row = 1; $row <= $Award3FileCount; $row++) {
-                                                        $row_id = $row;
-                                                        if (isset($award_3_files[$row]['url'])) {
-                                                            echo "<a href=\"" . $award_3_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a>";
-                                                        } else {
-                                                            echo "No files uploaded";
-                                                        }
-                                                    }
-                                                } else {
-                                                    echo "No files uploaded";
-                                                }
-                                            } else {
-                                                echo "No files uploaded";
-                                            }
-                                        ?>
-                                    </div>
-                                </div>
 						</div>
 						<!-- Award 3 Stop -->
 						<!-- Award 4 Start -->
@@ -2119,6 +2065,19 @@
                                         }
                                     ?>
                                 </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <?php if (!empty($financial_report_array['award_4_files'])): ?>
+                                        <label class="control-label" for="Award4Files">File Attachment:</label>
+                                        <div class="col-sm-12">
+                                            <a href="<?php echo $financial_report_array['award_4_files']; ?>" target="_blank">Award 4 Files</a>
+                                        </div>
+                                <?php else: ?>
+                                        <label class="control-label" for="Award4Files">File Attachment:</label>
+                                        <div class="col-sm-12">
+                                            No files attached
+                                        </div>
+                                <?php endif; ?>
                             </div>
                             <?php if (!empty($financial_report_array) && ($financial_report_array['award_4_nomination_type'] == 5 || $financial_report_array['award_4_nomination_type'] == 6)) : ?>
                             <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
@@ -2147,37 +2106,6 @@
                                 </table>
                             </div>
                             <?php endif; ?>
-                            <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
-							    <input type="hidden" name="Award4Path" id="Award4Path" value="<?php echo $financial_report_array['award_4_files']; ?>">
-                                <div class="col-sm-12">
-                                    Supporting Award Files:
-                                    <div class="form-group col-sm-12">
-                                        <?php
-                                            $award_4_files = null;
-                                            $Award4FileCount = 0;
-
-                                            if (isset($financial_report_array['award_4_files'])) {
-                                                $award_4_files = unserialize(base64_decode($financial_report_array['award_4_files']));
-                                                $Award4FileCount = is_array($award_4_files) ? count($award_4_files) : 0;
-
-                                                if ($Award4FileCount > 0) {
-                                                    for ($row = 1; $row <= $Award4FileCount; $row++) {
-                                                        $row_id = $row;
-                                                        if (isset($award_4_files[$row]['url'])) {
-                                                            echo "<a href=\"" . $award_4_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a>";
-                                                        } else {
-                                                            echo "No files uploaded";
-                                                        }
-                                                    }
-                                                } else {
-                                                    echo "No files uploaded";
-                                                }
-                                            } else {
-                                                echo "No files uploaded";
-                                            }
-                                        ?>
-                                    </div>
-                                </div>
 						</div>
 						<!-- Award 4 Stop -->
 						<!-- Award 5 Start -->
@@ -2201,6 +2129,19 @@
                                         }
                                     ?>
                                 </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <?php if (!empty($financial_report_array['award_5_files'])): ?>
+                                        <label class="control-label" for="Award5Files">File Attachment:</label>
+                                        <div class="col-sm-12">
+                                            <a href="<?php echo $financial_report_array['award_5_files']; ?>" target="_blank">Award 5 Files</a>
+                                        </div>
+                                <?php else: ?>
+                                        <label class="control-label" for="Award5Files">File Attachment:</label>
+                                        <div class="col-sm-12">
+                                            No files attached
+                                        </div>
+                                <?php endif; ?>
                             </div>
                             <?php if (!empty($financial_report_array) && ($financial_report_array['award_5_nomination_type'] == 5 || $financial_report_array['award_5_nomination_type'] == 6)) : ?>
                             <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
@@ -2229,37 +2170,6 @@
                                 </table>
                             </div>
                             <?php endif; ?>
-                            <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
-							    <input type="hidden" name="Award5Path" id="Award5Path" value="<?php echo $financial_report_array['award_5_files']; ?>">
-                                <div class="col-sm-12">
-                                    Supporting Award Files:
-                                    <div class="form-group col-sm-12">
-                                        <?php
-                                            $award_5_files = null;
-                                            $Award5FileCount = 0;
-
-                                            if (isset($financial_report_array['award_5_files'])) {
-                                                $award_5_files = unserialize(base64_decode($financial_report_array['award_5_files']));
-                                                $Award5FileCount = is_array($award_5_files) ? count($award_5_files) : 0;
-
-                                                if ($Award5FileCount > 0) {
-                                                    for ($row = 1; $row <= $Award5FileCount; $row++) {
-                                                        $row_id = $row;
-                                                        if (isset($award_5_files[$row]['url'])) {
-                                                            echo "<a href=\"" . $award_5_files[$row]['url'] . "\" target=\"_blank\">Submitted Award Files " . $row_id . "</a>";
-                                                        } else {
-                                                            echo "No files uploaded";
-                                                        }
-                                                    }
-                                                } else {
-                                                    echo "No files uploaded";
-                                                }
-                                            } else {
-                                                echo "No files uploaded";
-                                            }
-                                        ?>
-                                    </div>
-                                </div>
 						</div>
 						<!-- Award 5 Stop -->
 

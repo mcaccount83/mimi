@@ -37,33 +37,11 @@ Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
-// Registration Routes...
-// Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-// Route::post('register', [RegisterController::class, 'register']);
-
 // Password Reset Routes...
 Route::get('password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
 Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
-
-// Confirm Password
-// Route::get('password/confirm', [ConfirmPasswordController::class, 'showConfirmForm'])->name('password.confirm');
-// Route::post('password/confirm', [ConfirmPasswordController::class, 'confirm']);
-
-// Email Verification Routes...
-// Route::get('email/verify', [VerificationController::class, 'show'])->name('verification.notice');
-// Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
-// Route::get('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
-
-//Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
-
-//Auth::routes();
-
-// Route::middleware(['preventBackHistory'])->group(function () {
-//     Route::get('/home', [HomeController::class, 'index'])->name('home');
-//     Route::get('/', [LoginController::class, 'showLoginForm'])->name('home');
-// });
 
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
 
@@ -79,7 +57,7 @@ Route::get('/getchapterprimary', [CoordinatorController::class, 'getChapterPrima
 Route::get('/chapter-links', [ChapterController::class, 'chapterLinks'])->name('chapter.links');
 
 /**
- * Routes for Admin Actions/Reporting
+ * Routes for Admin Controller
  */
 Route::get('/admin/progression', [AdminController::class, 'showProgression'])->name('admin.progression');
 Route::post('/admin/addprogression', [AdminController::class, 'addProgression'])->name('admin.addprogression');
@@ -87,23 +65,32 @@ Route::post('/admin/updateprogression/{id}', [AdminController::class, 'updatePro
 Route::get('/admin/resources', [AdminController::class, 'showResources'])->name('admin.resources');
 Route::post('/admin/addresources', [AdminController::class, 'addResources'])->name('admin.addresources');
 Route::post('/admin/updateresources/{id}', [AdminController::class, 'updateResources'])->name('admin.updateresources');
+Route::get('/admin/toolkit', [AdminController::class, 'showToolkit'])->name('admin.toolkit');
+Route::post('/admin/addtoolkit', [AdminController::class, 'addToolkit'])->name('admin.addtoolkit');
+Route::post('/admin/updatetoolkit/{id}', [AdminController::class, 'updateToolkit'])->name('admin.updatetoolkit');
+
 
 /**
- * Routes for Payment Processing
+ * Routes for Payment Controller (Payment Processing)
  */
 Route::post('/process-payment', [PaymentController::class, 'processPayment'])->name('process.payment');
 
 /**
- * Routes for Google Upload Files
+ * Routes for Google Congroler (Uploading Files)
  */
 Route::post('/files/storeEIN/{id}', [GoogleController::class, 'storeEIN']);
 Route::post('/files/storeRoster/{id}', [GoogleController::class, 'storeRoster']);
 Route::post('/files/store990n/{id}', [GoogleController::class, 'store990N']);
 Route::post('/files/storeStatement1/{id}', [GoogleController::class, 'storeStatement1']);
 Route::post('/files/storeStatement2/{id}', [GoogleController::class, 'storeStatement2']);
+Route::post('/files/storeAward1/{id}', [GoogleController::class, 'storeAward1']);
+Route::post('/files/storeAward2/{id}', [GoogleController::class, 'storeAward2']);
+Route::post('/files/storeAward3/{id}', [GoogleController::class, 'storeAward3']);
+Route::post('/files/storeAward4/{id}', [GoogleController::class, 'storeAward4']);
+Route::post('/files/storeAward5/{id}', [GoogleController::class, 'storeAward5']);
 
 /**
- * Routes for Chapters
+ * Routes for Chapter Controller
  */
 Route::get('/chapter/list', [ChapterController::class, 'index'])->name('chapter.list');
 Route::get('/chapter/create', [ChapterController::class, 'create'])->name('chapters.create');
@@ -148,7 +135,7 @@ Route::get('/chapter/statusview/{id}', [ChapterController::class, 'showStatusVie
 Route::post('/chapter/updatestatus/{id}', [ChapterController::class, 'updateStatus'])->name('chapter.updatestatus');
 
 /**
- * Routes for Coordinator
+ * Routes for Coordinator Controller
  */
 Route::get('/coordinatorlist', [CoordinatorController::class, 'index'])->name('coordinator.list');
 Route::get('/coordinator/create', [CoordinatorController::class, 'create'])->name('coordinator.create');
@@ -175,7 +162,7 @@ Route::get('/coordinator/birthday/{id}', [CoordinatorController::class, 'showBir
 Route::post('/coordinator/updatebirthday/{id}', [CoordinatorController::class, 'updateBirthday'])->name('coordinator.updatebirthday');
 
 /**
- * Routes for Exporting File
+ * Routes for Export Controller
  */
 Route::get('/export/chapter/{id}', [ExportController::class, 'indexChapter'])->name('export.chapter');
 Route::get('/export/zapchapter', [ExportController::class, 'indexZappedChapter'])->name('export.zapchapter');
@@ -197,7 +184,7 @@ Route::get('/export/inteoystatus', [ExportController::class, 'indexIntEOYStatus'
 Route::get('/export/boardelection', [ExportController::class, 'indexBoardElection'])->name('export.boardelection');
 
 /**
- * Routes for Board Memebers
+ * Routes for Board Controller
  */
 Route::post('/board/update/{id}', [BoardController::class, 'updatePresident'])->name('board.update');
 Route::post('/member/update/{id}', [BoardController::class, 'updateMember'])->name('member.update');
@@ -206,9 +193,10 @@ Route::post('/boardinfo/{id}', [BoardController::class, 'createBoardInfo'])->nam
 Route::get('/board/financial/{id}', [BoardController::class, 'showFinancialReport'])->name('board.showfinancial');
 Route::post('/board/financial/{id}', [BoardController::class, 'storeFinancialReport'])->name('board.storefinancial');
 Route::get('/board/reregpayment', [BoardController::class, 'showReregistrationPaymentForm'])->name('board.showreregpayment');
+Route::get('/board/resources', [BoardController::class, 'showResources'])->name('board.resources');
 
 /**
- * Routes for Reports
+ * Routes for Report Controller
  */
 Route::get('/reports/chapterstatus', [ReportController::class, 'showChapterStatus'])->name('report.chapterstatus');
 Route::get('/reports/chapternew', [ReportController::class, 'showChapterNew'])->name('report.chapternew');
@@ -246,13 +234,13 @@ Route::get('/adminreports/outgoingboard', [ReportController::class, 'showOutgoin
 Route::post('/adminreports/outgoingactivate', [ReportController::class, 'storeActivateOutgoingBoard'])->name('report.outgoingactivate');
 
 /**
- * Routes for PDF
+ * Routes for PDF Controller
  */
 Route::get('/board/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.financialreport');
 Route::get('/chapter/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.financialreport');
 
 /**
- * Routes for BoardList
+ * Routes for BoardList Controller
  */
 Route::get('/boardlist', [BoardListController::class, 'index'])->name('boardlist.index');
 Route::get('/boardlist/{id}', [BoardListController::class, 'show'])->name('boardlist.show');
