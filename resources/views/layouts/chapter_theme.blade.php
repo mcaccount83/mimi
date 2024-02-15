@@ -38,7 +38,7 @@
                     <a class="navbar-brand" href="#"> <img src="{{ asset('chapter_theme/img/logo.png') }}" alt=""> </a>
                     <div class="navbar-collapse justify-content-end" id="navigation">
                         <ul class="navbar-nav ml-auto">
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a class="nav-link" href="{{ route('home')}}" >
                                     <span class="no-icon">Chapter Profile</span>
                                 </a>
@@ -52,7 +52,7 @@
                                 <a class="nav-link" href="https://momsclub.org/elearning/" target="_blank">
                                     <span class="no-icon">eLearning Library</span>
                                 </a>
-                            </li>
+                            </li> --}}
                             <li class="nav-item">
                                 <a class="nav-link" href="https://momsclub.org/" target="_blank">
                                     <span class="no-icon">MOMS Club Main Website</span>
