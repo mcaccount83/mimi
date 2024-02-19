@@ -2912,6 +2912,58 @@ class ChapterController extends Controller
         $primaryCordEmail = $request->input('ch_pc_email');
         $boardPresEmail = $request->input('ch_pre_email');
         $chapter = Chapter::find($id);
+        $chPcid = $chapter['primary_coordinator_id'];
+
+        $chapterEmailList = DB::table('board_details as bd')
+            ->select('bd.email as bor_email')
+            ->where('bd.chapter_id', '=', $id)
+            ->get();
+        $emailListBorad = '';
+        foreach ($chapterEmailList as $val) {
+            $email = $val->bor_email;
+            $escaped_email = str_replace("'", "\\'", $email);
+            if ($emailListBorad == '') {
+                $emailListBorad = $escaped_email;
+            } else {
+                $emailListBorad .= ','.$escaped_email;
+            }
+        }
+
+        $coordinatorEmailList = DB::table('coordinator_reporting_tree')
+            ->select('*')
+            ->where('id', '=', $chPcid)
+            ->get();
+
+        foreach ($coordinatorEmailList as $key => $value) {
+            $coordinatorList[$key] = (array) $value;
+        }
+        $filterCoordinatorList = array_filter($coordinatorList[0]);
+        unset($filterCoordinatorList['id']);
+        unset($filterCoordinatorList['layer0']);
+        $filterCoordinatorList = array_reverse($filterCoordinatorList);
+        $str = '';
+        $array_rows = count($filterCoordinatorList);
+        $i = 0;
+
+        $emailListCoor = '';
+        foreach ($filterCoordinatorList as $key => $val) {
+            // if($corId != $val && $val >1){
+            if ($val > 1) {
+                $corList = DB::table('coordinator_details as cd')
+                    ->select('cd.email as cord_email')
+                    ->where('cd.coordinator_id', '=', $val)
+                    ->where('cd.is_active', '=', 1)
+                    ->get();
+                if (count($corList) > 0) {
+                    if ($emailListCoor == '') {
+                        $emailListCoor = $corList[0]->cord_email;
+                    } else {
+                        $emailListCoor .= ','.$corList[0]->cord_email;
+                    }
+                }
+            }
+        }
+
         DB::beginTransaction();
         try {
             $chapter->m2m_date = $request->input('ch_m2m_date');
@@ -2922,8 +2974,10 @@ class ChapterController extends Controller
             $chapter->last_updated_date = date('Y-m-d H:i:s');
             $chapter->save();
             if ($request->input('ch_thanks') == 'on') {
-                $to_email = $boardPresEmail;
-                $cc_email = $primaryCordEmail;
+                // $to_email = $boardPresEmail;
+                // $cc_email = $primaryCordEmail;
+                $to_email = $emailListBorad;
+                $cc_email = $emailListCoor;
                 $mailData = [
                     'chapterName' => $request->input('ch_name'),
                     'chapterState' => $request->input('ch_state'),
@@ -2941,8 +2995,10 @@ class ChapterController extends Controller
             }
 
             if ($request->input('ch_sustaining') == 'on') {
-                $to_email = $boardPresEmail;
-                $cc_email = $primaryCordEmail;
+                // $to_email = $boardPresEmail;
+                // $cc_email = $primaryCordEmail;
+                $to_email = $emailListBorad;
+                $cc_email = $emailListCoor;
                 $mailData = [
                     'chapterName' => $request->input('ch_name'),
                     'chapterState' => $request->input('ch_state'),
@@ -3158,6 +3214,58 @@ class ChapterController extends Controller
         $primaryCordEmail = $request->input('ch_pc_email');
         $boardPresEmail = $request->input('ch_pre_email');
         $chapter = Chapter::find($id);
+        $chPcid = $chapter['primary_coordinator_id'];
+
+        $chapterEmailList = DB::table('board_details as bd')
+            ->select('bd.email as bor_email')
+            ->where('bd.chapter_id', '=', $id)
+            ->get();
+        $emailListBorad = '';
+        foreach ($chapterEmailList as $val) {
+            $email = $val->bor_email;
+            $escaped_email = str_replace("'", "\\'", $email);
+            if ($emailListBorad == '') {
+                $emailListBorad = $escaped_email;
+            } else {
+                $emailListBorad .= ','.$escaped_email;
+            }
+        }
+
+        $coordinatorEmailList = DB::table('coordinator_reporting_tree')
+            ->select('*')
+            ->where('id', '=', $chPcid)
+            ->get();
+
+        foreach ($coordinatorEmailList as $key => $value) {
+            $coordinatorList[$key] = (array) $value;
+        }
+        $filterCoordinatorList = array_filter($coordinatorList[0]);
+        unset($filterCoordinatorList['id']);
+        unset($filterCoordinatorList['layer0']);
+        $filterCoordinatorList = array_reverse($filterCoordinatorList);
+        $str = '';
+        $array_rows = count($filterCoordinatorList);
+        $i = 0;
+
+        $emailListCoor = '';
+        foreach ($filterCoordinatorList as $key => $val) {
+            // if($corId != $val && $val >1){
+            if ($val > 1) {
+                $corList = DB::table('coordinator_details as cd')
+                    ->select('cd.email as cord_email')
+                    ->where('cd.coordinator_id', '=', $val)
+                    ->where('cd.is_active', '=', 1)
+                    ->get();
+                if (count($corList) > 0) {
+                    if ($emailListCoor == '') {
+                        $emailListCoor = $corList[0]->cord_email;
+                    } else {
+                        $emailListCoor .= ','.$corList[0]->cord_email;
+                    }
+                }
+            }
+        }
+
         DB::beginTransaction();
         try {
             $chapter->dues_last_paid = $request->input('PaymentDate');
@@ -3181,8 +3289,11 @@ class ChapterController extends Controller
                 ];
 
                 //Payment Thank You Email//
-                $to_email = $boardPresEmail;
-                $cc_email = $primaryCordEmail;
+                // $to_email = $boardPresEmail;
+                // $cc_email = $primaryCordEmail;
+
+                $to_email = $emailListBorad;
+                $cc_email = $emailListCoor;
 
                 Mail::to($to_email)
                     ->cc($cc_email)
