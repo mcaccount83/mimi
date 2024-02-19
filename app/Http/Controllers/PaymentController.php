@@ -42,11 +42,61 @@ class PaymentController extends Controller
         $company = $chapterName . ', ' . $chapterState;
         $next_renewal_year = $chapterDetails['next_renewal_year'];
 
+        $chapterEmailList = DB::table('board_details as bd')
+            ->select('bd.email as bor_email')
+            ->where('bd.chapter_id', '=',$chapterId)
+            ->get();
+        $emailListBorad = '';
+        foreach ($chapterEmailList as $val) {
+            $email = $val->bor_email;
+            $escaped_email = str_replace("'", "\\'", $email);
+            if ($emailListBorad == '') {
+                $emailListBorad = $escaped_email;
+            } else {
+                $emailListBorad .= ','.$escaped_email;
+            }
+        }
+
         $corDetails = DB::table('coordinator_details')
             ->select('email')
             ->where('coordinator_id', $chapterDetails->primary_coordinator_id)
             ->first();
         $cor_email = $corDetails->email;
+
+        $coordinatorEmailList = DB::table('coordinator_reporting_tree')
+            ->select('*')
+            ->where('id', '=', $chPcid)
+            ->get();
+
+        foreach ($coordinatorEmailList as $key => $value) {
+            $coordinatorList[$key] = (array) $value;
+        }
+        $filterCoordinatorList = array_filter($coordinatorList[0]);
+        unset($filterCoordinatorList['id']);
+        unset($filterCoordinatorList['layer0']);
+        $filterCoordinatorList = array_reverse($filterCoordinatorList);
+        $str = '';
+        $array_rows = count($filterCoordinatorList);
+        $i = 0;
+
+        $emailListCoor = '';
+        foreach ($filterCoordinatorList as $key => $val) {
+            // if($corId != $val && $val >1){
+            if ($val > 1) {
+                $corList = DB::table('coordinator_details as cd')
+                    ->select('cd.email as cord_email')
+                    ->where('cd.coordinator_id', '=', $val)
+                    ->where('cd.is_active', '=', 1)
+                    ->get();
+                if (count($corList) > 0) {
+                    if ($emailListCoor == '') {
+                        $emailListCoor = $corList[0]->cord_email;
+                    } else {
+                        $emailListCoor .= ','.$corList[0]->cord_email;
+                    }
+                }
+            }
+        }
 
         $members = $request->input('members');
         $late = $request->input('late');
@@ -180,28 +230,30 @@ class PaymentController extends Controller
                     ];
 
                     $to_email = $email;
-                    $to_email2 = $cor_email;
-                    $to_email3 = $ConfCoorEmail;
-                    $to_email4 = "dragonmom@msn.com";
+                    $to_email2 = $emailListBorad;
+                    //$to_email3 = $cor_email;
+                    $to_email3 = $emailListCoor;
+                    $to_email4 = $ConfCoorEmail;
+                    $to_email5 = "dragonmom@msn.com";
 
                     $existingRecord = Chapter::where('id', $chapterId)->first();
                         $existingRecord->members_paid_for = $members;
                         $existingRecord->next_renewal_year = $next_renewal_year + 1;
                         $existingRecord->dues_last_paid = Carbon::today();
 
-                        Mail::to($to_email)
-                            ->cc($to_email2)
+                        Mail::to([$to_email, $to_email2])
+                            ->cc($to_email3)
                             ->send(new PaymentsReRegChapterThankYou($mailData));
 
-                        Mail::to([$to_email3, $to_email4])
+                        Mail::to([$to_email4, $to_email5])
                             ->send(new PaymentsReRegOnline($mailData, $coordinator_array));
 
                         if ($sustaining > 0.00) {
                             $existingRecord->sustaining_donation = $sustaining;
                             $existingRecord->sustaining_date = Carbon::today();
 
-                            Mail::to($to_email)
-                                ->cc($to_email2)
+                            Mail::to([$to_email, $to_email2])
+                                ->cc($to_email3)
                                 ->send(new PaymentsSustainingChapterThankYou($mailData));
                         }
                     $existingRecord->save();
