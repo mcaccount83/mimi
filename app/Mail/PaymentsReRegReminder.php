@@ -28,6 +28,7 @@ class PaymentsReRegReminder extends Mailable
     public function build(): static
     {
         return $this
+            ->from('support@momsclub.org', 'International MOMS Club')
             ->subject("Re-Registration Payment Reminder | {$this->mailData['chapterName']}, {$this->mailData['chapterState']}")
             ->markdown('emails.payments.reregreminder')
             ->with('mailData', $this->mailData);

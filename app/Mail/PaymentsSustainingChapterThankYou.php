@@ -28,6 +28,7 @@ class PaymentsSustainingChapterThankYou extends Mailable
     public function build(): static
     {
         return $this
+            ->from('support@momsclub.org', 'International MOMS Club')
             ->subject('Thank You for Your Sustaining Chapter Payment')
             ->markdown('emails.payments.sustainingchapterthankyou');
     }

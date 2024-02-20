@@ -61,7 +61,7 @@ class PaymentController extends Controller
             ->select('email')
             ->where('coordinator_id', $chapterDetails->primary_coordinator_id)
             ->first();
-        $cor_email = $corDetails->email;
+        $cor_pcemail = $corDetails->email;
 
         $coordinatorEmailList = DB::table('coordinator_reporting_tree')
             ->select('*')
@@ -230,11 +230,11 @@ class PaymentController extends Controller
                     ];
 
                     $to_email = $email;
-                    $to_email2 = $emailListBorad;
-                    //$to_email3 = $cor_email;
-                    $to_email3 = $emailListCoor;
-                    $to_email4 = $ConfCoorEmail;
-                    $to_email5 = "dragonmom@msn.com";
+                    $to_email2 = explode(',', $emailListBorad);
+                    $to_email3 = $cor_pcemail;
+                    $to_email4 = explode(',', $emailListCoor);
+                    $to_email5 = $ConfCoorEmail;
+                    $to_email6 = "dragonmom@msn.com";
 
                     $existingRecord = Chapter::where('id', $chapterId)->first();
                         $existingRecord->members_paid_for = $members;
@@ -245,7 +245,7 @@ class PaymentController extends Controller
                             ->cc($to_email3)
                             ->send(new PaymentsReRegChapterThankYou($mailData));
 
-                        Mail::to([$to_email4, $to_email5])
+                        Mail::to([$to_email5, $to_email6])
                             ->send(new PaymentsReRegOnline($mailData, $coordinator_array));
 
                         if ($sustaining > 0.00) {

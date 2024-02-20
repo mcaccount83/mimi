@@ -31,7 +31,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
-
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 class ChapterController extends Controller
 {
     public function __construct()
@@ -2947,7 +2948,6 @@ class ChapterController extends Controller
 
         $emailListCoor = '';
         foreach ($filterCoordinatorList as $key => $val) {
-            // if($corId != $val && $val >1){
             if ($val > 1) {
                 $corList = DB::table('coordinator_details as cd')
                     ->select('cd.email as cord_email')
@@ -2974,10 +2974,8 @@ class ChapterController extends Controller
             $chapter->last_updated_date = date('Y-m-d H:i:s');
             $chapter->save();
             if ($request->input('ch_thanks') == 'on') {
-                // $to_email = $boardPresEmail;
-                // $cc_email = $primaryCordEmail;
-                $to_email = $emailListBorad;
-                $cc_email = $emailListCoor;
+                $to_email = explode(',', $emailListBorad);
+                $cc_email = explode(',', $emailListCoor);
                 $mailData = [
                     'chapterName' => $request->input('ch_name'),
                     'chapterState' => $request->input('ch_state'),
@@ -2995,10 +2993,8 @@ class ChapterController extends Controller
             }
 
             if ($request->input('ch_sustaining') == 'on') {
-                // $to_email = $boardPresEmail;
-                // $cc_email = $primaryCordEmail;
-                $to_email = $emailListBorad;
-                $cc_email = $emailListCoor;
+                $to_email = explode(',', $emailListBorad);
+                $cc_email = explode(',', $emailListCoor);
                 $mailData = [
                     'chapterName' => $request->input('ch_name'),
                     'chapterState' => $request->input('ch_state'),
@@ -3249,7 +3245,6 @@ class ChapterController extends Controller
 
         $emailListCoor = '';
         foreach ($filterCoordinatorList as $key => $val) {
-            // if($corId != $val && $val >1){
             if ($val > 1) {
                 $corList = DB::table('coordinator_details as cd')
                     ->select('cd.email as cord_email')
@@ -3288,15 +3283,12 @@ class ChapterController extends Controller
                     'cordConf' => $request->input('ch_pc_confid'),
                 ];
 
-                //Payment Thank You Email//
-                // $to_email = $boardPresEmail;
-                // $cc_email = $primaryCordEmail;
+                // Payment Thank You Email
+                $to_emails = explode(',', $emailListBorad);
+                $cc_emails = explode(',', $emailListCoor);
 
-                $to_email = $emailListBorad;
-                $cc_email = $emailListCoor;
-
-                Mail::to($to_email)
-                    ->cc($cc_email)
+                Mail::to($to_emails)
+                    ->cc($cc_emails)
                     ->send(new PaymentsReRegChapterThankYou($mailData));
             }
 
