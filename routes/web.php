@@ -43,7 +43,7 @@ Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEm
 Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
-Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
+Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
 
 /**
  * Routes for Custom Links

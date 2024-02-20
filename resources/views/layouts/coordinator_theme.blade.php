@@ -435,6 +435,18 @@
                 <span>Outgoing Board</span>
                 </a>
             </li>
+            <li class="{{ Request::is('logs') ? 'active' : '' }}">
+                <a href="{{ route('logs') }}" target="_blank">
+                <i class="fa fa-exclamation-triangle"></i>
+                <span>Error Logs</span>
+                </a>
+            </li>
+            <li class="{{ Request::is('admin/sentemails') ? 'active' : '' }}">
+                <a href="{{ url(config('sentemails.routepath')) }}" target="_blank">
+                <i class="fa fa-share-square-o"></i>
+                <span>Sent Email</span>
+                </a>
+            </li>
                 </ul>
             </li>
         @endif

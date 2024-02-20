@@ -20,8 +20,7 @@ To calculate your payment:
 <li>If this total amount of members is less than 10, make your check for the amount of $50</li>
 <li>If this total amount of members is 10 or more, multiply the number by $5.00 to get your total amount due</li></ul>
 
-Pay online: https://momsclub.org/resources/re-registration-payment<br>
-Password: daytime support<br>
+Pay online through your MIMI account: https://momsclub.org/mimi<br>
 <br>
 OR to pay by mail:<br>
 Be sure your full chapter name, including state abbreviation, is on your check so that the re-registration can be credited properly.
@@ -49,8 +48,6 @@ Sustaining chapter donations are voluntary and in addition to your chapter's re-
 </td></tr></table>
 <br>
 <p>If payment is not recevied by the last day of <b>{{$mailData['dueMonth']}}</b> your chapter will be placed on probation.</p>
-<br>
-You can view/update your chapter details at any time by logging into MIMI at https://momsclub.org/mimi.<br>
 <br>
 If you have any questions at all, do not hesitate to ask.<br>
 <br>
