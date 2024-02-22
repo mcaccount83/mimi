@@ -88,7 +88,7 @@ Route::post('/files/storeAward2/{id}', [GoogleController::class, 'storeAward2'])
 Route::post('/files/storeAward3/{id}', [GoogleController::class, 'storeAward3']);
 Route::post('/files/storeAward4/{id}', [GoogleController::class, 'storeAward4']);
 Route::post('/files/storeAward5/{id}', [GoogleController::class, 'storeAward5']);
-Route::post('/files/storeResources/{id}', [GoogleController::class, 'storeResources']);
+Route::post('/files/storeResources/{id}', [GoogleController::class, 'storeResources'])->name('store.resources');
 
 /**
  * Routes for Chapter Controller

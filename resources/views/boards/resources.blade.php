@@ -2,6 +2,21 @@
 
 @section('content')
 <div class="container">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Your custom JavaScript -->
+    <script>
+        // Your JavaScript code here
+    </script>
+    <!-- Custom CSS -->
+    <style>
+        .accordion__item {
+            margin-left: 10px; /* Adjust the left margin */
+            margin-right: 10px; /* Adjust the right margin */
+        }
+        /* Add any other custom CSS styles here */
+    </style>
+
     <div>
 
     </div>
@@ -38,17 +53,14 @@
                         <div class="accordion-body js-accordion-body">
                             <section>
                                 @foreach($resources->where('category', 1) as $resourceItem)
-                                <div class="col-md-12">
+                                <div class="col-md-12" style="margin-bottom: 5px;">
                                     @if ($resourceItem->link)
-                                        <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}</a>
+                                        <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                     @elseif ($resourceItem->file_path)
-                                        <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}</a>
+                                        <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                     @else
                                         {{ $resourceItem->name }}
                                     @endif
-                                </div>
-                                <div class="col-md-12" style="font-size: small;">
-                                    {{ $resourceItem->description }}
                                 </div>
                                 @endforeach
                                 <div class="col-md-12"><br></div>
@@ -63,17 +75,14 @@
                         <div class="accordion-body js-accordion-body">
                             <section>
                                 @foreach($resources->where('category', 2) as $resourceItem)
-                                <div class="col-md-12">
+                                <div class="col-md-12"style="margin-bottom: 5px;">
                                     @if ($resourceItem->link)
-                                        <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}</a>
+                                        <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                     @elseif ($resourceItem->file_path)
-                                        <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}</a>
+                                        <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                     @else
                                         {{ $resourceItem->name }}
                                     @endif
-                                </div>
-                                <div class="col-md-12" style="font-size: small;">
-                                    {{ $resourceItem->description }}
                                 </div>
                                 @endforeach
                                 <div class="col-md-12"><br></div>
@@ -88,16 +97,16 @@
                     <div class="accordion-body js-accordion-body">
                         <section>
                             @foreach($resources->where('category', 3) as $resourceItem)
-                            <div class="col-md-12">
+                            <div class="col-md-12"style="margin-bottom: 5px;">
                                 @if ($resourceItem->link)
-                                    <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}</a>
+                                    <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                 @elseif ($resourceItem->file_path)
-                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}</a>
+                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                 @else
                                     {{ $resourceItem->name }}
                                 @endif
                             </div>
-                            <div class="col-md-12" style="font-size: small;">
+                            <div class="col-md-12" style="font-size: smaller; margin-bottom: 10px;">
                                 {{ $resourceItem->description }}
                             </div>
                             @endforeach
@@ -113,17 +122,14 @@
                     <div class="accordion-body js-accordion-body">
                         <section>
                             @foreach($resources->where('category', 4) as $resourceItem)
-                            <div class="col-md-12">
+                            <div class="col-md-12"style="margin-bottom: 5px;">
                                 @if ($resourceItem->link)
-                                    <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}</a>
+                                    <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                 @elseif ($resourceItem->file_path)
-                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}</a>
+                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                 @else
                                     {{ $resourceItem->name }}
                                 @endif
-                            </div>
-                            <div class="col-md-12" style="font-size: small;">
-                                {{ $resourceItem->description }}
                             </div>
                             @endforeach
                             <div class="col-md-12"><br></div>
@@ -143,17 +149,14 @@
                     <div class="accordion-body js-accordion-body">
                         <section>
                             @foreach($resources->where('category', 5) as $resourceItem)
-                            <div class="col-md-12">
+                            <div class="col-md-12"style="margin-bottom: 5px;">
                                 @if ($resourceItem->link)
-                                    <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}</a>
+                                    <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                 @elseif ($resourceItem->file_path)
-                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}</a>
+                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                 @else
                                     {{ $resourceItem->name }}
                                 @endif
-                            </div>
-                            <div class="col-md-12" style="font-size: small;">
-                                {{ $resourceItem->description }}
                             </div>
                             @endforeach
                             <div class="col-md-12"><br></div>
@@ -168,17 +171,14 @@
                     <div class="accordion-body js-accordion-body">
                         <section>
                             @foreach($resources->where('category', 6) as $resourceItem)
-                            <div class="col-md-12">
+                            <div class="col-md-12"style="margin-bottom: 5px;">
                                 @if ($resourceItem->link)
-                                    <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}</a>
+                                    <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                 @elseif ($resourceItem->file_path)
-                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}</a>
+                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                 @else
                                     {{ $resourceItem->name }}
                                 @endif
-                            </div>
-                            <div class="col-md-12" style="font-size: small;">
-                                {{ $resourceItem->description }}
                             </div>
                             @endforeach
                             <div class="col-md-12"><br></div>

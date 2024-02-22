@@ -39,8 +39,8 @@
 @if (! empty($salutation))
 {{ $salutation }}
 @else
-{{ __("<b>MCL,</b>\n".
-"MIMI Database Administrator") }}
+<strong>{{ __("MCL,") }}</strong>
+{{ __("MIMI Database Administrator") }}
 @endif
 
 {{-- Subcopy --}}

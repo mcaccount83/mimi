@@ -203,7 +203,7 @@ class AdminController extends Controller
         $validatedData = $request->validate([
             'fileCategoryNew' => 'required',
             'fileNameNew' => 'required|string|max:50',
-            'fileDescriptionNew' => 'required|string|max:255',
+            'fileDescriptionNew' => 'required|string|max:500',
             'fileTypeNew' => 'required',
             'fileVersionNew' => 'nullable|string|max:25',
             'LinkNew' => 'nullable|string|max:255',
@@ -251,7 +251,7 @@ class AdminController extends Controller
             ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
             ->first(); // Fetch only one record
         $validatedData = $request->validate([
-            'fileDescription' => 'required|string|max:255',
+            'fileDescription' => 'required|string|max:500',
             'fileType' => 'required',
             'fileVersion' => 'nullable|string|max:25',
             'link' => 'nullable|string|max:255',

@@ -466,7 +466,14 @@
             </li>
         @endif
 
-        <div class="too" style="padding-left:15px; padding-top:9px;"><a href="https://momsclub.org/coordinator-toolkit/" target="_blank"><i class="fa fa-briefcase"></i>&nbsp;&nbsp;Coordinator Toolkit</a></div>
+        <li class="{{ Request::is('admin/resources') ? 'active' : '' }}">
+            <a href="{{ route('admin.resources') }}">
+                <i class="fa fa-briefcase"></i>
+                <span>Chapter Resources</span>
+            </a>
+        </li>
+
+        <div class="too" style="padding-left:15px; padding-top:9px;"><a href="https://momsclub.org/coordinator-toolkit/" target="_blank"><i class="fa fa-briefcase"></i>&nbsp;&nbsp;&nbsp;Coordinator Toolkit</a></div>
 
         <div class="too" style="padding-left:15px; padding-top:20px;"><a href="https://momsclub.org/elearning/" target="_blank"><i class="fa fa-graduation-cap"></i>&nbsp;&nbsp;eLearning Library</a></div>
 
