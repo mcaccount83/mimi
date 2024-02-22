@@ -146,8 +146,8 @@ class AdminController extends Controller
             ->where('cd.coordinator_id', '=', $corId)
             ->get();
 
-        $resources = DB::table('resources')
-            ->select('resources.*',
+            $resources = DB::table('resources')
+            ->select('resources.*', 'resources.id as id',
                 DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),
                 DB::raw('CASE
                     WHEN category = 1 THEN "BYLAWS"
@@ -163,12 +163,19 @@ class AdminController extends Controller
             ->orderBy('name', 'asc')
             ->get();
 
-        // Determine if the user is allowed to edit notes and status
+        // Assuming you want to access the 'id' property of each resource, you need to iterate through $resources
+        foreach ($resources as $resource) {
+            $id = $resource->id;
+            // Do something with $id
+        }
+
+
+        // Determine if the user is allowed to add and update resources
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        $canEditFiles = ($positionId == 13 || $secPositionId == 13);  //IT Coordinator
+        $canEditFiles = ($positionId == 6 || $secPositionId == 6);  //CC Coordinator
 
-        $data = ['resources' => $resources, 'canEditFiles' => $canEditFiles, 'coordinatorDetails' => $coordinatorDetails];
+        $data = ['resources' => $resources, 'canEditFiles' => $canEditFiles, 'coordinatorDetails' => $coordinatorDetails, 'id' => $id];
 
         return view('admin.resources')->with($data);
     }
@@ -187,11 +194,11 @@ class AdminController extends Controller
             ->where('cd.coordinator_id', '=', $corId)
             ->first(); // Fetch only one record
 
-        // Fetch admin details
-        $file = DB::table('resources')
-            ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
-            ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
-            ->first(); // Fetch only one record
+        // // Fetch admin details
+        // $file = DB::table('resources')
+        //     ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
+        //     ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
+        //     ->first(); // Fetch only one record
 
         $validatedData = $request->validate([
             'fileCategoryNew' => 'required',
@@ -215,6 +222,13 @@ class AdminController extends Controller
         $file->updated_date = Carbon::today();
 
         $file->save();
+
+        // After adding the resource, retrieve its id
+        $id = $file->id;
+        $fileType = $file->file_type;
+
+        // Return the id and file_type in the response
+        return response()->json(['id' => $id, 'file_type' => $fileType]);
     }
 
     /**
@@ -241,15 +255,22 @@ class AdminController extends Controller
             'fileType' => 'required',
             'fileVersion' => 'nullable|string|max:25',
             'link' => 'nullable|string|max:255',
-            'filePath' => 'nullable|string|max:255',
         ]);
 
         $file = Resources::findOrFail($id);
         $file->description = $validatedData['fileDescription'];
         $file->file_type = $validatedData['fileType'];
-        $file->version = $validatedData['fileVersion'] ?? null;
-        $file->link = $validatedData['link'] ?? null;
-        $file->file_path = $validatedData['filePath'] ?? null;
+
+        // Check file_type value and set version and link accordingly
+        if ($validatedData['fileType'] == 1) {
+            $file->link = null;
+            $file->version = $validatedData['fileVersion'] ?? null;
+        } elseif ($validatedData['fileType'] == 2) {
+            $file->version = null;
+            $file->file_path = null;
+            $file->link = $validatedData['link'] ?? null;
+        }
+
         $file->updated_id = $corId;
         $file->updated_date = Carbon::today();
 

@@ -26,23 +26,22 @@
 
 <!-- Main content -->
     <section class="content">
-
       <div class="row">
         <div class="col-md-12">
           <div class="box card">
-
             <div class="box-header with-border">
               <h3 class="box-title">Chapter Resources - Links & File Downloads</h3>
               <h4>Board members have the same list of links & file downloads available through their MIMI logins.</h4>
             </div>
-
             <!-- /.box-header -->
             <div class="box-body">
               <!-- /.form group -->
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-task"><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Resource</button>
+                    @if($canEditFiles)
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-task"><i class="fa fa-plus fa-fw" aria-hidden="true"></i>&nbsp; Add Resource</button>
+                    @endif
                     <hr>
                     <div class="row">
                         <div class="col-md-4">
@@ -51,85 +50,33 @@
                                     <h3 class="box-title">BYLAWS</h3>
                                 </div>
                                 <div class="box-body">
-                                        @foreach($resources->where('category', 5) as $resourceItem)
+                                        @foreach($resources->where('category', 1) as $resourceItem)
                                             <div class="card">
                                                 <div class="card-body">
-                                                    <div class="col-md-9">
+                                                    <div class="col-md-12">
                                                         <h4>
                                                             @if ($resourceItem->link)
-                                                                <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}</a>
+                                                                <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                                                @if($canEditFiles)
+                                                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
                                                             @elseif ($resourceItem->file_path)
-                                                                <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}</a>
+                                                                <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                                                @if($canEditFiles)
+                                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
                                                             @else
-                                                                {{ $resourceItem->name }}
+                                                                {{ $resourceItem->name }}&nbsp;
+                                                                @if($canEditFiles)
+                                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
                                                             @endif
                                                         </h4>
                                                     </div>
-                                                    <!-- Button to open modal for editing -->
-                                                    <div class="col-md-3 text-center">
-                                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#editByLawsModal{{ $resourceItem->id }}">
-                                                        <i class="fa fa-info-circle fa-fw" aria-hidden="true" ></i>&nbsp; Update
-                                                    </button>
-                                                    </div>
-                                                    <div class="col-md-12"><br></div>
+                                                    <div class="col-md-12">{{ $resourceItem->description }}</div>
                                                 </div>
                                             </div>
-
-                                            <!-- Modal for editing task -->
-                                            <div class="modal fade" id="editByLawsModal{{ $resourceItem->id }}" tabindex="-1" role="dialog" aria-labelledby="editByLawsModal{{ $resourceItem->id }}Label" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span></button>
-                                                                <h3 class="modal-title" id="#editByLawsModal{{ $resourceItem->id }}Label">{{ $resourceItem->name }}</h3>
-                                                            </div>
-                                                        <div class="modal-body">
-                                                            <form>
-                                                                <div class="col-md-12">
-                                                                <div class="form-group">
-                                                                    <label for="fileDescription">Description</label>
-                                                                    <textarea class="form-control" id="fileDescription{{ $resourceItem->id }}">{{ $resourceItem->description }}</textarea>
-                                                                </div>
-                                                                </div>
-                                                                <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        <label for="fileType{{ $resourceItem->id }}">File Type</label>
-                                                                        <select class="form-control fileType" id="fileType{{ $resourceItem->id }}" name="fileType">
-                                                                            <option value="1" {{ $resourceItem->file_type === 1 ? 'selected' : '' }}>Document to Download</option>
-                                                                            <option value="2" {{ $resourceItem->file_type === 2 ? 'selected' : '' }}>Link to Webpage</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="form-group versionField" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
-                                                                        <label for="fileVersion{{ $resourceItem->id }}">Version</label>
-                                                                        <input type="text" class="form-control" id="fileVersion{{ $resourceItem->id }}" name="fileVersion" value="{{ $resourceItem->version }}">
-                                                                    </div>
-                                                                    <div class="form-group filePathField" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
-                                                                        <label for="filePath{{ $resourceItem->id }}">File Path</label>
-                                                                        <input type="text" class="form-control" id="filePath{{ $resourceItem->id }}" name="filePath" value="{{ $resourceItem->file_path }}">
-                                                                    </div>
-                                                                    <div class="form-group linkField" style="{{ $resourceItem->file_type === 2 ? 'display:block;' : 'display:none;' }}">
-                                                                        <label for="link{{ $resourceItem->id }}">Link</label>
-                                                                        <input type="text" class="form-control" id="link{{ $resourceItem->id }}" name="link" value="{{ $resourceItem->link }}">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6"><br></div>
-                                                                <div class="col-md-12">
-                                                                <div class="form-group">
-                                                                    Updated <strong>{{ $resourceItem->updated_by }}</strong> on <strong>{{ \Carbon\Carbon::parse($resourceItem->updated_date)->format('m-d-Y') }}</strong>
-                                                                </div>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                        <div class="col-md-6"><br></div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times fa-fw" aria-hidden="true" ></i>&nbsp; Close</button>
-                                                            <button type="button" class="btn btn-success" onclick="updateFile({{ $resourceItem->id }})"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save changes</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
+                                    @endforeach
                                 </div>    {{-- END ITEM --}}
                             </div>
                         </div>
@@ -137,7 +84,36 @@
                         <div class="col-md-4">
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">CHAPTER RESOURCES</h3>
+                                    <h3 class="box-title">FACT SHEETS</h3>
+                                </div>
+                                    <div class="box-body">
+                                        @foreach($resources->where('category', 2) as $resourceItem)
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="col-md-12">
+                                                        <h4>
+                                                            @if ($resourceItem->link)
+                                                                <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                                                @if($canEditFiles)
+                                                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
+                                                            @elseif ($resourceItem->file_path)
+                                                                <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                                                @if($canEditFiles)
+                                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
+                                                            @else
+                                                                {{ $resourceItem->name }}&nbsp;
+                                                                @if($canEditFiles)
+                                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
+                                                            @endif
+                                                        </h4>
+                                                    </div>
+                                                    <div class="col-md-12">{{ $resourceItem->description }}</div>
+                                                </div>
+                                            </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -145,7 +121,36 @@
                         <div class="col-md-4">
                             <div class="box">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">SAMPLE CHAPTER FILES</h3>
+                                    <h3 class="box-title">COPY READY MATERIALS</h3>
+                                </div>
+                                    <div class="box-body">
+                                        @foreach($resources->where('category', 3) as $resourceItem)
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="col-md-12">
+                                                        <h4>
+                                                            @if ($resourceItem->link)
+                                                                <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                                                @if($canEditFiles)
+                                                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
+                                                            @elseif ($resourceItem->file_path)
+                                                                <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                                                @if($canEditFiles)
+                                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
+                                                            @else
+                                                                {{ $resourceItem->name }}&nbsp;
+                                                                @if($canEditFiles)
+                                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
+                                                            @endif
+                                                        </h4>
+                                                    </div>
+                                                    <div class="col-md-12">{{ $resourceItem->description }}</div>
+                                                </div>
+                                            </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -155,45 +160,233 @@
                     <div class="col-md-4">
                         <div class="box">
                             <div class="box-header with-border">
-                                <h3 class="box-title">FACT SHEETS</h3>
-                                &nbsp;&nbsp;&nbsp;
-                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-task"><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Fact Sheets</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="box">
-                            <div class="box-header with-border">
                                 <h3 class="box-title">IDEAS AND INSPIRATION</h3>
                             </div>
+                                <div class="box-body">
+                                    @foreach($resources->where('category', 4) as $resourceItem)
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="col-md-12">
+                                                    <h4>
+                                                        @if ($resourceItem->link)
+                                                                <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                                                @if($canEditFiles)
+                                                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
+                                                            @elseif ($resourceItem->file_path)
+                                                                <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                                                @if($canEditFiles)
+                                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
+                                                            @else
+                                                                {{ $resourceItem->name }}&nbsp;
+                                                                @if($canEditFiles)
+                                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
+                                                            @endif
+                                                    </h4>
+                                                </div>
+                                                <div class="col-md-12">{{ $resourceItem->description }}</div>
+                                            </div>
+                                        </div>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
 
                     <div class="col-md-4">
                         <div class="box">
                             <div class="box-header with-border">
-                                <h3 class="box-title">END OF YEAR</h3>
+                                <h3 class="box-title">CHAPTER RESOURCES</h3>
+                            </div>
+                                <div class="box-body">
+                                    @foreach($resources->where('category', 5) as $resourceItem)
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="col-md-12">
+                                                    <h4>
+                                                        @if ($resourceItem->link)
+                                                                <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                                                @if($canEditFiles)
+                                                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
+                                                            @elseif ($resourceItem->file_path)
+                                                                <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                                                @if($canEditFiles)
+                                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
+                                                            @else
+                                                                {{ $resourceItem->name }}&nbsp;
+                                                                @if($canEditFiles)
+                                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
+                                                            @endif
+                                                    </h4>
+                                                </div>
+                                                <div class="col-md-12">{{ $resourceItem->description }}</div>
+                                            </div>
+                                        </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">SAMPLE CHPATER FILES</h3>
+                            </div>
+                                <div class="box-body">
+                                    @foreach($resources->where('category', 6) as $resourceItem)
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="col-md-12">
+                                                    <h4>
+                                                        @if ($resourceItem->link)
+                                                                <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                                                @if($canEditFiles)
+                                                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
+                                                            @elseif ($resourceItem->file_path)
+                                                                <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                                                @if($canEditFiles)
+                                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
+                                                            @else
+                                                                {{ $resourceItem->name }}&nbsp;
+                                                                @if($canEditFiles)
+                                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
+                                                            @endif
+                                                    </h4>
+                                                </div>
+                                                <div class="col-md-12">{{ $resourceItem->description }}</div>
+                                            </div>
+                                        </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>
                 </div>    {{-- END ROW --}}
 
-                       <div class="row">
-                            <div class="col-md-4">
-                                <div class="box">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">COPY READY MATERIAL</h3>
-                                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="box">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">END OF YEAR</h3>
+                                </div>
+                                    <div class="box-body">
+                                        @foreach($resources->where('category', 7) as $resourceItem)
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <div class="col-md-12">
+                                                        <h4>
+                                                            @if ($resourceItem->link)
+                                                                <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                                                @if($canEditFiles)
+                                                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
+                                                            @elseif ($resourceItem->file_path)
+                                                                <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                                                @if($canEditFiles)
+                                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
+                                                            @else
+                                                                {{ $resourceItem->name }}&nbsp;
+                                                                @if($canEditFiles)
+                                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                                @endif
+                                                            @endif
+                                                        </h4>
+                                                    </div>
+                                                    <div class="col-md-12">{{ $resourceItem->description }}</div>
+                                                    <div class="col-md-12"><br></div>
+                                                </div>
+                                            </div>
+                                    @endforeach
                                 </div>
                             </div>
-                        </div>    {{-- END ROW --}}
+                        </div>
+                    </div>    {{-- END ROW --}}
 
+                </div>
             </div>
-            </div>
-            </div>
+        </div>
 
+@foreach($resources as $resourceItem)
+<!-- Modal for editing task -->
+<div class="modal fade" id="editResourceModal{{ $resourceItem->id }}" tabindex="-1" role="dialog" aria-labelledby="editResourceModal{{ $resourceItem->id }}Label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span></button>
+                    <h3 class="modal-title" id="#editResourceModal{{ $resourceItem->id }}Label">{{ $resourceItem->name }}</h3>
+                </div>
+            <div class="modal-body">
+                <form>
+                    <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="fileCategory{{ $resourceItem->id }}">Category</label>
+                        <select name="fileCategory" class="form-control select2" style="width: 50%;" id="fileCategory{{ $resourceItem->id }}" disabled>
+                            <option value="1" {{ $resourceItem->category == 1 ? 'selected' : '' }}>Bylaws</option>
+                            <option value="2" {{ $resourceItem->category == 2 ? 'selected' : '' }}>Fact Sheets</option>
+                            <option value="3" {{ $resourceItem->category == 3 ? 'selected' : '' }}>Copy Ready Materials</option>
+                            <option value="4" {{ $resourceItem->category == 4 ? 'selected' : '' }}>Ideas & Inspiration</option>
+                            <option value="5" {{ $resourceItem->category == 5 ? 'selected' : '' }}>Chapter Resources</option>
+                            <option value="6" {{ $resourceItem->category == 6 ? 'selected' : '' }}>Sample Chapter Files</option>
+                            <option value="7" {{ $resourceItem->category == 7 ? 'selected' : '' }}>End of Year</option>
+                        </select>
+                    </div>
+                    </div>
+                    <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="fileDescription">Description</label>
+                        <textarea class="form-control" id="fileDescription{{ $resourceItem->id }}">{{ $resourceItem->description }}</textarea>
+                    </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="fileType{{ $resourceItem->id }}">File Type</label>
+                            <select class="form-control fileType" id="fileType{{ $resourceItem->id }}" name="fileType">
+                                <option value="1" {{ $resourceItem->file_type == 1 ? 'selected' : '' }}>Document to Download</option>
+                                <option value="2" {{ $resourceItem->file_type == 2 ? 'selected' : '' }}>Link to Webpage</option>
+                            </select>
+                        </div>
+                        <div class="form-group versionField" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
+                            <label for="fileVersion{{ $resourceItem->id }}">Version</label>
+                            <input type="text" class="form-control" id="fileVersion{{ $resourceItem->id }}" name="fileVersion" value="{{ $resourceItem->version }}">
+                        </div>
+                        <div class="form-group filePathField" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
+                            File Path: <a href="{{ $resourceItem->file_path }}">{{ $resourceItem->file_path }}</a>
+                        </div>
+                        <div class="form-group linkField" style="{{ $resourceItem->file_type === 2 ? 'display:block;' : 'display:none;' }}">
+                            <label for="link{{ $resourceItem->id }}">Link</label>
+                            <input type="text" class="form-control" id="link{{ $resourceItem->id }}" name="link" value="{{ $resourceItem->link }}">
+                        </div>
+                    </div>
+                <div class="col-md-12">
+                    <div class="form-group fileUpload" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
+                        <input type="file" id="fileUpload{{ $resourceItem->id }}" class="form-control" name='fileUpload' required>
+                    </div>
+                </div>
+            </form>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12">
+                    <div class="form-group">
+                        Updated by <strong>{{ $resourceItem->updated_by }}</strong> on <strong>{{ \Carbon\Carbon::parse($resourceItem->updated_date)->format('m-d-Y') }}</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times fa-fw" aria-hidden="true" ></i>&nbsp; Close</button>
+                <button type="button" class="btn btn-success" onclick="updateFile({{ $resourceItem->id }})"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
+<!-- Modal for adding task -->
  <div class="modal fade" id="modal-task">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -238,15 +431,14 @@
                             <label for="fileVersionNew">Version</label>
                             <input type="text" class="form-control" id="fileVersionNew" name="fileVersionNew">
                         </div>
-                        <div class="form-group filePathFieldNew" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
-                            <label for="filePathNew">File Path</label>
-                            <input type="text" class="form-control" id="filePathNew" name="filePathNew">
-                        </div>
                         <div class="form-group linkFieldNew" style="{{ $resourceItem->file_type === 2 ? 'display:block;' : 'display:none;' }}">
                             <label for="linkNew">Link</label>
                             <input type="text" class="form-control" id="linkNew" name="linkNew" >
                         </div>
-                        </form>
+                        <div class="form-group fileUploadNew" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
+                            <input type="file" id="fileUploadNew" class="form-control" name="fileUploadNew" required>
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times fa-fw" aria-hidden="true" ></i>&nbsp; Close</button>
@@ -255,55 +447,47 @@
             </div>
         </div>
     </div>
-
-        </section>
-        <!-- /.content -->
-
-    @endsection
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+@endforeach
+</section>
+<!-- /.content -->
+@endsection
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-    // Listen for change event on the dropdown
         $('.fileType').change(function() {
             var selectedType = $(this).val();
             var resourceId = $(this).attr('id').replace('fileType', '');
 
-            // Hide all fields initially
-            $('.versionField').hide();
-            $('.filePathField').hide();
-            $('.linkField').hide();
-
-            // Show the appropriate fields based on the selected value
             if (selectedType === '1') {
-                $('#fileVersion' + resourceId).closest('.versionField').show();
-                $('#filePath' + resourceId).closest('.filePathField').show();
+                $('.versionField').show();
+                $('.filePathField').show();
+                $('.fileUpload').show();
+                $('.filePathBlock').show();
+                $('.linkField').hide();
             } else if (selectedType === '2') {
-                $('#link' + resourceId).closest('.linkField').show();
+                $('.linkField').show();
+                $('.versionField').hide();
+                $('.filePathField').hide();
+                $('.filePathBlock').hide();
+                $('.fileUpload').hide();
             }
         });
-    });
 
-    $(document).ready(function() {
-        // Hide link field by default
         $('.linkFieldNew').hide();
+        $('.versionFieldNew').hide();
+        $('.fileUploadNew').hide();
 
-        // Listen for change event on the dropdown
         $('#fileTypeNew').change(function() {
             var selectedType = $(this).val();
 
-            // Hide all fields initially
-            $('.versionFieldNew').hide();
-            $('.filePathFieldNew').hide();
-            $('.linkFieldNew').hide();
-
-            // Show the appropriate fields based on the selected value
             if (selectedType === '1') {
                 $('.versionFieldNew').show();
-                $('.filePathFieldNew').show();
+                $('.fileUploadNew').show();
+                $('.linkFieldNew').hide();
             } else if (selectedType === '2') {
                 $('.linkFieldNew').show();
+                $('.versionFieldNew').hide();
+                $('.fileUploadNew').hide();
             }
         });
     });
@@ -315,7 +499,6 @@
     var fileTypeNew = document.getElementById('fileTypeNew').value;
     var fileVersionNew = document.getElementById('fileVersionNew').value;
     var linkNew = document.getElementById('linkNew').value;
-    var filePathNew = document.getElementById('filePathNew').value;
 
     if (fileCategoryNew == '') {
         alert('Category is Required.');
@@ -341,6 +524,18 @@
         alert('Description cannot exceed 255 characters.');
         return false; // Prevent form submission
     }
+    if (fileTypeNew === '1') {
+            if (fileVersionNew == '') {
+            alert('Resource Version is Required.');
+            return false; // Prevent form submission
+        }
+    }
+    if (fileTypeNew === '2') {
+            if (linkNew == '') {
+            alert('Resource Link is Required.');
+            return false; // Prevent form submission
+        }
+    }
 
     // Get the CSRF token value from the meta tag
     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -353,86 +548,159 @@
         fileTypeNew: fileTypeNew
     };
 
-     if (fileTypeNew === '1') { // Add version and link fields if file type is 1 (Document to Download)
-            data.fileVersionNew = fileVersionNew;
-            data.filePathNew = filePathNew;
+    if (fileTypeNew === '1') { // Add version and link fields if file type is 1 (Document to Download)
+        data.fileVersionNew = fileVersionNew;
     } else if (fileTypeNew === '2') { // Add file path if file type is 2 (Link to Webpage)
-            data.LinkNew = linkNew;
+        data.LinkNew = linkNew;
     }
 
-    // Send an AJAX request to Laravel backend to create a new task
+    // Send an AJAX request to Laravel backend to create a new resource
     $.ajax({
-        url: '{{ route('admin.addresources') }}',
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': csrfToken
-        },
-        data: data,
-        success: function(response) {
-            // Display success message
+    url: '{{ route('admin.addresources') }}',
+    method: 'POST',
+    headers: {
+        'X-CSRF-TOKEN': csrfToken
+    },
+    data: data,
+    success: function(response) {
+        // Display success message
+        // alert('Resource added successfully');
+
+        // Extract the newly created id from the response
+        var id = response.id;
+        var fileType = response.file_type;
+
+        // Now, you have the id, you can proceed to upload the file to Google Drive
+        // Construct the FormData object to send
+        if (fileType === '1') {
+        var formData = new FormData();
+        formData.append('file', document.getElementById('fileUploadNew').files[0]);
+
+        // Send an AJAX request to upload the file to Google Drive
+        $.ajax({
+            url: '/files/storeResources/' + id,
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            success: function(response) {
+                alert('Resource & File added successfully');
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                // Handle error if needed
+                console.error(xhr.responseText);
+            }
+        });
+    } else {
             alert('Resource added successfully');
-            // Reload the page to reflect the new data
             location.reload();
-        },
-        error: function(xhr, status, error) {
-            // Handle error
-            console.error(xhr.responseText);
         }
-    });
-}
-
-function updateFile(id) {
-    console.log('fileDescription:', document.getElementById('fileDescription' + id));
-    console.log('fileType:', document.getElementById('fileType' + id));
-    console.log('fileVersion:', document.getElementById('fileVersion' + id));
-    console.log('link:', document.getElementById('link' + id));
-    console.log('filePath:', document.getElementById('filePath' + id));
-
-    var fileDescription = document.getElementById('fileDescription' + id).value;
-    var fileType = document.getElementById('fileType' + id).value;
-    var fileVersion = document.getElementById('fileVersion' + id).value;
-    var link = document.getElementById('link' + id).value;
-    var filePath = document.getElementById('filePath' + id).value;
-
-    // Get the CSRF token value from the meta tag
-    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-    var data = {
-        fileDescription: fileDescription,
-        fileType: fileType,
-        fileVersion: fileVersion || null, // Handle potential null values
-        link: fileType === '2' ? link : null, // Handle link only for fileType === '2'
-        filePath: fileType === '1' ? filePath : null // Handle filePath only for fileType === '1'
-    };
-
-    // Send an AJAX request to update the task
-    $.ajax({
-        url: '{{ route('admin.updateresources', '') }}' + '/' + id,
-        method: 'POST',
-        data: data,
-        headers: {
-            'X-CSRF-TOKEN': csrfToken
-        },
-        success: function(response) {
-            // Display success message
-            alert('Resource updated successfully');
-            // Reload the page to reflect the new data
-            location.reload();
-        },
-        error: function(xhr, status, error) {
-            // Handle error
-            console.error(xhr.responseText);
-        }
-    });
+    },
+    error: function(xhr, status, error) {
+        // Handle error
+        console.error(xhr.responseText);
+    }
+});
 
     // Close the modal
-    $('#editTaskModal' + id).modal('hide');
+    $('#modal-task').modal('hide');
 
     // Prevent form submission
     return false;
 }
 
 
+function updateFile(id) {
+    var file = document.getElementById('fileUpload' + id).files[0];
+    var fileDescription = document.getElementById('fileDescription' + id).value;
+    var fileType = document.getElementById('fileType' + id).value;
+    var fileVersion = document.getElementById('fileVersion' + id).value;
+    var link = document.getElementById('link' + id).value;
+
+    var formData = new FormData();
+    formData.append('file', file);
+    formData.append('fileDescription', fileDescription);
+    formData.append('fileType', fileType);
+    formData.append('fileVersion', fileVersion);
+    formData.append('link', link);
+
+    if (fileDescription == '') {
+        alert('Resource Description is Required.');
+        return false; // Prevent form submission
+    }
+    if (fileDescription.length > 255) {
+        alert('Description cannot exceed 255 characters.');
+        return false; // Prevent form submission
+    }
+    if (fileType === '1') {
+            if (fileVersion == '') {
+            alert('Resource Version is Required.');
+            return false; // Prevent form submission
+        }
+    }
+    if (fileType === '2') {
+            if (link == '') {
+            alert('Resource Link is Required.');
+            return false; // Prevent form submission
+        }
+    }
+
+    // Get the CSRF token value from the meta tag
+    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+    // Send an AJAX request to update the task
+    $.ajax({
+        url: '{{ route('admin.updateresources', '') }}' + '/' + id,
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        headers: {
+            'X-CSRF-TOKEN': csrfToken
+        },
+        success: function(response) {
+
+    // Send an AJAX request to upload the file to Google Drive
+    if (fileType === '1') {
+        $.ajax({
+            url: '/files/storeResources/' + id,
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            success: function(response) {
+                alert('Resource & File updated successfully');
+                location.reload();
+            },
+            error: function(xhr, status, error) {
+                // Handle error if needed
+                console.error(xhr.responseText);
+            }
+        });
+    } else {
+            alert('Resource updated successfully');
+            location.reload();
+        }
+    },
+    error: function(xhr, status, error) {
+        // Handle error
+        console.error(xhr.responseText);
+    }
+});
+
+    // Close the modal
+    $('#editResourceModal' + id).modal('hide');
+
+    // Prevent form submission
+    return false;
+}
 
 </script>
 </html>
