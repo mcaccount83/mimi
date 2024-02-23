@@ -47,10 +47,10 @@
                                </br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
                             </p>
                             @if($thisDate->month >= 5 && $thisDate->month <= 8)
-                             <div id="readOnlyText" class="description text-center" style="color: red;">
-                                <p><strong>All Board Member Information is READ ONLY at this time.<br>
-                                In order to add new board members to MIMI, please complete the Board Election Report.<br>
-                                If you need to make updates to your current year officers, please contact your Primary Coordinator.</strong></p>
+                             <div id="readOnlyText" class="description text-center">
+                                <p><span style="color: red;"><strong>All Board Member Information is READ ONLY at this time.<br>
+                                    In order to add new board members to MIMI, please complete the Board Election Report.<br>
+                                    If you need to make updates to your current year officers, please contact your Primary Coordinator.</strong></span></p>
                             </div>
                             @endif
                     </div>
@@ -373,6 +373,19 @@
 <script>
 /* Disable fields and buttons  */
 $(document).ready(function () {
+    var currentDate = new Date();
+    var currentMonth = currentDate.getMonth() + 1; // JavaScript months are 0-based
+
+    if (currentMonth >= 5 && currentMonth <= 8) {
+        // Disable all input fields, select elements, textareas and Save button
+        $('input, select, textarea').prop('disabled', true);
+        $('#Save').prop('disabled', true);
+    } else {
+        // If the condition is not met, keep the fields active
+        $('input, select, textarea').prop('disabled', false);
+        $('#Save').prop('disabled', false);
+    }
+
         // //Update to show/hide for true/false
         // $('#reportStatusText').show();  /*report status text (.show/.hide to change visibility)*/
         // $('#readOnlyText').hide();  /*read only text (.show/.hide to change visibility)*/

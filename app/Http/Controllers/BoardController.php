@@ -976,6 +976,29 @@ class BoardController extends Controller
 
 
     /**
+     * Show Chapter Resources
+     */
+    public function chapterResources()
+    {
+        $resources = DB::table('resources')
+            ->select('resources.*',
+                DB::raw('CASE
+                    WHEN category = 1 THEN "BYLAWS"
+                    WHEN category = 2 THEN "FACT SHEETS"
+                    WHEN category = 3 THEN "COPY READY MATERIAL"
+                    WHEN category = 4 THEN "IDEAS AND INSPIRATION"
+                    WHEN category = 5 THEN "CHAPTER RESOURCES"
+                    WHEN category = 6 THEN "SAMPLE CHPATER FILES"
+                    WHEN category = 7 THEN "END OF YEAR"
+                    ELSE "Unknown"
+                END as priority_word'))
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return view('resources', ['resources' => $resources,]);
+    }
+
+    /**
      * Show EOY BoardInfo All Board Members
      */
     public function showBoardInfo(Request $request): View
@@ -1405,59 +1428,6 @@ class BoardController extends Controller
         }
     }
 
-    // public function printFinancialReport(Request $request, $chapterId)
-    // {
-    //     $borDetails = User::find($request->user()->id)->BoardDetails;
-    //     $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
-    //     $isActive = $borDetails['is_active'];
-    //     if ($isActive != 1) {
-    //         Auth::logout();
-    //         $request->session()->flush();
-
-    //         return redirect()->to('/login');
-    //     }
-
-    //     $financial_report_array = FinancialReport::find($chapterId);
-
-    //     $chapterDetails = DB::table('chapters')
-    //         ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state')
-    //         ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-    //         ->where('chapters.is_active', '=', '1')
-    //         ->where('chapters.id', '=', $chapterId)
-    //         ->get();
-
-    //     $submitted = $chapterDetails[0]->financial_report_received;
-    //     $data = ['financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails];
-
-    //     return view('boards.printfinancial')->with($data);
-    // }
-
-    // public function printFinancialReport2(Request $request, $chapterId)
-    // {
-    //     $borDetails = User::find($request->user()->id)->BoardDetails;
-    //     $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
-    //     $isActive = $borDetails['is_active'];
-    //     if ($isActive != 1) {
-    //         Auth::logout();
-    //         $request->session()->flush();
-
-    //         return redirect()->to('/login');
-    //     }
-
-    //     $financial_report_array = FinancialReport::find($chapterId);
-
-    //     $chapterDetails = DB::table('chapters')
-    //         ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state')
-    //         ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-    //         ->where('chapters.is_active', '=', '1')
-    //         ->where('chapters.id', '=', $chapterId)
-    //         ->get();
-
-    //     $submitted = $chapterDetails[0]->financial_report_received;
-    //     $data = ['financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails];
-
-    //     return view('boards.printfinancial2')->with($data);
-    // }
 
     /**
      * Save EOY Financial Report All Board Members
