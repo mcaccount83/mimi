@@ -23,68 +23,94 @@
 
                 </div>
                 <div class="card-body">
-                    <div class="author">
-                        <a href="#">
-							<div class="border-gray avatar">
-								<img src="{{ asset('chapter_theme/img/logo.png') }}" alt="...">
-							</div>
-                            <h2 class="moms-c">MOMS Club of {{$chapterDetails->name}}, {{$chapterState}}</h2>
-                        </a>
-                        <h4 class="ein">
-                            EIN: {{$chapterDetails->ein}}
-                        </h4>
-                        <p class="description">
-                            Boundaries: {{$chapterDetails->territory}}
-                        </p>
-                    </div>
-                    <p class="description text-center">
-                        <b>{{$borDetails->first_name}} {{$borDetails->last_name}}, {{$boardPositionAbbreviation}}</b>
-                    </p>
-                <p class="description text-center">
-                    Welcome to the MOMS Club's "MOMS information Management Interface" -- MIMI!
-                </br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
-                    </p>
-                                <!-- Display the description text based on the disabled/enabled state -->
-                            <div id="readOnlyText" class="description text-center" style="color: red;">
+                    @php
+                        $thisDate = \Carbon\Carbon::now();
+                    @endphp
+                        <div class="author">
+                                <div class="border-gray avatar">
+                                    <img src="{{ asset('chapter_theme/img/logo.png') }}" alt="...">
+                                </div>
+                               <h2 class="moms-c"> MOMS Club of {{$chapterDetails->name}}, {{$chapterState}} </h2>
+                            </a>
+                            <h4 class="ein">
+                                EIN: {{$chapterDetails->ein}}
+                            </h4>
+                            <p class="description">
+                                Boundaries: {{$chapterDetails->territory}}
+                            </p>
+                        </div>
+                            <p class="description text-center">
+                                <b>{{$borDetails->first_name}} {{$borDetails->last_name}}, {{$boardPositionAbbreviation}}</b>
+                            </p>
+                        <p class="description text-center">
+                               Welcome to the MOMS Club's "MOMS information Management Interface" -- MIMI!
+                               </br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
+                            </p>
+                            @if($thisDate->month >= 5 && $thisDate->month <= 8)
+                             <div id="readOnlyText" class="description text-center" style="color: red;">
                                 <p><strong>All Board Member Information is READ ONLY at this time.<br>
                                 In order to add new board members to MIMI, please complete the Board Election Report.<br>
                                 If you need to make updates to your current year officers, please contact your Primary Coordinator.</strong></p>
                             </div>
-                </div>
-
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <div id="reportStatusText" class="description text-center" style="color: red;">
-                        <p><strong><?php echo date('Y')-1 .'-'.date('Y');?> Reports are not available at this time.</strong></p>
+                            @endif
                     </div>
-                    <div class="col-md-12 text-center">
-                        <div class="col-md-4 float-left">
-                       @if($chapterDetails->ein_letter=='1')
-                      <a class="btn btn-info btn-fill" href="{{ $chapterDetails->ein_letter_path }}" target="blank"><i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; View/Download EIN Letter</a>
-                      	@else
-                       <a class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>><i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; No EIN Letter on File</a>
-                       	@endif
-                      </div>
 
-                    <div class="col-md-4 float-left">
-					@if($chapterDetails->new_board_active=='1')
-                        <button type="button" id="BoardReportAlwaysDisabled" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $chapterDetails->id]) }}'">
-                            <i class="fa fa-user-plus fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
-                        </button>
-                    @else
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                <div class="card">
+                   <div class="card-body">
+
+                    @if ($thisDate->gte($due_date))
+                        @if ($due_date->month === $thisDate->month)
+                            <div class="col-md-12" style="color: green;"><center>Your chapter's anniversary month is <strong>{{ $startMonth }}</strong>.&nbsp; Your Re-registration payment is due now.</center></div>
+                        @else
+                            <div class="col-md-12" style="color: red;"><center>Your chapter's anniversary month was <strong>{{ $startMonth }}</strong>.&nbsp; Your Re-registration payment is now considered overdue.</center></div>
+                        @endif
+                        <div class="col-md-12"><br></div>
+                        <div class="col-md-12 text-center">
+                            <a href="{{ route('board.showreregpayment') }}" class="btn btn-info btn-fill"><i class="fa fa-money fa-fw" aria-hidden="true" ></i>&nbsp; PAY HERE</a>
+                        </div>
+                        <hr>
+                    <div class="col-md-12"><br></div>
+                    @endif
+
+                    @if($thisDate->month >= 1 && $thisDate->month <= 5)
+                    <div class="col-md-12"><br></div>
+                        <div class="col-md-12 text-center">
+                        <div class="col-md-4 float-left">
+                            @if($chapterDetails->ein_letter=='1')
+                          <a class="btn btn-info btn-fill" href="{{ $chapterDetails->ein_letter_path }}" target="blank"><i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; View/Download EIN Letter</a>
+                              @else
+                           <a class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>><i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; No EIN Letter on File</a>
+                               @endif
+                          </div>
+                          <div id="reportStatusText" class="description text-center">
+                            <p><strong><?php echo date('Y')-1 .'-'.date('Y');?> EOY Reports are not available at this time.</strong></p>
+                        </div>
+                    @endif
+
+                    @if($thisDate->month >= 6 && $thisDate->month <= 12)
+                        <div class="col-md-4 float-left">
+                            @if($chapterDetails->new_board_active=='1')
+                            <button type="button" id="BoardReportAlwaysDisabled" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $chapterDetails->id]) }}'">
+                                <i class="fa fa-user-plus fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
+                            </button>
+                        @else
                         <button type="button" id="BoardReport" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $chapterDetails->id]) }}'">
                             <i class="fa fa-user-plus fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
-                        </button>
-                    @endif
-                </div>
-                <div class="col-md-4 float-left">
+                            </button>
+                        @endif
+                    </div>
+                    <div class="col-md-4 float-left">
                         <button type="button" id="FinancialReport" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $chapterDetails->id]) }}'">
                             <i class="fa fa-usd fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y')-1 .'-'.date('Y') }} Financial Report
-                        </button>
-                    </div>
+                            </button>
+                        </div>
+                    @endif
+
+
                     </div>
                 </div>
 
@@ -331,8 +357,9 @@
                         <button type="submit" id="Save" class="btn btn-info btn-fill" onclick="return PreSaveValidate()"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button></div><br>
                     <div class="box-body text-center">
                     {{-- <button type="button" class="btn btn-info btn-fill" onclick="window.open('https://groups.google.com/a/momsclub.org/g/2023-24boardlist"><i class="fa fa-list fa-fw" aria-hidden="true" ></i>&nbsp; BoardList Forum</button> --}}
-                    <button type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-info btn-fill"><i class="fa fa-graduation-cap fa-fw" aria-hidden="true" ></i>&nbsp; eLearning Library</button></div>
+                    <button type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-info btn-fill"><i class="fa fa-graduation-cap fa-fw" aria-hidden="true" ></i>&nbsp; eLearning Library</button>
                     <a href="{{ route('board.resources') }}" class="btn btn-info btn-fill"><i class="fa fa-briefcase fa-fw" aria-hidden="true" ></i>&nbsp; Chapter Resources</a>
+                </div>
                 </div>
                 </div>
 			</form>
@@ -346,18 +373,18 @@
 <script>
 /* Disable fields and buttons  */
 $(document).ready(function () {
-        //Update to show/hide for true/false
-        $('#reportStatusText').show();  /*report status text (.show/.hide to change visibility)*/
-        $('#readOnlyText').hide();  /*read only text (.show/.hide to change visibility)*/
-        $('input, select, textarea').prop('disabled', false);  /*fields on page (true disables fields for editing)*/
-        $('#BoardReport').prop('disabled', true);  /*board report button (true grays out button)*/
-        $('#FinancialReport').prop('disabled', true);  /*financial report button (true grays out button)*/
-        $('#Save').prop('disabled', false);  /*save button (true grays out button)*/
-        $('.BoardInfoStatus').hide();  /*board info status (.show/.hide to change visibility)*/
-        $('.FinancialReportStatus').hide();  /*financial report status (.show/.hide to change visibility)*/
+        // //Update to show/hide for true/false
+        // $('#reportStatusText').show();  /*report status text (.show/.hide to change visibility)*/
+        // $('#readOnlyText').hide();  /*read only text (.show/.hide to change visibility)*/
+        // $('input, select, textarea').prop('disabled', false);  /*fields on page (true disables fields for editing)*/
+        // $('#BoardReport').prop('disabled', true);  /*board report button (true grays out button)*/
+        // $('#FinancialReport').prop('disabled', true);  /*financial report button (true grays out button)*/
+        // $('#Save').prop('disabled', false);  /*save button (true grays out button)*/
+        // $('.BoardInfoStatus').hide();  /*board info status (.show/.hide to change visibility)*/
+        // $('.FinancialReportStatus').hide();  /*financial report status (.show/.hide to change visibility)*/
 
-        //ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report
-        $('#BoardReportAlwaysDisabled').prop('disabled', true);
+        // //ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report
+        // $('#BoardReportAlwaysDisabled').prop('disabled', true);
 
     //Check the disabled status of EOY Buttons and show the "fields are locked" description if necessary
     if ($('input, select, textarea').prop('disabled')) {

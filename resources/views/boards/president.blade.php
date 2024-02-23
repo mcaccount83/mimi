@@ -23,8 +23,10 @@
                 <div class="card-image color_header">
                 </div>
                 <div class="card-body">
+                @php
+                    $thisDate = \Carbon\Carbon::now();
+                @endphp
                     <div class="author">
-                        <a href="#">
 							<div class="border-gray avatar">
 								<img src="{{ asset('chapter_theme/img/logo.png') }}" alt="...">
 							</div>
@@ -44,12 +46,13 @@
                            Welcome to the MOMS Club's "MOMS information Management Interface" -- MIMI!
                            </br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
                         </p>
-                             <!-- Display the description text based on the disabled/enabled state -->
-                        <div id="readOnlyText" class="description text-center" style="color: red;">
+                        @if($thisDate->month >= 5 && $thisDate->month <= 8)
+                         <div id="readOnlyText" class="description text-center" style="color: red;">
                             <p><strong>All Board Member Information is READ ONLY at this time.<br>
                             In order to add new board members to MIMI, please complete the Board Election Report.<br>
                             If you need to make updates to your current year officers, please contact your Primary Coordinator.</strong></p>
                         </div>
+                        @endif
                 </div>
 
             </div>
@@ -60,9 +63,6 @@
                <div class="card-body">
                 @foreach($chapterList as $list)
 
-                @php
-                    $thisDate = \Carbon\Carbon::now();
-                @endphp
                 @if ($thisDate->gte($due_date))
                     @if ($due_date->month === $thisDate->month)
                         <div class="col-md-12" style="color: green;"><center>Your chapter's anniversary month is <strong>{{ $startMonth }}</strong>.&nbsp; Your Re-registration payment is due now.</center></div>
