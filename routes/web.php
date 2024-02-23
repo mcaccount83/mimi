@@ -60,8 +60,8 @@ Route::get('/chapter-links', [ChapterController::class, 'chapterLinks'])->name('
 /**
  * Routes for Public Pages
  */
-Route::get('/chapterlinks', [PublicController::class, 'chapterLinks']);
-Route::get('/chapterresoures', [PublicController::class, 'chapterResources']);
+Route::get('/public/chapterlinks', [PublicController::class, 'chapterLinks'])->name('public.chapterlinks');
+Route::get('/public/chapterresources', [PublicController::class, 'chapterResources'])->name('public.resources');
 
 /**
  * Routes for Admin Controller

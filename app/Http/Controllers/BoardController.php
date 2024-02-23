@@ -974,30 +974,6 @@ class BoardController extends Controller
         return view('boards.resources')->with($data);
     }
 
-
-    /**
-     * Show Chapter Resources
-     */
-    public function chapterResources()
-    {
-        $resources = DB::table('resources')
-            ->select('resources.*',
-                DB::raw('CASE
-                    WHEN category = 1 THEN "BYLAWS"
-                    WHEN category = 2 THEN "FACT SHEETS"
-                    WHEN category = 3 THEN "COPY READY MATERIAL"
-                    WHEN category = 4 THEN "IDEAS AND INSPIRATION"
-                    WHEN category = 5 THEN "CHAPTER RESOURCES"
-                    WHEN category = 6 THEN "SAMPLE CHPATER FILES"
-                    WHEN category = 7 THEN "END OF YEAR"
-                    ELSE "Unknown"
-                END as priority_word'))
-            ->orderBy('name', 'asc')
-            ->get();
-
-        return view('resources', ['resources' => $resources,]);
-    }
-
     /**
      * Show EOY BoardInfo All Board Members
      */
