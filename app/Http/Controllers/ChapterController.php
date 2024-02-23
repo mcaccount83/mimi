@@ -4638,4 +4638,29 @@ class ChapterController extends Controller
 
         return view('chapterlinks', compact('link_array_intl', 'link_array_usa'));
     }
+
+    public function masonryLinks()
+    {
+        $international =  DB::table('chapters')
+            ->select('chapters.*', 'state.state_short_name', 'state.state_long_name')
+            ->join('state', 'chapters.state', '=', 'state.id')
+            ->where('state', '=', '52')
+            ->where('is_active', '1')
+            ->where('name', 'not like', '%test%')
+            ->orderBy('name')
+            ->get();
+
+        $chapters = DB::table('chapters')
+            ->select('chapters.*', 'state.state_short_name', 'state.state_long_name')
+            ->join('state', 'chapters.state', '=', 'state.id')
+            ->where('chapters.state', '<>', 52)
+            ->where('is_active', '1')
+            ->where('name', 'not like', '%test%')
+            ->orderBy('state')
+            ->orderBy('name')
+            ->get();
+
+        return view('masonrylinks', ['chapters' => $chapters, 'international' => $international]);
+    }
+
 }
