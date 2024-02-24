@@ -2,6 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateToolkitAdminRequest;
+use App\Http\Requests\AddToolkitAdminRequest;
+use App\Http\Requests\UpdateResourcesAdminRequest;
+use App\Http\Requests\AddResourcesAdminRequest;
+use App\Http\Requests\UpdateProgressionAdminRequest;
+use App\Http\Requests\AddProgressionAdminRequest;
 use App\Mail\AdminNewMIMIBugWish;
 use App\Models\Admin;
 use App\Models\Resources;
@@ -58,7 +64,7 @@ class AdminController extends Controller
     /**
      * Add New Task to Bugs & Enhancements List
      */
-    public function addProgression(Request $request)
+    public function addProgression(AddProgressionAdminRequest $request)
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -76,11 +82,7 @@ class AdminController extends Controller
             ->orderByDesc('priority')
             ->first(); // Fetch only one record
 
-        $validatedData = $request->validate([
-            'taskNameNew' => 'required|string|max:255',
-            'taskDetailsNew' => 'required|string',
-            'taskPriorityNew' => 'required',
-        ]);
+        $validatedData = $request->validated();
 
         $task = new Admin;
         $task->task = $validatedData['taskNameNew'];
@@ -105,14 +107,9 @@ class AdminController extends Controller
     /**
      * Update Task on Bugs & Enhancements List
      */
-    public function updateProgression(Request $request, $id)
+    public function updateProgression(UpdateProgressionAdminRequest $request, $id)
     {
-        $validatedData = $request->validate([
-            'taskDetails' => 'required|string',
-            'taskNotes' => 'nullable|string',
-            'taskStatus' => 'required',
-            'taskPriority' => 'required',
-        ]);
+        $validatedData = $request->validated();
 
         $task = Admin::findOrFail($id);
         $task->details = $validatedData['taskDetails'];
@@ -176,7 +173,7 @@ class AdminController extends Controller
     /**
      * Add New Files or Links to the Resources List
      */
-    public function addResources(Request $request)
+    public function addResources(AddResourcesAdminRequest $request)
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -193,15 +190,7 @@ class AdminController extends Controller
         //     ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
         //     ->first(); // Fetch only one record
 
-        $validatedData = $request->validate([
-            'fileCategoryNew' => 'required',
-            'fileNameNew' => 'required|string|max:50',
-            'fileDescriptionNew' => 'required|string|max:500',
-            'fileTypeNew' => 'required',
-            'fileVersionNew' => 'nullable|string|max:25',
-            'LinkNew' => 'nullable|string|max:255',
-            'filePathNew' => 'nullable|string|max:255',
-        ]);
+        $validatedData = $request->validated();
 
         $file = new Resources;
         $file->category = $validatedData['fileCategoryNew'];
@@ -227,7 +216,7 @@ class AdminController extends Controller
     /**
      * Update Files or Links on the Resources List
      */
-    public function updateResources(Request $request, $id)
+    public function updateResources(UpdateResourcesAdminRequest $request, $id)
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -243,12 +232,7 @@ class AdminController extends Controller
             ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
             ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
             ->first(); // Fetch only one record
-        $validatedData = $request->validate([
-            'fileDescription' => 'required|string|max:500',
-            'fileType' => 'required',
-            'fileVersion' => 'nullable|string|max:25',
-            'link' => 'nullable|string|max:255',
-        ]);
+        $validatedData = $request->validated();
 
         $file = Resources::findOrFail($id);
         $file->description = $validatedData['fileDescription'];
@@ -313,7 +297,7 @@ class AdminController extends Controller
     /**
      * Add New Files or Links to the Toolkit List
      */
-    public function addToolkit(Request $request)
+    public function addToolkit(AddToolkitAdminRequest $request)
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -330,15 +314,7 @@ class AdminController extends Controller
             ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
             ->first(); // Fetch only one record
 
-        $validatedData = $request->validate([
-            'fileCategoryNew' => 'required',
-            'fileNameNew' => 'required|string|max:50',
-            'fileDescriptionNew' => 'required|string|max:255',
-            'fileTypeNew' => 'required',
-            'fileVersionNew' => 'nullable|string|max:25',
-            'LinkNew' => 'nullable|string|max:255',
-            'filePathNew' => 'nullable|string|max:255',
-        ]);
+        $validatedData = $request->validated();
 
         $file = new Resources;
         $file->category = $validatedData['fileCategoryNew'];
@@ -357,7 +333,7 @@ class AdminController extends Controller
     /**
      * Update Files or Links on the Toolkit List
      */
-    public function updateToolkit(Request $request, $id)
+    public function updateToolkit(UpdateToolkitAdminRequest $request, $id)
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -373,13 +349,7 @@ class AdminController extends Controller
             ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
             ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
             ->first(); // Fetch only one record
-        $validatedData = $request->validate([
-            'fileDescription' => 'required|string|max:255',
-            'fileType' => 'required',
-            'fileVersion' => 'nullable|string|max:25',
-            'link' => 'nullable|string|max:255',
-            'filePath' => 'nullable|string|max:255',
-        ]);
+        $validatedData = $request->validated();
 
         $file = Resources::findOrFail($id);
         $file->description = $validatedData['fileDescription'];
