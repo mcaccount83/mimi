@@ -14,13 +14,37 @@ class AddToolkitAdminRequest extends FormRequest
     public function rules()
     {
         return [
-'fileCategoryNew'    => 'required',
-'fileNameNew'        => 'required|string|max:50',
-'fileDescriptionNew' => 'required|string|max:255',
-'fileTypeNew'        => 'required',
-'fileVersionNew'     => 'nullable|string|max:25',
-'LinkNew'            => 'nullable|string|max:255',
-'filePathNew'        => 'nullable|string|max:255',
+'fileCategoryNew'    => [
+                'required',
+            ],
+'fileNameNew'        => [
+                'required',
+                'string',
+                'max:50',
+            ],
+'fileDescriptionNew' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+'fileTypeNew'        => [
+                'required',
+            ],
+'fileVersionNew'     => [
+                'nullable',
+                'string',
+                'max:25',
+            ],
+'LinkNew'            => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+'filePathNew'        => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
 ];
     }
 }

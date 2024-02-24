@@ -14,10 +14,20 @@ class UpdateProgressionAdminRequest extends FormRequest
     public function rules()
     {
         return [
-'taskDetails'  => 'required|string',
-'taskNotes'    => 'nullable|string',
-'taskStatus'   => 'required',
-'taskPriority' => 'required',
+'taskDetails'  => [
+                'required',
+                'string',
+            ],
+'taskNotes'    => [
+                'nullable',
+                'string',
+            ],
+'taskStatus'   => [
+                'required',
+            ],
+'taskPriority' => [
+                'required',
+            ],
 ];
     }
 }

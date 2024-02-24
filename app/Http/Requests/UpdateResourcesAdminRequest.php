@@ -14,10 +14,24 @@ class UpdateResourcesAdminRequest extends FormRequest
     public function rules()
     {
         return [
-'fileDescription' => 'required|string|max:500',
-'fileType'        => 'required',
-'fileVersion'     => 'nullable|string|max:25',
-'link'            => 'nullable|string|max:255',
+'fileDescription' => [
+                'required',
+                'string',
+                'max:500',
+            ],
+'fileType'        => [
+                'required',
+            ],
+'fileVersion'     => [
+                'nullable',
+                'string',
+                'max:25',
+            ],
+'link'            => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
 ];
     }
 }
