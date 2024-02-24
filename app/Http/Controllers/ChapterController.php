@@ -4639,7 +4639,7 @@ class ChapterController extends Controller
         return view('chapter-links', compact('link_array_intl', 'link_array_usa'));
     }
 
-    public function chapterLinks2()
+    public function chapterLinks2(): View
     {
         $international = DB::table('chapters')
             ->select('chapters.*', 'state.state_short_name', 'state.state_long_name')

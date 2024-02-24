@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegOnline;
 use App\Mail\PaymentsSustainingChapterThankYou;
@@ -22,7 +23,7 @@ class PaymentController extends Controller
         Carbon::setTimezone('America/New_York');
     }
 
-    public function processPayment(Request $request)
+    public function processPayment(Request $request): RedirectResponse
     {
         $borDetails = User::find($request->user()->id)->BoardDetails;
         $chapterId = $borDetails['chapter_id'];

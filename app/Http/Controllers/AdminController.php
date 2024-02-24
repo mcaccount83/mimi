@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Requests\UpdateToolkitAdminRequest;
 use App\Http\Requests\AddToolkitAdminRequest;
 use App\Http\Requests\UpdateResourcesAdminRequest;
@@ -173,7 +174,7 @@ class AdminController extends Controller
     /**
      * Add New Files or Links to the Resources List
      */
-    public function addResources(AddResourcesAdminRequest $request)
+    public function addResources(AddResourcesAdminRequest $request): JsonResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];

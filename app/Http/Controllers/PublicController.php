@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
 
 class PublicController extends Controller
@@ -11,7 +12,7 @@ class PublicController extends Controller
         //$this->middleware('auth')->except('logout');
     }
 
-    public function chapterLinks()
+    public function chapterLinks(): View
     {
         $international = DB::table('chapters')
             ->select('chapters.*', 'state.state_short_name', 'state.state_long_name')
@@ -35,7 +36,7 @@ class PublicController extends Controller
         return view('public.chapterlinks', ['chapters' => $chapters, 'international' => $international]);
     }
 
-    public function chapterResources()
+    public function chapterResources(): View
     {
         $resources = DB::table('resources')
             ->select('resources.*',
