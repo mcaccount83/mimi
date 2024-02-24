@@ -2,19 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use net\authorize\api\contract\v1 as AnetAPI;
-use net\authorize\api\controller as AnetController;
-use App\Mail\PaymentsReRegReceipt;
-use App\Mail\PaymentsReRegOnline;
 use App\Mail\PaymentsReRegChapterThankYou;
+use App\Mail\PaymentsReRegOnline;
 use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Models\Chapter;
 use App\Models\User;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
+use net\authorize\api\contract\v1 as AnetAPI;
+use net\authorize\api\controller as AnetController;
 
 class PaymentController extends Controller
 {
@@ -39,12 +37,12 @@ class PaymentController extends Controller
         $chConf = $chapterDetails['conference'];
         $chPcid = $chapterDetails['primary_coordinator_id'];
 
-        $company = $chapterName . ', ' . $chapterState;
+        $company = $chapterName.', '.$chapterState;
         $next_renewal_year = $chapterDetails['next_renewal_year'];
 
         $chapterEmailList = DB::table('board_details as bd')
             ->select('bd.email as bor_email')
-            ->where('bd.chapter_id', '=',$chapterId)
+            ->where('bd.chapter_id', '=', $chapterId)
             ->get();
         $emailListBorad = '';
         foreach ($chapterEmailList as $val) {
@@ -129,7 +127,7 @@ class PaymentController extends Controller
         $merchantAuthentication->setTransactionKey(env('AUTHORIZENET_TRANSACTION_KEY'));
 
         // Set the transaction's refId
-        $refId = 'ref' . time();
+        $refId = 'ref'.time();
 
         // Create the payment data for a credit card
         $creditCard = new AnetAPI\CreditCardType();
@@ -146,7 +144,7 @@ class PaymentController extends Controller
         // Create order information
         $order = new AnetAPI\OrderType();
         $order->setInvoiceNumber($randomInvoiceNumber);
-        $order->setDescription("Re-Registration Payment");
+        $order->setDescription('Re-Registration Payment');
 
         // Set the customer's Bill To address
         $customerAddress = new AnetAPI\CustomerAddressType();
@@ -157,32 +155,32 @@ class PaymentController extends Controller
         $customerAddress->setCity($city);
         $customerAddress->setState($state);
         $customerAddress->setZip($zip);
-        $customerAddress->setCountry("USA");
+        $customerAddress->setCountry('USA');
 
         // Set the customer's identifying information
         $customerData = new AnetAPI\CustomerDataType();
-        $customerData->setType("individual");
+        $customerData->setType('individual');
         $customerData->setId($chapterId);
         $customerData->setEmail($email);
 
         // Add values for transaction settings
         $duplicateWindowSetting = new AnetAPI\SettingType();
-        $duplicateWindowSetting->setSettingName("duplicateWindow");
-        $duplicateWindowSetting->setSettingValue("60");
+        $duplicateWindowSetting->setSettingName('duplicateWindow');
+        $duplicateWindowSetting->setSettingValue('60');
 
         // Add some merchant defined fields. These fields won't be stored with the transaction,
         // but will be echoed back in the response.
         $merchantDefinedField1 = new AnetAPI\UserFieldType();
-        $merchantDefinedField1->setName("MemberCount");
+        $merchantDefinedField1->setName('MemberCount');
         $merchantDefinedField1->setValue($members);
 
         $merchantDefinedField2 = new AnetAPI\UserFieldType();
-        $merchantDefinedField2->setName("SustainingDonation");
+        $merchantDefinedField2->setName('SustainingDonation');
         $merchantDefinedField2->setValue($sustaining);
 
         // Create a TransactionRequestType object and add the previous objects to it
         $transactionRequestType = new AnetAPI\TransactionRequestType();
-        $transactionRequestType->setTransactionType("authCaptureTransaction");
+        $transactionRequestType->setTransactionType('authCaptureTransaction');
         $transactionRequestType->setAmount($amount);
         $transactionRequestType->setOrder($order);
         $transactionRequestType->setPayment($paymentOne);
@@ -204,7 +202,7 @@ class PaymentController extends Controller
 
         if ($response != null) {
             // Check to see if the API request was successfully received and acted upon
-            if ($response->getMessages()->getResultCode() == "Ok") {
+            if ($response->getMessages()->getResultCode() == 'Ok') {
                 // Since the API request was successful, look for a transaction response and parse it to display the results of authorizing the card
                 $tresponse = $response->getTransactionResponse();
                 if ($tresponse != null && $tresponse->getMessages() != null) {
@@ -215,7 +213,7 @@ class PaymentController extends Controller
                         'members' => $members,
                         'late' => $late,
                         'sustaining' => $donation,
-                        'reregTotal' =>$rereg,
+                        'reregTotal' => $rereg,
                         'processing' => $fee,
                         'totalPaid' => $total,
                         'fname' => $first,
@@ -234,28 +232,28 @@ class PaymentController extends Controller
                     $to_email3 = $cor_pcemail;
                     $to_email4 = explode(',', $emailListCoor);
                     $to_email5 = $ConfCoorEmail;
-                    $to_email6 = "dragonmom@msn.com";
+                    $to_email6 = 'dragonmom@msn.com';
 
                     $existingRecord = Chapter::where('id', $chapterId)->first();
-                        $existingRecord->members_paid_for = $members;
-                        $existingRecord->next_renewal_year = $next_renewal_year + 1;
-                        $existingRecord->dues_last_paid = Carbon::today();
+                    $existingRecord->members_paid_for = $members;
+                    $existingRecord->next_renewal_year = $next_renewal_year + 1;
+                    $existingRecord->dues_last_paid = Carbon::today();
+
+                    Mail::to([$to_email, $to_email2])
+                        ->cc($to_email3)
+                        ->send(new PaymentsReRegChapterThankYou($mailData));
+
+                    Mail::to([$to_email5, $to_email6])
+                        ->send(new PaymentsReRegOnline($mailData, $coordinator_array));
+
+                    if ($sustaining > 0.00) {
+                        $existingRecord->sustaining_donation = $sustaining;
+                        $existingRecord->sustaining_date = Carbon::today();
 
                         Mail::to([$to_email, $to_email2])
                             ->cc($to_email3)
-                            ->send(new PaymentsReRegChapterThankYou($mailData));
-
-                        Mail::to([$to_email5, $to_email6])
-                            ->send(new PaymentsReRegOnline($mailData, $coordinator_array));
-
-                        if ($sustaining > 0.00) {
-                            $existingRecord->sustaining_donation = $sustaining;
-                            $existingRecord->sustaining_date = Carbon::today();
-
-                            Mail::to([$to_email, $to_email2])
-                                ->cc($to_email3)
-                                ->send(new PaymentsSustainingChapterThankYou($mailData));
-                        }
+                            ->send(new PaymentsSustainingChapterThankYou($mailData));
+                    }
                     $existingRecord->save();
 
                     // Success notification
@@ -263,14 +261,14 @@ class PaymentController extends Controller
                     // return redirect()->route('home')->with('success', 'Payment successful! Transaction ID: ' . $tresponse->getTransId());
                 } else {
                     // Transaction failed
-                    $error_message = "Transaction Failed";
+                    $error_message = 'Transaction Failed';
                     if ($tresponse->getErrors() != null) {
-                        $error_message .= "\n Error Code: " . $tresponse->getErrors()[0]->getErrorCode();
-                        $error_message .= "\n Error Message: " . $tresponse->getErrors()[0]->getErrorText();
+                        $error_message .= "\n Error Code: ".$tresponse->getErrors()[0]->getErrorCode();
+                        $error_message .= "\n Error Message: ".$tresponse->getErrors()[0]->getErrorText();
                     }
+
                     return redirect()->to('/board/showreregpayment')->with('fail', $error_message);
                 }
-
 
                 // Or, print errors if the API request wasn't successful
             } else {
@@ -278,14 +276,16 @@ class PaymentController extends Controller
                 $tresponse = $response->getTransactionResponse();
 
                 if ($tresponse != null && $tresponse->getErrors() != null) {
-                    $error_message = "Transaction Failed";
-                    $error_message .= "\n Error Code: " . $tresponse->getErrors()[0]->getErrorCode();
-                    $error_message .= "\n Error Message: " . $tresponse->getErrors()[0]->getErrorText();
+                    $error_message = 'Transaction Failed';
+                    $error_message .= "\n Error Code: ".$tresponse->getErrors()[0]->getErrorCode();
+                    $error_message .= "\n Error Message: ".$tresponse->getErrors()[0]->getErrorText();
+
                     return redirect()->back()->with('fail', $error_message);
                 } else {
-                    $error_message = "Transaction Failed";
-                    $error_message .= "\n Error Code: " . $response->getMessages()->getMessage()[0]->getCode();
-                    $error_message .= "\n Error Message: " . $response->getMessages()->getMessage()[0]->getText();
+                    $error_message = 'Transaction Failed';
+                    $error_message .= "\n Error Code: ".$response->getMessages()->getMessage()[0]->getCode();
+                    $error_message .= "\n Error Message: ".$response->getMessages()->getMessage()[0]->getText();
+
                     return redirect()->to('/board/showreregpayment')->with('fail', $error_message);
                 }
             }
@@ -371,5 +371,4 @@ class PaymentController extends Controller
             'coordinator_array' => $coordinator_array,
         ];
     }
-
 }

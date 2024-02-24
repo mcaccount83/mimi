@@ -2,21 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\CoordinatorRetireAdmin;
-use App\Models\FinancialReport;
-use App\Models\User;
+use App\Mail\AdminNewMIMIBugWish;
 use App\Models\Admin;
 use App\Models\Resources;
-use App\Mail\AdminNewMIMIBugWish;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\RedirectResponse;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
-use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -133,7 +127,7 @@ class AdminController extends Controller
         $task->save();
     }
 
-     /**
+    /**
      * View Resources List
      */
     public function showResources(Request $request): View
@@ -146,7 +140,7 @@ class AdminController extends Controller
             ->where('cd.coordinator_id', '=', $corId)
             ->get();
 
-            $resources = DB::table('resources')
+        $resources = DB::table('resources')
             ->select('resources.*', 'resources.id as id',
                 DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),
                 DB::raw('CASE
@@ -168,7 +162,6 @@ class AdminController extends Controller
             $id = $resource->id;
             // Do something with $id
         }
-
 
         // Determine if the user is allowed to add and update resources
         $positionId = $corDetails['position_id'];
@@ -277,8 +270,7 @@ class AdminController extends Controller
         $file->save();
     }
 
-
-     /**
+    /**
      * View Toolkit List
      */
     public function showToolkit(Request $request): View
@@ -400,6 +392,4 @@ class AdminController extends Controller
 
         $file->save();
     }
-
-
 }

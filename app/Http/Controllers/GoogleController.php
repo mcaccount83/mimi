@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Store990NGoogleRequest;
 use App\Http\Requests\StoreAward1GoogleRequest;
 use App\Http\Requests\StoreAward2GoogleRequest;
 use App\Http\Requests\StoreAward3GoogleRequest;
 use App\Http\Requests\StoreAward4GoogleRequest;
 use App\Http\Requests\StoreAward5GoogleRequest;
-use App\Http\Requests\Store990NGoogleRequest;
 use App\Http\Requests\StoreEINGoogleRequest;
+use App\Http\Requests\StoreResourcesGoogleRequest;
 use App\Http\Requests\StoreRosterGoogleRequest;
 use App\Http\Requests\StoreStatement1GoogleRequest;
 use App\Http\Requests\StoreStatement2GoogleRequest;
-use App\Http\Requests\StoreResourcesGoogleRequest;
 use App\Models\Chapter;
 use App\Models\FinancialReport;
 use App\Models\Resources;
@@ -422,7 +422,6 @@ class GoogleController extends Controller
         }
     }
 
-
     public function storeAward3(StoreAward3GoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
@@ -476,7 +475,6 @@ class GoogleController extends Controller
         }
     }
 
-
     public function storeAward4(StoreAward4GoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
@@ -529,7 +527,6 @@ class GoogleController extends Controller
             return redirect()->back()->with('error', 'File failed to upload');
         }
     }
-
 
     public function storeAward5(StoreAward5GoogleRequest $request, $id): RedirectResponse
     {
@@ -629,5 +626,4 @@ class GoogleController extends Controller
         }
 
     }
-
 }

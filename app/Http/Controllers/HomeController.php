@@ -6,8 +6,8 @@ use App\Models\Chapter;
 use App\Models\FinancialReport;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -212,7 +212,7 @@ class HomeController extends Controller
             } elseif ($borPositionId != 1 && $isActive == 1) {
                 $data = ['chapterState' => $chapterState, 'chapterDetails' => $chapterDetails, 'boardPositionAbbreviation' => $boardPositionAbbreviation, 'currentMonthAbbreviation' => $currentMonthAbbreviation,
                     'stateArr' => $stateArr, 'borPositionId' => $borPositionId, 'borDetails' => $borDetails,
-                    'startMonth' => $start_monthInWords, 'thisMonth' => $month, 'due_date' => $due_date, 'late_date' => $late_date ];
+                    'startMonth' => $start_monthInWords, 'thisMonth' => $month, 'due_date' => $due_date, 'late_date' => $late_date];
 
                 return view('boards.members')->with($data);
             } else {

@@ -26,8 +26,8 @@ class EmailSent
     /**
      * Create a new event instance.
      *
-     * @param string $recipient
-     * @param string $subject
+     * @param  string  $recipient
+     * @param  string  $subject
      */
     public function __construct($recipient, $subject)
     {

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class PublicController extends Controller
@@ -14,7 +13,7 @@ class PublicController extends Controller
 
     public function chapterLinks()
     {
-        $international =  DB::table('chapters')
+        $international = DB::table('chapters')
             ->select('chapters.*', 'state.state_short_name', 'state.state_long_name')
             ->join('state', 'chapters.state', '=', 'state.id')
             ->where('state', '=', '52')
@@ -53,6 +52,6 @@ class PublicController extends Controller
             ->orderBy('name', 'asc')
             ->get();
 
-        return view('public.resources', ['resources' => $resources,]);
+        return view('public.resources', ['resources' => $resources]);
     }
 }

@@ -15,6 +15,4 @@ class Resources extends Authenticatable
     protected $fillable = [
         'name', 'description', 'version', 'link',
     ];
-
-
 }
