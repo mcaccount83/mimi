@@ -123,8 +123,8 @@ class PaymentController extends Controller
         /* Create a merchantAuthenticationType object with authentication details
             retrieved from the constants file */
         $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
-        $merchantAuthentication->setName(env('AUTHORIZENET_API_LOGIN_ID'));
-        $merchantAuthentication->setTransactionKey(env('AUTHORIZENET_TRANSACTION_KEY'));
+        $merchantAuthentication->setName(config('settings.authorizenet_api_login_id'));
+        $merchantAuthentication->setTransactionKey(config('settings.authorizenet_transaction_key'));
 
         // Set the transaction's refId
         $refId = 'ref'.time();
