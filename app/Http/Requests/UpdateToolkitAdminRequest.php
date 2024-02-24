@@ -12,29 +12,29 @@ class UpdateToolkitAdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-'fileDescription' => [
+            'fileDescription' => [
                 'required',
                 'string',
                 'max:255',
             ],
-'fileType'        => [
+            'fileType' => [
                 'required',
             ],
-'fileVersion'     => [
+            'fileVersion' => [
                 'nullable',
                 'string',
                 'max:25',
             ],
-'link'            => [
+            'link' => [
                 'nullable',
                 'string',
                 'max:255',
             ],
-'filePath'        => [
+            'filePath' => [
                 'nullable',
                 'string',
                 'max:255',
             ],
-];
+        ];
     }
 }

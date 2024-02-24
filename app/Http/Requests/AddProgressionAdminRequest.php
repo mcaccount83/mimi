@@ -12,18 +12,18 @@ class AddProgressionAdminRequest extends FormRequest
     public function rules(): array
     {
         return [
-'taskNameNew'     => [
+            'taskNameNew' => [
                 'required',
                 'string',
                 'max:255',
             ],
-'taskDetailsNew'  => [
+            'taskDetailsNew' => [
                 'required',
                 'string',
             ],
-'taskPriorityNew' => [
+            'taskPriorityNew' => [
                 'required',
             ],
-];
+        ];
     }
 }
