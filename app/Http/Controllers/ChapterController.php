@@ -38,7 +38,7 @@ class ChapterController extends Controller
     public function __construct()
     {
         //$this->middleware('preventBackHistory');
-        $this->middleware('auth')->except('logout', 'chapterLinks');
+        $this->middleware('auth')->except('logout', 'chapterLinks', 'chapterLinks2');
     }
 
     /**
@@ -4636,7 +4636,32 @@ class ChapterController extends Controller
             $link_array_usa[$key]['url'] = $value->website_url;
         }
 
-        return view('chapterlinks', compact('link_array_intl', 'link_array_usa'));
+        return view('chapter-links', compact('link_array_intl', 'link_array_usa'));
     }
+
+    public function chapterLinks2()
+    {
+        $international =  DB::table('chapters')
+            ->select('chapters.*', 'state.state_short_name', 'state.state_long_name')
+            ->join('state', 'chapters.state', '=', 'state.id')
+            ->where('state', '=', '52')
+            ->where('is_active', '1')
+            ->where('name', 'not like', '%test%')
+            ->orderBy('name')
+            ->get();
+
+        $chapters = DB::table('chapters')
+            ->select('chapters.*', 'state.state_short_name', 'state.state_long_name')
+            ->join('state', 'chapters.state', '=', 'state.id')
+            ->where('chapters.state', '<>', 52)
+            ->where('is_active', '1')
+            ->where('name', 'not like', '%test%')
+            ->orderBy('state')
+            ->orderBy('name')
+            ->get();
+
+        return view('chapterlinks', ['chapters' => $chapters, 'international' => $international]);
+    }
+
 
 }

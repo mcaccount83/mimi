@@ -56,12 +56,14 @@ Route::get('/getreporting', [CoordinatorController::class, 'getReportingList'])-
 Route::get('/getdirectreport', [CoordinatorController::class, 'getDirectReportingList'])->name('get.directreport');
 Route::get('/getchapterprimary', [CoordinatorController::class, 'getChapterPrimaryFor'])->name('get.chapterprimary');
 Route::get('/chapter-links', [ChapterController::class, 'chapterLinks'])->name('chapter.links');
+Route::get('/chapterlinks', [ChapterController::class, 'chapterLinks2'])->name('chapter.links2');
+
 
 /**
  * Routes for Public Pages
  */
-Route::get('/public/chapterlinks', [PublicController::class, 'chapterLinks'])->name('public.chapterlinks');
-Route::get('/public/chapterresources', [PublicController::class, 'chapterResources'])->name('public.resources');
+Route::get('/chapterlinks', [PublicController::class, 'chapterLinks'])->name('public.chapterlinks');
+Route::get('/chapterresources', [PublicController::class, 'chapterResources'])->name('public.resources');
 
 /**
  * Routes for Admin Controller
