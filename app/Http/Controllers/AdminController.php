@@ -42,7 +42,7 @@ class AdminController extends Controller
                     ELSE "Unknown"
                 END as priority_word'))
             ->leftJoin('coordinator_details as cd', 'admin.reported_id', '=', 'cd.coordinator_id')
-            ->orderBy('priority', 'desc')
+            ->orderByDesc('priority')
             ->get();
 
         // Determine if the user is allowed to edit notes and status
@@ -73,7 +73,7 @@ class AdminController extends Controller
         $admin = DB::table('admin')
             ->select('admin.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS reported_by'))
             ->leftJoin('coordinator_details as cd', 'admin.reported_id', '=', 'cd.coordinator_id')
-            ->orderBy('priority', 'desc')
+            ->orderByDesc('priority')
             ->first(); // Fetch only one record
 
         $validatedData = $request->validate([
@@ -154,7 +154,7 @@ class AdminController extends Controller
                     ELSE "Unknown"
                 END as priority_word'))
             ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
-            ->orderBy('name', 'asc')
+            ->orderBy('name')
             ->get();
 
         // Assuming you want to access the 'id' property of each resource, you need to iterate through $resources
@@ -297,7 +297,7 @@ class AdminController extends Controller
                     ELSE "Unknown"
                 END as priority_word'))
             ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
-            ->orderBy('name', 'asc')
+            ->orderBy('name')
             ->get();
 
         // Determine if the user is allowed to edit notes and status

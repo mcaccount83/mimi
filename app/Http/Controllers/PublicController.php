@@ -49,7 +49,7 @@ class PublicController extends Controller
                     WHEN category = 7 THEN "END OF YEAR"
                     ELSE "Unknown"
                 END as priority_word'))
-            ->orderBy('name', 'asc')
+            ->orderBy('name')
             ->get();
 
         return view('public.resources', ['resources' => $resources]);

@@ -965,7 +965,7 @@ class BoardController extends Controller
                     ELSE "Unknown"
                 END as priority_word'))
             ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
-            ->orderBy('name', 'asc')
+            ->orderBy('name')
             ->get();
 
         $data = ['chapterState' => $chapterState, 'chapterList' => $chapterList, 'resources' => $resources];
