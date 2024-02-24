@@ -16,5 +16,4 @@ class BoardList extends Model
         'content',
         // Add other fillable fields as needed
     ];
-
 }

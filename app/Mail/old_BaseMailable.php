@@ -2,10 +2,10 @@
 
 namespace App\Mail;
 
+use App\Events\EmailSent;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable as BaseMailable;
 use Illuminate\Queue\SerializesModels;
-use App\Events\EmailSent;
 
 class Mailable extends BaseMailable
 {

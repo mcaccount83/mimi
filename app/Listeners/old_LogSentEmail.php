@@ -2,9 +2,6 @@
 
 namespace App\Listeners;
 
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-
 class LogSentEmail
 {
     /**
@@ -20,7 +17,6 @@ class LogSentEmail
             'App\Listeners\LogSentEmail',
         ],
     ];
-
 
     /**
      * Handle the event.

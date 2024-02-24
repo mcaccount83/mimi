@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class PublicController extends Controller
 {
@@ -12,9 +12,9 @@ class PublicController extends Controller
         //$this->middleware('auth')->except('logout');
     }
 
-    public function chapterLinks()
+    public function chapterLinks(): View
     {
-        $international =  DB::table('chapters')
+        $international = DB::table('chapters')
             ->select('chapters.*', 'state.state_short_name', 'state.state_long_name')
             ->join('state', 'chapters.state', '=', 'state.id')
             ->where('state', '=', '52')
@@ -36,7 +36,7 @@ class PublicController extends Controller
         return view('public.chapterlinks', ['chapters' => $chapters, 'international' => $international]);
     }
 
-    public function chapterResources()
+    public function chapterResources(): View
     {
         $resources = DB::table('resources')
             ->select('resources.*',
@@ -50,9 +50,9 @@ class PublicController extends Controller
                     WHEN category = 7 THEN "END OF YEAR"
                     ELSE "Unknown"
                 END as priority_word'))
-            ->orderBy('name', 'asc')
+            ->orderBy('name')
             ->get();
 
-        return view('public.resources', ['resources' => $resources,]);
+        return view('public.resources', ['resources' => $resources]);
     }
 }

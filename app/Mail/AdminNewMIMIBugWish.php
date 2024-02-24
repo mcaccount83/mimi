@@ -20,7 +20,7 @@ class AdminNewMIMIBugWish extends Mailable
         $this->mailData = $mailData;
     }
 
-  /**
+    /**
      * Build the message.
      */
     public function build(): static
@@ -29,5 +29,4 @@ class AdminNewMIMIBugWish extends Mailable
             ->subject('New MIMI Bugs & Wishes Submitted')
             ->markdown('emails.admin.newmimibugwish');
     }
-
 }

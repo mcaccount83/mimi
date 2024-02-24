@@ -31,8 +31,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+
 class ChapterController extends Controller
 {
     public function __construct()
@@ -4482,8 +4482,8 @@ class ChapterController extends Controller
                 DB::commit();
                 if ($submitType == 'review_complete') {
                     return redirect()->back()->with('success', 'Report has been successfully Marked as Review Complete');
-                // } elseif ($submitType == 'review_clear') {
-                //     return redirect()->back()->with('success', 'Review Complete has been successfully cleared');
+                    // } elseif ($submitType == 'review_clear') {
+                    //     return redirect()->back()->with('success', 'Review Complete has been successfully cleared');
                 } else {
                     return redirect()->back()->with('success', 'Report has been successfully Updated');
                 }
@@ -4495,7 +4495,7 @@ class ChapterController extends Controller
                 //throw $e;     // Show on screen error intead of message - use only for testing
             }
 
-                return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
 
     }
@@ -4639,9 +4639,9 @@ class ChapterController extends Controller
         return view('chapter-links', compact('link_array_intl', 'link_array_usa'));
     }
 
-    public function chapterLinks2()
+    public function chapterLinks2(): View
     {
-        $international =  DB::table('chapters')
+        $international = DB::table('chapters')
             ->select('chapters.*', 'state.state_short_name', 'state.state_long_name')
             ->join('state', 'chapters.state', '=', 'state.id')
             ->where('state', '=', '52')
@@ -4662,6 +4662,4 @@ class ChapterController extends Controller
 
         return view('chapterlinks', ['chapters' => $chapters, 'international' => $international]);
     }
-
-
 }

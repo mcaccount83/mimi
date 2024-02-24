@@ -25,11 +25,8 @@ class EmailSent
 
     /**
      * Create a new event instance.
-     *
-     * @param string $recipient
-     * @param string $subject
      */
-    public function __construct($recipient, $subject)
+    public function __construct(string $recipient, string $subject)
     {
         $this->recipient = $recipient;
         $this->subject = $subject;
