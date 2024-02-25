@@ -1328,7 +1328,10 @@ class ReportController extends Controller
             $coordinator_array[$key] = (array) $value;
         }
 
-        return view('reports.reportingtree', compact('coordinator_array', 'cord_pos_id'));
+        return view('reports.reportingtree', [
+            'coordinator_array' => $coordinator_array,
+            'cord_pos_id' => $cord_pos_id,
+        ]);
     }
 
     /**
