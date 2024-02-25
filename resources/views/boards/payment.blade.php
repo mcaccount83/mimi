@@ -36,7 +36,7 @@
                         <div class="col-md-12"><center>Re-registration payments are due each year by the last day of your anniversary month.</center></div>
                         <div class="col-md-12"><center>Your next due date: <strong>{{ $startMonth }} {{ $chapterList[0]->next_renewal_year }}</strong></center></div>
                         @php
-                           $thisDate = \Carbon\Carbon::now();
+                           $thisDate = \Illuminate\Support\Carbon::now();
                         @endphp
                         @if ($thisDate->gte($due_date))
                             @if ($due_date->month === $thisDate->month)
@@ -55,7 +55,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>RE-REGISTRATION DUES LAST PAID</label>
-                                    <p>{{\Carbon\Carbon::parse($chapterList[0]->dues_last_paid)->format('m-d-Y')}}</p>
+                                    <p>{{\Illuminate\Support\Carbon::parse($chapterList[0]->dues_last_paid)->format('m-d-Y')}}</p>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -116,7 +116,7 @@
                                 <input type="text" name="members" id="members" class="form-control"  required >
                             </div>
                             @php
-                                $thisDate = \Carbon\Carbon::now();
+                                $thisDate = \Illuminate\Support\Carbon::now();
                             @endphp
                             <div class="col-md-4" disabled >
                                 <label>Late Fee</label>

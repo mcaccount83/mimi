@@ -24,7 +24,7 @@
                 </div>
                 <div class="card-body">
                 @php
-                    $thisDate = \Carbon\Carbon::now();
+                    $thisDate = \Illuminate\Support\Carbon::now();
                 @endphp
                     <div class="author">
 							<div class="border-gray avatar">
@@ -607,7 +607,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>RE-REGISTRATION DUES LAST PAID</label>
-                                <p>{{\Carbon\Carbon::parse($chapterList[0]->dues_last_paid)->format('m-d-Y')}}</p>
+                                <p>{{\Illuminate\Support\Carbon::parse($chapterList[0]->dues_last_paid)->format('m-d-Y')}}</p>
                             </div>
                         </div>
                         <div class="col-md-6">

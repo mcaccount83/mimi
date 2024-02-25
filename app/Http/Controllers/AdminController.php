@@ -12,7 +12,7 @@ use App\Mail\AdminNewMIMIBugWish;
 use App\Models\Admin;
 use App\Models\Resources;
 use App\Models\User;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

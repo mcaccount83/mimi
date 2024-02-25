@@ -107,7 +107,7 @@
                                                                 <div class="col-md-6"><br></div>
                                                                 <div class="col-md-12">
                                                                 <div class="form-group">
-                                                                    Updated <strong>{{ $resourceItem->updated_by }}</strong> on <strong>{{ \Carbon\Carbon::parse($resourceItem->updated_date)->format('m-d-Y') }}</strong>
+                                                                    Updated <strong>{{ $resourceItem->updated_by }}</strong> on <strong>{{ \Illuminate\Support\Carbon::parse($resourceItem->updated_date)->format('m-d-Y') }}</strong>
                                                                 </div>
                                                                 </div>
                                                             </form>
