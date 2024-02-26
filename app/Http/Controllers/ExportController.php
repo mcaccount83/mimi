@@ -2322,4 +2322,121 @@ class ExportController extends Controller
         fclose($output);
         exit($output);
     }
+
+    /**
+     * Export International Chapter List
+     */
+    public function indexBoardList(Request $request)
+    {
+        $fileName = 'board_list_'.date('Y-m-d').'.csv';
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$fileName",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+        //Get Coordinators Details
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corId = $corDetails['coordinator_id'];
+        $corConfId = $corDetails['conference_id'];
+        $corlayerId = $corDetails['layer_id'];
+        $activeChapterList = DB::table('chapters')
+            ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'bd.email as pre_email', 'st.state_short_name as state')
+            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
+            ->where('chapters.is_active', '=', '1')
+            ->where('bd.board_position_id', '=', '1')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
+            ->get();
+
+        if (count($activeChapterList) > 0) {
+            $exportChapterList = [];
+            foreach ($activeChapterList as $list) {
+                $chapterId = $list->id;
+                //For AVP Details
+                $avpDeatils = DB::table('chapters')
+                    ->select('chapters.id', 'bd.email as avp_email', 'bd.board_position_id as positionid')
+                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->where('chapters.is_active', '=', '1')
+                    ->where('bd.board_position_id', '=', '2')
+                    ->where('chapters.id', '=', $chapterId)
+                    ->get()->toArray();
+                if (count($avpDeatils) > 0) {
+                    $list->avp_email = $avpDeatils[0]->avp_email;
+                } else {
+                    $list->avp_email = '';
+                }
+                //For MVP Details
+                $mvpDeatils = DB::table('chapters')
+                    ->select('chapters.id', 'bd.email as mvp_email', 'bd.board_position_id as positionid')
+                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->where('chapters.is_active', '=', '1')
+                    ->where('bd.board_position_id', '=', '3')
+                    ->where('chapters.id', '=', $chapterId)
+                    ->get()->toArray();
+                if (count($mvpDeatils) > 0) {
+                    $list->mvp_email = $mvpDeatils[0]->mvp_email;
+                } else {
+                    $list->mvp_email = '';
+                }
+                //For TREASURER Details
+                $trsDeatils = DB::table('chapters')
+                    ->select('chapters.id', 'bd.email as trs_email', 'bd.board_position_id as positionid')
+                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->where('chapters.is_active', '=', '1')
+                    ->where('bd.board_position_id', '=', '4')
+                    ->where('chapters.id', '=', $chapterId)
+                    ->get()->toArray();
+                if (count($trsDeatils) > 0) {
+                    $list->trs_email = $trsDeatils[0]->trs_email;
+                } else {
+                    $list->trs_email = '';
+                }
+                //For SECRETARY Details
+                $secDeatils = DB::table('chapters')
+                    ->select('chapters.id', 'bd.email as sec_email', 'bd.board_position_id as positionid')
+                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->where('chapters.is_active', '=', '1')
+                    ->where('bd.board_position_id', '=', '5')
+                    ->where('chapters.id', '=', $chapterId)
+                    ->get()->toArray();
+                if (count($secDeatils) > 0) {
+                    $list->sec_email = $secDeatils[0]->sec_email;
+                } else {
+                    $list->sec_email = '';
+                }
+
+                $exportChapterList[] = $list;
+            }
+            $columns = ['Conference', 'Region', 'State', 'Name', 'President Email', 'AVP Email', 'MVP Email', 'Treasurer Email', 'Secretary Email'];
+            $callback = function () use ($exportChapterList, $columns) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, $columns);
+
+                foreach ($exportChapterList as $list) {
+                    fputcsv($file, [
+                        $list->conf,
+                        $list->reg_name,
+                        $list->state,
+                        $list->name,
+                        $list->pre_email,
+                        $list->avp_email,
+                        $list->mvp_email,
+                        $list->trs_email,
+                        $list->sec_email,
+                    ]);
+                }
+                fclose($file);
+            };
+
+            return Response::stream($callback, 200, $headers);
+        }
+
+        return redirect()->to('/boardlist');
+    }
+
 }

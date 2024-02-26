@@ -53,6 +53,9 @@
                   @endforeach
                   </tbody>
                 </table>
+                <div class="box-body text-center">
+                    <a href="{{ route('export.boardlist','0') }}"><button class="btn btn-themeBlue margin"><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export BoardList</button></a>
+                </div>
             </div>
            </div>
           <!-- /.box -->

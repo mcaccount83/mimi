@@ -52,14 +52,13 @@ Route::get('/getregion/{id}', [CoordinatorController::class, 'getRegionList'])->
 Route::get('/getreporting', [CoordinatorController::class, 'getReportingList'])->name('get.reporting');
 Route::get('/getdirectreport', [CoordinatorController::class, 'getDirectReportingList'])->name('get.directreport');
 Route::get('/getchapterprimary', [CoordinatorController::class, 'getChapterPrimaryFor'])->name('get.chapterprimary');
-Route::get('/chapter-links', [ChapterController::class, 'chapterLinks'])->name('chapter.links');
-Route::get('/chapterlinks', [ChapterController::class, 'chapterLinks2'])->name('chapter.links2');
+Route::get('/chapterlinks', [ChapterController::class, 'chapterLinks'])->name('chapter.links');
 
 /**
  * Routes for Public Pages
  */
-Route::get('/chapterlinks', [PublicController::class, 'chapterLinks'])->name('public.chapterlinks');
-Route::get('/chapterresources', [PublicController::class, 'chapterResources'])->name('public.resources');
+Route::get('/chapter-links', [PublicController::class, 'chapterLinks'])->name('chapter.links');
+Route::get('/chapter-resources', [PublicController::class, 'chapterResources'])->name('board.resources');
 
 /**
  * Routes for Admin Controller
@@ -187,6 +186,7 @@ Route::get('/export/inteinstatus', [ExportController::class, 'indexIntEINStatus'
 Route::get('/export/intrereg', [ExportController::class, 'indexIntReReg'])->name('export.intrereg');
 Route::get('/export/inteoystatus', [ExportController::class, 'indexIntEOYStatus'])->name('export.inteoystatus');
 Route::get('/export/boardelection', [ExportController::class, 'indexBoardElection'])->name('export.boardelection');
+Route::get('/export/boardlist', [ExportController::class, 'indexBoardList'])->name('export.boardlist');
 
 /**
  * Routes for Board Controller

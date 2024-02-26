@@ -20,7 +20,7 @@ To calculate your payment:
 <li>If this total amount of members is less than 10, make your check for the amount of $50</li>
 <li>If this total amount of members is 10 or more, multiply the number by $5.00 to get your total amount due</li></ul>
 
-Pay online through your MIMI account: https://momsclub.org/mimi<br>
+Pay online through your MIMI account: <a href="https://momsclub.org/mimi">https://momsclub.org/mimi</a><br>
 <br>
 OR to pay by mail:<br>
 Be sure your full chapter name, including state abbreviation, is on your check so that the re-registration can be credited properly.
