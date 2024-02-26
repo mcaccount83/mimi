@@ -615,7 +615,8 @@ class GoogleController extends Controller
 
         if ($response->getStatusCode() === 200) { // Check for a successful status code
             $file_id = $jsonResponse['id'];
-            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
+            //$path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
+            $path = 'https://drive.google.com/uc?export=download&id=$file_id';
 
             $resource->file_path = $path;
             $resource->save();
