@@ -40,7 +40,7 @@
         </div>
 
         @php
-            $thisDate = \Carbon\Carbon::now();
+            $thisDate = \Illuminate\Support\Carbon::now();
         @endphp
 
         <div class="row">

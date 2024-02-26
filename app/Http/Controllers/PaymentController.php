@@ -7,9 +7,9 @@ use App\Mail\PaymentsReRegOnline;
 use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Models\Chapter;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use net\authorize\api\contract\v1 as AnetAPI;
@@ -20,7 +20,7 @@ class PaymentController extends Controller
     public function __construct()
     {
         // Set the timezone explicitly for the whole controller
-        Carbon::setTimezone('America/New_York');
+        //Carbon::setTimezone('America/New_York');
     }
 
     public function processPayment(Request $request): RedirectResponse
