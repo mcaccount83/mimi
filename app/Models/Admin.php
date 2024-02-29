@@ -10,7 +10,7 @@ class Admin extends Model
     use HasFactory;
 
     protected $fillable = [
-        'task', 'details', 'status', 'priority', 'reported_id', 'notes'
+        'task', 'details', 'status', 'priority', 'reported_id', 'notes',
     ];
 
     protected $table = 'admin';

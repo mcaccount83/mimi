@@ -12,6 +12,6 @@ class Resources extends Authenticatable
     use Notifiable;
 
     protected $fillable = [
-        'name', 'description', 'version', 'link'
+        'name', 'description', 'version', 'link',
     ];
 }
