@@ -9,5 +9,4 @@ class EoyUploads extends Model
 {
     use HasFactory;
 
-    //
 }

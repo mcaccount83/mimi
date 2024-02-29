@@ -12,8 +12,6 @@ class BoardList extends Model
     protected $table = 'board_list';
 
     protected $fillable = [
-        'title',
-        'content',
-        // Add other fillable fields as needed
+        'title', 'content'
     ];
 }
