@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\OutgoingBoardMember;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class OutgoingBoardMemberFactory extends Factory
