@@ -2438,5 +2438,4 @@ class ExportController extends Controller
 
         return redirect()->to('/boardlist');
     }
-
 }
