@@ -3,32 +3,23 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\ConfirmsPasswords;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
-
 class ConfirmPasswordController extends Controller
 {
     use ConfirmsPasswords;
 
     /**
-     * Show the confirmation form.
+     * Where to redirect users when the intended url fails.
      */
-    public function showConfirmForm(): View
-    {
-        return view('auth.passwords.reset');
-    }
+    protected $redirectTo = RouteServiceProvider::HOME;
 
     /**
-     * Confirm the user's password.
+     * Create a new controller instance.
      */
-    protected function confirm(Request $request): RedirectResponse
+    public function __construct()
     {
-        $request->validate([
-            'password' => 'required|password',
-        ]);
-
-        return redirect()->intended(route('dashboard'));
+        $this->middleware('auth');
     }
+
 }
