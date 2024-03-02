@@ -45,14 +45,14 @@ class PaymentController extends Controller
             ->select('bd.email as bor_email')
             ->where('bd.chapter_id', '=', $chapterId)
             ->get();
-        $emailListBorad = '';
+        $emailListBoard = '';
         foreach ($chapterEmailList as $val) {
             $email = $val->bor_email;
             $escaped_email = str_replace("'", "\\'", $email);
-            if ($emailListBorad == '') {
-                $emailListBorad = $escaped_email;
+            if ($emailListBoard == '') {
+                $emailListBoard = $escaped_email;
             } else {
-                $emailListBorad .= ','.$escaped_email;
+                $emailListBoard .= ','.$escaped_email;
             }
         }
 
@@ -181,7 +181,8 @@ class PaymentController extends Controller
 
         // Create a TransactionRequestType object and add the previous objects to it
         $transactionRequestType = new AnetAPI\TransactionRequestType();
-        $transactionRequestType->setTransactionType('authCaptureTransaction');
+        $transactionRequestType->setTransactionType("authOnlyTransaction");
+        //$transactionRequestType->setTransactionType('authCaptureTransaction');
         $transactionRequestType->setAmount($amount);
         $transactionRequestType->setOrder($order);
         $transactionRequestType->setPayment($paymentOne);
@@ -229,7 +230,7 @@ class PaymentController extends Controller
                     ];
 
                     $to_email = $email;
-                    $to_email2 = explode(',', $emailListBorad);
+                    $to_email2 = explode(',', $emailListBoard);
                     $to_email3 = $cor_pcemail;
                     $to_email4 = explode(',', $emailListCoor);
                     $to_email5 = $ConfCoorEmail;
@@ -240,7 +241,7 @@ class PaymentController extends Controller
                     $existingRecord->next_renewal_year = $next_renewal_year + 1;
                     $existingRecord->dues_last_paid = Carbon::today();
 
-                    Mail::to([$to_email, $to_email2])
+                    Mail::to([$to_email])
                         ->cc($to_email3)
                         ->send(new PaymentsReRegChapterThankYou($mailData));
 
@@ -251,7 +252,7 @@ class PaymentController extends Controller
                         $existingRecord->sustaining_donation = $sustaining;
                         $existingRecord->sustaining_date = Carbon::today();
 
-                        Mail::to([$to_email, $to_email2])
+                        Mail::to([$to_email])
                             ->cc($to_email3)
                             ->send(new PaymentsSustainingChapterThankYou($mailData));
                     }
