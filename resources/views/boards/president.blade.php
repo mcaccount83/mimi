@@ -528,6 +528,7 @@
                                             <option value="2" id="option2" {{$chapterList[0]->website_status == 2 ? 'selected' : ''}}>Add Link Requested</option>
                                             <option value="3" id="option3" {{$chapterList[0]->website_status == 3 ? 'selected' : ''}}>Do Not Link</option>
                                         </select>
+                                        <input type="hidden" name="ch_hid_webstatus" value="{{ $chapterList[0]->website_status }}">
                                     </div>
                                 </div>
                             </div>

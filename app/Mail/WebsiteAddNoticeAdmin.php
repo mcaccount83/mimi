@@ -28,7 +28,7 @@ class WebsiteAddNoticeAdmin extends Mailable
     public function build(): static
     {
         return $this
-            ->subject('Website Review Notification')
+            ->subject('Website Link Notification')
             ->markdown('emails.website.addnoticeadmin');
     }
 

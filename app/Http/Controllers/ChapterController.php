@@ -1160,14 +1160,13 @@ class ChapterController extends Controller
                 }
             }
 
-            //change primary coordinator email
-            $cor_details = db::table('coordinator_details')
+            //Change Primary Coordinator Notifications//
+            $coremail = DB::table('coordinator_details')
                 ->select('email')
-                ->where('conference_id', $corConfId)
-                ->where('position_id', 9)
-                ->where('is_active', 1)
+                ->where('is_active', '=', '1')
+                ->where('coordinator_id', $request->input('ch_primarycor'))
                 ->get();
-            $row_count = count($cor_details);
+            $coremail = $coremail[0]->email;
 
             $PREemail = DB::table('board_details')
                 ->select('email')
@@ -1176,30 +1175,6 @@ class ChapterController extends Controller
                 ->where('is_active', 1)
                 ->get();
             $to_email3 = [$PREemail[0]->email];
-
-            $cc_details = db::table('coordinator_details')
-                ->select('email')
-                ->where('conference_id', $corConfId)
-                ->where('coordinator_id', $corId)
-                ->where('is_active', 1)
-                ->get();
-
-            $to_email1 = $cc_details[0]->email;
-
-            $coremail = DB::table('coordinator_details')
-                ->select('email')
-                ->where('is_active', '=', '1')
-                ->where('coordinator_id', $request->input('ch_primarycor'))
-                ->get();
-            $coremail = $coremail[0]->email;
-
-            if ($row_count == 0) {
-                $to_email = $cc_details[0]->email;
-
-            } else {
-                $to_email = $cor_details[0]->email;
-
-            }
 
             if ($request->input('ch_primarycor') != $request->input('ch_hid_primarycor')) {
                 $corename = DB::table('coordinator_details')
@@ -1269,12 +1244,12 @@ class ChapterController extends Controller
                 $cc_details = db::table('coordinator_details')
                     ->select('email')
                     ->where('conference_id', $corConfId)
-                    ->where('coordinator_id', $corId)
+                    ->where('position_id', 6)
                     ->where('is_active', 1)
                     ->get();
-                $to_email4 = $cc_details[0]->email;
+                $to_email4 = $cc_details[0]->email;   //conference coordinator
             } else {
-                $to_email4 = $cor_details[0]->email;
+                $to_email4 = $cor_details[0]->email;  //website reviewer if conf has one
             }
 
             if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
@@ -1502,7 +1477,8 @@ class ChapterController extends Controller
             //Primary Coordinator Notification//
             $to_email = $presInfoUpd[0]->cor_email;
 
-            if ($presInfoUpd[0]->name != $presInfoPre[0]->name || $presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email || $presInfoUpd[0]->street != $presInfoPre[0]->street || $presInfoUpd[0]->city != $presInfoPre[0]->city || $presInfoUpd[0]->state != $presInfoPre[0]->state ||
+            if ($presInfoUpd[0]->name != $presInfoPre[0]->name || $presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email || $presInfoUpd[0]->street != $presInfoPre[0]->street || $presInfoUpd[0]->city != $presInfoPre[0]->city ||
+                    $presInfoUpd[0]->state != $presInfoPre[0]->state || $presInfoUpd[0]->bor_f_name != $presInfoPre[0]->bor_f_name || $presInfoUpd[0]->bor_l_name != $presInfoPre[0]->bor_l_name ||
                     $presInfoUpd[0]->zip != $presInfoPre[0]->zip || $presInfoUpd[0]->phone != $presInfoPre[0]->phone || $presInfoUpd[0]->inquiries_contact != $presInfoPre[0]->inquiries_contact ||
                     $presInfoUpd[0]->ein != $presInfoPre[0]->ein || $presInfoUpd[0]->ein_letter_path != $presInfoPre[0]->ein_letter_path || $presInfoUpd[0]->inquiries_note != $presInfoPre[0]->inquiries_note ||
                     $presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->po_box != $presInfoPre[0]->po_box || $presInfoUpd[0]->website_url != $presInfoPre[0]->website_url ||
@@ -1515,7 +1491,6 @@ class ChapterController extends Controller
 
                 Mail::to($to_email)
                     ->send(new ChapersUpdatePrimaryCoor($mailData));
-
             }
 
             //List Admin Notification//
@@ -2363,12 +2338,12 @@ class ChapterController extends Controller
             $cc_details = db::table('coordinator_details')
                 ->select('email')
                 ->where('conference_id', $corConfId)
-                ->where('coordinator_id', $corId)
+                ->where('position_id', 6)
                 ->where('is_active', 1)
                 ->get();
-            $to_email4 = $cc_details[0]->email;
+            $to_email4 = $cc_details[0]->email;    //conference coordinator
         } else {
-            $to_email4 = $cor_details[0]->email;
+            $to_email4 = $cor_details[0]->email;   //website reviewer if conf has one
         }
 
         if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {

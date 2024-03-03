@@ -480,12 +480,12 @@ class BoardController extends Controller
                 $cc_details = db::table('coordinator_details')
                     ->select('email')
                     ->where('conference_id', $ConfId)
-                    ->where('coordinator_id', $corId)
+                    ->where('position_id', 6)
                     ->where('is_active', 1)
                     ->get();
-                $to_email4 = $cc_details[0]->email;
+                $to_email4 = $cc_details[0]->email;    //conference coordinator
             } else {
-                $to_email4 = $cor_details[0]->email;
+                $to_email4 = $cor_details[0]->email;   //website reviewer if conf has one
             }
 
             if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
@@ -697,7 +697,8 @@ class BoardController extends Controller
             //Primary Coordinator Notification//
             $to_email = $presInfoUpd[0]->cor_email;
 
-            if ($presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email || $presInfoUpd[0]->street != $presInfoPre[0]->street || $presInfoUpd[0]->city != $presInfoPre[0]->city || $presInfoUpd[0]->state != $presInfoPre[0]->state ||
+            if ($presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email || $presInfoUpd[0]->street != $presInfoPre[0]->street || $presInfoUpd[0]->city != $presInfoPre[0]->city ||
+                $presInfoUpd[0]->state != $presInfoPre[0]->state || $presInfoUpd[0]->bor_f_name != $presInfoPre[0]->bor_f_name || $presInfoUpd[0]->bor_l_name != $presInfoPre[0]->bor_l_name ||
                     $presInfoUpd[0]->zip != $presInfoPre[0]->zip || $presInfoUpd[0]->phone != $presInfoPre[0]->phone || $presInfoUpd[0]->inquiries_contact != $presInfoPre[0]->inquiries_contact ||
                     $presInfoUpd[0]->ein != $presInfoPre[0]->ein || $presInfoUpd[0]->ein_letter_path != $presInfoPre[0]->ein_letter_path || $presInfoUpd[0]->inquiries_note != $presInfoPre[0]->inquiries_note ||
                     $presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->po_box != $presInfoPre[0]->po_box || $presInfoUpd[0]->website_url != $presInfoPre[0]->website_url ||
