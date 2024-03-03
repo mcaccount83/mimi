@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Board;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BoardFactory extends Factory

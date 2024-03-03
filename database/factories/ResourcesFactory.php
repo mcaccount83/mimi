@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Resources;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ResourcesFactory extends Factory
