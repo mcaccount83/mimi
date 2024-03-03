@@ -181,7 +181,7 @@ class PaymentController extends Controller
 
         // Create a TransactionRequestType object and add the previous objects to it
         $transactionRequestType = new AnetAPI\TransactionRequestType();
-        $transactionRequestType->setTransactionType("authOnlyTransaction");
+        $transactionRequestType->setTransactionType('authOnlyTransaction');
         //$transactionRequestType->setTransactionType('authCaptureTransaction');
         $transactionRequestType->setAmount($amount);
         $transactionRequestType->setOrder($order);
