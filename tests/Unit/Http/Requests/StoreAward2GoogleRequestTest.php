@@ -8,7 +8,7 @@ use Tests\TestCase;
 /**
  * @see \App\Http\Requests\StoreAward2GoogleRequest
  */
-class StoreAward2GoogleRequestTest extends TestCase
+final class StoreAward2GoogleRequestTest extends TestCase
 {
     /** @var \App\Http\Requests\StoreAward2GoogleRequest */
     private $subject;

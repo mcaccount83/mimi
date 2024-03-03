@@ -9,7 +9,7 @@ use Tests\TestCase;
 /**
  * @see \App\Http\Controllers\PaymentController
  */
-class PaymentControllerTest extends TestCase
+final class PaymentControllerTest extends TestCase
 {
     use RefreshDatabase;
 

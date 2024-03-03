@@ -8,7 +8,7 @@ use Tests\TestCase;
 /**
  * @see \App\Http\Controllers\PublicController
  */
-class PublicControllerTest extends TestCase
+final class PublicControllerTest extends TestCase
 {
     #[Test]
     public function chapter_links_returns_an_ok_response(): void

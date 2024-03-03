@@ -8,7 +8,7 @@ use Tests\TestCase;
 /**
  * @see \App\Http\Requests\AddResourcesAdminRequest
  */
-class AddResourcesAdminRequestTest extends TestCase
+final class AddResourcesAdminRequestTest extends TestCase
 {
     /** @var \App\Http\Requests\AddResourcesAdminRequest */
     private $subject;

@@ -9,7 +9,7 @@ use Tests\TestCase;
 /**
  * @see \App\Http\Controllers\AdminController
  */
-class AdminControllerTest extends TestCase
+final class AdminControllerTest extends TestCase
 {
     use RefreshDatabase;
 

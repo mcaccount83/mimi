@@ -9,7 +9,7 @@ use Tests\TestCase;
 /**
  * @see \App\Http\Controllers\ChapterController
  */
-class ChapterControllerTest extends TestCase
+final class ChapterControllerTest extends TestCase
 {
     use RefreshDatabase;
 

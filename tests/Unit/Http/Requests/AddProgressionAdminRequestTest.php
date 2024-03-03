@@ -8,7 +8,7 @@ use Tests\TestCase;
 /**
  * @see \App\Http\Requests\AddProgressionAdminRequest
  */
-class AddProgressionAdminRequestTest extends TestCase
+final class AddProgressionAdminRequestTest extends TestCase
 {
     /** @var \App\Http\Requests\AddProgressionAdminRequest */
     private $subject;

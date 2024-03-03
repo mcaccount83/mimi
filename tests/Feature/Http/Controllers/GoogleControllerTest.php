@@ -9,7 +9,7 @@ use Tests\TestCase;
 /**
  * @see \App\Http\Controllers\GoogleController
  */
-class GoogleControllerTest extends TestCase
+final class GoogleControllerTest extends TestCase
 {
     use RefreshDatabase;
 

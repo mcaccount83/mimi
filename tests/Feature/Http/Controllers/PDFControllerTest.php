@@ -9,7 +9,7 @@ use Tests\TestCase;
 /**
  * @see \App\Http\Controllers\PDFController
  */
-class PDFControllerTest extends TestCase
+final class PDFControllerTest extends TestCase
 {
     use RefreshDatabase;
 

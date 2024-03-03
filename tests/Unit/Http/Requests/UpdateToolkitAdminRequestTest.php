@@ -8,7 +8,7 @@ use Tests\TestCase;
 /**
  * @see \App\Http\Requests\UpdateToolkitAdminRequest
  */
-class UpdateToolkitAdminRequestTest extends TestCase
+final class UpdateToolkitAdminRequestTest extends TestCase
 {
     /** @var \App\Http\Requests\UpdateToolkitAdminRequest */
     private $subject;
