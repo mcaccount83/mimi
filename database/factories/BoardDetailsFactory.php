@@ -2,10 +2,18 @@
 
 namespace Database\Factories;
 
+use App\Models\BoardDetails;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BoardDetailsFactory extends Factory
 {
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = BoardDetails::class;
+
     /**
      * Define the model's default state.
      *
