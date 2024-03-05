@@ -812,8 +812,12 @@ class BoardController extends Controller
             //PC Admin Notification
             $to_email = $chapterInfo[0]->cor_email;
 
+            if ($boardDetailsUpd[0]->bor_email != $boardDetails[0]->bor_email || $boardDetailsUpd[0]->bor_fname != $boardDetails[0]->bor_fname ||
+            $boardDetailsUpd[0]->bor_lname != $boardDetails[0]->bor_lname) {
+
             Mail::to($to_email, 'MOMS Club')
                 ->send(new ChapersUpdatePrimaryCoorMember($mailData));
+            }
 
             //List Admin Notification//
             $to_email2 = 'listadmin@momsclub.org';

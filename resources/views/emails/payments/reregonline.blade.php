@@ -6,6 +6,23 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}
 <table>
     <tbody>
         <tr>
+            <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Chapter Information</strong></center></td>
+        </tr>
+        <tr>
+            <td>Chapter Name:&nbsp;&nbsp;</td>
+            <td>{{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}</td>
+        </tr>
+        <tr>
+            <td>President Name:&nbsp;&nbsp;</td>
+            <td>{{ $mailData['pres_fname'] }}, {{ $mailData['pres_lname'] }}</td>
+        </tr>
+        <tr>
+            <td>President Address:&nbsp;&nbsp;<br>
+                &nbsp;&nbsp;</td>
+            <td>{{ $mailData['pres_street'] }}<br>
+                {{ $mailData['pres_city'] }}, {{ $mailData['pres_state'] }} {{ $mailData['pres_zip'] }}</td>
+        </tr>
+        <tr>
             <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Payment Information</strong></center></td>
         </tr>
         <tr>

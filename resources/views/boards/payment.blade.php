@@ -211,6 +211,8 @@
                         </div>
 
                         <div class="form-group text-center">
+                            <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after payment submission with success or error message.<br>
+                                DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
                             <button type="submit" class="btn btn-info btn-fill"><i class="fa fa-share fa-fw" aria-hidden="true" ></i>&nbsp;{{ __('Submit Payment') }}</button>
                             <a href="{{ route('home') }}" class="btn btn-info btn-fill"><i class="fa fa-home fa-fw" aria-hidden="true" ></i>&nbsp; Back to HOME</a>
                         </div>
@@ -243,6 +245,10 @@
 @section('customscript')
 
 <script>
+    document.querySelector('form').addEventListener('submit', function(){
+        document.querySelector('button[type="submit"]').setAttribute('disabled', 'disabled');
+    });
+
     function formatCurrency(input) {
         let value = input.value.replace(/\D/g, '');
         value = (value / 100).toFixed(2);

@@ -38,6 +38,12 @@ class PaymentController extends Controller
         $chConf = $chapterDetails['conference'];
         $chPcid = $chapterDetails['primary_coordinator_id'];
 
+        $presDetails = DB::table('board_details as bd')
+        ->select('*')
+        ->where('bd.chapter_id', '=', $chapterId)
+        ->where('bd.board_position_id', '=', 1)
+        ->first();
+
         $company = $chapterName.', '.$chapterState;
         $next_renewal_year = $chapterDetails['next_renewal_year'];
 
@@ -212,6 +218,12 @@ class PaymentController extends Controller
                     $mailData = [
                         'chapterName' => $chapterName,
                         'chapterState' => $chapterState,
+                        'pres_fname' => $presDetails->first_name,
+                        'pres_lname' => $presDetails->last_name,
+                        'pres_street' => $presDetails->street_address,
+                        'pres_city' => $presDetails->city,
+                        'pres_state' => $presDetails->state,
+                        'pres_zip' => $presDetails->zip,
                         'members' => $members,
                         'late' => $late,
                         'sustaining' => $donation,
