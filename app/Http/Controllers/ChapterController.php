@@ -533,6 +533,7 @@ class ChapterController extends Controller
 
             return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again...');
         }
+        Mail::getSwiftMailer()->getTransport()->stop();
 
         return redirect()->to('/chapter/list')->with('success', 'Chapter created successfully');
     }
@@ -1524,6 +1525,7 @@ class ChapterController extends Controller
 
             return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again..');
         }
+        Mail::getSwiftMailer()->getTransport()->stop();
 
         return redirect()->to('/chapter/list')->with('success', 'Chapter has been updated');
     }
@@ -2375,6 +2377,7 @@ class ChapterController extends Controller
                     ->send(new WebsiteReviewNotice($mailData));
             }
         }
+        Mail::getSwiftMailer()->getTransport()->stop();
 
         return redirect()->to('/chapter/website')->with('success', 'Chapter Website has been changed successfully.');
     }
@@ -2627,6 +2630,7 @@ class ChapterController extends Controller
 
             return redirect()->to('/chapter/zapped')->with('fail', 'Something went wrong, Please try again..');
         }
+        Mail::getSwiftMailer()->getTransport()->stop();
 
         return redirect()->to('/chapter/zapped')->with('success', 'Chapter was successfully zapped');
     }
@@ -2795,6 +2799,7 @@ class ChapterController extends Controller
 
             return redirect()->to('/chapter/list')->with('fail', 'Something went wrong, Please try again..');
         }
+        Mail::getSwiftMailer()->getTransport()->stop();
 
         return redirect()->to('/chapter/list')->with('success', 'Chapter was successfully unzapped');
     }
@@ -2995,6 +3000,7 @@ class ChapterController extends Controller
 
             return redirect()->to('/reports/m2mdonation')->with('fail', 'Something went wrong, Please try again.');
         }
+        Mail::getSwiftMailer()->getTransport()->stop();
 
         return redirect()->to('/reports/m2mdonation')->with('success', 'Donation has been successfully saved');
     }
@@ -3276,6 +3282,7 @@ class ChapterController extends Controller
 
             return redirect()->to('/chapter/re-registration')->with('fail', 'Something went wrong, Please try again.');
         }
+        Mail::getSwiftMailer()->getTransport()->stop();
 
         return redirect()->to('/chapter/re-registration')->with('success', 'Payment has been successfully payment saved');
     }
@@ -3395,6 +3402,7 @@ class ChapterController extends Controller
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
+        Mail::getSwiftMailer()->getTransport()->stop();
 
         return redirect()->to('/chapter/re-registration')->with('success', 'Re-Registration Reminders have been successfully sent.');
 
@@ -3534,6 +3542,7 @@ class ChapterController extends Controller
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
+        Mail::getSwiftMailer()->getTransport()->stop();
 
         return redirect()->to('/chapter/re-registration')->with('success', 'Re-Registration Late Reminders have been successfully sent.');
 
