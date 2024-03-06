@@ -22,6 +22,9 @@
             <div class="card card-user">
                 <div class="card-image color_header"></div>
                 <div class="card-body">
+                    @php
+                        $thisDate = \Carbon\Carbon::now();
+                    @endphp
                     <div class="author">
                             <div class="border-gray avatar">
 								<img src="{{ asset('chapter_theme/img/logo.png') }}" alt="...">
@@ -3115,7 +3118,9 @@
                                 <div class="card-body">
                                     <div class="col-md-12 text-center">
                                         <button type="button" class="btn btn-info btn-fill" id="btn-step-12" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+                                        @if($thisDate->month >= 7 && $thisDate->month <= 12)
                                         <button type="button" class="btn btn-info btn-fill" id="final-submit" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-mail-forward fa-fw" aria-hidden="true" ></i>&nbsp; Submit</button>
+                                        @endif
                                     </div>
                                     <hr style="height:3px;border:none;color:#0c71c3;background-color:#0c71c3;" />
                                 </div>
@@ -3133,10 +3138,14 @@
                     @if($user_type !== 'outgoing')
                         <a href="{{ route('home') }}" class="btn btn-info btn-fill"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
                     @endif
-                    <button type="button" id="btn-save" class="btn btn-info btn-fill" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-                    <a href='{{ url("/board/financial/pdf", ["id" => Session::get("chapterid")]) }}' target="_blank" class="">
-                    <button id="buttononclickdisable" class="btn btn-info btn-fill" onClick="this.disabled=true;" <?php if(!$submitted =='1') echo "disabled"; ?>><i class="fa fa-file-pdf-o fa-fw" aria-hidden="true" ></i>&nbsp; View PDF</button>
-                    </a>
+                    @if($submitted !='1')
+                        <button type="button" id="btn-save" class="btn btn-info btn-fill" ><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+                    @endif
+                    @if($submitted =='1')
+                        <a href='{{ url("/board/financial/pdf", ["id" => Session::get("chapterid")]) }}' target="_blank" class="">
+                        <button id="buttononclickdisable" class="btn btn-info btn-fill" onClick="this.disabled=true;"><i class="fa fa-file-pdf-o fa-fw" aria-hidden="true" ></i>&nbsp; View PDF</button>
+                        </a>
+                    @endif
             </div>
         </div>
         <!-- Modal Popups for Uploading Files -->
@@ -3317,10 +3326,10 @@
 @endsection
 @section('customscript')
 <script>
-    /* Disable fields and buttons  */
-    $(document).ready(function () {
-            $('#final-submit').show();  /*report status text (.show/.hide to change visibility)*/
-    });
+    // /* Disable fields and buttons  */
+    // $(document).ready(function () {
+    //         $('#final-submit').show();  /*report status text (.show/.hide to change visibility)*/
+    // });
 
     $('.demo1').fileselect();
 

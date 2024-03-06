@@ -24,14 +24,21 @@
                         <p class="description" style="padding: 0 20px">
                             Please complete the report below with information about your newly elcted board to ensure they have access to all the tools they need to be successful in the upcoming year.
                         </p>
-                       <h4><center><?php if($chapterList[0]->new_board_submitted) echo "<br><font color=\"red\">Thank You! Your chapter's Board Eleciton Report has been Submitted!</font>"; ?></center></h4>
-
+                        @if ($chapterList[0]->new_board_submitted == '1' && $chapterList[0]->new_board_active !='1')
+                        <h4><center><span style="color: red;">Your chapter's Board Eleciton Report has been Submitted!<br>
+                            When Activated, New Board Members will have MIMI Access.</style></center></h4>
+                            <h5><center><span style="color: red;">If you need to make changes, please contact your Primary Coordinator</style></center></h5>
+                        @endif
+                        @if ($chapterList[0]->new_board_active =='1')
+                        <h4><center><span style="color: red;">Your chapter's Board Eleciton Report has been Activated!<br>
+                            New Board Members now have MIMI Access.</style></center></h4>
+                            <h5><center><span style="color: red;">If you need to make changes, please contact your Primary Coordinator</style></center></h5>
+                        @endif
                     </div>
-
                 </div>
-
             </div>
         </div>
+        @if ($chapterList[0]->new_board_active != '1')
         <div class="col-md-12">
 		    <div class="card">
 
@@ -101,7 +108,7 @@
                       <!-- /.form group -->
                       <div class="col-sm-6 col-xs-12">
                         <div class="form-group">
-                            <label>Website Link Status</label> <span class="field-required">*</span>
+                            <label>Website Link Status</label>
                             <select id="ch_webstatus" name="ch_webstatus" class="form-control select2" style="width: 100%;" required>
                                 <option value="0" id="option0" {{$chapterList[0]->website_status == 0 ? 'selected' : ''}} disabled>Website Not Linked</option>
                                 <option value="1" id="option1" {{$chapterList[0]->website_status == 1 ? 'selected' : ''}} disabled>Website Linked</option>
@@ -513,10 +520,14 @@
                             </div>
 						<input type="hidden" name="secID" id="secID" value="<?php echo $SECDetails[0]->ibd_id; ?>" />
                     </div>
+                    @endif
+
                     <div class="card-body">
                     <div class="col-md-12 text-center">
                         <a href="{{ route('home') }}" class="btn btn-info btn-fill"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
+                        @if ($chapterList[0]->new_board_submitted != '1')
                         <button type="submit" class="btn btn-info btn-fill" onclick="return PreSaveValidate()" <?php if($chapterList[0]->new_board_submitted) echo "disabled"; ?>><i class="fa fa-mail-forward fa-fw" aria-hidden="true" ></i>&nbsp; Submit</button>
+                        @endif
                     </div>
                 </div>
 				</form>
@@ -529,10 +540,19 @@
 @endsection
 @section('customscript')
 <script>
-
 $(document).ready(function() {
   $('#add_link_req').parent().hide();
   $('#not_link').parent().hide();
+
+  // Disable all input fields, select elements, textareas, and submit button if the condition is met
+  if ("{{$chapterList[0]->new_board_submitted}}" === '1') {
+        $('input, select, textarea').prop('disabled', true);
+        $('#submit').prop('disabled', true);
+    } else {
+        // If the condition is not met, keep the fields active
+        $('input, select, textarea').prop('disabled', false);
+        $('#submit').prop('disabled', false);
+    }
 });
 
 // Disable Web Link Status option 0 and 1
