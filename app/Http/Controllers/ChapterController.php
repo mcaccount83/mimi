@@ -3373,14 +3373,31 @@ class ChapterController extends Controller
         }
 
         // Send a single email with multiple recipients
-        foreach ($mailData as $chapterName => $data) {
-            $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
-            $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
+        // foreach ($mailData as $chapterName => $data) {
+        //     $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
+        //     $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
 
-            if (! empty($emailRecipients)) {
-                Mail::to($emailRecipients)
-                    ->cc($cc_email)
-                    ->send(new PaymentsReRegReminder($data));
+        //     if (! empty($emailRecipients)) {
+        //         Mail::to($emailRecipients)
+        //             ->cc($cc_email)
+        //             ->send(new PaymentsReRegReminder($data));
+        //     }
+        // }
+
+        foreach ($mailData as $chapterName => $data) {
+            $toRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
+            $ccRecipients = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
+
+            if (!empty($toRecipients)) {
+                // Split recipients into batches of 50 - so won't be over 100 after adding ccRecipients
+                $toBatches = array_chunk($toRecipients, 50);
+
+                foreach ($toBatches as $toBatch) {
+                    $email = new PaymentsReRegReminder($data);
+                    $email->to($toBatch);
+                    $email->cc($ccRecipients);
+                    Mail::send($email);
+                }
             }
         }
 
@@ -3513,16 +3530,33 @@ class ChapterController extends Controller
         }
 
         // Send a single email with multiple recipients
-        foreach ($mailData as $chapterName => $data) {
-            $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
-            $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
+        // foreach ($mailData as $chapterName => $data) {
+        //     $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
+        //     $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
 
-            if (! empty($emailRecipients)) {
-                Mail::to($emailRecipients)
-                    ->cc($cc_email)
-                    ->send(new PaymentsReRegLate($data));
+        //     if (! empty($emailRecipients)) {
+        //         Mail::to($emailRecipients)
+        //             ->cc($cc_email)
+        //             ->send(new PaymentsReRegLate($data));
+        //     }
+        // }
+        foreach ($mailData as $chapterName => $data) {
+            $toRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
+            $ccRecipients = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
+
+            if (!empty($toRecipients)) {
+                // Split recipients into batches of 50 - so won't be over 100 after adding ccRecipients
+                $toBatches = array_chunk($toRecipients, 50);
+
+                foreach ($toBatches as $toBatch) {
+                    $email = new PaymentsReRegLate($data);
+                    $email->to($toBatch);
+                    $email->cc($ccRecipients);
+                    Mail::send($email);
+                }
             }
         }
+
         try {
             DB::commit();
         } catch (\Exception $e) {
