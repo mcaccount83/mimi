@@ -39,10 +39,10 @@ class PaymentController extends Controller
         $chPcid = $chapterDetails['primary_coordinator_id'];
 
         $presDetails = DB::table('board_details as bd')
-        ->select('*')
-        ->where('bd.chapter_id', '=', $chapterId)
-        ->where('bd.board_position_id', '=', 1)
-        ->first();
+            ->select('*')
+            ->where('bd.chapter_id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', 1)
+            ->first();
 
         $company = $chapterName.', '.$chapterState;
         $next_renewal_year = $chapterDetails['next_renewal_year'];
