@@ -844,9 +844,21 @@ class BoardController extends Controller
     /**
      * Show Re-Registrstion Payment Form All Board Members
      */
-    public function showReregistrationPaymentForm(Request $request): View
+    public function showReregistrationPaymentForm(Request $request)
     {
-        $borDetails = User::find($request->user()->id)->BoardDetails;
+        //$borDetails = User::find($request->user()->id)->BoardDetails;
+        $user = User::find($request->user()->id);
+        // Check if user is not found
+        if (!$user) {
+            return redirect()->route('home');
+        }
+
+        $borDetails = $user->BoardDetails;
+        // Check if BoardDetails is not found for the user
+        if (!$borDetails) {
+            return redirect()->route('home');
+        }
+
         $borPositionId = $borDetails['board_position_id'];
         $chapterId = $borDetails['chapter_id'];
         $isActive = $borDetails['is_active'];
@@ -928,9 +940,21 @@ class BoardController extends Controller
     /**
      * Show Chater Resources
      */
-    public function showResources(Request $request): View
+    public function showResources(Request $request)
     {
-        $borDetails = User::find($request->user()->id)->BoardDetails;
+        //$borDetails = User::find($request->user()->id)->BoardDetails;
+        $user = User::find($request->user()->id);
+        // Check if user is not found
+        if (!$user) {
+            return redirect()->route('home');
+        }
+
+        $borDetails = $user->BoardDetails;
+        // Check if BoardDetails is not found for the user
+        if (!$borDetails) {
+            return redirect()->route('home');
+        }
+
         $borPositionId = $borDetails['board_position_id'];
         $chapterId = $borDetails['chapter_id'];
         $isActive = $borDetails['is_active'];
@@ -981,9 +1005,21 @@ class BoardController extends Controller
     /**
      * Show EOY BoardInfo All Board Members
      */
-    public function showBoardInfo(Request $request): View
+    public function showBoardInfo(Request $request)
     {
-        $borDetails = User::find($request->user()->id)->BoardDetails;
+        //$borDetails = User::find($request->user()->id)->BoardDetails;
+        $user = User::find($request->user()->id);
+        // Check if user is not found
+        if (!$user) {
+            return redirect()->route('home');
+        }
+
+        $borDetails = $user->BoardDetails;
+        // Check if BoardDetails is not found for the user
+        if (!$borDetails) {
+            return redirect()->route('home');
+        }
+
         $borPositionId = $borDetails['board_position_id'];
         $chapterId = $borDetails['chapter_id'];
         $isActive = $borDetails['is_active'];
