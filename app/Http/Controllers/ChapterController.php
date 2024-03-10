@@ -196,13 +196,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -557,13 +557,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -1560,13 +1560,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -1653,13 +1653,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -1690,13 +1690,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -1853,13 +1853,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -1930,13 +1930,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -1984,13 +1984,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -2046,13 +2046,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -2100,13 +2100,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -2168,13 +2168,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -2205,13 +2205,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -2308,13 +2308,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -2413,13 +2413,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -3029,13 +3029,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -3189,13 +3189,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -3292,13 +3292,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -3596,7 +3596,7 @@ class ChapterController extends Controller
             $toRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
             $ccRecipients = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
 
-            if (!empty($toRecipients)) {
+            if (! empty($toRecipients)) {
                 // Split recipients into batches of 50 - so won't be over 100 after adding ccRecipients
                 $toBatches = array_chunk($toRecipients, 50);
 
@@ -3752,7 +3752,7 @@ class ChapterController extends Controller
             $toRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
             $ccRecipients = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
 
-            if (!empty($toRecipients)) {
+            if (! empty($toRecipients)) {
                 // Split recipients into batches of 50 - so won't be over 100 after adding ccRecipients
                 $toBatches = array_chunk($toRecipients, 50);
 
@@ -3829,13 +3829,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -3950,13 +3950,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -4507,13 +4507,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
@@ -4764,13 +4764,13 @@ class ChapterController extends Controller
         //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->CoordinatorDetails;
         // Check if BoardDetails is not found for the user
-        if (!$corDetails) {
+        if (! $corDetails) {
             return redirect()->route('home');
         }
 
