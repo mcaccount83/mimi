@@ -20,7 +20,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
-use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class BoardController extends Controller
@@ -849,13 +848,13 @@ class BoardController extends Controller
         //$borDetails = User::find($request->user()->id)->BoardDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $borDetails = $user->BoardDetails;
         // Check if BoardDetails is not found for the user
-        if (!$borDetails) {
+        if (! $borDetails) {
             return redirect()->route('home');
         }
 
@@ -945,13 +944,13 @@ class BoardController extends Controller
         //$borDetails = User::find($request->user()->id)->BoardDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $borDetails = $user->BoardDetails;
         // Check if BoardDetails is not found for the user
-        if (!$borDetails) {
+        if (! $borDetails) {
             return redirect()->route('home');
         }
 
@@ -1010,13 +1009,13 @@ class BoardController extends Controller
         //$borDetails = User::find($request->user()->id)->BoardDetails;
         $user = User::find($request->user()->id);
         // Check if user is not found
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('home');
         }
 
         $borDetails = $user->BoardDetails;
         // Check if BoardDetails is not found for the user
-        if (!$borDetails) {
+        if (! $borDetails) {
             return redirect()->route('home');
         }
 
