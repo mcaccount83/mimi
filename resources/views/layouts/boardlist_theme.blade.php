@@ -87,7 +87,7 @@
 
         @endphp
 
-        <li class="{{ Request::is('boardlist') ? 'active' : '' }}  ">
+        {{-- <li class="{{ Request::is('boardlist') ? 'active' : '' }}  ">
             <a href="{{ route('boardlist.index') }}">
               <i class="fa fa-list"></i> <span>BoardList</span>
             </a>
@@ -103,7 +103,7 @@
             <a href="{{ route('boardlist.index') }}">
               <i class="fa fa-files-o"></i> <span>My Posts</span>
             </a>
-          </li>
+          </li> --}}
 
 
 
