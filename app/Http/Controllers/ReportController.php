@@ -30,8 +30,7 @@ class ReportController extends Controller
     public function showChapterStatus(Request $request): View
     {
         //Get Coordinators Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -106,8 +105,7 @@ class ReportController extends Controller
     public function showDownloads(Request $request): View
     {
         //Get Coordinators Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -160,8 +158,7 @@ class ReportController extends Controller
     public function showEINstatus(Request $request): View
     {
         //Get Coordinators Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -214,8 +211,7 @@ class ReportController extends Controller
     public function showIntEINstatus(Request $request): View
     {
         //Get Coordinators Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -259,8 +255,7 @@ class ReportController extends Controller
      */
     public function showChapterStatusView(Request $request, $id): View
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
@@ -310,8 +305,7 @@ class ReportController extends Controller
     public function showChapterNew(Request $request): View
     {
         //Get Coordinators Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -409,8 +403,7 @@ class ReportController extends Controller
     public function showChapterLarge(Request $request): View
     {
         //Get Coordinators Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -487,8 +480,7 @@ class ReportController extends Controller
     public function showChapterProbation(Request $request): View
     {
         //Get Coordinators Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -563,8 +555,7 @@ class ReportController extends Controller
     public function showSocialMedia(Request $request): View
     {
         //Get Coordinators Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -618,8 +609,7 @@ class ReportController extends Controller
     public function showM2Mdonation(Request $request): View
     {
         //Get Coordinators Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -696,8 +686,7 @@ class ReportController extends Controller
     public function showIntM2Mdonation(Request $request): View
     {
         //Get Coordinators Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -766,8 +755,7 @@ class ReportController extends Controller
     {
         try {
             //Get Coordinators Details
-            $user = $request->user();
-            $corDetails = $user->coordinatorDetails->first();
+            $corDetails = User::find($request->user()->id)->CoordinatorDetails;
             $corId = $corDetails['coordinator_id'];
             $corConfId = $corDetails['conference_id'];
             $corlayerId = $corDetails['layer_id'];
@@ -847,8 +835,7 @@ class ReportController extends Controller
     public function showChapterVolunteer(Request $request): View
     {
         //Get Coordinator Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -955,8 +942,7 @@ class ReportController extends Controller
     public function showCoordinatorToDo(Request $request): View
     {
         //Get Coordinator Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1009,8 +995,7 @@ class ReportController extends Controller
     public function showIntCoordinatorToDo(Request $request): View
     {
         //Get Coordinator Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1063,8 +1048,7 @@ class ReportController extends Controller
      */
     public function showBoardlist(Request $request): View
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1201,8 +1185,7 @@ class ReportController extends Controller
     public function showAppreciation(Request $request): View
     {
         //Get Coordinator Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1255,8 +1238,7 @@ class ReportController extends Controller
     public function showBirthday(Request $request): View
     {
         //Get Coordinator Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1308,8 +1290,7 @@ class ReportController extends Controller
     public function showReportingTree(Request $request): View
     {
         $coordinator_array = [];
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corConfId = $corDetails['conference_id'];
         $positionId = $corDetails['position_id'];
         $request->session()->put('positionid', $positionId);
@@ -1401,8 +1382,7 @@ class ReportController extends Controller
         $user = $request->user();
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         //Get Coordinators Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1475,8 +1455,7 @@ class ReportController extends Controller
     public function showReportToReview(Request $request): View
     {
         //Get Coordinators Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1572,7 +1551,7 @@ class ReportController extends Controller
         $user = $request->user();
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         //Get Coordinators Details
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1668,8 +1647,7 @@ class ReportController extends Controller
      */
     public function showReminderBoardInfo(Request $request): RedirectResponse
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
@@ -1761,8 +1739,7 @@ class ReportController extends Controller
      */
     public function showReminderFinancialReport(Request $request): RedirectResponse
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
@@ -1854,8 +1831,7 @@ class ReportController extends Controller
      */
     public function showReminderEOYReportsLate(Request $request): RedirectResponse
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
@@ -2127,8 +2103,7 @@ class ReportController extends Controller
     public function showReportToIssues(Request $request): View
     {
         //Get Coordinators Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -2197,8 +2172,7 @@ class ReportController extends Controller
     public function showChapterAwards(Request $request): View
     {
         //Get Coordinators Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -2299,7 +2273,7 @@ class ReportController extends Controller
         $user = $request->user();
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         //Get Coordinators Details
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];

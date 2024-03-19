@@ -39,10 +39,11 @@ class HomeController extends Controller
         /**
          * Coordinator Login with dashboard view
          */
-        if ($user && $user->user_type === 'coordinator' && $user->coordinatorDetails->isNotEmpty()) {
-            $corDetails = $user->coordinatorDetails->first();
-            $corId = $corDetails->coordinator_id;
-            $corConfId = $corDetails->conference_id;
+        if ($user_type == 'coordinator') {
+            //Get Coordinators Details
+            $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+            $corId = $corDetails['coordinator_id'];
+            $corConfId = $corDetails['conference_id'];
 
             $corlayerId = $corDetails['layer_id'];
             $sqlLayerId = 'crt.layer'.$corlayerId;

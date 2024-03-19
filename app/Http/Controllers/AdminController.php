@@ -29,20 +29,9 @@ class AdminController extends Controller
     /**
      * View Tasks on Bugs & Enhancements List
      */
-    public function showProgression(Request $request)
+    public function showProgression(Request $request): View
     {
-        $user = $request->user();
-        // Check if user is not found
-        if (! $user) {
-            return redirect()->route('home');
-        }
-
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
-        if (! $corDetails) {
-            return redirect()->route('home');
-        }
-
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $coordinatorDetails = DB::table('coordinator_details as cd')
             ->select('cd.*')
@@ -78,8 +67,7 @@ class AdminController extends Controller
      */
     public function addProgression(AddProgressionAdminRequest $request)
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         // Fetch coordinator details
         $coordinatorDetails = DB::table('coordinator_details as cd')
@@ -140,20 +128,9 @@ class AdminController extends Controller
     /**
      * View Resources List
      */
-    public function showResources(Request $request)
+    public function showResources(Request $request): View
     {
-        $user = $request->user();
-        // Check if user is not found
-        if (! $user) {
-            return redirect()->route('home');
-        }
-
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
-        if (! $corDetails) {
-            return redirect()->route('home');
-        }
-
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $coordinatorDetails = DB::table('coordinator_details as cd')
             ->select('cd.*')
@@ -194,14 +171,12 @@ class AdminController extends Controller
         return view('admin.resources')->with($data);
     }
 
-
     /**
      * Add New Files or Links to the Resources List
      */
     public function addResources(AddResourcesAdminRequest $request): JsonResponse
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         // Fetch coordinator details
         $coordinatorDetails = DB::table('coordinator_details as cd')
@@ -244,8 +219,7 @@ class AdminController extends Controller
      */
     public function updateResources(UpdateResourcesAdminRequest $request, $id)
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         // Fetch coordinator details
         $coordinatorDetails = DB::table('coordinator_details as cd')
@@ -284,20 +258,9 @@ class AdminController extends Controller
     /**
      * View Toolkit List
      */
-    public function showToolkit(Request $request)
+    public function showToolkit(Request $request): View
     {
-        $user = $request->user();
-        // Check if user is not found
-        if (! $user) {
-            return redirect()->route('home');
-        }
-
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
-        if (! $corDetails) {
-            return redirect()->route('home');
-        }
-
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $coordinatorDetails = DB::table('coordinator_details as cd')
             ->select('cd.*')
@@ -337,8 +300,7 @@ class AdminController extends Controller
      */
     public function addToolkit(AddToolkitAdminRequest $request)
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         // Fetch coordinator details
         $coordinatorDetails = DB::table('coordinator_details as cd')
@@ -374,8 +336,7 @@ class AdminController extends Controller
      */
     public function updateToolkit(UpdateToolkitAdminRequest $request, $id)
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         // Fetch coordinator details
         $coordinatorDetails = DB::table('coordinator_details as cd')

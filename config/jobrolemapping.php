@@ -12,7 +12,6 @@ return [
     '8' => 'InqCord',
     '23' => 'ListAdmin',
     '28' => 'MentorCord',
-    '12' => 'EINCord',
-    '9' => 'WebReviewr'
+    '12' => 'EINCord'
     // Add more mappings as needed
 ];

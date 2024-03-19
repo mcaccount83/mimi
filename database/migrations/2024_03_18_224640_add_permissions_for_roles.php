@@ -25,155 +25,115 @@ class AddPermissionsForRoles extends Migration
         // Retrieve roles as needed
 
         // Define permissions
-        // $permissionAddCord = Permission::create(['name' => 'add-coordinator']);
-        // $permissionEditCord = Permission::create(['name' => 'edit-coordinator']);
-        // $permissionRetCord = Permission::create(['name' => 'retire-coordinator']);
-        // $permissionViewCord = Permission::create(['name' => 'view-coordinator']);
-        // $permissionAddChap = Permission::create(['name' => 'add-chapter']);
-        // $permissionEditChap = Permission::create(['name' => 'edit-chapter']);
-        // $permissionZapChap = Permission::create(['name' => 'zap-chapter']);
-        // $permissionViewChap = Permission::create(['name' => 'view-chapter']);
-        // $permissionViewInt = Permission::create(['name' => 'view-international']);
-        // $permissionViewInq = Permission::create(['name' => 'view-inquiries']);
-        // $permissionEditWeb = Permission::create(['name' => 'edit-webstatus']);
-        // $permissionViewWeb = Permission::create(['name' => 'view-webstatus']);
-        // $permissionEditEIN = Permission::create(['name' => 'edit-EIN-number']);
+        $permissionAddCord = Permission::create(['name' => 'add-coordinator']);
+        $permissionEditCord = Permission::create(['name' => 'edit-coordinator']);
+        $permissionRetCord = Permission::create(['name' => 'retire-coordinator']);
+        $permissionViewCord = Permission::create(['name' => 'view-coordinator']);
+        $permissionAddChap = Permission::create(['name' => 'add-chapter']);
+        $permissionEditChap = Permission::create(['name' => 'edit-chapter']);
+        $permissionZapChap = Permission::create(['name' => 'zap-chapter']);
+        $permissionViewChap = Permission::create(['name' => 'view-chapter']);
+        $permissionViewInt = Permission::create(['name' => 'view-international']);
+        $permissionViewInq = Permission::create(['name' => 'view-inquiries']);
+        $permissionEditWeb = Permission::create(['name' => 'edit-webstatus']);
+        $permissionViewWeb = Permission::create(['name' => 'view-webstatus']);
+        $permissionEditEIN = Permission::create(['name' => 'edit-EIN-number']);
         // Define more permissions as needed
 
-        //BoardList permissions
-        // $permissionCreateCategories = Permission::create(['name' => 'createCategories']);
-        // $permissionMoveCategories = Permission::create(['name' => 'moveCategories']);
-        // $permissionManageCategories = Permission::create(['name' => 'manageCategories']);
-        // $permissionCreateThreads = Permission::create(['name' => 'createThreads']);
-        // $permissionMoveThreads = Permission::create(['name' => 'moveThreads']);
-        // $permissionManageThreads = Permission::create(['name' => 'manageThreads']);
-        // $permissionDeleteThreads = Permission::create(['name' => 'deleteThreads']);
-        // $permissionRestoreThreads = Permission::create(['name' => 'restoreThreads']);
-        // $permissionLockThreads = Permission::create(['name' => 'lockThreads']);
-        // $permissionPinThreads = Permission::create(['name' => 'pinThreads']);
-        // $permissionMarkThreadsAsRead = Permission::create(['name' => 'markThreadsAsRead']);
-        // $permissionMoveThreadsFrom = Permission::create(['name' => 'moveThreadsFrom']);
-        // $permissionDeletePosts = Permission::create(['name' => 'deletePosts']);
-        // $permissionRestorePosts = Permission::create(['name' => 'restorePosts']);
-        // $permissionViewTrashed = Permission::create(['name' => 'viewTrashed']);
-        // $permissionDelete = Permission::create(['name' => 'delete']);
-        // $permissionEdit = Permission::create(['name' => 'edit']);
-        // $permissionReply = Permission::create(['name' => 'reply']);
-        // $permissionRestore = Permission::create(['name' => 'restore']);
-        // $permissionRrename = Permission::create(['name' => 'rename']);
-
-        // Assign permissions to SuperAdmin
-        $permissions = ['add-coordinator', 'edit-coordinator', 'retire-coordinator', 'add-chapter', 'edit-chapter', 'zap-chapter',
-                'edit-webstatus', 'view-inquiries', 'edit-EIN-number', 'view-international',
-                'createCategories', 'moveCategories', 'manageCategories', 'createThreads', 'moveThreads', 'manageThreads', 'deleteThreads', 'restoreThreads', 'lockThreads',
-                'pinThreads', 'markThreadsAsRead', 'moveThreadsFrom', 'deletePosts', 'restorePosts', 'viewTrashed', 'delete', 'edit', 'reply', 'restore', 'rename'];
-        foreach ($permissions as $permissionName) {
-            $permission = Permission::where('name', $permissionName)->first();
-            if ($permission) {
-                $roleSuperAdmin->givePermissionTo($permission);
-            }
-        }
-
-        // Assign permissions to BoardList Admin
-        $permissionsLIST = ['createCategories', 'moveCategories', 'manageCategories', 'createThreads', 'moveThreads', 'manageThreads', 'deleteThreads', 'restoreThreads', 'lockThreads',
-                'pinThreads', 'markThreadsAsRead', 'moveThreadsFrom', 'deletePosts', 'restorePosts', 'viewTrashed', 'delete', 'edit', 'reply', 'restore', 'rename'];
-        foreach ($permissionsLIST as $permissionName) {
-            $permission = Permission::where('name', $permissionName)->first();
-            if ($permission) {
-                $roleLIST->givePermissionTo($permission);
-            }
-        }
+        // Assign permissions to SuperAdmin for ALL
+        $permissions = Permission::pluck('id')->all();
+        $roleSuperAdmin->syncPermissions($permissions);
 
         // Assign multiple permissions to ConfCord role using array
         $permissionsCC = ['add-coordinator', 'edit-coordinator', 'retire-coordinator', 'add-chapter', 'edit-chapter', 'zap-chapter',
                 'edit-webstatus', 'view-inquiries', 'edit-EIN-number'];
-        foreach ($permissionsCC as $permissionNameCC) {
-            $permissionCC = Permission::where('name', $permissionNameCC)->first();
-            if ($permissionCC) {
-                $roleCC->givePermissionTo($permissionCC);
+        foreach ($permissionsCC as $permissionName) {
+            $permission = Permission::where('name', $permissionName)->first();
+            if ($permission) {
+                $roleCC->givePermissionTo($permission);
             }
         }
 
         $permissionsACC = ['add-coordinator', 'edit-coordinator', 'retire-coordinator', 'add-chapter', 'edit-chapter', 'zap-chapter',
                 'edit-webstatus', 'view-inquiries', 'edit-EIN-number'];
-        foreach ($permissionsACC as $permissionNameACC) {
-            $permissionACC = Permission::where('name', $permissionNameACC)->first();
-            if ($permissionACC) {
-                $roleACC->givePermissionTo($permissionACC);
+        foreach ($permissionsACC as $permissionName) {
+            $permission = Permission::where('name', $permissionName)->first();
+            if ($permission) {
+                $roleACC->givePermissionTo($permission);
             }
         }
 
         $permissionsRC = ['add-coordinator', 'edit-coordinator', 'retire-coordinator', 'add-chapter', 'edit-chapter', 'zap-chapter',
                 'edit-webstatus', 'view-inquiries', 'edit-EIN-number'];
-        foreach ($permissionsRC as $permissionNameRC) {
-            $permissionRC = Permission::where('name', $permissionNameRC)->first();
-            if ($permissionRC) {
-                $roleRC->givePermissionTo($permissionRC);
+        foreach ($permissionsRC as $permissionName) {
+            $permission = Permission::where('name', $permissionName)->first();
+            if ($permission) {
+                $roleRC->givePermissionTo($permission);
             }
         }
 
         $permissionsARC = ['add-coordinator', 'edit-coordinator', 'retire-coordinator', 'add-chapter', 'edit-chapter', 'zap-chapter',
                 'edit-webstatus', 'view-inquiries'];
-        foreach ($permissionsARC as $permissionNameARC) {
-            $permissionARC = Permission::where('name', $permissionNameARC)->first();
-            if ($permissionARC) {
-                $roleARC->givePermissionTo($permissionARC);
+        foreach ($permissionsARC as $permissionName) {
+            $permission = Permission::where('name', $permissionName)->first();
+            if ($permission) {
+                $roleARC->givePermissionTo($permission);
             }
         }
 
         $permissionsSC = [ 'edit-coordinator', 'edit-chapter', 'view-webstatus'];
-        foreach ($permissionsSC as $permissionNameSC) {
-            $permissionSC = Permission::where('name', $permissionNameSC)->first();
-            if ($permissionSC) {
-                $roleSC->givePermissionTo($permissionSC);
+        foreach ($permissionsSC as $permissionName) {
+            $permission = Permission::where('name', $permissionName)->first();
+            if ($permission) {
+                $roleSC->givePermissionTo($permission);
             }
         }
 
         $permissionsAC = ['view-chapter'];
-        foreach ($permissionsAC as $permissionNameAC) {
-            $permissionAC = Permission::where('name', $permissionNameAC)->first();
-            if ($permissionAC) {
-                $roleAC->givePermissionTo($permissionAC);
+        foreach ($permissionsAC as $permissionName) {
+            $permission = Permission::where('name', $permissionName)->first();
+            if ($permission) {
+                $roleAC->givePermissionTo($permission);
             }
         }
 
         $permissionsBS = ['view-chapter'];
-        foreach ($permissionsBS as $permissionNameBS) {
-            $permissionBS = Permission::where('name', $permissionNameBS)->first();
-            if ($permissionBS) {
-                $roleBS->givePermissionTo($permissionBS);
+        foreach ($permissionsBS as $permissionName) {
+            $permission = Permission::where('name', $permissionName)->first();
+            if ($permission) {
+                $roleBS->givePermissionTo($permission);
             }
         }
 
         $permissionsMentor = [ 'view-coordinator'];
-        foreach ($permissionsMentor as $permissionNameMentor) {
-            $permissionMentor = Permission::where('name', $permissionNameMentor)->first();
-            if ($permissionMentor) {
-                $roleMentor->givePermissionTo($permissionMentor);
+        foreach ($permissionsMentor as $permissionName) {
+            $permission = Permission::where('name', $permissionName)->first();
+            if ($permission) {
+                $roleMentor->givePermissionTo($permission);
             }
         }
 
         $permissionsEIN = [ 'view-international', 'edit-EIN-number'];
-        foreach ($permissionsEIN as $permissionNameEIN) {
-            $permissionEIN = Permission::where('name', $permissionNameEIN)->first();
-            if ($permissionEIN) {
-                $roleEIN->givePermissionTo($permissionEIN);
+        foreach ($permissionsEIN as $permissionName) {
+            $permission = Permission::where('name', $permissionName)->first();
+            if ($permission) {
+                $roleEIN->givePermissionTo($permission);
             }
         }
 
         $permissionsIC = [ 'view-inquiries'];
-        foreach ($permissionsIC as $permissionNameIC) {
-            $permissionIC = Permission::where('name', $permissionNameIC)->first();
-            if ($permissionIC) {
-                $roleIC->givePermissionTo($permissionIC);
+        foreach ($permissionsIC as $permissionName) {
+            $permission = Permission::where('name', $permissionName)->first();
+            if ($permission) {
+                $roleIC->givePermissionTo($permission);
             }
         }
 
         $permissionsWR = [ 'edit-webstatus'];
-        foreach ($permissionsWR as $permissionNameWR) {
-            $permissionWR = Permission::where('name', $permissionNameWR)->first();
-            if ($permissionWR) {
-                $roleWR->givePermissionTo($permissionWR);
+        foreach ($permissionsWR as $permissionName) {
+            $permission = Permission::where('name', $permissionName)->first();
+            if ($permission) {
+                $roleWR->givePermissionTo($permission);
             }
         }
         // Assign permissions to other roles as needed

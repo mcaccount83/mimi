@@ -47,8 +47,7 @@ class ChapterController extends Controller
     public function index(Request $request): View
     {
         //Get Coordinators Details
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
 
@@ -253,8 +252,7 @@ class ChapterController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -556,14 +554,15 @@ class ChapterController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -762,8 +761,7 @@ class ChapterController extends Controller
             ->get();
 
         $chapterId = $id;
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $positionid = $corDetails['position_id'];
@@ -1559,14 +1557,15 @@ class ChapterController extends Controller
      */
     public function showBoundary(Request $request, $id)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -1620,8 +1619,7 @@ class ChapterController extends Controller
      */
     public function updateBoundary(Request $request, $id): RedirectResponse
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
@@ -1652,14 +1650,15 @@ class ChapterController extends Controller
      */
     public function showIntChapter(Request $request)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -1688,14 +1687,15 @@ class ChapterController extends Controller
      */
     public function showIntChapterView(Request $request, $id)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -1850,14 +1850,15 @@ class ChapterController extends Controller
      */
     public function showInquiriesChapter(Request $request)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -1926,14 +1927,15 @@ class ChapterController extends Controller
      */
     public function showZappedInquiries(Request $request)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -1979,14 +1981,15 @@ class ChapterController extends Controller
      */
     public function showInquiries(Request $request, $id)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -2040,14 +2043,15 @@ class ChapterController extends Controller
      */
     public function showWebsiteChapter(Request $request)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -2093,14 +2097,15 @@ class ChapterController extends Controller
      */
     public function showZappedChapter(Request $request)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -2160,14 +2165,15 @@ class ChapterController extends Controller
      */
     public function showIntZappedChapter(Request $request)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -2196,14 +2202,15 @@ class ChapterController extends Controller
      */
     public function showZappedChapterView(Request $request, $id)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -2298,14 +2305,15 @@ class ChapterController extends Controller
      */
     public function showIntZappedChapterView(Request $request, $id)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -2402,14 +2410,15 @@ class ChapterController extends Controller
      */
     public function editWebsite(Request $request, $id)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -2463,8 +2472,7 @@ class ChapterController extends Controller
      */
     public function updateWebsite(Request $request, $id): RedirectResponse
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
@@ -3018,14 +3026,15 @@ class ChapterController extends Controller
      */
     public function showDonation(Request $request, $id)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -3054,8 +3063,7 @@ class ChapterController extends Controller
      */
     public function createDonation(Request $request, $id): RedirectResponse
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
@@ -3178,14 +3186,15 @@ class ChapterController extends Controller
      */
     public function showReRegistration(Request $request)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -3280,14 +3289,15 @@ class ChapterController extends Controller
      */
     public function showReRegNotes(Request $request, $id)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -3316,8 +3326,7 @@ class ChapterController extends Controller
      */
     public function createReRegNotes(Request $request, $id): RedirectResponse
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
@@ -3374,8 +3383,7 @@ class ChapterController extends Controller
      */
     public function createPayment(Request $request, $id): RedirectResponse
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
@@ -3485,8 +3493,7 @@ class ChapterController extends Controller
      */
     public function createReminderReRegistration(Request $request): RedirectResponse
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
@@ -3623,8 +3630,7 @@ class ChapterController extends Controller
      */
     public function createLateReRegistration(Request $request): RedirectResponse
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
@@ -3820,14 +3826,15 @@ class ChapterController extends Controller
      */
     public function showAwardsView(Request $request, $id)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -3882,8 +3889,7 @@ class ChapterController extends Controller
      */
     public function updateAwards(Request $request, $id): RedirectResponse
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
@@ -3941,14 +3947,15 @@ class ChapterController extends Controller
      */
     public function showBoardInfo(Request $request, $chapterId)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -4497,14 +4504,15 @@ class ChapterController extends Controller
      */
     public function showFinancialReport(Request $request, $chapterId)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -4753,14 +4761,15 @@ class ChapterController extends Controller
      */
     public function showStatusView(Request $request, $id)
     {
-        $user = $request->user();
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->coordinatorDetails->first();
-        // Check if CoordinatorDetails is not found for the user
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -4811,8 +4820,7 @@ class ChapterController extends Controller
 
     public function updateStatus(Request $request, $id): RedirectResponse
     {
-        $user = $request->user();
-        $corDetails = $user->coordinatorDetails->first();
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
