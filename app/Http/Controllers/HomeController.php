@@ -227,14 +227,13 @@ class HomeController extends Controller
          * Outgoing Board Login with Fiancial Report Only
          */
         if ($user_type == 'outgoing') {
-            $borDetails = User::find($request->user()->id)->OutgoingDetails;
-            $borPositionId = $borDetails['board_position_id'];
+            $borDetails = User::find($request->user()->id)->OutgoingBoardMember;
             $isActive = $borDetails['is_active'];
             $chapterId = $borDetails['chapter_id'];
             $chapterDetails = Chapter::find($chapterId);
             $request->session()->put('chapterid', $chapterId);
-            $loggedInName = $borDetails->first_name.' '.$borDetails->last_name;
 
+            $loggedInName = $borDetails->first_name.' '.$borDetails->last_name;
             $financial_report_array = FinancialReport::find($chapterId);
 
             $chapterDetails = DB::table('chapters')
@@ -246,7 +245,7 @@ class HomeController extends Controller
 
             $submitted = $chapterDetails[0]->financial_report_received;
 
-            $data = ['financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails, 'user_type' => $user_type];
+            $data = ['financial_report_array' => $financial_report_array, 'submitted' => $submitted, 'loggedInName' => $loggedInName, 'chapterDetails' => $chapterDetails];
 
             return view('boards.financial')->with($data);
 
