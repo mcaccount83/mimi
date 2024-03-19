@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -27,16 +26,10 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function coordinatorDetail(): HasOne
-{
-    return $this->hasOne(\App\Models\CoordinatorDetails::class, 'user_id');
-}
-
-public function coordinatorDetails(): HasMany
-{
-    return $this->hasMany(\App\Models\CoordinatorDetails::class, 'user_id');
-}
-
+    public function CoordinatorDetails(): HasOne
+    {
+        return $this->hasOne(\App\Models\CoordinatorDetails::class, 'user_id');
+    }
 
     public function BoardDetails(): HasOne
     {
