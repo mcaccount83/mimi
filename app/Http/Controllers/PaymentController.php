@@ -19,8 +19,7 @@ class PaymentController extends Controller
 {
     public function __construct()
     {
-        // Set the timezone explicitly for the whole controller
-        //Carbon::setTimezone('America/New_York');
+        //
     }
 
     public function processPayment(Request $request): RedirectResponse
@@ -86,7 +85,6 @@ class PaymentController extends Controller
 
         $emailListCoor = '';
         foreach ($filterCoordinatorList as $key => $val) {
-            // if($corId != $val && $val >1){
             if ($val > 1) {
                 $corList = DB::table('coordinator_details as cd')
                     ->select('cd.email as cord_email')
@@ -121,6 +119,7 @@ class PaymentController extends Controller
         $email = $request->input('email');
         $total = $request->input('total');
         $amount = (float) preg_replace('/[^\d.]/', '', $total);
+        $today = Carbon::today()->format('m-d-Y');
 
         // Call the load_coordinators function
         $coordinatorData = $this->load_coordinators($chapterId, $chConf, $chPcid);
@@ -235,9 +234,9 @@ class PaymentController extends Controller
                         'email' => $email,
                         'chapterId' => $chapterId,
                         'invoice' => $randomInvoiceNumber,
-                        'datePaid' => Carbon::today()->format('m-d-Y'),
+                        'datePaid' => $today,
                         'chapterMembers' => $members,
-                        'chapterDate' => Carbon::today()->format('m-d-Y'),
+                        'chapterDate' => $today,
                         'chapterTotal' => $sustaining,
                     ];
 
