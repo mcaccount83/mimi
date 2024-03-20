@@ -7,8 +7,6 @@ class CreateForumTablePosts extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up(): void
     {
@@ -25,8 +23,6 @@ class CreateForumTablePosts extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down(): void
     {
