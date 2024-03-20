@@ -3601,10 +3601,13 @@ class ChapterController extends Controller
                 $toBatches = array_chunk($toRecipients, 50);
 
                 foreach ($toBatches as $toBatch) {
-                    $email = new PaymentsReRegReminder($data);
-                    $email->to($toBatch);
-                    $email->cc($ccRecipients);
-                    Mail::send($email);
+                    Mail::to($toBatch)
+                        ->cc($ccRecipients)
+                        ->send(new PaymentsReRegReminder($data));
+                    // $email = new PaymentsReRegReminder($data);
+                    // $email->to($toBatch);
+                    // $email->cc($ccRecipients);
+                    // Mail::send($email);
                 }
             }
         }
@@ -3757,10 +3760,13 @@ class ChapterController extends Controller
                 $toBatches = array_chunk($toRecipients, 50);
 
                 foreach ($toBatches as $toBatch) {
-                    $email = new PaymentsReRegLate($data);
-                    $email->to($toBatch);
-                    $email->cc($ccRecipients);
-                    Mail::send($email);
+                    Mail::to($toBatch)
+                        ->cc($ccRecipients)
+                        ->send(new PaymentsReRegLate($data));
+                    // $email = new PaymentsReRegLate($data);
+                    // $email->to($toBatch);
+                    // $email->cc($ccRecipients);
+                    // Mail::send($email);
                 }
             }
         }
