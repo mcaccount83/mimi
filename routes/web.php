@@ -250,4 +250,3 @@ Route::get('/chapter/financial/pdf/{id}', [PDFController::class, 'generatePdf'])
 //  Route::get('/boardlist', [BoardListController::class, 'index'])->name('boardlist.index');
 // Route::get('/boardlist/{id}', [BoardListController::class, 'show'])->name('boardlist.show');
 // Add routes for other methods as needed
-

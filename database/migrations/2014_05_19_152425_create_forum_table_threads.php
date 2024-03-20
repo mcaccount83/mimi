@@ -7,10 +7,8 @@ class CreateForumTableThreads extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('forum_threads', function (Blueprint $table) {
             $table->increments('id');
@@ -27,10 +25,8 @@ class CreateForumTableThreads extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::drop('forum_threads');
     }

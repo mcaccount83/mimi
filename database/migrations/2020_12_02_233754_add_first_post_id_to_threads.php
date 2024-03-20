@@ -8,10 +8,8 @@ class AddFirstPostIdToThreads extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('forum_threads', function (Blueprint $table) {
             $table->integer('first_post_id')->after('locked')->unsigned()->nullable();
@@ -20,10 +18,8 @@ class AddFirstPostIdToThreads extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('forum_threads', function (Blueprint $table) {
             $table->dropColumn('first_post_id');

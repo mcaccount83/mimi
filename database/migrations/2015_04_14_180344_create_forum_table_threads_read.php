@@ -7,10 +7,8 @@ class CreateForumTableThreadsRead extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('forum_threads_read', function (Blueprint $table) {
             $table->integer('thread_id')->unsigned();
@@ -21,10 +19,8 @@ class CreateForumTableThreadsRead extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::drop('forum_threads_read');
     }

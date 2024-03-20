@@ -7,10 +7,8 @@ class AddCountsToThreadsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('forum_threads', function (Blueprint $table) {
             $table->integer('reply_count')->after('locked')->default(0);
@@ -19,10 +17,8 @@ class AddCountsToThreadsTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('forum_threads', function (Blueprint $table) {
             $table->dropColumn('reply_count');

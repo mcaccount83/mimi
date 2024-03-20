@@ -7,10 +7,8 @@ class UpdateForumTableCategories extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('forum_categories', function (Blueprint $table) {
             $table->renameColumn('parent_category', 'category_id');
@@ -31,10 +29,8 @@ class UpdateForumTableCategories extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('forum_categories', function (Blueprint $table) {
             $table->renameColumn('category_id', 'parent_category');
