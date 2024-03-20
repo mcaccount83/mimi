@@ -20,8 +20,7 @@
         "laravel/ui": "^4.2",
         "league/flysystem-aws-s3-v3": "^3.0",
         "rap2hpoutre/laravel-log-viewer": "^2.3",
-        "riari/laravel-forum": "~5.0",
-        "spatie/laravel-permission": "^6.4"
+        "riari/laravel-forum": "~5.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -30,8 +29,7 @@
         "laravel/sail": "^1.25",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
-        "phpunit/phpunit": "^10.5",
-        "spatie/laravel-ignition": "^2.0"
+        "phpunit/phpunit": "^10.5"
     },
     "autoload": {
         "psr-4": {
