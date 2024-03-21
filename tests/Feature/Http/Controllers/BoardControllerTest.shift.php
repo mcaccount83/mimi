@@ -45,8 +45,7 @@ class BoardControllerTest extends TestCase
 
         $response = $this->actingAs($authUser)->get(route('boardinfo.showboardinfo'));
 
-        $response->assertOk();
-        $response->assertViewIs('boards.boardinfo');
+        $response->assertRedirect(route('home'));
 
         // TODO: perform additional assertions
     }
@@ -84,8 +83,7 @@ class BoardControllerTest extends TestCase
 
         $response = $this->actingAs($authUser)->get(route('board.showreregpayment'));
 
-        $response->assertOk();
-        $response->assertViewIs('boards.payment');
+        $response->assertRedirect(route('home'));
 
         // TODO: perform additional assertions
     }
@@ -103,8 +101,7 @@ class BoardControllerTest extends TestCase
 
         $response = $this->actingAs($authUser)->get(route('board.resources'));
 
-        $response->assertOk();
-        $response->assertViewIs('boards.resources');
+        $response->assertRedirect(route('home'));
 
         // TODO: perform additional assertions
     }
