@@ -280,7 +280,7 @@ class PaymentController extends Controller
                         $error_message .= "\n Error Message: ".$tresponse->getErrors()[0]->getErrorText();
                     }
 
-                    return redirect()->to('/board/showreregpayment')->with('fail', $error_message);
+                    return redirect()->to('/board/reregpayment')->with('fail', $error_message);
                 }
 
                 // Or, print errors if the API request wasn't successful
@@ -299,12 +299,12 @@ class PaymentController extends Controller
                     $error_message .= "\n Error Code: ".$response->getMessages()->getMessage()[0]->getCode();
                     $error_message .= "\n Error Message: ".$response->getMessages()->getMessage()[0]->getText();
 
-                    return redirect()->to('/board/showreregpayment')->with('fail', $error_message);
+                    return redirect()->to('/board/reregpayment')->with('fail', $error_message);
                 }
             }
         } else {
             // No response returned
-            return redirect()->to('/board/showreregpayment')->with('fail', 'No response returned');
+            return redirect()->to('/board/reregpayment')->with('fail', 'No response returned');
         }
     }
 

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "daa3b6f0368f6f0c20e46a667b7b8dfa",
+    "content-hash": "7f539ffdc1c13ea9e0c06937c2051c78",
     "packages": [
         {
             "name": "authorizenet/authorizenet",
@@ -4890,25 +4890,25 @@
         },
         {
             "name": "rap2hpoutre/laravel-log-viewer",
-            "version": "v2.3.0",
+            "version": "v2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rap2hpoutre/laravel-log-viewer.git",
-                "reference": "c4148ec364d78be13eb2ab81ce860946bfd91c4c"
+                "reference": "49c52ae197b3d4f7f9e43d328628edc4bc529afa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rap2hpoutre/laravel-log-viewer/zipball/c4148ec364d78be13eb2ab81ce860946bfd91c4c",
-                "reference": "c4148ec364d78be13eb2ab81ce860946bfd91c4c",
+                "url": "https://api.github.com/repos/rap2hpoutre/laravel-log-viewer/zipball/49c52ae197b3d4f7f9e43d328628edc4bc529afa",
+                "reference": "49c52ae197b3d4f7f9e43d328628edc4bc529afa",
                 "shasum": ""
             },
             "require": {
-                "illuminate/support": "4.2.*|5.*|^6.0|^7.0|^8.0|^9.0|^10.0",
-                "php": ">=5.4.0"
+                "illuminate/support": "^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
+                "php": "^7.2|^8.0"
             },
             "require-dev": {
-                "orchestra/testbench": "3.7.*|^7.0",
-                "phpunit/phpunit": "^7|^9.5.10"
+                "orchestra/testbench": "^4.0|^5.0|^6.0|^7.0|^8.0|^9.0",
+                "phpunit/phpunit": "^7||^8.4|^9.3.3|^10.1"
             },
             "type": "laravel-package",
             "extra": {
@@ -4947,9 +4947,9 @@
             ],
             "support": {
                 "issues": "https://github.com/rap2hpoutre/laravel-log-viewer/issues",
-                "source": "https://github.com/rap2hpoutre/laravel-log-viewer/tree/v2.3.0"
+                "source": "https://github.com/rap2hpoutre/laravel-log-viewer/tree/v2.4.0"
             },
-            "time": "2023-02-15T07:36:34+00:00"
+            "time": "2024-03-20T08:49:53+00:00"
         },
         {
             "name": "riari/laravel-forum",
@@ -7768,56 +7768,6 @@
                 "source": "https://github.com/hamcrest/hamcrest-php/tree/v2.0.1"
             },
             "time": "2020-07-09T08:09:16+00:00"
-        },
-        {
-            "name": "jasonmccreary/laravel-test-assertions",
-            "version": "v2.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jasonmccreary/laravel-test-assertions.git",
-                "reference": "e506c4eb57816e036b143bd1c64589e1d013337d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jasonmccreary/laravel-test-assertions/zipball/e506c4eb57816e036b143bd1c64589e1d013337d",
-                "reference": "e506c4eb57816e036b143bd1c64589e1d013337d",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/testing": "^10.0|^11.0",
-                "mockery/mockery": "^1.4.4",
-                "php": "^8.1",
-                "phpunit/phpunit": "^10.1"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "JMac\\Testing\\AdditionalAssertionsServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "JMac\\Testing\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Jason McCreary",
-                    "email": "jason@pureconcepts.net"
-                }
-            ],
-            "description": "A set of helpful assertions when testing Laravel applications.",
-            "support": {
-                "issues": "https://github.com/jasonmccreary/laravel-test-assertions/issues",
-                "source": "https://github.com/jasonmccreary/laravel-test-assertions/tree/v2.4.0"
-            },
-            "time": "2024-02-29T19:39:03+00:00"
         },
         {
             "name": "laravel-shift/factory-generator",
