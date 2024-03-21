@@ -10,21 +10,21 @@
     "require": {
         "php": "^8.2",
         "authorizenet/authorizenet": "^2.0",
-        "barryvdh/laravel-dompdf": "^2.0",
+        "barryvdh/laravel-dompdf": "^2.1",
         "dcblogdev/laravel-sent-emails": "^2.0",
         "google/apiclient": "^2.15",
         "guzzlehttp/guzzle": "^7.8",
         "laravel/framework": "^10.48",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
-        "laravel/ui": "^4.2",
-        "league/flysystem-aws-s3-v3": "^3.0",
+        "laravel/ui": "^4.5",
+        "league/flysystem-aws-s3-v3": "^3.24",
         "rap2hpoutre/laravel-log-viewer": "^2.3",
-        "riari/laravel-forum": "~5.0"
+        "riari/laravel-forum": "^5.6"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
-        "jasonmccreary/laravel-test-assertions": "^2.3",
+        "jasonmccreary/laravel-test-assertions": "^2.4",
         "laravel-shift/factory-generator": "dev-master",
         "laravel/sail": "^1.25",
         "mockery/mockery": "^1.4.4",
