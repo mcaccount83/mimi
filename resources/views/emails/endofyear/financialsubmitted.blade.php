@@ -3,37 +3,37 @@
 
 {{ $mailData['chapter_name'] }}, {{ $mailData['chapter_state'] }} has submitted their Financial Report. It is ready to be reviewed.<br>
 <br>
-Submitted by:
-<ul>
-    <li>{{$mailData['completed_name']}}</li>
-    <li>{{$mailData['completed_email']}}</li>
-</ul>
+Submitted by: {{$mailData['completed_name']}}, <a href="mailto:{{$mailData['completed_email']}}">{{$mailData['completed_email']}}</a><br>
 <br>
 Attachments:
 <ul>
     <li>@if (isset($mailData['roster_path']))
-        [Chapter Roster]({{ $mailData['roster_path'] }})
+        <a href="{{ $mailData['roster_path'] }}" target="_blank">Chapter Roster</a>
         @else
         No Roster Attached
         @endif</li>
     <li>@if (isset($mailData['bank_statement_included_path']))
-        [Primary Bank Statement]({{$mailData['bank_statement_included_path'] }})
+        <a href="{{ $mailData['bank_statement_included_path'] }}" target="_blank">Primary Bank Statement</a>
         @else
         No Statement Attached
         @endif</li>
     <li>@if (isset($mailData['bank_statement_2_included_path']))
-        [Additional Bank Statement]({{ $mailData['bank_statement_2_included_path'] }})
-        @endif
-        </li>
+        <a href="{{ $mailData['bank_statement_2_included_path'] }}" target="_blank">Additional Bank Statement</a>
+        @endif</li>
     <li>@if (isset($mailData['file_irs_path']))
-        [990N Confirmation File]({{ $mailData['file_irs_path'] }})
+        <a href="{{ $mailData['file_irs_path'] }}" target="_blank">990N Confirmation File</a>
         @else
         No 990N File Attached
+        @endif</li>
+    <li>@if (isset($mailData['roster_path']))
+    <a href="{{ route('pdf.financialreport', ['id' => $mailData['chapterid']]) }}" target="_blank">Financial Report PDF</a>
         @endif</li>
 </ul>
 Coordinators:
 <ul>
-    <li>Primary Coordinator: {{ $coordinator_array[0]['first_name'] }} {{ $coordinator_array[0]['last_name'] }}</li>
+    <li>@if (isset($coordinator_array[0]['first_name']))
+        Primary Coordinator: {{ $coordinator_array[0]['first_name'] }} {{ $coordinator_array[0]['last_name'] }}
+        @endif</li>
     <li>@if (isset($coordinator_array[1]['first_name']))
         Secondary Coordinator: {{ $coordinator_array[1]['first_name'] }} {{ $coordinator_array[1]['last_name'] }}
         @endif</li>

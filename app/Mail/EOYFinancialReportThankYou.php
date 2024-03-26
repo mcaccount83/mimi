@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class EOYFinancialSubmitted extends Mailable
+class EOYFinancialReportThankYou extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -33,17 +33,13 @@ class EOYFinancialSubmitted extends Mailable
      */
     public function build(): static
     {
-        $message = $this->subject('Financial Report Submitted')
-                        ->markdown('emails.endofyear.financialsubmitted');
-
-        if ($this->attachmentPath !== null) {
-            $message->attach($this->attachmentPath, [
+        return $this
+            ->subject('Financial Report Submitted')
+            ->markdown('emails.endofyear.financialreportthankyou')
+            ->attach($this->attachmentPath, [
                 'as' => $this->attachmentName,
                 'mime' => mime_content_type($this->attachmentPath),
             ]);
-        }
-
-        return $message;
     }
 
 }

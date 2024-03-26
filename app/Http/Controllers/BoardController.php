@@ -6,6 +6,7 @@ use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdateListAdminMember;
 use App\Mail\ChapersUpdatePrimaryCoor;
 use App\Mail\ChapersUpdatePrimaryCoorMember;
+use App\Mail\EOYFinancialReportThankYou;
 use App\Mail\EOYFinancialSubmitted;
 use App\Mail\WebsiteReviewNotice;
 use App\Models\Chapter;
@@ -1940,6 +1941,7 @@ class BoardController extends Controller
             ->get();
 
         $roster_path = $files[0]->roster_path;
+        $name = $chapter_state.'_'.$chapter_name.'_Roster';
         $file_irs_path = $files[0]->file_irs_path;
         $bank_statement_included_path = $files[0]->bank_statement_included_path;
         $bank_statement_2_included_path = $files[0]->bank_statement_2_included_path;
@@ -2190,7 +2192,9 @@ class BoardController extends Controller
 
                 // Send email to Assigned Reviewer//
                 $to_email = $ReviewerEmail;
-                $mailData = ['chapter_name' => $chapter_name,
+                $mailData = [
+                    'chapterid' => $chapter_id,
+                    'chapter_name' => $chapter_name,
                     'chapter_state' => $chapter_state,
                     'completed_name' => $completed_name,
                     'completed_email' => $completed_email,
@@ -2200,9 +2204,28 @@ class BoardController extends Controller
                     'bank_statement_2_included_path' => $bank_statement_2_included_path,
                 ];
 
-                if ($reportReceived == 1) {
-                    Mail::to($to_email)
-                        ->send(new EOYFinancialSubmitted($mailData, $coordinator_array));
+
+                if (file_exists($roster_path)) {
+                    $attachmentPath = $roster_path; // Full path to the file
+                    $attachmentName = $name; // Name of the file
+
+                    if ($reportReceived == 1) {
+                        Mail::to($to_email)
+                            ->send(new EOYFinancialSubmitted($mailData, $coordinator_array, $attachmentPath, $attachmentName));
+
+                            // Mail::to($to_email)
+                            // ->send(new EOYFinancialReportThankYou($mailData, $coordinator_array, $attachmentPath, $attachmentName));
+                    }
+                    } else {
+
+                    if ($reportReceived == 1) {
+                        Mail::to($to_email)
+                            ->send(new EOYFinancialSubmitted($mailData, $coordinator_array));
+
+                            // Mail::to($to_email)
+                            // ->send(new EOYFinancialReportThankYou($mailData, $coordinator_array));
+
+                    }
                 }
 
                 $report->save();

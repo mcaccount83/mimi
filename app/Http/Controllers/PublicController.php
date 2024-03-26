@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Illuminate\Support\Str;
 
 class PublicController extends Controller
 {
@@ -32,6 +33,13 @@ class PublicController extends Controller
             ->orderBy('state')
             ->orderBy('name')
             ->get();
+
+            // Preprocess website URLs
+    foreach ($chapters as $chapter) {
+        if (!Str::startsWith($chapter->website_url, ['http://', 'https://'])) {
+            $chapter->website_url = 'https://' . $chapter->website_url;
+        }
+    }
 
         return view('public.chapterlinks', ['chapters' => $chapters, 'international' => $international]);
     }

@@ -3118,7 +3118,7 @@
                                 <div class="card-body">
                                     <div class="col-md-12 text-center">
                                         <button type="button" class="btn btn-info btn-fill" id="btn-step-12" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-                                        @if($thisDate->month >= 7 && $thisDate->month <= 12)
+                                        @if($thisDate->month >= 3 && $thisDate->month <= 12)
                                         <button type="button" class="btn btn-info btn-fill" id="final-submit" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-mail-forward fa-fw" aria-hidden="true" ></i>&nbsp; Submit</button>
                                         @endif
                                     </div>
