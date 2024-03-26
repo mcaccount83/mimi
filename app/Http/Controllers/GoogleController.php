@@ -11,6 +11,7 @@ use App\Http\Requests\StoreAward5GoogleRequest;
 use App\Http\Requests\StoreEINGoogleRequest;
 use App\Http\Requests\StoreResourcesGoogleRequest;
 use App\Http\Requests\StoreRosterGoogleRequest;
+use App\Http\Requests\StoreRosterGoogleRequest2;
 use App\Http\Requests\StoreStatement1GoogleRequest;
 use App\Http\Requests\StoreStatement2GoogleRequest;
 use App\Http\Requests\StoreFinancialPDFRequest;
@@ -22,6 +23,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Request;
 
 const client_id = 'YOUR_CLIENT_ID';
 const client_secret = 'YOUR_CLIENT_SECRET';
@@ -73,7 +75,9 @@ class GoogleController extends Controller
         ];
 
         $metadataJson = json_encode($fileMetadata);
-        $fileContent = file_get_contents($file->getRealPath());
+        // $fileContent = file_get_contents($file->getRealPath());
+        $fileContent = file_get_contents($file->getPathname());
+
         $fileContentBase64 = base64_encode($fileContent);
 
         $client = new Client();
@@ -127,7 +131,7 @@ class GoogleController extends Controller
         ];
 
         $metadataJson = json_encode($fileMetadata);
-        $fileContent = file_get_contents($file->getRealPath());
+        $fileContent = file_get_contents($file->getPathname());
         $fileContentBase64 = base64_encode($fileContent);
 
         $client = new Client();
@@ -233,7 +237,7 @@ class GoogleController extends Controller
         ];
 
         $metadataJson = json_encode($fileMetadata);
-        $fileContent = file_get_contents($file->getRealPath());
+        $fileContent = file_get_contents($file->getPathname());
         $fileContentBase64 = base64_encode($fileContent);
 
         $client = new Client();
@@ -286,7 +290,7 @@ class GoogleController extends Controller
         ];
 
         $metadataJson = json_encode($fileMetadata);
-        $fileContent = file_get_contents($file->getRealPath());
+        $fileContent = file_get_contents($file->getPathname());
         $fileContentBase64 = base64_encode($fileContent);
 
         $client = new Client();
@@ -339,7 +343,7 @@ class GoogleController extends Controller
         ];
 
         $metadataJson = json_encode($fileMetadata);
-        $fileContent = file_get_contents($file->getRealPath());
+        $fileContent = file_get_contents($file->getPathname());
         $fileContentBase64 = base64_encode($fileContent);
 
         $client = new Client();
@@ -392,7 +396,7 @@ class GoogleController extends Controller
         ];
 
         $metadataJson = json_encode($fileMetadata);
-        $fileContent = file_get_contents($file->getRealPath());
+        $fileContent = file_get_contents($file->getPathname());
         $fileContentBase64 = base64_encode($fileContent);
 
         $client = new Client();
@@ -445,7 +449,7 @@ class GoogleController extends Controller
         ];
 
         $metadataJson = json_encode($fileMetadata);
-        $fileContent = file_get_contents($file->getRealPath());
+        $fileContent = file_get_contents($file->getPathname());
         $fileContentBase64 = base64_encode($fileContent);
 
         $client = new Client();
@@ -498,7 +502,7 @@ class GoogleController extends Controller
         ];
 
         $metadataJson = json_encode($fileMetadata);
-        $fileContent = file_get_contents($file->getRealPath());
+        $fileContent = file_get_contents($file->getPathname());
         $fileContentBase64 = base64_encode($fileContent);
 
         $client = new Client();
@@ -551,7 +555,7 @@ class GoogleController extends Controller
         ];
 
         $metadataJson = json_encode($fileMetadata);
-        $fileContent = file_get_contents($file->getRealPath());
+        $fileContent = file_get_contents($file->getPathname());
         $fileContentBase64 = base64_encode($fileContent);
 
         $client = new Client();
@@ -605,7 +609,7 @@ class GoogleController extends Controller
         ];
 
         $metadataJson = json_encode($fileMetadata);
-        $fileContent = file_get_contents($file->getRealPath());
+        $fileContent = file_get_contents($file->getPathname());
         $fileContentBase64 = base64_encode($fileContent);
 
         $client = new Client();
@@ -653,7 +657,7 @@ class GoogleController extends Controller
         ];
 
         $metadataJson = json_encode($fileMetadata);
-        $fileContent = file_get_contents($file->getRealPath());
+        $fileContent = file_get_contents($file->getPathname());
         $fileContentBase64 = base64_encode($fileContent);
 
         $client = new Client();
