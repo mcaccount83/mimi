@@ -12,20 +12,19 @@ class EOYFinancialReportThankYou extends Mailable
 
     public $mailData;
     public $coordinator_array;
-    protected $attachmentPath;
-    protected $attachmentName;
+    protected $pdfPath;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($mailData, $coordinator_array, $attachmentPath = null, $attachmentName = null)
+    public function __construct($mailData, $coordinator_array, $pdfPath)
     {
         $this->mailData = $mailData;
         $this->coordinator_array = $coordinator_array;
-        $this->attachmentPath = $attachmentPath;
-        $this->attachmentName = $attachmentName;
+        $this->pdfPath =$pdfPath;
+
     }
 
     /**
@@ -36,10 +35,11 @@ class EOYFinancialReportThankYou extends Mailable
         return $this
             ->subject('Financial Report Submitted')
             ->markdown('emails.endofyear.financialreportthankyou')
-            ->attach($this->attachmentPath, [
-                'as' => $this->attachmentName,
-                'mime' => mime_content_type($this->attachmentPath),
+            ->attach($this->pdfPath, [
+                'as' => date('Y') - 1 .'-'.date('Y').'_'.$this->mailData['chapter_state'].'_'.$this->mailData['chapter_name'].'_FinancialReport.pdf',
+                'mime' => 'application/pdf',
             ]);
+
     }
 
 }

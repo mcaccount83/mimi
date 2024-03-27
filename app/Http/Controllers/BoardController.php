@@ -2196,6 +2196,8 @@ class BoardController extends Controller
 
                 // Send email to Assigned Reviewer//
                 $to_email = $ReviewerEmail;
+                $to_email2 = $completed_email;
+
                 $mailData = [
                     'chapterid' => $chapter_id,
                     'chapter_name' => $chapter_name,
@@ -2213,10 +2215,12 @@ class BoardController extends Controller
                     $pdfPath = $this->generateAndSavePdf($chapter_id);   // Generate and save the PDF
                     Mail::to($to_email)
                         ->send(new EOYFinancialSubmitted($mailData, $coordinator_array, $pdfPath));
+
+                    Mail::to($to_email2)
+                        ->send(new EOYFinancialReportThankYou($mailData, $coordinator_array, $pdfPath));
                 }
 
                 $report->save();
-
 
                 DB::commit();
                 if ($reportReceived == 1) {
@@ -2375,24 +2379,11 @@ class BoardController extends Controller
                 'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n" . json_encode($fileMetadata) . "\r\n--foo_bar_baz\r\nContent-Type: application/pdf\r\nContent-Transfer-Encoding: base64\r\n\r\n" . $fileContentBase64 . "\r\n--foo_bar_baz--",
             ]);
 
-            // $bodyContents = $response->getBody()->getContents();
-            // $jsonResponse = json_decode($bodyContents, true);
-
             if ($response->getStatusCode() === 200) { // Check for a successful status code
                 $pdf_file_id = json_decode($response->getBody()->getContents(), true)['id'];
-
-                // $pdf_file_id = $jsonResponse['id'];
-
                 $report = FinancialReport::find($chapter_id);
                 $report->financial_pdf_path = $pdf_file_id;
                 $report->save();
-
-                // $report->update(['financial_pdf_path' => $pdf_file_id]);
-
-                // $report = FinancialReport::where('chapter_id', $chapter_id)->first();
-                // $report->update([
-                //     'financial_pdf_path' => $pdf_file_id,
-                // ]);
 
                 return $pdfPath;  // Return the full local stored path
         }

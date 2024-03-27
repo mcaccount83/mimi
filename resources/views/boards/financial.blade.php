@@ -3512,6 +3512,11 @@ $(document).ready(function(){
         else if (!EnsureSubmitInformation()) {
             return false;
         }
+        var completedEmail = $("#CompletedEmail").val();
+        if (!isValidEmail(completedEmail)) {
+            alert("Please enter a valid email address.");
+            return false;
+        }
         var result = confirm("This will finalize and submit your report.  You will no longer be able to edit this report.  Do you wish to continue?");
         if (result) {
             $("#submitted").val('1');
@@ -3520,6 +3525,12 @@ $(document).ready(function(){
         }
     });
 });
+
+    function isValidEmail(email) {
+        // Regular expression for email validation
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
 
     function EnsureRoster(){
         if(document.getElementById('RosterPath').value==""){
