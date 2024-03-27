@@ -3142,9 +3142,12 @@
                         <button type="button" id="btn-save" class="btn btn-info btn-fill" ><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                     @endif
                     @if($submitted =='1')
-                        <a href='{{ url("/board/financial/pdf", ["id" => Session::get("chapterid")]) }}' target="_blank" class="">
+                    <a id="viewPdfLink" href="https://drive.google.com/file/d/<?php echo $financial_report_array['financial_pdf_path']; ?>/view" target="_blank" class="btn btn-info btn-fill" <?php if(!$submitted =='1') echo "disabled"; ?>><i class="fa fa-file-pdf-o fa-fw" aria-hidden="true" ></i>&nbsp; View PDF</a>
+                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn btn-info btn-fill" <?php if(!$submitted =='1') echo "disabled"; ?>><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Download PDF</a>
+
+                        {{-- <a href='{{ url("/board/financial/pdf", ["id" => Session::get("chapterid")]) }}' target="_blank" class="">
                         <button id="buttononclickdisable" class="btn btn-info btn-fill" onClick="this.disabled=true;"><i class="fa fa-file-pdf-o fa-fw" aria-hidden="true" ></i>&nbsp; View PDF</button>
-                        </a>
+                        </a> --}}
                     @endif
             </div>
         </div>

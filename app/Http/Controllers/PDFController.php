@@ -6,6 +6,9 @@ use App\Models\FinancialReport;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+use GuzzleHttp\Client;
+
 
 class PDFController extends Controller
 {
@@ -103,22 +106,9 @@ class PDFController extends Controller
                 'meeting_speakers' => $financial_report_array->meeting_speakers,
                 'meeting_speakers_explanation' => $financial_report_array->meeting_speakers_explanation,
                 'meeting_speakers_array' => $financial_report_array->meeting_speakers_array,
-                // 'speaker_child_rearing' => $financial_report_array->speaker_child_rearing,
-                // 'speaker_education' => $financial_report_array->speaker_education,
-                // 'speaker_homemaking' => $financial_report_array->speaker_homemaking,
-                // 'speaker_politics' => $financial_report_array->speaker_politics,
-                // 'speaker_other_np' => $financial_report_array->speaker_other_np,
-                // 'speaker_other' => $financial_report_array->speaker_other,
                 'discussion_topic_frequency' => $financial_report_array->discussion_topic_frequency,
                 'park_day_frequency' => $financial_report_array->park_day_frequency,
                 'activity_array' => $financial_report_array->activity_array,
-                // 'activity_cooking' => $financial_report_array->activity_cooking,
-                // 'activity_couponing' => $financial_report_array->activity_couponing,
-                // 'activity_mommy_playgroup' => $financial_report_array->activity_mommy_playgroup,
-                // 'activity_babysitting' => $financial_report_array->activity_babysitting,
-                // 'activity_mno' => $financial_report_array->activity_mno,
-                // 'activity_other' => $financial_report_array->activity_other,
-                // 'activity_other_explanation' => $financial_report_array->activity_other_explanation,
                 'contributions_not_registered_charity' => $financial_report_array->contributions_not_registered_charity,
                 'contributions_not_registered_charity_explanation' => $financial_report_array->contributions_not_registered_charity_explanation,
                 'at_least_one_service_project' => $financial_report_array->at_least_one_service_project,
@@ -139,9 +129,72 @@ class PDFController extends Controller
 
             $filename = date('Y') - 1 .'-'.date('Y').'_'.$pdfData['state'].'_'.$pdfData['chapter_name'].'_FinancialReport.pdf';
 
-            return $pdf->stream($filename, ['Attachment' => 0]);
+            // Save the PDF to local storage
+            $pdfPath = storage_path('app/pdf_reports/' . $filename);
+            $pdf->save($pdfPath);
 
-        } catch (\Exception $e) {
+            // Save the file path in the financialReport table
+            $report = FinancialReport::findOrFail($chapterId);
+            $report->file_irs_path = $pdfPath;
+            $report->save();
+
+            // Upload the PDF to Google Drive
+            $googleClient = new Client();
+            // Set up your Google Client configuration (credentials, scopes, etc.)
+            $client_id = \config('services.google.client_id');
+            $client_secret = \config('services.google.client_secret');
+            $refresh_token = \config('services.google.refresh_token');
+            $response = Http::post('https://oauth2.googleapis.com/token', [
+                'client_id' => $client_id,
+                'client_secret' => $client_secret,
+                'refresh_token' => $refresh_token,
+                'grant_type' => 'refresh_token',
+            ]);
+
+            $accessToken = json_decode((string) $response->getBody(), true)['access_token'];
+
+            // $accessToken = $googleClient->fetchAccessTokenWithAssertion()["access_token"]; // Fetch access token
+
+            $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+
+            $fileMetadata = [
+                'name' => $filename,
+                'parents' => [$sharedDriveId], // Define your Google Drive folder ID
+                'mimeType' => 'application/pdf', // Mime type of the file
+            ];
+
+            $fileContent = file_get_contents($pdfPath); // Get the file content
+            $fileContentBase64 = base64_encode($fileContent); // Encode the file content in base64
+
+            $response = $googleClient->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+                ],
+                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n" . json_encode($fileMetadata) . "\r\n--foo_bar_baz\r\nContent-Type: application/pdf\r\nContent-Transfer-Encoding: base64\r\n\r\n" . $fileContentBase64 . "\r\n--foo_bar_baz--",
+            ]);
+
+            if ($response->getStatusCode() === 200) { // Check for a successful status code
+                $fileId = json_decode($response->getBody()->getContents(), true)['id'];
+
+                // Update the record with the file ID from Google Drive
+                $report->update(['drive_file_id' => $fileId]);
+
+            //     return 'File uploaded to Google Drive successfully!';
+            // } else {
+            //     return 'Failed to upload file to Google Drive';
+            // }
+
+            $mode = request()->input('mode'); // Get the mode parameter from the request
+
+            if ($mode === 'stream') {
+                return $pdf->stream($filename, ['Attachment' => 0]); // Stream the PDF
+            } else {
+                return $pdf->download($filename); // Download the PDF
+            }
+        }
+
+        }catch (\Exception $e) {
             // Handle the exception and log the error message
             dd($e->getMessage());
 

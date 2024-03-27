@@ -2395,10 +2395,16 @@
                             <br>
                             </div>
                                 <div class="col-md-12">
+                                    <div class="col-xs-12">
+                                        <label class="control-label" for="RosterLink">Financial Report PDF:</label>
+                                    <a id="viewPdfLink" href="{{ url("/chapter/financial/pdf/{$chapterid}?mode=download") }}">Download PDF</a>
+                                  </div>
+
                                     <?php if (!empty($financial_report_array['roster_path'])): ?>
                                         <div class="col-xs-12">
                                             <label class="control-label" for="RosterLink">Chapter Roster File:</label>
-                                            <a href="<?php echo $financial_report_array['roster_path']; ?>" target="_blank">Chapter Roster</a>
+                                            <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['roster_path']; ?>">Chapter Roster</a>
+                                            {{-- <a href="https://drive.google.com/file/d/<?php echo $financial_report_array['roster_path']; ?>/view" target="_blank">Chapter Roster</a> --}}
                                         </div>
                                     <?php else: ?>
                                         <div class="col-xs-12">
@@ -2411,7 +2417,8 @@
                                     <?php if (!empty($financial_report_array['bank_statement_included_path'])): ?>
                                         <div class="col-xs-12">
                                             <label class="control-label" for="Statement1ink">Primary Bank Statement:</label>
-                                            <a href="<?php echo $financial_report_array['bank_statement_included_path']; ?>" target="_blank">Statement 1</a>
+                                            <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_included_path']; ?>">Statement 1</a>
+                                            {{-- <a href="<?php echo $financial_report_array['bank_statement_included_path']; ?>" target="_blank">Statement 1</a> --}}
                                         </div>
                                     <?php else: ?>
                                         <div class="col-xs-12">
@@ -2424,7 +2431,8 @@
                                     <?php if (!empty($financial_report_array['bank_statement_2_included_path'])): ?>
                                         <div class="col-xs-12">
                                             <label class="control-label" for="Statement2Link">Additional Bank Statement:</label>
-                                            <a href="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" target="_blank">Statement 2</a>
+                                            <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">Statement 2</a>
+                                            {{-- <a href="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" target="_blank">Statement 2</a> --}}
                                         </div>
                                     <?php else: ?>
                                         <div class="col-xs-12">
@@ -2437,7 +2445,8 @@
                                     <?php if (!empty($financial_report_array['file_irs_path'])): ?>
                                         <div class="col-xs-12">
                                             <label class="control-label" for="990NLink">990N Filing:</label>
-                                            <a href="<?php echo $financial_report_array['file_irs_path']; ?>" target="_blank">990N Confirmation</a>
+                                            <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['file_irs_path']; ?>">990N Confirmation</a>
+                                            {{-- <a href="<?php echo $financial_report_array['file_irs_path']; ?>" target="_blank">990N Confirmation</a> --}}
                                         </div>
                                     <?php else: ?>
                                         <div class="col-xs-12">
@@ -2737,8 +2746,9 @@
 <div class="box-body text-center">
 
               <a href="{{ route('home') }}" class="btn btn-themeBlue margin"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
-<a id="viewPdfLink" href="{{ url("/chapter/financial/pdf/{$chapterid}") }}" target="_blank" class="btn btn-themeBlue margin" <?php if(!$submitted =='1') echo "disabled"; ?>><i class="fa fa-file-pdf-o fa-fw" aria-hidden="true" ></i>&nbsp; View PDF</a>
-              </div>
+              <a id="viewPdfLink" href="https://drive.google.com/file/d/<?php echo $financial_report_array['financial_pdf_path']; ?>/view" target="_blank" class="btn btn-themeBlue margin" <?php if(!$submitted =='1') echo "disabled"; ?>><i class="fa fa-file-pdf-o fa-fw" aria-hidden="true" ></i>&nbsp; View PDF</a>
+            <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn btn-themeBlue margin" <?php if(!$submitted =='1') echo "disabled"; ?>><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Download PDF</a>
+        </div>
 
 
 @endsection

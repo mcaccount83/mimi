@@ -69,10 +69,12 @@
 						<td><center><a href="<?php echo url("/chapter/financial/{$list->chap_id}") ?>"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a></center></td>
                         <td><center>
                                 @if($list->financial_report_received == '1')
-                                    <a href="{{ url("/chapter/financial/pdf/{$list->chap_id}") }}" target="_blank"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></a>
+                                <a id="viewPdfLink" href="https://drive.google.com/file/d/{{$list->financial_pdf_path}}/view" target="_blank"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></a>&nbsp;
+                                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{$list->financial_pdf_path}}"><i class="fa fa-download fa-fw fa-lg" aria-hidden="true" ></i></a>
+                                    {{-- <a href="{{ url("/chapter/financial/pdf/{$list->chap_id}") }}" target="_blank"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></a> --}}
                                 @endif
                             </center></td>
-                        <td><center><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Financial Report Review - MOMS Club of {{ $list->name }}, {{ $list->state }}"><i class="fa fa-envelope-o fa-lg" aria-hidden="true"></i></a></i></center></td>
+                        <td><center><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Financial Report Review - MOMS Club of {{ $list->name }}, {{ $list->state }}"><i class="fa fa-envelope-o fa-lg" aria-hidden="true"></i></a></center></td>
                         <td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
                         <td>{{ $list->fname }} {{ $list->lname }}</td>

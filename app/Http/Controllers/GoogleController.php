@@ -149,11 +149,10 @@ class GoogleController extends Controller
 
         if ($response->getStatusCode() === 200) { // Check for a successful status code
             $file_id = $jsonResponse['id'];
-            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
             $existingRecord = FinancialReport::where('chapter_id', $id)->first();
 
             $existingRecord->update([
-                'roster_path' => $path,
+                'roster_path' => $file_id,
             ]);
 
             return redirect()->back()->with('success', 'File uploaded successfully!');
@@ -184,7 +183,7 @@ class GoogleController extends Controller
         ];
 
         $metadataJson = json_encode($fileMetadata);
-        $fileContent = file_get_contents($file->getRealPath());
+        $fileContent = file_get_contents($file->getPathname());
         $fileContentBase64 = base64_encode($fileContent);
 
         $client = new Client();
@@ -202,11 +201,10 @@ class GoogleController extends Controller
 
         if ($response->getStatusCode() === 200) { // Check for a successful status code
             $file_id = $jsonResponse['id'];
-            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
             $existingRecord = FinancialReport::where('chapter_id', $id)->first();
 
             $existingRecord->update([
-                'file_irs_path' => $path,
+                'file_irs_path' => $file_id,
             ]);
 
             return redirect()->back()->with('success', 'File uploaded successfully!');
@@ -255,11 +253,10 @@ class GoogleController extends Controller
 
         if ($response->getStatusCode() === 200) { // Check for a successful status code
             $file_id = $jsonResponse['id'];
-            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
             $existingRecord = FinancialReport::where('chapter_id', $id)->first();
 
             $existingRecord->update([
-                'bank_statement_included_path' => $path,
+                'bank_statement_included_path' => $file_id,
             ]);
 
             return redirect()->back()->with('success', 'File uploaded successfully!');
@@ -308,11 +305,10 @@ class GoogleController extends Controller
 
         if ($response->getStatusCode() === 200) { // Check for a successful status code
             $file_id = $jsonResponse['id'];
-            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
             $existingRecord = FinancialReport::where('chapter_id', $id)->first();
 
             $existingRecord->update([
-                'bank_statement_2_included_path' => $path,
+                'bank_statement_2_included_path' => $file_id,
             ]);
 
             return redirect()->back()->with('success', 'File uploaded successfully!');
@@ -361,11 +357,10 @@ class GoogleController extends Controller
 
         if ($response->getStatusCode() === 200) { // Check for a successful status code
             $file_id = $jsonResponse['id'];
-            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
             $existingRecord = FinancialReport::where('chapter_id', $id)->first();
 
             $existingRecord->update([
-                'award_1_files' => $path,
+                'award_1_files' => $file_id,
             ]);
 
             return redirect()->back()->with('success', 'File uploaded successfully!');
@@ -414,11 +409,10 @@ class GoogleController extends Controller
 
         if ($response->getStatusCode() === 200) { // Check for a successful status code
             $file_id = $jsonResponse['id'];
-            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
             $existingRecord = FinancialReport::where('chapter_id', $id)->first();
 
             $existingRecord->update([
-                'award_2_files' => $path,
+                'award_2_files' => $file_id,
             ]);
 
             return redirect()->back()->with('success', 'File uploaded successfully!');
@@ -467,11 +461,10 @@ class GoogleController extends Controller
 
         if ($response->getStatusCode() === 200) { // Check for a successful status code
             $file_id = $jsonResponse['id'];
-            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
             $existingRecord = FinancialReport::where('chapter_id', $id)->first();
 
             $existingRecord->update([
-                'award_3_files' => $path,
+                'award_3_files' => $file_id,
             ]);
 
             return redirect()->back()->with('success', 'File uploaded successfully!');
@@ -520,11 +513,10 @@ class GoogleController extends Controller
 
         if ($response->getStatusCode() === 200) { // Check for a successful status code
             $file_id = $jsonResponse['id'];
-            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
             $existingRecord = FinancialReport::where('chapter_id', $id)->first();
 
             $existingRecord->update([
-                'award_4_files' => $path,
+                'award_4_files' => $file_id,
             ]);
 
             return redirect()->back()->with('success', 'File uploaded successfully!');
@@ -573,11 +565,10 @@ class GoogleController extends Controller
 
         if ($response->getStatusCode() === 200) { // Check for a successful status code
             $file_id = $jsonResponse['id'];
-            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
             $existingRecord = FinancialReport::where('chapter_id', $id)->first();
 
             $existingRecord->update([
-                'award_5_files' => $path,
+                'award_5_files' => $file_id,
             ]);
 
             return redirect()->back()->with('success', 'File uploaded successfully!');
@@ -585,61 +576,6 @@ class GoogleController extends Controller
             return redirect()->back()->with('error', 'File failed to upload');
         }
     }
-
-
-    public function storeFinancialPDF(StoreFinancialPDFRequest $request, $id): RedirectResponse
-    {
-        $chapter = DB::table('chapters as ch')
-            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('ch.id', '=', $id)
-            ->first();
-
-        $name = $chapter->state.'_'.$chapter->name.'_Financial_PDF';
-        $accessToken = $this->token();
-
-        $file = $request->file('file');
-        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
-
-        $fileMetadata = [
-            'name' => Str::ascii($name.'.'.$file->getClientOriginalExtension()),
-            'parents' => [$sharedDriveId],
-            'mimeType' => $file->getMimeType(),
-        ];
-
-        $metadataJson = json_encode($fileMetadata);
-        $fileContent = file_get_contents($file->getPathname());
-        $fileContentBase64 = base64_encode($fileContent);
-
-        $client = new Client();
-
-        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-            'headers' => [
-                'Authorization' => 'Bearer '.$accessToken,
-                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-            ],
-            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-        ]);
-
-        $bodyContents = $response->getBody()->getContents();
-        $jsonResponse = json_decode($bodyContents, true);
-
-        if ($response->getStatusCode() === 200) { // Check for a successful status code
-            $file_id = $jsonResponse['id'];
-            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
-            $existingRecord = FinancialReport::where('chapter_id', $id)->first();
-
-            $existingRecord->update([
-                'financial_pdf_path' => $path,
-            ]);
-
-            return redirect()->back()->with('success', 'File uploaded successfully!');
-        } else {
-            return redirect()->back()->with('error', 'File failed to upload');
-        }
-    }
-
 
     public function storeResources(StoreResourcesGoogleRequest $request, $id): RedirectResponse
     {
@@ -675,10 +611,8 @@ class GoogleController extends Controller
 
         if ($response->getStatusCode() === 200) { // Check for a successful status code
             $file_id = $jsonResponse['id'];
-            //$path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
-            $path = 'https://drive.google.com/uc?export=download&id=$file_id';
 
-            $resource->file_path = $path;
+            $resource->file_path = $file_id;
             $resource->save();
 
             return redirect()->back()->with('success', 'File uploaded successfully!');

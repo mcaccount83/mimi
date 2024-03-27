@@ -1482,7 +1482,7 @@ class ReportController extends Controller
         $chapterList = DB::table('chapters as ch')
             ->select('ch.id as chap_id', 'ch.primary_coordinator_id as primary_coordinator_id', 'ch.name as name', 'ch.financial_report_received as financial_report_received',
                 'ch.financial_report_complete as report_complete', 'cd.coordinator_id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state',
-                'fr.review_complete as review_complete', 'fr.post_balance as post_balance', 'cd_reviewer.first_name as pcfname', 'cd_reviewer.last_name as pclname')
+                'fr.review_complete as review_complete', 'fr.post_balance as post_balance', 'fr.financial_pdf_path as financial_pdf_path', 'cd_reviewer.first_name as pcfname', 'cd_reviewer.last_name as pclname')
             ->join('state as st', 'ch.state', '=', 'st.id')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
@@ -1500,7 +1500,7 @@ class ReportController extends Controller
                 $chapterList = DB::table('chapters as ch')
                     ->select('ch.id as chap_id', 'ch.primary_coordinator_id as primary_coordinator_id', 'ch.name as name', 'ch.financial_report_received as financial_report_received',
                         'ch.financial_report_complete as report_complete', 'cd.coordinator_id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state',
-                        'fr.review_complete as review_complete', 'fr.post_balance as post_balance', 'cd_reviewer.first_name as pcfname', 'cd_reviewer.last_name as pclname')
+                        'fr.review_complete as review_complete', 'fr.post_balance as post_balance', 'fr.financial_pdf_path as financial_pdf_path', 'cd_reviewer.first_name as pcfname', 'cd_reviewer.last_name as pclname')
                     ->join('state as st', 'ch.state', '=', 'st.id')
                     ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
                     ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
@@ -1522,7 +1522,7 @@ class ReportController extends Controller
                 $chapterList = DB::table('chapters as ch')
                     ->select('ch.id as chap_id', 'ch.primary_coordinator_id as primary_coordinator_id', 'ch.name as name', 'ch.financial_report_received as financial_report_received',
                         'ch.financial_report_complete as report_complete', 'cd.coordinator_id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state',
-                        'fr.review_complete as review_complete', 'fr.post_balance as post_balance', 'cd_reviewer.first_name as pcfname', 'cd_reviewer.last_name as pclname')
+                        'fr.review_complete as review_complete', 'fr.post_balance as post_balance', 'fr.financial_pdf_path as financial_pdf_path', 'cd_reviewer.first_name as pcfname', 'cd_reviewer.last_name as pclname')
                     ->join('state as st', 'ch.state', '=', 'st.id')
                     ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
                     ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')

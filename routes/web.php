@@ -5,7 +5,6 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BoardController;
-use App\Http\Controllers\BoardListController;
 use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\ExportController;
