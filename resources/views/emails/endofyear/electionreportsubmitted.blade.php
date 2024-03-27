@@ -1,12 +1,14 @@
 @component('mail::message')
-# Introduction
+# Election Report Submitted Notification
 
-The body of your message.
+{{ $mailData['chapter_name'] }}, {{ $mailData['chapter_state'] }} has submitted their Election Report.<br>
+<br>
+You can activate their new board members at any time to give them access to MIMI.<br>
+<br>
+Outgoing board members will still be able to log in and access the Financial Report.<br>
 
-@component('mail::button', ['url' => ''])
-Button Text
+<br>
+<strong>MCL,</strong><br>
+MIMI Database Administrator
 @endcomponent
 
-Thanks,<br>
-{{ config('app.name') }}
-@endcomponent

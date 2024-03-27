@@ -1,32 +1,31 @@
 @component('mail::message')
 # Financial Report Check-In Notification
 
-{{ $mailData['chapter_name'] }}, {{ $mailData['chapter_state'] }} has submitted their Financial Report. It is ready to be reviewed.<br>
+{{ $mailData['chapter_name'] }}, {{ $mailData['chapter_state'] }} has submitted their Financial Report. It is ready to be reviewed. The Financial Report PDF is attached and other
+documnets that can be downloaded are listed below.<br>
 <br>
 Submitted by: {{$mailData['completed_name']}}, <a href="mailto:{{$mailData['completed_email']}}">{{$mailData['completed_email']}}</a><br>
 <br>
-Attachments:
+Downloads Available:
 <ul>
     <li>@if (isset($mailData['roster_path']))
-        <a href="{{ $mailData['roster_path'] }}" target="_blank">Chapter Roster</a>
+        <a href="https://drive.google.com/uc?export=download&id=<?php echo $mailData['roster_path']; ?>">Chapter Roster</a>
         @else
         No Roster Attached
         @endif</li>
     <li>@if (isset($mailData['bank_statement_included_path']))
-        <a href="{{ $mailData['bank_statement_included_path'] }}" target="_blank">Primary Bank Statement</a>
+        <a href="https://drive.google.com/uc?export=download&id=<?php echo $mailData['bank_statement_included_path']; ?>">Primary Bank Statement</a>
         @else
         No Statement Attached
         @endif</li>
     @if (isset($mailData['bank_statement_2_included_path']))<li>
-        <a href="{{ $mailData['bank_statement_2_included_path'] }}" target="_blank">Additional Bank Statement</a>
+        <a href="https://drive.google.com/uc?export=download&id=<?php echo $mailData['bank_statement_2_included_path']; ?>">Additional Bank Statement</a>
         </li>@endif
     <li>@if (isset($mailData['file_irs_path']))
-        <a href="{{ $mailData['file_irs_path'] }}" target="_blank">990N Confirmation File</a>
+        <a href="https://drive.google.com/uc?export=download&id=<?php echo $mailData['file_irs_path']; ?>">990N Confirmation File</a>
         @else
         No 990N File Attached
         @endif</li>
-    <li><a href="{{ route('pdf.financialreport', ['id' => $mailData['chapterid']]) }}" target="_blank">Financial Report PDF</a>
-        </li>
 </ul>
 Coordinators:
 <ul>

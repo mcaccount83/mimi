@@ -8,6 +8,8 @@ use App\Mail\ChapersUpdatePrimaryCoor;
 use App\Mail\ChapersUpdatePrimaryCoorMember;
 use App\Mail\EOYFinancialReportThankYou;
 use App\Mail\EOYFinancialSubmitted;
+use App\Mail\EOYElectionReportSubmitted;
+use App\Mail\EOYElectionReportThankYou;
 use App\Mail\WebsiteReviewNotice;
 use App\Models\Chapter;
 use App\Models\FinancialReport;
@@ -1133,6 +1135,38 @@ class BoardController extends Controller
         }
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         $chapter = Chapter::find($chapter_id);
+
+        $chapterDetails = DB::table('chapters')
+            ->select('chapters.*', 'st.state_short_name as state_short_name')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->where('chapters.id', '=', $chapter_id)
+            ->get();
+        $chapter_conf = $chapterDetails[0]->conference;
+        $chapter_state = $chapterDetails[0]->state_short_name;
+        $chapter_name = $chapterDetails[0]->name;
+        $chapter_country = $chapterDetails[0]->country;
+
+        $chName = $chapter_name;
+        $chState = $chapter_state;
+        $chPcid = $chapterDetails[0]->primary_coordinator_id;
+        $chConf = $chapter_conf;
+
+        $coremail = DB::table('coordinator_details')
+            ->select('email')
+            ->where('is_active', '=', '1')
+            ->where('coordinator_id', $chPcid)
+            ->get();
+        $coremail = $coremail[0]->email;
+
+        $PREemail = DB::table('board_details')
+            ->select('email')
+            ->where('board_position_id', 1)
+            ->where('chapter_id', $chapter_id)
+            ->where('is_active', 1)
+            ->get();
+
+        $to_email2 = [$PREemail[0]->email];
+
         $boundaryStatus = $request->input('BoundaryStatus');
         $issue_note = $request->input('BoundaryIssue');
         //Boundary Issues Correct 0 | Not Correct 1
@@ -1396,6 +1430,28 @@ class BoardController extends Controller
 
                 }
             }
+
+            // Call the load_coordinators function
+            $chId = $chapter_id;
+            $coordinatorData = $this->load_coordinators($chId, $chName, $chState, $chConf, $chPcid);
+            $ReviewerEmail = $coordinatorData['ReviewerEmail'];
+            $coordinator_array = $coordinatorData['coordinator_array'];
+
+            // Send email to Assigned Reviewer//
+            $to_email = $ReviewerEmail;
+
+            $mailData = [
+                'chapterid' => $chapter_id,
+                'chapter_name' => $chapter_name,
+                'chapter_state' => $chapter_state,
+            ];
+
+            Mail::to($to_email)
+                ->send(new EOYElectionReportSubmitted($mailData));
+
+            Mail::to($to_email2)
+                ->send(new EOYElectionReportThankYou($mailData));
+
 
             DB::commit();
         } catch (\Exception $e) {

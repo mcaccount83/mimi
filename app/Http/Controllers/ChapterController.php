@@ -4656,6 +4656,19 @@ class ChapterController extends Controller
             $chapter_name = $chapterDetails[0]->name;
             $chapter_country = $chapterDetails[0]->country;
 
+            // Links for uploaded documents
+            $files = DB::table('financial_report')
+            ->select('*')
+            ->where('chapter_id', '=', $chapter_id)
+            ->get();
+
+            $roster_path = $files[0]->roster_path;
+            $file_irs_path = $files[0]->file_irs_path;
+            $bank_statement_included_path = $files[0]->bank_statement_included_path;
+            $bank_statement_2_included_path = $files[0]->bank_statement_2_included_path;
+            $completed_name = $files[0]->completed_name;
+            $completed_email = $files[0]->completed_email;
+
             $Reviewer = DB::table('coordinator_details')
                 ->select('coordinator_details.*')
                 ->where('coordinator_details.coordinator_id', '=', $reviewer_id)
@@ -4666,10 +4679,6 @@ class ChapterController extends Controller
             DB::beginTransaction();
             try {
                 $report = FinancialReport::find($chapter_id);
-                // $report->roster_path = $roster_path;
-                // $report->file_irs_path = $file_irs_path;
-                // $report->bank_statement_included_path = $bank_statement_included_path;
-                // $report->bank_statement_2_included_path = $bank_statement_2_included_path;
                 $report->reviewer_id = $reviewer_id;
                 $report->step_1_notes_log = $step_1_notes_log;
                 $report->step_2_notes_log = $step_2_notes_log;
@@ -4709,18 +4718,19 @@ class ChapterController extends Controller
                 if ($submitType == 'review_complete') {
                     $report->review_complete = date('Y-m-d H:i:s');
                 }
-                // if ($submitType == 'review_clear') {
-                //     $report->review_complete = null;
-                // }
 
                 // Send email to new Assigned Reviewer//
                 $to_email = $ReviewerEmail;
-                $mailData = ['chapter_name' => $chapter_name,
+                $mailData = [
+                    'chapterid' => $chapter_id,
+                    'chapter_name' => $chapter_name,
                     'chapter_state' => $chapter_state,
-                    'roster_path' => $report->get('roster_path'),
-                    'file_irs_path' => $report->get('file_irs_path'),
-                    'bank_statement_included_path' => $report->get('bank_statement_included_path'),
-                    'bank_statement_2_included_path' => $report->get('bank_statement_2_included_path'),
+                    'completed_name' => $completed_name,
+                    'completed_email' => $completed_email,
+                    'roster_path' => $roster_path,
+                    'file_irs_path' => $file_irs_path,
+                    'bank_statement_included_path' => $bank_statement_included_path,
+                    'bank_statement_2_included_path' => $bank_statement_2_included_path,
                 ];
 
                 if ($report->isDirty('reviewer_id')) {
@@ -4735,17 +4745,12 @@ class ChapterController extends Controller
                 if ($submitType == 'review_complete') {
                     $chapter->financial_report_complete = 1;
                 }
-                // if ($submitType == 'review_clear') {
-                //     $chapter->financial_report_complete = null;
-                // }
 
                 $chapter->save();
 
                 DB::commit();
                 if ($submitType == 'review_complete') {
                     return redirect()->back()->with('success', 'Report has been successfully Marked as Review Complete');
-                    // } elseif ($submitType == 'review_clear') {
-                    //     return redirect()->back()->with('success', 'Review Complete has been successfully cleared');
                 } else {
                     return redirect()->back()->with('success', 'Report has been successfully Updated');
                 }
