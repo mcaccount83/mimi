@@ -248,6 +248,7 @@ class GoogleController extends Controller
         $name = $state.'_'.$chapterName.'_Roster';
         $accessToken = $this->token();
 
+
         $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
 
         // Create conference folder if it doesn't exist in the shared drive
@@ -265,8 +266,6 @@ class GoogleController extends Controller
         $fileContent = file_get_contents($request->file('file')->getPathname());
         $fileContentBase64 = base64_encode($fileContent);
         $metadataJson = json_encode($fileMetadata);
-
-        $client = new Client();
 
         $client = new Client();
 
