@@ -11,7 +11,9 @@ class EOYFinancialReportThankYou extends Mailable
     use Queueable, SerializesModels;
 
     public $mailData;
+
     public $coordinator_array;
+
     protected $pdfPath;
 
     /**
@@ -23,7 +25,7 @@ class EOYFinancialReportThankYou extends Mailable
     {
         $this->mailData = $mailData;
         $this->coordinator_array = $coordinator_array;
-        $this->pdfPath =$pdfPath;
+        $this->pdfPath = $pdfPath;
 
     }
 
@@ -41,5 +43,4 @@ class EOYFinancialReportThankYou extends Mailable
             ]);
 
     }
-
 }

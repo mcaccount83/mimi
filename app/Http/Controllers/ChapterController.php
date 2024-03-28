@@ -4658,9 +4658,9 @@ class ChapterController extends Controller
 
             // Links for uploaded documents
             $files = DB::table('financial_report')
-            ->select('*')
-            ->where('chapter_id', '=', $chapter_id)
-            ->get();
+                ->select('*')
+                ->where('chapter_id', '=', $chapter_id)
+                ->get();
 
             $roster_path = $files[0]->roster_path;
             $file_irs_path = $files[0]->file_irs_path;

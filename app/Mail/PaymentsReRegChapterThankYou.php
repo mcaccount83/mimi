@@ -24,7 +24,7 @@ class PaymentsReRegChapterThankYou extends Mailable
         // $this->mailData['chapterDate'] = date('m-d-Y', strtotime($this->mailData['chapterDate']));
 
         // Check if 'chapterDate' is set and valid
-        if (!isset($this->mailData['chapterDate']) || !strtotime($this->mailData['chapterDate'])) {
+        if (! isset($this->mailData['chapterDate']) || ! strtotime($this->mailData['chapterDate'])) {
             // If 'chapterDate' is not set or invalid, default it to today's date
             $this->mailData['chapterDate'] = Carbon::today()->format('m-d-Y');
         } elseif (strpos($this->mailData['chapterDate'], '-') !== false) {

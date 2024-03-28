@@ -16,4 +16,3 @@ class FolderRecord extends Model
         'folder_id',
     ];
 }
-
