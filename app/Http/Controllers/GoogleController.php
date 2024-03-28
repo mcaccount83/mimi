@@ -270,8 +270,6 @@ public function storeRoster(StoreRosterGoogleRequest $request, $id): RedirectRes
     $fileContentBase64 = base64_encode($fileContent);
     $metadataJson = json_encode($fileMetadata);
 
-    $client = new Client();
-
             $client = new Client();
 
         $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
