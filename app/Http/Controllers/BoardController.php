@@ -13,6 +13,7 @@ use App\Mail\EOYElectionReportThankYou;
 use App\Mail\WebsiteReviewNotice;
 use App\Models\Chapter;
 use App\Models\FinancialReport;
+use App\Models\FolderRecord;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,6 +26,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use GuzzleHttp\Client;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -2310,6 +2312,7 @@ class BoardController extends Controller
                 ->get();
 
             $pdfData = [
+                'conf' => $chapterDetails[0]->conf,
                 'chapter_name' => $chapterDetails[0]->chapter_name,
                 'state' => $chapterDetails[0]->state,
                 'ein' => $chapterDetails[0]->ein,
@@ -2414,25 +2417,35 @@ class BoardController extends Controller
                 'grant_type' => 'refresh_token',
             ]);
 
-            $accessToken = json_decode((string) $response->getBody(), true)['access_token'];
+            $conf = $pdfData['conf'];
+    $state = $pdfData['state'];
+    $chapterName = $pdfData['chapter_name'];
+    $accessToken = json_decode((string) $response->getBody(), true)['access_token'];
 
-            $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+    $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
 
-            $fileMetadata = [
-                'name' => $filename,
-                'parents' => [$sharedDriveId],
-                'mimeType' => 'application/pdf',
-            ];
+    // Create conference folder if it doesn't exist in the shared drive
+    $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
 
-            $fileContent = file_get_contents($pdfPath);
-            $fileContentBase64 = base64_encode($fileContent);
+    // Set parent IDs for the file
+    $fileMetadata = [
+        'name' => $filename,
+        'mimeType' => 'application/pdf',
+        'parents' => [$chapterFolderId],
+        'driveId' => $sharedDriveId,
+    ];
+
+    // Upload the file
+    $fileContent = file_get_contents($pdfPath);
+    $fileContentBase64 = base64_encode($fileContent);
+    $metadataJson = json_encode($fileMetadata);
 
             $response = $googleClient->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $accessToken,
                     'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
                 ],
-                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n" . json_encode($fileMetadata) . "\r\n--foo_bar_baz\r\nContent-Type: application/pdf\r\nContent-Transfer-Encoding: base64\r\n\r\n" . $fileContentBase64 . "\r\n--foo_bar_baz--",
+                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
             ]);
 
             if ($response->getStatusCode() === 200) { // Check for a successful status code
@@ -2444,6 +2457,133 @@ class BoardController extends Controller
                 return $pdfPath;  // Return the full local stored path
         }
     }
+
+
+    private function createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId)
+    {
+        // Check if the conference folder exists, create it if not
+        $confFolderId = $this->getOrCreateConfFolder($conf, $accessToken, $sharedDriveId);
+
+        // Check if the state folder exists, create it if not
+        $stateFolderId = $this->getOrCreateStateFolder($conf, $state, $confFolderId, $accessToken, $sharedDriveId);
+
+        // Check if the chapter folder exists, create it if not
+        $chapterFolderId = $this->getOrCreateChapterFolder($conf, $state, $chapterName, $stateFolderId, $accessToken, $sharedDriveId);
+
+        return $chapterFolderId;
+    }
+
+
+    private function getOrCreateConfFolder($conf, $accessToken, $sharedDriveId)
+{
+    // Check if the conference folder exists in the records
+    $confRecord = FolderRecord::where('conf', $conf)->first();
+
+    if ($confRecord) {
+        // Conference folder exists, return its ID
+        return $confRecord->folder_id;
+    } else {
+        // Conference folder doesn't exist, create it
+        $client = new Client();
+        $folderMetadata = [
+            'name' => "Conference $conf",
+            'parents' => [$sharedDriveId],
+            'driveId' => $sharedDriveId,
+            'mimeType' => 'application/vnd.google-apps.folder',
+        ];
+        $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
+            ],
+            'json' => $folderMetadata,
+        ]);
+        $folderId = json_decode($response->getBody()->getContents(), true)['id'];
+
+        // Record the created folder ID for future reference
+        FolderRecord::create([
+            'conf' => $conf,
+            'folder_id' => $folderId,
+        ]);
+
+        return $folderId;
+    }
+}
+
+private function getOrCreateStateFolder($conf, $state, $confFolderId, $accessToken, $sharedDriveId)
+{
+    // Check if the state folder exists in the records
+    $stateRecord = FolderRecord::where('state', $state)->first();
+
+    if ($stateRecord) {
+        // State folder exists, return its ID
+        return $stateRecord->folder_id;
+    } else {
+        // State folder doesn't exist, create it
+        $client = new Client();
+        $folderMetadata = [
+            'name' => $state,
+            'parents' => [$confFolderId],
+            'driveId' => $sharedDriveId,
+            'mimeType' => 'application/vnd.google-apps.folder',
+        ];
+        $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
+            ],
+            'json' => $folderMetadata,
+        ]);
+        $folderId = json_decode($response->getBody()->getContents(), true)['id'];
+
+        // Record the created folder ID for future reference
+        FolderRecord::create([
+            // 'conf' => "Conference $conf",
+            'state' => $state,
+            'folder_id' => $folderId,
+        ]);
+
+        return $folderId;
+    }
+}
+
+private function getOrCreateChapterFolder($conf, $state, $chapterName, $stateFolderId, $accessToken, $sharedDriveId)
+{
+    // Check if the chapter folder exists in the records
+    $chapterRecord = FolderRecord::where('chapter_name', $chapterName)->first();
+
+    if ($chapterRecord) {
+        // Chapter folder exists, return its ID
+        return $chapterRecord->folder_id;
+    } else {
+        // Chapter folder doesn't exist, create it
+        $client = new Client();
+        $folderMetadata = [
+            'name' => $chapterName,
+            'parents' => [$stateFolderId],
+            'driveId' => $sharedDriveId,
+            'mimeType' => 'application/vnd.google-apps.folder',
+        ];
+        $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Content-Type' => 'application/json',
+            ],
+            'json' => $folderMetadata,
+        ]);
+        $folderId = json_decode($response->getBody()->getContents(), true)['id'];
+
+        // Record the created folder ID for future reference
+        FolderRecord::create([
+            // 'conf' => "Conference $conf",
+            // 'state' => $state,
+            'chapter_name' => $chapterName,
+            'folder_id' => $folderId,
+        ]);
+
+        return $folderId;
+    }
+}
 
     public function load_coordinators($chId, $chName, $chState, $chConf, $chPcid)
     {
