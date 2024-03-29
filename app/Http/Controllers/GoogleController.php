@@ -248,7 +248,6 @@ class GoogleController extends Controller
         $name = $state.'_'.$chapterName.'_Roster';
         $accessToken = $this->token();
 
-
         $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
 
         // Create conference folder if it doesn't exist in the shared drive
