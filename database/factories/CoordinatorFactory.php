@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Coordinator;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CoordinatorFactory extends Factory
