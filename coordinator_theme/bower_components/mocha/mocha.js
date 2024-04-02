@@ -1086,10 +1086,10 @@ module.exports = function(suite){
 
 require.register("interfaces/index.js", function(module, exports, require){
 
-exports.bdd = require('./bdd');
-exports.tdd = require('./tdd');
-exports.qunit = require('./qunit');
-exports.exports = require('./exports');
+import bdd from './bdd';
+import tdd from './tdd';
+import qunit from './qunit';
+import exports from './exports';
 
 }); // module: interfaces/index.js
 
@@ -1386,14 +1386,14 @@ exports = module.exports = Mocha;
  */
 
 exports.utils = utils;
-exports.interfaces = require('./interfaces');
-exports.reporters = require('./reporters');
-exports.Runnable = require('./runnable');
-exports.Context = require('./context');
-exports.Runner = require('./runner');
-exports.Suite = require('./suite');
-exports.Hook = require('./hook');
-exports.Test = require('./test');
+import interfaces from './interfaces';
+import reporters from './reporters';
+import Runnable from './runnable';
+import Context from './context';
+import Runner from './runner';
+import Suite from './suite';
+import Hook from './hook';
+import Test from './test';
 
 /**
  * Return image `name` path.
@@ -2821,23 +2821,23 @@ function on(el, event, fn) {
 
 require.register("reporters/index.js", function(module, exports, require){
 
-exports.Base = require('./base');
-exports.Dot = require('./dot');
-exports.Doc = require('./doc');
-exports.TAP = require('./tap');
-exports.JSON = require('./json');
-exports.HTML = require('./html');
-exports.List = require('./list');
-exports.Min = require('./min');
-exports.Spec = require('./spec');
-exports.Nyan = require('./nyan');
-exports.XUnit = require('./xunit');
-exports.Markdown = require('./markdown');
-exports.Progress = require('./progress');
-exports.Landing = require('./landing');
-exports.JSONCov = require('./json-cov');
-exports.HTMLCov = require('./html-cov');
-exports.JSONStream = require('./json-stream');
+import Base from './base';
+import Dot from './dot';
+import Doc from './doc';
+import TAP from './tap';
+import JSON from './json';
+import HTML from './html';
+import List from './list';
+import Min from './min';
+import Spec from './spec';
+import Nyan from './nyan';
+import XUnit from './xunit';
+import Markdown from './markdown';
+import Progress from './progress';
+import Landing from './landing';
+import JSONCov from './json-cov';
+import HTMLCov from './html-cov';
+import JSONStream from './json-stream';
 
 }); // module: reporters/index.js
 
