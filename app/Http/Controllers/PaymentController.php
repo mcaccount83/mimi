@@ -38,7 +38,8 @@ class PaymentController extends Controller
         $chPcid = $chapterDetails['primary_coordinator_id'];
 
         $presDetails = DB::table('board_details as bd')
-            ->select('*')
+            ->select('bd.chapter_id as chapter_id', 'bd.board_position_id as board_position_id', 'bd.first_name as first_name', 'bd.last_name as last_name',
+            'bd.street_address as street_address', 'bd.city as city', 'bd.state as state', 'bd.zip as zip')
             ->where('bd.chapter_id', '=', $chapterId)
             ->where('bd.board_position_id', '=', 1)
             ->first();

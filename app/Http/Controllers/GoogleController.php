@@ -55,7 +55,7 @@ class GoogleController extends Controller
     public function storeEIN(StoreEINGoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
-            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
+            ->select('ch.conference', 'ch.state', 'ch.ein', 'ch.name', 'st.state_short_name as state')
             ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $id)
@@ -236,8 +236,8 @@ class GoogleController extends Controller
     public function storeRoster(StoreRosterGoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
-            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+        ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
+        ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $id)
             ->first();
@@ -296,8 +296,8 @@ class GoogleController extends Controller
     public function store990N(Store990NGoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
-            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+        ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
+        ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $id)
             ->first();
@@ -356,8 +356,8 @@ class GoogleController extends Controller
     public function storeStatement1(StoreStatement1GoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
-            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+        ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
+        ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $id)
             ->first();
@@ -416,8 +416,8 @@ class GoogleController extends Controller
     public function storeStatement2(StoreStatement2GoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
-            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+        ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
+        ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $id)
             ->first();
@@ -476,8 +476,8 @@ class GoogleController extends Controller
     public function storeAward1(StoreAward1GoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
-            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+        ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
+        ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $id)
             ->first();
@@ -536,8 +536,8 @@ class GoogleController extends Controller
     public function storeAward2(StoreAward2GoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
-            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+        ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
+        ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $id)
             ->first();
@@ -596,8 +596,8 @@ class GoogleController extends Controller
     public function storeAward3(StoreAward3GoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
-            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+        ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
+        ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $id)
             ->first();
@@ -656,8 +656,8 @@ class GoogleController extends Controller
     public function storeAward4(StoreAward4GoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
-            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+        ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
+        ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $id)
             ->first();
@@ -716,8 +716,8 @@ class GoogleController extends Controller
     public function storeAward5(StoreAward5GoogleRequest $request, $id): RedirectResponse
     {
         $chapter = DB::table('chapters as ch')
-            ->select('ch.*', 'ch.ein as ein', 'ch.name as name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+        ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
+        ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $id)
             ->first();

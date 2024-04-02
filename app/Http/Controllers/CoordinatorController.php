@@ -1520,7 +1520,7 @@ class CoordinatorController extends Controller
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $coordinatorDetails = DB::table('coordinator_details as cd')
-            ->select('cd.*')
+            ->select('cd.coordinator_id', 'cd.position_id', 'cd.birthday_month_id', 'cd.birthday_day', 'cd.card_sent', 'cd.first_name', 'cd.last_name', 'cd.address','cd.city', 'cd.state', 'cd.zip')
             ->where('cd.is_active', '=', '1')
             ->where('cd.coordinator_id', '=', $id)
             ->get();
@@ -1565,10 +1565,7 @@ class CoordinatorController extends Controller
             ->where('ch.is_active', '=', '1')
             ->get();
 
-        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
-        $currentMonth = $coordinatorDetails[0]->birthday_month_id;
-
-        $data = ['directChapterTo' => $directChapterTo, 'directReportTo' => $directReportTo, 'primaryCoordinatorList' => $primaryCoordinatorList, 'positionList' => $positionList, 'confList' => $confList, 'currentMonth' => $currentMonth, 'coordinatorDetails' => $coordinatorDetails, 'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
+        $data = ['directChapterTo' => $directChapterTo, 'directReportTo' => $directReportTo, 'primaryCoordinatorList' => $primaryCoordinatorList, 'positionList' => $positionList, 'confList' => $confList, 'coordinatorDetails' => $coordinatorDetails, 'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr];
 
         return view('coordinators.birthday')->with($data);
     }
