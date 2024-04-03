@@ -107,6 +107,8 @@
                         </button>
                     </div>
                     @endif
+                    @endif
+                    @if($thisDate->month >= 6 && $thisDate->month <= 12)
                     <div class="col-md-4 float-left">
                         <button id="FinancialReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $list->id]) }}'">
                             <i class="fa fa-usd fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y')-1 .'-'.date('Y') }} Financial Report

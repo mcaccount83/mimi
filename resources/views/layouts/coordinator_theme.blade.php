@@ -400,11 +400,17 @@
         @endif
 
         @if ($adminReportCondition)
-            <li class="treeview {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }} {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }} {{ Request::is('adminreports/multipleboard') ? 'active' : '' }} {{ Request::is('adminreports/nopresident') ? 'active' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
+            <li class="treeview {{ Request::is('admin') ? 'active' : '' }} {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }} {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }} {{ Request::is('adminreports/multipleboard') ? 'active' : '' }} {{ Request::is('adminreports/nopresident') ? 'active' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
                 <a href="#"><i class="fa fa-cogs"></i> <span>Admin Reports</span>
                 <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
                 <ul class="treeview-menu">
+            <li class="{{ Request::is('admin') ? 'active' : '' }}">
+                <a href="{{ route('admin.index') }}">
+                    <i class="fa fa-bullseye"></i>
+                    <span>EOY Procedures</span>
+                </a>
+                </li>
             <li class="{{ Request::is('adminreports/duplicateuser') ? 'active' : '' }}">
             <a href="{{ route('report.duplicateuser') }}">
                 <i class="fa fa-user-plus"></i>
@@ -458,8 +464,8 @@
         @endif
 
         @if ($regionalCoordinatorCondition)
-            <li class="{{ Request::is('admin/progression') ? 'active' : '' }}">
-            <a href="{{ route('admin.progression') }}">
+            <li class="{{ Request::is('admin/bugs') ? 'active' : '' }}">
+            <a href="{{ route('admin.bugs') }}">
                 <i class="fa fa-bug"></i>
                 <span>MIMI Bugs & Wishes</span>
             </a>

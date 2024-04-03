@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Admin extends Model
+class Bugs extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'eoy_testers', 'eoy_coordinators', 'checklist',
-
+        'task', 'details', 'status', 'priority', 'reported_id', 'notes',
     ];
 
-    protected $table = 'admin';
+    protected $table = 'bugs';
 
     protected $primaryKey = 'id';
 }

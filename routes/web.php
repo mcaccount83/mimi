@@ -62,15 +62,19 @@ Route::get('/chapter-resources', [PublicController::class, 'chapterResources'])-
 /**
  * Routes for Admin Controller
  */
-Route::get('/admin/progression', [AdminController::class, 'showProgression'])->name('admin.progression');
-Route::post('/admin/addprogression', [AdminController::class, 'addProgression'])->name('admin.addprogression');
-Route::post('/admin/updateprogression/{id}', [AdminController::class, 'updateProgression'])->name('admin.updateprogression');
+Route::get('/admin', [AdminController::class, 'showAdmin'])->name('admin.index');
+Route::post('/admin/update/{id}', [AdminController::class, 'updateAdmin'])->name('admin.update');
+Route::post('/admin/reset-year', [AdminController::class, 'resetYear'])->name('resetYear');
+Route::get('/admin/bugs', [AdminController::class, 'showBugs'])->name('admin.bugs');
+Route::post('/admin/addbugs', [AdminController::class, 'addBugs'])->name('admin.addbugs');
+Route::post('/admin/updatebugs/{id}', [AdminController::class, 'updateBugs'])->name('admin.updatebugs');
 Route::get('/admin/resources', [AdminController::class, 'showResources'])->name('admin.resources');
 Route::post('/admin/addresources', [AdminController::class, 'addResources'])->name('admin.addresources');
 Route::post('/admin/updateresources/{id}', [AdminController::class, 'updateResources'])->name('admin.updateresources');
 Route::get('/admin/toolkit', [AdminController::class, 'showToolkit'])->name('admin.toolkit');
 Route::post('/admin/addtoolkit', [AdminController::class, 'addToolkit'])->name('admin.addtoolkit');
 Route::post('/admin/updatetoolkit/{id}', [AdminController::class, 'updateToolkit'])->name('admin.updatetoolkit');
+
 
 /**
  * Routes for Payment Controller (Payment Processing)

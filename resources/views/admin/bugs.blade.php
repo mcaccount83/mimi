@@ -4,11 +4,11 @@
  <section class="content-header">
       <h1>
         Admin
-       <small>Progression</small>
+       <small>Bugs</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Chapter List</li>
+        <li class="active">Bugs & Wishes</li>
       </ol>
     </section>
     @if ($message = Session::get('success'))
@@ -422,7 +422,7 @@
 
     // Send an AJAX request to Laravel backend to create a new task
     $.ajax({
-        url: '{{ route('admin.addprogression') }}',
+        url: '{{ route('admin.addbugs') }}',
         method: 'POST',
         headers: {
             'X-CSRF-TOKEN': csrfToken
@@ -462,7 +462,7 @@
 
     // Send an AJAX request to update the task
     $.ajax({
-        url: '{{ route('admin.updateprogression', '') }}' + '/' + id,
+        url: '{{ route('admin.updatebugs', '') }}' + '/' + id,
         method: 'POST',
         data: {
             taskDetails: taskDetails,
