@@ -207,8 +207,8 @@
 								<div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['roster_path']) echo "style=\"display: none;\"";} ?>>
 									<div class="col-md-12" >
 										<div>
-										   <a href="<?php echo $financial_report_array['roster_path']; ?>" target="_blank">View Chapter Roster</a><br>
-                                           <br>
+                                            <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['roster_path']; ?>">View Chapter Roster</a><br>
+                                            <br>
                                             <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
                                            <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-roster" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Roster File</button>
@@ -1382,8 +1382,8 @@
 								<div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['bank_statement_included_path']) echo "style=\"display: none;\"";} ?>>
 									<div class="col-md-12" >
 										<div>
-										   <a href="<?php echo $financial_report_array['bank_statement_included_path']; ?>" target="_blank">View Bank Statement</a><br>
-                                           <br>
+                                            <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_included_path']; ?>" >View Bank Statement</a><br>
+                                            <br>
                                             <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace Bank Statement.<br>
                                            <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-statement1" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Bank Statement</button>
@@ -1402,8 +1402,8 @@
 								<div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['bank_statement_2_included_path']) echo "style=\"display: none;\"";} ?>>
 									<div class="col-md-12" >
 										<div>
-										   <a href="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" target="_blank">View Additional Bank Statement</a><br>
-                                           <br>
+                                            <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" >View Additional Bank Statement</a><br>
+                                            <br>
                                             <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace Additional Bank Statement.<br>
                                            <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-statement2" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Additional Bank Statement</button>
@@ -1490,10 +1490,8 @@
 								<button type="button" id="AddNote8" class="btn btn-large btn-success" onclick="AddNote(8)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 							</div>
 						</div>
-
-					{{-- </div> --}}
 				</div>
-                </div>
+            </div>
 				<!-- end:report_review -->
 
 				 <div class="form-row form-group">
@@ -1581,30 +1579,32 @@
                             <td><strong>{{ is_null($financial_report_array['meeting_speakers']) ? 'Not Answered' : ($financial_report_array['meeting_speakers'] == 0 ? 'NO'
                                 : ( $financial_report_array ['meeting_speakers'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['meeting_speakers_explanation']}}</strong></td></tr>
                            <tr><td>14.</td>
-                               <td>If you had speakers, check any of the topics that were covered:</td></tr>
-                               <tr><td></td>
-                                   <td><strong>
-                                       @php
-                                           $meetingSpeakersArray = json_decode($financial_report_array['meeting_speakers_array']);
-                                           $meetingSpeakersMapping = [
-                                               '0' => 'N/A',
-                                               '1' => 'Child Rearing',
-                                               '2' => 'Schools/Education',
-                                               '3' => 'Home Management',
-                                               '4' => 'Politics',
-                                               '5' => 'Other Non-Profit',
-                                               '6' => 'Other',
-                                           ];
-                                       @endphp
+                            <td>If you had speakers, check any of the topics that were covered:</td></tr>
+                            <tr><td></td>
+                                <td><strong>
+                                    @php
+                                        $meetingSpeakersArray = json_decode($financial_report_array['meeting_speakers_array']);
+                                        $meetingSpeakersMapping = [
+                                            '0' => 'N/A',
+                                            '1' => 'Child Rearing',
+                                            '2' => 'Schools/Education',
+                                            '3' => 'Home Management',
+                                            '4' => 'Politics',
+                                            '5' => 'Other Non-Profit',
+                                            '6' => 'Other',
+                                        ];
+                                    @endphp
 
-                                       @if (!empty($meetingSpeakersArray))
-                                           {{ implode(', ', array_map(function($value) use ($meetingSpeakersMapping) {
-                                               return $meetingSpeakersMapping[$value];
-                                           }, $meetingSpeakersArray)) }}
-                                       @else
-                                           N/A
-                                       @endif
-                                   </strong></td></tr>
+                                    @if (!empty($meetingSpeakersArray))
+                                        {{ implode(', ', array_map(function($value) use ($meetingSpeakersMapping) {
+                                            // Check if the key exists in the mapping array before accessing it
+                                            return isset($meetingSpeakersMapping[$value]) ? $meetingSpeakersMapping[$value] : 'Not Answered';
+                                        }, $meetingSpeakersArray)) }}
+                                    @else
+                                        N/A
+                                    @endif
+                                </strong></td></tr>
+
                            <tr><td>15.</td>
                                <td>Did you have any discussion topics at your meetings? If yes, how often?</td></tr>
                            <tr><td></td>
@@ -1618,30 +1618,32 @@
                                 : ( $financial_report_array ['park_day_frequency'] == 1 ? '1-3 Times' : (['park_day_frequency'] == 2 ? '4-6 Times' :
                                    (['park_day_frequency'] == 3 ? '7-9 Times' : (['park_day_frequency'] == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong></td></tr>
                            <tr><td>17.</td>
-                               <td>Did your chapter have any of the following activity groups?</td></tr>
-                               <tr><td></td>
-                               <td><strong>
-                                   @php
-                                       $activityArray = json_decode($financial_report_array['activity_array']);
-                                       $activityMapping = [
-                                           '0' => 'N/A',
-                                           '1' => 'Cooking',
-                                           '2' => 'Cost Cutting Tips',
-                                           '3' => 'Mommy Playgroup',
-                                           '4' => 'Babysitting Co-op',
-                                           '5' => 'MOMS Night Out',
-                                           '6' => 'Other',
-                                       ];
-                                   @endphp
+                            <td>Did your chapter have any of the following activity groups?</td></tr>
+                            <tr><td></td>
+                            <td><strong>
+                                @php
+                                    $activityArray = json_decode($financial_report_array['activity_array']);
+                                    $activityMapping = [
+                                        '0' => 'N/A',
+                                        '1' => 'Cooking',
+                                        '2' => 'Cost Cutting Tips',
+                                        '3' => 'Mommy Playgroup',
+                                        '4' => 'Babysitting Co-op',
+                                        '5' => 'MOMS Night Out',
+                                        '6' => 'Other',
+                                    ];
+                                @endphp
 
-                                   @if (!empty($activityArray))
-                                       {{ implode(', ', array_map(function($value) use ($activityMapping) {
-                                           return $activityMapping[$value];
-                                       }, $activityArray)) }}
-                                   @else
-                                       N/A
-                                   @endif
-                               </strong></td></tr>
+                                @if (!empty($activityArray))
+                                    {{ implode(', ', array_map(function($value) use ($activityMapping) {
+                                        // Check if the key exists in the mapping array before accessing it
+                                        return isset($activityMapping[$value]) ? $activityMapping[$value] : 'Not Answered';
+                                    }, $activityArray)) }}
+                                @else
+                                    N/A
+                                @endif
+                            </strong></td></tr>
+
                            <tr><td>18.</td>
                                <td>Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity?</td></tr>
                            <tr><td></td>
@@ -1697,8 +1699,8 @@
 								<div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
 									<div class="col-md-12" >
 										<div>
-										   <a href="<?php echo $financial_report_array['file_irs_path']; ?>" target="_blank">View 990N Confirmation</a><br>
-                                           <br>
+                                            <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['file_irs_path']; ?>">View 990N Confirmation</a><br>
+                                            <br>
                                             <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace 990N Confirmation.<br>
                                            <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-990N" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace 990N Confirmation</button>
@@ -2394,6 +2396,8 @@
                                 Answers from questios in previous sections will show up here after they have been saved.<br>
                             <br>
                             </div>
+
+                            @if ($submitted)
                                 <div class="col-md-12">
                                     <div class="col-xs-12">
                                         <label class="control-label" for="RosterLink">Financial Report PDF:</label>
@@ -2456,6 +2460,7 @@
                                     <?php endif; ?>
                                 </div>
 									<div class="clearfix"></div>
+                                @endif
 
                                     <style>
                                         .flex-container2 {

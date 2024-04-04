@@ -31,7 +31,8 @@
 							</div>
                         <h2 class="moms-c"> MOMS Club of {{ $chapterDetails[0]->chapter_name }}, {{$chapterDetails[0]->state}}</h2>
                         <h2 class="moms-c"> <?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</h2>
-                        <h4><center><?php if(!$chapterDetails[0]->financial_report_received) echo "<br>Please complete the report below with finanacial information about your chapter."; ?></center></h4>
+                        <h4><center><?php if(!$chapterDetails[0]->financial_report_received) echo "<br>Please complete the report below with finanacial information about your chapter.<br>
+                            Reports are due by July 10th."; ?></center></h4>
                         <h4><center><?php if($chapterDetails[0]->financial_report_received) echo "<br><font color=\"red\">Your chapter's Financial Report has been Submitted!<br>
                             Please save a copy of the PDF for your records.</font>"; ?></center></h4>
                     </div>
@@ -68,7 +69,7 @@
                                 <div class="col-md-12" >
                                     <div>
                                         <label class="control-label" for="RosterLink">Chapter Roster File:</label>
-                                       <a href="<?php echo $financial_report_array['roster_path']; ?>" target="_blank">View Chapter Roster</a><br>
+                                       <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['roster_path']; ?>">View Chapter Roster</a><br>
                                         <strong style="color:red">Please Note</strong><br>
                                         This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
                                        <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-roster" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Roster File</button>
@@ -1252,7 +1253,7 @@
                         <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['bank_statement_included_path']) echo "style=\"display: none;\"";} ?>>
                             <div class="col-md-12" >
                                 <div>
-                                   <a href="<?php echo $financial_report_array['bank_statement_included_path']; ?>" target="_blank">View Bank Statement</a><br>
+                                   <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_included_path']; ?>" >View Bank Statement</a><br>
                                     <strong style="color:red">Please Note</strong><br>
                                     This will refresh the screen - be sure to save all work before clicking button to Replace Bank Statement.<br>
                                    <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-statement1" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Bank Statement</button>
@@ -1272,7 +1273,7 @@
                         <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['bank_statement_2_included_path']) echo "style=\"display: none;\"";} ?>>
                             <div class="col-md-12" >
                                 <div>
-                                   <a href="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" target="_blank">View Additional Bank Statement</a><br>
+                                   <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" >View Additional Bank Statement</a><br>
                                     <strong style="color:red">Please Note</strong><br>
                                     This will refresh the screen - be sure to save all work before clicking button to Replace Additional Bank Statement.<br>
                                    <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-statement2" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Additional Bank Statement</button>
@@ -1835,14 +1836,7 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- <div class="form-row form-group">
-                            <div class="card-body">
-                                <div class="col-md-12 text-center">
-                                <button type="submit" id="btn-step-10" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-                                </div>
-                            </div>
-                        </div> --}}
-                </section>
+                     </section>
             </div><!-- end of accordion body -->
             </div><!-- end of accordion item -->
             <!------End Step 10 ------>
@@ -2329,7 +2323,7 @@
                     <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
                         <div class="col-md-12" >
                             <div>
-                               <a href="<?php echo $financial_report_array['file_irs_path']; ?>" target="_blank">View 990N Confirmation</a><br>
+                               <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['file_irs_path']; ?>">View 990N Confirmation</a><br>
                                <br>
                                 <strong style="color:red">Please Note</strong><br>
                                 This will refresh the screen - be sure to save all work before clicking button to Replace 990N Confirmation.<br>
