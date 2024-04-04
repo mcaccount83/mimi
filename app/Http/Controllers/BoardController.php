@@ -1793,7 +1793,6 @@ class BoardController extends Controller
         $award_5_outstanding_support_international = isset($input['OutstandingSupportMomsClub5']) ? $input['OutstandingSupportMomsClub5'] : null;
         $award_5_outstanding_project_desc = $input['AwardDesc5'];
 
-
         if (isset($input['AwardsAgree']) && $input['AwardsAgree'] == false) {
             $award_agree = 0;
         } elseif (isset($input['AwardsAgree'])) {

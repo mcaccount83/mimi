@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddBugsAdminRequest;
 use App\Http\Requests\AddResourcesAdminRequest;
 use App\Http\Requests\AddToolkitAdminRequest;
-use App\Http\Requests\UpdateEOYRequest;
 use App\Http\Requests\UpdateBugsAdminRequest;
+use App\Http\Requests\UpdateEOYRequest;
 use App\Http\Requests\UpdateResourcesAdminRequest;
 use App\Http\Requests\UpdateToolkitAdminRequest;
 use App\Mail\AdminNewMIMIBugWish;
@@ -14,16 +14,14 @@ use App\Models\Admin;
 use App\Models\Bugs;
 use App\Models\Resources;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
-use Exception;
-
 
 class AdminController extends Controller
 {
@@ -380,18 +378,14 @@ class AdminController extends Controller
             ->where('cd.coordinator_id', '=', $corId)
             ->get();
 
-         $admin = DB::table('admin')
+        $admin = DB::table('admin')
             ->select('admin.*',
-                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),)
+                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'), )
             ->leftJoin('coordinator_details as cd', 'admin.updated_id', '=', 'cd.coordinator_id')
             ->orderBy('admin.id', 'desc') // Assuming 'id' represents the order of insertion
             ->first();
 
-
-
-
-
-         // Fetch distinct fiscal years
+        // Fetch distinct fiscal years
         $fiscalYears = DB::table('admin')->distinct()->pluck('fiscal_year');
 
         // Determine if the user is allowed to edit notes and status
@@ -414,30 +408,31 @@ class AdminController extends Controller
             $corId = $corDetails['coordinator_id'];
 
             // Convert checkbox values to 1 or null
-        $admin->eoy_testers = isset($validatedData['eoy_testers']) ? 1 : null;
-        $admin->eoy_coordinators = isset($validatedData['eoy_coordinators']) ? 1 : null;
-        $admin->eoy_boardreport = isset($validatedData['eoy_boardreport']) ? 1 : null;
-        $admin->eoy_financialreport = isset($validatedData['eoy_financialreport']) ? 1 : null;
-        $admin->truncate_incoming = isset($validatedData['truncate_incoming']) ? 1 : null;
-        $admin->truncate_outgoing = isset($validatedData['truncate_outgoing']) ? 1 : null;
-        $admin->copy_FRtoCH = isset($validatedData['copy_FRtoCH']) ? 1 : null;
-        $admin->copy_CHtoFR = isset($validatedData['copy_CHtoFR']) ? 1 : null;
-        $admin->copy_financial = isset($validatedData['copy_financial']) ? 1 : null;
-        $admin->copy_chapters = isset($validatedData['copy_chapters']) ? 1 : null;
-        $admin->copy_users = isset($validatedData['copy_users']) ? 1 : null;
-        $admin->copy_boarddetails = isset($validatedData['copy_boarddetails']) ? 1 : null;
-        $admin->copy_coordinatordetails = isset($validatedData['copy_coordinatordetails']) ? 1 : null;
-        $admin->updated_id = $corId;
-        $admin->updated_at = Carbon::today();
+            $admin->eoy_testers = isset($validatedData['eoy_testers']) ? 1 : null;
+            $admin->eoy_coordinators = isset($validatedData['eoy_coordinators']) ? 1 : null;
+            $admin->eoy_boardreport = isset($validatedData['eoy_boardreport']) ? 1 : null;
+            $admin->eoy_financialreport = isset($validatedData['eoy_financialreport']) ? 1 : null;
+            $admin->truncate_incoming = isset($validatedData['truncate_incoming']) ? 1 : null;
+            $admin->truncate_outgoing = isset($validatedData['truncate_outgoing']) ? 1 : null;
+            $admin->copy_FRtoCH = isset($validatedData['copy_FRtoCH']) ? 1 : null;
+            $admin->copy_CHtoFR = isset($validatedData['copy_CHtoFR']) ? 1 : null;
+            $admin->copy_financial = isset($validatedData['copy_financial']) ? 1 : null;
+            $admin->copy_chapters = isset($validatedData['copy_chapters']) ? 1 : null;
+            $admin->copy_users = isset($validatedData['copy_users']) ? 1 : null;
+            $admin->copy_boarddetails = isset($validatedData['copy_boarddetails']) ? 1 : null;
+            $admin->copy_coordinatordetails = isset($validatedData['copy_coordinatordetails']) ? 1 : null;
+            $admin->updated_id = $corId;
+            $admin->updated_at = Carbon::today();
 
             $admin->save();
 
-           // Return a success response to the client
-           return redirect()->to('/admin/eoy')->with('success', 'Admin data updated successfully.');
+            // Return a success response to the client
+            return redirect()->to('/admin/eoy')->with('success', 'Admin data updated successfully.');
 
         } catch (Exception $e) {
             // Log the error message
-            Log::error('Failed to update admin data: ' . $e->getMessage());
+            Log::error('Failed to update admin data: '.$e->getMessage());
+
             return redirect()->to('/admin/eoy')->with('success', 'Admin data failed to update.');
         }
     }
@@ -451,7 +446,7 @@ class AdminController extends Controller
             // Calculate the fiscal year (current year - next year)
             $currentYear = Carbon::now()->year;
             $nextYear = $currentYear + 1;
-            $fiscalYear = $currentYear . '-' . $nextYear;
+            $fiscalYear = $currentYear.'-'.$nextYear;
 
             // Set the fiscal year field
             $admin->fiscal_year = $fiscalYear;
@@ -463,7 +458,8 @@ class AdminController extends Controller
             return redirect()->to('/admin')->with('success', 'Fiscal year reset successfully.');
         } catch (Exception $e) {
             // Log the error message
-            Log::error('Failed to reset fiscal year: ' . $e->getMessage());
+            Log::error('Failed to reset fiscal year: '.$e->getMessage());
+
             return redirect()->to('/admin')->with('error', 'Failed to reset fiscal year.');
         }
     }
