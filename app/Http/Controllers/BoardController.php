@@ -1739,15 +1739,7 @@ class BoardController extends Controller
         $award_1_outstanding_well_rounded = isset($input['OutstandingWellRounded1']) ? $input['OutstandingWellRounded1'] : null;
         $award_1_outstanding_communicated = isset($input['OutstandingCommunicated1']) ? $input['OutstandingCommunicated1'] : null;
         $award_1_outstanding_support_international = isset($input['OutstandingSupportMomsClub1']) ? $input['OutstandingSupportMomsClub1'] : null;
-
         $award_1_outstanding_project_desc = $input['AwardDesc1'];
-
-
-        // if (isset($input['AwardDesc1'])) {
-        //     $award_1_outstanding_project_desc = $input['AwardDesc1'];
-        // } else {
-        //     $award_1_outstanding_project_desc = null;
-        // }
 
         //Award Nomination 2
         if (isset($input['NominationType2'])) {
@@ -1760,12 +1752,7 @@ class BoardController extends Controller
         $award_2_outstanding_well_rounded = isset($input['OutstandingWellRounded2']) ? $input['OutstandingWellRounded2'] : null;
         $award_2_outstanding_communicated = isset($input['OutstandingCommunicated2']) ? $input['OutstandingCommunicated2'] : null;
         $award_2_outstanding_support_international = isset($input['OutstandingSupportMomsClub2']) ? $input['OutstandingSupportMomsClub2'] : null;
-
-        if (isset($input['AwardDesc2'])) {
-            $award_2_outstanding_project_desc = $input['AwardDesc2'];
-        } else {
-            $award_2_outstanding_project_desc = null;
-        }
+        $award_2_outstanding_project_desc = $input['AwardDesc2'];
 
         //Award Nomination 3
         if (isset($input['NominationType3'])) {
@@ -1778,12 +1765,7 @@ class BoardController extends Controller
         $award_3_outstanding_well_rounded = isset($input['OutstandingWellRounded3']) ? $input['OutstandingWellRounded3'] : null;
         $award_3_outstanding_communicated = isset($input['OutstandingCommunicated3']) ? $input['OutstandingCommunicated3'] : null;
         $award_3_outstanding_support_international = isset($input['OutstandingSupportMomsClub3']) ? $input['OutstandingSupportMomsClub3'] : null;
-
-        if (isset($input['AwardDesc3'])) {
-            $award_3_outstanding_project_desc = $input['AwardDesc3'];
-        } else {
-            $award_3_outstanding_project_desc = null;
-        }
+        $award_3_outstanding_project_desc = $input['AwardDesc3'];
 
         //Award Nomination 4
         if (isset($input['NominationType4'])) {
@@ -1796,12 +1778,7 @@ class BoardController extends Controller
         $award_4_outstanding_well_rounded = isset($input['OutstandingWellRounded4']) ? $input['OutstandingWellRounded4'] : null;
         $award_4_outstanding_communicated = isset($input['OutstandingCommunicated4']) ? $input['OutstandingCommunicated4'] : null;
         $award_4_outstanding_support_international = isset($input['OutstandingSupportMomsClub4']) ? $input['OutstandingSupportMomsClub4'] : null;
-
-        if (isset($input['AwardDesc4'])) {
-            $award_4_outstanding_project_desc = $input['AwardDesc4'];
-        } else {
-            $award_4_outstanding_project_desc = null;
-        }
+        $award_4_outstanding_project_desc = $input['AwardDesc4'];
 
         //Award Nomination 5
         if (isset($input['NominationType5'])) {
@@ -1814,12 +1791,8 @@ class BoardController extends Controller
         $award_5_outstanding_well_rounded = isset($input['OutstandingWellRounded5']) ? $input['OutstandingWellRounded5'] : null;
         $award_5_outstanding_communicated = isset($input['OutstandingCommunicated5']) ? $input['OutstandingCommunicated5'] : null;
         $award_5_outstanding_support_international = isset($input['OutstandingSupportMomsClub5']) ? $input['OutstandingSupportMomsClub5'] : null;
+        $award_5_outstanding_project_desc = $input['AwardDesc5'];
 
-        if (isset($input['AwardDesc5'])) {
-            $award_5_outstanding_project_desc = $input['AwardDesc5'];
-        } else {
-            $award_5_outstanding_project_desc = null;
-        }
 
         if (isset($input['AwardsAgree']) && $input['AwardsAgree'] == false) {
             $award_agree = 0;
