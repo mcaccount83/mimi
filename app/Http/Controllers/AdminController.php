@@ -382,7 +382,7 @@ class AdminController extends Controller
             ->select('admin.*',
                 DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'), )
             ->leftJoin('coordinator_details as cd', 'admin.updated_id', '=', 'cd.coordinator_id')
-            ->orderBy('admin.id', 'desc') // Assuming 'id' represents the order of insertion
+            ->orderByDesc('admin.id') // Assuming 'id' represents the order of insertion
             ->first();
 
         // Fetch distinct fiscal years
