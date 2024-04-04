@@ -87,7 +87,7 @@
             $coordinatorCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
             $founderCondition = $positionid == 7;  //*Founder
             $conferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 7);  //*CC-Founder
-            $assistConferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*RC-Founder & ACC
+            $assistConferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //CC-Founder & ACC
             $regionalCoordinatorCondition = ($positionid >= 5 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*RC-Founder & ACC
             $supervisingCoordinatorCondition =  ($positionid >= 3 && $positionid <= 7 || $positionid == 25);  //*SC-Founder & ACC
             $eoyReportCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
@@ -98,6 +98,21 @@
             $adminReportCondition = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
             $m2mCondition = ($positionid == 21 || $secpositionid == 21);  //*M2M Committee
             $listAdminCondition = ($positionid == 23 || $secpositionid == 23);  //*ListAdmin
+        @endphp
+
+        @php
+            $admin = DB::table('admin')
+                ->select('admin.*',
+                    DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),)
+                ->leftJoin('coordinator_details as cd', 'admin.updated_id', '=', 'cd.coordinator_id')
+                ->orderBy('admin.id', 'desc') // Assuming 'id' represents the order of insertion
+                ->first();
+
+            $eoy_testers = $admin->eoy_testers;
+            $eoy_coordinators = $admin->eoy_coordinators;
+
+            $testers_yes = ($eoy_testers == 1);
+            $coordinators_yes = ($eoy_coordinators == 1);
         @endphp
 
         <li class="{{ Request::is('coordinator/dashboard') ? 'active' : '' }}  ">
@@ -363,8 +378,8 @@
             </li>
         @endif
 
-        @if ($eoyReportConditionDISABLED)
-            <li class="treeview {{ Request::is('yearreports/*') ? 'active' : '' }} {{ Request::is('chapter/financial/*') ? 'active' : ''}} {{ Request::is('chapter/boardinfo/*') ? 'active' : ''}}  {{ Request::is('chapter/boundaryview/*') ? 'active' : '' }} {{ Request::is('chapter/statusview/*') ? 'active' : ''}} {{ Request::is('chapter/awardsview/*') ? 'active' : '' }} {{ Request::is('yearreports/addawards') ? 'active' : '' }}">
+        @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $assistConferenceCoordinatorCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes))
+        <li class="treeview {{ Request::is('yearreports/*') ? 'active' : '' }} {{ Request::is('chapter/financial/*') ? 'active' : ''}} {{ Request::is('chapter/boardinfo/*') ? 'active' : ''}}  {{ Request::is('chapter/boundaryview/*') ? 'active' : '' }} {{ Request::is('chapter/statusview/*') ? 'active' : ''}} {{ Request::is('chapter/awardsview/*') ? 'active' : '' }} {{ Request::is('yearreports/addawards') ? 'active' : '' }}">
             <a href="#"><i class="fa fa-bar-chart"></i> <span>EOY Reports</span>
               <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
             </a>
