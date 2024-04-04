@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\AddBugsAdminRequest;
 use App\Http\Requests\AddResourcesAdminRequest;
 use App\Http\Requests\AddToolkitAdminRequest;
@@ -398,7 +399,7 @@ class AdminController extends Controller
         return view('admin.eoy')->with($data);
     }
 
-    public function updateEOY(UpdateEOYRequest $request, $id)
+    public function updateEOY(UpdateEOYRequest $request, $id): RedirectResponse
     {
         try {
             $admin = Admin::findOrFail($id);
@@ -437,7 +438,7 @@ class AdminController extends Controller
         }
     }
 
-    public function resetYear(Request $request)
+    public function resetYear(Request $request): RedirectResponse
     {
         try {
             // Create a new Admin instance
