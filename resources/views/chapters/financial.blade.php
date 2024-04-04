@@ -57,7 +57,7 @@
                             <strong>{{ is_null($financial_report_array['different_dues']) ? 'Not Answered' : ($financial_report_array['different_dues'] == 0 ? 'NO'
                                 :( $financial_report_array ['different_dues'] == 1 ? 'YES' : 'Not Answered' )) }}</strong><br>
                             Did your chapter have any members who didn't pay full dues?&nbsp;&nbsp;&nbsp;
-                            <strong>{{ is_null($financial_report_array['different_dues']) ? 'Not Answered' : ($financial_report_array['different_dues'] == 0 ? 'NO'
+                            <strong>{{ is_null($financial_report_array['not_all_full_dues']) ? 'Not Answered' : ($financial_report_array['not_all_full_dues'] == 0 ? 'NO'
                                 : ( $financial_report_array ['not_all_full_dues'] == 1 ? 'YES' : 'Not Answered' )) }}</strong><br>
                             <br>
                             <style>
@@ -1900,7 +1900,8 @@
                                     <tr><td colspan="2">Did you run a well-rounded program for your members?</td></tr>
                                     <tr><td>&nbsp;&nbsp;&nbsp;</td>
                                     <td>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings), a variety of outings, playgroups, other activity groups, service projects, parties/member benefits
-                                        kept under 15% of the dues received -- these are all taken into consideration. A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older
+                                        kept under 15% of the dues received -- these are all taken into consideration.<br>
+                                        A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older
                                         children (or vice versa) would not be offering a well-rounded program.</td></tr>
                                     <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_1_outstanding_well_rounded']) ? 'Not Answered' : ($financial_report_array['award_1_outstanding_well_rounded'] == 0 ? 'NO'
                                             : ($financial_report_array['award_1_outstanding_well_rounded'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
@@ -1964,7 +1965,8 @@
                                     <tr><td colspan="2">Did you run a well-rounded program for your members?</td></tr>
                                     <tr><td>&nbsp;&nbsp;&nbsp;</td>
                                     <td>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings), a variety of outings, playgroups, other activity groups, service projects, parties/member benefits
-                                        kept under 15% of the dues received -- these are all taken into consideration. A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older
+                                        kept under 15% of the dues received -- these are all taken into consideration.<br>
+                                        A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older
                                         children (or vice versa) would not be offering a well-rounded program.</td></tr>
                                     <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_2_outstanding_well_rounded']) ? 'Not Answered' : ($financial_report_array['award_2_outstanding_well_rounded'] == 0 ? 'NO'
                                             : ($financial_report_array['award_2_outstanding_well_rounded'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
@@ -2028,7 +2030,8 @@
                                     <tr><td colspan="2">Did you run a well-rounded program for your members?</td></tr>
                                     <tr><td>&nbsp;&nbsp;&nbsp;</td>
                                     <td>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings), a variety of outings, playgroups, other activity groups, service projects, parties/member benefits
-                                        kept under 15% of the dues received -- these are all taken into consideration. A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older
+                                        kept under 15% of the dues received -- these are all taken into consideration.<br>
+                                        A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older
                                         children (or vice versa) would not be offering a well-rounded program.</td></tr>
                                     <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_3_outstanding_well_rounded']) ? 'Not Answered' : ($financial_report_array['award_3_outstanding_well_rounded'] == 0 ? 'NO'
                                             : ($financial_report_array['award_3_outstanding_well_rounded'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
@@ -2092,7 +2095,8 @@
                                     <tr><td colspan="2">Did you run a well-rounded program for your members?</td></tr>
                                     <tr><td>&nbsp;&nbsp;&nbsp;</td>
                                     <td>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings), a variety of outings, playgroups, other activity groups, service projects, parties/member benefits
-                                        kept under 15% of the dues received -- these are all taken into consideration. A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older
+                                        kept under 15% of the dues received -- these are all taken into consideration.<br>
+                                        A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older
                                         children (or vice versa) would not be offering a well-rounded program.</td></tr>
                                     <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_4_outstanding_well_rounded']) ? 'Not Answered' : ($financial_report_array['award_4_outstanding_well_rounded'] == 0 ? 'NO'
                                             : ($financial_report_array['award_4_outstanding_well_rounded'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
@@ -2156,7 +2160,8 @@
                                     <tr><td colspan="2">Did you run a well-rounded program for your members?</td></tr>
                                     <tr><td>&nbsp;&nbsp;&nbsp;</td>
                                     <td>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings), a variety of outings, playgroups, other activity groups, service projects, parties/member benefits
-                                        kept under 15% of the dues received -- these are all taken into consideration. A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older
+                                        kept under 15% of the dues received -- these are all taken into consideration.<br>
+                                        A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older
                                         children (or vice versa) would not be offering a well-rounded program.</td></tr>
                                     <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_5_outstanding_well_rounded']) ? 'Not Answered' : ($financial_report_array['award_5_outstanding_well_rounded'] == 0 ? 'NO'
                                             : ($financial_report_array['award_5_outstanding_well_rounded'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>

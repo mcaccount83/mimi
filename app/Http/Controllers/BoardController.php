@@ -1533,33 +1533,9 @@ class BoardController extends Controller
         $chapterDetailsExist = $chapterDetailsExistArr->count();
 
         // CHAPTER DUES
-        if (isset($input['optChangeDues']) && $input['optChangeDues'] == 'no') {
-            $input['changed_dues'] = 0;
-        } elseif (isset($input['optChangeDues'])) {
-            $input['changed_dues'] = 1;
-        } else {
-            $input['changed_dues'] = null;
-        }
-
-        if (isset($input['optNewOldDifferent']) && $input['optNewOldDifferent'] == 'no') {
-            $input['different_dues'] = 0;
-        } elseif (isset($input['optNewOldDifferent'])) {
-            $input['different_dues'] = 1;
-        } else {
-            $input['different_dues'] = null;
-        }
-
-        if (isset($input['optNoFullDues']) && $input['optNoFullDues'] == 'no') {
-            $input['not_all_full_dues'] = 0;
-        } elseif (isset($input['optNoFullDues'])) {
-            $input['not_all_full_dues'] = 1;
-        } else {
-            $input['not_all_full_dues'] = null;
-        }
-
-        $changed_dues = $input['changed_dues'];
-        $different_dues = $input['different_dues'];
-        $not_all_full_dues = $input['not_all_full_dues'];
+        $changed_dues = isset($input['optChangeDues']) ? $input['optChangeDues'] : null;
+        $different_dues = isset($input['optNewOldDifferent']) ? $input['optNewOldDifferent'] : null;
+        $not_all_full_dues = isset($input['optNoFullDues']) ? $input['optNoFullDues'] : null;
         $total_new_members = $input['TotalNewMembers'];
         $total_renewed_members = $input['TotalRenewedMembers'];
         $dues_per_member = $input['MemberDues'];
@@ -1759,43 +1735,19 @@ class BoardController extends Controller
             $award_1_nomination_type = null;
         }
 
-        if (isset($input['OutstandingFollowByLaws1']) && $input['OutstandingFollowByLaws1'] == 'no') {
-            $award_1_outstanding_follow_bylaws = 0;
-        } elseif (isset($input['OutstandingFollowByLaws1'])) {
-            $award_1_outstanding_follow_bylaws = 1;
-        } else {
-            $award_1_outstanding_follow_bylaws = null;
-        }
+        $award_1_outstanding_follow_bylaws = isset($input['OutstandingFollowByLaws1']) ? $input['OutstandingFollowByLaws1'] : null;
+        $award_1_outstanding_well_rounded = isset($input['OutstandingWellRounded1']) ? $input['OutstandingWellRounded1'] : null;
+        $award_1_outstanding_communicated = isset($input['OutstandingCommunicated1']) ? $input['OutstandingCommunicated1'] : null;
+        $award_1_outstanding_support_international = isset($input['OutstandingSupportMomsClub1']) ? $input['OutstandingSupportMomsClub1'] : null;
 
-        if (isset($input['OutstandingWellRounded1']) && $input['OutstandingWellRounded1'] == 'no') {
-            $award_1_outstanding_well_rounded = 0;
-        } elseif (isset($input['OutstandingWellRounded1'])) {
-            $award_1_outstanding_well_rounded = 1;
-        } else {
-            $award_1_outstanding_well_rounded = null;
-        }
+        $award_1_outstanding_project_desc = $input['AwardDesc1'];
 
-        if (isset($input['OutstandingCommunicated1']) && $input['OutstandingCommunicated1'] == 'no') {
-            $award_1_outstanding_communicated = 0;
-        } elseif (isset($input['OutstandingCommunicated1'])) {
-            $award_1_outstanding_communicated = 1;
-        } else {
-            $award_1_outstanding_communicated = null;
-        }
 
-        if (isset($input['OutstandingSupportMomsClub1']) && $input['OutstandingSupportMomsClub1'] == 'no') {
-            $award_1_outstanding_support_international = 0;
-        } elseif (isset($input['OutstandingSupportMomsClub1'])) {
-            $award_1_outstanding_support_international = 1;
-        } else {
-            $award_1_outstanding_support_international = null;
-        }
-
-        if (isset($input['AwardDesc1'])) {
-            $award_1_outstanding_project_desc = $input['AwardDesc1'];
-        } else {
-            $award_1_outstanding_project_desc = null;
-        }
+        // if (isset($input['AwardDesc1'])) {
+        //     $award_1_outstanding_project_desc = $input['AwardDesc1'];
+        // } else {
+        //     $award_1_outstanding_project_desc = null;
+        // }
 
         //Award Nomination 2
         if (isset($input['NominationType2'])) {
@@ -1804,37 +1756,10 @@ class BoardController extends Controller
             $award_2_nomination_type = null;
         }
 
-        if (isset($input['OutstandingFollowByLaws2']) && $input['OutstandingFollowByLaws2'] == 'no') {
-            $award_2_outstanding_follow_bylaws = 0;
-        } elseif (isset($input['OutstandingFollowByLaws2'])) {
-            $award_2_outstanding_follow_bylaws = 1;
-        } else {
-            $award_2_outstanding_follow_bylaws = null;
-        }
-
-        if (isset($input['OutstandingWellRounded2']) && $input['OutstandingWellRounded2'] == 'no') {
-            $award_2_outstanding_well_rounded = 0;
-        } elseif (isset($input['OutstandingWellRounded2'])) {
-            $award_2_outstanding_well_rounded = 1;
-        } else {
-            $award_2_outstanding_well_rounded = null;
-        }
-
-        if (isset($input['OutstandingCommunicated2']) && $input['OutstandingCommunicated2'] == 'no') {
-            $award_2_outstanding_communicated = 0;
-        } elseif (isset($input['OutstandingCommunicated2'])) {
-            $award_2_outstanding_communicated = 1;
-        } else {
-            $award_2_outstanding_communicated = null;
-        }
-
-        if (isset($input['OutstandingSupportMomsClub2']) && $input['OutstandingSupportMomsClub2'] == 'no') {
-            $award_2_outstanding_support_international = 0;
-        } elseif (isset($input['OutstandingSupportMomsClub2'])) {
-            $award_2_outstanding_support_international = 1;
-        } else {
-            $award_2_outstanding_support_international = null;
-        }
+        $award_2_outstanding_follow_bylaws = isset($input['OutstandingFollowByLaws2']) ? $input['OutstandingFollowByLaws2'] : null;
+        $award_2_outstanding_well_rounded = isset($input['OutstandingWellRounded2']) ? $input['OutstandingWellRounded2'] : null;
+        $award_2_outstanding_communicated = isset($input['OutstandingCommunicated2']) ? $input['OutstandingCommunicated2'] : null;
+        $award_2_outstanding_support_international = isset($input['OutstandingSupportMomsClub2']) ? $input['OutstandingSupportMomsClub2'] : null;
 
         if (isset($input['AwardDesc2'])) {
             $award_2_outstanding_project_desc = $input['AwardDesc2'];
@@ -1849,37 +1774,10 @@ class BoardController extends Controller
             $award_3_nomination_type = null;
         }
 
-        if (isset($input['OutstandingFollowByLaws3']) && $input['OutstandingFollowByLaws3'] == 'no') {
-            $award_3_outstanding_follow_bylaws = 0;
-        } elseif (isset($input['OutstandingFollowByLaws3'])) {
-            $award_3_outstanding_follow_bylaws = 1;
-        } else {
-            $award_3_outstanding_follow_bylaws = null;
-        }
-
-        if (isset($input['OutstandingWellRounded3']) && $input['OutstandingWellRounded3'] == 'no') {
-            $award_3_outstanding_well_rounded = 0;
-        } elseif (isset($input['OutstandingWellRounded3'])) {
-            $award_3_outstanding_well_rounded = 1;
-        } else {
-            $award_3_outstanding_well_rounded = null;
-        }
-
-        if (isset($input['OutstandingCommunicated3']) && $input['OutstandingCommunicated3'] == 'no') {
-            $award_3_outstanding_communicated = 0;
-        } elseif (isset($input['OutstandingCommunicated3'])) {
-            $award_3_outstanding_communicated = 1;
-        } else {
-            $award_3_outstanding_communicated = null;
-        }
-
-        if (isset($input['OutstandingSupportMomsClub3']) && $input['OutstandingSupportMomsClub3'] == 'no') {
-            $award_3_outstanding_support_international = 0;
-        } elseif (isset($input['OutstandingSupportMomsClub3'])) {
-            $award_3_outstanding_support_international = 1;
-        } else {
-            $award_3_outstanding_support_international = null;
-        }
+        $award_3_outstanding_follow_bylaws = isset($input['OutstandingFollowByLaws3']) ? $input['OutstandingFollowByLaws3'] : null;
+        $award_3_outstanding_well_rounded = isset($input['OutstandingWellRounded3']) ? $input['OutstandingWellRounded3'] : null;
+        $award_3_outstanding_communicated = isset($input['OutstandingCommunicated3']) ? $input['OutstandingCommunicated3'] : null;
+        $award_3_outstanding_support_international = isset($input['OutstandingSupportMomsClub3']) ? $input['OutstandingSupportMomsClub3'] : null;
 
         if (isset($input['AwardDesc3'])) {
             $award_3_outstanding_project_desc = $input['AwardDesc3'];
@@ -1894,37 +1792,10 @@ class BoardController extends Controller
             $award_4_nomination_type = null;
         }
 
-        if (isset($input['OutstandingFollowByLaws4']) && $input['OutstandingFollowByLaws4'] == 'no') {
-            $award_4_outstanding_follow_bylaws = 0;
-        } elseif (isset($input['OutstandingFollowByLaws4'])) {
-            $award_4_outstanding_follow_bylaws = 1;
-        } else {
-            $award_4_outstanding_follow_bylaws = null;
-        }
-
-        if (isset($input['OutstandingWellRounded4']) && $input['OutstandingWellRounded4'] == 'no') {
-            $award_4_outstanding_well_rounded = 0;
-        } elseif (isset($input['OutstandingWellRounded4'])) {
-            $award_4_outstanding_well_rounded = 1;
-        } else {
-            $award_4_outstanding_well_rounded = null;
-        }
-
-        if (isset($input['OutstandingCommunicated4']) && $input['OutstandingCommunicated4'] == 'no') {
-            $award_4_outstanding_communicated = 0;
-        } elseif (isset($input['OutstandingCommunicated4'])) {
-            $award_4_outstanding_communicated = 1;
-        } else {
-            $award_4_outstanding_communicated = null;
-        }
-
-        if (isset($input['OutstandingSupportMomsClub4']) && $input['OutstandingSupportMomsClub4'] == 'no') {
-            $award_4_outstanding_support_international = 0;
-        } elseif (isset($input['OutstandingSupportMomsClub4'])) {
-            $award_4_outstanding_support_international = 1;
-        } else {
-            $award_4_outstanding_support_international = null;
-        }
+        $award_4_outstanding_follow_bylaws = isset($input['OutstandingFollowByLaws4']) ? $input['OutstandingFollowByLaws4'] : null;
+        $award_4_outstanding_well_rounded = isset($input['OutstandingWellRounded4']) ? $input['OutstandingWellRounded4'] : null;
+        $award_4_outstanding_communicated = isset($input['OutstandingCommunicated4']) ? $input['OutstandingCommunicated4'] : null;
+        $award_4_outstanding_support_international = isset($input['OutstandingSupportMomsClub4']) ? $input['OutstandingSupportMomsClub4'] : null;
 
         if (isset($input['AwardDesc4'])) {
             $award_4_outstanding_project_desc = $input['AwardDesc4'];
@@ -1939,37 +1810,10 @@ class BoardController extends Controller
             $award_5_nomination_type = null;
         }
 
-        if (isset($input['OutstandingFollowByLaws5']) && $input['OutstandingFollowByLaws5'] == 'no') {
-            $award_5_outstanding_follow_bylaws = 0;
-        } elseif (isset($input['OutstandingFollowByLaws5'])) {
-            $award_5_outstanding_follow_bylaws = 1;
-        } else {
-            $award_5_outstanding_follow_bylaws = null;
-        }
-
-        if (isset($input['OutstandingWellRounded5']) && $input['OutstandingWellRounded5'] == 'no') {
-            $award_5_outstanding_well_rounded = 0;
-        } elseif (isset($input['OutstandingWellRounded5'])) {
-            $award_5_outstanding_well_rounded = 1;
-        } else {
-            $award_5_outstanding_well_rounded = null;
-        }
-
-        if (isset($input['OutstandingCommunicated5']) && $input['OutstandingCommunicated5'] == 'no') {
-            $award_5_outstanding_communicated = 0;
-        } elseif (isset($input['OutstandingCommunicated5'])) {
-            $award_5_outstanding_communicated = 1;
-        } else {
-            $award_5_outstanding_communicated = null;
-        }
-
-        if (isset($input['OutstandingSupportMomsClub5']) && $input['OutstandingSupportMomsClub5'] == 'no') {
-            $award_5_outstanding_support_international = 0;
-        } elseif (isset($input['OutstandingSupportMomsClub5'])) {
-            $award_5_outstanding_support_international = 1;
-        } else {
-            $award_5_outstanding_support_international = null;
-        }
+        $award_5_outstanding_follow_bylaws = isset($input['OutstandingFollowByLaws5']) ? $input['OutstandingFollowByLaws5'] : null;
+        $award_5_outstanding_well_rounded = isset($input['OutstandingWellRounded5']) ? $input['OutstandingWellRounded5'] : null;
+        $award_5_outstanding_communicated = isset($input['OutstandingCommunicated5']) ? $input['OutstandingCommunicated5'] : null;
+        $award_5_outstanding_support_international = isset($input['OutstandingSupportMomsClub5']) ? $input['OutstandingSupportMomsClub5'] : null;
 
         if (isset($input['AwardDesc5'])) {
             $award_5_outstanding_project_desc = $input['AwardDesc5'];
