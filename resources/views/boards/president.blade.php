@@ -58,6 +58,21 @@
             </div>
         </div>
 
+        @php
+            $admin = DB::table('admin')
+                ->select('admin.*',
+                    DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),)
+                ->leftJoin('coordinator_details as cd', 'admin.updated_id', '=', 'cd.coordinator_id')
+                ->orderBy('admin.id', 'desc') // Assuming 'id' represents the order of insertion
+                ->first();
+
+            $eoy_boardreport = $admin->eoy_boardreport;
+            $eoy_financialreport = $admin->eoy_financialreport;
+
+            $boardreport_yes = ($eoy_boardreport == 1);
+            $financialreport_yes = ($eoy_financialreport == 1);
+        @endphp
+
         <div class="col-md-12">
 		    <div class="card">
                <div class="card-body">
@@ -94,21 +109,16 @@
                     </div>
                 @endif
 
-                @if($thisDate->month >= 5 && $thisDate->month <= 12)
+                @if($thisDate->month >= 5 && $thisDate->month <= 12 && $boardreport_yes)
                 @if($list->new_board_active != '1')
                     <div class="col-md-4 float-left">
-                    {{-- @if($list->new_board_active=='1')
-                        <button id="BoardReportAlwaysDisabled" type="button"  class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $list->id]) }}'">
-                            <i class="fa fa-user-plus fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
-                        </button>
-                    @endif --}}
                         <button id="BoardReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $list->id]) }}'">
                             <i class="fa fa-user-plus fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
                         </button>
                     </div>
                     @endif
                     @endif
-                    @if($thisDate->month >= 6 && $thisDate->month <= 12)
+                    @if($thisDate->month >= 6 && $thisDate->month <= 12 && $financialreport_yes)
                     <div class="col-md-4 float-left">
                         <button id="FinancialReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $list->id]) }}'">
                             <i class="fa fa-usd fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y')-1 .'-'.date('Y') }} Financial Report

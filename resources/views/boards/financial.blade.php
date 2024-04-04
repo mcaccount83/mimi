@@ -342,40 +342,40 @@
                                             }
 
                                             for ($row = 0; $row < $ChildrensExpenseRowCount; $row++){
-                                                echo "<tr>";
-                                                echo "<td>
-                                                <div class=\"form-group\">
-                                                <input type=\"text\" class=\"form-control\" name=\"ChildrensRoomDesc" . $row . "\" id=\"ChildrensRoomDesc" . $row . "\" value=\"" . $childrens_room[$row]['childrens_room_desc'] . "\">
-                                                </div>
+                                            echo "<tr>";
+                                            echo "<td>
+                                                    <div class=\"form-group\">
+                                                        <input type=\"text\" class=\"form-control\" name=\"ChildrensRoomDesc" . $row . "\" id=\"ChildrensRoomDesc" . $row . "\" value=\"" . ($childrens_room[$row]['childrens_room_desc'] ?? '') . "\">
+                                                    </div>
                                                 </td>";
 
-                                                echo "<td>
-                                                <div class=\"form-group\">
-                                                <div class=\"input-group\">";
-                                                echo "<span class = \"input-group-addon\">$</span>";
-                                                echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\"  name=\"ChildrensRoomSupplies" . $row . "\" id=\"ChildrensRoomSupplies" . $row . "\" oninput=\"ChangeChildrensRoomExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $childrens_room[$row]['childrens_room_supplies'] . "\">";
-                                                echo "</div>
-                                                </div>
+                                            echo "<td>
+                                                    <div class=\"form-group\">
+                                                        <div class=\"input-group\">";
+                                                            echo "<span class = \"input-group-addon\">$</span>";
+                                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\"  name=\"ChildrensRoomSupplies" . $row . "\" id=\"ChildrensRoomSupplies" . $row . "\" oninput=\"ChangeChildrensRoomExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($childrens_room[$row]['childrens_room_supplies'] ?? '') . "\">";
+                                                        echo "</div>
+                                                    </div>
                                                 </td>";
 
-                                                echo "<td>
-                                                <div class=\"form-group\">
-                                                <div class=\"input-group\">";
-                                                echo "<span class = \"input-group-addon\">$</span>";
-                                                echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ChildrensRoomOther" . $row . "\" id=\"ChildrensRoomOther" . $row . "\" oninput=\"ChangeChildrensRoomExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $childrens_room[$row]['childrens_room_other'] . "\">";
-                                                echo "</div>
-                                                </div>
+                                            echo "<td>
+                                                    <div class=\"form-group\">
+                                                        <div class=\"input-group\">";
+                                                            echo "<span class = \"input-group-addon\">$</span>";
+                                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ChildrensRoomOther" . $row . "\" id=\"ChildrensRoomOther" . $row . "\" oninput=\"ChangeChildrensRoomExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($childrens_room[$row]['childrens_room_other'] ?? '') . "\">";
+                                                        echo "</div>
+                                                    </div>
                                                 </td>";
 
-                                                echo "</tr>";
-                                            }
+                                            echo "</tr>";
+                                        }
                                         ?>
                                         </tbody>
                                     </table>
                                 </div>
                                 <div class="col-md-12 float-left">
-                                    <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddChildrenExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Add</button>
-                                    <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteChildrenExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Remove</button>
+                                    <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddChildrenExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Add Row</button>
+                                    <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteChildrenExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Remove Row</button>
                                 </div>
                                 <div class="col-md-6 float-left">
                                     <div>
@@ -430,6 +430,7 @@
                                   <td width="16%">M2M Donation<span class="field-required">*</span></td>
                                 </tr>
                                 </thead>
+                                <tbody>
 
                                 <?php
                                         $service_projects = null;
@@ -440,102 +441,106 @@
                                         else{
                                             $ServiceProjectRowCount = 1;
                                         }
-                                    ?>
-                                    <tbody>
-                                    <tr>
-                                        <td>
-                                        <div class="form-group">
-                                            <textarea class="form-control" rows="4" name="ServiceProjectDesc0" id="ServiceProjectDesc0" ><?php echo $service_projects[0]['service_project_desc'];?>  </textarea>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="form-group">
-                                            <div class="input-group">
-                                            <span class = "input-group-addon">$</span>
-                                            <input type="number" onKeyPress="if(this.value.length==9) return false;" class="form-control txt-num" min="0"  step="0.01" name="ServiceProjectIncome0" id="ServiceProjectIncome0" oninput="ChangeServiceProjectExpenses()" onkeydown="return event.keyCode !== 69" value="<?php echo $service_projects[0]['service_project_income'];?>">
-                                            </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="form-group">
-                                            <div class="input-group"><span class = "input-group-addon">$</span>
-                                            <input type="number" onKeyPress="if(this.value.length==9) return false;" class="form-control txt-num" min="0"  step="0.01" name="ServiceProjectSupplies0" id="ServiceProjectSupplies0" oninput="ChangeServiceProjectExpenses()" onkeydown="return event.keyCode !== 69" value="<?php echo $service_projects[0]['service_project_supplies'];?>">
-                                            </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="form-group">
-                                            <div class="input-group">
-                                            <span class = "input-group-addon">$</span>
-                                            <input type="number" onKeyPress="if(this.value.length==9) return false;" class="form-control txt-num" min="0"  step="0.01" name="ServiceProjectDonatedCharity0" id="ServiceProjectDonatedCharity0" oninput="ChangeServiceProjectExpenses()" onkeydown="return event.keyCode !== 69" value="<?php echo $service_projects[0]['service_project_charity'];?>">
-                                            </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="form-group">
-                                            <div class="input-group">
-                                            <span class = "input-group-addon">$</span>
-                                            <input type="number" onKeyPress="if(this.value.length==9) return false;" class="form-control txt-num" min="0"  step="0.01" name="ServiceProjectDonatedM2M0" id="ServiceProjectDonatedM2M0" oninput="ChangeServiceProjectExpenses()" onkeydown="return event.keyCode !== 69" value="<?php echo $service_projects[0]['service_project_m2m'];?>">
-                                            </div>
-                                            </div>
-                                        </td>
-                                    </tr>
 
+                                        // Hardcoded first row
+                                        echo "<tr>";
+                                        echo "<td>
+                                                <div class=\"form-group\">
+                                                    <textarea class=\"form-control\" rows=\"4\" name=\"ServiceProjectDesc0\" id=\"ServiceProjectDesc0\">" . ($service_projects[0]['service_project_desc'] ?? '') . "</textarea>
+                                                </div>
+                                              </td>";
 
-                                    <?php
+                                        echo "<td>
+                                                <div class=\"form-group\">
+                                                    <div class=\"input-group\">";
+                                                        echo "<span class = \"input-group-addon\">$</span>";
+                                                        echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectIncome0\" id=\"ServiceProjectIncome0\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($service_projects[0]['service_project_income'] ?? '') . "\">";
+                                                    echo "</div>
+                                                </div>
+                                              </td>";
+
+                                        echo "<td>
+                                                <div class=\"form-group\">
+                                                    <div class=\"input-group\"><span class = \"input-group-addon\">$</span>
+                                                    <input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectSupplies0\" id=\"ServiceProjectSupplies0\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($service_projects[0]['service_project_supplies'] ?? '') . "\">";
+                                                echo "</div>
+                                                </div>
+                                              </td>";
+
+                                        echo "<td>
+                                                <div class=\"form-group\">
+                                                    <div class=\"input-group\">
+                                                        <span class = \"input-group-addon\">$</span>
+                                                        <input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectDonatedCharity0\" id=\"ServiceProjectDonatedCharity0\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($service_projects[0]['service_project_charity'] ?? '') . "\">";
+                                                    echo "</div>
+                                                </div>
+                                              </td>";
+
+                                        echo "<td>
+                                                <div class=\"form-group\">
+                                                    <div class=\"input-group\">
+                                                        <span class = \"input-group-addon\">$</span>
+                                                        <input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectDonatedM2M0\" id=\"ServiceProjectDonatedM2M0\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($service_projects[0]['service_project_m2m'] ?? '') . "\">";
+                                                    echo "</div>
+                                                </div>
+                                              </td>";
+                                        echo "</tr>";
+
+                                        // Dynamic rows
                                         for ($row = 1; $row < $ServiceProjectRowCount; $row++){
                                             echo "<tr>";
                                             echo "<td>
-                                            <div class=\"form-group\">
-                                            <textarea class=\"form-control\" rows=\"4\" name=\"ServiceProjectDesc" . $row . "\" id=\"ServiceProjectDesc" . $row . "\">" . $service_projects[$row]['service_project_desc'] . "</textarea>
-                                            </div>
-                                            </td>";
+                                                    <div class=\"form-group\">
+                                                        <textarea class=\"form-control\" rows=\"4\" name=\"ServiceProjectDesc" . $row . "\" id=\"ServiceProjectDesc" . $row . "\">" . ($service_projects[$row]['service_project_desc'] ?? '') . "</textarea>
+                                                    </div>
+                                                  </td>";
 
                                             echo "<td>
-                                            <div class=\"form-group\">
-                                            <div class=\"input-group\">";
-                                            echo "<span class = \"input-group-addon\">$</span>";
-                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectIncome" . $row . "\" id=\"ServiceProjectIncome" . $row . "\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $service_projects[$row]['service_project_income'] . "\">";
-                                            echo "</div>
-                                            </div>
-                                            </td>";
+                                                    <div class=\"form-group\">
+                                                        <div class=\"input-group\">";
+                                                            echo "<span class = \"input-group-addon\">$</span>";
+                                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectIncome" . $row . "\" id=\"ServiceProjectIncome" . $row . "\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($service_projects[$row]['service_project_income'] ?? '') . "\">";
+                                                        echo "</div>
+                                                    </div>
+                                                  </td>";
 
                                             echo "<td>
-                                            <div class=\"form-group\">
-                                            <div class=\"input-group\">";
-                                            echo "<span class = \"input-group-addon\">$</span>";
-                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectSupplies" . $row . "\" id=\"ServiceProjectSupplies" . $row . "\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $service_projects[$row]['service_project_supplies'] . "\">";
-                                            echo "</div>
-                                            </div>
-                                            </td>";
+                                                    <div class=\"form-group\">
+                                                        <div class=\"input-group\">";
+                                                            echo "<span class = \"input-group-addon\">$</span>";
+                                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectSupplies" . $row . "\" id=\"ServiceProjectSupplies" . $row . "\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($service_projects[$row]['service_project_supplies'] ?? '') . "\">";
+                                                        echo "</div>
+                                                    </div>
+                                                  </td>";
 
                                             echo "<td>
-                                            <div class=\"form-group\">
-                                            <div class=\"input-group\">";
-                                            echo "<span class = \"input-group-addon\">$</span>";
-                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectDonatedCharity" . $row . "\" id=\"ServiceProjectDonatedCharity" . $row . "\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $service_projects[$row]['service_project_charity'] . "\">";
-                                            echo "</div>
-                                            </div>
-                                            </td>";
+                                                    <div class=\"form-group\">
+                                                        <div class=\"input-group\">";
+                                                            echo "<span class = \"input-group-addon\">$</span>";
+                                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectDonatedCharity" . $row . "\" id=\"ServiceProjectDonatedCharity" . $row . "\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($service_projects[$row]['service_project_charity'] ?? '') . "\">";
+                                                        echo "</div>
+                                                    </div>
+                                                  </td>";
 
                                             echo "<td>
-                                            <div class=\"form-group\">
-                                            <div class=\"input-group\">";
-                                            echo "<span class = \"input-group-addon\">$</span>";
-                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectDonatedM2M" . $row . "\" id=\"ServiceProjectDonatedM2M" . $row . "\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $service_projects[$row]['service_project_m2m'] . "\">";
-                                            echo "</div>
-                                            </div>
-                                            </td>";
+                                                    <div class=\"form-group\">
+                                                        <div class=\"input-group\">";
+                                                            echo "<span class = \"input-group-addon\">$</span>";
+                                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectDonatedM2M" . $row . "\" id=\"ServiceProjectDonatedM2M" . $row . "\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($service_projects[$row]['service_project_m2m'] ?? '') . "\">";
+                                                        echo "</div>
+                                                    </div>
+                                                  </td>";
 
                                             echo "</tr>";
                                         }
-                                ?>
+                                        ?>
+
                                 </tbody>
                             </table>
                         </div>
                         <div class="col-md-12 float-left">
-                            <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddServiceProjectRow()" >Add</button>
-                            <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteServiceProjectRow()" >Remove</button>
+                            <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddServiceProjectRow()" >Add Row</button>
+                            <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteServiceProjectRow()" >Remove Row</button>
                         </div>
                         <div class="col-md-6 float-left">
                             <div class="form-group">
@@ -634,38 +639,38 @@
                                 }
 
                                 for ($row = 0; $row < $PartyExpenseRowCount; $row++){
-                                    echo "<tr>";
-                                    echo "<td>
-                                    <div class=\"form-group\">
-                                    <input type=\"text\" class=\"form-control\" name=\"PartyDesc" . $row . "\" id=\"PartyDesc" . $row . "\" value=\"" . $party_expenses[$row]['party_expense_desc'] . "\">
-                                    </div>
+                                echo "<tr>";
+                                echo "<td>
+                                        <div class=\"form-group\">
+                                            <input type=\"text\" class=\"form-control\" name=\"PartyDesc" . $row . "\" id=\"PartyDesc" . $row . "\" value=\"" . ($party_expenses[$row]['party_expense_desc'] ?? '') . "\">
+                                        </div>
                                     </td>";
 
-                                    echo "<td>
-                                    <div class=\"form-group\">
-                                    <div class=\"input-group\">";
-                                    echo "<span class = \"input-group-addon\">$</span>";
-                                    echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"PartyIncome" . $row . "\" id=\"PartyIncome" . $row . "\" oninput=\"ChangePartyExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $party_expenses[$row]['party_expense_income'] . "\">";
-                                    echo "</div>
-                                    </div>
+                                echo "<td>
+                                        <div class=\"form-group\">
+                                            <div class=\"input-group\">";
+                                                echo "<span class = \"input-group-addon\">$</span>";
+                                                echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"PartyIncome" . $row . "\" id=\"PartyIncome" . $row . "\" oninput=\"ChangePartyExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($party_expenses[$row]['party_expense_income'] ?? '') . "\">";
+                                            echo "</div>
+                                        </div>
                                     </td>";
 
-                                    echo "<td>
-                                    <div class=\"form-group\">
-                                    <div class=\"input-group\">";
-                                    echo "<span class = \"input-group-addon\">$</span>";
-                                    echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"PartyExpenses" . $row . "\" id=\"PartyExpenses" . $row . "\" oninput=\"ChangePartyExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $party_expenses[$row]['party_expense_expenses'] . "\">";
-                                    echo "</div>
-                                    </div>
+                                echo "<td>
+                                        <div class=\"form-group\">
+                                            <div class=\"input-group\">";
+                                                echo "<span class = \"input-group-addon\">$</span>";
+                                                echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"PartyExpenses" . $row . "\" id=\"PartyExpenses" . $row . "\" oninput=\"ChangePartyExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($party_expenses[$row]['party_expense_expenses'] ?? '') . "\">";
+                                            echo "</div>
+                                        </div>
                                     </td>";
-                                    echo "</tr>";
-                                }
+                                echo "</tr>";
+                            }
                             ?>
                             </tbody>
                         </table>
                         <div class="col-md-12">
-                            <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddPartyExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Add</button>
-                            <button type="button" class="btn btn-danger btn-add-remove" onclick="DeletePartyExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Remove</button>
+                            <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddPartyExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Add Row</button>
+                            <button type="button" class="btn btn-danger btn-add-remove" onclick="DeletePartyExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Remove Row</button>
                         </div>
                         <div class="col-md-12">
                             <h4>Party/Member Benefit</h4>
@@ -774,29 +779,29 @@
                             }
 
                             for ($row = 0; $row < $OfficeExpenseRowCount; $row++){
-                                echo "<tr>";
-                                echo "<td>
-                                <div class=\"form-group\">
-                                <input maxlength=\"250\" type=\"text\" class=\"form-control\" name=\"OfficeDesc" . $row . "\" id=\"OfficeDesc" . $row . "\" value=\"" . $other_office_expenses[$row]['office_other_desc'] . "\">
-                                </div>
+                            echo "<tr>";
+                            echo "<td>
+                                    <div class=\"form-group\">
+                                        <input maxlength=\"250\" type=\"text\" class=\"form-control\" name=\"OfficeDesc" . $row . "\" id=\"OfficeDesc" . $row . "\" value=\"" . ($other_office_expenses[$row]['office_other_desc'] ?? '') . "\">
+                                    </div>
                                 </td>";
 
-                                echo "<td>
-                                <div class=\"form-group\">
-                                <div class=\"input-group\">";
-                                echo "<span class = \"input-group-addon\">$</span>";
-                                echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"OfficeExpenses" . $row . "\" id=\"OfficeExpenses" . $row . "\" oninput=\"ChangeOfficeExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $other_office_expenses[$row]['office_other_expense'] . "\">";
-                                echo "</div>
-                                </div>
+                            echo "<td>
+                                    <div class=\"form-group\">
+                                        <div class=\"input-group\">";
+                                            echo "<span class = \"input-group-addon\">$</span>";
+                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"OfficeExpenses" . $row . "\" id=\"OfficeExpenses" . $row . "\" oninput=\"ChangeOfficeExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($other_office_expenses[$row]['office_other_expense'] ?? '') . "\">";
+                                        echo "</div>
+                                    </div>
                                 </td>";
-                                echo "</tr>";
-                            }
+                            echo "</tr>";
+                        }
                         ?>
                         </tbody>
                     </table>
                     <div class="col-md-12 float-left">
-                        <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddOfficeExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Add</button>
-                        <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteOfficeExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Remove</button>
+                        <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddOfficeExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Add Row</button>
+                        <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteOfficeExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Remove Row</button>
                     </div>
                     <div class="col-md-4 float-left">
                         <div class="form-group">
@@ -860,39 +865,39 @@
                                 $InternationalEventRowCount = 1;
                             }
                             for ($row = 0; $row < $InternationalEventRowCount; $row++){
-                                echo "<tr>";
-                                echo "<td>
-                                <div class=\"form-group\">
-                                <input type=\"text\" onKeyPress=\"if(this.value.length==30) return false;\" class=\"form-control\" name=\"InternationalEventDesc" . $row . "\" id=\"InternationalEventDesc" . $row . "\" value=\"" . $international_event_array[$row]['intl_event_desc'] . "\">
-                                </div>
+                            echo "<tr>";
+                            echo "<td>
+                                    <div class=\"form-group\">
+                                        <input type=\"text\" onKeyPress=\"if(this.value.length==30) return false;\" class=\"form-control\" name=\"InternationalEventDesc" . $row . "\" id=\"InternationalEventDesc" . $row . "\" value=\"" . ($international_event_array[$row]['intl_event_desc'] ?? '') . "\">
+                                    </div>
                                 </td>";
 
-                                echo "<td>
-                                <div class=\"form-group\">
-                                <div class=\"input-group\">";
-                                echo "<span class = \"input-group-addon\">$</span>";
-                                echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"InternationalEventIncome" . $row . "\" id=\"InternationalEventIncome" . $row . "\" oninput=\"ChangeInternationalEventExpense()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $international_event_array[$row]['intl_event_income'] . "\">";
-                                echo "</div>
-                                </div>
+                            echo "<td>
+                                    <div class=\"form-group\">
+                                        <div class=\"input-group\">";
+                                            echo "<span class = \"input-group-addon\">$</span>";
+                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"InternationalEventIncome" . $row . "\" id=\"InternationalEventIncome" . $row . "\" oninput=\"ChangeInternationalEventExpense()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($international_event_array[$row]['intl_event_income'] ?? '') . "\">";
+                                        echo "</div>
+                                    </div>
                                 </td>";
 
-                                echo "<td>
-                                <div class=\"form-group\">
-                                <div class=\"input-group\">";
-                                echo "<span class = \"input-group-addon\">$</span>";
-                                echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"InternationalEventExpense" . $row . "\" id=\"InternationalEventExpense" . $row . "\" oninput=\"ChangeInternationalEventExpense()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $international_event_array[$row]['intl_event_expenses'] . "\">";
-                                echo "</div>
-                                </div>
+                            echo "<td>
+                                    <div class=\"form-group\">
+                                        <div class=\"input-group\">";
+                                            echo "<span class = \"input-group-addon\">$</span>";
+                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"InternationalEventExpense" . $row . "\" id=\"InternationalEventExpense" . $row . "\" oninput=\"ChangeInternationalEventExpense()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($international_event_array[$row]['intl_event_expenses'] ?? '') . "\">";
+                                        echo "</div>
+                                    </div>
                                 </td>";
 
-                                echo "</tr>";
-                            }
+                            echo "</tr>";
+                        }
                         ?>
                         </tbody>
                     </table>
                     <div class="col-md-12 float-left">
-                    <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddInternationalEventRow()" <?php if($submitted) echo "disabled"; ?>>Add</button>
-                    <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteInternationalEventRow()" <?php if($submitted) echo "disabled"; ?>>Remove</button>
+                    <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddInternationalEventRow()" <?php if($submitted) echo "disabled"; ?>>Add Row</button>
+                    <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteInternationalEventRow()" <?php if($submitted) echo "disabled"; ?>>Remove Row</button>
                     </div>
                     <hr>
                 </div>
@@ -984,43 +989,43 @@
                                     $MonDonationRowCount = 1;
                                 }
 
-                                    for ($row = 0; $row < $MonDonationRowCount; $row++){
-                                        echo "<tr>";
-                                        echo "<td>
+                                for ($row = 0; $row < $MonDonationRowCount; $row++){
+                                echo "<tr>";
+                                echo "<td>
                                         <div class=\"form-group\">
-                                        <input type=\"text\" class=\"form-control\" name=\"DonationDesc" . $row . "\" id=\"DonationDesc" . $row . "\" value=\"" . $monetary_dontations_to_chapter[$row]['mon_donation_desc'] . "\">
+                                            <input type=\"text\" class=\"form-control\" name=\"DonationDesc" . $row . "\" id=\"DonationDesc" . $row . "\" value=\"" . ($monetary_dontations_to_chapter[$row]['mon_donation_desc'] ?? '') . "\">
                                         </div>
-                                        </td>";
+                                    </td>";
 
-                                        echo "<td>
+                                echo "<td>
                                         <div class=\"form-group\">
-                                        <input type=\"text\" class=\"form-control\" name=\"DonorInfo" . $row . "\" id=\"DonorInfo" . $row . "\" value=\"" . $monetary_dontations_to_chapter[$row]['mon_donation_info'] . "\">
+                                            <input type=\"text\" class=\"form-control\" name=\"DonorInfo" . $row . "\" id=\"DonorInfo" . $row . "\" value=\"" . ($monetary_dontations_to_chapter[$row]['mon_donation_info'] ?? '') . "\">
                                         </div>
-                                        </td>";
+                                    </td>";
 
-                                        echo "<td>
+                                echo "<td>
                                         <div class=\"form-group\">
-                                        <input type=\"date\" class=\"form-control\" min='2021-07-01' max='2022-06-30' name=\"MonDonationDate" . $row . "\" id=\"MonDonationDate" . $row . "\" value=\"" . $monetary_dontations_to_chapter[$row]['mon_donation_date'] . "\" onchange=\"IsValidDate(this)\">
+                                            <input type=\"date\" class=\"form-control\" min='2021-07-01' max='2022-06-30' name=\"MonDonationDate" . $row . "\" id=\"MonDonationDate" . $row . "\" value=\"" . ($monetary_dontations_to_chapter[$row]['mon_donation_date'] ?? '') . "\" onchange=\"IsValidDate(this)\">
                                         </div>
-                                        </td>";
+                                    </td>";
 
-                                        echo "<td>
+                                echo "<td>
                                         <div class=\"form-group\">
-                                        <div class=\"input-group\">";
-                                        echo "<span class = \"input-group-addon\">$</span>";
-                                        echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"DonationAmount" . $row . "\" id=\"DonationAmount" . $row . "\" oninput=\"ChangeDonationAmount()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $monetary_dontations_to_chapter[$row]['mon_donation_amount'] . "\">";
-                                        echo "</div>
+                                            <div class=\"input-group\">";
+                                                echo "<span class = \"input-group-addon\">$</span>";
+                                                echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"DonationAmount" . $row . "\" id=\"DonationAmount" . $row . "\" oninput=\"ChangeDonationAmount()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($monetary_dontations_to_chapter[$row]['mon_donation_amount'] ?? '') . "\">";
+                                            echo "</div>
                                         </div>
-                                        </td>";
+                                    </td>";
 
-                                        echo "</tr>";
-                                    }
+                                echo "</tr>";
+                            }
                                 ?>
                         </tbody>
                     </table>
                     <div class="col-md-12">
-                        <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddMonDonationRow()" <?php if($submitted) echo "disabled"; ?>>Add</button>
-                        <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteMonDonationRow()" <?php if($submitted) echo "disabled"; ?>>Remove</button>
+                        <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddMonDonationRow()" <?php if($submitted) echo "disabled"; ?>>Add Row</button>
+                        <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteMonDonationRow()" <?php if($submitted) echo "disabled"; ?>>Remove Row</button>
                     </div>
                     <div class="col-md-4 float-left">
                     <div class="form-group">
@@ -1059,33 +1064,33 @@
                             }
 
                             for ($row = 0; $row < $NonMonDonationRowCount; $row++){
-                                echo "<tr>";
-                                echo "<td>
-                                <div class=\"form-group\">
-                                <input type=\"text\" class=\"form-control\" name=\"NonMonDonationDesc" . $row . "\" id=\"NonMonDonationDesc" . $row . "\" value=\"" . $non_monetary_dontations_to_chapter[$row]['nonmon_donation_desc'] . "\">
-                                </div>
+                            echo "<tr>";
+                            echo "<td>
+                                    <div class=\"form-group\">
+                                        <input type=\"text\" class=\"form-control\" name=\"NonMonDonationDesc" . $row . "\" id=\"NonMonDonationDesc" . $row . "\" value=\"" . ($non_monetary_dontations_to_chapter[$row]['nonmon_donation_desc'] ?? '') . "\">
+                                    </div>
                                 </td>";
 
-                                echo "<td>
-                                <div class=\"form-group\">
-                                <input type=\"text\" class=\"form-control\" name=\"NonMonDonorInfo" . $row . "\" id=\"NonMonDonorInfo" . $row . "\" value=\"" . $non_monetary_dontations_to_chapter[$row]['nonmon_donation_info'] . "\">
-                                </div>
+                            echo "<td>
+                                    <div class=\"form-group\">
+                                        <input type=\"text\" class=\"form-control\" name=\"NonMonDonorInfo" . $row . "\" id=\"NonMonDonorInfo" . $row . "\" value=\"" . ($non_monetary_dontations_to_chapter[$row]['nonmon_donation_info'] ?? '') . "\">
+                                    </div>
                                 </td>";
 
-                                echo "<td>
-                                <div class=\"form-group\">
-                                <input type=\"date\" class=\"form-control\" min='2021-07-01' max='2022-06-30' name=\"NonMonDonationDate" . $row . "\" id=\"NonMonDonationDate" . $row . "\" value=\"" . $non_monetary_dontations_to_chapter[$row]['nonmon_donation_date'] . "\" onchange=\"IsValidDate(this)\">
-                                </div>
+                            echo "<td>
+                                    <div class=\"form-group\">
+                                        <input type=\"date\" class=\"form-control\" min='2021-07-01' max='2022-06-30' name=\"NonMonDonationDate" . $row . "\" id=\"NonMonDonationDate" . $row . "\" value=\"" . ($non_monetary_dontations_to_chapter[$row]['nonmon_donation_date'] ?? '') . "\" onchange=\"IsValidDate(this)\">
+                                    </div>
                                 </td>";
 
-                                echo "</tr>";
-                            }
+                            echo "</tr>";
+                        }
                         ?>
                         </tbody>
                     </table>
                     <div class="col-md-12 float-left">
-                        <button type="button"  class="btn btn-large btn-success btn-add-remove" onclick="AddNonMonDonationRow()" <?php if($submitted) echo "disabled"; ?>>Add</button>
-                        <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteNonMonDonationRow()" <?php if($submitted) echo "disabled"; ?>>Remove</button>
+                        <button type="button"  class="btn btn-large btn-success btn-add-remove" onclick="AddNonMonDonationRow()" <?php if($submitted) echo "disabled"; ?>>Add Row</button>
+                        <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteNonMonDonationRow()" <?php if($submitted) echo "disabled"; ?>>Remove Row</button>
                     </div>
                     <input type="hidden" name="NonMonDonationRowCount" id="NonMonDonationRowCount" value="<?php echo $NonMonDonationRowCount; ?>" />
                     <hr>
@@ -1119,6 +1124,7 @@
                               <td>Expenses</td>
                             </tr>
                             </thead>
+                            <tbody>
                             <?php
                                 $other_income_and_expenses_array = null;
                                 if(isset($financial_report_array['other_income_and_expenses_array'])){
@@ -1128,68 +1134,68 @@
                                 else{
                                     $OtherOfficeExpenseRowCount = 2;
                                 }
-                            ?>
-                            <tbody>
-                                <tr>
-                                <td>
-                                <div class="form-group">
-                                <input type="text" class="form-control" name="OtherOfficeDesc0" id="OtherOfficeDesc0" value="Outgoing Board Gifts" readonly>
-                                </div>
-                                </td>
 
-                                <td>
-                                <div class="form-group">
-                                <div class="input-group">
-                                <span class = "input-group-addon">$</span>
-                                <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0" step="0.01" name="OtherOfficeIncome0" id="OtherOfficeIncome0" oninput="ChangeOtherOfficeExpenses()" value="<?php echo $other_income_and_expenses_array[0]['other_income'];?>">
-                                </div>
-                                </div>
-                                </td>
+                                // Hardcoded first row
+                                echo "<tr>";
+                                echo "<td>
+                                        <div class=\"form-group\">
+                                            <input type=\"text\" class=\"form-control\" name=\"OtherOfficeDesc0\" id=\"OtherOfficeDesc0\" value=\"Outgoing Board Gifts\" readonly>
+                                        </div>
+                                    </td>";
 
-                                <td>
-                                <div class="form-group">
-                                <div class="input-group">
-                                <span class = "input-group-addon">$</span>
-                                <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0" step="0.01" name="OtherOfficeExpenses0" id="OtherOfficeExpenses0" oninput="ChangeOtherOfficeExpenses()" value="<?php echo $other_income_and_expenses_array[0]['other_expenses'];?>">
-                                </div>
-                                </div>
-                                </td>
-                                </tr>
-                                <?php
-
-                                        for ($row = 1; $row < $OtherOfficeExpenseRowCount; $row++){
-                                            echo "<tr>";
-                                            echo "<td>
-                                            <div class=\"form-group\">
-                                            <input type=\"text\" class=\"form-control\" name=\"OtherOfficeDesc" . $row . "\" id=\"OtherOfficeDesc" . $row . "\" value=\"" . $other_income_and_expenses_array[$row]['other_desc'] . "\">
-                                            </div>
-                                            </td>";
-
-                                            echo "<td>
-                                            <div class=\"form-group\">
+                                echo "<td>
+                                        <div class=\"form-group\">
                                             <div class=\"input-group\">";
-                                            echo "<span class = \"input-group-addon\">$</span>";
-                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"OtherOfficeIncome" . $row . "\" id=\"OtherOfficeIncome" . $row . "\" oninput=\"ChangeOtherOfficeExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $other_income_and_expenses_array[$row]['other_income'] . "\">";
+                                                echo "<span class = \"input-group-addon\">$</span>";
+                                                echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" onkeydown=\"return event.keyCode !== 69\" class=\"form-control txt-num\" min=\"0\" step=\"0.01\" name=\"OtherOfficeIncome0\" id=\"OtherOfficeIncome0\" oninput=\"ChangeOtherOfficeExpenses()\" value=\"" . ($other_income_and_expenses_array[0]['other_income'] ?? '') . "\">";
                                             echo "</div>
-                                            </div>
-                                            </td>";
+                                        </div>
+                                    </td>";
 
-                                            echo "<td>
-                                            <div class=\"form-group\">
+                                echo "<td>
+                                        <div class=\"form-group\">
                                             <div class=\"input-group\">";
-                                            echo "<span class = \"input-group-addon\">$</span>";
-                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"OtherOfficeExpenses" . $row . "\" id=\"OtherOfficeExpenses" . $row . "\" oninput=\"ChangeOtherOfficeExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $other_income_and_expenses_array[$row]['other_expenses'] . "\">";
+                                                echo "<span class = \"input-group-addon\">$</span>";
+                                                echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" onkeydown=\"return event.keyCode !== 69\" class=\"form-control txt-num\" min=\"0\" step=\"0.01\" name=\"OtherOfficeExpenses0\" id=\"OtherOfficeExpenses0\" oninput=\"ChangeOtherOfficeExpenses()\" value=\"" . ($other_income_and_expenses_array[0]['other_expenses'] ?? '') . "\">";
                                             echo "</div>
+                                        </div>
+                                    </td>";
+                                echo "</tr>";
+
+                                // Dynamic rows
+                                for ($row = 1; $row < $OtherOfficeExpenseRowCount; $row++){
+                                    echo "<tr>";
+                                    echo "<td>
+                                            <div class=\"form-group\">
+                                                <input type=\"text\" class=\"form-control\" name=\"OtherOfficeDesc" . $row . "\" id=\"OtherOfficeDesc" . $row . "\" value=\"" . ($other_income_and_expenses_array[$row]['other_desc'] ?? '') . "\">
                                             </div>
-                                            </td>";
-                                            echo "</tr>";
-                                        }
+                                        </td>";
+
+                                    echo "<td>
+                                            <div class=\"form-group\">
+                                                <div class=\"input-group\">";
+                                                    echo "<span class = \"input-group-addon\">$</span>";
+                                                    echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"OtherOfficeIncome" . $row . "\" id=\"OtherOfficeIncome" . $row . "\" oninput=\"ChangeOtherOfficeExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($other_income_and_expenses_array[$row]['other_income'] ?? '') . "\">";
+                                                echo "</div>
+                                            </div>
+                                        </td>";
+
+                                    echo "<td>
+                                            <div class=\"form-group\">
+                                                <div class=\"input-group\">";
+                                                    echo "<span class = \"input-group-addon\">$</span>";
+                                                    echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"OtherOfficeExpenses" . $row . "\" id=\"OtherOfficeExpenses" . $row . "\" oninput=\"ChangeOtherOfficeExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($other_income_and_expenses_array[$row]['other_expenses'] ?? '') . "\">";
+                                                echo "</div>
+                                            </div>
+                                        </td>";
+                                    echo "</tr>";
+                                }
                                 ?>
                             </tbody>
                         </table>
                         <div class="col-md-12 float-left">
-                        <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddOtherOfficeExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Add</button>
-                        <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteOtherOfficeExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Remove</button>
+                        <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddOtherOfficeExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Add Row</button>
+                        <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteOtherOfficeExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Remove Row</button>
                         </div>
                         <div class="col-md-6 float-left">
                             <div class="form-group">
@@ -1362,51 +1368,52 @@
                                 $BankRecRowCount = 1;
                             }
 
-                                for ($row = 0; $row < $BankRecRowCount; $row++){
-                                    echo "<tr>";
-                                    echo "<td>
+                            for ($row = 0; $row < $BankRecRowCount; $row++){
+                            echo "<tr>";
+                            echo "<td>
                                     <div class=\"form-group\">
-                                    <input type=\"date\" class=\"form-control\" min='2021-07-01' max='2022-06-30' name=\"BankRecDate" . $row . "\" id=\"BankRecDate" . $row . "\"value=\"" . $bank_rec_array[$row]['bank_rec_date'] . "\"  onchange=\"IsValidDate(this)\">
+                                        <input type=\"date\" class=\"form-control\" min='2021-07-01' max='2022-06-30' name=\"BankRecDate" . $row . "\" id=\"BankRecDate" . $row . "\" value=\"" . ($bank_rec_array[$row]['bank_rec_date'] ?? '') . "\"  onchange=\"IsValidDate(this)\">
                                     </div>
-                                    </td>";
+                                </td>";
 
-                                    echo "<td>
+                            echo "<td>
                                     <div class=\"form-group\">
-                                    <input type=\"text\" class=\"form-control\" name=\"BankRecCheckNo" . $row . "\" id=\"BankRecCheckNo" . $row . "\"value=\"" . $bank_rec_array[$row]['bank_rec_check_no'] . "\">
+                                        <input type=\"text\" class=\"form-control\" name=\"BankRecCheckNo" . $row . "\" id=\"BankRecCheckNo" . $row . "\" value=\"" . ($bank_rec_array[$row]['bank_rec_check_no'] ?? '') . "\">
                                     </div>
-                                    </td>";
+                                </td>";
 
-                                    echo "<td>
+                            echo "<td>
                                     <div class=\"form-group\">
-                                    <input type=\"text\" class=\"form-control\" name=\"BankRecDesc" . $row . "\" id=\"BankRecDesc" . $row . "\"value=\"" . $bank_rec_array[$row]['bank_rec_desc'] . "\">
+                                        <input type=\"text\" class=\"form-control\" name=\"BankRecDesc" . $row . "\" id=\"BankRecDesc" . $row . "\" value=\"" . ($bank_rec_array[$row]['bank_rec_desc'] ?? '') . "\">
                                     </div>
-                                    </td>";
+                                </td>";
 
-                                    echo "<td>
+                            echo "<td>
                                     <div class=\"form-group\">
-                                    <div class=\"input-group\">";
-                                    echo "<span class = \"input-group-addon\">$</span>";
-                                    echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"BankRecPaymentAmount" . $row . "\" id=\"BankRecPaymentAmount" . $row . "\" oninput=\"ChangeBankRec()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $bank_rec_array[$row]['bank_rec_payment_amount'] . "\">";
-                                    echo "</div>
+                                        <div class=\"input-group\">";
+                                            echo "<span class = \"input-group-addon\">$</span>";
+                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"BankRecPaymentAmount" . $row . "\" id=\"BankRecPaymentAmount" . $row . "\" oninput=\"ChangeBankRec()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($bank_rec_array[$row]['bank_rec_payment_amount'] ?? '') . "\">";
+                                        echo "</div>
                                     </div>
-                                    </td>";
+                                </td>";
 
-                                    echo "<td>
+                            echo "<td>
                                     <div class=\"form-group\">
-                                    <div class=\"input-group\">";
-                                    echo "<span class = \"input-group-addon\">$</span>";
-                                    echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"BankRecDepositAmount" . $row . "\" id=\"BankRecDepositAmount" . $row . "\" oninput=\"ChangeBankRec()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . $bank_rec_array[$row]['bank_rec_desposit_amount'] . "\">";
-                                    echo "</div>
+                                        <div class=\"input-group\">";
+                                            echo "<span class = \"input-group-addon\">$</span>";
+                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"BankRecDepositAmount" . $row . "\" id=\"BankRecDepositAmount" . $row . "\" oninput=\"ChangeBankRec()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($bank_rec_array[$row]['bank_rec_desposit_amount'] ?? '') . "\">";
+                                        echo "</div>
                                     </div>
-                                    </td>";
-                                    echo "</tr>";
-                                }
+                                </td>";
+                            echo "</tr>";
+                        }
+
                                 ?>
                         </tbody>
                     </table>
                     <div class="col-md-12 float-left">
-                        <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddBankRecRow()" <?php if($submitted) echo "disabled"; ?>>Add</button>
-                        <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteBankRecRow()" <?php if($submitted) echo "disabled"; ?>>Remove</button>
+                        <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddBankRecRow()" <?php if($submitted) echo "disabled"; ?>>Add Row</button>
+                        <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteBankRecRow()" <?php if($submitted) echo "disabled"; ?>>Remove Row</button>
                     </div>
                     <div class="col-md-6 float-left">
                         <div class="form-group">
