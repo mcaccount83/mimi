@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddBugsAdminRequest;
 use App\Http\Requests\AddResourcesAdminRequest;
 use App\Http\Requests\AddToolkitAdminRequest;
-use App\Http\Requests\UpdateAdminRequest;
+use App\Http\Requests\UpdateEOYRequest;
 use App\Http\Requests\UpdateBugsAdminRequest;
 use App\Http\Requests\UpdateResourcesAdminRequest;
 use App\Http\Requests\UpdateToolkitAdminRequest;
@@ -370,7 +370,7 @@ class AdminController extends Controller
         $file->save();
     }
 
-    public function showAdmin(Request $request): View
+    public function showEOY(Request $request): View
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -401,10 +401,10 @@ class AdminController extends Controller
 
         $data = ['admin' => $admin, 'canEditFiles' => $canEditFiles, 'coordinatorDetails' => $coordinatorDetails, 'fiscalYears' => $fiscalYears];
 
-        return view('admin.index')->with($data);
+        return view('admin.eoy')->with($data);
     }
 
-    public function updateAdmin(UpdateAdminRequest $request, $id)
+    public function updateEOY(UpdateEOYRequest $request, $id)
     {
         try {
             $admin = Admin::findOrFail($id);
@@ -416,6 +416,8 @@ class AdminController extends Controller
             // Convert checkbox values to 1 or null
         $admin->eoy_testers = isset($validatedData['eoy_testers']) ? 1 : null;
         $admin->eoy_coordinators = isset($validatedData['eoy_coordinators']) ? 1 : null;
+        $admin->eoy_boardreport = isset($validatedData['eoy_boardreport']) ? 1 : null;
+        $admin->eoy_financialreport = isset($validatedData['eoy_financialreport']) ? 1 : null;
         $admin->truncate_incoming = isset($validatedData['truncate_incoming']) ? 1 : null;
         $admin->truncate_outgoing = isset($validatedData['truncate_outgoing']) ? 1 : null;
         $admin->copy_FRtoCH = isset($validatedData['copy_FRtoCH']) ? 1 : null;
@@ -431,12 +433,12 @@ class AdminController extends Controller
             $admin->save();
 
            // Return a success response to the client
-           return redirect()->to('/admin')->with('success', 'Admin data updated successfully.');
+           return redirect()->to('/admin/eoy')->with('success', 'Admin data updated successfully.');
 
         } catch (Exception $e) {
             // Log the error message
             Log::error('Failed to update admin data: ' . $e->getMessage());
-            return redirect()->to('/admin')->with('success', 'Admin data failed to update.');
+            return redirect()->to('/admin/eoy')->with('success', 'Admin data failed to update.');
         }
     }
 

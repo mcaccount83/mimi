@@ -62,8 +62,8 @@ Route::get('/chapter-resources', [PublicController::class, 'chapterResources'])-
 /**
  * Routes for Admin Controller
  */
-Route::get('/admin', [AdminController::class, 'showAdmin'])->name('admin.index');
-Route::post('/admin/update/{id}', [AdminController::class, 'updateAdmin'])->name('admin.update');
+Route::get('/admin/eoy', [AdminController::class, 'showEOY'])->name('admin.eoy');
+Route::post('/admin/eoy/update/{id}', [AdminController::class, 'updateEOY'])->name('admin.eoyupdate');
 Route::post('/admin/reset-year', [AdminController::class, 'resetYear'])->name('resetYear');
 Route::get('/admin/bugs', [AdminController::class, 'showBugs'])->name('admin.bugs');
 Route::post('/admin/addbugs', [AdminController::class, 'addBugs'])->name('admin.addbugs');

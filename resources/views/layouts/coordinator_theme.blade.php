@@ -415,13 +415,13 @@
         @endif
 
         @if ($adminReportCondition)
-            <li class="treeview {{ Request::is('admin') ? 'active' : '' }} {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }} {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }} {{ Request::is('adminreports/multipleboard') ? 'active' : '' }} {{ Request::is('adminreports/nopresident') ? 'active' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
+            <li class="treeview {{ Request::is('admin/eoy') ? 'active' : '' }} {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }} {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }} {{ Request::is('adminreports/multipleboard') ? 'active' : '' }} {{ Request::is('adminreports/nopresident') ? 'active' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
                 <a href="#"><i class="fa fa-cogs"></i> <span>Admin Reports</span>
                 <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
                 <ul class="treeview-menu">
-            <li class="{{ Request::is('admin') ? 'active' : '' }}">
-                <a href="{{ route('admin.index') }}">
+            <li class="{{ Request::is('admin/eoy') ? 'active' : '' }}">
+                <a href="{{ route('admin.eoy') }}">
                     <i class="fa fa-bullseye"></i>
                     <span>EOY Procedures</span>
                 </a>

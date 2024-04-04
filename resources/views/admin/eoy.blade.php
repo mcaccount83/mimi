@@ -30,7 +30,7 @@
 
 <!-- Main content -->
 <section class="content">
-        <form method="POST" action='{{ route("admin.update",$admin->id) }}'>
+        <form method="POST" action='{{ route("admin.eoyupdate",$admin->id) }}'>
         @csrf
 
         <div class="row">
@@ -62,9 +62,9 @@
 
         <div class="col-md-10">
 
-        <p><strong>Complete in May/June to prepare for testing and going live with Annual Reports.</strong><br>
-            Board Election Report will automatically be available for Chapters on <strong>May 1st</strong>.<br>
-                Financial Reports will automatically be available for Chapters on <strong>June 1st</strong>.</p>
+        <p><strong>Complete in April/May to prepare for testing and going live with Annual Reports.</strong><br>
+            Board Election Report will automatically be available for Chapters on <strong>May 1st</strong> & Report is activated below.<br>
+                Financial Reports will automatically be available for Chapters on <strong>June 1st</strong> & Report is activated below.</p>
                 <br>
         </div>
     </div>
@@ -170,6 +170,33 @@
                 </div>
             </div>
 
+            <h4>Activate Board and Financial Report Buttons for Viewing</h4>
+            <p>Check YES to activate the buttons/links for Board Members.</p>
+            <br>
+            <div class="radio-chk">
+                <div class="col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label>Board Election Report for Chapters</label>
+                        <label style="display: block;">
+                            <input type="checkbox" name="eoy_boardreport" id="" class="ios-switch green bigswitch" {{ $admin->eoy_boardreport == '1' ? 'checked' : '' }} />
+                            <div><div></div></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="radio-chk">
+                <div class="col-sm-12 col-xs-12">
+                    <div class="form-group">
+                        <label>Financial Report for Chapters</label>
+                        <label style="display: block;">
+                            <input type="checkbox" name="eoy_financialreport" id="" class="ios-switch green bigswitch" {{ $admin->eoy_financialreport == '1' ? 'checked' : '' }} />
+                            <div><div></div></div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
      <!-- Grid item -->
@@ -240,7 +267,8 @@
 
     <hr>
     <div id="readOnlyText" class="description text-center">
-        <p><span style="color: red;">Resetting for New Year will also change MIMI menus and information items <strong><u>OFF</u></strong> for Coordinators by default.
+        <p><span style="color: red;">Resetting for New Year will also turn MIMI menus and information items <strong><u>OFF</u></strong> for Coordinators by default.<br>
+            Resetting for New Year will also turn Board Election and Financial Report buttons <strong><u>OFF</u></strong> for Chapters by default.
     </span></p>
     </div>
 </form>

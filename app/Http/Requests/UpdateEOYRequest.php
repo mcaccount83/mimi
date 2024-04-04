@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateAdminRequest extends FormRequest
+class UpdateEOYRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -20,6 +20,12 @@ class UpdateAdminRequest extends FormRequest
             'nullable',
         ],
         'eoy_coordinators' => [
+            'nullable',
+        ],
+        'eoy_boardreport' => [
+            'nullable',
+        ],
+        'eoy_financialreport' => [
             'nullable',
         ],
         'truncate_incoming' => [
