@@ -75,7 +75,6 @@ Route::get('/admin/toolkit', [AdminController::class, 'showToolkit'])->name('adm
 Route::post('/admin/addtoolkit', [AdminController::class, 'addToolkit'])->name('admin.addtoolkit');
 Route::post('/admin/updatetoolkit/{id}', [AdminController::class, 'updateToolkit'])->name('admin.updatetoolkit');
 
-
 /**
  * Routes for Payment Controller (Payment Processing)
  */

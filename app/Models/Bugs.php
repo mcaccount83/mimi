@@ -13,7 +13,5 @@ class Bugs extends Model
         'task', 'details', 'status', 'priority', 'reported_id', 'notes',
     ];
 
-    protected $table = 'bugs';
-
     protected $primaryKey = 'id';
 }

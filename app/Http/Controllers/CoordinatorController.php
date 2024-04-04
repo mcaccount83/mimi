@@ -1520,7 +1520,7 @@ class CoordinatorController extends Controller
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $coordinatorDetails = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id', 'cd.position_id', 'cd.birthday_month_id', 'cd.birthday_day', 'cd.card_sent', 'cd.first_name', 'cd.last_name', 'cd.address','cd.city', 'cd.state', 'cd.zip')
+            ->select('cd.coordinator_id', 'cd.position_id', 'cd.birthday_month_id', 'cd.birthday_day', 'cd.card_sent', 'cd.first_name', 'cd.last_name', 'cd.address', 'cd.city', 'cd.state', 'cd.zip')
             ->where('cd.is_active', '=', '1')
             ->where('cd.coordinator_id', '=', $id)
             ->get();
