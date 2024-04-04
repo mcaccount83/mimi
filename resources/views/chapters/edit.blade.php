@@ -28,6 +28,31 @@
     <form method="POST" action='{{ route("chapters.update",$chapterList[0]->id) }}'">
     @csrf
     <section class="content">
+
+        @php
+            $assistConferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //CC-Founder & ACC
+            $regionalCoordinatorCondition = ($positionid >= 5 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*RC-Founder & ACC
+            $assistRegionalCoordinatorCondition = ($positionid >= 4 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*ARC-Founder & ACC
+            $bigSisterCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
+
+            $eoyReportCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
+            $eoyReportConditionDISABLED = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
+        @endphp
+        @php
+            $admin = DB::table('admin')
+                ->select('admin.*',
+                    DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),)
+                ->leftJoin('coordinator_details as cd', 'admin.updated_id', '=', 'cd.coordinator_id')
+                ->orderBy('admin.id', 'desc') // Assuming 'id' represents the order of insertion
+                ->first();
+
+            $eoy_testers = $admin->eoy_testers;
+            $eoy_coordinators = $admin->eoy_coordinators;
+
+            $testers_yes = ($eoy_testers == 1);
+            $coordinators_yes = ($eoy_coordinators == 1);
+        @endphp
+
       <div class="row">
         <div class="col-md-12">
           <div class="box card">
@@ -716,15 +741,13 @@
               </div>
               </div>
             </div>
+
+            @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $assistConferenceCoordinatorCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes))
              <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">End of Year Reporting</h3>
               </div>
               <div class="box-body">
             <br>
-            <div id="reportStatusText" class="description text-center" style="color: red;">
-                <h4><strong><?php echo date('Y')-1 .'-'.date('Y');?> Report Status/Links are not available at this time.</strong></h4>
-            </div>
-              <!-- /.form group -->
               <div class="radio-chk">
               <div class="col-sm-3 col-xs-12">
                   <div class="form-group">
@@ -745,7 +768,6 @@
                   </div>
               </div>
               <!-- /.form group -->
-
                     <div class="radio-chk">
                         <div class="col-sm-3 col-xs-12">
                             <div class="form-group">
@@ -755,8 +777,6 @@
                             </div>
                         </div>
                     </div>
-
-
               <!-- /.form group -->
               <div class="radio-chk">
                         <div class="col-sm-3 col-xs-12">
@@ -767,30 +787,38 @@
                             </div>
                         </div>
                     </div>
-            <?php if($positionid !=12){?>
                 <div class="box-body text-center">
-                 @foreach($chapterList as $list)
-                    <?php if($positionid >=5 && $positionid <=7){?>
+                @foreach($chapterList as $list)
+                @if ($regionalCoordinatorCondition)
                         <button type="button" id="ReportStatus" class="btn btn-themeBlue margin" onclick="window.location.href='{{ route('chapter.statusview', ['id' => $list->id]) }}'">
                             Update Report Status
                         </button>
-                        <?php }?>
-                     @if($list->new_board_active=='1')
+                    @if($list->new_board_active != '1')
                         <button type="button" id="BoardReportAlwaysDisabled" class="btn btn-themeBlue margin" onclick="window.location.href='{{ route('chapter.showboardinfo', ['id' => $list->id]) }}'">
-                            {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
-                        </button>
-                    @else
-                        <button type="button" id="BoardReport" class="btn btn-themeBlue margin" onclick="window.location.href='{{ route('chapter.showboardinfo', ['id' => $list->id]) }}'">
                             {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
                         </button>
                     @endif
                         <button type="button" id="FinancialReport" class="btn btn-themeBlue margin" onclick="window.location.href='{{ route('chapter.showfinancial', ['id' => $list->id]) }}'">
                             {{ date('Y')-1 .'-'.date('Y') }} Financial Report
                         </button>
-                    @endforeach
+                @endif
+                @endforeach
                  </div>
-            <?php }?>
             </div>
+        @endif
+
+        @if (!($eoyReportConditionDISABLED || ($eoyReportCondition && $assistConferenceCoordinatorCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes)))
+            <div class="box-header with-border mrg-t-10">
+            <h3 class="box-title">End of Year Reporting</h3>
+            </div>
+            <div class="box-body">
+            <br>
+            <div id="reportStatusText" class="description text-center" style="color: red;">
+                <h4><strong><?php echo date('Y')-1 .'-'.date('Y');?> Report Status/Links are not available at this time.</strong></h4>
+            </div>
+
+            </div>
+        @endif
 
           <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">International MOMS Club Coordinators</h3>
@@ -800,6 +828,21 @@
               <!-- /.form group -->
               <div class="col-sm-12 col-xs-12">
               <div class="form-group">
+                @if($regionalCoordinatorCondition)
+                <label>Primary Coordinator (Changing this value will cause the page to refresh)</label> <span class="field-required">*</span>
+                <select name="ch_primarycor" id="ch_primarycor" class="form-control select2" style="width: 100%;" onchange="checkReportId(this.value)" required disabled>
+                <option value="">Select Primary Coordinator</option>
+                @foreach($primaryCoordinatorList as $pcl)
+                      <option value="{{$pcl->cid}}" {{$chapterList[0]->primary_coordinator_id == $pcl->cid  ? 'selected' : ''}}>{{$pcl->cor_f_name}} {{$pcl->cor_l_name}} ({{$pcl->pos}})</option>
+                    @endforeach
+                </select>
+                <input type="hidden" name="ch_hid_primarycor" value="{{$chapterList[0]->primary_coordinator_id}}">
+              </div>
+              <div id="display_corlist"> </div>
+              </div>
+              </div>
+              @endif
+              @if(!($regionalCoordinatorCondition))
                 <label>Primary Coordinator (Changing this value will cause the page to refresh)</label> <span class="field-required">*</span>
                 <select name="ch_primarycor" id="ch_primarycor" class="form-control select2" style="width: 100%;" onchange="checkReportId(this.value)" required >
                 <option value="">Select Primary Coordinator</option>
@@ -812,7 +855,7 @@
               <div id="display_corlist"> </div>
               </div>
               </div>
-
+              @endif
               <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title"></h3>
               </div>
@@ -837,28 +880,25 @@
 
             <!-- /.box-body -->
             <div class="box-body text-center">
-            <?php if (Session::get('positionid') <=7 || Session::get('positionid') == 25) {?>
+            @if($bigSisterCondition)
               <button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate()" ><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-              <?php }?>
-              <?php if (Session::get('positionid') <=7 || Session::get('positionid') == 25) {?>
               <a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=MOMS Club of {{ $chapterList[0]->name }}" class="btn btn-themeBlue margin"><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; E-mail Board</a>
-             <?php }?>
-              <?php if ((Session::get('positionid') >=4 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>
               <button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);" ><i class="fa fa-undo fa-fw" aria-hidden="true" ></i>&nbsp; Reset Data</button>
-                <?php }?>
+            @endif
               <a href="{{ route('chapter.list') }}" class="btn btn-themeBlue margin"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
               </div>
 
               <div class="box-body text-center">
-               <?php if ((Session::get('positionid') >=6 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>
+            @if($assistConferenceCoordinatorCondition)
                 <button type="button" class="btn btn-themeBlue margin" onclick="return UpdateEIN()"><i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; Update EIN</button>
-
-                <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-ein"><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload EIN Letter</button>
-                {{-- <button type="button" class="btn btn-themeBlue margin" onclick="return EINLetter()">Update EIN Letter</button> --}}
-              <?php } ?>
-              <?php if ((Session::get('positionid') >=5 && Session::get('positionid') <=7) || Session::get('positionid') == 25) {?>
+                @if(empty($chapterList[0]->ein_letter_path))
+                    <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-ein"><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload EIN Letter</button>
+                @else
+                    <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-ein"><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Replace EIN Letter</button>               @endif
+                @endif
+            @if($regionalCoordinatorCondition)
               <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-disband"><i class="fa fa-ban fa-fw" aria-hidden="true" ></i>&nbsp; Disband Chapter</button>
-              <?php } ?>
+            @endif
               </div>
 
             </form>
@@ -921,21 +961,14 @@
 
   @section('customscript')
   <script>
- // Change .show/.hide to update visibility
- $(document).ready(function () {
-        $('#reportStatusText').show();  /* report status text */
-        $('#BoardInfo').closest('.radio-chk').hide();  /* board info received toggle */
-        $('#BoardActive').closest('.radio-chk').hide();  /* board info activated toggle */
-        $('#FinancialReceived').closest('.radio-chk').hide();  /* financial report received toggle */
-        $('#FinancialComplete').closest('.radio-chk').hide();  /* financial report complete toggle */
-        $('#ReportStatus').hide();  /* update report status button */
-        $('#BoardReport').hide();  /* board report button */
-        $('#BoardReportAlwaysDisabled').hide();  /* board report button */
-        $('#FinancialReport').hide();  /* financial report button */
-
- // ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report//
-        $('#BoardReportAlwaysDisabled').prop('disabled', true);
-});
+    // Disble fields for non Primary Coordinators
+    $(document).ready(function () {
+        // Check if the assistant conference coordinator condition is not met
+        if (!($bigSisterCondition)) {
+            // Disable all input fields, select elements, textareas, and Save button
+            $('input, select, textarea').prop('disabled', true);
+        }
+    });
 
 // Disable Web Link Status option 0
     document.getElementById('option0').disabled = true;

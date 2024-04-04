@@ -89,7 +89,11 @@
             $conferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 7);  //*CC-Founder
             $assistConferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //CC-Founder & ACC
             $regionalCoordinatorCondition = ($positionid >= 5 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*RC-Founder & ACC
+            $assistRegionalCoordinatorCondition = ($positionid >= 4 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*ARC-Founder & ACC
             $supervisingCoordinatorCondition =  ($positionid >= 3 && $positionid <= 7 || $positionid == 25);  //*SC-Founder & ACC
+            $areaCoordinatorCondition =  ($positionid >= 2 && $positionid <= 7 || $positionid == 25);  //*AC-Founder & ACC
+            $bigSisterCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
+
             $eoyReportCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
             $eoyReportConditionDISABLED = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
             $inquiriesCondition = ($positionid == 8 || $secpositionid == 8);  //*Inquiries Coordinator
