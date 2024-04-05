@@ -94,7 +94,10 @@
             $areaCoordinatorCondition =  ($positionid >= 2 && $positionid <= 7 || $positionid == 25);  //*AC-Founder & ACC
             $bigSisterCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
 
-            $eoyReportCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
+            $eoyTestCondition = ($positionid >= 6 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25) ||
+                    ($positionid == 29 || $secpositionid == 29);  //CC-Founder & ACC, AR Tester
+            $eoyReportCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25) ||
+                    ($positionid == 19 || $secpositionid == 19) || ($positionid == 29 || $secpositionid == 29);  //*BS-Founder & ACC, AR Reviewer, AR Tester
             $eoyReportConditionDISABLED = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
             $inquiriesCondition = ($positionid == 8 || $secpositionid == 8);  //*Inquiries Coordinator
             $webReviewCondition = ($positionid == 9 || $secpositionid == 9);  //*Website Reviewer
@@ -382,7 +385,7 @@
             </li>
         @endif
 
-        @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $assistConferenceCoordinatorCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes))
+        @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes))
         <li class="treeview {{ Request::is('yearreports/*') ? 'active' : '' }} {{ Request::is('chapter/financial/*') ? 'active' : ''}} {{ Request::is('chapter/boardinfo/*') ? 'active' : ''}}  {{ Request::is('chapter/boundaryview/*') ? 'active' : '' }} {{ Request::is('chapter/statusview/*') ? 'active' : ''}} {{ Request::is('chapter/awardsview/*') ? 'active' : '' }} {{ Request::is('yearreports/addawards') ? 'active' : '' }}">
             <a href="#"><i class="fa fa-bar-chart"></i> <span>EOY Reports</span>
               <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>

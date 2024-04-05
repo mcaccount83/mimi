@@ -35,7 +35,10 @@
             $assistRegionalCoordinatorCondition = ($positionid >= 4 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*ARC-Founder & ACC
             $bigSisterCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
 
-            $eoyReportCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
+            $eoyTestCondition = ($positionid >= 6 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25) ||
+                    ($positionid == 29 || $secpositionid == 29);  //CC-Founder & ACC, AR Tester
+            $eoyReportCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25) ||
+                    ($positionid == 19 || $secpositionid == 19) || ($positionid == 29 || $secpositionid == 29);  //*BS-Founder & ACC, AR Reviewer, AR Tester
             $eoyReportConditionDISABLED = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
         @endphp
         @php
@@ -742,7 +745,7 @@
               </div>
             </div>
 
-            @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $assistConferenceCoordinatorCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes))
+            @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes))
              <div class="box-header with-border mrg-t-10">
                 <h3 class="box-title">End of Year Reporting</h3>
               </div>
@@ -789,7 +792,7 @@
                     </div>
                 <div class="box-body text-center">
                 @foreach($chapterList as $list)
-                @if ($regionalCoordinatorCondition)
+                @if (($regionalCoordinatorCondition) || ($eoyTestCondition))
                         <button type="button" id="ReportStatus" class="btn btn-themeBlue margin" onclick="window.location.href='{{ route('chapter.statusview', ['id' => $list->id]) }}'">
                             Update Report Status
                         </button>
@@ -798,16 +801,16 @@
                             {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
                         </button>
                     @endif
+                    @endif
                         <button type="button" id="FinancialReport" class="btn btn-themeBlue margin" onclick="window.location.href='{{ route('chapter.showfinancial', ['id' => $list->id]) }}'">
                             {{ date('Y')-1 .'-'.date('Y') }} Financial Report
                         </button>
-                @endif
                 @endforeach
                  </div>
             </div>
         @endif
 
-        @if (!($eoyReportConditionDISABLED || ($eoyReportCondition && $assistConferenceCoordinatorCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes)))
+        @if (!($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes)))
             <div class="box-header with-border mrg-t-10">
             <h3 class="box-title">End of Year Reporting</h3>
             </div>
@@ -830,7 +833,7 @@
               <div class="form-group">
                 @if($regionalCoordinatorCondition)
                 <label>Primary Coordinator (Changing this value will cause the page to refresh)</label> <span class="field-required">*</span>
-                <select name="ch_primarycor" id="ch_primarycor" class="form-control select2" style="width: 100%;" onchange="checkReportId(this.value)" required disabled>
+                <select name="ch_primarycor" id="ch_primarycor" class="form-control select2" style="width: 100%;" onchange="checkReportId(this.value)" required >
                 <option value="">Select Primary Coordinator</option>
                 @foreach($primaryCoordinatorList as $pcl)
                       <option value="{{$pcl->cid}}" {{$chapterList[0]->primary_coordinator_id == $pcl->cid  ? 'selected' : ''}}>{{$pcl->cor_f_name}} {{$pcl->cor_l_name}} ({{$pcl->pos}})</option>
@@ -844,7 +847,7 @@
               @endif
               @if(!($regionalCoordinatorCondition))
                 <label>Primary Coordinator (Changing this value will cause the page to refresh)</label> <span class="field-required">*</span>
-                <select name="ch_primarycor" id="ch_primarycor" class="form-control select2" style="width: 100%;" onchange="checkReportId(this.value)" required >
+                <select name="ch_primarycor" id="ch_primarycor" class="form-control select2" style="width: 100%;" onchange="checkReportId(this.value)" required disabled>
                 <option value="">Select Primary Coordinator</option>
                 @foreach($primaryCoordinatorList as $pcl)
                       <option value="{{$pcl->cid}}" {{$chapterList[0]->primary_coordinator_id == $pcl->cid  ? 'selected' : ''}}>{{$pcl->cor_f_name}} {{$pcl->cor_l_name}} ({{$pcl->pos}})</option>
