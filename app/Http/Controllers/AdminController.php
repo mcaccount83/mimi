@@ -583,17 +583,7 @@ class AdminController extends Controller
 
     public function updateReRegDate(Request $request, $id): RedirectResponse
     {
-        $chapterDetails = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->where('chapters.is_Active', '=', '1')
-            ->where('chapters.id', $id)
-            ->orderByDesc('chapters.id')
-            ->get();
-
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         $chapter = Chapter::find($id);
@@ -608,17 +598,14 @@ class AdminController extends Controller
             $chapter->save();
 
             DB::commit();
-        } catch (\Exception $e) {
-            // Rollback Transaction
-            echo $e->getMessage();
-            exit();
-            DB::rollback();
-            // Log the error
-            Log::error($e);
 
-            return redirect()->to('/admin/reregdate')->with('fail', 'Something went wrong, Please try again..');
+        // Return a success response to the client
+        return redirect()->to('/admin/reregdate')->with('success', 'Re-Reg Date updated successfully.');
+        } catch (Exception $e) {
+            // Log the error message
+            Log::error('Failed to reset fiscal year: '.$e->getMessage());
+
+            return redirect()->to('/admin/reregdate')->with('error', 'Failed to update Re-Reg Date.');
         }
-
-        return redirect()->to('/admin/reregdate')->with('success', 'Chapter has been updated');
     }
 }
