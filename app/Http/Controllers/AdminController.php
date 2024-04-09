@@ -529,20 +529,20 @@ class AdminController extends Controller
         }
 
         $reChapterList = DB::table('chapters as ch')
-        ->select('ch.id', 'ch.notes', 'ch.name', 'ch.state', 'ch.reg_notes', 'ch.next_renewal_year', 'ch.dues_last_paid', 'ch.start_month_id',
-            'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-            'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name')
-        ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
-        ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
-        ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-        ->leftJoin('db_month as db', 'ch.start_month_id', '=', 'db.id')
-        ->where('ch.is_active', '=', '1')
-        ->where('bd.board_position_id', '=', '1')
-        ->orderBy('st.state_short_name')
-        ->orderBy('ch.name')
-        ->get();
+            ->select('ch.id', 'ch.notes', 'ch.name', 'ch.state', 'ch.reg_notes', 'ch.next_renewal_year', 'ch.dues_last_paid', 'ch.start_month_id',
+                'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name')
+            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->leftJoin('db_month as db', 'ch.start_month_id', '=', 'db.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('bd.board_position_id', '=', '1')
+            ->orderBy('st.state_short_name')
+            ->orderBy('ch.name')
+            ->get();
 
-        $data = ['reChapterList' => $reChapterList, ];
+        $data = ['reChapterList' => $reChapterList];
 
         return view('admin.reregdate')->with($data);
     }
@@ -581,7 +581,6 @@ class AdminController extends Controller
         return view('admin.editreregdate')->with($data);
     }
 
-
     public function updateReRegDate(Request $request, $id): RedirectResponse
     {
         $chapterDetails = DB::table('chapters')
@@ -600,7 +599,7 @@ class AdminController extends Controller
         $chapter = Chapter::find($id);
         DB::beginTransaction();
         try {
-            $chapter->start_month_id  = $request->input('ch_founddate');
+            $chapter->start_month_id = $request->input('ch_founddate');
             $chapter->next_renewal_year = $request->input('ch_renewyear');
             $chapter->dues_last_paid = $request->input('ch_duespaid');
             $chapter->last_updated_by = $lastUpdatedBy;
@@ -622,5 +621,4 @@ class AdminController extends Controller
 
         return redirect()->to('/admin/reregdate')->with('success', 'Chapter has been updated');
     }
-
 }
