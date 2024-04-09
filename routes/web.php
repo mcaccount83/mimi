@@ -65,6 +65,9 @@ Route::get('/chapter-resources', [PublicController::class, 'chapterResources'])-
 Route::get('/admin/eoy', [AdminController::class, 'showEOY'])->name('admin.eoy');
 Route::post('/admin/eoy/update/{id}', [AdminController::class, 'updateEOY'])->name('admin.eoyupdate');
 Route::post('/admin/reset-year', [AdminController::class, 'resetYear'])->name('resetYear');
+Route::get('/admin/reregdate', [AdminController::class, 'showReRegDate'])->name('admin.reregdate');
+Route::get('/admin/reregdate/{id}', [AdminController::class, 'EditReRegDate'])->name('admin.editreregdate');
+Route::post('/admin/updatereregdate/{id}', [AdminController::class, 'UpdateReRegDate'])->name('admin.updatereregdate');
 Route::get('/admin/bugs', [AdminController::class, 'showBugs'])->name('admin.bugs');
 Route::post('/admin/addbugs', [AdminController::class, 'addBugs'])->name('admin.addbugs');
 Route::post('/admin/updatebugs/{id}', [AdminController::class, 'updateBugs'])->name('admin.updatebugs');

@@ -270,6 +270,7 @@
         <p><span style="color: red;">Resetting for New Year will also turn MIMI menus and information items <strong><u>OFF</u></strong> for Coordinators by default.<br>
             Resetting for New Year will also turn Board Election and Financial Report buttons <strong><u>OFF</u></strong> for Chapters by default.
     </span></p>
+    <h4>This CANNOT be undone!</h4>
     </div>
 </form>
 <form method="POST" action="{{ route('resetYear') }}">

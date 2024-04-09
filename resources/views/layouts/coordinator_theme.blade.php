@@ -422,8 +422,8 @@
         @endif
 
         @if ($adminReportCondition)
-            <li class="treeview {{ Request::is('admin/eoy') ? 'active' : '' }} {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }} {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }} {{ Request::is('adminreports/multipleboard') ? 'active' : '' }} {{ Request::is('adminreports/nopresident') ? 'active' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
-                <a href="#"><i class="fa fa-cogs"></i> <span>Admin Reports</span>
+            <li class="treeview {{ Request::is('admin/eoy') ? 'active' : '' }}  {{ Request::is('admin/reregdate') ? 'active' : '' }} {{ Request::is('admin/reregdate/*') ? 'active' : '' }} {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }} {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }} {{ Request::is('adminreports/multipleboard') ? 'active' : '' }} {{ Request::is('adminreports/nopresident') ? 'active' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
+                <a href="#"><i class="fa fa-cogs"></i> <span>Admin Items</span>
                 <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
                 </a>
                 <ul class="treeview-menu">
@@ -433,6 +433,12 @@
                     <span>EOY Procedures</span>
                 </a>
                 </li>
+                <li class="{{ Request::is('admin/reregdate') ? 'active' : '' }} {{ Request::is('admin/reregdate/*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.reregdate') }}">
+                        <i class="fa fa-calendar-o"></i>
+                        <span>Re-Reg Renewal Dates</span>
+                    </a>
+                    </li>
             <li class="{{ Request::is('adminreports/duplicateuser') ? 'active' : '' }}">
             <a href="{{ route('report.duplicateuser') }}">
                 <i class="fa fa-user-plus"></i>
@@ -653,6 +659,26 @@ $(document).ready(function() {
         { targets: 6, type: 'date', format: null },
         {
             targets: 7, render: function(data, type, row) {
+                if (type === 'display' && data === 'Invalid date') {
+                    return null;
+                }
+                return data;
+            }
+        }
+    ]);
+
+    initializeDataTable('#chapterlist_reRegDate', {
+        paging: true,
+        lengthChange: true,
+        searching: true,
+        ordering: true,
+        info: false,
+        autoWidth: false,
+        order: [[0, 'asc']]
+    }, [
+        { targets: 3, type: 'date', format: null },
+        {
+            targets: 4, render: function(data, type, row) {
                 if (type === 'display' && data === 'Invalid date') {
                     return null;
                 }
