@@ -2123,7 +2123,7 @@ class ChapterController extends Controller
                     ->orderByDesc('ch.zap_date')
                     ->get();
             } else {
-                $chapterList = DB::table('chapters')
+                $chapterList = DB::table('chapters as ch')
                     ->select('ch.id', 'ch.state', 'ch.name', 'ch.ein', 'ch.zap_date', 'ch.disband_reason', 'st.state_short_name as state')
                     ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
                     ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')

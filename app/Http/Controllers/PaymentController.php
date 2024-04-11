@@ -237,7 +237,7 @@ class PaymentController extends Controller
                         'invoice' => $randomInvoiceNumber,
                         'datePaid' => $today,
                         'chapterMembers' => $members,
-                        'chapterDate' => $today,
+                        'chapterDate' => Carbon::today()->format('m-d-Y'),
                         'chapterTotal' => $sustaining,
                     ];
 

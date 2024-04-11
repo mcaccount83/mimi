@@ -51,7 +51,7 @@
               <table id="chapterlist_reRegDate" class="table table-bordered table-hover">
               <thead>
       			    <tr>
-          			<th>Renew Date</th>
+          			<th></th>
           			<th>Chapter State</th>
                     <th>Chapter Name</th>
                     <th class="nosort" id="due_sort">Renew Date</th>
