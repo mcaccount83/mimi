@@ -51,79 +51,34 @@
                                     <h3 class="box-title">JOB DESCRIPTIONS</h3>
                                 </div>
                                 <div class="box-body">
-                                        @foreach($resources->where('category', 5) as $resourceItem)
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <div class="col-md-12">
-                                                            @if ($resourceItem->link)
-                                                            <h4><a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}</a> (<a href="#" data-toggle="modal" data-target="#modal-task">Update</a>)</h4>
-                                                            @elseif ($resourceItem->file_path)
-                                                            <h4><a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}</a> (<a href="#" data-toggle="modal" data-target="#modal-task">Update</a>)</h4>
-                                                            @else
-                                                            <h4>{{ $resourceItem->name }} (<a href="#" data-toggle="modal" data-target="#modal-task">Update</a>)</h4>
-                                                            @endif
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Modal for editing task -->
-                                            <div class="modal fade" id="editByLawsModal{{ $resourceItem->id }}" tabindex="-1" role="dialog" aria-labelledby="editByLawsModal{{ $resourceItem->id }}Label" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span></button>
-                                                                <h3 class="modal-title" id="#editByLawsModal{{ $resourceItem->id }}Label">{{ $resourceItem->name }}</h3>
-                                                            </div>
-                                                        <div class="modal-body">
-                                                            <form>
-                                                                <div class="col-md-12">
-                                                                <div class="form-group">
-                                                                    <label for="fileDescription">Description</label>
-                                                                    <textarea class="form-control" id="fileDescription{{ $resourceItem->id }}">{{ $resourceItem->description }}</textarea>
-                                                                </div>
-                                                                </div>
-                                                                <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        <label for="fileType{{ $resourceItem->id }}">File Type</label>
-                                                                        <select class="form-control fileType" id="fileType{{ $resourceItem->id }}" name="fileType">
-                                                                            <option value="1" {{ $resourceItem->file_type === 1 ? 'selected' : '' }}>Document to Download</option>
-                                                                            <option value="2" {{ $resourceItem->file_type === 2 ? 'selected' : '' }}>Link to Webpage</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="form-group versionField" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
-                                                                        <label for="fileVersion{{ $resourceItem->id }}">Version</label>
-                                                                        <input type="text" class="form-control" id="fileVersion{{ $resourceItem->id }}" name="fileVersion" value="{{ $resourceItem->version }}">
-                                                                    </div>
-                                                                    <div class="form-group filePathField" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
-                                                                        <label for="filePath{{ $resourceItem->id }}">File Path</label>
-                                                                        <input type="text" class="form-control" id="filePath{{ $resourceItem->id }}" name="filePath" value="{{ $resourceItem->file_path }}">
-                                                                    </div>
-                                                                    <div class="form-group linkField" style="{{ $resourceItem->file_type === 2 ? 'display:block;' : 'display:none;' }}">
-                                                                        <label for="link{{ $resourceItem->id }}">Link</label>
-                                                                        <input type="text" class="form-control" id="link{{ $resourceItem->id }}" name="link" value="{{ $resourceItem->link }}">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6"><br></div>
-                                                                <div class="col-md-12">
-                                                                <div class="form-group">
-                                                                    Updated <strong>{{ $resourceItem->updated_by }}</strong> on <strong>{{ \Carbon\Carbon::parse($resourceItem->updated_date)->format('m-d-Y') }}</strong>
-                                                                </div>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                        <div class="col-md-6"><br></div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times fa-fw" aria-hidden="true" ></i>&nbsp; Close</button>
-                                                            <button type="button" class="btn btn-success" onclick="updateFile({{ $resourceItem->id }})"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save changes</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                </div>    {{-- END ITEM --}}
+                                    @foreach($resources->where('category', 9) as $resourceItem)
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4>
+                                                @if ($resourceItem->link)
+                                                <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                                @if($canEditFiles)
+                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                @endif
+                                                @elseif ($resourceItem->file_path)
+                                                <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                                @if($canEditFiles)
+                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                @endif
+                                                @else
+                                                {{ $resourceItem->name }}&nbsp;
+                                                @if($canEditFiles)
+                                                <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                                @endif
+                                                @endif
+                                            </h4>
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
+
 
                         <div class="col-md-4">
                             <div class="box">
@@ -148,6 +103,42 @@
                                 </div>
                             </div>
 
+                            <!-- Grid item -->
+            <div class="grid-item col-md-4">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">NEED BASED FACT SHEETS</h3>
+                    </div>
+                    <div class="box-body">
+                        @foreach($resources->where('category', 8) as $resourceItem)
+                        <div class="card">
+                            <div class="card-body">
+                                <h4>
+                                    @if ($resourceItem->link)
+                                    <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                    @if($canEditFiles)
+                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                    @endif
+                                    @elseif ($resourceItem->file_path)
+                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                    @if($canEditFiles)
+                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                    @endif
+                                    @else
+                                    {{ $resourceItem->name }}&nbsp;
+                                    @if($canEditFiles)
+                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                    @endif
+                                    @endif
+                                </h4>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+
                         <div class="col-md-4">
                             <div class="box">
                                 <div class="box-header with-border">
@@ -170,6 +161,10 @@
             </div>
             </div>
             </div>
+
+
+
+
 
             <div class="modal fade" id="modal-positions">
                 <div class="modal-dialog">
@@ -251,76 +246,155 @@
             </div>
 
 
- <div class="modal fade" id="modal-task">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Add a New Resource</h4>
-                </div>
-                <div class="modal-body">
-                    <form id="addResourceForm">
-                        <div class="form-group">
-                            <label>Category</label>
-                            <select name="fileCategoryNew" class="form-control select2" style="width: 50%;" id="fileCategoryNew" >
-                                <option value="1" >Job Description</option>
-                                <option value="2" >Fact Sheets</option>
-                                <option value="3" >End of Year Review</option>
-                                <option value="4" >Chapter Resources</option>
-                                <option value="5" >Chapter Resources</option>
-                                <option value="6" >Sample Chapter Files</option>
-                                <option value="7" >End of Year</option>
-                            </select>
+            @foreach($resources as $resourceItem)
+            <!-- Modal for editing task -->
+            <div class="modal fade" id="editResourceModal{{ $resourceItem->id }}" tabindex="-1" role="dialog" aria-labelledby="editResourceModal{{ $resourceItem->id }}Label" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span></button>
+                                <h3 class="modal-title" id="#editResourceModal{{ $resourceItem->id }}Label">{{ $resourceItem->name }}</h3>
                             </div>
-                        <div class="form-group">
-                            <label for="fileNameNew">Name</label>
-                            <input type="text" class="form-control" id="fileNameNew" name="fileNameNew">
-                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="fileCategory{{ $resourceItem->id }}">Category</label>
+                                    <select name="fileCategory" class="form-control select2" style="width: 50%;" id="fileCategory{{ $resourceItem->id }}" disabled>
+                                        <option value="8" {{ $resourceItem->category == 8 ? 'selected' : '' }}>Need Based Fact Sheet</option>
+                                        <option value="9" {{ $resourceItem->category == 9 ? 'selected' : '' }}>Job Description</option>
+                                        <option value="10" {{ $resourceItem->category == 10 ? 'selected' : '' }}>Resource for Coordinators</option>
+                                        <option value="11" {{ $resourceItem->category == 11 ? 'selected' : '' }}>Resource for Chapters</option>
 
-                        <div class="form-group">
-                            <label for="fileDetailsNew">Description</label>
-                            <textarea class="form-control" id="fileDescriptionNew" name="fileDescriptionNew"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="fileTypeNew">File Type</label>
-                            <select class="form-control" id="fileTypeNew" name="fileTypeNew">
-                                <option value="" selected>Select file type</option>
-                                <option value="1">Document to Download</option>
-                                <option value="2">Link to Webpage</option>
-                            </select>
-
-                        </div>
-                        <div class="form-group versionFieldNew" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
-                            <label for="fileVersionNew">Version</label>
-                            <input type="text" class="form-control" id="fileVersionNew" name="fileVersionNew">
-                        </div>
-                        <div class="form-group filePathFieldNew" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
-                            <label for="filePathNew">File Path</label>
-                            <input type="text" class="form-control" id="filePathNew" name="filePathNew">
-                        </div>
-                        <div class="form-group linkFieldNew" style="{{ $resourceItem->file_type === 2 ? 'display:block;' : 'display:none;' }}">
-                            <label for="linkNew">Link</label>
-                            <input type="text" class="form-control" id="linkNew" name="linkNew" >
-                        </div>
+                                    </select>
+                                </div>
+                                </div>
+                                <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="fileDescription">Description</label>
+                                    <textarea class="form-control" id="fileDescription{{ $resourceItem->id }}">{{ $resourceItem->description }}</textarea>
+                                </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="fileType{{ $resourceItem->id }}">File Type</label>
+                                        <select class="form-control fileType" id="fileType{{ $resourceItem->id }}" name="fileType">
+                                            <option value="1" {{ $resourceItem->file_type == 1 ? 'selected' : '' }}>Document to Download</option>
+                                            <option value="2" {{ $resourceItem->file_type == 2 ? 'selected' : '' }}>Link to Webpage</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group versionField" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
+                                        <label for="fileVersion{{ $resourceItem->id }}">Version</label>
+                                        <input type="text" class="form-control" id="fileVersion{{ $resourceItem->id }}" name="fileVersion" value="{{ $resourceItem->version }}">
+                                    </div>
+                                    <div class="form-group filePathField" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
+                                        File Path: <a href="{{ $resourceItem->file_path }}">{{ $resourceItem->file_path }}</a>
+                                    </div>
+                                    <div class="form-group linkField" style="{{ $resourceItem->file_type === 2 ? 'display:block;' : 'display:none;' }}">
+                                        <label for="link{{ $resourceItem->id }}">Link</label>
+                                        <input type="text" class="form-control" id="link{{ $resourceItem->id }}" name="link" value="{{ $resourceItem->link }}">
+                                    </div>
+                                </div>
+                            <div class="col-md-12">
+                                <div class="form-group fileUpload" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
+                                    <input type="file" id="fileUpload{{ $resourceItem->id }}" class="form-control" name='fileUpload' required>
+                                </div>
+                            </div>
                         </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times fa-fw" aria-hidden="true" ></i>&nbsp; Close</button>
-                    <button type="button" class="btn btn-success" onclick="return addFile()"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Add Resource</button>
+                                <div class="col-md-12"><br></div>
+                                <div class="col-md-12">
+                                <div class="form-group">
+                                    Updated by <strong>{{ $resourceItem->updated_by }}</strong> on <strong>{{ \Carbon\Carbon::parse($resourceItem->updated_date)->format('m-d-Y') }}</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times fa-fw" aria-hidden="true" ></i>&nbsp; Close</button>
+                            <button type="button" class="btn btn-success" onclick="updateFile({{ $resourceItem->id }})"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save changes</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-        </section>
-        <!-- /.content -->
+            <!-- Modal for adding task -->
+             <div class="modal fade" id="modal-task">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">Add a New Resource</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form id="addResourceForm">
+                                    <div class="form-group">
+                                        <label>Category</label>
+                                        <select name="fileCategoryNew" class="form-control select2" style="width: 50%;" id="fileCategoryNew" >
+                                            <option value="8" >Need Based Fact Sheet</option>
+                                            <option value="9" >Job Description</option>
+                                            <option value="10" >Resource for Coordinators</option>
+                                            <option value="11" >Resource for Chapters</option>
+                                        </select>
+                                        </div>
+                                    <div class="form-group">
+                                        <label for="fileNameNew">Name</label>
+                                        <input type="text" class="form-control" id="fileNameNew" name="fileNameNew">
+                                    </div>
 
-    @endsection
+                                    <div class="form-group">
+                                        <label for="fileDetailsNew">Description</label>
+                                        <textarea class="form-control" id="fileDescriptionNew" name="fileDescriptionNew"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fileTypeNew">File Type</label>
+                                        <select class="form-control" id="fileTypeNew" name="fileTypeNew">
+                                            <option value="" selected>Select file type</option>
+                                            <option value="1">Document to Download</option>
+                                            <option value="2">Link to Webpage</option>
+                                        </select>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                                    </div>
+                                    <div class="form-group versionFieldNew" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
+                                        <label for="fileVersionNew">Version</label>
+                                        <input type="text" class="form-control" id="fileVersionNew" name="fileVersionNew">
+                                    </div>
+                                    <div class="form-group linkFieldNew" style="{{ $resourceItem->file_type === 2 ? 'display:block;' : 'display:none;' }}">
+                                        <label for="linkNew">Link</label>
+                                        <input type="text" class="form-control" id="linkNew" name="linkNew" >
+                                    </div>
+                                    <div class="form-group fileUploadNew" style="{{ $resourceItem->file_type === 1 ? 'display:block;' : 'display:none;' }}">
+                                        <input type="file" id="fileUploadNew" class="form-control" name="fileUploadNew" required>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times fa-fw" aria-hidden="true" ></i>&nbsp; Close</button>
+                                <button type="button" class="btn btn-success" onclick="return addFile()"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Add Resource</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+            </section>
+            <!-- /.content -->
+            @endsection
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
 
-<script>
+            <script>
+            $(document).ready(function() {
+                var elem = document.querySelector('.grid');
+                var msnry = new Masonry(elem, {
+                    itemSelector: '.grid-item',
+                    columnWidth: '.grid-item', // Set column width to grid-item for consistent size
+                    //gutter: 20, // Set gutter for spacing between items
+                    percentPosition: true
+                });
+            });
+            </script>
+            <script>
     $(document).ready(function() {
     // Listen for change event on the dropdown
         $('.fileType').change(function() {
