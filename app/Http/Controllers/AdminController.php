@@ -314,13 +314,10 @@ class AdminController extends Controller
             ->select('resources.*',
                 DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),
                 DB::raw('CASE
-                    WHEN category = 1 THEN "BYLAWS"
-                    WHEN category = 2 THEN "FACT SHEETS"
-                    WHEN category = 3 THEN "COPY READY MATERIAL"
-                    WHEN category = 4 THEN "IDEAS AND INSPIRATION"
-                    WHEN category = 5 THEN "CHAPTER RESOURCES"
-                    WHEN category = 6 THEN "SAMPLE CHPATER FILES"
-                    WHEN category = 7 THEN "END OF YEAR"
+                    WHEN category = 8 THEN "NEED BASED FACT SHEET"
+                    WHEN category = 9 THEN "JOB DESCRIPTION"
+                    WHEN category = 10 THEN "RESOURCE FOR COORDINATORS"
+                    WHEN category = 11 THEN "RESOURCE FOR CHAPTERS"
                     ELSE "Unknown"
                 END as priority_word'))
             ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
@@ -337,10 +334,10 @@ class AdminController extends Controller
         return view('admin.toolkit')->with($data);
     }
 
-    /**
+   /**
      * Add New Files or Links to the Toolkit List
      */
-    public function addToolkit(AddToolkitAdminRequest $request)
+    public function addToolkit(AddToolkitAdminRequest $request): JsonResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
@@ -351,11 +348,11 @@ class AdminController extends Controller
             ->where('cd.coordinator_id', '=', $corId)
             ->first(); // Fetch only one record
 
-        // Fetch admin details
-        $file = DB::table('resources')
-            ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
-            ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
-            ->first(); // Fetch only one record
+        // // Fetch admin details
+        // $file = DB::table('resources')
+        //     ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
+        //     ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
+        //     ->first(); // Fetch only one record
 
         $validatedData = $request->validated();
 
@@ -371,6 +368,13 @@ class AdminController extends Controller
         $file->updated_date = Carbon::today();
 
         $file->save();
+
+        // After adding the resource, retrieve its id
+        $id = $file->id;
+        $fileType = $file->file_type;
+
+        // Return the id and file_type in the response
+        return response()->json(['id' => $id, 'file_type' => $fileType]);
     }
 
     /**
@@ -397,14 +401,23 @@ class AdminController extends Controller
         $file = Resources::findOrFail($id);
         $file->description = $validatedData['fileDescription'];
         $file->file_type = $validatedData['fileType'];
-        $file->version = $validatedData['fileVersion'] ?? null;
-        $file->link = $validatedData['link'] ?? null;
-        $file->file_path = $validatedData['filePath'] ?? null;
+
+        // Check file_type value and set version and link accordingly
+        if ($validatedData['fileType'] == 1) {
+            $file->link = null;
+            $file->version = $validatedData['fileVersion'] ?? null;
+        } elseif ($validatedData['fileType'] == 2) {
+            $file->version = null;
+            $file->file_path = null;
+            $file->link = $validatedData['link'] ?? null;
+        }
+
         $file->updated_id = $corId;
         $file->updated_date = Carbon::today();
 
         $file->save();
     }
+
 
     public function showEOY(Request $request): View
     {

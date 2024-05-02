@@ -14,7 +14,7 @@ The MOMS Club of {{ $mailData['chapterName'] }}, {{ $mailData['chapterState'] }}
         </tr>
         <tr>
             <td>President Name:&nbsp;&nbsp;</td>
-            <td>{{ $mailData['pres_fname'] }}, {{ $mailData['pres_lname'] }}</td>
+            <td>{{ $mailData['pres_fname'] }} {{ $mailData['pres_lname'] }}</td>
         </tr>
         <tr>
             <td>President Address:&nbsp;&nbsp;<br>

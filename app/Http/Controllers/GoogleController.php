@@ -10,6 +10,7 @@ use App\Http\Requests\StoreAward4GoogleRequest;
 use App\Http\Requests\StoreAward5GoogleRequest;
 use App\Http\Requests\StoreEINGoogleRequest;
 use App\Http\Requests\StoreResourcesGoogleRequest;
+use App\Http\Requests\StoreToolkitGoogleRequest;
 use App\Http\Requests\StoreRosterGoogleRequest;
 use App\Http\Requests\StoreStatement1GoogleRequest;
 use App\Http\Requests\StoreStatement2GoogleRequest;
@@ -817,4 +818,51 @@ class GoogleController extends Controller
         }
 
     }
+
+
+    public function storeToolkit(StoreToolkitGoogleRequest $request, $id): RedirectResponse
+    {
+        $resource = Resources::findOrFail($id);
+
+        $accessToken = $this->token();
+
+        $file = $request->file('file');
+        $sharedDriveId = '17YQBX5T67g0azczV844XyUJH1TM5RAcA';   //Shared Drive -> CC Resources -> Resources - Uploaded Online
+
+        $fileMetadata = [
+            'name' => Str::ascii($file->getClientOriginalName()), // Use getClientOriginalName() to get the file name
+            'parents' => [$sharedDriveId],
+            'mimeType' => $file->getMimeType(),
+        ];
+
+        $metadataJson = json_encode($fileMetadata);
+        $fileContent = file_get_contents($file->getPathname());
+        $fileContentBase64 = base64_encode($fileContent);
+
+        $client = new Client();
+
+        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+            'headers' => [
+                'Authorization' => 'Bearer '.$accessToken,
+                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+            ],
+            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
+        ]);
+
+        $bodyContents = $response->getBody()->getContents();
+        $jsonResponse = json_decode($bodyContents, true);
+
+        if ($response->getStatusCode() === 200) { // Check for a successful status code
+            $file_id = $jsonResponse['id'];
+
+            $resource->file_path = $file_id;
+            $resource->save();
+
+            return redirect()->back()->with('success', 'File uploaded successfully!');
+        } else {
+            return redirect()->back()->with('error', 'File failed to upload');
+        }
+
+    }
+
 }
