@@ -30,8 +30,8 @@
       <div class="col-md-12">
         <div class="box card">
           <div class="box-header with-border">
-            <h3 class="box-title">Chapter Resources - Links & File Downloads</h3>
-            <h4>Board members have the same list of links & file downloads available through their MIMI logins.</h4>
+            <h3 class="box-title">Coordinator Toolkit - Links & File Downloads</h3>
+            <h4>Additional Resources that may be helpful for Coordinators and that Chapter may need in specific circumstances.</h4>
           </div>
           <!-- /.box-header -->
           <div class="box-body">
@@ -121,7 +121,7 @@
             <div class="grid-item col-md-4">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">RESOURCES FOR COORDINATORS</h3>
+                        <h3 class="box-title">ADDITIONAL COORDINATOR RESOURCES</h3>
                     </div>
                     <div class="box-body">
                         @foreach($resources->where('category', 10) as $resourceItem)
@@ -155,7 +155,7 @@
             <div class="grid-item col-md-4">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">RESOURCES FOR CHAPTERS</h3>
+                        <h3 class="box-title">ADDITIONAL CHAPTER RESOURCES</h3>
                     </div>
                     <div class="box-body">
                         @foreach($resources->where('category', 11) as $resourceItem)
