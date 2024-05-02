@@ -523,9 +523,6 @@ $(document).ready(function() {
     },
     data: data,
     success: function(response) {
-        // Display success message
-        // alert('Toolkit added successfully');
-
         // Extract the newly created id from the response
         var id = response.id;
         var fileType = response.file_type;

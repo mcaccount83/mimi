@@ -215,12 +215,6 @@ class AdminController extends Controller
             ->where('cd.coordinator_id', '=', $corId)
             ->first(); // Fetch only one record
 
-        // // Fetch admin details
-        // $file = DB::table('resources')
-        //     ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
-        //     ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
-        //     ->first(); // Fetch only one record
-
         $validatedData = $request->validated();
 
         $file = new Resources;
@@ -347,12 +341,6 @@ class AdminController extends Controller
             ->where('cd.is_active', '=', '1')
             ->where('cd.coordinator_id', '=', $corId)
             ->first(); // Fetch only one record
-
-        // // Fetch admin details
-        // $file = DB::table('resources')
-        //     ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
-        //     ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
-        //     ->first(); // Fetch only one record
 
         $validatedData = $request->validated();
 

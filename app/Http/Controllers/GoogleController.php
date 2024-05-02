@@ -809,7 +809,7 @@ class GoogleController extends Controller
         if ($response->getStatusCode() === 200) { // Check for a successful status code
             $file_id = $jsonResponse['id'];
 
-            $resource->file_path = $file_id;
+            $resource->file_path = "https://drive.google.com/uc?export=download&id=$file_id";
             $resource->save();
 
             return redirect()->back()->with('success', 'File uploaded successfully!');
@@ -855,7 +855,7 @@ class GoogleController extends Controller
         if ($response->getStatusCode() === 200) { // Check for a successful status code
             $file_id = $jsonResponse['id'];
 
-            $resource->file_path = $file_id;
+            $resource->file_path = "https://drive.google.com/uc?export=download&id=$file_id";
             $resource->save();
 
             return redirect()->back()->with('success', 'File uploaded successfully!');
