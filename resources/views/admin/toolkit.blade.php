@@ -40,7 +40,7 @@
               <div class="col-md-12">
                 <div class="form-group">
                   @if($canEditFiles)
-                      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-task"><i class="fa fa-plus fa-fw" aria-hidden="true"></i>&nbsp; Add Resource</button>
+                      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-task"><i class="fa fa-plus fa-fw" aria-hidden="true"></i>&nbsp; Add Toolkit Item</button>
                   @endif
                   <hr>
               </div>
@@ -148,6 +148,8 @@
                             </div>
                         </div>
                         @endforeach
+                        <div class="card-body">
+                        <h4><a href="#" data-toggle="modal" data-target="#modal-positions">MIMI Position Abreviations</a></h4></div>
                     </div>
                 </div>
             </div>
