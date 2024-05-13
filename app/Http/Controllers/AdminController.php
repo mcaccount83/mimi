@@ -328,7 +328,7 @@ class AdminController extends Controller
         return view('admin.toolkit')->with($data);
     }
 
-   /**
+    /**
      * Add New Files or Links to the Toolkit List
      */
     public function addToolkit(AddToolkitAdminRequest $request): JsonResponse
@@ -405,7 +405,6 @@ class AdminController extends Controller
 
         $file->save();
     }
-
 
     public function showEOY(Request $request): View
     {
@@ -600,8 +599,8 @@ class AdminController extends Controller
 
             DB::commit();
 
-        // Return a success response to the client
-        return redirect()->to('/admin/reregdate')->with('success', 'Re-Reg Date updated successfully.');
+            // Return a success response to the client
+            return redirect()->to('/admin/reregdate')->with('success', 'Re-Reg Date updated successfully.');
         } catch (Exception $e) {
             // Log the error message
             Log::error('Failed to reset fiscal year: '.$e->getMessage());
