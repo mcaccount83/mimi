@@ -60,7 +60,7 @@
               <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
-                <label>Postmark Date of Payment</label> <span class="field-required">*</span>
+                <label>Date Payment Received</label> <span class="field-required">*</span>
                 <!-- max="<?php echo $maxDateLimit;?>" -->
                 <input type="date" class="form-control my-colorpicker1" name="PaymentDate" id="PaymentDate" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" value="" min="<?php echo $minDateLimit;?>"  required />
 
