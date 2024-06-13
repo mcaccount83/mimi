@@ -4368,7 +4368,7 @@ class ChapterController extends Controller
                                 'email' => $incomingRecord->email,
                                 'password' => Hash::make('TempPass4You'),
                                 'user_type' => 'board',
-                                'is_active' => 1
+                                'is_active' => 1,
                             ]
                         );
 
@@ -4391,7 +4391,7 @@ class ChapterController extends Controller
                                 'phone' => $incomingRecord->phone,
                                 'last_updated_by' => $lastUpdatedBy,
                                 'last_updated_date' => now(),
-                                'is_active' => 1
+                                'is_active' => 1,
                             ]
                         );
                     }
