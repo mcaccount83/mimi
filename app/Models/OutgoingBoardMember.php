@@ -11,5 +11,8 @@ class OutgoingBoardMember extends Model
 
     protected $table = 'outgoing_board_member';
 
-    // Define your model properties and relationships here
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'user_id');
+    }
 }

@@ -1509,7 +1509,7 @@ class BoardController extends Controller
     public function storeFinancialReport(Request $request, $chapter_id): RedirectResponse
     {
         $borDetails = User::find($request->user()->id)->BoardDetails;
-        $isActive = $borDetails['is_active'];
+     //   $isActive = $borDetails['is_active'];
 
         $input = $request->all();
         $chName = $input['ch_name'];

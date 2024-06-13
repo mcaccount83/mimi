@@ -227,7 +227,11 @@ class HomeController extends Controller
          * Outgoing Board Login with Fiancial Report Only
          */
         if ($user_type == 'outgoing') {
-            $borDetails = User::find($request->user()->id)->OutgoingBoardMember;
+          //  $borDetails = User::find($request->user()->id)->OutgoingBoardMember;
+
+          $user = User::with('OutgoingDetails')->find($request->user()->id);
+          $borDetails = $user->OutgoingDetails;
+
             $isActive = $borDetails['is_active'];
             $chapterId = $borDetails['chapter_id'];
             $chapterDetails = Chapter::find($chapterId);

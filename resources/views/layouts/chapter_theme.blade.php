@@ -2,12 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-    <link rel="icon" type="image/png" href="../assets/img/favicon.ico">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{config('app.name')}}</title>
     <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
     <!--     Fonts and icons     -->
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+    <link rel="icon" type="image/png" href="../assets/img/favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
     <!-- CSS Files -->
@@ -53,19 +57,16 @@
                                     <span class="no-icon">eLearning Library</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="https://momsclub.org/" target="_blank">
-                                    <span class="no-icon">MOMS Club Main Website</span>
-                                </a>
-                            </li>
-							<li class="nav-item">
-                                <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                        document.getElementById('logout-form').submit();"> {{ __('Logout') }}
-                                </a>
-								<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-								@csrf
-								</form>
-                            </li>
+                            <li class="">
+                                <a href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                                           document.getElementById('logout-form').submit();">
+                                                      <span>        {{ __('Logout') }}</span>
+
+                                 </a>
+                                  <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                                              @csrf
+                                 </form>
+                              </li>
 						</ul>
                     </div>
                 </div>
@@ -109,4 +110,5 @@
 <script src="{{ asset('chapter_theme/js/bootstrap-fileselect.js') }}"></script>
 <script src="{{ asset('chapter_theme/js/bootstrap-datepicker.min.js') }}"></script>
 @yield('customscript')
+
 </html>

@@ -664,7 +664,17 @@
 
                 <div class="card-body card-b"><hr></div>
                    <div class="box-body text-center">
-                    <button id="Save" type="submit" class="btn btn-info btn-fill" onclick="return PreSaveValidate()"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button></div><br>
+                    <button id="Save" type="submit" class="btn btn-info btn-fill" onclick="return PreSaveValidate()"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+
+                    <a href="{{ route('logout') }}" class="btn btn-info btn-fill" onclick="event.preventDefault();
+                                                                   document.getElementById('logout-form').submit();">
+                                              <i class="fa fa-sign-out"></i> <span>        {{ __('Logout') }}</span>
+
+                         </a>
+                          <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                                      @csrf
+                         </form>
+                        </div><br>
                     <div class="box-body text-center">
                     {{-- <button type="button" class="btn btn-info btn-fill" onclick="window.open('https://groups.google.com/a/momsclub.org/g/2023-24boardlist)"><i class="fa fa-list fa-fw" aria-hidden="true" ></i>&nbsp; BoardList Forum</button> --}}
                     <button type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-info btn-fill"><i class="fa fa-graduation-cap fa-fw" aria-hidden="true" ></i>&nbsp; eLearning Library</button>
