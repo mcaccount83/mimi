@@ -393,26 +393,13 @@ $(document).ready(function () {
 
     if (currentMonth >= 5 && currentMonth <= 8) {
         // Disable all input fields, select elements, textareas and Save button
-        $('input, select, textarea').prop('disabled', true);
+        $('input, select, textarea').not('#logout-form input, #logout-form select, #logout-form textarea').prop('disabled', true);
         $('#Save').prop('disabled', true);
     } else {
         // If the condition is not met, keep the fields active
         $('input, select, textarea').prop('disabled', false);
         $('#Save').prop('disabled', false);
     }
-
-        // //Update to show/hide for true/false
-        // $('#reportStatusText').show();  /*report status text (.show/.hide to change visibility)*/
-        // $('#readOnlyText').hide();  /*read only text (.show/.hide to change visibility)*/
-        // $('input, select, textarea').prop('disabled', false);  /*fields on page (true disables fields for editing)*/
-        // $('#BoardReport').prop('disabled', true);  /*board report button (true grays out button)*/
-        // $('#FinancialReport').prop('disabled', true);  /*financial report button (true grays out button)*/
-        // $('#Save').prop('disabled', false);  /*save button (true grays out button)*/
-        // $('.BoardInfoStatus').hide();  /*board info status (.show/.hide to change visibility)*/
-        // $('.FinancialReportStatus').hide();  /*financial report status (.show/.hide to change visibility)*/
-
-        // //ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report
-        // $('#BoardReportAlwaysDisabled').prop('disabled', true);
 
     //Check the disabled status of EOY Buttons and show the "fields are locked" description if necessary
     if ($('input, select, textarea').prop('disabled')) {

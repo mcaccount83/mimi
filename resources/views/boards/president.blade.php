@@ -665,28 +665,23 @@
                 <div class="card-body card-b"><hr></div>
                    <div class="box-body text-center">
                     <button id="Save" type="submit" class="btn btn-info btn-fill" onclick="return PreSaveValidate()"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+                </form>
 
-                    <a href="{{ route('logout') }}" class="btn btn-info btn-fill" onclick="event.preventDefault();
-                                                                   document.getElementById('logout-form').submit();">
-                                              <i class="fa fa-sign-out"></i> <span>        {{ __('Logout') }}</span>
-
-                         </a>
-                          <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                                      @csrf
-                         </form>
-                        </div><br>
+                <a href="{{ route('logout') }}" class="btn btn-info btn-fill"
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                 <span>{{ __('Logout') }}</span>
+             </a>
+             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                 @csrf
+             </form>
+                </div><br>
                     <div class="box-body text-center">
                     {{-- <button type="button" class="btn btn-info btn-fill" onclick="window.open('https://groups.google.com/a/momsclub.org/g/2023-24boardlist)"><i class="fa fa-list fa-fw" aria-hidden="true" ></i>&nbsp; BoardList Forum</button> --}}
                     <button type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-info btn-fill"><i class="fa fa-graduation-cap fa-fw" aria-hidden="true" ></i>&nbsp; eLearning Library</button>
                     <a href="{{ route('board.resources') }}" class="btn btn-info btn-fill"><i class="fa fa-briefcase fa-fw" aria-hidden="true" ></i>&nbsp; Chapter Resources</a>
                 </div>
                 </div>
-			</form>
             </div>
-		</div>
-
-    </div>
-</div>
 @endsection
 @section('customscript')
 <script>
@@ -696,8 +691,8 @@ $(document).ready(function () {
     var currentMonth = currentDate.getMonth() + 1; // JavaScript months are 0-based
 
     if (currentMonth >= 5 && currentMonth <= 8) {
-        // Disable all input fields, select elements, textareas and Save button
-        $('input, select, textarea').prop('disabled', true);
+        // Disable all input fields, select elements, textareas, and Save button except the logout elements
+        $('input, select, textarea').not('#logout-form input, #logout-form select, #logout-form textarea').prop('disabled', true);
         $('#Save').prop('disabled', true);
     } else {
         // If the condition is not met, keep the fields active
@@ -705,26 +700,10 @@ $(document).ready(function () {
         $('#Save').prop('disabled', false);
     }
 
-        // //Update to show/hide for true/false
-        // $('#readOnlyText').hide();  /*read only text (.show/.hide to change visibility)*/
-        // $('input, select, textarea').prop('disabled', false);  /*fields on page (true disables fields for editing)*/
-        // $('#Save').prop('disabled', false);  /*save button (true grays out button)*/
-
-        // $('#reportStatusText').show();  /*report status text (.show/.hide to change visibility)*/
-        // $('#BoardReport').hide();  /*board report button (.show/.hide to change visibility)*/
-        // $('#BoardReportAlwaysDisabled').hide();  /*board report button (.show/.hide to change visibility)*/
-        // $('#FinancialReport').hide();  /*inancial report button (.show/.hide to change visibility)*/
-
-        // $('.BoardInfoStatus').hide();  /*board info status (.show/.hide to change visibility)*/
-        // $('.FinancialReportStatus').hide();  /*financial report status (.show/.hide to change visibility)*/
-
-        // //ALWAYS leave thise fiels set to "true" it works on conditional logic for submtited Election Report
-        // $('#BoardReportAlwaysDisabled').prop('disabled', true);
-
-    //Check the disabled status of EOY Buttons and show the "fields are locked" description if necessary
+    // Check the disabled status of EOY Buttons and show the "fields are locked" description if necessary
     if ($('input, select, textarea').prop('disabled')) {
-            $('.description').show();
-        }
+        $('.description').show();
+    }
 });
 
 /* Disables Web Link Status options 0 and 1 */
@@ -850,9 +829,6 @@ function isAlphanumeric(e){
         document.all ? k = e.keyCode : k = e.which;
         return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
     }
-
-
-
 
 function PreSaveValidate(){
     var errMessage="";
