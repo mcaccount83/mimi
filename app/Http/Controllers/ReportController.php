@@ -1925,6 +1925,8 @@ class ReportController extends Controller
 
     }
 
+    //
+
     /**
      * Activate Board
      */
