@@ -1472,10 +1472,15 @@ class BoardController extends Controller
     public function showFinancialReport(Request $request, $chapterId)
     {
         try {
-            $borDetails = User::find($request->user()->id)->BoardDetails;
-            $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
-            $isActive = $borDetails['is_active'];
-            $user_type = $borDetails['user_type'];
+            // $borDetails = User::find($request->user()->id)->BoardDetails;
+            // $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
+            // $isActive = $borDetails['is_active'];
+
+                $user = $request->user();
+                $borDetails = $user->BoardDetails;
+                $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
+                $isActive = $borDetails['is_active'];
+                $user_type = $user->user_type;
 
             DB::beginTransaction();
 

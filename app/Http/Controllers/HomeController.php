@@ -249,7 +249,7 @@ class HomeController extends Controller
 
             $submitted = $chapterDetails[0]->financial_report_received;
 
-            $data = ['financial_report_array' => $financial_report_array, 'submitted' => $submitted, 'loggedInName' => $loggedInName, 'chapterDetails' => $chapterDetails];
+            $data = ['financial_report_array' => $financial_report_array, 'submitted' => $submitted, 'loggedInName' => $loggedInName, 'chapterDetails' => $chapterDetails, 'user_type' => $user_type];
 
             return view('boards.financial')->with($data);
 

@@ -3010,9 +3010,9 @@
         </div>
             <div class="col-md-12 text-center">
                 <br>
-                    {{-- @if($user_type !== 'outgoing')
+                    @if($user_type !== 'outgoing')
                         <a href="{{ route('home') }}" class="btn btn-info btn-fill"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
-                    @endif --}}
+                    @endif
                     @if($submitted !='1')
                         <button type="button" id="btn-save" class="btn btn-info btn-fill" ><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                     @endif
