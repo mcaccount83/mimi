@@ -44,6 +44,135 @@
 			<input type="hidden" name="submitted" id="submitted" value="<?php echo $submitted; ?>" />
 			<input type="hidden" name="FurthestStep" id="FurthestStep" value="<?php if($financial_report_array['farthest_step_visited_coord'] > 0) echo $financial_report_array['farthest_step_visited_coord']; else echo "0"; ?>" />
 			<input type="hidden" name="submit_type" id="submit_type" value="" />
+
+            {{-- <div>
+                Primary Coordinator:                <br>
+                Secondary Coordinator:
+            </div>
+            <div><br></div>
+            <div>
+                <table class="table table-bordered table-hover">
+                <thead>
+                  <tr>
+                  <th>Checked-In</th>
+                  <th>Roster</th>
+                  <th>99N</th>
+                  <th>Bank Statement</th>
+                  <th>Service Project</th>
+                  <th>Party %</th>
+                  <th>Initial Complete</th>
+                  <th>Report Returned</th>
+                  <th>Resubmitted</th>
+                  <th>Secondary Complete</th>
+                  <th>Closing Email</th>
+                  <th>Marked in MIMI</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                            <td style="background-color: @if($submitted == '1') transparent; @else #FFC7CE; @endif;">
+                                <?php if ($positionid == 6 || $positionid == 25) {?>
+                                    <select id="check_party_percentage" name="check_party_percentage" class="form-control select2" style="width: 100px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
+                                    <option value="" {{ is_null($financial_report_array->check_party_percentage) ? 'selected' : '' }} disabled>No</option>
+                                    <option value="1" {{$financial_report_array->check_party_percentage == 1 ? 'selected' : ''}}>Yes</option>
+                                    </select>
+                                    <?php } else { ?>
+                                        {{ is_null($financial_report_array['check_party_percentage']) ? 'No' : ($financial_report_array['check_party_percentage'] == 1 ? 'Yes' :  'No' ) }}</strong><br>
+                             <?php } ?>
+                          </td>
+                          <td style="background-color: @if($submitted == '1') transparent; @else #FFC7CE; @endif;">
+                            <?php if ($positionid == 6 || $positionid == 25) {?>
+                                <select id="check_party_percentage" name="check_party_percentage" class="form-control select2" style="width: 100px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
+                                <option value="" {{ is_null($financial_report_array->check_party_percentage) ? 'selected' : '' }} disabled>Select</option>
+                                <option value="0" {{$financial_report_array->check_party_percentage === 0 ? 'selected' : ''}}>Not Attached</option>
+                                <option value="1" {{$financial_report_array->check_party_percentage == 1 ? 'selected' : ''}}>Attached</option>
+                                <option value="2" {{$financial_report_array->check_party_percentage === 2 ? 'selected' : ''}}>Not Correct</option>
+                                </select>
+                                <?php } else { ?>
+                                    {{ is_null($financial_report_array['check_party_percentage']) ? 'Select' : ($financial_report_array['check_party_percentage'] == 0 ? 'Not Attached'
+                                : ($financial_report_array['check_party_percentage'] == 1 ? 'Attached' : ($financial_report_array['check_party_percentage'] == 2 ? 'Not Correct' : 'Select' ))) }}</strong><br>
+                         <?php } ?>
+                        </td>
+                        <td style="background-color: @if($submitted == '1') transparent; @else #FFC7CE; @endif;">
+                            <?php if ($positionid == 6 || $positionid == 25) {?>
+                                <select id="check_party_percentage" name="check_party_percentage" class="form-control select2" style="width: 100px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
+                                <option value="" {{ is_null($financial_report_array->check_party_percentage) ? 'selected' : '' }} disabled>Select</option>
+                                <option value="0" {{$financial_report_array->check_party_percentage === 0 ? 'selected' : ''}}>Not Attached</option>
+                                <option value="1" {{$financial_report_array->check_party_percentage == 1 ? 'selected' : ''}}>Attached</option>
+                                <option value="2" {{$financial_report_array->check_party_percentage === 2 ? 'selected' : ''}}>Not Correct</option>
+                                </select>
+                                <?php } else { ?>
+                                    {{ is_null($financial_report_array['check_party_percentage']) ? 'Select' : ($financial_report_array['check_party_percentage'] == 0 ? 'Not Attached'
+                                : ($financial_report_array['check_party_percentage'] == 1 ? 'Attached' : ($financial_report_array['check_party_percentage'] == 2 ? 'Not Correct' : 'Select' ))) }}</strong><br>
+                         <?php } ?>
+                        </td>
+                        <td style="background-color: @if($submitted == '1') transparent; @else #FFC7CE; @endif;">
+                            <?php if ($positionid == 6 || $positionid == 25) {?>
+                                <select id="check_party_percentage" name="check_party_percentage" class="form-control select2" style="width: 100px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
+                                <option value="" {{ is_null($financial_report_array->check_party_percentage) ? 'selected' : '' }} disabled>Select</option>
+                                <option value="0" {{$financial_report_array->check_party_percentage === 0 ? 'selected' : ''}}>Not Attached</option>
+                                <option value="1" {{$financial_report_array->check_party_percentage == 1 ? 'selected' : ''}}>Attached</option>
+                                <option value="2" {{$financial_report_array->check_party_percentage === 2 ? 'selected' : ''}}>Not Correct</option>
+                                </select>
+                                <?php } else { ?>
+                                    {{ is_null($financial_report_array['check_party_percentage']) ? 'Select' : ($financial_report_array['check_party_percentage'] == 0 ? 'Not Attached'
+                                : ($financial_report_array['check_party_percentage'] == 1 ? 'Attached' : ($financial_report_array['check_party_percentage'] == 2 ? 'Not Correct' : 'Select' ))) }}</strong><br>
+                         <?php } ?>
+                            </td>
+                            <td style="background-color: {{ $financial_report_array['check_minimum_service_project'] == 0 ? '#FFC7CE' : ($financial_report_array['check_minimum_service_project'] == 1 ? '#FFEB9C' : '#FFFFFF') }}">
+                                {{ is_null($financial_report_array['check_minimum_service_project']) ? 'Please Review'
+                                                : ( $financial_report_array ['check_minimum_service_project'] == 0 ? 'NO' : ($financial_report_array ['check_minimum_service_project'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
+                        </td>
+                        <td style="background-color: {{ $financial_report_array['check_party_percentage'] == 0 ? '#FFC7CE' : ($financial_report_array['check_party_percentage'] == 1 ? '#FFEB9C' : '#FFFFFF') }}">
+                            {{ is_null($financial_report_array['check_party_percentage']) ? 'Please Review' : ($financial_report_array['check_party_percentage'] == 0 ? 'They are over 20%'
+                                : ($financial_report_array['check_party_percentage'] == 1 ? 'They are between 15-20%' : ($financial_report_array['check_party_percentage'] == 2 ? 'They are under 15%' : 'Please Review' ))) }}</strong><br>
+                    </td>
+                        <td style="background-color: @if($submitted == '1') transparent; @else #FFC7CE; @endif;">
+                            <select id="check_party_percentage" name="check_party_percentage" class="form-control select2" style="width: 100px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
+                                <option value="" {{ is_null($financial_report_array->check_party_percentage) ? 'selected' : '' }} disabled>Select</option>
+                                <option value="1" {{$financial_report_array->check_party_percentage == 1 ? 'selected' : ''}}>Yes</option>
+                            </select>
+                        </td>
+                        <td style="background-color: @if($submitted == '1') transparent; @else #FFC7CE; @endif;">
+                            <select id="check_party_percentage" name="check_party_percentage" class="form-control select2" style="width: 100px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
+                                <option value="" {{ is_null($financial_report_array->check_party_percentage) ? 'selected' : '' }} disabled>Select</option>
+                                <option value="1" {{$financial_report_array->check_party_percentage == 1 ? 'selected' : ''}}>Yes</option>
+                                <option value="2" {{$financial_report_array->check_party_percentage == 2 ? 'selected' : ''}}>N/A</option>
+                            </select>
+                      </td>
+                      <td style="background-color: @if($submitted == '1') transparent; @else #FFC7CE; @endif;">
+                        <select id="check_party_percentage" name="check_party_percentage" class="form-control select2" style="width: 100px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
+                            <option value="" {{ is_null($financial_report_array->check_party_percentage) ? 'selected' : '' }} disabled>Select</option>
+                            <option value="1" {{$financial_report_array->check_party_percentage == 1 ? 'selected' : ''}}>Yes</option>
+                            <option value="2" {{$financial_report_array->check_party_percentage == 2 ? 'selected' : ''}}>N/A</option>
+                        </select>
+                      </td>
+                        <td style="background-color: @if($submitted == '1') transparent; @else #FFC7CE; @endif;">
+                            <select id="check_party_percentage" name="check_party_percentage" class="form-control select2" style="width: 100px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
+                                <option value="" {{ is_null($financial_report_array->check_party_percentage) ? 'selected' : '' }} disabled>Select</option>
+                                <option value="1" {{$financial_report_array->check_party_percentage == 1 ? 'selected' : ''}}>Yes</option>
+                                <option value="2" {{$financial_report_array->check_party_percentage == 2 ? 'selected' : ''}}>N/A</option>
+                            </select>
+                        </td>
+                        <td style="background-color: @if($submitted == '1') transparent; @else #FFC7CE; @endif;">
+                            <select id="check_party_percentage" name="check_party_percentage" class="form-control select2" style="width: 100px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
+                                <option value="" {{ is_null($financial_report_array->check_party_percentage) ? 'selected' : '' }} disabled>Select</option>
+                                <option value="1" {{$financial_report_array->check_party_percentage == 1 ? 'selected' : ''}}>Sent</option>
+                                </select>
+                        </td>
+                        <td style="background-color: @if($submitted == '1') transparent; @else #FFC7CE; @endif;">
+                            <select id="check_party_percentage" name="check_party_percentage" class="form-control select2" style="width: 100px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
+                                <option value="" {{ is_null($financial_report_array->check_party_percentage) ? 'selected' : '' }} disabled>Select</option>
+                                <option value="1" {{$financial_report_array->check_party_percentage == 1 ? 'selected' : ''}}>Complete</option>
+                                </select>
+                        </td>
+                   </tr>
+                    </tbody>
+                    <a href="#" id="save-btn"><i class="fa fa-save"></i> Save Status Changes</a>
+                  </table>
+                </div> --}}
+
+
             <div class="accordion js-accordion">
 				<!------Start Step 1 ------>
 				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] <='1') echo "active";?>">
@@ -2393,7 +2522,7 @@
 
 			<!------Start Step 12 ------>
 				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='12') echo "active";?>">
-					<div class="accordion-header js-accordion-header">FINAL REVIEW</div>
+					<div class="accordion-header js-accordion-header">REVIEW SUMMARY</div>
 					<div class="accordion-body js-accordion-body">
 						<section>
                             <div class="col-md-12">

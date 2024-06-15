@@ -1513,6 +1513,11 @@ class BoardController extends Controller
      */
     public function storeFinancialReport(Request $request, $chapter_id): RedirectResponse
     {
+
+        if (!$chapter_id) {
+            return redirect()->route('login')->with('error', 'Your session has expired. Please log in again.');
+        }
+
         $borDetails = User::find($request->user()->id)->BoardDetails;
      //   $isActive = $borDetails['is_active'];
 

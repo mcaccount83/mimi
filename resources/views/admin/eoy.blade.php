@@ -63,8 +63,8 @@
         <div class="col-md-10">
 
         <p><strong>Complete in April/May to prepare for testing and going live with Annual Reports.</strong><br>
-            Board Election Report will automatically be available for Chapters on <strong>May 1st</strong> & Report is activated below.<br>
-                Financial Reports will automatically be available for Chapters on <strong>June 1st</strong> & Report is activated below.</p>
+            Board Election Report will automatically be available for Chapters on <strong>May 1st</strong> when Report is activated below.<br>
+                Financial Reports will automatically be available for Chapters on <strong>June 1st</strong> when Report is activated below.</p>
                 <br>
         </div>
     </div>

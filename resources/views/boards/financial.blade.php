@@ -44,6 +44,7 @@
         <div class="col-md-12">
             <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board.storefinancial", ["id" => Session::get("chapterid")]) }}' novalidate>
             @csrf
+            <input type="hidden" name="id" value="{{ Session::get('chapterid') }}">
             <input type="hidden" name="ch_name" value="<?php echo $chapterDetails[0]->chapter_name; ?>" />
             <input type="hidden" name="ch_state" value="<?php echo $chapterDetails[0]->state; ?>" />
             <input type="hidden" name="ch_pcid" value="<?php echo $chapterDetails[0]->pcid; ?>" />
