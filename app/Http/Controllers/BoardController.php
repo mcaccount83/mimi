@@ -1515,7 +1515,8 @@ class BoardController extends Controller
     {
 
         if (!$chapter_id) {
-            return redirect()->route('login')->with('error', 'Your session has expired. Please log in again.');
+            return redirect()->to('/login')->with('error', 'Your session has expired, Please log in again');
+
         }
 
         $borDetails = User::find($request->user()->id)->BoardDetails;
