@@ -14,7 +14,7 @@
         "dcblogdev/laravel-sent-emails": "^2.0",
         "google/apiclient": "^2.15",
         "guzzlehttp/guzzle": "^7.8",
-        "laravel/framework": "^11.10",
+        "laravel/framework": "^11.11",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "laravel/ui": "^4.5",
@@ -58,7 +58,8 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi",
             "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
-            "@php artisan migrate --graceful --ansi"        ]
+            "@php artisan migrate --graceful --ansi"
+        ]
     },
     "extra": {
         "laravel": {
