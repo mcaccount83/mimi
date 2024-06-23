@@ -668,7 +668,7 @@
                     <table width="75%" style="border-collapse: collapse;">
                         <thead>
                             <tr style="border-bottom: 1px solid #333;">
-                                <td>Paty/Member Benefit Description</td>
+                                <td>Party/Member Benefit Description</td>
                                 <td>Benefit Income</td>
                                 <td>Benefit Expenses</td>
                             </tr>
