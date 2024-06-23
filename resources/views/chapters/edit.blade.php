@@ -1192,73 +1192,37 @@ handleVacantCheckbox("TreasVacant", "treas-field");
 
 
     function resetPassword(userid){
-        // var new_password="";
-        //         new_password = prompt("Please enter new password for this board member.", "TempPass4You");
-        //         if (new_password != null && userid !='') {
-        //             //Verify the password entered is of an allowable size
-        //             if(new_password.length < 7){
-        //                 alert("Password must be at least 7 characters.  The password has not been reset.");
-        //                 return false;
-        //             }
-        //             else{
-        //        $.ajax({
-        //           url: '/chapter/resetpswd',
-        //           type: "POST",
-        //           data: { pswd:new_password,user_id:userid, _token: '{{csrf_token()}}' },
-        //           success: function(result) {
-        //               alert('Password has been reset successfully');
-
-        //           },
-        //           error: function (jqXHR, exception) {
-
-        //           }
-        //       });
-
-        //         return true;
-        //             }
-        //         }
-        //         else{
-        //   //alert('Not Allowed');
-        //   return false;
-        // }
-
-        //     }
-
-
-        var new_password = prompt("Please enter new password for this board member.", "TempPass4You");
-        if (new_password != null && userid != '') {
-            // Verify the password entered is of an allowable size
-            if (new_password.length < 7) {
-                alert("Password must be at least 7 characters. The password has not been reset.");
-                return false;
-            } else {
-                $.ajax({
-                    url: '{{ route('chapter.resetpswd') }}',
-                    type: "POST",
-                    data: {
-                        pswd: new_password,
-                        user_id: userid,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(result) {
-                        alert(result.message);
-                    },
-                    error: function(jqXHR, exception) {
-                        if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
-                            alert(jqXHR.responseJSON.error);
-                        } else {
-                            alert('An error occurred while resetting the password.');
-                        }
+        var new_password="";
+                new_password = prompt("Please enter new password for this board member.", "TempPass4You");
+                if (new_password != null && userid !='') {
+                    //Verify the password entered is of an allowable size
+                    if(new_password.length < 7){
+                        alert("Password must be at least 7 characters.  The password has not been reset.");
+                        return false;
                     }
-                });
+                    else{
+               $.ajax({
+                  url: '/chapter/resetpswd',
+                  type: "POST",
+                  data: { pswd:new_password,user_id:userid, _token: '{{csrf_token()}}' },
+                  success: function(result) {
+                      alert('Password has been reset successfully');
+
+                  },
+                  error: function (jqXHR, exception) {
+
+                  }
+              });
+
                 return true;
-            }
-        } else {
-            return false;
+                    }
+                }
+                else{
+          //alert('Not Allowed');
+          return false;
         }
-    }
 
-
+            }
 
 function UpdateEIN(){
                 var ein=document.getElementById("ch_ein").value;

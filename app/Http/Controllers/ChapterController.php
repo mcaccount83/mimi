@@ -32,8 +32,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use Symfony\Component\Mime\Email;
-use Illuminate\Support\Facades\Validator;
-
 
 class ChapterController extends Controller
 {
@@ -2993,48 +2991,15 @@ class ChapterController extends Controller
      * Reset Password
      */
     public function updateChapterResetPassword(Request $request)
-    // {
-    //     $input = $request->all();
-    //     $pswd = $input['pswd'];
-    //     $userId = $input['user_id'];
-    //     $newPswd = Hash::make($pswd);
-    //     DB::table('users')
-    //         ->where('id', $userId)
-    //         ->update(['password' => $newPswd]);
-
-    // }
-
     {
-        $validator = Validator::make($request->all(), [
-            'pswd' => 'required|string|min:7',
-            'user_id' => 'required|exists:users,id',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()->first()], 400);
-        }
-
-        $pswd = $request->input('pswd');
-        $userId = $request->input('user_id');
+        $input = $request->all();
+        $pswd = $input['pswd'];
+        $userId = $input['user_id'];
         $newPswd = Hash::make($pswd);
+        DB::table('users')
+            ->where('id', $userId)
+            ->update(['password' => $newPswd]);
 
-        try {
-            DB::transaction(function () use ($userId, $newPswd) {
-                // Update the password and nullify the remember token in the users table
-                DB::table('users')
-                    ->where('id', $userId)
-                    ->update(['password' => $newPswd, 'remember_token' => null]);
-
-                // Update the password in the board_details table
-                DB::table('board_details')
-                    ->where('user_id', $userId)
-                    ->update(['password' => $newPswd]);
-            });
-
-            return response()->json(['message' => 'Password has been reset successfully']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'An error occurred while resetting the password.'], 500);
-        }
     }
 
     /**
