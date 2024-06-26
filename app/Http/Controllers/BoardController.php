@@ -1476,11 +1476,11 @@ class BoardController extends Controller
             // $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
             // $isActive = $borDetails['is_active'];
 
-                $user = $request->user();
-                $borDetails = $user->BoardDetails;
-                $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
-                $isActive = $borDetails['is_active'];
-                $user_type = $user->user_type;
+            $user = $request->user();
+            $borDetails = $user->BoardDetails;
+            $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
+            $isActive = $borDetails['is_active'];
+            $user_type = $user->user_type;
 
             DB::beginTransaction();
 
@@ -1514,13 +1514,13 @@ class BoardController extends Controller
     public function storeFinancialReport(Request $request, $chapter_id): RedirectResponse
     {
 
-        if (!$chapter_id) {
+        if (! $chapter_id) {
             return redirect()->to('/login')->with('error', 'Your session has expired, Please log in again');
 
         }
 
         $borDetails = User::find($request->user()->id)->BoardDetails;
-     //   $isActive = $borDetails['is_active'];
+        //   $isActive = $borDetails['is_active'];
 
         $input = $request->all();
         $chName = $input['ch_name'];
