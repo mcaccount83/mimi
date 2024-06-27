@@ -14,7 +14,7 @@
         "dcblogdev/laravel-sent-emails": "^2.0.5",
         "google/apiclient": "^2.16",
         "guzzlehttp/guzzle": "^7.8",
-        "laravel/framework": "^11.11",
+        "laravel/framework": "^11.13",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "laravel/ui": "^4.5",
