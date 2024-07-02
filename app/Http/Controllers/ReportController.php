@@ -1660,16 +1660,10 @@ class ReportController extends Controller
             ->join('board_details', 'chapters.id', '=', 'board_details.chapter_id')
             ->whereIn('board_details.board_position_id', [1, 2, 3, 4, 5])
             ->where('chapters.conference', $corConfId)
-            ->where(function($query) {
-                $query->where('chapters.new_board_submitted', '=', '0')
-                      ->orWhereNull('chapters.new_board_submitted');
-            })
+            ->where('chapters.new_board_submitted', '=', '0')
             ->where('created_at', '<=', date('Y-06-30'))
             ->where('chapters.is_active', 1)
             ->get();
-
-            // Debugging: Log the chapters retrieved
-    Log::info('Chapters with Board Reports Due: ', $chapters->toArray());
 
         $cc_email = [];
         $chapterEmails = []; // Store email addresses for each chapter
@@ -1758,10 +1752,7 @@ class ReportController extends Controller
             ->join('board_details', 'chapters.id', '=', 'board_details.chapter_id')
             ->whereIn('board_details.board_position_id', [1, 2, 3, 4, 5])
             ->where('chapters.conference', $corConfId)
-            ->where(function($query) {
-                $query->where('chapters.financial_report_received', '=', '0')
-                      ->orWhereNull('chapters.financial_report_received');
-            })
+            ->where('chapters.financial_report_received', '=', '0')
             ->where('created_at', '<=', date('Y-06-30'))
             ->where('chapters.is_active', 1)
             ->get();

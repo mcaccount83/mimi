@@ -245,15 +245,25 @@
                                 <table>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;</td>
-                                        <td>990N IRS Website Link to File</td>
+                                        <td><a href="https://www.irs.gov/charities-non-profits/annual-electronic-filing-requirement-for-small-exempt-organizations-form-990-n-e-postcard">990N IRS Website Link to File</a></td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;</td>
-                                        <td>990N Filing Instructions</td>
+                                        @foreach($resources as $resourceItem)
+                                        @if ($resourceItem->name === '990N Filing Instructions')
+                                            <td><a href="{{ $resourceItem->file_path }}" target="_blank">990N Filing Instructions
+                                            </a></td>
+                                        @endif
+                                        @endforeach
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;</td>
-                                        <td>990N Filing FAQs</td>
+                                        @foreach($resources as $resourceItem)
+                                        @if ($resourceItem->name === '990N Filing FAQs')
+                                            <td><a href="{{ $resourceItem->file_path }}" target="_blank">990N Filing FAQs
+                                            </a></td>
+                                        @endif
+                                        @endforeach
                                     </tr>
                                 </table>
                                 @endif
