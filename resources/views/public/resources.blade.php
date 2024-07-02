@@ -234,6 +234,14 @@
                                 <table>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;</td>
+                                        <td><span class="text-danger">990N Filing Instructions will be available on July 1st. Since chapter cannot file until then, we are also unable to verify that instructions/screenshots have not changed since last year until that date, so please bear with us until we get them updated and posted.</span><br></td>
+                                    </tr>
+                                </table>
+                                @endif
+                                @if($thisDate->month >= 7 && $thisDate->month <= 12)
+                                <table>
+                                    <tr>
+                                        <td>&nbsp;&nbsp;&nbsp;</td>
                                         <td><a href="https://www.irs.gov/charities-non-profits/annual-electronic-filing-requirement-for-small-exempt-organizations-form-990-n-e-postcard" target="_blank">990N IRS Website Link to File</a></td>
                                     </tr>
                                     <tr>
