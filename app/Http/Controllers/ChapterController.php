@@ -30,10 +30,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Symfony\Component\Mime\Email;
-use Illuminate\Support\Facades\Validator;
-
 
 class ChapterController extends Controller
 {
@@ -3003,7 +3002,6 @@ class ChapterController extends Controller
     //         ->update(['password' => $newPswd]);
 
     // }
-
     {
         $validator = Validator::make($request->all(), [
             'pswd' => 'required|string|min:7',

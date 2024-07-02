@@ -18,5 +18,3 @@ class HandlePageExpired
         return $response;
     }
 }
-
-
