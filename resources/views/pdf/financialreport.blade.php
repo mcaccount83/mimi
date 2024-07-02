@@ -843,7 +843,7 @@
                 <td>If you had speakers, check any of the topics that were covered:</td></tr>
                 <tr><td></td>
                     <td><strong>
-                        @php
+                        {{-- @php
                             $meetingSpeakersArray = json_decode($pdfData['meeting_speakers_array']);
                             $meetingSpeakersMapping = [
                                 '0' => 'N/A',
@@ -862,7 +862,7 @@
                             }, $meetingSpeakersArray)) }}
                         @else
                             N/A
-                        @endif
+                        @endif --}}
                     </strong></td></tr>
             <tr><td>15.</td>
                 <td>Did you have any discussion topics at your meetings? If yes, how often?</td></tr>
@@ -878,7 +878,7 @@
                 <td>Did your chapter have any of the following activity groups?</td></tr>
                 <tr><td></td>
                 <td><strong>
-                    @php
+                    {{-- @php
                         $activityArray = json_decode($pdfData['activity_array']);
                         $activityMapping = [
                             '0' => 'N/A',
@@ -897,7 +897,7 @@
                         }, $activityArray)) }}
                     @else
                         N/A
-                    @endif
+                    @endif --}}
                 </strong></td></tr>
             <tr><td>18.</td>
                 <td>Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity?</td></tr>
