@@ -32,7 +32,7 @@
                         <h2 class="moms-c"> MOMS Club of {{ $chapterDetails[0]->chapter_name }}, {{$chapterDetails[0]->state}}</h2>
                         <h2 class="moms-c"> <?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</h2>
                         <h4><center><?php if(!$chapterDetails[0]->financial_report_received) echo "<br>Please complete the report below with finanacial information about your chapter.<br>
-                            Reports are due by July 10th."; ?></center></h4>
+                            Reports are due by July 15th."; ?></center></h4>
                         <h4><center><?php if($chapterDetails[0]->financial_report_received) echo "<br><font color=\"red\">Your chapter's Financial Report has been Submitted!<br>
                             Please save a copy of the PDF for your records.</font>"; ?></center></h4>
                     </div>
@@ -3712,23 +3712,29 @@ $(document).ready(function(){
         });
     }
 
-    function DeleteChildrenExpenseRow(){
+    function DeleteChildrenExpenseRow() {
         var ExpenseCount = document.getElementById("ChildrensExpenseRowCount").value;
 
-        //clear the values to make sure they aren't error conditions
-        var table=document.getElementById("childrens-room");
+        // Check if there's more than one row before deleting
+        if (ExpenseCount > 1) {
+            var table = document.getElementById("childrens-room");
+            var row = table.rows[ExpenseCount - 1]; // Get the correct row to delete
 
-        var row = table.rows[ExpenseCount];
-        row.cells[1].children[0].children[0].children[1].value=0;
-        row.cells[2].children[0].children[0].children[1].value=0;
+            // Clear values (adjust based on your HTML structure)
+            row.cells[1].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
+            row.cells[2].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
 
-        document.getElementById("childrens-room").deleteRow(ExpenseCount);
+            table.deleteRow(ExpenseCount - 1);            // Delete the row
+            ExpenseCount--;            // Update the expense count
+            ChangeChildrensRoomExpenses();            // Update any other necessary logic
+            ReCalculateSummaryTotal(); // Example: Recalculate summary totals if needed
+            document.getElementById('ChildrensExpenseRowCount').value = ExpenseCount;            // Update the hidden field storing row count
 
-        ExpenseCount--; //We removed a row so lower this
-
-        ChangeChildrensRoomExpenses();
-        ReCalculateSummaryTotal();
-        document.getElementById('ChildrensExpenseRowCount').value = ExpenseCount;
+            // Disable the "Remove Row" button if only one row left
+            if (ExpenseCount === 1) {
+                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
+            }
+        }
     }
 
     function ChangeServiceProjectExpenses(){
@@ -3805,24 +3811,28 @@ $(document).ready(function(){
         });
     }
 
-    function DeleteServiceProjectRow(){
+    function DeleteServiceProjectRow() {
         var ExpenseCount = document.getElementById("ServiceProjectRowCount").value;
-        if(ExpenseCount>1){
-        //clear the values to make sure they aren't error conditions
-        var table=document.getElementById("service-projects");
 
-        var row = table.rows[ExpenseCount];
-        row.cells[1].children[0].children[0].children[1].value=0;
-        row.cells[2].children[0].children[0].children[1].value=0;
-        row.cells[3].children[0].children[0].children[1].value=0;
-        row.cells[4].children[0].children[0].children[1].value=0;
+        // Check if there's more than one row before deleting
+        if (ExpenseCount > 1) {
+            var table = document.getElementById("service-projects");
+            var row = table.rows[ExpenseCount - 1]; // Get the correct row to delete
 
-        document.getElementById("service-projects").deleteRow(ExpenseCount);
+            // Clear values (adjust based on your HTML structure)
+            row.cells[1].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
+            row.cells[2].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
+            row.cells[3].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
+            row.cells[4].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
 
-        ExpenseCount--; //We removed a row so lower this
-        ChangeServiceProjectExpenses();
-
-        document.getElementById('ServiceProjectRowCount').value = ExpenseCount;
+            table.deleteRow(ExpenseCount - 1);        // Delete the row
+            ExpenseCount--;        // Update the expense count
+            ChangeServiceProjectExpenses();        // Update any other necessary logic
+            document.getElementById('ServiceProjectRowCount').value = ExpenseCount;        // Update the hidden field storing row count
+            // Disable the "Remove Row" button if only one row left
+            if (ExpenseCount === 1) {
+                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
+            }
         }
     }
 
@@ -3879,22 +3889,28 @@ $(document).ready(function(){
         });
     }
 
-    function DeletePartyExpenseRow(){
+    function DeletePartyExpenseRow() {
         var ExpenseCount = document.getElementById("PartyExpenseRowCount").value;
 
-        //clear the values to make sure they aren't error conditions
-        var table=document.getElementById("party-expenses");
+        // Check if there's more than one row before deleting
+        if (ExpenseCount > 1) {
+            var table = document.getElementById("party-expenses");
+            var row = table.rows[ExpenseCount - 1]; // Get the correct row to delete
 
-        var row = table.rows[ExpenseCount];
-        row.cells[1].children[0].children[0].children[1].value=0;
-        row.cells[2].children[0].children[0].children[1].value=0;
+            // Clear values (adjust based on your HTML structure)
+            row.cells[1].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
+            row.cells[2].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
 
-        document.getElementById("party-expenses").deleteRow(ExpenseCount);
+            table.deleteRow(ExpenseCount - 1);        // Delete the row
+            ExpenseCount--;        // Update the expense count
+            ChangePartyExpenses();        // Update any other necessary logic
+            document.getElementById('PartyExpenseRowCount').value = ExpenseCount;        // Update the hidden field storing row count
 
-        ExpenseCount--; //We removed a row so lower this
-        ChangePartyExpenses();
-
-        document.getElementById('PartyExpenseRowCount').value = ExpenseCount;
+            // Disable the "Remove Row" button if only one row left
+            if (ExpenseCount === 1) {
+                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
+            }
+        }
     }
 
     function ChangeOfficeExpenses(){
@@ -3954,23 +3970,29 @@ $(document).ready(function(){
         });
     }
 
-    function DeleteOfficeExpenseRow(){
+    function DeleteOfficeExpenseRow() {
         var ExpenseCount = document.getElementById("OfficeExpenseRowCount").value;
 
-        //clear the values to make sure they aren't error conditions
-        var table=document.getElementById("office-expenses");
+        // Check if there's more than one row before deleting
+        if (ExpenseCount > 1) {
+            var table = document.getElementById("office-expenses");
+            var row = table.rows[ExpenseCount - 1]; // Get the correct row to delete
 
-        var row = table.rows[ExpenseCount];
-        row.cells[1].children[0].children[0].children[1].value=0;
+            // Clear values (adjust based on your HTML structure)
+            row.cells[1].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
 
-        document.getElementById("office-expenses").deleteRow(ExpenseCount);
+            table.deleteRow(ExpenseCount - 1);        // Delete the row
+            ExpenseCount--;        // Update the expense count
+            ChangeOfficeExpenses();        // Update any other necessary logic
+            document.getElementById('OfficeExpenseRowCount').value = ExpenseCount;        // Update the hidden field storing row count
 
-        ExpenseCount--; //We removed a row so lower this
-        ChangeOfficeExpenses();
 
-        document.getElementById('OfficeExpenseRowCount').value = ExpenseCount;
+            // Disable the "Remove Row" button if only one row left
+            if (ExpenseCount === 1) {
+                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
+            }
+        }
     }
-
 
     function ChangeDonationAmount(){
         var IncomeTotal=0;
@@ -4018,21 +4040,27 @@ $(document).ready(function(){
         });
     }
 
-    function DeleteMonDonationRow(){
+    function DeleteMonDonationRow() {
         var ExpenseCount = document.getElementById("MonDonationRowCount").value;
 
-        //clear the values to make sure they aren't error conditions
-        var table=document.getElementById("donation-income");
+        // Check if there's more than one row before deleting
+        if (ExpenseCount > 1) {
+            var table = document.getElementById("donation-income");
+            var row = table.rows[ExpenseCount - 1]; // Get the correct row to delete
 
-        var row = table.rows[ExpenseCount];
-        row.cells[3].children[0].children[0].children[1].value=0;
+            // Clear values (adjust based on your HTML structure)
+            row.cells[3].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
 
-        document.getElementById("donation-income").deleteRow(ExpenseCount);
+            table.deleteRow(ExpenseCount - 1);        // Delete the row
+            ExpenseCount--;        // Update the expense count
+            ChangeDonationAmount();        // Update any other necessary logic
+            document.getElementById('MonDonationRowCount').value = ExpenseCount;        // Update the hidden field storing row count
 
-        ExpenseCount--; //We removed a row so lower this
-        ChangeDonationAmount();
-
-        document.getElementById('MonDonationRowCount').value = ExpenseCount;
+            // Disable the "Remove Row" button if only one row left
+            if (ExpenseCount === 1) {
+                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
+            }
+        }
     }
 
     function AddNonMonDonationRow(){
@@ -4054,13 +4082,21 @@ $(document).ready(function(){
         document.getElementById('NonMonDonationRowCount').value = ExpenseCount;
     }
 
-    function DeleteNonMonDonationRow(){
+    function DeleteNonMonDonationRow() {
         var ExpenseCount = document.getElementById("NonMonDonationRowCount").value;
-        document.getElementById("donation-goods").deleteRow(ExpenseCount);
 
-        ExpenseCount--; //We removed a row so lower this
+        // Check if there's more than one row before deleting
+        if (ExpenseCount > 1) {
+            // Delete the row
+            document.getElementById("donation-goods").deleteRow(ExpenseCount - 1);
+            ExpenseCount--;        // Update the expense count
+            document.getElementById('NonMonDonationRowCount').value = ExpenseCount;        // Update the hidden field storing row count
 
-        document.getElementById('NonMonDonationRowCount').value = ExpenseCount;
+            //Disable the "Remove Row" button if only one row left
+            if (ExpenseCount === 1) {
+                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
+            }
+        }
     }
 
     function ChangeOtherOfficeExpenses(){
@@ -4114,22 +4150,27 @@ $(document).ready(function(){
 
     }
 
-    function DeleteInternationalEventRow(){
+    function DeleteInternationalEventRow() {
         var ExpenseCount = document.getElementById("InternationalEventRowCount").value;
 
-        //clear the values to make sure they aren't error conditions
-        var table=document.getElementById("international_events");
+        // Check if there's more than one row before deleting
+        if (ExpenseCount > 1) {
+            // Clear values (assuming your structure is as described)
+            var table = document.getElementById("international_events");
+            var row = table.rows[ExpenseCount - 1]; // Subtract 1 to get the correct row index
+            row.cells[1].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
+            row.cells[2].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
 
-        var row = table.rows[ExpenseCount];
-        row.cells[1].children[0].children[0].children[1].value=0;
-        row.cells[2].children[0].children[0].children[1].value=0;
+            table.deleteRow(ExpenseCount - 1);  // Delete the row
+            ExpenseCount--;  // Update the expense count
+            ChangeDonationAmount();  // Update any other necessary logic (like recalculating totals)
+            document.getElementById('InternationalEventRowCount').value = ExpenseCount;  // Update the hidden field storing row count
 
-        document.getElementById("international_events").deleteRow(ExpenseCount);
-
-        ExpenseCount--; //We removed a row so lower this
-        ChangeDonationAmount();
-
-        document.getElementById('InternationalEventRowCount').value = ExpenseCount;
+            // Disable the "Remove Row" button if only one row left
+            if (ExpenseCount === 1) {
+                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
+            }
+        }
     }
 
     function AddInternationalEventRow(){
@@ -4270,23 +4311,26 @@ $(document).ready(function(){
         });
     }
 
-    function DeleteOtherOfficeExpenseRow(){
+    function DeleteOtherOfficeExpenseRow() {
         var ExpenseCount = document.getElementById("OtherOfficeExpenseRowCount").value;
-        if(ExpenseCount>1){
 
-            //clear the values to make sure they aren't error conditions
-            var table=document.getElementById("other-office-expenses");
+        if (ExpenseCount > 1) {
+            var table = document.getElementById("other-office-expenses");
+            var row = table.rows[ExpenseCount - 1]; // Get the correct row to delete
 
-            var row = table.rows[ExpenseCount];
-            row.cells[1].children[0].children[0].children[1].value=0;
-            row.cells[2].children[0].children[0].children[1].value=0;
+            // Clear values (adjust based on your HTML structure)
+            row.cells[1].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
+            row.cells[2].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
 
-            document.getElementById("other-office-expenses").deleteRow(ExpenseCount);
+            table.deleteRow(ExpenseCount - 1);  // Delete the row
+            ExpenseCount--;  // Update the expense count
+            ChangeOtherOfficeExpenses();  // Update any other necessary logic
+            document.getElementById('OtherOfficeExpenseRowCount').value = ExpenseCount;  // Update the hidden field storing row count
 
-            ExpenseCount--; //We removed a row so lower this
-            ChangeOtherOfficeExpenses();
-
-            document.getElementById('OtherOfficeExpenseRowCount').value = ExpenseCount;
+            // Disable the "Remove Row" button if only one row left
+            if (ExpenseCount === 1) {
+                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
+            }
         }
     }
 
@@ -4365,23 +4409,28 @@ $(document).ready(function(){
         });
     }
 
-    function DeleteBankRecRow(){
-        var ExpenseCount = document.getElementById("BankRecRowCount").value;
+    function DeleteBankRecRow() {
+    var ExpenseCount = document.getElementById("BankRecRowCount").value;
 
-        //clear the values to make sure they aren't error conditions
-        var table=document.getElementById("bank-rec");
+    if (ExpenseCount > 1) {
+        var table = document.getElementById("bank-rec");
+        var row = table.rows[ExpenseCount - 1]; // Get the correct row to delete
 
-        var row = table.rows[ExpenseCount];
-        row.cells[3].children[0].children[0].children[1].value=0;
-        row.cells[4].children[0].children[0].children[1].value=0;
+        // Clear values (adjust based on your HTML structure)
+        row.cells[3].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
+        row.cells[4].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
 
-        document.getElementById("bank-rec").deleteRow(ExpenseCount);
+        table.deleteRow(ExpenseCount - 1);        // Delete the row
+        ExpenseCount--;        // Update the expense count
+        ChangeBankRec();        // Update any other necessary logic
+        document.getElementById('BankRecRowCount').value = ExpenseCount;        // Update the hidden field storing row count
 
-        ExpenseCount--; //We removed a row so lower this
-        ChangeBankRec();
-
-        document.getElementById('BankRecRowCount').value = ExpenseCount;
+        // Disable the "Remove Row" button if only one row left
+        if (ExpenseCount === 1) {
+            document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
+        }
     }
+}
 
 // Sectiom 9 Questions - Explainations Rquired.
     function ToggleReceiveCompensationExplanation(){
