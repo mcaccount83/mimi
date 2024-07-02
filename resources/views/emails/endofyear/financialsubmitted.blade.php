@@ -2,7 +2,7 @@
 # Financial Report Check-In Notification
 
 {{ $mailData['chapter_name'] }}, {{ $mailData['chapter_state'] }} has submitted their Financial Report. It is ready to be reviewed. The Financial Report PDF is attached and other
-documnets that can be downloaded are listed below.<br>
+documents that can be downloaded are listed below.<br>
 <br>
 Submitted by: {{$mailData['completed_name']}}, <a href="mailto:{{$mailData['completed_email']}}">{{$mailData['completed_email']}}</a><br>
 <br>

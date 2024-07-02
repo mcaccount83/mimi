@@ -245,7 +245,7 @@
                                 <table>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;</td>
-                                        <td><a href="https://www.irs.gov/charities-non-profits/annual-electronic-filing-requirement-for-small-exempt-organizations-form-990-n-e-postcard">990N IRS Website Link to File</a></td>
+                                        <td><a href="https://www.irs.gov/charities-non-profits/annual-electronic-filing-requirement-for-small-exempt-organizations-form-990-n-e-postcard" target="_blank">990N IRS Website Link to File</a></td>
                                     </tr>
                                     <tr>
                                         <td>&nbsp;&nbsp;&nbsp;</td>

@@ -1569,9 +1569,9 @@ class BoardController extends Controller
         $ChildrenRoomArray = null;
         $FieldCount = $input['ChildrensExpenseRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
-            $ChildrenRoomArray[$i]['childrens_room_desc'] = $input['ChildrensRoomDesc'.$i];
-            $ChildrenRoomArray[$i]['childrens_room_supplies'] = $input['ChildrensRoomSupplies'.$i];
-            $ChildrenRoomArray[$i]['childrens_room_other'] = $input['ChildrensRoomOther'.$i];
+            $ChildrenRoomArray[$i]['childrens_room_desc'] = $input['ChildrensRoomDesc'.$i] ?? null;
+            $ChildrenRoomArray[$i]['childrens_room_supplies'] = $input['ChildrensRoomSupplies'.$i] ?? null;
+            $ChildrenRoomArray[$i]['childrens_room_other'] = $input['ChildrensRoomOther'.$i] ?? null;
         }
         $childrens_room_expenses = base64_encode(serialize($ChildrenRoomArray));
 
@@ -1579,11 +1579,11 @@ class BoardController extends Controller
         $ServiceProjectFields = null;
         $FieldCount = $input['ServiceProjectRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
-            $ServiceProjectFields[$i]['service_project_desc'] = $input['ServiceProjectDesc'.$i];
-            $ServiceProjectFields[$i]['service_project_income'] = $input['ServiceProjectIncome'.$i];
-            $ServiceProjectFields[$i]['service_project_supplies'] = $input['ServiceProjectSupplies'.$i];
-            $ServiceProjectFields[$i]['service_project_charity'] = $input['ServiceProjectDonatedCharity'.$i];
-            $ServiceProjectFields[$i]['service_project_m2m'] = $input['ServiceProjectDonatedM2M'.$i];
+            $ServiceProjectFields[$i]['service_project_desc'] = $input['ServiceProjectDesc'.$i] ?? null;
+            $ServiceProjectFields[$i]['service_project_income'] = $input['ServiceProjectIncome'.$i] ?? null;
+            $ServiceProjectFields[$i]['service_project_supplies'] = $input['ServiceProjectSupplies'.$i] ?? null;
+            $ServiceProjectFields[$i]['service_project_charity'] = $input['ServiceProjectDonatedCharity'.$i] ?? null;
+            $ServiceProjectFields[$i]['service_project_m2m'] = $input['ServiceProjectDonatedM2M'.$i] ?? null;
         }
         $service_project_array = base64_encode(serialize($ServiceProjectFields));
 
@@ -1591,9 +1591,9 @@ class BoardController extends Controller
         $PartyExpenseFields = null;
         $FieldCount = $input['PartyExpenseRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
-            $PartyExpenseFields[$i]['party_expense_desc'] = $input['PartyDesc'.$i];
-            $PartyExpenseFields[$i]['party_expense_income'] = $input['PartyIncome'.$i];
-            $PartyExpenseFields[$i]['party_expense_expenses'] = $input['PartyExpenses'.$i];
+            $PartyExpenseFields[$i]['party_expense_desc'] = $input['PartyDesc'.$i] ?? null;
+            $PartyExpenseFields[$i]['party_expense_income'] = $input['PartyIncome'.$i] ?? null;
+            $PartyExpenseFields[$i]['party_expense_expenses'] = $input['PartyExpenses'.$i] ?? null;
         }
         $party_expense_array = base64_encode(serialize($PartyExpenseFields));
 
@@ -1605,8 +1605,8 @@ class BoardController extends Controller
         $OfficeOtherArray = null;
         $FieldCount = $input['OfficeExpenseRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
-            $OfficeOtherArray[$i]['office_other_desc'] = $input['OfficeDesc'.$i];
-            $OfficeOtherArray[$i]['office_other_expense'] = $input['OfficeExpenses'.$i];
+            $OfficeOtherArray[$i]['office_other_desc'] = $input['OfficeDesc'.$i] ?? null;
+            $OfficeOtherArray[$i]['office_other_expense'] = $input['OfficeExpenses'.$i] ?? null;
         }
 
         $office_other_expenses = base64_encode(serialize($OfficeOtherArray));
@@ -1615,9 +1615,9 @@ class BoardController extends Controller
         $InternationalEventArray = null;
         $FieldCount = $input['InternationalEventRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
-            $InternationalEventArray[$i]['intl_event_desc'] = $input['InternationalEventDesc'.$i];
-            $InternationalEventArray[$i]['intl_event_income'] = $input['InternationalEventIncome'.$i];
-            $InternationalEventArray[$i]['intl_event_expenses'] = $input['InternationalEventExpense'.$i];
+            $InternationalEventArray[$i]['intl_event_desc'] = $input['InternationalEventDesc'.$i] ?? null;
+            $InternationalEventArray[$i]['intl_event_income'] = $input['InternationalEventIncome'.$i] ?? null;
+            $InternationalEventArray[$i]['intl_event_expenses'] = $input['InternationalEventExpense'.$i] ?? null;
         }
         $international_event_array = base64_encode(serialize($InternationalEventArray));
         $annual_registration_fee = $input['AnnualRegistrationFee'];
@@ -1626,19 +1626,19 @@ class BoardController extends Controller
         $MonetaryDonation = null;
         $FieldCount = $input['MonDonationRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
-            $MonetaryDonation[$i]['mon_donation_desc'] = $input['DonationDesc'.$i];
-            $MonetaryDonation[$i]['mon_donation_info'] = $input['DonorInfo'.$i];
-            $MonetaryDonation[$i]['mon_donation_date'] = $input['MonDonationDate'.$i];
-            $MonetaryDonation[$i]['mon_donation_amount'] = $input['DonationAmount'.$i];
+            $MonetaryDonation[$i]['mon_donation_desc'] = $input['DonationDesc'.$i] ?? null;
+            $MonetaryDonation[$i]['mon_donation_info'] = $input['DonorInfo'.$i] ?? null;
+            $MonetaryDonation[$i]['mon_donation_date'] = $input['MonDonationDate'.$i] ?? null;
+            $MonetaryDonation[$i]['mon_donation_amount'] = $input['DonationAmount'.$i] ?? null;
         }
         $monetary_donations_to_chapter = base64_encode(serialize($MonetaryDonation));
 
         $NonMonetaryDonation = null;
         $FieldCount = $input['NonMonDonationRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
-            $NonMonetaryDonation[$i]['nonmon_donation_desc'] = $input['NonMonDonationDesc'.$i];
-            $NonMonetaryDonation[$i]['nonmon_donation_info'] = $input['NonMonDonorInfo'.$i];
-            $NonMonetaryDonation[$i]['nonmon_donation_date'] = $input['NonMonDonationDate'.$i];
+            $NonMonetaryDonation[$i]['nonmon_donation_desc'] = $input['NonMonDonationDesc'.$i] ?? null;
+            $NonMonetaryDonation[$i]['nonmon_donation_info'] = $input['NonMonDonorInfo'.$i] ?? null;
+            $NonMonetaryDonation[$i]['nonmon_donation_date'] = $input['NonMonDonationDate'.$i] ?? null;
         }
         $non_monetary_donations_to_chapter = base64_encode(serialize($NonMonetaryDonation));
 
@@ -1646,9 +1646,9 @@ class BoardController extends Controller
         $OtherOffice = null;
         $FieldCount = $input['OtherOfficeExpenseRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
-            $OtherOffice[$i]['other_desc'] = $input['OtherOfficeDesc'.$i];
-            $OtherOffice[$i]['other_expenses'] = $input['OtherOfficeExpenses'.$i];
-            $OtherOffice[$i]['other_income'] = $input['OtherOfficeIncome'.$i];
+            $OtherOffice[$i]['other_desc'] = $input['OtherOfficeDesc'.$i] ?? null;
+            $OtherOffice[$i]['other_expenses'] = $input['OtherOfficeExpenses'.$i] ?? null;
+            $OtherOffice[$i]['other_income'] = $input['OtherOfficeIncome'.$i] ?? null;
         }
         $other_income_and_expenses_array = base64_encode(serialize($OtherOffice));
 
@@ -1661,11 +1661,11 @@ class BoardController extends Controller
         $FieldCount = $input['BankRecRowCount'];
 
         for ($i = 0; $i < $FieldCount; $i++) {
-            $BankRecArray[$i]['bank_rec_date'] = $input['BankRecDate'.$i];
-            $BankRecArray[$i]['bank_rec_check_no'] = $input['BankRecCheckNo'.$i];
-            $BankRecArray[$i]['bank_rec_desc'] = $input['BankRecDesc'.$i];
-            $BankRecArray[$i]['bank_rec_payment_amount'] = $input['BankRecPaymentAmount'.$i];
-            $BankRecArray[$i]['bank_rec_desposit_amount'] = $input['BankRecDepositAmount'.$i];
+            $BankRecArray[$i]['bank_rec_date'] = $input['BankRecDate'.$i] ?? null;
+            $BankRecArray[$i]['bank_rec_check_no'] = $input['BankRecCheckNo'.$i] ?? null;
+            $BankRecArray[$i]['bank_rec_desc'] = $input['BankRecDesc'.$i] ?? null;
+            $BankRecArray[$i]['bank_rec_payment_amount'] = $input['BankRecPaymentAmount'.$i] ?? null;
+            $BankRecArray[$i]['bank_rec_desposit_amount'] = $input['BankRecDepositAmount'.$i] ?? null;
         }
         $bank_reconciliation_array = base64_encode(serialize($BankRecArray));
 
