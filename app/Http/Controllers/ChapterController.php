@@ -4337,178 +4337,183 @@ class ChapterController extends Controller
      * Activate Board
      */
     public function activateBoard($chapter_id, $lastUpdatedBy)
-    {
-        $message = '';
-        // Fetching New Board Info from Incoming Board Members
-        $incomingBoardDetails = DB::table('incoming_board_member')
-            ->select('*')
-            ->where('chapter_id', '=', $chapter_id)
-            ->orderBy('board_position_id')
-            ->get();
-        $countIncomingBoardDetails = count($incomingBoardDetails);
-        if ($countIncomingBoardDetails > 0) {
-            DB::beginTransaction();
-            try {
-                // Fetching Existing Board Members from Board Details
-                $boardDetails = DB::table('board_details')
-                    ->select('*')
-                    ->where('chapter_id', '=', $chapter_id)
-                    ->get();
-                $countBoardDetails = count($boardDetails);
-                if ($countBoardDetails > 0) {
-                    // Insert Outgoing Board Members
-                    foreach ($boardDetails as $record) {
-                        DB::table('outgoing_board_member')->insert(
-                            [
-                                'first_name' => $record->first_name,
-                                'last_name' => $record->last_name,
-                                'email' => $record->email,
-                                'password' => Hash::make('TempPass4You'),
-                                'remember_token' => '',
-                                'board_position_id' => $record->board_position_id,
-                                'chapter_id' => $chapter_id,
-                                'street_address' => $record->street_address,
-                                'city' => $record->city,
-                                'state' => $record->state,
-                                'zip' => $record->zip,
-                                'country' => $record->country,
-                                'phone' => $record->phone,
-                                'last_updated_by' => $lastUpdatedBy,
-                                'last_updated_date' => now(),
-                                'board_id' => $record->board_id,
-                                'user_id' => $record->user_id,
-                            ]
-                        );
+{
+    $message = '';
+    // Fetching New Board Info from Incoming Board Members
+    $incomingBoardDetails = DB::table('incoming_board_member')
+        ->select('*')
+        ->where('chapter_id', '=', $chapter_id)
+        ->orderBy('board_position_id')
+        ->get();
+    $countIncomingBoardDetails = count($incomingBoardDetails);
+    if ($countIncomingBoardDetails > 0) {
+        DB::beginTransaction();
+        try {
+            // Fetching Existing Board Members from Board Details
+            $boardDetails = DB::table('board_details')
+                ->select('*')
+                ->where('chapter_id', '=', $chapter_id)
+                ->get();
+            $countBoardDetails = count($boardDetails);
+            if ($countBoardDetails > 0) {
+                // Insert Outgoing Board Members
+                foreach ($boardDetails as $record) {
+                    // Fetch existing password
+                    $existingPassword = DB::table('users')
+                        ->where('id', $record->user_id)
+                        ->value('password');
 
-                        // Delete Details of Board members from users table
-                        DB::table('users')->where('id', $record->user_id)->delete();
-                    }
+                    DB::table('outgoing_board_member')->insert(
+                        [
+                            'first_name' => $record->first_name,
+                            'last_name' => $record->last_name,
+                            'email' => $record->email,
+                            'password' => $existingPassword, // Use existing password
+                            'remember_token' => '',
+                            'board_position_id' => $record->board_position_id,
+                            'chapter_id' => $chapter_id,
+                            'street_address' => $record->street_address,
+                            'city' => $record->city,
+                            'state' => $record->state,
+                            'zip' => $record->zip,
+                            'country' => $record->country,
+                            'phone' => $record->phone,
+                            'last_updated_by' => $lastUpdatedBy,
+                            'last_updated_date' => now(),
+                            'board_id' => $record->board_id,
+                            'user_id' => $record->user_id,
+                        ]
+                    );
 
-                    // Delete Details of Board members from Board Details table
-                    DB::table('board_details')->where('chapter_id', $chapter_id)->delete();
-
-                    // Fetch the latest board_id and increment it for each new board member
-                    $latestBoardId = DB::table('board_details')
-                        ->select('board_id')
-                        ->orderByDesc('board_id')
-                        ->value('board_id');
-
-                    // Set initial board_id
-                    $boardId = is_null($latestBoardId) ? 1 : $latestBoardId + 1;
-
-                    // Create & Activate Details of Board members from Incoming Board Members
-                    foreach ($incomingBoardDetails as $incomingRecord) {
-                        $userId = DB::table('users')->insertGetId(
-                            [
-                                'first_name' => $incomingRecord->first_name,
-                                'last_name' => $incomingRecord->last_name,
-                                'email' => $incomingRecord->email,
-                                'password' => Hash::make('TempPass4You'),
-                                'user_type' => 'board',
-                                'is_active' => 1,
-                            ]
-                        );
-
-                        DB::table('board_details')->insert(
-                            [
-                                'user_id' => $userId,
-                                'board_id' => $boardId,  // Assign unique board_id
-                                'first_name' => $incomingRecord->first_name,
-                                'last_name' => $incomingRecord->last_name,
-                                'email' => $incomingRecord->email,
-                                'password' => Hash::make('TempPass4You'),
-                                'remember_token' => '',
-                                'board_position_id' => $incomingRecord->board_position_id,
-                                'chapter_id' => $chapter_id,
-                                'street_address' => $incomingRecord->street_address,
-                                'city' => $incomingRecord->city,
-                                'state' => $incomingRecord->state,
-                                'zip' => $incomingRecord->zip,
-                                'country' => 'USA',
-                                'phone' => $incomingRecord->phone,
-                                'last_updated_by' => $lastUpdatedBy,
-                                'last_updated_date' => now(),
-                                'is_active' => 1,
-                            ]
-                        );
-
-                        // Increment board_id for the next board member
-                        $boardId++;
-                    }
-
-                    // Update Chapter after Board Active
-                    DB::update('UPDATE chapters SET new_board_active = ? WHERE id = ?', [1, $chapter_id]);
-
-                    // Delete Details of Board members from Incoming Board Member table
-                    DB::table('incoming_board_member')
-                        ->where('chapter_id', $chapter_id)
-                        ->delete();
+                    // Delete Details of Board members from users table
+                    DB::table('users')->where('id', $record->user_id)->delete();
                 }
 
-                $chunkSize = 100;
+                // Delete Details of Board members from Board Details table
+                DB::table('board_details')->where('chapter_id', $chapter_id)->delete();
 
-                // Update or insert for outgoing board members
-                $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
-                foreach (array_chunk($outgoingBoardMembers->toArray(), $chunkSize) as $chunk) {
-                    foreach ($chunk as $outgoingMember) {
-                        $outgoingUser = DB::table('users')->where('email', $outgoingMember->email)->first();
+                // Fetch the latest board_id and increment it for each new board member
+                $latestBoardId = DB::table('board_details')
+                    ->select('board_id')
+                    ->orderByDesc('board_id')
+                    ->value('board_id');
 
-                        if ($outgoingUser) {
-                            // Update user_type for existing record
-                            DB::table('users')->where('email', $outgoingMember->email)->update([
-                                'user_type' => 'outgoing',
-                            ]);
+                // Set initial board_id
+                $boardId = is_null($latestBoardId) ? 1 : $latestBoardId + 1;
 
-                            // Retrieve the user_id
-                            $userId = $outgoingUser->id;
-                        } else {
-                            // Insert new record
-                            $userId = DB::table('users')->insertGetId([
-                                'email' => $outgoingMember->email,
-                                'first_name' => $outgoingMember->first_name,
-                                'last_name' => $outgoingMember->last_name,
-                                'password' => Hash::make('TempPass4You'),
-                                'remember_token' => '',
-                                'user_type' => 'outgoing',
-                                'is_active' => 1,
-                            ]);
-                        }
-
-                        // Update outgoing_board_member with user_id
-                        DB::table('outgoing_board_member')->where('email', $outgoingMember->email)->update([
-                            'user_id' => $userId,
-                        ]);
-                    }
-                }
-
-                // Only update for board members who exist in the users table
-                $boardMembers = DB::table('board_details')->get();
-                foreach ($boardMembers as $member) {
-                    $user = DB::table('users')->where('email', $member->email)->first();
-
-                    if ($user) {
-                        // Update user_type for existing record
-                        DB::table('users')->where('email', $member->email)->update([
+                // Create & Activate Details of Board members from Incoming Board Members
+                foreach ($incomingBoardDetails as $incomingRecord) {
+                    $userId = DB::table('users')->insertGetId(
+                        [
+                            'first_name' => $incomingRecord->first_name,
+                            'last_name' => $incomingRecord->last_name,
+                            'email' => $incomingRecord->email,
+                            'password' => Hash::make('TempPass4You'),
                             'user_type' => 'board',
-                        ]);
-                    }
+                            'is_active' => 1,
+                        ]
+                    );
+
+                    DB::table('board_details')->insert(
+                        [
+                            'user_id' => $userId,
+                            'board_id' => $boardId,  // Assign unique board_id
+                            'first_name' => $incomingRecord->first_name,
+                            'last_name' => $incomingRecord->last_name,
+                            'email' => $incomingRecord->email,
+                            'password' => Hash::make('TempPass4You'),
+                            'remember_token' => '',
+                            'board_position_id' => $incomingRecord->board_position_id,
+                            'chapter_id' => $chapter_id,
+                            'street_address' => $incomingRecord->street_address,
+                            'city' => $incomingRecord->city,
+                            'state' => $incomingRecord->state,
+                            'zip' => $incomingRecord->zip,
+                            'country' => 'USA',
+                            'phone' => $incomingRecord->phone,
+                            'last_updated_by' => $lastUpdatedBy,
+                            'last_updated_date' => now(),
+                            'is_active' => 1,
+                        ]
+                    );
+
+                    // Increment board_id for the next board member
+                    $boardId++;
                 }
 
-                DB::commit();
-            } catch (\Illuminate\Database\QueryException $e) {
-                DB::rollback();
-                Log::error($e);
-                $errorCode = $e->errorInfo[1];
-                if ($errorCode == 1062) {
-                    return $message = $e->errorInfo[2];
-                } else {
-                    return $message = 'fail';
+                // Update Chapter after Board Active
+                DB::update('UPDATE chapters SET new_board_active = ? WHERE id = ?', [1, $chapter_id]);
+
+                // Delete Details of Board members from Incoming Board Member table
+                DB::table('incoming_board_member')
+                    ->where('chapter_id', $chapter_id)
+                    ->delete();
+            }
+
+            $chunkSize = 100;
+
+            // Update or insert for outgoing board members
+            $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
+            foreach (array_chunk($outgoingBoardMembers->toArray(), $chunkSize) as $chunk) {
+                foreach ($chunk as $outgoingMember) {
+                    $outgoingUser = DB::table('users')->where('email', $outgoingMember->email)->first();
+
+                    if ($outgoingUser) {
+                        // Update user_type for existing record
+                        DB::table('users')->where('email', $outgoingMember->email)->update([
+                            'user_type' => 'outgoing',
+                        ]);
+
+                        // Retrieve the user_id
+                        $userId = $outgoingUser->id;
+                    } else {
+                        // Insert new record
+                        $userId = DB::table('users')->insertGetId([
+                            'email' => $outgoingMember->email,
+                            'first_name' => $outgoingMember->first_name,
+                            'last_name' => $outgoingMember->last_name,
+                            'password' => Hash::make('TempPass4You'),
+                            'remember_token' => '',
+                            'user_type' => 'outgoing',
+                            'is_active' => 1,
+                        ]);
+                    }
+
+                    // Update outgoing_board_member with user_id
+                    DB::table('outgoing_board_member')->where('email', $outgoingMember->email)->update([
+                        'user_id' => $userId,
+                    ]);
                 }
             }
 
-            return $message = 'success';
+            // Only update for board members who exist in the users table
+            $boardMembers = DB::table('board_details')->get();
+            foreach ($boardMembers as $member) {
+                $user = DB::table('users')->where('email', $member->email)->first();
+
+                if ($user) {
+                    // Update user_type for existing record
+                    DB::table('users')->where('email', $member->email)->update([
+                        'user_type' => 'board',
+                    ]);
+                }
+            }
+
+            DB::commit();
+        } catch (\Illuminate\Database\QueryException $e) {
+            DB::rollback();
+            Log::error($e);
+            $errorCode = $e->errorInfo[1];
+            if ($errorCode == 1062) {
+                return $message = $e->errorInfo[2];
+            } else {
+                return $message = 'fail';
+            }
         }
+
+        return $message = 'success';
     }
+}
 
 
     /**
