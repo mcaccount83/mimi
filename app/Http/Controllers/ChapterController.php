@@ -4339,7 +4339,7 @@ class ChapterController extends Controller
     public function activateBoard($chapter_id, $lastUpdatedBy)
     {
         $message = '';
-        //Fetching New Board Info from Incoming Board Members
+        // Fetching New Board Info from Incoming Board Members
         $incomingBoardDetails = DB::table('incoming_board_member')
             ->select('*')
             ->where('chapter_id', '=', $chapter_id)
@@ -4349,14 +4349,14 @@ class ChapterController extends Controller
         if ($countIncomingBoardDetails > 0) {
             DB::beginTransaction();
             try {
-                //Fetching Existing Board Members from Board Details
+                // Fetching Existing Board Members from Board Details
                 $boardDetails = DB::table('board_details')
                     ->select('*')
                     ->where('chapter_id', '=', $chapter_id)
                     ->get();
                 $countBoardDetails = count($boardDetails);
                 if ($countBoardDetails > 0) {
-                    //Insert Outgoing Board Members
+                    // Insert Outgoing Board Members
                     foreach ($boardDetails as $record) {
                         DB::table('outgoing_board_member')->insert(
                             [
@@ -4380,19 +4380,23 @@ class ChapterController extends Controller
                             ]
                         );
 
-                        //Delete Details of Board members from users table
+                        // Delete Details of Board members from users table
                         DB::table('users')->where('id', $record->user_id)->delete();
                     }
 
-                    //Delete Details of Board members from Board Details table
+                    // Delete Details of Board members from Board Details table
                     DB::table('board_details')->where('chapter_id', $chapter_id)->delete();
 
-                    //Create & Activate Details of Board members from Incoming Board Members
-                    $boardId = DB::table('board_details')
+                    // Fetch the latest board_id and increment it for each new board member
+                    $latestBoardId = DB::table('board_details')
                         ->select('board_id')
                         ->orderByDesc('board_id')
-                        ->value('board_id') + 1;
+                        ->value('board_id');
 
+                    // Set initial board_id
+                    $boardId = is_null($latestBoardId) ? 1 : $latestBoardId + 1;
+
+                    // Create & Activate Details of Board members from Incoming Board Members
                     foreach ($incomingBoardDetails as $incomingRecord) {
                         $userId = DB::table('users')->insertGetId(
                             [
@@ -4408,7 +4412,7 @@ class ChapterController extends Controller
                         DB::table('board_details')->insert(
                             [
                                 'user_id' => $userId,
-                                'board_id' => $boardId,
+                                'board_id' => $boardId,  // Assign unique board_id
                                 'first_name' => $incomingRecord->first_name,
                                 'last_name' => $incomingRecord->last_name,
                                 'email' => $incomingRecord->email,
@@ -4427,12 +4431,15 @@ class ChapterController extends Controller
                                 'is_active' => 1,
                             ]
                         );
+
+                        // Increment board_id for the next board member
+                        $boardId++;
                     }
 
-                    //Update Chapter after Board Active
+                    // Update Chapter after Board Active
                     DB::update('UPDATE chapters SET new_board_active = ? WHERE id = ?', [1, $chapter_id]);
 
-                    //Delete Details of Board members from Incoming Board Member table
+                    // Delete Details of Board members from Incoming Board Member table
                     DB::table('incoming_board_member')
                         ->where('chapter_id', $chapter_id)
                         ->delete();
@@ -4502,6 +4509,7 @@ class ChapterController extends Controller
             return $message = 'success';
         }
     }
+
 
     /**
      * Financial Report for Coordinator side for Reviewing of Chapters
