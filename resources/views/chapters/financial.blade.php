@@ -1738,14 +1738,15 @@
                                <td>Did you have any discussion topics at your meetings? If yes, how often?</td></tr>
                            <tr><td></td>
                             <td><strong>{{ is_null($financial_report_array['discussion_topic_frequency']) ? 'Not Answered' : ($financial_report_array['discussion_topic_frequency'] == 0 ? 'NO'
-                                : ( $financial_report_array ['discussion_topic_frequency'] == 1 ? '1-3 Times' : (['discussion_topic_frequency'] == 2 ? '4-6 Times' :
-                                   (['discussion_topic_frequency'] == 3 ? '7-9 Times' : (['discussion_topic_frequency'] == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong></td></tr>
+                                : ( $financial_report_array['discussion_topic_frequency'] == 1 ? '1-3 Times' : ($financial_report_array['discussion_topic_frequency'] == 2 ? '4-6 Times' :
+                                   ($financial_report_array['discussion_topic_frequency'] == 3 ? '7-9 Times' : ($financial_report_array['discussion_topic_frequency'] == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong></td></tr>
                            <tr><td>16.</td>
                                <td>Did your chapter have scheduled park days? If yes, how often?</td></tr>
                            <tr><td></td>
                             <td><strong>{{ is_null($financial_report_array['park_day_frequency']) ? 'Not Answered' : ($financial_report_array['park_day_frequency'] == 0 ? 'NO'
-                                : ( $financial_report_array ['park_day_frequency'] == 1 ? '1-3 Times' : (['park_day_frequency'] == 2 ? '4-6 Times' :
-                                   (['park_day_frequency'] == 3 ? '7-9 Times' : (['park_day_frequency'] == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong></td></tr>
+                                : ( $financial_report_array['park_day_frequency'] == 1 ? '1-3 Times' : ($financial_report_array['park_day_frequency'] == 2 ? '4-6 Times' :
+                                   ($financial_report_array['park_day_frequency'] == 3 ? '7-9 Times' : ($financial_report_array['park_day_frequency'] == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong></td></tr>
+
                            <tr><td>17.</td>
                             <td>Did your chapter have any of the following activity groups?</td></tr>
                             <tr><td></td>
@@ -3112,9 +3113,9 @@ $(document).ready(function(){
             5 :'Operating',
             6: 'Donations',
             7: 'Other',
-            8: 'Financials',
-            9: 'Reconciliation',
-            10: 'Questions',
+            8: 'Reconciliation',
+            9: 'Questions',
+            10: 'Financials',
             11: 'Awards',
             12: 'International',
         }

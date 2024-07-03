@@ -864,16 +864,17 @@
                             N/A
                         @endif --}}
                     </strong></td></tr>
-            <tr><td>15.</td>
-                <td>Did you have any discussion topics at your meetings? If yes, how often?</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData ['discussion_topic_frequency'] == 1 ? '1-3 Times' : (['discussion_topic_frequency'] == 2 ? '4-6 Times' :
-                    (['discussion_topic_frequency'] == 3 ? '7-9 Times' : (['discussion_topic_frequency'] == 4 ? '10+ Times' : 'NO'))) }}</strong></td></tr>
-            <tr><td>16.</td>
-                <td>Did your chapter have scheduled park days? If yes, how often?</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData ['park_day_frequency'] == 1 ? '1-3 Times' : (['park_day_frequency'] == 2 ? '4-6 Times' :
-                    (['park_day_frequency'] == 3 ? '7-9 Times' : (['park_day_frequency'] == 4 ? '10+ Times' : 'NO'))) }}</strong></td></tr>
+                    <tr><td>15.</td>
+                        <td>Did you have any discussion topics at your meetings? If yes, how often?</td></tr>
+                    <tr><td></td>
+                        <td><strong>{{ $pdfData['discussion_topic_frequency'] == 1 ? '1-3 Times' : ($pdfData['discussion_topic_frequency'] == 2 ? '4-6 Times' :
+                            ($pdfData['discussion_topic_frequency'] == 3 ? '7-9 Times' : ($pdfData['discussion_topic_frequency'] == 4 ? '10+ Times' : 'NO'))) }}</strong></td></tr>
+                    <tr><td>16.</td>
+                        <td>Did your chapter have scheduled park days? If yes, how often?</td></tr>
+                    <tr><td></td>
+                        <td><strong>{{ $pdfData['park_day_frequency'] == 1 ? '1-3 Times' : ($pdfData['park_day_frequency'] == 2 ? '4-6 Times' :
+                            ($pdfData['park_day_frequency'] == 3 ? '7-9 Times' : ($pdfData['park_day_frequency'] == 4 ? '10+ Times' : 'NO'))) }}</strong></td></tr>
+
             <tr><td>17.</td>
                 <td>Did your chapter have any of the following activity groups?</td></tr>
                 <tr><td></td>
