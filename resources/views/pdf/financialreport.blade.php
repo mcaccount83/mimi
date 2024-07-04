@@ -122,7 +122,7 @@
             $associateMembers = $pdfData['total_associate_members'] * $pdfData['associate_member_fee'];
 
             $totalMembers = $pdfData['total_new_members'] + $pdfData['total_renewed_members'] + $pdfData['total_new_members_changed_dues'] + $pdfData['total_renewed_members_changed_dues']
-                    + $pdfData['members_who_paid_partial_dues'] + $pdfData['members_who_paid_partial_dues'] + $pdfData['total_associate_members'];
+                    + $pdfData['members_who_paid_partial_dues'] + $pdfData['total_associate_members'];
             $totalDues = $newMembers + $renewalMembers + $renewMembersOld + $newMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
         ?>
     <br>

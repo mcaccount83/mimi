@@ -312,7 +312,7 @@
                                 $associateMembers = $financial_report_array['total_associate_members'] * $financial_report_array['associate_member_fee'];
 
                                 $totalMembers = $financial_report_array['total_new_members'] +$financial_report_array['total_renewed_members'] + $financial_report_array['total_new_members_changed_dues'] + $financial_report_array['total_renewed_members_changed_dues']
-                                        + $financial_report_array['members_who_paid_partial_dues'] + $financial_report_array['members_who_paid_partial_dues'] + $financial_report_array['total_associate_members'];
+                                        + $financial_report_array['members_who_paid_partial_dues'] + $financial_report_array['total_associate_members'];
                                 $totalDues = $newMembers + $renewalMembers + $renewMembersOld + $newMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
                             ?>
 
