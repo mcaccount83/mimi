@@ -2886,7 +2886,7 @@
 <div class="box-body text-center">
 
               <a href="{{ route('home') }}" class="btn btn-themeBlue margin"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
-              <a id="viewPdfLink" href="https://drive.google.com/file/d/<?php echo $financial_report_array['financial_pdf_path']; ?>/view" target="_blank" class="btn btn-themeBlue margin" <?php if(!$submitted =='1') echo "disabled"; ?>><i class="fa fa-file-pdf-o fa-fw" aria-hidden="true" ></i>&nbsp; View PDF</a>
+              {{-- <a id="viewPdfLink" href="https://drive.google.com/file/d/<?php echo $financial_report_array['financial_pdf_path']; ?>/view" target="_blank" class="btn btn-themeBlue margin" <?php if(!$submitted =='1') echo "disabled"; ?>><i class="fa fa-file-pdf-o fa-fw" aria-hidden="true" ></i>&nbsp; View PDF</a> --}}
             <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn btn-themeBlue margin" <?php if(!$submitted =='1') echo "disabled"; ?>><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Download PDF</a>
         </div>
 

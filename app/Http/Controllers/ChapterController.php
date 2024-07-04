@@ -4393,53 +4393,77 @@ class ChapterController extends Controller
                 DB::table('board_details')->where('chapter_id', $chapter_id)->delete();
 
                 // Fetch the latest board_id and increment it for each new board member
-                $latestBoardId = DB::table('board_details')
-                    ->select('board_id')
-                    ->orderByDesc('board_id')
-                    ->value('board_id');
+$latestBoardId = DB::table('board_details')
+->select('board_id')
+->orderByDesc('board_id')
+->value('board_id');
 
-                // Set initial board_id
-                $boardId = is_null($latestBoardId) ? 1 : $latestBoardId + 1;
+// Set initial board_id
+$boardId = is_null($latestBoardId) ? 1 : $latestBoardId + 1;
 
-                // Create & Activate Details of Board members from Incoming Board Members
-                foreach ($incomingBoardDetails as $incomingRecord) {
-                    $userId = DB::table('users')->insertGetId(
-                        [
-                            'first_name' => $incomingRecord->first_name,
-                            'last_name' => $incomingRecord->last_name,
-                            'email' => $incomingRecord->email,
-                            'password' => Hash::make('TempPass4You'),
-                            'user_type' => 'board',
-                            'is_active' => 1,
-                        ]
-                    );
+// Create & Activate Details of Board members from Incoming Board Members
+foreach ($incomingBoardDetails as $incomingRecord) {
+// Check if user already exists
+$existingUser = DB::table('users')->where('email', $incomingRecord->email)->first();
 
-                    DB::table('board_details')->insert(
-                        [
-                            'user_id' => $userId,
-                            'board_id' => $boardId,  // Assign unique board_id
-                            'first_name' => $incomingRecord->first_name,
-                            'last_name' => $incomingRecord->last_name,
-                            'email' => $incomingRecord->email,
-                            'password' => Hash::make('TempPass4You'),
-                            'remember_token' => '',
-                            'board_position_id' => $incomingRecord->board_position_id,
-                            'chapter_id' => $chapter_id,
-                            'street_address' => $incomingRecord->street_address,
-                            'city' => $incomingRecord->city,
-                            'state' => $incomingRecord->state,
-                            'zip' => $incomingRecord->zip,
-                            'country' => 'USA',
-                            'phone' => $incomingRecord->phone,
-                            'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => now(),
-                            'is_active' => 1,
-                        ]
-                    );
+if ($existingUser) {
+    $userId = $existingUser->id;
+} else {
+    // Insert new user
+    $userId = DB::table('users')->insertGetId(
+        [
+            'first_name' => $incomingRecord->first_name,
+            'last_name' => $incomingRecord->last_name,
+            'email' => $incomingRecord->email,
+            'password' => Hash::make('TempPass4You'),
+            'user_type' => 'board',
+            'is_active' => 1,
+        ]
+    );
+}
 
-                    // Increment board_id for the next board member
-                    $boardId++;
-                }
+// Fetch the latest board_id for each new board member
+$latestBoardId = DB::table('board_details')
+    ->select('board_id')
+    ->orderByDesc('board_id')
+    ->value('board_id');
+
+// Set board_id for the new board member
+$boardId = is_null($latestBoardId) ? 1 : $latestBoardId + 1;
+
+// Prepare board details data
+$boardDetailsData = [
+    'user_id' => $userId,
+    'board_id' => $boardId,
+    'first_name' => $incomingRecord->first_name,
+    'last_name' => $incomingRecord->last_name,
+    'email' => $incomingRecord->email,
+    'password' => Hash::make('TempPass4You'),
+    'remember_token' => '',
+    'board_position_id' => $incomingRecord->board_position_id,
+    'chapter_id' => $chapter_id,
+    'street_address' => $incomingRecord->street_address,
+    'city' => $incomingRecord->city,
+    'state' => $incomingRecord->state,
+    'zip' => $incomingRecord->zip,
+    'country' => 'USA',
+    'phone' => $incomingRecord->phone,
+    'last_updated_by' => $lastUpdatedBy,
+    'last_updated_date' => now(),
+    'is_active' => 1,
+];
+
+// Upsert board details
+DB::table('board_details')->upsert(
+    [$boardDetailsData], // The values to insert or update
+    ['user_id', 'chapter_id'], // The unique constraints for upsert
+    array_keys($boardDetailsData) // The columns to update if a conflict occurs
+);
+
+// Increment board_id for the next board member
+$boardId++;
+}
+
 
                 // Update Chapter after Board Active
                 DB::update('UPDATE chapters SET new_board_active = ? WHERE id = ?', [1, $chapter_id]);
