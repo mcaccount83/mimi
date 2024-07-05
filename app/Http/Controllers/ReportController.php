@@ -1660,9 +1660,9 @@ class ReportController extends Controller
             ->join('board_details', 'chapters.id', '=', 'board_details.chapter_id')
             ->whereIn('board_details.board_position_id', [1, 2, 3, 4, 5])
             ->where('chapters.conference', $corConfId)
-            ->where(function($query) {
+            ->where(function ($query) {
                 $query->where('chapters.new_board_submitted', '=', '0')
-                      ->orWhereNull('chapters.new_board_submitted');
+                    ->orWhereNull('chapters.new_board_submitted');
             })
             ->where('created_at', '<=', date('Y-06-30'))
             ->where('chapters.is_active', 1)
@@ -1685,7 +1685,7 @@ class ReportController extends Controller
                     $cc_email1 = $this->getCCMail($chapter->pcid);
                     $cc_email1 = array_filter($cc_email1);
 
-                    if (!empty($cc_email1)) {
+                    if (! empty($cc_email1)) {
                         $coordinatorEmails[$chapter->name] = $cc_email1; // Store coordinator emails by chapter
                     }
                 }
@@ -1714,7 +1714,7 @@ class ReportController extends Controller
             $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
             $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
 
-            if (!empty($emailRecipients)) {
+            if (! empty($emailRecipients)) {
                 // Split recipients into batches of 50 - so won't be over 100 after adding ccRecipients
                 $toBatches = array_chunk($emailRecipients, 25);
 
@@ -1723,7 +1723,7 @@ class ReportController extends Controller
                         ->cc($cc_email)
                         ->send(new EOYElectionReportReminder($data));
 
-                        usleep(500000); // Delay for 0.5 seconds between each batch
+                    usleep(500000); // Delay for 0.5 seconds between each batch
                 }
             }
         }
@@ -1762,10 +1762,10 @@ class ReportController extends Controller
             ->join('board_details', 'chapters.id', '=', 'board_details.chapter_id')
             ->whereIn('board_details.board_position_id', [1, 2, 3, 4, 5])
             ->where('chapters.conference', $corConfId)
-            ->where(function($query) {
+            ->where(function ($query) {
                 $query->where('chapters.financial_report_received', '=', '0')
-                      ->orWhereNull('chapters.financial_report_received');
-            })            ->where('created_at', '<=', date('Y-06-30'))
+                    ->orWhereNull('chapters.financial_report_received');
+            })->where('created_at', '<=', date('Y-06-30'))
             ->where('chapters.is_active', 1)
             ->get();
 
@@ -1786,7 +1786,7 @@ class ReportController extends Controller
                     $cc_email1 = $this->getCCMail($chapter->pcid);
                     $cc_email1 = array_filter($cc_email1);
 
-                    if (!empty($cc_email1)) {
+                    if (! empty($cc_email1)) {
                         $coordinatorEmails[$chapter->name] = $cc_email1; // Store coordinator emails by chapter
                     }
                 }
@@ -1815,7 +1815,7 @@ class ReportController extends Controller
             $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
             $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
 
-            if (!empty($emailRecipients)) {
+            if (! empty($emailRecipients)) {
                 // Split recipients into batches of 50 - so won't be over 100 after adding ccRecipients
                 $toBatches = array_chunk($emailRecipients, 25);
 
@@ -1824,10 +1824,10 @@ class ReportController extends Controller
                         ->cc($cc_email)
                         ->send(new EOYFinancialReportReminder($data));
 
-                        usleep(500000); // Delay for 0.5 seconds between each batch
-                        }
-                    }
+                    usleep(500000); // Delay for 0.5 seconds between each batch
                 }
+            }
+        }
 
         try {
             DB::commit();
@@ -1888,7 +1888,7 @@ class ReportController extends Controller
                     $cc_email1 = $this->getCCMail($chapter->pcid);
                     $cc_email1 = array_filter($cc_email1);
 
-                    if (!empty($cc_email1)) {
+                    if (! empty($cc_email1)) {
                         $coordinatorEmails[$chapter->name] = $cc_email1; // Store coordinator emails by chapter
                     }
                 }
@@ -1922,7 +1922,7 @@ class ReportController extends Controller
             $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
             $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
 
-            if (!empty($emailRecipients)) {
+            if (! empty($emailRecipients)) {
                 // Split recipients into batches of 50
                 $toBatches = array_chunk($emailRecipients, 25);
 
@@ -1931,7 +1931,7 @@ class ReportController extends Controller
                         ->cc($cc_email)
                         ->send(new EOYLateReportReminder($data));
 
-                        usleep(500000); // Delay for 0.5 seconds between each batch
+                    usleep(500000); // Delay for 0.5 seconds between each batch
                 }
             }
         }
@@ -1979,10 +1979,10 @@ class ReportController extends Controller
                 if ($countBoardDetails > 0) {
                     //Insert Outgoing Board Members
                     foreach ($boardDetails as $record) {
-                         // Fetch existing password
+                        // Fetch existing password
                         $existingPassword = DB::table('users')
-                        ->where('id', $record->user_id)
-                        ->value('password');
+                            ->where('id', $record->user_id)
+                            ->value('password');
 
                         DB::table('outgoing_board_member')->insert(
                             [
@@ -2015,14 +2015,14 @@ class ReportController extends Controller
 
                     // Fetch the latest board_id and increment it for each new board member
                     $latestBoardId = DB::table('board_details')
-                    ->select('board_id')
-                    ->orderByDesc('board_id')
-                    ->value('board_id');
+                        ->select('board_id')
+                        ->orderByDesc('board_id')
+                        ->value('board_id');
 
                     // Set initial board_id
                     $boardId = is_null($latestBoardId) ? 1 : $latestBoardId + 1;
 
-                                        // Create & Activate Details of Board members from Incoming Board Members
+                    // Create & Activate Details of Board members from Incoming Board Members
                     foreach ($incomingBoardDetails as $incomingRecord) {
                         // Check if user already exists
                         $existingUser = DB::table('users')->where('email', $incomingRecord->email)->first();
@@ -2044,16 +2044,16 @@ class ReportController extends Controller
                         }
 
                         // Fetch the latest board_id for each new board member
-                            $latestBoardId = DB::table('board_details')
+                        $latestBoardId = DB::table('board_details')
                             ->select('board_id')
                             ->orderByDesc('board_id')
                             ->value('board_id');
 
-                            // Set board_id for the new board member
-                            $boardId = is_null($latestBoardId) ? 1 : $latestBoardId + 1;
+                        // Set board_id for the new board member
+                        $boardId = is_null($latestBoardId) ? 1 : $latestBoardId + 1;
 
-                            // Prepare board details data
-                            $boardDetailsData = [
+                        // Prepare board details data
+                        $boardDetailsData = [
                             'user_id' => $userId,
                             'board_id' => $boardId,
                             'first_name' => $incomingRecord->first_name,
@@ -2072,18 +2072,18 @@ class ReportController extends Controller
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => now(),
                             'is_active' => 1,
-                            ];
+                        ];
 
-                            // Upsert board details
-                            DB::table('board_details')->upsert(
+                        // Upsert board details
+                        DB::table('board_details')->upsert(
                             [$boardDetailsData], // The values to insert or update
                             ['user_id', 'chapter_id'], // The unique constraints for upsert
                             array_keys($boardDetailsData) // The columns to update if a conflict occurs
-                            );
+                        );
 
-                            // Increment board_id for the next board member
-                            $boardId++;
-                            }
+                        // Increment board_id for the next board member
+                        $boardId++;
+                    }
 
                     //Update Chapter after Board Active
                     DB::update('UPDATE chapters SET new_board_active = ? WHERE id = ?', [1, $chapter_id]);
