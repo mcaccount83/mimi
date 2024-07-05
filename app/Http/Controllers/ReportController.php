@@ -1716,12 +1716,14 @@ class ReportController extends Controller
 
             if (!empty($emailRecipients)) {
                 // Split recipients into batches of 50 - so won't be over 100 after adding ccRecipients
-                $toBatches = array_chunk($emailRecipients, 50);
+                $toBatches = array_chunk($emailRecipients, 25);
 
                 foreach ($toBatches as $toBatch) {
                     Mail::to($toBatch)
                         ->cc($cc_email)
                         ->send(new EOYElectionReportReminder($data));
+
+                        usleep(500000); // Delay for 0.5 seconds between each batch
                 }
             }
         }
@@ -1815,13 +1817,14 @@ class ReportController extends Controller
 
             if (!empty($emailRecipients)) {
                 // Split recipients into batches of 50 - so won't be over 100 after adding ccRecipients
-                $toBatches = array_chunk($emailRecipients, 50);
+                $toBatches = array_chunk($emailRecipients, 25);
 
                 foreach ($toBatches as $toBatch) {
                     Mail::to($toBatch)
                         ->cc($cc_email)
+                        ->send(new EOYFinancialReportReminder($data));
 
-                            ->send(new EOYFinancialReportReminder($data));
+                        usleep(500000); // Delay for 0.5 seconds between each batch
                         }
                     }
                 }
@@ -1921,12 +1924,14 @@ class ReportController extends Controller
 
             if (!empty($emailRecipients)) {
                 // Split recipients into batches of 50
-                $toBatches = array_chunk($emailRecipients, 50);
+                $toBatches = array_chunk($emailRecipients, 25);
 
                 foreach ($toBatches as $toBatch) {
                     Mail::to($toBatch)
                         ->cc($cc_email)
                         ->send(new EOYLateReportReminder($data));
+
+                        usleep(500000); // Delay for 0.5 seconds between each batch
                 }
             }
         }

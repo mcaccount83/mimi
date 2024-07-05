@@ -3583,12 +3583,14 @@ class ChapterController extends Controller
 
             if (! empty($toRecipients)) {
                 // Split recipients into batches of 50 - so won't be over 100 after adding ccRecipients
-                $toBatches = array_chunk($toRecipients, 50);
+                $toBatches = array_chunk($toRecipients, 25);
 
                 foreach ($toBatches as $toBatch) {
                     Mail::to($toBatch)
                         ->cc($ccRecipients)
                         ->send(new PaymentsReRegReminder($data));
+
+                        usleep(500000); // Delay for 0.5 seconds between each batch
                 }
             }
         }
@@ -3726,12 +3728,14 @@ class ChapterController extends Controller
 
             if (! empty($toRecipients)) {
                 // Split recipients into batches of 50 - so won't be over 100 after adding ccRecipients
-                $toBatches = array_chunk($toRecipients, 50);
+                $toBatches = array_chunk($toRecipients, 25);
 
                 foreach ($toBatches as $toBatch) {
                     Mail::to($toBatch)
                         ->cc($ccRecipients)
                         ->send(new PaymentsReRegLate($data));
+
+                        usleep(500000); // Delay for 0.5 seconds between each batch
                 }
             }
         }
