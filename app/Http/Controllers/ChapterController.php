@@ -2979,7 +2979,7 @@ class ChapterController extends Controller
     /**
      * Reset Password
      */
-    public function updateChapterResetPassword(Request $request)
+    public function updateChapterResetPassword(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'pswd' => 'required|string|min:7',
