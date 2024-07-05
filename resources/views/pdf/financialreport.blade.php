@@ -844,25 +844,36 @@
                 <tr><td></td>
                     <td><strong>
                         @php
-                            $meetingSpeakersArray = json_decode($pdfData['meeting_speakers_array']);
-                            $meetingSpeakersMapping = [
-                                '0' => 'N/A',
-                                '1' => 'Child Rearing',
-                                '2' => 'Schools/Education',
-                                '3' => 'Home Management',
-                                '4' => 'Politics',
-                                '5' => 'Other Non-Profit',
-                                '6' => 'Other',
-                            ];
-                        @endphp
+                        $meetingSpeakersArray = [];
+                        if (isset($pdfData['meeting_speakers_array']) && !is_null($pdfData['meeting_speakers_array'])) {
+                            $decodedArray = json_decode($pdfData['meeting_speakers_array'], true);
+                            if (json_last_error() === JSON_ERROR_NONE) {
+                                $meetingSpeakersArray = $decodedArray;
+                            } else {
+                                \Log::error('JSON decoding error: ' . json_last_error_msg(), ['data' => $pdfData['meeting_speakers_array']]);
+                            }
+                        }
 
-                        @if (!empty($meetingSpeakersArray))
-                            {{ implode(', ', array_map(function($value) use ($meetingSpeakersMapping) {
-                                return $meetingSpeakersMapping[$value];
-                            }, $meetingSpeakersArray)) }}
-                        @else
-                            N/A
-                        @endif
+                        $meetingSpeakersMapping = [
+                            '0' => 'N/A',
+                            '1' => 'Child Rearing',
+                            '2' => 'Schools/Education',
+                            '3' => 'Home Management',
+                            '4' => 'Politics',
+                            '5' => 'Other Non-Profit',
+                            '6' => 'Other',
+                        ];
+                    @endphp
+
+                    @if (!empty($meetingSpeakersArray))
+                        {{ implode(', ', array_map(function($value) use ($meetingSpeakersMapping) {
+                            return $meetingSpeakersMapping[$value] ?? 'Unknown';
+                        }, $meetingSpeakersArray)) }}
+                    @else
+                        N/A
+                    @endif
+
+
                     </strong></td></tr>
                     <tr><td>15.</td>
                         <td>Did you have any discussion topics at your meetings? If yes, how often?</td></tr>
@@ -880,25 +891,37 @@
                 <tr><td></td>
                 <td><strong>
                     @php
-                        $activityArray = json_decode($pdfData['activity_array']);
-                        $activityMapping = [
-                            '0' => 'N/A',
-                            '1' => 'Cooking',
-                            '2' => 'Cost Cutting Tips',
-                            '3' => 'Mommy Playgroup',
-                            '4' => 'Babysitting Co-op',
-                            '5' => 'MOMS Night Out',
-                            '6' => 'Other',
-                        ];
-                    @endphp
+   @php
+    $activityArray = [];
+    if (isset($pdfData['activity_array']) && !is_null($pdfData['activity_array'])) {
+        $decodedArray = json_decode($pdfData['activity_array'], true);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            $activityArray = $decodedArray;
+        } else {
+            \Log::error('JSON decoding error: ' . json_last_error_msg(), ['data' => $pdfData['activity_array']]);
+        }
+    }
 
-                    @if (!empty($activityArray))
-                        {{ implode(', ', array_map(function($value) use ($activityMapping) {
-                            return $activityMapping[$value];
-                        }, $activityArray)) }}
-                    @else
-                        N/A
-                    @endif
+    $activityMapping = [
+        '0' => 'N/A',
+        '1' => 'Cooking',
+        '2' => 'Cost Cutting Tips',
+        '3' => 'Mommy Playgroup',
+        '4' => 'Babysitting Co-op',
+        '5' => 'MOMS Night Out',
+        '6' => 'Other',
+    ];
+@endphp
+
+@if (!empty($activityArray))
+    {{ implode(', ', array_map(function($value) use ($activityMapping) {
+        return $activityMapping[$value] ?? 'Unknown';
+    }, $activityArray)) }}
+@else
+    N/A
+@endif
+
+
                 </strong></td></tr>
             <tr><td>18.</td>
                 <td>Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity?</td></tr>
