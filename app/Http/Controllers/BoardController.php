@@ -2226,7 +2226,7 @@ class BoardController extends Controller
         $pdf = Pdf::loadView('pdf.financialreport', compact('pdfData'));
 
         $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
-        $filename = (date('Y') - 1) . '-' . date('Y') . '_' . $pdfData['state'] . '_' . $chapterName . '_FinancialReport.pdf'; // Use sanitized chapter name
+        $filename = (date('Y') - 1).'-'.date('Y').'_'.$pdfData['state'].'_'.$chapterName.'_FinancialReport.pdf'; // Use sanitized chapter name
 
         $pdfPath = storage_path('app/pdf_reports/'.$filename);
         $pdf->save($pdfPath);
