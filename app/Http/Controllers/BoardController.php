@@ -2225,7 +2225,8 @@ class BoardController extends Controller
 
         $pdf = Pdf::loadView('pdf.financialreport', compact('pdfData'));
 
-        $filename = date('Y') - 1 .'-'.date('Y').'_'.$pdfData['state'].'_'.$pdfData['chapter_name'].'_FinancialReport.pdf';
+        $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
+        $filename = (date('Y') - 1) . '-' . date('Y') . '_' . $pdfData['state'] . '_' . $chapterName . '_FinancialReport.pdf'; // Use sanitized chapter name
 
         $pdfPath = storage_path('app/pdf_reports/'.$filename);
         $pdf->save($pdfPath);
@@ -2243,7 +2244,7 @@ class BoardController extends Controller
 
         $conf = $pdfData['conf'];
         $state = $pdfData['state'];
-        $chapterName = $pdfData['chapter_name'];
+        $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
         $accessToken = json_decode((string) $response->getBody(), true)['access_token'];
 
         $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024

@@ -325,7 +325,11 @@
                     echo "No data available.";
                 }
 
-                $partyPercentage = ($totalPartyExpense - $totalPartyIncome) / $totalDues
+                if ($totalDues == 0) {
+    $partyPercentage = 0;
+} else {
+    $partyPercentage = ($totalPartyExpense - $totalPartyIncome) / $totalDues;
+}
                 ?>
         </tbody>
     </table>
@@ -890,7 +894,6 @@
                 <td>Did your chapter have any of the following activity groups?</td></tr>
                 <tr><td></td>
                 <td><strong>
-                    @php
    @php
     $activityArray = [];
     if (isset($pdfData['activity_array']) && !is_null($pdfData['activity_array'])) {
