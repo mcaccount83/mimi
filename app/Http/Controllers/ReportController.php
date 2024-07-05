@@ -1660,7 +1660,10 @@ class ReportController extends Controller
             ->join('board_details', 'chapters.id', '=', 'board_details.chapter_id')
             ->whereIn('board_details.board_position_id', [1, 2, 3, 4, 5])
             ->where('chapters.conference', $corConfId)
-            ->where('chapters.new_board_submitted', '=', '0')
+            ->where(function($query) {
+                $query->where('chapters.new_board_submitted', '=', '0')
+                      ->orWhereNull('chapters.new_board_submitted');
+            })
             ->where('created_at', '<=', date('Y-06-30'))
             ->where('chapters.is_active', 1)
             ->get();
@@ -1673,7 +1676,7 @@ class ReportController extends Controller
         $mailData = [];
 
         if ($chapters->isEmpty()) {
-            return redirect()->back()->with('info', 'There are no Chapters with Board Reports Due.');
+            return redirect()->back()->with('info', 'There are no Chapters with Board Election Reports Due.');
         } else {
             foreach ($chapters as $chapter) {
                 if ($chapter->name) {
@@ -1701,23 +1704,28 @@ class ReportController extends Controller
                     'chapterState' => $chapterState,
                 ];
 
+
                 if (isset($chapterChEmails[$chapter->name])) {
                     $chapterEmails[$chapter->name][] = $chapterChEmails[$chapter->name];
                 }
             }
         }
 
-        // Send a single email with multiple recipients
         foreach ($mailData as $chapterName => $data) {
             $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
             $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
 
             if (! empty($emailRecipients)) {
-                Mail::to($emailRecipients)
+                // Split recipients into batches of 50 - so won't be over 100 after adding ccRecipients
+                $toBatches = array_chunk($emailRecipients, 50);
+
+                foreach ($emailRecipients as $toBatch) {
+                    Mail::to($emailRecipients)
                     ->cc($cc_email)
                     ->send(new EOYElectionReportReminder($data));
             }
         }
+    }
         try {
             DB::commit();
         } catch (\Exception $e) {
@@ -1752,8 +1760,10 @@ class ReportController extends Controller
             ->join('board_details', 'chapters.id', '=', 'board_details.chapter_id')
             ->whereIn('board_details.board_position_id', [1, 2, 3, 4, 5])
             ->where('chapters.conference', $corConfId)
-            ->where('chapters.financial_report_received', '=', '0')
-            ->where('created_at', '<=', date('Y-06-30'))
+            ->where(function($query) {
+                $query->where('chapters.financial_report_received', '=', '0')
+                      ->orWhereNull('chapters.financial_report_received');
+            })            ->where('created_at', '<=', date('Y-06-30'))
             ->where('chapters.is_active', 1)
             ->get();
 
@@ -1793,23 +1803,29 @@ class ReportController extends Controller
                     'chapterState' => $chapterState,
                 ];
 
+
                 if (isset($chapterChEmails[$chapter->name])) {
                     $chapterEmails[$chapter->name][] = $chapterChEmails[$chapter->name];
                 }
             }
         }
 
-        // Send a single email with multiple recipients
         foreach ($mailData as $chapterName => $data) {
             $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
             $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
 
             if (! empty($emailRecipients)) {
-                Mail::to($emailRecipients)
+                // Split recipients into batches of 50 - so won't be over 100 after adding ccRecipients
+                $toBatches = array_chunk($emailRecipients, 50);
+
+                foreach ($emailRecipients as $toBatch) {
+                    Mail::to($emailRecipients)
                     ->cc($cc_email)
                     ->send(new EOYFinancialReportReminder($data));
+                }
             }
         }
+
         try {
             DB::commit();
         } catch (\Exception $e) {
@@ -1986,77 +2002,77 @@ class ReportController extends Controller
                     //Delete Details of Board members from Board Details table
                     DB::table('board_details')->where('chapter_id', $chapter_id)->delete();
 
-                                    // Fetch the latest board_id and increment it for each new board member
-$latestBoardId = DB::table('board_details')
-->select('board_id')
-->orderByDesc('board_id')
-->value('board_id');
+                    // Fetch the latest board_id and increment it for each new board member
+                    $latestBoardId = DB::table('board_details')
+                    ->select('board_id')
+                    ->orderByDesc('board_id')
+                    ->value('board_id');
 
-// Set initial board_id
-$boardId = is_null($latestBoardId) ? 1 : $latestBoardId + 1;
+                    // Set initial board_id
+                    $boardId = is_null($latestBoardId) ? 1 : $latestBoardId + 1;
 
-                    // Create & Activate Details of Board members from Incoming Board Members
-foreach ($incomingBoardDetails as $incomingRecord) {
-    // Check if user already exists
-    $existingUser = DB::table('users')->where('email', $incomingRecord->email)->first();
+                                        // Create & Activate Details of Board members from Incoming Board Members
+                    foreach ($incomingBoardDetails as $incomingRecord) {
+                        // Check if user already exists
+                        $existingUser = DB::table('users')->where('email', $incomingRecord->email)->first();
 
-    if ($existingUser) {
-        $userId = $existingUser->id;
-    } else {
-        // Insert new user
-        $userId = DB::table('users')->insertGetId(
-            [
-                'first_name' => $incomingRecord->first_name,
-                'last_name' => $incomingRecord->last_name,
-                'email' => $incomingRecord->email,
-                'password' => Hash::make('TempPass4You'),
-                'user_type' => 'board',
-                'is_active' => 1,
-            ]
-        );
-    }
+                        if ($existingUser) {
+                            $userId = $existingUser->id;
+                        } else {
+                            // Insert new user
+                            $userId = DB::table('users')->insertGetId(
+                                [
+                                    'first_name' => $incomingRecord->first_name,
+                                    'last_name' => $incomingRecord->last_name,
+                                    'email' => $incomingRecord->email,
+                                    'password' => Hash::make('TempPass4You'),
+                                    'user_type' => 'board',
+                                    'is_active' => 1,
+                                ]
+                            );
+                        }
 
-     // Fetch the latest board_id for each new board member
-$latestBoardId = DB::table('board_details')
-->select('board_id')
-->orderByDesc('board_id')
-->value('board_id');
+                        // Fetch the latest board_id for each new board member
+                            $latestBoardId = DB::table('board_details')
+                            ->select('board_id')
+                            ->orderByDesc('board_id')
+                            ->value('board_id');
 
-// Set board_id for the new board member
-$boardId = is_null($latestBoardId) ? 1 : $latestBoardId + 1;
+                            // Set board_id for the new board member
+                            $boardId = is_null($latestBoardId) ? 1 : $latestBoardId + 1;
 
-// Prepare board details data
-$boardDetailsData = [
-'user_id' => $userId,
-'board_id' => $boardId,
-'first_name' => $incomingRecord->first_name,
-'last_name' => $incomingRecord->last_name,
-'email' => $incomingRecord->email,
-'password' => Hash::make('TempPass4You'),
-'remember_token' => '',
-'board_position_id' => $incomingRecord->board_position_id,
-'chapter_id' => $chapter_id,
-'street_address' => $incomingRecord->street_address,
-'city' => $incomingRecord->city,
-'state' => $incomingRecord->state,
-'zip' => $incomingRecord->zip,
-'country' => 'USA',
-'phone' => $incomingRecord->phone,
-'last_updated_by' => $lastUpdatedBy,
-'last_updated_date' => now(),
-'is_active' => 1,
-];
+                            // Prepare board details data
+                            $boardDetailsData = [
+                            'user_id' => $userId,
+                            'board_id' => $boardId,
+                            'first_name' => $incomingRecord->first_name,
+                            'last_name' => $incomingRecord->last_name,
+                            'email' => $incomingRecord->email,
+                            'password' => Hash::make('TempPass4You'),
+                            'remember_token' => '',
+                            'board_position_id' => $incomingRecord->board_position_id,
+                            'chapter_id' => $chapter_id,
+                            'street_address' => $incomingRecord->street_address,
+                            'city' => $incomingRecord->city,
+                            'state' => $incomingRecord->state,
+                            'zip' => $incomingRecord->zip,
+                            'country' => 'USA',
+                            'phone' => $incomingRecord->phone,
+                            'last_updated_by' => $lastUpdatedBy,
+                            'last_updated_date' => now(),
+                            'is_active' => 1,
+                            ];
 
-// Upsert board details
-DB::table('board_details')->upsert(
-[$boardDetailsData], // The values to insert or update
-['user_id', 'chapter_id'], // The unique constraints for upsert
-array_keys($boardDetailsData) // The columns to update if a conflict occurs
-);
+                            // Upsert board details
+                            DB::table('board_details')->upsert(
+                            [$boardDetailsData], // The values to insert or update
+                            ['user_id', 'chapter_id'], // The unique constraints for upsert
+                            array_keys($boardDetailsData) // The columns to update if a conflict occurs
+                            );
 
-// Increment board_id for the next board member
-$boardId++;
-}
+                            // Increment board_id for the next board member
+                            $boardId++;
+                            }
 
                     //Update Chapter after Board Active
                     DB::update('UPDATE chapters SET new_board_active = ? WHERE id = ?', [1, $chapter_id]);
