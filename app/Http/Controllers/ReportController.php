@@ -1685,7 +1685,7 @@ class ReportController extends Controller
                     $cc_email1 = $this->getCCMail($chapter->pcid);
                     $cc_email1 = array_filter($cc_email1);
 
-                    if (! empty($cc_email1)) {
+                    if (!empty($cc_email1)) {
                         $coordinatorEmails[$chapter->name] = $cc_email1; // Store coordinator emails by chapter
                     }
                 }
@@ -1704,7 +1704,6 @@ class ReportController extends Controller
                     'chapterState' => $chapterState,
                 ];
 
-
                 if (isset($chapterChEmails[$chapter->name])) {
                     $chapterEmails[$chapter->name][] = $chapterChEmails[$chapter->name];
                 }
@@ -1715,17 +1714,18 @@ class ReportController extends Controller
             $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
             $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
 
-            if (! empty($emailRecipients)) {
+            if (!empty($emailRecipients)) {
                 // Split recipients into batches of 50 - so won't be over 100 after adding ccRecipients
                 $toBatches = array_chunk($emailRecipients, 50);
 
-                foreach ($emailRecipients as $toBatch) {
-                    Mail::to($emailRecipients)
-                    ->cc($cc_email)
-                    ->queue(new EOYElectionReportReminder($data));
+                foreach ($toBatches as $toBatch) {
+                    Mail::to($toBatch)
+                        ->cc($cc_email)
+                        ->queue(new EOYElectionReportReminder($data));
+                }
             }
         }
-    }
+
         try {
             DB::commit();
         } catch (\Exception $e) {
@@ -1784,7 +1784,7 @@ class ReportController extends Controller
                     $cc_email1 = $this->getCCMail($chapter->pcid);
                     $cc_email1 = array_filter($cc_email1);
 
-                    if (! empty($cc_email1)) {
+                    if (!empty($cc_email1)) {
                         $coordinatorEmails[$chapter->name] = $cc_email1; // Store coordinator emails by chapter
                     }
                 }
@@ -1803,7 +1803,6 @@ class ReportController extends Controller
                     'chapterState' => $chapterState,
                 ];
 
-
                 if (isset($chapterChEmails[$chapter->name])) {
                     $chapterEmails[$chapter->name][] = $chapterChEmails[$chapter->name];
                 }
@@ -1814,17 +1813,18 @@ class ReportController extends Controller
             $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
             $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
 
-            if (! empty($emailRecipients)) {
+            if (!empty($emailRecipients)) {
                 // Split recipients into batches of 50 - so won't be over 100 after adding ccRecipients
                 $toBatches = array_chunk($emailRecipients, 50);
 
-                foreach ($emailRecipients as $toBatch) {
-                    Mail::to($emailRecipients)
-                    ->cc($cc_email)
-                    ->queue(new EOYFinancialReportReminder($data));
+                foreach ($toBatches as $toBatch) {
+                    Mail::to($toBatch)
+                        ->cc($cc_email)
+
+                            ->queue(new EOYFinancialReportReminder($data));
+                        }
+                    }
                 }
-            }
-        }
 
         try {
             DB::commit();
@@ -1885,7 +1885,7 @@ class ReportController extends Controller
                     $cc_email1 = $this->getCCMail($chapter->pcid);
                     $cc_email1 = array_filter($cc_email1);
 
-                    if (! empty($cc_email1)) {
+                    if (!empty($cc_email1)) {
                         $coordinatorEmails[$chapter->name] = $cc_email1; // Store coordinator emails by chapter
                     }
                 }
@@ -1914,17 +1914,23 @@ class ReportController extends Controller
             }
         }
 
-        // Send a single email with multiple recipients
+        // Send emails in batches
         foreach ($mailData as $chapterName => $data) {
             $emailRecipients = isset($chapterEmails[$chapterName]) ? $chapterEmails[$chapterName] : [];
             $cc_email = isset($coordinatorEmails[$chapterName]) ? $coordinatorEmails[$chapterName] : [];
 
-            if (! empty($emailRecipients)) {
-                Mail::to($emailRecipients)
-                    ->cc($cc_email)
-                    ->send(new EOYLateReportReminder($data));
+            if (!empty($emailRecipients)) {
+                // Split recipients into batches of 50
+                $toBatches = array_chunk($emailRecipients, 50);
+
+                foreach ($toBatches as $toBatch) {
+                    Mail::to($toBatch)
+                        ->cc($cc_email)
+                        ->send(new EOYLateReportReminder($data));
+                }
             }
         }
+
         try {
             DB::commit();
         } catch (\Exception $e) {
