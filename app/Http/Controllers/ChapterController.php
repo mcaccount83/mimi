@@ -3588,7 +3588,7 @@ class ChapterController extends Controller
                 foreach ($toBatches as $toBatch) {
                     Mail::to($toBatch)
                         ->cc($ccRecipients)
-                        ->queue(new PaymentsReRegReminder($data));
+                        ->send(new PaymentsReRegReminder($data));
                 }
             }
         }
@@ -3731,7 +3731,7 @@ class ChapterController extends Controller
                 foreach ($toBatches as $toBatch) {
                     Mail::to($toBatch)
                         ->cc($ccRecipients)
-                        ->queue(new PaymentsReRegLate($data));
+                        ->send(new PaymentsReRegLate($data));
                 }
             }
         }

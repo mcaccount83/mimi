@@ -1721,7 +1721,7 @@ class ReportController extends Controller
                 foreach ($toBatches as $toBatch) {
                     Mail::to($toBatch)
                         ->cc($cc_email)
-                        ->queue(new EOYElectionReportReminder($data));
+                        ->send(new EOYElectionReportReminder($data));
                 }
             }
         }
@@ -1821,7 +1821,7 @@ class ReportController extends Controller
                     Mail::to($toBatch)
                         ->cc($cc_email)
 
-                            ->queue(new EOYFinancialReportReminder($data));
+                            ->send(new EOYFinancialReportReminder($data));
                         }
                     }
                 }
