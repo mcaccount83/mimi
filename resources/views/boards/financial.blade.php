@@ -42,6 +42,7 @@
     </div>
     <div class="row">
         <div class="col-md-12">
+            @if (auth()->check())
             <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board.storefinancial", ["id" => Session::get("chapterid")]) }}' novalidate>
             @csrf
             <input type="hidden" name="id" value="{{ Session::get('chapterid') }}">
@@ -3008,6 +3009,9 @@
 
                 </div><!-- end of accordion -->
             </form>
+            @else
+    <p>Your session has expired. Please <a href="{{ url('/login') }}">log in</a> again.</p>
+@endif
         </div>
             <div class="col-md-12 text-center">
                 <br>

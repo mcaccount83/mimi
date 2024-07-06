@@ -13,6 +13,8 @@ return [
     // emails per page
     'perPage' => 10,
 
+    'storeAttachments' => true,
+
     'noEmailsMessage' => 'No emails found.',
 
     // body emails are stored as compressed strings to save db disk

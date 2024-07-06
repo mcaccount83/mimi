@@ -703,8 +703,12 @@
                                         echo "<td><strong>$" . number_format($totalPartyExpense, 2) . "</strong></td>";
                                         echo "</tr>";
 
-                                        $partyPercentage = ($totalPartyExpense - $totalPartyIncome) / $totalDues;
-                                    }
+                                        if ($totalDues == 0) {
+                                            $partyPercentage = 0;
+                                        } else {
+                                            $partyPercentage = ($totalPartyExpense - $totalPartyIncome) / $totalDues;
+                                        }
+                                            }
                                 } else {
                                     echo "<tr style='border-top: 1px solid #333;'>";
                                     echo "<td colspan='3'>No Parties or Member Benefits Entered.</td>";
