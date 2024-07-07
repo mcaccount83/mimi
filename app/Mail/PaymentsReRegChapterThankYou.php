@@ -39,7 +39,7 @@ class PaymentsReRegChapterThankYou extends Mailable
     public function build(): static
     {
         return $this
-            ->from('support@momsclub.org', 'International MOMS Club')
+            ->from('support@momsclub.org', 'MOMS Club')
             ->subject('Thank You for Your Re-Registration Payment')
             ->markdown('emails.payments.reregchapterthankyou')
             ->with('mailData', $this->mailData);

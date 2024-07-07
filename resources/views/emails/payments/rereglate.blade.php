@@ -24,11 +24,11 @@ Pay online through your MIMI account: <a href="https://momsclub.org/mimi">https:
 <br>
 OR to pay by mail:<br>
 Be sure your full chapter name, including state abbreviation, is on your check so that the re-registration can be credited properly.
-<ul><li>Make check payable to MOMS Club</li>
+<ul><li>Make check payable to "MOMS Club"</li>
 <li>Please write "Chapter Re-Registration" in the Memo field of your check</li>
 <li>As requested with all chapter checks, be sure two Executive Board members sign the check</li>
 <li>Print this page, fill out the box below and mail the page, along with the re-registration, check to:</li></ul>
-<center>International MOMS Club<br>
+<center>MOMS Club<br>
 Chapter Re-Registration<br>
 208 Hewitt Dr., Ste 103 #328<br>
 Waco, TX 76712</center><br>
@@ -49,7 +49,7 @@ Sustaining chapter donations are voluntary and in addition to your chapter's re-
 <br>
 <p>If payment is not recevied by the last day of <b>{{$mailData['dueMonth']}}</b> your chapter will be placed on probation.</p>
 <br>
-If you have any questions at all, do not hesitate to ask.<br>
+<p>If you have any questions at all, do not hesitate to ask.</p>
 <br>
 <strong>MCL,</strong><br>
 MIMI Database Administrator
