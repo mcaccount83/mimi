@@ -2645,6 +2645,8 @@ class ChapterController extends Controller
                 ->orderByDesc('chapters.id')
                 ->get();
 
+            $chPcid = $chapterList[0]->pcid;
+
             $chapterName = $chapterList[0]->name;
             $chapterState = $chapterList[0]->state;
             $chapterEmail = $chapterList[0]->email;
@@ -2733,6 +2735,55 @@ class ChapterController extends Controller
                 ->get();
             $conf = $coninfo[0]->conference;
 
+            $chapterEmailList = DB::table('board_details as bd')
+            ->select('bd.email as bor_email')
+            ->where('bd.chapter_id', '=', $chapterid)
+            ->get();
+            $emailListBorad = '';
+            foreach ($chapterEmailList as $val) {
+                $email = $val->bor_email;
+                $escaped_email = str_replace("'", "\\'", $email);
+                if ($emailListBorad == '') {
+                    $emailListBorad = $escaped_email;
+                } else {
+                    $emailListBorad .= ','.$escaped_email;
+                }
+            }
+
+            $coordinatorEmailList = DB::table('coordinator_reporting_tree')
+                ->select('*')
+                ->where('id', '=', $chPcid)
+                ->get();
+
+            foreach ($coordinatorEmailList as $key => $value) {
+                $coordinatorList[$key] = (array) $value;
+            }
+            $filterCoordinatorList = array_filter($coordinatorList[0]);
+            unset($filterCoordinatorList['id']);
+            unset($filterCoordinatorList['layer0']);
+            $filterCoordinatorList = array_reverse($filterCoordinatorList);
+            $str = '';
+            $array_rows = count($filterCoordinatorList);
+            $i = 0;
+
+            $emailListCoor = '';
+            foreach ($filterCoordinatorList as $key => $val) {
+                if ($val > 1) {
+                    $corList = DB::table('coordinator_details as cd')
+                        ->select('cd.email as cord_email')
+                        ->where('cd.coordinator_id', '=', $val)
+                        ->where('cd.is_active', '=', 1)
+                        ->get();
+                    if (count($corList) > 0) {
+                        if ($emailListCoor == '') {
+                            $emailListCoor = $corList[0]->cord_email;
+                        } else {
+                            $emailListCoor .= ','.$corList[0]->cord_email;
+                        }
+                    }
+                }
+            }
+
             $mailData = [
                 'chapterName' => $chapterName,
                 'chapterEmail' => $chapterEmail,
@@ -2761,14 +2812,12 @@ class ChapterController extends Controller
                 ->send(new ChapterRemoveListAdmin($mailData));
 
             // //Standard Disbanding Letter Send to Board & Coordinators//
-            // $cc_email2 = $this->getCCMail($chapterList->pcid);
-            // $cc_email2 = array_filter($cc_email2);
-
-            $to_email2 = 'jackie.mchenry@momsclub.org';
+            $to_email2 = explode(',', $emailListBorad);
+            $cc_email2 = explode(',', $emailListCoor);
             if ($disbandLetter == 1) {
                 $pdfPath = $this->generateAndSaveDisbandLetter($chapterid);   // Generate and save the PDF
                 Mail::to($to_email2)
-                    // ->cc($cc_email2)
+                    ->cc($cc_email2)
                     ->send(new ChapterDisbandLetter($mailData, $pdfPath));
             }
 
@@ -2784,7 +2833,6 @@ class ChapterController extends Controller
 
         return redirect()->to('/chapter/zapped')->with('success', 'Chapter was successfully zapped');
     }
-
 
     public function generateAndSaveDisbandLetter($chapterid)
     {

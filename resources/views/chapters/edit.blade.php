@@ -948,8 +948,11 @@
                             <input type="text" id="disband_reason" name="disband_reason" class="form-control my-colorpicker1">
                             <input type="hidden" id="chapter_id" name="chapter_id" class="form-control my-colorpicker1" value="{{ $chapterList[0]->id}}">
                         </p>
+
                         <div class="radio-chk">
                             <label>Send Standard Disband Letter</label>
+                            <div style="color: red;">Please be patient if sending letter, screen does take a while to zap/refresh after clicking OK.</div>
+
                             <label style="display: block;"><input type="checkbox" name="disband_letter" id="disband_letter" class="ios-switch green bigswitch" {{$chapterList[0]->disband_letter == '1'  ? 'checked' : ''}}><div><div></div></div>
                                 </label>
                             </div>
