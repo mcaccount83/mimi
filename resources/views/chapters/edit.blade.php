@@ -948,6 +948,11 @@
                             <input type="text" id="disband_reason" name="disband_reason" class="form-control my-colorpicker1">
                             <input type="hidden" id="chapter_id" name="chapter_id" class="form-control my-colorpicker1" value="{{ $chapterList[0]->id}}">
                         </p>
+                        <div class="radio-chk">
+                            <label>Send Standard Disband Letter</label>
+                            <label style="display: block;"><input type="checkbox" name="disband_letter" id="disband_letter" class="ios-switch green bigswitch" {{$chapterList[0]->disband_letter == '1'  ? 'checked' : ''}}><div><div></div></div>
+                                </label>
+                            </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -979,6 +984,7 @@
   function disbandChapter(){
         var txt =  $("#disband_reason").val();
         var cid = $("#chapter_id").val();
+    var ltr = $("#disband_letter").is(":checked") ? '1' : '0';  // Correctly assign '1' or '0'
 
         if(txt ==''){
             alert("Please enter reason for Disband");
@@ -988,7 +994,7 @@
             $.ajax({
               url: '{{ route('chapter.disband') }}',
               type: 'POST',
-              data: { reason:txt,chapterid:cid, _token: '{{csrf_token()}}' },
+              data: { reason:txt,letter:ltr,chapterid:cid, _token: '{{csrf_token()}}' },
               success: function(response) {
                     window.location.href = "{{ route('chapter.zapped') }}";
 

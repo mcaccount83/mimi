@@ -263,7 +263,7 @@
             <div class="grid-item col-md-4">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title">END OF YEAR</h3>
+                        <h3 class="box-title">END OF YEAR<spam style="font-size: small;">&nbsp;(AVAIL TO CHAPTERS JULY-DEC)</span></h3>
                     </div>
                     <div class="box-body">
                         @foreach($resources->where('category', 7) as $resourceItem)

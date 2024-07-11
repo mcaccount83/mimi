@@ -943,6 +943,60 @@ class BoardController extends Controller
         return view('boards.payment')->with($data);
     }
 
+
+     /**
+     * Show M2M Donation Form All Board Members
+     */
+    public function showM2MDonationForm(Request $request)
+    {
+        //$borDetails = User::find($request->user()->id)->BoardDetails;
+        $user = User::find($request->user()->id);
+        // Check if user is not found
+        if (! $user) {
+            return redirect()->route('home');
+        }
+
+        $borDetails = $user->BoardDetails;
+        // Check if BoardDetails is not found for the user
+        if (! $borDetails) {
+            return redirect()->route('home');
+        }
+
+        $borPositionId = $borDetails['board_position_id'];
+        $chapterId = $borDetails['chapter_id'];
+        $isActive = $borDetails['is_active'];
+
+        $chapterDetails = Chapter::find($chapterId);
+        $stateArr = DB::table('state')
+            ->select('state.*')
+            ->orderBy('id')
+            ->get();
+
+        $chapterState = DB::table('state')
+            ->select('state_short_name')
+            ->where('id', '=', $chapterDetails->state)
+            ->get();
+        $chapterState = $chapterState[0]->state_short_name;
+
+        $boardPosition = ['1' => 'President', '2' => 'AVP', '3' => 'MVP', '4' => 'Treasurer', '5' => 'Secretary'];
+        $boardPositionCode = $borPositionId;
+        $boardPositionAbbreviation = isset($boardPosition[$boardPositionCode]) ? $boardPosition[$boardPositionCode] : '';
+
+        $chapterList = DB::table('chapters as ch')
+            ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address',
+                'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
+            ->leftJoin('board_details as bd', 'ch.id', '=', 'bd.chapter_id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '1')
+            ->get();
+
+        $data = ['chapterState' => $chapterState, 'stateArr' => $stateArr, 'chapterList' => $chapterList, 'boardPositionAbbreviation' => $boardPositionAbbreviation];
+
+        return view('boards.donation')->with($data);
+    }
+
+
     /**
      * Show Chater Resources
      */

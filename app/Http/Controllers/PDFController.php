@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\FinancialReport;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use App\Models\Chapter;
 
 class PDFController extends Controller
 {
@@ -126,5 +127,190 @@ class PDFController extends Controller
 
         return $pdf->stream($filename, ['Attachment' => 0]); // Stream the PDF
 
+    }
+
+
+    /**
+     * Show Chaper in Good Standing PDF All Board Members
+     */
+    public function generateGoodStanding($chapterId)
+    {
+        $chapterDetails = DB::table('chapters')
+            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name',
+                 'st.state_short_name as state','bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'chapters.conference as conf',
+                'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
+            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->where('chapters.is_active', '=', '1')
+            ->where('bd.board_position_id', '=', '1')
+            ->where('chapters.id', '=', $chapterId)
+            ->get();
+
+         // Call the load_coordinators function
+         $chName = $chapterDetails[0]->chapter_name;
+         $chState = $chapterDetails[0]->state;
+         $chConf = $chapterDetails[0]->conf;
+         $chPcid = $chapterDetails[0]->pcid;
+
+         $coordinatorData = $this->load_coordinators($chConf, $chPcid);
+         $cc_fname = $coordinatorData['cc_fname'];
+         $cc_lname = $coordinatorData['cc_lname'];
+         $cc_pos = $coordinatorData['cc_pos'];
+
+        $pdfData = [
+            'chapter_name' => $chapterDetails[0]->chapter_name,
+            'state' => $chapterDetails[0]->state,
+            'conf_name' => $chapterDetails[0]->conf_name,
+            'conf_desc' => $chapterDetails[0]->conf_desc,
+            'ein' => $chapterDetails[0]->ein,
+            'pres_fname' => $chapterDetails[0]->pres_fname,
+            'pres_lname' => $chapterDetails[0]->pres_lname,
+            'cc_fname' => $cc_fname,
+            'cc_lname' => $cc_lname,
+            'cc_pos' => $cc_pos,
+        ];
+
+        $pdf = Pdf::loadView('pdf.chapteringoodstanding', compact('pdfData'));
+
+        $filename = date('Y') - 1 .'-'.date('Y').'_'.$pdfData['state'].'_'.$pdfData['chapter_name'].'_ChapterInGoodStanding.pdf';
+
+        return $pdf->stream($filename, ['Attachment' => 0]); // Stream the PDF
+
+    }
+
+    /**
+     * Send Disband Letter to Full Board
+     */
+    public function generateDisbandLetter($chapterId)
+    {
+        $chapterDetails = DB::table('chapters')
+            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name',
+                 'st.state_short_name as state','bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'bd.street_address as pres_addr', 'bd.city as pres_city', 'bd.state as pres_state',
+                 'bd.zip as pres_zip', 'chapters.conference as conf', 'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
+            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            // ->where('chapters.is_active', '=', '1')
+            ->where('bd.board_position_id', '=', '1')
+            ->where('chapters.id', '=', $chapterId)
+            ->get();
+
+         // Call the load_coordinators function
+         $chName = $chapterDetails[0]->chapter_name;
+         $chState = $chapterDetails[0]->state;
+         $chConf = $chapterDetails[0]->conf;
+         $chPcid = $chapterDetails[0]->pcid;
+
+         $coordinatorData = $this->load_coordinators($chConf, $chPcid);
+         $cc_fname = $coordinatorData['cc_fname'];
+         $cc_lname = $coordinatorData['cc_lname'];
+         $cc_pos = $coordinatorData['cc_pos'];
+
+        $pdfData = [
+            'chapter_name' => $chapterDetails[0]->chapter_name,
+            'state' => $chapterDetails[0]->state,
+            'conf_name' => $chapterDetails[0]->conf_name,
+            'conf_desc' => $chapterDetails[0]->conf_desc,
+            'ein' => $chapterDetails[0]->ein,
+            'pres_fname' => $chapterDetails[0]->pres_fname,
+            'pres_lname' => $chapterDetails[0]->pres_lname,
+            'pres_addr' => $chapterDetails[0]->pres_addr,
+            'pres_city' => $chapterDetails[0]->pres_city,
+            'pres_state' => $chapterDetails[0]->pres_state,
+            'pres_zip' => $chapterDetails[0]->pres_zip,
+            'cc_fname' => $cc_fname,
+            'cc_lname' => $cc_lname,
+            'cc_pos' => $cc_pos,
+        ];
+
+        $pdf = Pdf::loadView('pdf.disbandletter', compact('pdfData'));
+
+        $filename = date('Y') - 1 .'-'.date('Y').'_'.$pdfData['state'].'_'.$pdfData['chapter_name'].'_Disband_Letter.pdf';
+
+        return $pdf->stream($filename, ['Attachment' => 0]); // Stream the PDF
+
+    }
+
+
+    /**
+     * Load Conference Coordinators For Signing PDF Letters
+     */
+    public function load_coordinators($chConf, $chPcid)
+    {
+       $reportingList = DB::table('coordinator_reporting_tree')
+            ->select('*')
+            ->where('id', '=', $chPcid)
+            ->get();
+
+        foreach ($reportingList as $key => $value) {
+            $reportingList[$key] = (array) $value;
+        }
+        $filterReportingList = array_filter($reportingList[0]);
+        unset($filterReportingList['id']);
+        unset($filterReportingList['layer0']);
+        $filterReportingList = array_reverse($filterReportingList);
+        $str = '';
+        $array_rows = count($filterReportingList);
+        $i = 0;
+        $coordinator_array = [];
+        foreach ($filterReportingList as $key => $val) {
+            $corList = DB::table('coordinator_details as cd')
+                ->select('cd.coordinator_id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.long_title as pos')
+                ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                ->where('cd.coordinator_id', '=', $val)
+                ->get();
+            $coordinator_array[$i] = ['id' => $corList[0]->cid,
+                'first_name' => $corList[0]->fname,
+                'last_name' => $corList[0]->lname,
+                'pos' => $corList[0]->pos];
+
+            $i++;
+        }
+        $coordinator_count = count($coordinator_array);
+
+        for ($i = 0; $i < $coordinator_count; $i++) {
+                $cc_fname = $coordinator_array[$i]['first_name'];
+                $cc_lname = $coordinator_array[$i]['last_name'];
+                $cc_pos = $coordinator_array[$i]['pos'];
+
+        }
+
+        switch ($chConf) {
+            case 1:
+                $cc_fname = $cc_fname;
+                $cc_lname = $cc_lname;
+                $cc_pos = $cc_pos;
+                break;
+            case 2:
+                $cc_fname = $cc_fname;
+                $cc_lname = $cc_lname;
+                $cc_pos = $cc_pos;
+                break;
+            case 3:
+                $cc_fname = $cc_fname;
+                $cc_lname = $cc_lname;
+                $cc_pos = $cc_pos;
+                break;
+            case 4:
+                $cc_fname = $cc_fname;
+                $cc_lname = $cc_lname;
+                $cc_pos = $cc_pos;
+                break;
+            case 5:
+                $cc_fname = $cc_fname;
+                $cc_lname = $cc_lname;
+                $cc_pos = $cc_pos;
+                break;
+        }
+
+        return [
+            'cc_fname' => $cc_fname,
+            'cc_lname' => $cc_lname,
+            'cc_pos'=> $cc_pos,
+            'coordinator_array' => $coordinator_array,
+        ];
     }
 }

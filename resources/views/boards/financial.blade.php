@@ -1378,7 +1378,7 @@
                             echo "<tr>";
                             echo "<td>
                                     <div class=\"form-group\">
-                                        <input type=\"date\" class=\"form-control\" min='2021-07-01' max='2022-06-30' name=\"BankRecDate" . $row . "\" id=\"BankRecDate" . $row . "\" value=\"" . ($bank_rec_array[$row]['bank_rec_date'] ?? '') . "\"  onchange=\"IsValidDate(this)\">
+                                        <input type=\"date\" class=\"form-control\" name=\"BankRecDate" . $row . "\" id=\"BankRecDate" . $row . "\" value=\"" . ($bank_rec_array[$row]['bank_rec_date'] ?? '') . "\"  onchange=\"IsValidDate(this)\">
                                     </div>
                                 </td>";
 
@@ -3599,9 +3599,9 @@ $(document).ready(function(){
         var AssociateMembers=0;
         var AssociateMemberDuesCollected=0;
 
-        ChangedMeetingFees = document.getElementById("optChangeDuesYes").checked;
-        ChargedMembersDifferently = document.getElementById("optNewOldDifferentYes").checked;
-        MembersReducedDues = document.getElementById("optNoFullDuesYes").checked;
+        ChangedMeetingFees = document.getElementById("optChangeDues").value === "1";
+        ChargedMembersDifferently = document.getElementById("optNewOldDifferent").value === "1";
+        MembersReducedDues = document.getElementById("optNoFullDues").value === "1";
 
         NewMembers = Number(document.getElementById("TotalNewMembers").value);
         RenewedMembers = Number(document.getElementById("TotalRenewedMembers").value);
@@ -3620,19 +3620,23 @@ $(document).ready(function(){
         AssociateMemberDuesCollected = Number(document.getElementById("TotalAssociateMembers").value) * Number(document.getElementById("AssociateMemberDues").value);
         PartalDuesCollected = Number(document.getElementById("PartialDuesMemberDues").value);
 
-        if(ChargedMembersDifferently){
-            TotalFees = NewMembers * MemberDues // Normal dues, not changes
-                + RenewedMembers * MemberDuesRenewal
+        if (ChangedMeetingFees && ChargedMembersDifferently) {
+            TotalFees = NewMembers * MemberDues // Normal dues
+                + RenewedMembers * MemberDuesRenewal  // Renewal dues
                 + NewMembers2 * NewMemberDues  // Changed dues
-                + RenewedMembers2 * NewMemberDuesRenewal
-                + AssociateMemberDuesCollected + PartalDuesCollected ;  // Associate members or partial dues
-
-        }
-        else{
-            TotalFees = (NewMembers + RenewedMembers) * MemberDues // Normal dues, not changes
-                + (NewMembers2 + RenewedMembers2) * NewMemberDues  // Changed dues
-                + AssociateMemberDuesCollected + PartalDuesCollected ;  // Associate members or partial dues
-
+                + RenewedMembers2 * NewMemberDuesRenewal  //Renewal Changed dues
+                + AssociateMemberDuesCollected + PartalDuesCollected;  // Associate members or partial dues
+        } else if (ChargedMembersDifferently) {
+            TotalFees = NewMembers * MemberDues // Normal dues, no changes
+                + RenewedMembers * MemberDuesRenewal  //Renewal dues, no changes
+                + AssociateMemberDuesCollected + PartalDuesCollected;  // Associate members or partial dues
+        } else if (ChangedMeetingFees) {
+            TotalFees = NewMembers * MemberDues // Normal dues
+                + NewMembers2 * NewMemberDues  // Changed dues
+                + AssociateMemberDuesCollected + PartalDuesCollected;  // Associate members or partial dues
+        } else {
+            TotalFees = (NewMembers + RenewedMembers) * MemberDues // Normal & Renewal dues, no changes
+                + AssociateMemberDuesCollected + PartalDuesCollected;  // Associate members or partial dues
         }
 
         TotalFees = TotalFees.toFixed(2);

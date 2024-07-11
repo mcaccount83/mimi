@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegOnline;
 use App\Mail\PaymentsSustainingChapterThankYou;
+use App\Mail\PaymentsM2MOnline;
+use App\Mail\PaymentsM2MChapterThankYou;
 use App\Models\Chapter;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -306,6 +308,277 @@ class PaymentController extends Controller
         } else {
             // No response returned
             return redirect()->to('/board/reregpayment')->with('fail', 'No response returned');
+        }
+    }
+
+    public function processDonation(Request $request): RedirectResponse
+    {
+        $borDetails = User::find($request->user()->id)->BoardDetails;
+        $chapterId = $borDetails['chapter_id'];
+
+        $chapterDetails = Chapter::find($chapterId);
+        $chapterState = DB::table('state')
+            ->select('state_short_name')
+            ->where('id', '=', $chapterDetails->state)
+            ->get();
+        $chapterState = $chapterState[0]->state_short_name;
+        $chapterName = $chapterDetails['name'];
+        $chConf = $chapterDetails['conference'];
+        $chPcid = $chapterDetails['primary_coordinator_id'];
+
+        $presDetails = DB::table('board_details as bd')
+            ->select('bd.chapter_id as chapter_id', 'bd.board_position_id as board_position_id', 'bd.first_name as first_name', 'bd.last_name as last_name',
+                'bd.street_address as street_address', 'bd.city as city', 'bd.state as state', 'bd.zip as zip')
+            ->where('bd.chapter_id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', 1)
+            ->first();
+
+        $company = $chapterName.', '.$chapterState;
+        $next_renewal_year = $chapterDetails['next_renewal_year'];
+
+        $chapterEmailList = DB::table('board_details as bd')
+            ->select('bd.email as bor_email')
+            ->where('bd.chapter_id', '=', $chapterId)
+            ->get();
+        $emailListBoard = '';
+        foreach ($chapterEmailList as $val) {
+            $email = $val->bor_email;
+            $escaped_email = str_replace("'", "\\'", $email);
+            if ($emailListBoard == '') {
+                $emailListBoard = $escaped_email;
+            } else {
+                $emailListBoard .= ','.$escaped_email;
+            }
+        }
+
+        $corDetails = DB::table('coordinator_details')
+            ->select('email')
+            ->where('coordinator_id', $chapterDetails->primary_coordinator_id)
+            ->first();
+        $cor_pcemail = $corDetails->email;
+
+        $coordinatorEmailList = DB::table('coordinator_reporting_tree')
+            ->select('*')
+            ->where('id', '=', $chPcid)
+            ->get();
+
+        foreach ($coordinatorEmailList as $key => $value) {
+            $coordinatorList[$key] = (array) $value;
+        }
+        $filterCoordinatorList = array_filter($coordinatorList[0]);
+        unset($filterCoordinatorList['id']);
+        unset($filterCoordinatorList['layer0']);
+        $filterCoordinatorList = array_reverse($filterCoordinatorList);
+        $str = '';
+        $array_rows = count($filterCoordinatorList);
+        $i = 0;
+
+        $emailListCoor = '';
+        foreach ($filterCoordinatorList as $key => $val) {
+            if ($val > 1) {
+                $corList = DB::table('coordinator_details as cd')
+                    ->select('cd.email as cord_email')
+                    ->where('cd.coordinator_id', '=', $val)
+                    ->where('cd.is_active', '=', 1)
+                    ->get();
+                if (count($corList) > 0) {
+                    if ($emailListCoor == '') {
+                        $emailListCoor = $corList[0]->cord_email;
+                    } else {
+                        $emailListCoor .= ','.$corList[0]->cord_email;
+                    }
+                }
+            }
+        }
+
+        $m2mdonation = $request->input('donation');
+        $donation = (float) preg_replace('/[^\d.]/', '', $m2mdonation);
+        $fee = $request->input('fee');
+        $cardNumber = $request->input('card_number');
+        $expirationDate = $request->input('expiration_date');
+        $cvv = $request->input('cvv');
+        $first = $request->input('first_name');
+        $last = $request->input('last_name');
+        $address = $request->input('address');
+        $city = $request->input('city');
+        $state = $request->input('state');
+        $zip = $request->input('zip');
+        $email = $request->input('email');
+        $total = $request->input('total');
+        $amount = (float) preg_replace('/[^\d.]/', '', $total);
+        $today = Carbon::today()->format('m-d-Y');
+
+        // Call the load_coordinators function
+        $coordinatorData = $this->load_coordinators($chapterId, $chConf, $chPcid);
+        $ConfCoorEmail = $coordinatorData['ConfCoorEmail'];
+        $coordinator_array = $coordinatorData['coordinator_array'];
+
+        /* Create a merchantAuthenticationType object with authentication details
+            retrieved from the constants file */
+        $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+        $merchantAuthentication->setName(config('settings.authorizenet_api_login_id'));
+        $merchantAuthentication->setTransactionKey(config('settings.authorizenet_transaction_key'));
+
+        // Set the transaction's refId
+        $refId = 'ref'.time();
+
+        // Create the payment data for a credit card
+        $creditCard = new AnetAPI\CreditCardType();
+        $creditCard->setCardNumber($cardNumber);
+        $creditCard->setExpirationDate($expirationDate);
+        $creditCard->setCardCode($cvv);
+
+        // Add the payment data to a paymentType object
+        $paymentOne = new AnetAPI\PaymentType();
+        $paymentOne->setCreditCard($creditCard);
+
+        // Generate a random invoice number
+        $randomInvoiceNumber = mt_rand(100000, 999999);
+        // Create order information
+        $order = new AnetAPI\OrderType();
+        $order->setInvoiceNumber($randomInvoiceNumber);
+        $order->setDescription('Mother-to-Mother Donation');
+
+        // Set the customer's Bill To address
+        $customerAddress = new AnetAPI\CustomerAddressType();
+        $customerAddress->setFirstName($first);
+        $customerAddress->setLastName($last);
+        $customerAddress->setCompany($company);
+        $customerAddress->setAddress($address);
+        $customerAddress->setCity($city);
+        $customerAddress->setState($state);
+        $customerAddress->setZip($zip);
+        $customerAddress->setCountry('USA');
+
+        // Set the customer's identifying information
+        $customerData = new AnetAPI\CustomerDataType();
+        $customerData->setType('individual');
+        $customerData->setId($chapterId);
+        $customerData->setEmail($email);
+
+        // Add values for transaction settings
+        $duplicateWindowSetting = new AnetAPI\SettingType();
+        $duplicateWindowSetting->setSettingName('duplicateWindow');
+        $duplicateWindowSetting->setSettingValue('60');
+
+        // Add some merchant defined fields. These fields won't be stored with the transaction,
+        // but will be echoed back in the response.
+        // $merchantDefinedField1 = new AnetAPI\UserFieldType();
+        // $merchantDefinedField1->setName('MemberCount');
+        // $merchantDefinedField1->setValue($members);
+
+        $merchantDefinedField1 = new AnetAPI\UserFieldType();
+        $merchantDefinedField1->setName('Donation');
+        $merchantDefinedField1->setValue($donation);
+
+        // Create a TransactionRequestType object and add the previous objects to it
+        $transactionRequestType = new AnetAPI\TransactionRequestType();
+        //$transactionRequestType->setTransactionType('authOnlyTransaction');
+        $transactionRequestType->setTransactionType('authCaptureTransaction');
+        $transactionRequestType->setAmount($amount);
+        $transactionRequestType->setOrder($order);
+        $transactionRequestType->setPayment($paymentOne);
+        $transactionRequestType->setBillTo($customerAddress);
+        $transactionRequestType->setCustomer($customerData);
+        $transactionRequestType->addToTransactionSettings($duplicateWindowSetting);
+        $transactionRequestType->addToUserFields($merchantDefinedField1);
+
+        // Assemble the complete transaction request
+        $request = new AnetAPI\CreateTransactionRequest();
+        $request->setMerchantAuthentication($merchantAuthentication);
+        $request->setRefId($refId);
+        $request->setTransactionRequest($transactionRequestType);
+
+        // Create the controller and get the response
+        $controller = new AnetController\CreateTransactionController($request);
+        $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::PRODUCTION);
+
+        if ($response != null) {
+            // Check to see if the API request was successfully received and acted upon
+            if ($response->getMessages()->getResultCode() == 'Ok') {
+                // Since the API request was successful, look for a transaction response and parse it to display the results of authorizing the card
+                $tresponse = $response->getTransactionResponse();
+                if ($tresponse != null && $tresponse->getMessages() != null) {
+
+                    $mailData = [
+                        'chapterName' => $chapterName,
+                        'chapterState' => $chapterState,
+                        'pres_fname' => $presDetails->first_name,
+                        'pres_lname' => $presDetails->last_name,
+                        'pres_street' => $presDetails->street_address,
+                        'pres_city' => $presDetails->city,
+                        'pres_state' => $presDetails->state,
+                        'pres_zip' => $presDetails->zip,
+                        'donation' => $donation,
+                        'processing' => $fee,
+                        'total' => $total,
+                        'fname' => $first,
+                        'lname' => $last,
+                        'email' => $email,
+                        'chapterId' => $chapterId,
+                        'invoice' => $randomInvoiceNumber,
+                        'datePaid' => $today,
+                        'chapterAmount' => $donation,
+                    ];
+
+                    $to_email = $email;
+                    $to_email2 = explode(',', $emailListBoard);
+                    $to_email3 = $cor_pcemail;
+                    $to_email4 = explode(',', $emailListCoor);
+                    $to_email5 = $ConfCoorEmail;
+                    $to_email6 = 'dragonmom@msn.com';
+
+                    $existingRecord = Chapter::where('id', $chapterId)->first();
+
+                    Mail::to([$to_email5, $to_email6])
+                        ->send(new PaymentsM2MOnline($mailData, $coordinator_array));
+
+                    if ($donation > 0.00) {
+                        $existingRecord->m2m_payment = $donation;
+                        $existingRecord->m2m_date = Carbon::today();
+
+                        Mail::to([$to_email])
+                            ->cc($to_email3)
+                            ->send(new PaymentsM2MChapterThankYou($mailData));
+                    }
+                    $existingRecord->save();
+
+                    // Success notification
+                    return redirect()->to('/home')->with('success', 'Payment was successfully processed, thank you for your donation!');
+                    // return redirect()->route('home')->with('success', 'Payment successful! Transaction ID: ' . $tresponse->getTransId());
+                } else {
+                    // Transaction failed
+                    $error_message = 'Transaction Failed';
+                    if ($tresponse->getErrors() != null) {
+                        $error_message .= "\n Error Code: ".$tresponse->getErrors()[0]->getErrorCode();
+                        $error_message .= "\n Error Message: ".$tresponse->getErrors()[0]->getErrorText();
+                    }
+
+                    return redirect()->to('/board/m2mdonation')->with('fail', $error_message);
+                }
+
+                // Or, print errors if the API request wasn't successful
+            } else {
+                // Transaction Failed
+                $tresponse = $response->getTransactionResponse();
+
+                if ($tresponse != null && $tresponse->getErrors() != null) {
+                    $error_message = 'Transaction Failed';
+                    $error_message .= "\n Error Code: ".$tresponse->getErrors()[0]->getErrorCode();
+                    $error_message .= "\n Error Message: ".$tresponse->getErrors()[0]->getErrorText();
+
+                    return redirect()->back()->with('fail', $error_message);
+                } else {
+                    $error_message = 'Transaction Failed';
+                    $error_message .= "\n Error Code: ".$response->getMessages()->getMessage()[0]->getCode();
+                    $error_message .= "\n Error Message: ".$response->getMessages()->getMessage()[0]->getText();
+
+                    return redirect()->to('/board/m2mdonation')->with('fail', $error_message);
+                }
+            }
+        } else {
+            // No response returned
+            return redirect()->to('/board/m2mdonation')->with('fail', 'No response returned');
         }
     }
 

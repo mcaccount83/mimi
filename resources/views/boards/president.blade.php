@@ -31,7 +31,6 @@
 								<img src="{{ asset('chapter_theme/img/logo.png') }}" alt="...">
 							</div>
                            <h2 class="moms-c"> MOMS Club of {{ $chapterList[0]->name }}, {{$chapterState}} </h2>
-                        </a>
                         <h4 class="ein">
                             EIN: {{ $chapterList[0]->ein }}
                         </h4>
@@ -95,39 +94,47 @@
                 <div class="col-md-12"><br></div>
 
                     <div class="col-md-12 text-center">
-                    <div class="col-md-4 float-left">
+                    <div class="col-md-6 float-left">
                         @if($list->ein_letter=='1')
-                      <a class="btn btn-info btn-fill" href="{{ $chapterList[0]->ein_letter_path }}" target="blank"><i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; View/Download EIN Letter</a>
+                      <a class="btn btn-info btn-fill" href="{{ $chapterList[0]->ein_letter_path }}" target="blank"><i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; View/Download Chapter EIN Letter</a>
                       	@else
                        <a class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>><i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; No EIN Letter on File</a>
                        	@endif
                     </div>
+                    <div class="col-md-6 float-left">
+                        <button id="GoodStanding" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('pdf.chapteringoodstanding', ['id' => $list->id]) }}'">
+                            <i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; View/Download Good Standing Letter
+                        </button>
+                    </div>
+                    <div class="col-md-12"><br></div>
+                    <br><br>
+                    <div class="col-md-12 text-center">
 
-                @if($thisDate->month >= 1 && $thisDate->month <= 4)
+                @if($thisDate->month >= 1 && $thisDate->month <= 5)
                     <div id="reportStatusText" class="description text-center">
                         <p><strong><?php echo date('Y')-1 .'-'.date('Y');?> EOY Reports are not available at this time.</strong></p>
                     </div>
                 @endif
-
-                @if($thisDate->month >= 5 && $thisDate->month <= 12 && $boardreport_yes)
+                @if($thisDate->month >= 6 && $thisDate->month <= 12 && $boardreport_yes)
                 @if($list->new_board_active != '1')
-                    <div class="col-md-4 float-left">
-                        <button id="BoardReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $list->id]) }}'">
+                    <div class="col-md-6 float-left">
+                       <button id="BoardReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $list->id]) }}'">
                             <i class="fa fa-user-plus fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
                         </button>
                     </div>
                     @endif
                     @endif
                     @if($thisDate->month >= 6 && $thisDate->month <= 12 && $financialreport_yes)
-                    <div class="col-md-4 float-left">
+                    <div class="col-md-6 float-left">
                         <button id="FinancialReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $list->id]) }}'">
                             <i class="fa fa-usd fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y')-1 .'-'.date('Y') }} Financial Report
                         </button>
 					</div>
+                    <div class="col-md-12"><br></div>
+                    <br>
                 @endif
 
                 @endforeach
-
                     </div>
                 </div>
                 <form method="POST" action='{{ route("board.update",$chapterList[0]->id) }}' autocomplete="off">

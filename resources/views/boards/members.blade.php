@@ -31,7 +31,6 @@
                                     <img src="{{ asset('chapter_theme/img/logo.png') }}" alt="...">
                                 </div>
                                <h2 class="moms-c"> MOMS Club of {{$chapterDetails->name}}, {{$chapterState}} </h2>
-                            </a>
                             <h4 class="ein">
                                 EIN: {{$chapterDetails->ein}}
                             </h4>

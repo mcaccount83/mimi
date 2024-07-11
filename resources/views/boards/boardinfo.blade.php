@@ -10,13 +10,11 @@
                 </div>
                 <div class="card-body">
                     <div class="author">
-                        <a href="#">
                             <div class="border-gray avatar">
 								<img src="{{ asset('chapter_theme/img/logo.png') }}" alt="...">
 							</div>
                            <h2 class="moms-c"> MOMS Club of {{ $chapterList[0]->name }}, {{$chapterState}} </h2>
                            <h2 class="moms-c"> <?php echo $a = date('Y'); echo "-"; echo $a+1;?> Board Election Report </h2>
-                        </a>
                         <!--<h4 class="ein">
                             EIN: {{ $chapterList[0]->ein }}
                         </h4>-->
