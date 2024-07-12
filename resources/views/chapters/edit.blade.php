@@ -34,7 +34,6 @@
             $regionalCoordinatorCondition = ($positionid >= 5 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*RC-Founder & ACC
             $assistRegionalCoordinatorCondition = ($positionid >= 4 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*ARC-Founder & ACC
             $bigSisterCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
-
             $eoyTestCondition = ($positionid >= 6 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25) ||
                     ($positionid == 29 || $secpositionid == 29);  //CC-Founder & ACC, AR Tester
             $eoyReportCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25) ||

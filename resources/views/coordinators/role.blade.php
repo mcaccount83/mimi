@@ -28,6 +28,11 @@
     <form id="role" method="POST" action='{{ route("coordinator.updaterole",$coordinatorDetails[0]->coordinator_id) }}'>
     @csrf
     <section class="content">
+
+        @php
+            $bigSisterCondition = ($position_id == 1 );  //*Big Sister
+        @endphp
+
 		<div class="row">
 		<div class="col-md-12">
 			<div class="box card">
@@ -388,7 +393,15 @@
 			<button type="submit" class="btn btn-themeBlue margin" onclick="return PreRetireValidate(true)"><i class="fa fa-user-times fa-fw" aria-hidden="true" ></i>&nbsp; Put Volunteer on Leave</button>
 			<?php } ?>
 			<button type="submit" class="btn btn-themeBlue margin" onclick="return PreRetireValidate()"><i class="fa fa-user-times fa-fw" aria-hidden="true" ></i>&nbsp; Retire Volunteer</button>
-		</div>
+        </div>
+
+            <?php if ($bigSisterCondition) { ?>
+                <div class="box-body text-center">
+                Be sure to save all Region, Reporting and Chapter ionformation before sending Welcome Letter to a new Big Sister.<br>
+                <button type="button" class="btn btn-themeBlue margin" id="letter"><i class="fa fa-envelope fa-fw" aria-hidden="true"></i>&nbsp; Send Big Sister Welcome Email</button>
+            </div>
+            <?php } ?>
+
         <!-- /.box-body -->
         </div>
     </section>
@@ -502,6 +515,12 @@
 		$("#submit_type").val('RemoveLeave');
 		$("#role").submit();
 	});
+
+    $("#letter").click(function() {
+		$("#submit_type").val('Letter');
+		$("#role").submit();
+	});
+
 });
 
 function ConfirmCancel(element){

@@ -38,4 +38,5 @@ class User extends Authenticatable
     {
         return $this->hasOne(\App\Models\OutgoingBoardMember::class, 'user_id');
     }
+
 }
