@@ -37,7 +37,7 @@
 <p><center>Username: {{ $mailData['email'] }}<br>
     Password: TempPass4You</center></p>
 <br>
-<p>After logging in you will see the coordinator dashboard instead of your chapter's profile page when you log in.</p>
+<p>After logging in you will see the coordinator dashboard instead of your chapter's profile page.</p>
 <p>It is important to keep your @momsclub.org listed as your email address for your coordinator account because that is the email address your chapters see and will use to contact you. MIMI also does not allow coordinators and board member profiles to use the same email address. So, if you are still on your chapter's board and try to set both accounts up with the same email address you will get an error when trying to log into MIMI.</p>
 <hr>
 <br>
