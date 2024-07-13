@@ -2952,7 +2952,7 @@ class ChapterController extends Controller
     /**
      * Load Conference Coordinators for Each Conference
      */
-    public function load_cc_oordinators($chConf, $chPcid)
+    public function load_cc_coordinators($chConf, $chPcid)
     {
        $reportingList = DB::table('coordinator_reporting_tree')
             ->select('*')
