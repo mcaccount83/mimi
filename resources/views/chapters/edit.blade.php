@@ -943,23 +943,27 @@
                 </div>
                 <div class="modal-body">
                     <form>
-                        <p>Marking a chapter as disbanded will remove the logins for all board members and remove the chapter.  Please enter their reason for disbanding and press OK
-                            <input type="text" id="disband_reason" name="disband_reason" class="form-control my-colorpicker1">
-                            <input type="hidden" id="chapter_id" name="chapter_id" class="form-control my-colorpicker1" value="{{ $chapterList[0]->id}}">
-                        </p>
+                        <p>Marking a chapter as disbanded will remove the logins for all board members and remove the chapter. Please enter the reason for disbanding and press OK</p>
+                        <input type="text" id="disband_reason" name="disband_reason" class="form-control my-colorpicker1">
+                        <input type="hidden" id="chapter_id" name="chapter_id" class="form-control my-colorpicker1" value="{{ $chapterList[0]->id }}">
 
                         <div class="radio-chk">
                             <label>Send Standard Disband Letter</label>
                             <div style="color: red;">Please be patient if sending letter, screen does take a while to zap/refresh after clicking OK.</div>
-
-                            <label style="display: block;"><input type="checkbox" name="disband_letter" id="disband_letter" class="ios-switch green bigswitch" {{$chapterList[0]->disband_letter == '1'  ? 'checked' : ''}}><div><div></div></div>
-                                </label>
-                            </div>
+                            <label style="display: block;">
+                                <input type="checkbox" name="disband_letter" id="disband_letter" class="ios-switch green bigswitch" {{$chapterList[0]->disband_letter == '1'  ? 'checked' : ''}}>
+                                <div><div></div></div>
+                            </label>
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-success" onclick="return disbandChapter()">OK</button>
-                    </form>
+                    <div id="loading-spinner" style="display: none;">
+                        <!-- Add your loading spinner or message here -->
+                        <i class="fa fa-spinner fa-spin"></i> Processing...
+                    </div>
                 </div>
             </div>
         </div>
@@ -983,30 +987,43 @@
 // Disable Web Link Status option 0
     document.getElementById('option0').disabled = true;
 
-  function disbandChapter(){
-        var txt =  $("#disband_reason").val();
+    function disbandChapter() {
+        var txt = $("#disband_reason").val();
         var cid = $("#chapter_id").val();
-    var ltr = $("#disband_letter").is(":checked") ? '1' : '0';  // Correctly assign '1' or '0'
+        var ltr = $("#disband_letter").is(":checked") ? '1' : '0';
 
-        if(txt ==''){
+        if (txt == '') {
             alert("Please enter reason for Disband");
             $("#disband_reason").focus();
             return false;
-        }else{
+        } else {
+            // Show loading spinner
+            $('#loading-spinner').show();
+
             $.ajax({
-              url: '{{ route('chapter.disband') }}',
-              type: 'POST',
-              data: { reason:txt,letter:ltr,chapterid:cid, _token: '{{csrf_token()}}' },
-              success: function(response) {
-                    window.location.href = "{{ route('chapter.zapped') }}";
-
-              },
-              error: function (jqXHR, exception) {
-
-              }
-          });
+                url: '{{ route('chapter.disband') }}',
+                type: 'POST',
+                data: { reason: txt, letter: ltr, chapterid: cid, _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        alert(response.message);
+                        window.location.href = response.redirect;
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(jqXHR, exception) {
+                    alert("Something went wrong, Please try again.");
+                },
+                complete: function() {
+                    // Hide loading spinner
+                    $('#loading-spinner').hide();
+                }
+            });
         }
-      }
+    }
+
+
 
   function isNumber(evt) {
     evt = (evt) ? evt : window.event;

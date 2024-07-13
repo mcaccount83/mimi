@@ -37,6 +37,8 @@ use Symfony\Component\Mime\Email;
 use Illuminate\Support\Facades\Http;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Session;
+
 
 class ChapterController extends Controller
 {
@@ -2604,7 +2606,7 @@ class ChapterController extends Controller
     /**
      * Function for Zapping a Chapter (store)
      */
-    public function storeChapterDisband(Request $request): RedirectResponse
+    public function storeChapterDisband(Request $request)
     {
         $input = $request->all();
         $chapterid = $input['chapterid'];
@@ -2794,6 +2796,7 @@ class ChapterController extends Controller
             $cc_lname = $coordinatorData['cc_lname'];
             $cc_pos = $coordinatorData['cc_pos'];
             $cc_conf = $coordinatorData['cc_conf'];
+            $cc_conf_desc = $coordinatorData['cc_conf_desc'];
             $cc_email = $coordinatorData['cc_email'];
 
             $mailData = [
@@ -2820,6 +2823,7 @@ class ChapterController extends Controller
                 'cc_lname' => $cc_lname,
                 'cc_pos' => $cc_pos,
                 'cc_conf' => $cc_conf,
+                'cc_conf_desc' => $cc_conf_desc,
                 'cc_email' => $cc_email,
             ];
 
@@ -2838,18 +2842,41 @@ class ChapterController extends Controller
                     ->send(new ChapterDisbandLetter($mailData, $pdfPath));
             }
 
-            DB::commit();
-        } catch (\Exception $e) {
-            // Rollback Transaction
-            DB::rollback();
-            // Log the error
-            Log::error($e);
+        // Commit the transaction
+        DB::commit();
 
-            return redirect()->to('/chapter/zapped')->with('fail', 'Something went wrong, Please try again..');
+        $message = 'Chapter disbanded successfully';
+
+        // Determine response based on request type
+        if ($request->expectsJson()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => url('/chapter/zapped')
+            ]);
+        } else {
+            return redirect()->to('/chapter/zapped')->with('success', $message);
         }
+    } catch (\Exception $e) {
+        // Rollback transaction on exception
+        DB::rollback();
+        Log::error($e);
 
-        return redirect()->to('/chapter/zapped')->with('success', 'Chapter was successfully zapped');
+        $message = 'Something went wrong, Please try again.';
+
+        // Determine response based on request type
+        if ($request->expectsJson()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => url('/chapter/zapped')
+            ]);
+        } else {
+            return redirect()->to('/chapter/zapped')->with('error', $message);
+        }
     }
+}
+
 
     public function generateAndSaveDisbandLetter($chapterid)
     {
@@ -2972,8 +2999,10 @@ class ChapterController extends Controller
         $coordinator_array = [];
         foreach ($filterReportingList as $key => $val) {
             $corList = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.long_title as pos', 'cd.email as email', 'cd.conference_id as conf')
+                ->select('cd.coordinator_id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.long_title as pos', 'cd.email as email',
+                    'cd.conference_id as conf', 'cf.conference_description as conf_desc',)
                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
                 ->where('cd.coordinator_id', '=', $val)
                 ->get();
             $coordinator_array[$i] = ['id' => $corList[0]->cid,
@@ -2981,6 +3010,7 @@ class ChapterController extends Controller
                 'last_name' => $corList[0]->lname,
                 'pos' => $corList[0]->pos,
                 'conf' => $corList[0]->conf,
+                'conf_desc' => $corList[0]->conf_desc,
                 'email' => $corList[0]->email,
             ];
 
@@ -2993,6 +3023,7 @@ class ChapterController extends Controller
                 $cc_lname = $coordinator_array[$i]['last_name'];
                 $cc_pos = $coordinator_array[$i]['pos'];
                 $cc_conf = $coordinator_array[$i]['conf'];
+                $cc_conf_desc = $coordinator_array[$i]['conf_desc'];
                 $cc_email = $coordinator_array[$i]['email'];
         }
 
@@ -3002,6 +3033,7 @@ class ChapterController extends Controller
                 $cc_lname = $cc_lname;
                 $cc_pos = $cc_pos;
                 $cc_conf = $cc_conf;
+                $cc_conf_desc = $cc_conf_desc;
                 $cc_email = $cc_email;
                 break;
             case 2:  //Conference 2
@@ -3009,6 +3041,7 @@ class ChapterController extends Controller
                 $cc_lname = $cc_lname;
                 $cc_pos = $cc_pos;
                 $cc_conf = $cc_conf;
+                $cc_conf_desc = $cc_conf_desc;
                 $cc_email = $cc_email;
                 break;
             case 3:  //Conference 3
@@ -3016,6 +3049,7 @@ class ChapterController extends Controller
                 $cc_lname = $cc_lname;
                 $cc_pos = $cc_pos;
                 $cc_conf = $cc_conf;
+                $cc_conf_desc = $cc_conf_desc;
                 $cc_email = $cc_email;
                 break;
             case 4:  //Conference 4
@@ -3023,6 +3057,7 @@ class ChapterController extends Controller
                 $cc_lname = $cc_lname;
                 $cc_pos = $cc_pos;
                 $cc_conf = $cc_conf;
+                $cc_conf_desc = $cc_conf_desc;
                 $cc_email = $cc_email;
                 break;
             case 5:  //Conference 5
@@ -3030,6 +3065,7 @@ class ChapterController extends Controller
                 $cc_lname = $cc_lname;
                 $cc_pos = $cc_pos;
                 $cc_conf = $cc_conf;
+                $cc_conf_desc = $cc_conf_desc;
                 $cc_email = $cc_email;
                 break;
         }
@@ -3039,6 +3075,7 @@ class ChapterController extends Controller
             'cc_lname' => $cc_lname,
             'cc_pos'=> $cc_pos,
             'cc_conf'=> $cc_conf,
+            'cc_conf_desc'=> $cc_conf_desc,
             'cc_email' => $cc_email,
             // 'coordinator_array' => $coordinator_array,
         ];
