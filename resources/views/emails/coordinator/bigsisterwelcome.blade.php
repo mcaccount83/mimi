@@ -30,22 +30,34 @@
 <b>GSUITE</b>
 <p>All coordinators will receive and are expected to use an @momsclub.org email address when representing MOMS Club.</p>
 <p>A wide variety of documents, spreadsheets and presentations are created, stored and shared using Google Drive and Google Meet is used to interact face-to-face one on one, in small groups or events to hold virtual workshops and other Conference or International level events.</p>
+<p>Your assigned email address is {{ $mailData['email'] }}. You should have received an email from Google to activate your account. If you did not receive the email, or if the link has expired, just let me know and we'll send you a new link!
 <hr>
 <b>MIMI</b>
-<p>Although you are probably familiar with MIMI as a board member of your chapter, you will also use MIMI as a coordinator. You will log in with your @momsclub.org email address and see the coordinator dashboard instead of your chapter's profile page when you log in.</p>
+<p>Although you are probably familiar with MIMI as a board member of your chapter, you will also use MIMI as a coordinator.</p>
+<p><center>Username: {{ $mailData['email'] }}<br>
+    Password: TempPass4You</center></p>
+<br>
+<p>After logging in you will see the coordinator dashboard instead of your chapter's profile page when you log in.</p>
 <p>It is important to keep your @momsclub.org listed as your email address for your coordinator account because that is the email address your chapters see and will use to contact you. MIMI also does not allow coordinators and board member profiles to use the same email address. So, if you are still on your chapter's board and try to set both accounts up with the same email address you will get an error when trying to log into MIMI.</p>
 <hr>
 <br>
 <center><b>YOUR CHAPTER LIST</b></center>
-    <center><table id="chapterlist" class="table table-bordered table-hover" style="padding-top: 15px">
-        <tbody>
-            @foreach ($mailData['chapters'] as $chapter)
-                <tr>
-                    <td style="padding: 0px; line-height: 1.5;"><center>{{ $chapter->chapter }}, {{ $chapter->state }}</center></td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table></center>
+@if (count($mailData['chapters']) > 0)
+    <center>
+        <table id="chapterlist" class="table table-bordered table-hover" style="padding-top: 15px">
+            <tbody>
+                @foreach ($mailData['chapters'] as $chapter)
+                    <tr>
+                        <td style="padding: 0px; line-height: 1.5;"><center>{{ $chapter->chapter }}, {{ $chapter->state }}</center></td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </center>
+@else
+    <p><center>No chapters have been assigned to you yet.<br>
+    You will be notified once your group of chapter has been set.</center></p>
+@endif
 <br>
 <hr>
 <b>ADDITIONAL RESOURCES</b>
