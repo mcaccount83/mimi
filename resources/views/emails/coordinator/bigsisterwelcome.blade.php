@@ -32,8 +32,8 @@
 <p>A wide variety of documents, spreadsheets and presentations are created, stored and shared using Google Drive and Google Meet is used to interact face-to-face one on one, in small groups or events to hold virtual workshops and other Conference or International level events.</p>
 <hr>
 <b>MIMI</b>
-<p>Although you are probably familiar wtih MIMI as a board member of your chapter, you will also use MIMI as a coordinator. You will log in with your @momsclub.org email address and see the coordinator dashboard instead of your chapter's profile page when you log in.</p>
-<p>It is important to keep your @momsclub.org listed as your email address for your coordintaor account because that is the email address your chapters see and will use to contact you. MIMI also does not allow coordinators and board member profiles to use the same email address. So, if you are still on your chapter's board and try to set both accounts up with the same email address you will get an error when trying to log into MIMI.</p>
+<p>Although you are probably familiar with MIMI as a board member of your chapter, you will also use MIMI as a coordinator. You will log in with your @momsclub.org email address and see the coordinator dashboard instead of your chapter's profile page when you log in.</p>
+<p>It is important to keep your @momsclub.org listed as your email address for your coordinator account because that is the email address your chapters see and will use to contact you. MIMI also does not allow coordinators and board member profiles to use the same email address. So, if you are still on your chapter's board and try to set both accounts up with the same email address you will get an error when trying to log into MIMI.</p>
 <hr>
 <br>
 <center><b>YOUR CHAPTER LIST</b></center>

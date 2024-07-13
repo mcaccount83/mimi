@@ -2635,7 +2635,8 @@ class ChapterController extends Controller
                 ->update(['is_active' => 0]);
 
             $chapterList = DB::table('chapters')
-                ->select('chapters.*', 'chapters.primary_coordinator_id as pcid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+                ->select('chapters.*', 'chapters.primary_coordinator_id as pcid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+                    'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'chapters.conference as conf')
                 ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -2784,6 +2785,17 @@ class ChapterController extends Controller
                 }
             }
 
+            // Call the load_cc_coordinators function
+            $chConf = $chapterList[0]->conf;
+            $chPcid = $chapterList[0]->pcid;
+
+            $coordinatorData = $this->load_cc_coordinators($chConf, $chPcid);
+            $cc_fname = $coordinatorData['cc_fname'];
+            $cc_lname = $coordinatorData['cc_lname'];
+            $cc_pos = $coordinatorData['cc_pos'];
+            $cc_conf = $coordinatorData['cc_conf'];
+            $cc_email = $coordinatorData['cc_email'];
+
             $mailData = [
                 'chapterName' => $chapterName,
                 'chapterEmail' => $chapterEmail,
@@ -2804,6 +2816,11 @@ class ChapterController extends Controller
                 'slast' => $secscond,
                 'semail' => $secemail,
                 'conf' => $conf,
+                'cc_fname' => $cc_fname,
+                'cc_lname' => $cc_lname,
+                'cc_pos' => $cc_pos,
+                'cc_conf' => $cc_conf,
+                'cc_email' => $cc_email,
             ];
 
             //Primary Coordinator Notification//
@@ -2849,13 +2866,13 @@ class ChapterController extends Controller
             ->where('chapters.id', '=', $chapterid)
             ->get();
 
-         // Call the load_coordinators function
+         // Call the load_cc_coordinators function
          $chName = $chapterDetails[0]->chapter_name;
          $chState = $chapterDetails[0]->state;
          $chConf = $chapterDetails[0]->conf;
          $chPcid = $chapterDetails[0]->pcid;
 
-         $coordinatorData = $this->load_coordinators($chConf, $chPcid);
+         $coordinatorData = $this->load_cc_coordinators($chConf, $chPcid);
          $cc_fname = $coordinatorData['cc_fname'];
          $cc_lname = $coordinatorData['cc_lname'];
          $cc_pos = $coordinatorData['cc_pos'];
@@ -2933,9 +2950,9 @@ class ChapterController extends Controller
     }
 
     /**
-     * Load Conference Coordinators For Signing PDF Letters
+     * Load Conference Coordinators for Each Conference
      */
-    public function load_coordinators($chConf, $chPcid)
+    public function load_cc_oordinators($chConf, $chPcid)
     {
        $reportingList = DB::table('coordinator_reporting_tree')
             ->select('*')
@@ -2955,14 +2972,17 @@ class ChapterController extends Controller
         $coordinator_array = [];
         foreach ($filterReportingList as $key => $val) {
             $corList = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.long_title as pos')
+                ->select('cd.coordinator_id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.long_title as pos', 'cd.email as email', 'cd.conference_id as conf')
                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
                 ->where('cd.coordinator_id', '=', $val)
                 ->get();
             $coordinator_array[$i] = ['id' => $corList[0]->cid,
                 'first_name' => $corList[0]->fname,
                 'last_name' => $corList[0]->lname,
-                'pos' => $corList[0]->pos];
+                'pos' => $corList[0]->pos,
+                'conf' => $corList[0]->conf,
+                'email' => $corList[0]->email,
+            ];
 
             $i++;
         }
@@ -2972,34 +2992,45 @@ class ChapterController extends Controller
                 $cc_fname = $coordinator_array[$i]['first_name'];
                 $cc_lname = $coordinator_array[$i]['last_name'];
                 $cc_pos = $coordinator_array[$i]['pos'];
-
+                $cc_conf = $coordinator_array[$i]['conf'];
+                $cc_email = $coordinator_array[$i]['email'];
         }
 
         switch ($chConf) {
-            case 1:
+            case 1:   //Conference 1
                 $cc_fname = $cc_fname;
                 $cc_lname = $cc_lname;
                 $cc_pos = $cc_pos;
+                $cc_conf = $cc_conf;
+                $cc_email = $cc_email;
                 break;
-            case 2:
+            case 2:  //Conference 2
                 $cc_fname = $cc_fname;
                 $cc_lname = $cc_lname;
                 $cc_pos = $cc_pos;
+                $cc_conf = $cc_conf;
+                $cc_email = $cc_email;
                 break;
-            case 3:
+            case 3:  //Conference 3
                 $cc_fname = $cc_fname;
                 $cc_lname = $cc_lname;
                 $cc_pos = $cc_pos;
+                $cc_conf = $cc_conf;
+                $cc_email = $cc_email;
                 break;
-            case 4:
+            case 4:  //Conference 4
                 $cc_fname = $cc_fname;
                 $cc_lname = $cc_lname;
                 $cc_pos = $cc_pos;
+                $cc_conf = $cc_conf;
+                $cc_email = $cc_email;
                 break;
-            case 5:
+            case 5:  //Conference 5
                 $cc_fname = $cc_fname;
                 $cc_lname = $cc_lname;
                 $cc_pos = $cc_pos;
+                $cc_conf = $cc_conf;
+                $cc_email = $cc_email;
                 break;
         }
 
@@ -3007,7 +3038,9 @@ class ChapterController extends Controller
             'cc_fname' => $cc_fname,
             'cc_lname' => $cc_lname,
             'cc_pos'=> $cc_pos,
-            'coordinator_array' => $coordinator_array,
+            'cc_conf'=> $cc_conf,
+            'cc_email' => $cc_email,
+            // 'coordinator_array' => $coordinator_array,
         ];
     }
 

@@ -694,6 +694,7 @@ class CoordinatorController extends Controller
     // Get the necessary details from the coordinator details
     $corId = $corDetails['coordinator_id'];
     $userName = $corDetails['first_name'] . ' ' . $corDetails['last_name'];
+    $userEmail = $corDetails['email'];
     $positionId = $corDetails['position_id'];
 
     // Fetch the coordinator position using the position_id
@@ -844,6 +845,7 @@ class CoordinatorController extends Controller
                     'conf_name' => $conf_name,
                     'reg_name' => $reg_name,
                     'userName' => $userName,
+                    'userEmail' =>$userEmail,
                     'positionTitle' => $positionTitle,
                     'conf' => $conf,
                 ];
@@ -1253,9 +1255,9 @@ class CoordinatorController extends Controller
     }
 
     /**
-     * Load Conference Coordinators For Signing PDF Letters
+     * Load Conference Coordinators For Each Conference
      */
-    public function load_coordinators($chConf, $chPcid)
+    public function load_cc_coordinators($chConf, $chPcid)
     {
        $reportingList = DB::table('coordinator_reporting_tree')
             ->select('*')

@@ -29,6 +29,7 @@ class BigSisterWelcome extends Mailable
     {
         return $this
             ->subject('Welcome to Our Team!')
+            ->replyTo($this->mailData['userEmail'])
             ->markdown('emails.coordinator.bigsisterwelcome');
     }
 }

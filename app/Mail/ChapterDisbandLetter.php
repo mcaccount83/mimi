@@ -32,6 +32,7 @@ class ChapterDisbandLetter extends Mailable
     {
         return $this
             ->subject('Chapter Disdand Letter')
+            ->replyTo($this->mailData['cc_email'])
             ->markdown('emails.chapterupdate.chapterdisbandletter')
             ->attach($this->pdfPath, [
                 'as' => $this->mailData['chapterState'].'_'.$this->mailData['chapterName'].'_Disband_Letter.pdf',
