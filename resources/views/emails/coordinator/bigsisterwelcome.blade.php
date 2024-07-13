@@ -10,7 +10,7 @@
 <h4>Your Mentoring Coordinator and Her Role</h4>
 <p>Big Sisters are considered "in training” and most of your training will come on the job. You'll form a close working relationship with your Mentoring Coordinator as she helps guide you through your MOMS Club Volunteer experience.</p>
 <p>Your Mentoring Coordinator is your "go to" for anything that you need. While your role is to support the chapters, your Mentoring Coordinator's role is to support YOU.</p>
-<p>As a Big Sister communication (both with your chapters and your Mentoring Coordinator) is vital. You should be checking in with your Mentoring Coordinator every week to ensure you are receiving the information and support you need.</p>
+<p>As a Big Sister, communication (both with your chapters and your Mentoring Coordinator) is vital. You should be checking in with your Mentoring Coordinator every week to ensure you are receiving the information and support you need.</p>
 <p>While in training, your Mentoring Coordinator will be more involved in your communication with the chapters. As you start out you'll run everything past her before replying to a chapter. We strive to reply back to the chapter within 24 hours, so if it seems to be taking longer than that due to the nature of the question, you can always let a chapter know that you are still looking into it in order to give them the most accurate and complete answer possible.</p>
 <p>The easiest way to accomplish this is to go ahead and try to answer the chapter's question with what you think is correct and send the draft to your Mentoring Coordinator. She may have some additional inputs to add that you hadn't thought about. Once she shares that with you, you'll send the final copy to the chapter. Keep in mind this is part of the training process and something that everyone has done.</p>
 <p>After a few months you'll find your writing style and become more comfortable responding to chapters.</p>
@@ -57,18 +57,18 @@
     </center>
 @else
     <p><center>No chapters have been assigned to you yet.<br>
-    You will be notified once your group of chapter has been set.</center></p>
+    You will be notified once your group of chapters has been set.</center></p>
 @endif
 <br>
 <hr>
 <b>ADDITIONAL RESOURCES</b>
-<p>The Coordinator Toolkit is the all-in-one place where you can find information, documents, resources, links, etc that you may find helpful to you as a coordinator.<br>
+<p>The Coordinator Toolkit is the all-in-one place where you can find information, documents, resources, links, etc. that you may find helpful to you as a coordinator.<br>
     https://momsclub.org/mimi/admin/toolkit</p>
-<p>The list of Chapter Resources is also easily accessible for you to references when helping chapters with issues they may face.
+<p>The list of Chapter Resources is also easily accessible for you to reference when helping chapters with issues they may face.
     https://momsclub.org/mimi/admin/resources</p>
 <hr>
 <b>YOUR COORDINATOR TEAM</b>
-<p>You are never alone! No matter how seasoned you are, you will always have a Coordinator Team around you. Your full coordinator team is cc'd here so you have all of their information and I'm also here for anything that you need!  But, as your Mentoring Coordinator {{ $mailData['cor_fname'] }} should always be your first point of contact.</p>
+<p>You are never alone! No matter how seasoned you are, you will always have a Coordinator Team around you. Your full coordinator team is cc'd here so you have all of their information and I'm also here for anything that you need!  But, as your Mentoring Coordinator, {{ $mailData['cor_fname'] }} should always be your first point of contact.</p>
 
 <br>
 <p><strong>MCL</strong>,<br>
