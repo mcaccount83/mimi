@@ -34,7 +34,8 @@
 <hr>
 <b>MIMI</b>
 <p>Although you are probably familiar with MIMI as a board member of your chapter, you will also use MIMI as a coordinator.</p>
-<p><center>Username: {{ $mailData['email'] }}<br>
+<p><center>https://momsclub.org/mimi/login<br>
+    Username: {{ $mailData['email'] }}<br>
     Password: TempPass4You</center></p>
 <br>
 <p>After logging in you will see the coordinator dashboard instead of your chapter's profile page.</p>

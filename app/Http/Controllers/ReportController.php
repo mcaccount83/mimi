@@ -1984,12 +1984,17 @@ class ReportController extends Controller
                             ->where('id', $record->user_id)
                             ->value('password');
 
+                        // Set default password if existing password is null
+                        if (is_null($existingPassword)) {
+                            $existingPassword = Hash::make('TempPass4You');
+                        }
+
                         DB::table('outgoing_board_member')->insert(
                             [
                                 'first_name' => $record->first_name,
                                 'last_name' => $record->last_name,
                                 'email' => $record->email,
-                                'password' => $existingPassword, // Use existing password
+                                'password' => $existingPassword, // Use existing or default password
                                 'remember_token' => '',
                                 'board_position_id' => $record->board_position_id,
                                 'chapter_id' => $chapter_id,
