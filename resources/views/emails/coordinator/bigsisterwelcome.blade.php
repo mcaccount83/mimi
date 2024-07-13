@@ -15,48 +15,46 @@
 <p>The easiest way to accomplish this is to go ahead and try to answer the chapter's question with what you think is correct and send the draft to your Mentoring Coordinator. She may have some additional inputs to add that you hadn't thought about. Once she shares that with you, you'll send the final copy to the chapter. Keep in mind this is part of the training process and something that everyone has done.</p>
 <p>After a few months you'll find your writing style and become more comfortable responding to chapters.</p>
 <hr>
-<center><h4>YOUR MENTORING COORDINATOR</h4></center>
-    <center><table id="coordinator" class="table table-bordered table-hover">
-            <tbody>
-        <tr>
-            <td><center>{{ $mailData['cor_fname'] }} {{ $mailData['cor_lname'] }}</center><br>
-                <center><a href="mailto:{{ $mailData['cor_email'] }}">{{ $mailData['cor_email'] }}</a></center><br>
-                <center>{{ $mailData['cor_phone'] }}</center></td>
-        </tr>
-        </tbody>
-    </table></center><br>
+<br>
+<center><b>YOUR MENTORING COORDINATOR</b></center>
+    <p><center>{{ $mailData['cor_fname'] }} {{ $mailData['cor_lname'] }}<br>
+                <a href="mailto:{{ $mailData['cor_email'] }}">{{ $mailData['cor_email'] }}</a><br>
+               {{ $mailData['cor_phone'] }}</center></p>
+<br>
 <hr>
-<h4>Let's Get Started!</h4>
+<b>LET'S GET STARTED!</b>
 <p>Complete the Big Sister training in our eLearning Portal to gain a fuller understanding of the role of a Big Sister.</p>
 <p><center>https://momsclub.org/elearning/coordinator-training/<br>
     Password: Toolkit2021</center></p>
 <hr>
-<h4>GSuite</h4>
+<b>GSUITE</b>
 <p>All coordinators will receive and are expected to use an @momsclub.org email address when representing MOMS Club.</p>
 <p>A wide variety of documents, spreadsheets and presentations are created, stored and shared using Google Drive and Google Meet is used to interact face-to-face one on one, in small groups or events to hold virtual workshops and other Conference or International level events.</p>
 <hr>
-<h4>MIMI</h4>
+<b>MIMI</b>
 <p>Although you are probably familiar wtih MIMI as a board member of your chapter, you will also use MIMI as a coordinator. You will log in with your @momsclub.org email address and see the coordinator dashboard instead of your chapter's profile page when you log in.</p>
 <p>It is important to keep your @momsclub.org listed as your email address for your coordintaor account because that is the email address your chapters see and will use to contact you. MIMI also does not allow coordinators and board member profiles to use the same email address. So, if you are still on your chapter's board and try to set both accounts up with the same email address you will get an error when trying to log into MIMI.</p>
 <hr>
-<h4><center>YOUR CHAPTER LIST</center></h4>
-    <center><table id="chapterlist" class="table table-bordered table-hover">
+<br>
+<center><b>YOUR CHAPTER LIST</b></center>
+    <center><table id="chapterlist" class="table table-bordered table-hover" style="padding-top: 15px">
         <tbody>
             @foreach ($mailData['chapters'] as $chapter)
                 <tr>
-                    <td><center>{{ $chapter->chapter }}, {{ $chapter->state }}</center></td>
+                    <td style="padding: 0px; line-height: 1.5;"><center>{{ $chapter->chapter }}, {{ $chapter->state }}</center></td>
                 </tr>
             @endforeach
         </tbody>
-    </table></center><br>
+    </table></center>
+<br>
 <hr>
-<h4>Coordinator Toolkit & Chapter Resources</h4>
+<b>ADDITIONAL RESOURCES</b>
 <p>The Coordinator Toolkit is the all-in-one place where you can find information, documents, resources, links, etc that you may find helpful to you as a coordinator.<br>
     https://momsclub.org/mimi/admin/toolkit</p>
 <p>The list of Chapter Resources is also easily accessible for you to references when helping chapters with issues they may face.
     https://momsclub.org/mimi/admin/resources</p>
 <hr>
-<h4><center>YOUR COORDINATOR TEAM</center></h4>
+<b>YOUR COORDINATOR TEAM</b>
 <p>You are never alone! No matter how seasoned you are, you will always have a Coordinator Team around you. Your full coordinator team is cc'd here so you have all of their information and I'm also here for anything that you need!  But, as your Mentoring Coordinator {{ $mailData['cor_fname'] }} should always be your first point of contact.</p>
 
 <br>
