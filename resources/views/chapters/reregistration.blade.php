@@ -136,6 +136,7 @@
 
 						 <div class="box-body text-center">
             <?php if(Session::get('positionid') ==6 || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>
+                <p>**Known issue - will not send more than 10 messages.**</p>
               <a title="Re-registration reminders will be sent to all unpaid chapters in your conference with renewal dates this month." href="{{ route('chapter.reminder') }}"><button class="btn btn-themeBlue margin"   <?php if($checkBoxStatus) echo "disabled";?>><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; Send Current Month Reminders</button></a>
 			<?php }?>
 	        <?php if(Session::get('positionid') ==6 || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>

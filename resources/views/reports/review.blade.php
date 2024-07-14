@@ -121,6 +121,7 @@
             </div>
         </div>
               <div class="box-body text-center">
+                <p>**Known issue - will not send more than 10 messages.**</p>
               <a title="Financial Report reminders will be sent to all chapters who have not submitted a report." href="{{ route('report.financialreminder') }}"><button class="btn btn-themeBlue margin"><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; Send Financial Report Reminders</button></a>
            </div>
           <!-- /.box -->
