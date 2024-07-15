@@ -4879,6 +4879,7 @@ class ChapterController extends Controller
             DB::update('UPDATE chapters SET financial_report_received = ? where id = ?', [null, $chapter_id]);
             DB::update('UPDATE financial_report SET farthest_step_visited_coord = ? where chapter_id = ?', [13, $chapter_id]);
             DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [null, $chapter_id]);
+            DB::update('UPDATE financial_report SET submitted = ? where chapter_id = ?', [null, $chapter_id]);
 
             return redirect()->back()->with('success', 'Report has been successfully Unsubmitted');
             exit;
@@ -5111,6 +5112,7 @@ class ChapterController extends Controller
     public function updateStatus(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $userId = $corDetails['user_id'];
         $corId = $corDetails['coordinator_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
@@ -5126,13 +5128,20 @@ class ChapterController extends Controller
             $chapter->save();
 
             $report = FinancialReport::find($id);
+            if ($request->has('ch_financial_received') != null) {
+                $report->submitted = date('Y-m-d H:i:s');
+                $report->reviewer_id = $userId;
+            }
+            if ($request->has('ch_financial_received') == null) {
+                $report->submitted = null;
+                $report->reviewer_id = null;
+            }
             if ($request->has('ch_financial_complete') != null) {
                 $report->review_complete = date('Y-m-d H:i:s');
             }
             if ($request->has('ch_financial_complete') == null) {
                 $report->review_complete = null;
             }
-            $report->reviewer_id = null;
             $report->save();
 
             DB::commit();

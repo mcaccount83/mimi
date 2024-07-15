@@ -557,6 +557,10 @@ $(document).ready(function() {
 document.getElementById('option0').disabled = true;
 document.getElementById('option1').disabled = true;
 
+document.querySelector('form').addEventListener('submit', function(){
+        document.querySelector('button[type="submit"]').setAttribute('disabled', 'disabled');
+    });
+
 function is_url() {
         var str = $("#validate_url").val().trim(); // Trim leading and trailing whitespace
         var chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
