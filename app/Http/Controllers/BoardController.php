@@ -1888,9 +1888,10 @@ class BoardController extends Controller
 
         // Call the load_coordinators function
         $chId = $chapter_id;
-        $coordinatorData = $this->load_coordinators($chId, $chName, $chState, $chConf, $chPcid);
-        $ReviewerEmail = $coordinatorData['ReviewerEmail'];
+        $coordinatorData = $this->load_coordinators($chId, $chConf, $chPcid);
         $coordinator_array = $coordinatorData['coordinator_array'];
+        $cc_email = $coordinatorData['cc_email'];
+        $cc_id = $coordinatorData['cc_id'];
 
         DB::beginTransaction();
         try {
@@ -2131,7 +2132,7 @@ class BoardController extends Controller
                 $report->completed_email = $completed_email;
 
                 // Send email to Assigned Reviewer//
-                $to_email = $ReviewerEmail;
+                $to_email = $cc_email;
                 $to_email2 = $completed_email;
 
                 $mailData = [
@@ -2149,6 +2150,7 @@ class BoardController extends Controller
 
                 if ($reportReceived == 1) {
                     $pdfPath = $this->generateAndSavePdf($chapter_id);   // Generate and save the PDF
+                    DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapter_id]);
                     Mail::to($to_email)
                         ->send(new EOYFinancialSubmitted($mailData, $coordinator_array, $pdfPath));
 
@@ -2462,17 +2464,28 @@ class BoardController extends Controller
         }
     }
 
-    public function load_coordinators($chId, $chName, $chState, $chConf, $chPcid)
+    public function getRosterfile(): BinaryFileResponse
     {
-        $financial_report_array = FinancialReport::find($chId);
+        $filename = 'roster_template.xlsx';
 
-        $chapterDetails = DB::table('chapters')
-            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state',
-                'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->where('chapters.is_active', '=', '1')
-            ->where('chapters.id', '=', $chId)
-            ->get();
+        $file_path = '/home/momsclub/public_html/mimi/storage/app/public';
+
+        return Response::download($file_path, $filename, [
+            'Content-Length: '.filesize($file_path),
+        ]);
+    }
+
+    public function load_coordinators($chId, $chConf, $chPcid)
+    {
+        // $financial_report_array = FinancialReport::find($chId);
+
+        // $chapterDetails = DB::table('chapters')
+        //     ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state',
+        //         'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
+        //     ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+        //     ->where('chapters.is_active', '=', '1')
+        //     ->where('chapters.id', '=', $chId)
+        //     ->get();
 
         $reportingList = DB::table('coordinator_reporting_tree')
             ->select('*')
@@ -2507,58 +2520,48 @@ class BoardController extends Controller
         $coordinator_count = count($coordinator_array);
 
         for ($i = 0; $i < $coordinator_count; $i++) {
-            if ($coordinator_array[$i]['position'] == 'RC') {
-                $rc_email = $coordinator_array[$i]['email'];
-                $rc_id = $coordinator_array[$i]['id'];
-            } elseif ($coordinator_array[$i]['position'] == 'CC') {
                 $cc_email = $coordinator_array[$i]['email'];
                 $cc_id = $coordinator_array[$i]['id'];
             }
-        }
 
         $reviewer_id = 0;
         //Report was submitted, notify those who need to know.
         switch ($chConf) {
             case 1:
-                $to_email = $cc_email;
+                $cc_email = $cc_email;
+                $cc_id = $cc_id;
                 $reviewer_id = $cc_id;
                 break;
             case 2:
-                $to_email = $cc_email;
+                $cc_email = $cc_email;
+                $cc_id = $cc_id;
                 $reviewer_id = $cc_id;
                 break;
             case 3:
-                $to_email = $cc_email;
+                $cc_email = $cc_email;
+                $cc_id = $cc_id;
                 $reviewer_id = $cc_id;
                 break;
             case 4:
-                $to_email = $cc_email;
+                $cc_email = $cc_email;
+                $cc_id = $cc_id;
                 $reviewer_id = $cc_id;
                 break;
             case 5:
-                $to_email = $cc_email;
+                $cc_email = $cc_email;
+                $cc_id = $cc_id;
                 $reviewer_id = $cc_id;
                 break;
-            default:
-                $to_email = 'admin@momsclub.org';
         }
 
-        DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$reviewer_id, $chId]);
+        // DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$reviewer_id, $chId]);
 
         return [
-            'ReviewerEmail' => $to_email,
+            // 'ReviewerEmail' => $to_email,
             'coordinator_array' => $coordinator_array,
+            'cc_email' => $cc_email,
+            'cc_id' => $cc_id,
         ];
     }
 
-    public function getRosterfile(): BinaryFileResponse
-    {
-        $filename = 'roster_template.xlsx';
-
-        $file_path = '/home/momsclub/public_html/mimi/storage/app/public';
-
-        return Response::download($file_path, $filename, [
-            'Content-Length: '.filesize($file_path),
-        ]);
-    }
 }
