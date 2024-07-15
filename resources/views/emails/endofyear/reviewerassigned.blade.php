@@ -1,7 +1,10 @@
 @component('mail::message')
 # Assigned Reviewer Notification
 
-You have been assigned to review the financial report for {{$mailData['chapter_name']}}, {{$mailData['chapter_state']}}. After reviewing, assign to the next reviewer or mark as review complete.<br>
+{{$mailData['userName']}} has assigned you to review the financial report for {{$mailData['chapter_name']}}, {{$mailData['chapter_state']}}. After reviewing, assign to the next reviewer or mark as review complete.<br>
+<br>
+Message from {{$mailData['userName']}}:<br>
+{{$mailData['reviewer_email_message']}}<br>
 <br>
 The Financial Report PDF is attached and other documnets that can be downloaded are listed below.<br>
 <br>

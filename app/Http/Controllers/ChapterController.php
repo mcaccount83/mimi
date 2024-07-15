@@ -4869,6 +4869,9 @@ class ChapterController extends Controller
 
     public function storeFinancialReport(Request $request, $chapter_id): RedirectResponse
     {
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $userName = $corDetails['first_name'].' '.$corDetails['last_name'];
+
         $input = $request->all();
         $farthest_step_visited_coord = $input['FurthestStep'];
         $reviewer_id = isset($input['AssignedReviewer']) ? $input['AssignedReviewer'] : null;
@@ -4905,6 +4908,8 @@ class ChapterController extends Controller
             $step_10_notes_log = $input['Step10_Log'];
             $step_11_notes_log = $input['Step11_Log'];
             $step_12_notes_log = $input['Step12_Log'];
+
+            $reviewer_email_message = $input['reviewer_email_message'];
 
             // Step 1 - Dues
             $check_roster_attached = isset($input['checkRosterAttached']) ? $input['checkRosterAttached'] : null;
@@ -5027,6 +5032,8 @@ class ChapterController extends Controller
                     'file_irs_path' => $file_irs_path,
                     'bank_statement_included_path' => $bank_statement_included_path,
                     'bank_statement_2_included_path' => $bank_statement_2_included_path,
+                    'reviewer_email_message' => $reviewer_email_message,
+                    'userName' => $userName,
                 ];
 
                 if ($report->isDirty('reviewer_id')) {

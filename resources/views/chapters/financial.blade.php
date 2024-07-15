@@ -2767,7 +2767,7 @@
                                 <?php if ($chapterDetails[0]->financial_report_received == 1 && $financial_report_array['reviewer_id'] == null): ?>
                                     <span style="display: inline; color: red;">No Reviewer Assigned - Select Reviewer before continuing to prevent errors.<br></span>
                                 <?php endif; ?>
-                            <label for="AssignedReviewer"><strong>Assigned Reviewer:</strong></label>
+                                <label for="AssignedReviewer"><strong>Assigned Reviewer:</strong></label>
                                 <select class="form-control" name="AssignedReviewer" id="AssignedReviewer" style="width: 250px;" <?php if ($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"?> required>
                                     <option value="" style="display:none" disabled selected>Select a reviewer</option>
                                     @foreach($reviewerList as $pcl)
@@ -2775,7 +2775,13 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="form-group" id="emailMessageGroup" style="display: none;">
+                                <label for="AssignedReviewer"><strong>Additional Email Message for Reviewer:</strong></label>
+                                <textarea class="form-control" style="width:100%" rows="8" name="reviewer_email_message" id="reviewer_email_message"><?php echo $financial_report_array['reviewer_email_message']; ?></textarea>
+                            </div>
                         </div>
+
+
 
 						    <div class="form-row form-group">
 								<div class="card-body">
@@ -2962,6 +2968,15 @@
     }
   }
 })();
+
+document.getElementById('AssignedReviewer').addEventListener('change', function() {
+        var emailMessageGroup = document.getElementById('emailMessageGroup');
+        if (this.value != '') {
+            emailMessageGroup.style.display = 'block';
+        } else {
+            emailMessageGroup.style.display = 'none';
+        }
+    });
 
 $(document).ready(function(){
 	accordion.init({ speed: 300, oneOpen: true });
