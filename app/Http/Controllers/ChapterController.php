@@ -57,7 +57,7 @@ class ChapterController extends Controller
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
-
+        $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
@@ -65,13 +65,13 @@ class ChapterController extends Controller
         $request->session()->put('positionid', $positionId);
         $request->session()->put('secpositionid', $secPositionId);
         $request->session()->put('corconfid', $corConfId);
+        $request->session()->put('corregid', $corRegId);
 
         if ($positionId <= 7 || $positionId == 25) {
-            if ($corId == 25 || $positionId == 25) {
-                //Get Coordinator Reporting Tree
+            if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+                //Show Full Conference or Region
                 $reportIdList = DB::table('coordinator_reporting_tree as crt')
                     ->select('crt.id')
-                    ->where('crt.layer1', '=', '6')
                     ->get();
             } else {
                 //Get Coordinator Reporting Tree
@@ -86,8 +86,35 @@ class ChapterController extends Controller
             }
             $inQryStr = rtrim($inQryStr, ',');
             $inQryArr = explode(',', $inQryStr);
-
         }
+
+        if ($positionId == 6 || $positionId == 25) {
+        $chapterList = DB::table('chapters as ch')
+            ->select('ch.id', 'ch.name', 'ch.state', 'ch.ein', 'ch.primary_coordinator_id', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
+                'st.state_short_name as state', 'cd.region_id', 'ch.region')
+            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('bd.board_position_id', '=', '1')
+            ->where('ch.conference', '=', $corConfId)
+            ->orderBy('st.state_short_name')
+            ->orderBy('ch.name')
+            ->get();
+        } elseif ($positionId == 5) {
+            $chapterList = DB::table('chapters as ch')
+            ->select('ch.id', 'ch.name', 'ch.state', 'ch.ein', 'ch.primary_coordinator_id', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
+                'st.state_short_name as state', 'cd.region_id', 'ch.region')
+            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('bd.board_position_id', '=', '1')
+            ->where('ch.region', '=', $corRegId)
+            ->orderBy('st.state_short_name')
+            ->orderBy('ch.name')
+            ->get();
+        } else {
         $chapterList = DB::table('chapters as ch')
             ->select('ch.id', 'ch.name', 'ch.state', 'ch.ein', 'ch.primary_coordinator_id', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
@@ -99,6 +126,7 @@ class ChapterController extends Controller
             ->orderBy('st.state_short_name')
             ->orderBy('ch.name')
             ->get();
+        }
 
         if (isset($_GET['check'])) {
             if ($_GET['check'] == 'yes') {
@@ -115,7 +143,6 @@ class ChapterController extends Controller
                     ->orderBy('ch.name')
                     ->get();
             }
-
         } else {
             $checkBoxStatus = '';
         }
@@ -3507,9 +3534,9 @@ class ChapterController extends Controller
 
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
+        $corRegId = $corDetails['region_id'];
         $currentYear = date('Y');
         $currentMonth = date('m');
-
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
@@ -3517,13 +3544,13 @@ class ChapterController extends Controller
         $request->session()->put('positionid', $positionId);
         $request->session()->put('secpositionid', $secPositionId);
         $request->session()->put('corconfid', $corConfId);
+        $request->session()->put('corregid', $corRegId);
 
         if ($positionId <= 7 || $positionId == 25) {
-            if ($corId == 25 || $positionId == 25) {
-                //Get Coordinator Reporting Tree
+            if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+                //Show Full Conference or Region
                 $reportIdList = DB::table('coordinator_reporting_tree as crt')
                     ->select('crt.id')
-                    ->where('crt.layer1', '=', '6')
                     ->get();
             } else {
                 //Get Coordinator Reporting Tree
@@ -3538,52 +3565,49 @@ class ChapterController extends Controller
             }
             $inQryStr = rtrim($inQryStr, ',');
             $inQryArr = explode(',', $inQryStr);
-
         }
-        $reChapterList = DB::table('chapters as ch')
-            ->select('ch.id', 'ch.notes', 'ch.name', 'ch.state', 'ch.reg_notes', 'ch.next_renewal_year', 'ch.dues_last_paid', 'ch.start_month_id',
-                'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->leftJoin('db_month as db', 'ch.start_month_id', '=', 'db.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('bd.board_position_id', '=', '1')
-            ->where(function ($query) use ($currentYear, $currentMonth) {
-                $query->where('ch.next_renewal_year', '<', $currentYear)
-                    ->orWhere(function ($query) use ($currentYear, $currentMonth) {
-                        $query->where('ch.next_renewal_year', '=', $currentYear)
-                            ->where('ch.start_month_id', '<=', $currentMonth);
-                    });
-            })
-            ->whereIn('ch.primary_coordinator_id', $inQryArr)
-            ->orderByDesc('ch.next_renewal_year')
-            ->orderByDesc('ch.start_month_id')
-            ->get();
 
-        if (isset($_GET['check'])) {
-            if ($_GET['check'] == 'yes') {
-                $checkBoxStatus = 'checked';
-                $reChapterList = DB::table('chapters as ch')
-                    ->select('ch.id', 'ch.notes', 'ch.name', 'ch.state', 'ch.reg_notes', 'ch.next_renewal_year', 'ch.dues_last_paid', 'ch.start_month_id',
-                        'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                        'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name')
-                    ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
-                    ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-                    ->leftJoin('db_month as db', 'ch.start_month_id', '=', 'db.id')
-                    ->where('ch.is_active', '=', '1')
-                    ->where('bd.board_position_id', '=', '1')
-                    ->whereIn('ch.primary_coordinator_id', $inQryArr)
-                    ->orderBy('st.state_short_name')
-                    ->orderBy('ch.name')
-                    ->get();
-            }
+        $baseQuery = DB::table('chapters as ch')
+    ->select(
+        'ch.id', 'ch.notes', 'ch.name', 'ch.state', 'ch.reg_notes', 'ch.next_renewal_year', 'ch.dues_last_paid', 'ch.start_month_id',
+        'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+        'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name'
+    )
+    ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
+    ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+    ->leftJoin('db_month as db', 'ch.start_month_id', '=', 'db.id')
+    ->where('ch.is_active', '=', '1')
+    ->where('bd.board_position_id', '=', '1');
 
-        } else {
-            $checkBoxStatus = '';
-        }
+if ($positionId == 6 || $positionId == 25) {
+    $baseQuery->where('ch.conference', '=', $corConfId);
+} elseif ($positionId == 5) {
+    $baseQuery->where('ch.region', '=', $corRegId);
+} else {
+    $baseQuery->whereIn('ch.primary_coordinator_id', $inQryArr);
+}
+
+$baseQuery->where(function ($query) use ($currentYear, $currentMonth) {
+    $query->where('ch.next_renewal_year', '<', $currentYear)
+          ->orWhere(function ($query) use ($currentYear, $currentMonth) {
+              $query->where('ch.next_renewal_year', '=', $currentYear)
+                    ->where('ch.start_month_id', '<=', $currentMonth);
+          });
+});
+
+if (isset($_GET['check']) && $_GET['check'] == 'yes') {
+    $checkBoxStatus = 'checked';
+    $baseQuery->orderBy('st.state_short_name')
+              ->orderBy('ch.name');
+} else {
+    $checkBoxStatus = '';
+    $baseQuery->orderBy('ch.next_renewal_year')
+              ->orderBy('ch.start_month_id');
+}
+
+$reChapterList = $baseQuery->get();
+
 
         $countList = count($reChapterList);
 
