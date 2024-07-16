@@ -3618,35 +3618,54 @@ $(document).ready(function(){
         PartialDuesMembers = Number(document.getElementById("TotalPartialDuesMembers").value);
         AssociateMembers = Number(document.getElementById("TotalAssociateMembers").value);
 
-        AssociateMemberDuesCollected = Number(document.getElementById("TotalAssociateMembers").value) * Number(document.getElementById("AssociateMemberDues").value);
-        PartalDuesCollected = Number(document.getElementById("PartialDuesMemberDues").value);
-
-        if (ChangedMeetingFees && ChargedMembersDifferently) {
-            TotalFees = NewMembers * MemberDues // Normal dues
-                + RenewedMembers * MemberDuesRenewal  // Renewal dues
-                + NewMembers2 * NewMemberDues  // Changed dues
-                + RenewedMembers2 * NewMemberDuesRenewal  //Renewal Changed dues
-                + AssociateMemberDuesCollected + PartalDuesCollected;  // Associate members or partial dues
-        } else if (ChargedMembersDifferently) {
-            TotalFees = NewMembers * MemberDues // Normal dues, no changes
-                + RenewedMembers * MemberDuesRenewal  //Renewal dues, no changes
-                + AssociateMemberDuesCollected + PartalDuesCollected;  // Associate members or partial dues
-        } else if (ChangedMeetingFees) {
-            TotalFees = NewMembers * MemberDues // Normal dues
-                + RenewedMembers * MemberDues
-                + NewMembers2 * NewMemberDues  // Changed dues
-                + RenewedMembers2 *  NewMemberDues
-                + AssociateMemberDuesCollected + PartalDuesCollected;  // Associate members or partial dues
-        } else {
-            TotalFees = (NewMembers + RenewedMembers) * MemberDues // Normal & Renewal dues, no changes
-                + AssociateMemberDuesCollected + PartalDuesCollected;  // Associate members or partial dues
-        }
-
-        TotalFees = TotalFees.toFixed(2);
+        // AssociateMemberDuesCollected = Number(document.getElementById("TotalAssociateMembers").value) * Number(document.getElementById("AssociateMemberDues").value);
+        // // PartalDuesCollected = Number(document.getElementById("PartialDuesMemberDues").value);
+        // PartalDuesCollected = Number(document.getElementById("TotalPartialDuesMembers").value) * Number(document.getElementById("PartialDuesMemberDues").value);
 
         TotalMembers = NewMembers + RenewedMembers + MembersNoDues + AssociateMembers + PartialDuesMembers + NewMembers2 + RenewedMembers2;
         document.getElementById("TotalMembers").value = TotalMembers;
 
+        newMembersDues = Number(document.getElementById("TotalNewMembers").value) * Number(document.getElementById("MemberDues").value);
+        renewalMembersDues = Number(document.getElementById("TotalRenewedMembers").value) * Number(document.getElementById("MemberDues").value);
+        renewalMembersDuesDiff = Number(document.getElementById("TotalRenewedMembers").value) * Number(document.getElementById("MemberDuesRenewal").value);
+        newMembersDuesNew = Number(document.getElementById("TotalNewMembersNewFee").value) * Number(document.getElementById("NewMemberDues").value);
+        renewMembersDuesNew = Number(document.getElementById("TotalRenewedMembersNewFee").value) * Number(document.getElementById("NewMemberDues").value);
+        renewMembersNewDuesDiff = Number(document.getElementById("TotalRenewedMembersNewFee").value) * Number(document.getElementById("NewMemberDuesRenewal").value);
+        partialMembersDues = Number(document.getElementById("TotalPartialDuesMembers").value) * Number(document.getElementById("PartialDuesMemberDues").value);
+        associateMembersDues = Number(document.getElementById("TotalAssociateMembers").value) * Number(document.getElementById("AssociateMemberDues").value);
+
+        // if (ChangedMeetingFees && ChargedMembersDifferently) {
+        //     TotalFees = NewMembers * MemberDues // Normal dues
+        //         + RenewedMembers * MemberDuesRenewal  // Renewal dues
+        //         + NewMembers2 * NewMemberDues  // Changed dues
+        //         + RenewedMembers2 * NewMemberDuesRenewal  //Renewal Changed dues
+        //         + AssociateMemberDuesCollected + PartalDuesCollected;  // Associate members or partial dues
+        // } else if (ChargedMembersDifferently) {
+        //     TotalFees = NewMembers * MemberDues // Normal dues, no changes
+        //         + RenewedMembers * MemberDuesRenewal  //Renewal dues, no changes
+        //         + AssociateMemberDuesCollected + PartalDuesCollected;  // Associate members or partial dues
+        // } else if (ChangedMeetingFees) {
+        //     TotalFees = NewMembers * MemberDues // Normal dues
+        //         + RenewedMembers * MemberDues
+        //         + NewMembers2 * NewMemberDues  // Changed dues
+        //         + RenewedMembers2 *  NewMemberDues
+        //         + AssociateMemberDuesCollected + PartalDuesCollected;  // Associate members or partial dues
+        // } else {
+        //     TotalFees = (NewMembers + RenewedMembers) * MemberDues // Normal & Renewal dues, no changes
+        //         + AssociateMemberDuesCollected + PartalDuesCollected;  // Associate members or partial dues
+        // }
+
+        if (ChangedMeetingFees && ChargedMembersDifferently) {
+            TotalFees = newMembersDues + renewalMembersDuesDiff + newMembersDuesNew + renewMembersNewDuesDiff + associateMembersDues + partialMembersDues;
+        } else if (ChargedMembersDifferently) {
+            TotalFees = newMembersDues + renewalMembersDuesDiff + associateMembersDues + partialMembersDues;
+        } else if (ChangedMeetingFees) {
+            TotalFees = newMembersDues + renewalMembersDues + newMembersDuesNew + renewMembersDuesNew + associateMembersDues + partialMembersDues;
+        } else {
+            TotalFees = newMembersDues + renewalMembersDues + associateMembersDues + partialMembersDues;
+        }
+
+        TotalFees = TotalFees.toFixed(2);
 
         document.getElementById("TotalDues").value = TotalFees;
         document.getElementById("SumMembershipDuesIncome").value = TotalFees;

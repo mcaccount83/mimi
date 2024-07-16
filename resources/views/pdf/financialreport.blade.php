@@ -129,9 +129,9 @@
             if ($pdfData['different_dues'] == 1 && $pdfData['changed_dues'] != 1) {
                 $totalDues = $newMembers + $renewalMembersDiff + $partialMembers + $associateMembers;
             } elseif ($pdfData['different_dues'] == 1 && $pdfDatay['changed_dues'] == 1) {
-                $totalDues = $newMembers + $renewalMembersDiff + $renewMembersNew + $renewMembersNewDiff + $partialMembers + $associateMembers;
+                $totalDues = $newMembers + $renewalMembersDiff + $newMembersNew + $renewMembersNewDiff + $partialMembers + $associateMembers;
             } elseif ($pdfData['different_dues'] != 1 && $pdfData['changed_dues'] == 1) {
-                $totalDues = $newMembers + $newMembersNew + $renewalMembers + $renewMembersNew + $partialMembers + $associateMembers;
+                $totalDues = $newMembers + $renewalMembers + $newMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
             } else {
                 $totalDues = $newMembers + $renewalMembers + $partialMembers + $associateMembers;
             }

@@ -319,9 +319,9 @@
                                 if ($financial_report_array['different_dues'] == 1 && $financial_report_array['changed_dues'] != 1) {
                                     $totalDues = $newMembers + $renewalMembersDiff + $partialMembers + $associateMembers;
                                 } elseif ($financial_report_array['different_dues'] == 1 && $financial_report_array['changed_dues'] == 1) {
-                                    $totalDues = $newMembers + $renewalMembersDiff + $renewMembersNew + $renewMembersNewDiff + $partialMembers + $associateMembers;
+                                    $totalDues = $newMembers + $renewalMembersDiff + $newMembersNew + $renewMembersNewDiff + $partialMembers + $associateMembers;
                                 } elseif ($financial_report_array['different_dues'] != 1 && $financial_report_array['changed_dues'] == 1) {
-                                    $totalDues = $newMembers + $newMembersNew + $renewalMembers + $renewMembersNew + $partialMembers + $associateMembers;
+                                    $totalDues = $newMembers + $renewalMembers + $newMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
                                 } else {
                                     $totalDues = $newMembers + $renewalMembers + $partialMembers + $associateMembers;
                                 }
