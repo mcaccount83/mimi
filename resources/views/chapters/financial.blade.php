@@ -309,17 +309,19 @@
                                 $renewMembersOld = $financial_report_array['total_renewed_members'] * $financial_report_array['dues_per_member_renewal'];
                                 $newMembersNew = $financial_report_array['total_new_members_changed_dues'] * $financial_report_array['dues_per_member_new_changed'];
                                 $renewMembersNew = $financial_report_array['total_renewed_members_changed_dues'] * $financial_report_array['dues_per_member_renewal_changed'];
+                                $renewMembersNewDiff = $financial_report_array['total_renewed_members'] * $financial_report_array['dues_per_member_renewal_changed'];
                                 $partialMembers = $financial_report_array['members_who_paid_partial_dues'] * $financial_report_array['total_partial_fees_collected'];
                                 $associateMembers = $financial_report_array['total_associate_members'] * $financial_report_array['associate_member_fee'];
 
                                 $totalMembers = $financial_report_array['total_new_members'] +$financial_report_array['total_renewed_members'] + $financial_report_array['total_new_members_changed_dues'] + $financial_report_array['total_renewed_members_changed_dues']
                                         + $financial_report_array['members_who_paid_partial_dues'] + $financial_report_array['total_associate_members'];
+
                                 if ($financial_report_array['different_dues'] == 1 && $financial_report_array['changed_dues'] != 1) {
                                     $totalDues = $newMembers + $renewalMembersDiff + $partialMembers + $associateMembers;
                                 } elseif ($financial_report_array['different_dues'] == 1 && $financial_report_array['changed_dues'] == 1) {
-                                    $totalDues = $newMembers + $renewalMembersDiff + $renewMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
+                                    $totalDues = $newMembers + $renewalMembersDiff + $renewMembersNew + $renewMembersNewDiff + $partialMembers + $associateMembers;
                                 } elseif ($financial_report_array['different_dues'] != 1 && $financial_report_array['changed_dues'] == 1) {
-                                    $totalDues = $newMembers + $renewalMembers + $renewMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
+                                    $totalDues = $newMembers + $newMembersNew + $renewalMembers + $renewMembersNew + $partialMembers + $associateMembers;
                                 } else {
                                     $totalDues = $newMembers + $renewalMembers + $partialMembers + $associateMembers;
                                 }

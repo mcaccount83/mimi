@@ -3633,7 +3633,9 @@ $(document).ready(function(){
                 + AssociateMemberDuesCollected + PartalDuesCollected;  // Associate members or partial dues
         } else if (ChangedMeetingFees) {
             TotalFees = NewMembers * MemberDues // Normal dues
+                + RenewedMembers * MemberDues
                 + NewMembers2 * NewMemberDues  // Changed dues
+                + RenewedMembers2 *  NewMemberDues
                 + AssociateMemberDuesCollected + PartalDuesCollected;  // Associate members or partial dues
         } else {
             TotalFees = (NewMembers + RenewedMembers) * MemberDues // Normal & Renewal dues, no changes

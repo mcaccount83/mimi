@@ -112,28 +112,30 @@
             @endif
         </tbody>
     </table>
-                <?php
-                $newMembers = $pdfData['total_new_members'] * $pdfData['dues_per_member'];
-                $renewalMembers = $pdfData['total_renewed_members'] * $pdfData['dues_per_member'];
-                $renewalMembersDiff = $pdfData['total_renewed_members'] * $pdfData['dues_per_member_renewal'];
-                $renewMembersOld = $pdfData['total_renewed_members'] * $pdfData['dues_per_member_renewal'];
-                $newMembersNew = $pdfData['total_new_members_changed_dues'] * $pdfData['dues_per_member_new_changed'];
-                $renewMembersNew = $pdfData['total_renewed_members_changed_dues'] * $pdfData['dues_per_member_renewal_changed'];
-                $partialMembers = $pdfData['members_who_paid_partial_dues'] * $pdfData['total_partial_fees_collected'];
-                $associateMembers = $pdfData['total_associate_members'] * $pdfData['associate_member_fee'];
+            <?php
+            $newMembers = $pdfData['total_new_members'] * $pdfData['dues_per_member'];
+            $renewalMembers = $pdfData['total_renewed_members'] * $pdfData['dues_per_member'];
+            $renewalMembersDiff = $pdfData['total_renewed_members'] * $pdfData['dues_per_member_renewal'];
+            $renewMembersOld = $pdfData['total_renewed_members'] * $pdfData['dues_per_member_renewal'];
+            $newMembersNew = $pdfData['total_new_members_changed_dues'] * $pdfData['dues_per_member_new_changed'];
+            $renewMembersNew = $pdfData['total_renewed_members_changed_dues'] * $pdfData['dues_per_member_renewal_changed'];
+            $renewMembersNewDiff = $pdfData['total_renewed_members'] * $pdfData['dues_per_member_renewal_changed'];
+            $partialMembers = $pdfData['members_who_paid_partial_dues'] * $pdfData['total_partial_fees_collected'];
+            $associateMembers = $pdfData['total_associate_members'] * $pdfData['associate_member_fee'];
 
-                $totalMembers = $pdfData['total_new_members'] + $pdfData['total_renewed_members'] + $pdfData['total_new_members_changed_dues'] + $pdfData['total_renewed_members_changed_dues']
-                        + $pdfData['members_who_paid_partial_dues'] + $pdfData['total_associate_members'];
-                if ($pdfData['different_dues'] == 1 && $pdfData['changed_dues'] != 1) {
-                    $totalDues = $newMembers + $renewalMembersDiff + $partialMembers + $associateMembers;
-                } elseif ($pdfData['different_dues'] == 1 && $pdfData['changed_dues'] == 1) {
-                    $totalDues = $newMembers + $renewalMembersDiff + $renewMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
-                } elseif ($pdfData['different_dues'] != 1 && $pdfData['changed_dues'] == 1) {
-                    $totalDues = $newMembers + $renewalMembers + $renewMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
-                } else {
-                    $totalDues = $newMembers + $renewalMembers + $partialMembers + $associateMembers;
-                }
-            ?>
+            $totalMembers = $pdfData['total_new_members'] + $pdfData['total_renewed_members'] + $pdfData['total_new_members_changed_dues'] + $pdfData['total_renewed_members_changed_dues']
+                    + $pdfData['members_who_paid_partial_dues'] + $pdfData['total_associate_members'];
+
+            if ($pdfData['different_dues'] == 1 && $pdfData['changed_dues'] != 1) {
+                $totalDues = $newMembers + $renewalMembersDiff + $partialMembers + $associateMembers;
+            } elseif ($pdfData['different_dues'] == 1 && $pdfDatay['changed_dues'] == 1) {
+                $totalDues = $newMembers + $renewalMembersDiff + $renewMembersNew + $renewMembersNewDiff + $partialMembers + $associateMembers;
+            } elseif ($pdfData['different_dues'] != 1 && $pdfData['changed_dues'] == 1) {
+                $totalDues = $newMembers + $newMembersNew + $renewalMembers + $renewMembersNew + $partialMembers + $associateMembers;
+            } else {
+                $totalDues = $newMembers + $renewalMembers + $partialMembers + $associateMembers;
+            }
+        ?>
     <br>
     <table width="50%">
         <tbody>
