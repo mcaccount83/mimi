@@ -48,13 +48,13 @@
                             @if($thisDate->month >= 5 && $thisDate->month <= 8)
                          <div id="readOnlyText" class="description text-center">
                             <p><span style="color: red;"><strong>All Board Member Information is READ ONLY at this time.<br>
-                                @if($chapterDetails[0]->new_board_active != '1')
+                                @if($chapterDetails->new_board_active != '1')
                                 In order to add new board members to MIMI, please complete the Board Election Report.<br>
                             @endif
-                            @if($chapterDetails[0]->new_board_active == '1')
+                            @if($chapterDetails->new_board_active == '1')
                                 If you need to make updates to your listed officers, please contact your Primary Coordinator.</strong></span></p>
                             @endif
-                            @if($chapterDetails[0]->new_board_active == '1')
+                            @if($chapterDetails->new_board_active == '1')
                                 <p>Incoming Board Members have been activated and have full MIMI access.<br>
                                     Outgoing Board Members can still log in and access Financial Reports Only.</p>
                             @endif
@@ -109,6 +109,10 @@
                        <a class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>><i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; No EIN Letter on File</a>
                        	@endif
                     </div>
+                    <div class="col-md-12"><br></div>
+                    <br><br>
+                    <div class="col-md-12 text-center">
+
 
                 @if($thisDate->month >= 1 && $thisDate->month <= 4)
                     <div id="reportStatusText" class="description text-center">
@@ -136,6 +140,8 @@
                             <i class="fa fa-usd fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y')-1 .'-'.date('Y') }} Financial Report
                         </button>
 					</div>
+                    <div class="col-md-12"><br></div>
+                    <br>
                 @endif
 
                     </div>
