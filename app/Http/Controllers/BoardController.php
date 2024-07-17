@@ -1580,7 +1580,7 @@ class BoardController extends Controller
         $chPcid = $input['ch_pcid'];
         $chConf = $input['ch_conf'];
         $farthest_step_visited = $input['FurthestStep'];
-        $reportReceived = $input['submitted'];
+        // $reportReceived = $input['submitted'];
 
         $chapterDetails = DB::table('chapters')
             ->select('chapters.*', 'st.state_short_name as state_short_name', 'fr.reviewer_id as reviewer_id')
@@ -1594,10 +1594,19 @@ class BoardController extends Controller
         $chapter_country = $chapterDetails[0]->country;
 
         $reviewer_id = $chapterDetails[0]->reviewer_id;
+
+
         $coorDetails = DB::table('coordinator_details as cd')
-            ->where('cd.coordinator_id', '=', $reviewer_id)
-            ->get();
-        $reviewer_email = $coorDetails[0]->email;
+    ->where('cd.coordinator_id', '=', $reviewer_id)
+    ->get();
+
+// Check if $coorDetails is not empty
+if ($coorDetails->isNotEmpty()) {
+    $reviewer_email = $coorDetails[0]->email;
+} else {
+    // Handle the case where no results were found
+    $reviewer_email = null; // or set to a default value or handle accordingly
+}
 
         $chapterDetailsExistArr = DB::table('financial_report')->where('chapter_id', '=', $chapter_id)->get();
         $chapterDetailsExist = $chapterDetailsExistArr->count();
@@ -1874,6 +1883,7 @@ class BoardController extends Controller
         // SUBMISSION INFORMATION
         $completed_name = $input['CompletedName'];
         $completed_email = $input['CompletedEmail'];
+        $reportReceived = $input['submitted'];
 
         if ($reportReceived == 1) {
             DB::update('UPDATE chapters SET financial_report_received = ? where id = ?', [1, $chapter_id]);
