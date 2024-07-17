@@ -108,7 +108,13 @@
 
                             @endif
 						</td>
-                        <td>${{ $list->post_balance }}</td>
+                        <td>
+                            @if($list->post_balance != null)
+                            ${{ $list->post_balance }}
+                            @else
+                            No Balance Entered
+                            @endif
+                        </td>
 			        </tr>
                   @endforeach
                   </tbody>
