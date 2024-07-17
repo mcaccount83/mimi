@@ -8,9 +8,8 @@ use Illuminate\Notifications\Notifiable;
 
 class CoordinatorPosition extends Model
 {
-    use Notifiable;
-
     use HasFactory;
+    use Notifiable;
 
     // Specify the table name explicitly
     protected $table = 'coordinator_position';
@@ -34,10 +33,8 @@ class CoordinatorPosition extends Model
         return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
 
-
     public function position()
     {
         return $this->belongsTo(\App\Models\CoordinatorPosition::class, 'position_id');
     }
-
 }

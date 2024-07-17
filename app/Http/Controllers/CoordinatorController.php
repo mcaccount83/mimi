@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\BigSisterWelcome;
 use App\Mail\CoordinatorRetireAdmin;
+use App\Models\CoordinatorPosition;
 use App\Models\FinancialReport;
 use App\Models\User;
-use App\Models\CoordinatorPosition;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,7 +14,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\BigSisterWelcome;
 use Illuminate\View\View;
 
 class CoordinatorController extends Controller
@@ -687,24 +687,24 @@ class CoordinatorController extends Controller
      * Including LOA & Retiring Cooardinator
      */
     public function updateRole(Request $request, $id)
-{
-    // Find the coordinator details for the current user
-    $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+    {
+        // Find the coordinator details for the current user
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
 
-    // Get the necessary details from the coordinator details
-    $corId = $corDetails['coordinator_id'];
-    $userName = $corDetails['first_name'] . ' ' . $corDetails['last_name'];
-    $userEmail = $corDetails['email'];
-    $positionId = $corDetails['position_id'];
+        // Get the necessary details from the coordinator details
+        $corId = $corDetails['coordinator_id'];
+        $userName = $corDetails['first_name'].' '.$corDetails['last_name'];
+        $userEmail = $corDetails['email'];
+        $positionId = $corDetails['position_id'];
 
-    // Fetch the coordinator position using the position_id
-    $position = CoordinatorPosition::find($positionId);
+        // Fetch the coordinator position using the position_id
+        $position = CoordinatorPosition::find($positionId);
 
-    // Get the position title
-    $positionTitle = $position['long_title'];
+        // Get the position title
+        $positionTitle = $position['long_title'];
 
-    // Last updated by user's full name
-    $lastUpdatedBy = $userName;
+        // Last updated by user's full name
+        $lastUpdatedBy = $userName;
 
         $cordinatorId = $id;
         $onleave = false;
@@ -845,20 +845,22 @@ class CoordinatorController extends Controller
                     'conf_name' => $conf_name,
                     'reg_name' => $reg_name,
                     'userName' => $userName,
-                    'userEmail' =>$userEmail,
+                    'userEmail' => $userEmail,
                     'positionTitle' => $positionTitle,
                     'conf' => $conf,
                 ];
 
                 Mail::to($to_email)
-                        ->cc($cc_email)
-                        ->send(new BigSisterWelcome($mailData));
+                    ->cc($cc_email)
+                    ->send(new BigSisterWelcome($mailData));
 
                 DB::commit();
+
                 return redirect()->back()->with('success', 'Welcome letter has been successfully sent');
             } catch (\Exception $e) {
                 DB::rollback();
                 Log::error('Error sending welcome letter:', ['error' => $e->getMessage()]);
+
                 return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
             }
         }
@@ -923,7 +925,7 @@ class CoordinatorController extends Controller
                     //'report_id' => $report_id,
                     'last_promoted' => $promote_date,
                     'last_updated_by' => $lastUpdatedBy,
-                    'last_updated_date' => date('Y-m-d H:i:s')
+                    'last_updated_date' => date('Y-m-d H:i:s'),
                 ]);
             DB::commit();
 
@@ -1259,7 +1261,7 @@ class CoordinatorController extends Controller
      */
     public function load_cc_coordinators($chConf, $chPcid)
     {
-       $reportingList = DB::table('coordinator_reporting_tree')
+        $reportingList = DB::table('coordinator_reporting_tree')
             ->select('*')
             ->where('id', '=', $chPcid)
             ->get();
@@ -1291,9 +1293,9 @@ class CoordinatorController extends Controller
         $coordinator_count = count($coordinator_array);
 
         for ($i = 0; $i < $coordinator_count; $i++) {
-                $cc_fname = $coordinator_array[$i]['first_name'];
-                $cc_lname = $coordinator_array[$i]['last_name'];
-                $cc_pos = $coordinator_array[$i]['pos'];
+            $cc_fname = $coordinator_array[$i]['first_name'];
+            $cc_lname = $coordinator_array[$i]['last_name'];
+            $cc_pos = $coordinator_array[$i]['pos'];
 
         }
 
@@ -1328,7 +1330,7 @@ class CoordinatorController extends Controller
         return [
             'cc_fname' => $cc_fname,
             'cc_lname' => $cc_lname,
-            'cc_pos'=> $cc_pos,
+            'cc_pos' => $cc_pos,
             'coordinator_array' => $coordinator_array,
         ];
     }
@@ -1372,7 +1374,6 @@ class CoordinatorController extends Controller
 
         return $down_line_email;
     }
-
 
     /**
      * Retired Coorinators

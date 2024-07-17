@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PaymentsM2MChapterThankYou;
+use App\Mail\PaymentsM2MOnline;
 use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegOnline;
 use App\Mail\PaymentsSustainingChapterThankYou;
-use App\Mail\PaymentsM2MOnline;
-use App\Mail\PaymentsM2MChapterThankYou;
 use App\Models\Chapter;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;

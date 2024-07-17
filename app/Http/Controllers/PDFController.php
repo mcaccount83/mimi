@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chapter;
 use App\Models\FinancialReport;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
-use App\Models\Chapter;
 
 class PDFController extends Controller
 {
@@ -129,7 +129,6 @@ class PDFController extends Controller
 
     }
 
-
     /**
      * Show Chaper in Good Standing PDF All Board Members
      */
@@ -137,7 +136,7 @@ class PDFController extends Controller
     {
         $chapterDetails = DB::table('chapters')
             ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name',
-                 'st.state_short_name as state','bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'chapters.conference as conf',
+                'st.state_short_name as state', 'bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'chapters.conference as conf',
                 'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
@@ -148,16 +147,16 @@ class PDFController extends Controller
             ->where('chapters.id', '=', $chapterId)
             ->get();
 
-         // Call the load_coordinators function
-         $chName = $chapterDetails[0]->chapter_name;
-         $chState = $chapterDetails[0]->state;
-         $chConf = $chapterDetails[0]->conf;
-         $chPcid = $chapterDetails[0]->pcid;
+        // Call the load_coordinators function
+        $chName = $chapterDetails[0]->chapter_name;
+        $chState = $chapterDetails[0]->state;
+        $chConf = $chapterDetails[0]->conf;
+        $chPcid = $chapterDetails[0]->pcid;
 
-         $coordinatorData = $this->load_coordinators($chConf, $chPcid);
-         $cc_fname = $coordinatorData['cc_fname'];
-         $cc_lname = $coordinatorData['cc_lname'];
-         $cc_pos = $coordinatorData['cc_pos'];
+        $coordinatorData = $this->load_coordinators($chConf, $chPcid);
+        $cc_fname = $coordinatorData['cc_fname'];
+        $cc_lname = $coordinatorData['cc_lname'];
+        $cc_pos = $coordinatorData['cc_pos'];
 
         $pdfData = [
             'chapter_name' => $chapterDetails[0]->chapter_name,
@@ -187,8 +186,8 @@ class PDFController extends Controller
     {
         $chapterDetails = DB::table('chapters')
             ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name',
-                 'st.state_short_name as state','bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'bd.street_address as pres_addr', 'bd.city as pres_city', 'bd.state as pres_state',
-                 'bd.zip as pres_zip', 'chapters.conference as conf', 'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
+                'st.state_short_name as state', 'bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'bd.street_address as pres_addr', 'bd.city as pres_city', 'bd.state as pres_state',
+                'bd.zip as pres_zip', 'chapters.conference as conf', 'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
             ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
@@ -198,16 +197,16 @@ class PDFController extends Controller
             ->where('chapters.id', '=', $chapterId)
             ->get();
 
-         // Call the load_coordinators function
-         $chName = $chapterDetails[0]->chapter_name;
-         $chState = $chapterDetails[0]->state;
-         $chConf = $chapterDetails[0]->conf;
-         $chPcid = $chapterDetails[0]->pcid;
+        // Call the load_coordinators function
+        $chName = $chapterDetails[0]->chapter_name;
+        $chState = $chapterDetails[0]->state;
+        $chConf = $chapterDetails[0]->conf;
+        $chPcid = $chapterDetails[0]->pcid;
 
-         $coordinatorData = $this->load_coordinators($chConf, $chPcid);
-         $cc_fname = $coordinatorData['cc_fname'];
-         $cc_lname = $coordinatorData['cc_lname'];
-         $cc_pos = $coordinatorData['cc_pos'];
+        $coordinatorData = $this->load_coordinators($chConf, $chPcid);
+        $cc_fname = $coordinatorData['cc_fname'];
+        $cc_lname = $coordinatorData['cc_lname'];
+        $cc_pos = $coordinatorData['cc_pos'];
 
         $pdfData = [
             'chapter_name' => $chapterDetails[0]->chapter_name,
@@ -234,13 +233,12 @@ class PDFController extends Controller
 
     }
 
-
     /**
      * Load Conference Coordinators For Signing PDF Letters
      */
     public function load_coordinators($chConf, $chPcid)
     {
-       $reportingList = DB::table('coordinator_reporting_tree')
+        $reportingList = DB::table('coordinator_reporting_tree')
             ->select('*')
             ->where('id', '=', $chPcid)
             ->get();
@@ -272,9 +270,9 @@ class PDFController extends Controller
         $coordinator_count = count($coordinator_array);
 
         for ($i = 0; $i < $coordinator_count; $i++) {
-                $cc_fname = $coordinator_array[$i]['first_name'];
-                $cc_lname = $coordinator_array[$i]['last_name'];
-                $cc_pos = $coordinator_array[$i]['pos'];
+            $cc_fname = $coordinator_array[$i]['first_name'];
+            $cc_lname = $coordinator_array[$i]['last_name'];
+            $cc_pos = $coordinator_array[$i]['pos'];
 
         }
 
@@ -309,7 +307,7 @@ class PDFController extends Controller
         return [
             'cc_fname' => $cc_fname,
             'cc_lname' => $cc_lname,
-            'cc_pos'=> $cc_pos,
+            'cc_pos' => $cc_pos,
             'coordinator_array' => $coordinator_array,
         ];
     }
