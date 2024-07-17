@@ -45,21 +45,21 @@
                            Welcome to the MOMS Club's "MOMS information Management Interface" -- MIMI!
                            </br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
                         </p>
+                        <div id="readOnlyText" class="description text-center">
                         @if($thisDate->month >= 5 && $thisDate->month <= 8)
-                         <div id="readOnlyText" class="description text-center">
-                            <p><span style="color: red;"><strong>All Board Member Information is READ ONLY at this time.<br>
+                            <p><span style="color: red;">All Board Member Information is <strong>READ ONLY</strong> at this time.<br>
                                 @if($chapterList[0]->new_board_active != '1')
                                 In order to add new board members to MIMI, please complete the Board Election Report.<br>
                             @endif
                             @if($chapterList[0]->new_board_active == '1')
-                                If you need to make updates to your listed officers, please contact your Primary Coordinator.</strong></span></p>
+                                If you need to make updates to your listed officers, please contact your Primary Coordinator.</span></p>
                             @endif
                             @if($chapterList[0]->new_board_active == '1')
                                 <p>Incoming Board Members have been activated and have full MIMI access.<br>
                                     Outgoing Board Members can still log in and access Financial Reports Only.</p>
                             @endif
-                        </div>
                         @endif
+                    </div>
                 </div>
 
             </div>
@@ -75,81 +75,92 @@
 
             $eoy_boardreport = $admin->eoy_boardreport;
             $eoy_financialreport = $admin->eoy_financialreport;
-
             $boardreport_yes = ($eoy_boardreport == 1);
             $financialreport_yes = ($eoy_financialreport == 1);
         @endphp
 
-        <div class="col-md-12">
+        {{-- <div class="col-md-12"> --}}
 		    <div class="card">
-               <div class="card-body">
-                @foreach($chapterList as $list)
+                <div class="card-body">
+                    <div class="row">
+                    @foreach($chapterList as $list)
+                        @if ($thisDate->gte($due_date))
+                        <div class=" col-md-12 text-center">
+                            @if ($due_date->month === $thisDate->month)
+                            <p><span style="color: green;">
+                                Your chapter's anniversary month is <strong>{{ $startMonth }}</strong>.&nbsp; Your Re-registration payment is due now.
+                            </p>
+                            @else
+                            <p><span style="color: red;">
+                                Your chapter's anniversary month was <strong>{{ $startMonth }}</strong>.&nbsp; Your Re-registration payment is now considered overdue.
+                            </p>
+                            @endif
+                            <div class="col-md-12"><br></div>
+                                <a href="{{ route('board.showreregpayment') }}" class="btn btn-info btn-fill">
+                                    <i class="fa fa-money fa-fw" aria-hidden="true"></i>&nbsp; PAY HERE
+                                </a>
+                            </div>
+                            <hr>
+                            <div class="col-md-12"><br></div>
+                        @endif
+                        <div class="col-md-12"><br></div>
 
-                @if ($thisDate->gte($due_date))
-                    @if ($due_date->month === $thisDate->month)
-                        <div class="col-md-12" style="color: green;"><center>Your chapter's anniversary month is <strong>{{ $startMonth }}</strong>.&nbsp; Your Re-registration payment is due now.</center></div>
-                    @else
-                        <div class="col-md-12" style="color: red;"><center>Your chapter's anniversary month was <strong>{{ $startMonth }}</strong>.&nbsp; Your Re-registration payment is now considered overdue.</center></div>
-                    @endif
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 text-center">
-                        <a href="{{ route('board.showreregpayment') }}" class="btn btn-info btn-fill"><i class="fa fa-money fa-fw" aria-hidden="true" ></i>&nbsp; PAY HERE</a>
-                    </div>
-                    <hr>
-                <div class="col-md-12"><br></div>
-                @endif
+                        <div class="col-md-12 text-center">
+                            <div class="col-md-6 float-left">
+                                @if($list->ein_letter=='1')
+                                    <a class="btn btn-info btn-fill" href="{{ $chapterList[0]->ein_letter_path }}" target="blank">
+                                        <i class="fa fa-bank fa-fw" aria-hidden="true"></i>&nbsp; View/Download Chapter EIN Letter
+                                    </a>
+                                @else
+                                    <a class="btn btn-info btn-fill disabled" href="#">
+                                        <i class="fa fa-bank fa-fw" aria-hidden="true"></i>&nbsp; No EIN Letter on File
+                                    </a>
+                                @endif
+                            </div>
+                            <div class="col-md-6 float-left">
+                                <button id="GoodStanding" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('pdf.chapteringoodstanding', ['id' => $list->id]) }}'">
+                                    <i class="fa fa-bank fa-fw" aria-hidden="true"></i>&nbsp; View/Download Good Standing Letter
+                                </button>
+                            </div>
+                            <div class="col-md-12"><br></div>
+                            <br><br>
+                        </div>
 
-                <div class="col-md-12"><br></div>
+                        <div class="col-md-12 text-center">
+                            <div class="col-md-6 float-left">
+                                @if($thisDate->month >= 6 && $thisDate->month <= 12 && $boardreport_yes)
+                                        @if($list->new_board_active!='1')
+                                            <button id="BoardReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $list->id]) }}'">
+                                                <i class="fa fa-user-plus fa-fw" aria-hidden="true"></i>&nbsp; {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
+                                            </button>
+                                        @else
+                                            <a class="btn btn-info btn-fill disabled" href="#">
+                                                <i class="fa fa-bank fa-fw" aria-hidden="true"></i>&nbsp; Board Report Activated
+                                            </a>
+                                        @endif
+                                @else
+                                    <a class="btn btn-info btn-fill disabled" href="#">
+                                        <i class="fa fa-bank fa-fw" aria-hidden="true"></i>&nbsp; Board Report Not Available
+                                    </a>
+                                @endif
+                            </div>
+                            <div class="col-md-6 float-left">
+                                @if($thisDate->month >= 6 && $thisDate->month <= 12 && $financialreport_yes)
+                                        <button id="FinancialReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $list->id]) }}'">
+                                            <i class="fa fa-usd fa-fw" aria-hidden="true"></i>&nbsp; {{ date('Y')-1 .'-'.date('Y') }} Financial Report
+                                        </button>
+                                @else
+                                    <a class="btn btn-info btn-fill disabled" href="#">
+                                        <i class="fa fa-bank fa-fw" aria-hidden="true"></i>&nbsp; Financial Report Not Available
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
 
-                    <div class="col-md-12 text-center">
-                    <div class="col-md-6 float-left">
-                        @if($list->ein_letter=='1')
-                      <a class="btn btn-info btn-fill" href="{{ $chapterList[0]->ein_letter_path }}" target="blank"><i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; View/Download Chapter EIN Letter</a>
-                      	@else
-                       <a class="btn btn-info btn-fill" href="#" <?php echo "disabled";?>><i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; No EIN Letter on File</a>
-                       	@endif
-                    </div>
-                    <div class="col-md-6 float-left">
-                        <button id="GoodStanding" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('pdf.chapteringoodstanding', ['id' => $list->id]) }}'">
-                            <i class="fa fa-bank fa-fw" aria-hidden="true" ></i>&nbsp; View/Download Good Standing Letter
-                        </button>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <br><br>
-                    <div class="col-md-12 text-center">
-
-                @if($thisDate->month >= 1 && $thisDate->month <= 5)
-                    <div id="reportStatusText" class="description text-center">
-                        <p><strong><?php echo date('Y')-1 .'-'.date('Y');?> EOY Reports are not available at this time.</strong></p>
-                    </div>
-                @endif
-                @if($thisDate->month >= 6 && $thisDate->month <= 12 && $boardreport_yes)
-                    @if($list->new_board_active != '1')
-                    <div class="col-md-6 float-left">
-                       <button id="BoardReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $list->id]) }}'">
-                            <i class="fa fa-user-plus fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
-                        </button>
-                    </div>
-                    @endif
-                    @if($list->new_board_active == '1')
-                    <div class="col-md-6 float-left">
-                       <p>Your {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report has been Activated.</p>
-                    </div>
-                    @endif
-                @endif
-                @if($thisDate->month >= 6 && $thisDate->month <= 12 && $financialreport_yes)
-                    <div class="col-md-6 float-left">
-                        <button id="FinancialReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $list->id]) }}'">
-                            <i class="fa fa-usd fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y')-1 .'-'.date('Y') }} Financial Report
-                        </button>
-					</div>
-                    <div class="col-md-12"><br></div>
-                    <br>
-                @endif
-
-                @endforeach
-                    </div>
+                    @endforeach
                 </div>
+            </div>
+
                 <form method="POST" action='{{ route("board.update",$chapterList[0]->id) }}' autocomplete="off">
 				@csrf
                 <div class="card-header">
