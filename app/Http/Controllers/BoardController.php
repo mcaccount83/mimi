@@ -1488,11 +1488,11 @@ class BoardController extends Controller
             // Call the load_coordinators function
             $chId = $chapter_id;
             $coordinatorData = $this->load_coordinators($chId, $chName, $chState, $chConf, $chPcid);
-            $ReviewerEmail = $coordinatorData['ReviewerEmail'];
+            $cc_email = $coordinatorData['cc_email'];
             $coordinator_array = $coordinatorData['coordinator_array'];
 
-            // Send email to Assigned Reviewer//
-            $to_email = $ReviewerEmail;
+            // Send email to Conference Coordinator//
+            $to_email = $cc_email;
 
             $mailData = [
                 'chapterid' => $chapter_id,
