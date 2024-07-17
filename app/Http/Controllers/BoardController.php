@@ -1485,7 +1485,7 @@ class BoardController extends Controller
 
             // Call the load_coordinators function
             $chId = $chapter_id;
-            $coordinatorData = $this->load_coordinators($chId, $chName, $chState, $chConf, $chPcid);
+            $coordinatorData = $this->load_coordinators($chConf, $chPcid);
             $cc_email = $coordinatorData['cc_email'];
             $coordinator_array = $coordinatorData['coordinator_array'];
 
@@ -1886,7 +1886,7 @@ class BoardController extends Controller
 
         // Call the load_coordinators function
         $chId = $chapter_id;
-        $coordinatorData = $this->load_coordinators($chId, $chConf, $chPcid);
+        $coordinatorData = $this->load_coordinators($chConf, $chPcid);
         $coordinator_array = $coordinatorData['coordinator_array'];
         $cc_email = $coordinatorData['cc_email'];
         $cc_id = $coordinatorData['cc_id'];
@@ -2473,7 +2473,7 @@ class BoardController extends Controller
         ]);
     }
 
-    public function load_coordinators($chId, $chConf, $chPcid)
+    public function load_coordinators($chConf, $chPcid)
     {
         // $financial_report_array = FinancialReport::find($chId);
 
@@ -2522,33 +2522,33 @@ class BoardController extends Controller
             $cc_id = $coordinator_array[$i]['id'];
         }
 
-        $reviewer_id = 0;
+        // $reviewer_id = 0;
         //Report was submitted, notify those who need to know.
         switch ($chConf) {
             case 1:
                 $cc_email = $cc_email;
                 $cc_id = $cc_id;
-                $reviewer_id = $cc_id;
+                // $reviewer_id = $cc_id;
                 break;
             case 2:
                 $cc_email = $cc_email;
                 $cc_id = $cc_id;
-                $reviewer_id = $cc_id;
+                // $reviewer_id = $cc_id;
                 break;
             case 3:
                 $cc_email = $cc_email;
                 $cc_id = $cc_id;
-                $reviewer_id = $cc_id;
+                // $reviewer_id = $cc_id;
                 break;
             case 4:
                 $cc_email = $cc_email;
                 $cc_id = $cc_id;
-                $reviewer_id = $cc_id;
+                // $reviewer_id = $cc_id;
                 break;
             case 5:
                 $cc_email = $cc_email;
                 $cc_id = $cc_id;
-                $reviewer_id = $cc_id;
+                // $reviewer_id = $cc_id;
                 break;
         }
 
