@@ -81,12 +81,12 @@ class ReportController extends Controller
         if (isset($_GET['check']) && $_GET['check'] == 'yes') {
             $checkBoxStatus = 'checked';
             $baseQuery->where('chapters.status', '<>', '1')
-                      ->orderBy('st.state_short_name')
-                      ->orderBy('chapters.name');
+                ->orderBy('st.state_short_name')
+                ->orderBy('chapters.name');
         } else {
             $checkBoxStatus = '';
             $baseQuery->orderBy('st.state_short_name')
-                      ->orderBy('chapters.name');
+                ->orderBy('chapters.name');
         }
 
         $chapterList = $baseQuery->get();
@@ -449,26 +449,26 @@ class ReportController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->where('chapters.members_paid_for', '>=', '60');
 
-            if ($positionId == 6 || $positionId == 25) {
-                $baseQuery->where('chapters.conference', '=', $corConfId);
-            } elseif ($positionId == 5) {
-                $baseQuery->where('chapters.region', '=', $corRegId);
-            } else {
-                $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
-            }
+        if ($positionId == 6 || $positionId == 25) {
+            $baseQuery->where('chapters.conference', '=', $corConfId);
+        } elseif ($positionId == 5) {
+            $baseQuery->where('chapters.region', '=', $corRegId);
+        } else {
+            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
+        }
 
-            if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-                $checkBoxStatus = 'checked';
-                $baseQuery->where('chapters.primary_coordinator_id', '=', $corId)
-                          ->orderBy('st.state_short_name')
-                          ->orderBy('chapters.name');
-            } else {
-                $checkBoxStatus = '';
-                $baseQuery->orderBy('st.state_short_name')
-                          ->orderBy('chapters.name');
-            }
+        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
+            $checkBoxStatus = 'checked';
+            $baseQuery->where('chapters.primary_coordinator_id', '=', $corId)
+                ->orderBy('st.state_short_name')
+                ->orderBy('chapters.name');
+        } else {
+            $checkBoxStatus = '';
+            $baseQuery->orderBy('st.state_short_name')
+                ->orderBy('chapters.name');
+        }
 
-            $chapterList = $baseQuery->get();
+        $chapterList = $baseQuery->get();
 
         $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $corId];
 
@@ -533,12 +533,12 @@ class ReportController extends Controller
         if (isset($_GET['check']) && $_GET['check'] == 'yes') {
             $checkBoxStatus = 'checked';
             $baseQuery->where('chapters.primary_coordinator_id', '=', $corId)
-                      ->orderBy('st.state_short_name')
-                      ->orderBy('chapters.name');
+                ->orderBy('st.state_short_name')
+                ->orderBy('chapters.name');
         } else {
             $checkBoxStatus = '';
             $baseQuery->orderByDesc('st.state_short_name')
-                      ->orderByDesc('chapters.name');
+                ->orderByDesc('chapters.name');
         }
 
         $chapterList = $baseQuery->get();
@@ -594,15 +594,15 @@ class ReportController extends Controller
             ->orderByDesc('st.state_short_name')
             ->orderByDesc('chapters.name');
 
-            if ($positionId == 6 || $positionId == 25) {
-                $baseQuery->where('chapters.conference', '=', $corConfId);
-            } elseif ($positionId == 5) {
-                $baseQuery->where('chapters.region', '=', $corRegId);
-            } else {
-                $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
-            }
+        if ($positionId == 6 || $positionId == 25) {
+            $baseQuery->where('chapters.conference', '=', $corConfId);
+        } elseif ($positionId == 5) {
+            $baseQuery->where('chapters.region', '=', $corRegId);
+        } else {
+            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
+        }
 
-            $chapterList = $baseQuery->get();
+        $chapterList = $baseQuery->get();
 
         $data = ['chapterList' => $chapterList, 'corId' => $corId];
 
@@ -665,12 +665,12 @@ class ReportController extends Controller
         if (isset($_GET['check']) && $_GET['check'] == 'yes') {
             $checkBoxStatus = 'checked';
             $baseQuery->where('chapters.primary_coordinator_id', '=', $corId)
-                        ->orderBy('st.state_short_name')
-                        ->orderBy('chapters.name');
+                ->orderBy('st.state_short_name')
+                ->orderBy('chapters.name');
         } else {
             $checkBoxStatus = '';
             $baseQuery->orderBy('st.state_short_name')
-                        ->orderBy('chapters.name');
+                ->orderBy('chapters.name');
         }
 
         $chapterList = $baseQuery->get();
@@ -805,16 +805,15 @@ class ReportController extends Controller
             if (isset($_GET['check']) && $_GET['check'] == 'yes') {
                 $checkBoxStatus = 'checked';
                 $baseQuery->where('chapters.primary_coordinator_id', '=', $corId)
-                            ->orderBy('st.state_short_name')
-                            ->orderBy('chapters.name');
+                    ->orderBy('st.state_short_name')
+                    ->orderBy('chapters.name');
             } else {
                 $checkBoxStatus = '';
                 $baseQuery->orderBy('st.state_short_name')
-                            ->orderBy('chapters.name');
+                    ->orderBy('chapters.name');
             }
 
             $chapterList = $baseQuery->get();
-
 
             $countList = count($chapterList);
             $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $corId];
@@ -840,7 +839,7 @@ class ReportController extends Controller
         $positionId = $corDetails['position_id'];
         $request->session()->put('positionid', $positionId);
 
-       if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
@@ -869,13 +868,13 @@ class ReportController extends Controller
             ->orderBy('cd.region_id')
             ->orderByDesc('cp.id');
 
-            if ($positionId == 6 || $positionId == 25) {
-                $baseQuery->where('cd.conference_id', '=', $corConfId);
-            } elseif ($positionId == 5) {
-                $baseQuery->where('cd.region_id', '=', $corRegId);
-            } else {
-                $baseQuery->whereIn('cd.coordinator_id', $inQryArr);
-            }
+        if ($positionId == 6 || $positionId == 25) {
+            $baseQuery->where('cd.conference_id', '=', $corConfId);
+        } elseif ($positionId == 5) {
+            $baseQuery->where('cd.region_id', '=', $corRegId);
+        } else {
+            $baseQuery->whereIn('cd.coordinator_id', $inQryArr);
+        }
 
         $coordinatorList = $baseQuery->get();
 
@@ -982,13 +981,13 @@ class ReportController extends Controller
             ->orderBy('rg.short_name')
             ->orderByDesc('cp.id');
 
-            if ($positionId == 6 || $positionId == 25) {
-                $baseQuery->where('cd.conference_id', '=', $corConfId);
-            } elseif ($positionId == 5) {
-                $baseQuery->where('cd.region_id', '=', $corRegId);
-            } else {
-                $baseQuery->whereIn('cd.coordinator_id', $inQryArr);
-            }
+        if ($positionId == 6 || $positionId == 25) {
+            $baseQuery->where('cd.conference_id', '=', $corConfId);
+        } elseif ($positionId == 5) {
+            $baseQuery->where('cd.region_id', '=', $corRegId);
+        } else {
+            $baseQuery->whereIn('cd.coordinator_id', $inQryArr);
+        }
 
         $coordinatorList = $baseQuery->get();
 
@@ -1425,11 +1424,11 @@ class ReportController extends Controller
                 ->select('crt.id')
                 ->get();
         } else {
-        //Get Coordinator Reporting Tree
-        $reportIdList = DB::table('coordinator_reporting_tree as crt')
-            ->select('crt.id')
-            ->where($sqlLayerId, '=', $corId)
-            ->get();
+            //Get Coordinator Reporting Tree
+            $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                ->select('crt.id')
+                ->where($sqlLayerId, '=', $corId)
+                ->get();
         }
         $inQryStr = '';
         foreach ($reportIdList as $key => $val) {
@@ -1461,12 +1460,12 @@ class ReportController extends Controller
         if (isset($_GET['check']) && $_GET['check'] == 'yes') {
             $checkBoxStatus = 'checked';
             $baseQuery->where('chapters.primary_coordinator_id', '=', $corId)
-                        ->orderBy('st.state_short_name')
-                        ->orderBy('chapters.name');
+                ->orderBy('st.state_short_name')
+                ->orderBy('chapters.name');
         } else {
             $checkBoxStatus = '';
             $baseQuery->orderBy('st.state_short_name')
-                        ->orderBy('chapters.name');
+                ->orderBy('chapters.name');
         }
 
         $chapterList = $baseQuery->get();
@@ -1504,11 +1503,11 @@ class ReportController extends Controller
                 ->select('crt.id')
                 ->get();
         } else {
-        //Get Coordinator Reporting Tree
-        $reportIdList = DB::table('coordinator_reporting_tree as crt')
-            ->select('crt.id')
-            ->where($sqlLayerId, '=', $corId)
-            ->get();
+            //Get Coordinator Reporting Tree
+            $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                ->select('crt.id')
+                ->where($sqlLayerId, '=', $corId)
+                ->get();
         }
         $inQryStr = '';
         foreach ($reportIdList as $key => $val) {
@@ -1541,23 +1540,23 @@ class ReportController extends Controller
         if (isset($_GET['check']) && $_GET['check'] == 'yes') {
             $checkBoxStatus = 'checked';
             $baseQuery->where('fr.reviewer_id', $corId)
-                        ->orderBy('st.state_short_name')
-                        ->orderBy('ch.name');
+                ->orderBy('st.state_short_name')
+                ->orderBy('ch.name');
         } else {
             $checkBoxStatus = '';
             $baseQuery->orderBy('st.state_short_name')
-                        ->orderBy('ch.name');
+                ->orderBy('ch.name');
         }
 
         if (isset($_GET['check2']) && $_GET['check2'] == 'yes') {
             $checkBox2Status = 'checked';
             $baseQuery->where('ch.primary_coordinator_id', '=', $corId)
-                        ->orderBy('st.state_short_name')
-                        ->orderBy('ch.name');
+                ->orderBy('st.state_short_name')
+                ->orderBy('ch.name');
         } else {
             $checkBox2Status = '';
             $baseQuery->orderBy('st.state_short_name')
-                        ->orderBy('ch.name');
+                ->orderBy('ch.name');
         }
 
         $chapterList = $baseQuery->get();
@@ -1587,16 +1586,16 @@ class ReportController extends Controller
         $request->session()->put('secpositionid', $secPositionId);
         $request->session()->put('corconfid', $corConfId);
 
-         if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
                 ->get();
         } else {
-        $reportIdList = DB::table('coordinator_reporting_tree as crt')
-            ->select('crt.id')
-            ->where($sqlLayerId, '=', $corId)
-            ->get();
+            $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                ->select('crt.id')
+                ->where($sqlLayerId, '=', $corId)
+                ->get();
         }
         $inQryStr = '';
         foreach ($reportIdList as $key => $val) {
@@ -1617,26 +1616,26 @@ class ReportController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->where('created_at', '<=', date('Y-06-30'));
 
-            if ($positionId == 6 || $positionId == 25) {
-                $baseQuery->where('chapters.conference', '=', $corConfId);
-            } elseif ($positionId == 5) {
-                $baseQuery->where('chapters.region', '=', $corRegId);
-            } else {
-                $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
-            }
+        if ($positionId == 6 || $positionId == 25) {
+            $baseQuery->where('chapters.conference', '=', $corConfId);
+        } elseif ($positionId == 5) {
+            $baseQuery->where('chapters.region', '=', $corRegId);
+        } else {
+            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
+        }
 
-            if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-                $checkBoxStatus = 'checked';
-                $baseQuery->where('chapters.primary_coordinator_id', '=', $corId)
-                          ->orderBy('st.state_short_name')
-                          ->orderBy('chapters.name');
-            } else {
-                $checkBoxStatus = '';
-                $baseQuery->orderBy('st.state_short_name')
-                          ->orderBy('chapters.name');
-            }
+        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
+            $checkBoxStatus = 'checked';
+            $baseQuery->where('chapters.primary_coordinator_id', '=', $corId)
+                ->orderBy('st.state_short_name')
+                ->orderBy('chapters.name');
+        } else {
+            $checkBoxStatus = '';
+            $baseQuery->orderBy('st.state_short_name')
+                ->orderBy('chapters.name');
+        }
 
-            $chapterList = $baseQuery->get();
+        $chapterList = $baseQuery->get();
 
         $row_count = count($chapterList);
 
@@ -2216,11 +2215,11 @@ class ReportController extends Controller
                 ->select('crt.id')
                 ->get();
         } else {
-        //Get Coordinator Reporting Tree
-        $reportIdList = DB::table('coordinator_reporting_tree as crt')
-            ->select('crt.id')
-            ->where($sqlLayerId, '=', $corId)
-            ->get();
+            //Get Coordinator Reporting Tree
+            $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                ->select('crt.id')
+                ->where($sqlLayerId, '=', $corId)
+                ->get();
         }
         $inQryStr = '';
         foreach ($reportIdList as $key => $val) {
@@ -2251,12 +2250,12 @@ class ReportController extends Controller
         if (isset($_GET['check']) && $_GET['check'] == 'yes') {
             $checkBoxStatus = 'checked';
             $baseQuery->where('chapters.primary_coordinator_id', '=', $corId)
-                        ->orderBy('st.state_short_name')
-                        ->orderBy('chapters.name');
+                ->orderBy('st.state_short_name')
+                ->orderBy('chapters.name');
         } else {
             $checkBoxStatus = '';
             $baseQuery->orderBy('st.state_short_name')
-                        ->orderBy('chapters.name');
+                ->orderBy('chapters.name');
         }
 
         $chapterList = $baseQuery->get();
@@ -2290,11 +2289,11 @@ class ReportController extends Controller
                 ->select('crt.id')
                 ->get();
         } else {
-        //Get Coordinator Reporting Tree
-        $reportIdList = DB::table('coordinator_reporting_tree as crt')
-            ->select('crt.id')
-            ->where($sqlLayerId, '=', $corId)
-            ->get();
+            //Get Coordinator Reporting Tree
+            $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                ->select('crt.id')
+                ->where($sqlLayerId, '=', $corId)
+                ->get();
         }
         $reportIds = $reportIdList->pluck('id')->toArray();
         $inQryStr = implode(',', $reportIds);
@@ -2323,26 +2322,26 @@ class ReportController extends Controller
                     ->orWhereNotNull('fr.award_5_nomination_type');
             });
 
-            if ($positionId == 6 || $positionId == 25) {
-                $baseQuery->where('ch.conference', '=', $corConfId);
-            } elseif ($positionId == 5) {
-                $baseQuery->where('ch.region', '=', $corRegId);
-            } else {
-                $baseQuery->whereIn('ch.primary_coordinator_id', $reportIds);
-            }
+        if ($positionId == 6 || $positionId == 25) {
+            $baseQuery->where('ch.conference', '=', $corConfId);
+        } elseif ($positionId == 5) {
+            $baseQuery->where('ch.region', '=', $corRegId);
+        } else {
+            $baseQuery->whereIn('ch.primary_coordinator_id', $reportIds);
+        }
 
-            if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-                $checkBoxStatus = 'checked';
-                $baseQuery->where('fr.reviewer_id', $corId)
-                            ->orderBy('st.state_short_name')
-                            ->orderBy('ch.name');
-            } else {
-                $checkBoxStatus = '';
-                $baseQuery->orderBy('st.state_short_name')
-                            ->orderBy('ch.name');
-            }
+        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
+            $checkBoxStatus = 'checked';
+            $baseQuery->where('fr.reviewer_id', $corId)
+                ->orderBy('st.state_short_name')
+                ->orderBy('ch.name');
+        } else {
+            $checkBoxStatus = '';
+            $baseQuery->orderBy('st.state_short_name')
+                ->orderBy('ch.name');
+        }
 
-            $chapterList = $baseQuery->get();
+        $chapterList = $baseQuery->get();
 
         $chapterList = $chapterList->toArray();
         $countList = count($chapterList);
@@ -2379,11 +2378,11 @@ class ReportController extends Controller
                 ->select('crt.id')
                 ->get();
         } else {
-        //Get Coordinator Reporting Tree
-        $reportIdList = DB::table('coordinator_reporting_tree as crt')
-            ->select('crt.id')
-            ->where($sqlLayerId, '=', $corId)
-            ->get();
+            //Get Coordinator Reporting Tree
+            $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                ->select('crt.id')
+                ->where($sqlLayerId, '=', $corId)
+                ->get();
         }
         $inQryStr = '';
         foreach ($reportIdList as $key => $val) {
@@ -2409,26 +2408,26 @@ class ReportController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->where('created_at', '<=', date('Y-06-30'));
 
-            if ($positionId == 6 || $positionId == 25) {
-                $baseQuery->where('chapters.conference', '=', $corConfId);
-            } elseif ($positionId == 5) {
-                $baseQuery->where('chapters.region', '=', $corRegId);
-            } else {
-                $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
-            }
+        if ($positionId == 6 || $positionId == 25) {
+            $baseQuery->where('chapters.conference', '=', $corConfId);
+        } elseif ($positionId == 5) {
+            $baseQuery->where('chapters.region', '=', $corRegId);
+        } else {
+            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
+        }
 
-            if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-                $checkBoxStatus = 'checked';
-                $baseQuery->where('chapters.primary_coordinator_id', '=', $corId)
-                            ->orderBy('st.state_short_name')
-                            ->orderBy('chapters.name');
-            } else {
-                $checkBoxStatus = '';
-                $baseQuery->orderBy('st.state_short_name')
-                            ->orderBy('chapters.name');
-            }
+        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
+            $checkBoxStatus = 'checked';
+            $baseQuery->where('chapters.primary_coordinator_id', '=', $corId)
+                ->orderBy('st.state_short_name')
+                ->orderBy('chapters.name');
+        } else {
+            $checkBoxStatus = '';
+            $baseQuery->orderBy('st.state_short_name')
+                ->orderBy('chapters.name');
+        }
 
-            $chapterList = $baseQuery->get();
+        $chapterList = $baseQuery->get();
 
         $row_count = count($chapterList);
 

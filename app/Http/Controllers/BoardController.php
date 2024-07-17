@@ -943,8 +943,7 @@ class BoardController extends Controller
         return view('boards.payment')->with($data);
     }
 
-
-     /**
+    /**
      * Show M2M Donation Form All Board Members
      */
     public function showM2MDonationForm(Request $request)
@@ -995,7 +994,6 @@ class BoardController extends Controller
 
         return view('boards.donation')->with($data);
     }
-
 
     /**
      * Show Chater Resources
@@ -2520,9 +2518,9 @@ class BoardController extends Controller
         $coordinator_count = count($coordinator_array);
 
         for ($i = 0; $i < $coordinator_count; $i++) {
-                $cc_email = $coordinator_array[$i]['email'];
-                $cc_id = $coordinator_array[$i]['id'];
-            }
+            $cc_email = $coordinator_array[$i]['email'];
+            $cc_id = $coordinator_array[$i]['id'];
+        }
 
         $reviewer_id = 0;
         //Report was submitted, notify those who need to know.
@@ -2563,5 +2561,4 @@ class BoardController extends Controller
             'cc_id' => $cc_id,
         ];
     }
-
 }
