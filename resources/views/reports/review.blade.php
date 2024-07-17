@@ -53,6 +53,7 @@
                  <th>Primary Coordinator</th>
                  <th>Assigned Reviewer</th>
                  <th>Report Received</th>
+                 <th>Date Received</th>
                  <th>Review Completed</th>
                  <th>Date Completed</th>
                  <th>Ending Balance</th>
@@ -85,6 +86,13 @@
                             @else
                                 NO
                             @endif
+						</td>
+                        <td style="background-color: @if($list->financial_report_received == '1') transparent; @else #FFC7CE; @endif;">
+                            {{-- @if($list->financial_report_received != null) --}}
+                                {{ $list->report_received }}
+                            {{-- @else
+
+                            @endif --}}
 						</td>
                         <td style="background-color: @if($list->report_complete == '1') transparent; @else #FFC7CE; @endif;">
                             @if($list->report_complete == '1')

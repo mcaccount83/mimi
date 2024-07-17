@@ -1579,11 +1579,12 @@ class BoardController extends Controller
         $chState = $input['ch_state'];
         $chPcid = $input['ch_pcid'];
         $chConf = $input['ch_conf'];
-
         $farthest_step_visited = $input['FurthestStep'];
         $reportReceived = $input['submitted'];
+
         $chapterDetails = DB::table('chapters')
-            ->select('chapters.*', 'st.state_short_name as state_short_name')
+            ->select('chapters.*', 'st.state_short_name as state_short_name', 'fr.reviewer_id as reviewer_id')
+            ->leftJoin('financial_report as fr', 'chapters.id', '=', 'fr.chapter_id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.id', '=', $chapter_id)
             ->get();
@@ -1591,6 +1592,12 @@ class BoardController extends Controller
         $chapter_state = $chapterDetails[0]->state_short_name;
         $chapter_name = $chapterDetails[0]->name;
         $chapter_country = $chapterDetails[0]->country;
+
+        $reviewer_id = $chapterDetails[0]->reviewer_id;
+        $coorDetails = DB::table('coordinator_details as cd')
+            ->where('cd.coordinator_id', '=', $reviewer_id)
+            ->get();
+        $reviewer_email = $coorDetails[0]->email;
 
         $chapterDetailsExistArr = DB::table('financial_report')->where('chapter_id', '=', $chapter_id)->get();
         $chapterDetailsExist = $chapterDetailsExistArr->count();
@@ -1891,6 +1898,11 @@ class BoardController extends Controller
         $cc_email = $coordinatorData['cc_email'];
         $cc_id = $coordinatorData['cc_id'];
 
+        // Send email to Assigned Reviewer//
+        $to_email = $cc_email;
+        $to_email3 = $reviewer_email;
+        $to_email2 = $completed_email;
+
         DB::beginTransaction();
         try {
             if ($chapterDetailsExist == 0) {
@@ -2128,10 +2140,7 @@ class BoardController extends Controller
                 $report->farthest_step_visited = $farthest_step_visited;
                 $report->completed_name = $completed_name;
                 $report->completed_email = $completed_email;
-
-                // Send email to Assigned Reviewer//
-                $to_email = $cc_email;
-                $to_email2 = $completed_email;
+                $report->reviewer_id = $reviewer_id;
 
                 $mailData = [
                     'chapterid' => $chapter_id,
@@ -2148,12 +2157,20 @@ class BoardController extends Controller
 
                 if ($reportReceived == 1) {
                     $pdfPath = $this->generateAndSavePdf($chapter_id);   // Generate and save the PDF
+                    Mail::to($to_email2)
+                        ->send(new EOYFinancialReportThankYou($mailData, $coordinator_array, $pdfPath));
+
+                if($reviewer_id == null)
                     DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapter_id]);
                     Mail::to($to_email)
                         ->send(new EOYFinancialSubmitted($mailData, $coordinator_array, $pdfPath));
 
-                    Mail::to($to_email2)
-                        ->send(new EOYFinancialReportThankYou($mailData, $coordinator_array, $pdfPath));
+                if($reviewer_id != null)
+                    Mail::to($to_email3)
+                        ->send(new EOYFinancialSubmitted($mailData, $coordinator_array, $pdfPath));
+
+                    // Mail::to($to_email2)
+                    //     ->send(new EOYFinancialReportThankYou($mailData, $coordinator_array, $pdfPath));
                 }
 
                 $report->save();

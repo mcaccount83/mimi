@@ -4900,7 +4900,7 @@ class ChapterController extends Controller
         if (! $reportReceived && $submitType == 'UnSubmit') {
             DB::update('UPDATE chapters SET financial_report_received = ? where id = ?', [null, $chapter_id]);
             DB::update('UPDATE financial_report SET farthest_step_visited_coord = ? where chapter_id = ?', [13, $chapter_id]);
-            DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [null, $chapter_id]);
+            // DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [null, $chapter_id]);
             DB::update('UPDATE financial_report SET submitted = ? where chapter_id = ?', [null, $chapter_id]);
 
             return redirect()->back()->with('success', 'Report has been successfully Unsubmitted');

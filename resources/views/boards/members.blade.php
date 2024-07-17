@@ -46,12 +46,20 @@
                                </br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
                             </p>
                             @if($thisDate->month >= 5 && $thisDate->month <= 8)
-                             <div id="readOnlyText" class="description text-center">
-                                <p><span style="color: red;"><strong>All Board Member Information is READ ONLY at this time.<br>
-                                    In order to add new board members to MIMI, please complete the Board Election Report.<br>
-                                    If you need to make updates to your current year officers, please contact your Primary Coordinator.</strong></span></p>
-                            </div>
+                         <div id="readOnlyText" class="description text-center">
+                            <p><span style="color: red;"><strong>All Board Member Information is READ ONLY at this time.<br>
+                                @if($chapterList[0]->new_board_active != '1')
+                                In order to add new board members to MIMI, please complete the Board Election Report.<br>
                             @endif
+                            @if($chapterList[0]->new_board_active == '1')
+                                If you need to make updates to your listed officers, please contact your Primary Coordinator.</strong></span></p>
+                            @endif
+                            @if($chapterList[0]->new_board_active == '1')
+                                <p>Incoming Board Members have been activated and have full MIMI access.<br>
+                                    Outgoing Board Members can still log in and access Financial Reports Only.</p>
+                            @endif
+                        </div>
+                        @endif
                     </div>
 
                 </div>
@@ -109,15 +117,20 @@
                 @endif
 
                 @if($thisDate->month >= 5 && $thisDate->month <= 12 && $boardreport_yes)
-                @if($chapterDetails->new_board_active != '1')
+                    @if($chapterDetails->new_board_active != '1')
                     <div class="col-md-4 float-left">
                         <button id="BoardReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $chapterDetails->id]) }}'">
                             <i class="fa fa-user-plus fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
                         </button>
                     </div>
                     @endif
+                    @if($list->new_board_active == '1')
+                    <div class="col-md-6 float-left">
+                       <p>Your {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report has been Activated.</p>
+                    </div>
                     @endif
-                    @if($thisDate->month >= 6 && $thisDate->month <= 12 && $financialreport_yes)
+                @endif
+                @if($thisDate->month >= 6 && $thisDate->month <= 12 && $financialreport_yes)
                     <div class="col-md-4 float-left">
                         <button id="FinancialReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $chapterDetails->id]) }}'">
                             <i class="fa fa-usd fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y')-1 .'-'.date('Y') }} Financial Report

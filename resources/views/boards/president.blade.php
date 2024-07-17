@@ -124,7 +124,7 @@
                     </div>
                 @endif
                 @if($thisDate->month >= 6 && $thisDate->month <= 12 && $boardreport_yes)
-                @if($list->new_board_active != '1')
+                    @if($list->new_board_active != '1')
                     <div class="col-md-6 float-left">
                        <button id="BoardReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $list->id]) }}'">
                             <i class="fa fa-user-plus fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
@@ -136,8 +136,8 @@
                        <p>Your {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report has been Activated.</p>
                     </div>
                     @endif
-                    @endif
-                    @if($thisDate->month >= 6 && $thisDate->month <= 12 && $financialreport_yes)
+                @endif
+                @if($thisDate->month >= 6 && $thisDate->month <= 12 && $financialreport_yes)
                     <div class="col-md-6 float-left">
                         <button id="FinancialReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $list->id]) }}'">
                             <i class="fa fa-usd fa-fw" aria-hidden="true" ></i>&nbsp; {{ date('Y')-1 .'-'.date('Y') }} Financial Report
