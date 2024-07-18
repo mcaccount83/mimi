@@ -128,7 +128,7 @@
 
             if ($pdfData['different_dues'] == 1 && $pdfData['changed_dues'] != 1) {
                 $totalDues = $newMembers + $renewalMembersDiff + $partialMembers + $associateMembers;
-            } elseif ($pdfData['different_dues'] == 1 && $pdfData['changed_dues'] == 1) {
+            } elseif ($pdfData['different_dues'] == 1 && $pdfDatay['changed_dues'] == 1) {
                 $totalDues = $newMembers + $renewalMembersDiff + $newMembersNew + $renewMembersNewDiff + $partialMembers + $associateMembers;
             } elseif ($pdfData['different_dues'] != 1 && $pdfData['changed_dues'] == 1) {
                 $totalDues = $newMembers + $renewalMembers + $newMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
