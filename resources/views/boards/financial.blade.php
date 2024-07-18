@@ -56,7 +56,7 @@
             <div class="accordion js-accordion">
                 <!------Start Step 1 ------>
                 <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] <='1') echo "active";?>" >
-                    <div class="accordion-header js-accordion-header">CHAPTER DUES</div>
+                    <div class="accordion-header js-accordion-header" id="accordion-header-members">CHAPTER DUES</div>
                     <div class="accordion-body js-accordion-body">
                         <section>
                             <div class="col-md-12" id="RosterBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['roster_path']) echo "style=\"display: none;\"";} ?>>
@@ -412,7 +412,7 @@
 
                 <!------Start Step 3 ------>
                 <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='3') echo "active";?>">
-                    <div class="accordion-header js-accordion-header">SERVICE PROJECTS</div>
+                    <div class="accordion-header js-accordion-header" id="accordion-header-service">SERVICE PROJECTS</div>
                     <div class="accordion-body js-accordion-body ">
                     <section>
                         <div class="form-row form-group">
@@ -430,10 +430,10 @@
                                 <thead>
                                 <tr>
                                   <td width="36%">Project Description<span class="field-required">*</span></td>
-                                  <td width="16%">Income<span class="field-required">*</span></td>
-                                  <td width="16%">Supplies & Expenses<span class="field-required">*</span></td>
-                                  <td width="16%">Charity Donation<span class="field-required">*</span></td>
-                                  <td width="16%">M2M Donation<span class="field-required">*</span></td>
+                                  <td width="16%">Income</td>
+                                  <td width="16%">Supplies & Expenses</td>
+                                  <td width="16%">Charity Donation</td>
+                                  <td width="16%">M2M Donation</td>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -835,9 +835,9 @@
             </div><!-- end of accordion item -->
             <!------End Step 5 ------>
 
-            <!------Start Step 5 ------>
-            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='55') echo "active";?>">
-                <div class="accordion-header js-accordion-header">INTERNATIONAL EVENTS & RE-REGISTRATION</div>
+            <!------Start Step 6 ------>
+            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='6') echo "active";?>">
+                <div class="accordion-header js-accordion-header" id="accordion-header-rereg">INTERNATIONAL EVENTS & RE-REGISTRATION</div>
                 <div class="accordion-body js-accordion-body ">
                     <section>
                     <div class="form-row form-group">
@@ -956,17 +956,17 @@
                 <div class="form-row form-group">
                     <div class="card-body">
                         <div class="col-md-12 text-center">
-                          <button type="button" id="btn-step-55" class="btn btn-info btn-fill" onSubmit="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+                          <button type="button" id="btn-step-6" class="btn btn-info btn-fill" onSubmit="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                         </div>
                     </div>
                 </div>
                 </section>
                 </div><!-- end of accordion body -->
             </div><!-- end of accordion item -->
-            <!------End Step 5 ------>
+            <!------End Step 6 ------>
 
-            <!------Start Step 6 ------>
-            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='6') echo "active";?>">
+            <!------Start Step 7 ------>
+            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='7') echo "active";?>">
                 <div class="accordion-header js-accordion-header">DONATIONS TO YOUR CHAPTER</div>
                 <div class="accordion-body js-accordion-body ">
                 <section>
@@ -1104,17 +1104,17 @@
                     <div class="form-row form-group">
                         <div class="card-body">
                             <div class="col-md-12 text-center">
-                              <button type="submit" id="btn-step-6" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+                              <button type="submit" id="btn-step-7" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                             </div>
                         </div>
                     </div>
                 </section>
                 </div><!-- end of accordion body -->
                 </div><!-- end of accordion item -->
-                <!------End Step 6 ------>
+                <!------End Step 7 ------>
 
-                <!------Start Step 7 ------>
-                <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='7') echo "active";?>">
+                <!------Start Step 8 ------>
+                <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='8') echo "active";?>">
                     <div class="accordion-header js-accordion-header">OTHER INCOME & EXPENSES</div>
                     <div class="accordion-body js-accordion-body ">
                     <section>
@@ -1231,7 +1231,7 @@
                     <div class="form-row form-group">
                         <div class="card-body">
                             <div class="col-md-12 text-center">
-                              <button type="submit" id="btn-step-7" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+                              <button type="submit" id="btn-step-8" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                             </div>
                         </div>
 
@@ -1239,11 +1239,11 @@
                 </section>
                 </div><!-- end of accordion body -->
                 </div><!-- end of accordion item -->
-                <!------End Step 7 ------>
+                <!------End Step 8 ------>
 
-                <!------Start Step 8 ------>
-                  <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='8') echo "active";?>">
-                    <div class="accordion-header js-accordion-header">BANK RECONCILIATION</div>
+                <!------Start Step 9 ------>
+                  <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='9') echo "active";?>">
+                    <div class="accordion-header js-accordion-header" id="accordion-header-reconciliation">BANK RECONCILIATION</div>
                     <div class="accordion-body js-accordion-body ">
                     <section>
 
@@ -1455,14 +1455,14 @@
                  <div class="form-row form-group">
                         <div class="card-body">
                             <div class="col-md-12 text-center">
-                              <button type="submit" id="btn-step-8" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+                              <button type="submit" id="btn-step-9" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                             </div>
                         </div>
                 </div>
             </section>
             </div><!-- end of accordion body -->
             </div><!-- end of accordion item -->
-            <!------End Step 8 ------>
+            <!------End Step 9 ------>
 
             <!------Start Step 10 ------>
             <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='10') echo "active";?>">
@@ -1847,9 +1847,9 @@
             <!------End Step 10 ------>
 
 
-            <!------Start Step 9 ------>
-            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='9') echo "active";?>">
-            <div class="accordion-header js-accordion-header">CHAPTER QUESTIONS</div>
+            <!------Start Step 11 ------>
+            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='11') echo "active";?>">
+            <div class="accordion-header js-accordion-header" id="accordion-header-questions">CHAPTER QUESTIONS</div>
                 <div class="accordion-body js-accordion-body">
                 <section>
                 <div id="form-step-8" role="form" data-toggle="validator" class="form-row form-group">
@@ -2369,17 +2369,17 @@
                     <div class="form-row form-group">
                         <div class="card-body">
                             <div class="col-md-12 text-center">
-                              <button type="button" class="btn btn-info btn-fill" id="btn-step-9" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+                              <button type="button" class="btn btn-info btn-fill" id="btn-step-11" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                             </div>
                         </div>
                     </div>
               </section>
           </div><!-- end of accordion body -->
           </div><!-- end of accordion item -->
-            <!------End Step 9 ------>
+            <!------End Step 11 ------>
 
-            <!------Begin Step 11 ------>
-            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='11') echo "active";?>">
+            <!------Begin Step 12 ------>
+            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='12') echo "active";?>">
                 <div class="accordion-header js-accordion-header">AWARD NOMINATIONS</div>
                 <div class="accordion-body js-accordion-body ">
                     <section>
@@ -2960,7 +2960,7 @@
                     <div class="form-row form-group">
                        <div class="card-body">
                           <div class="col-md-12 text-center">
-                             <button type="button" id="btn-step-11" class="btn btn-info btn-fill" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+                             <button type="button" id="btn-step-12" class="btn btn-info btn-fill" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
 
                             </div>
                        </div>
@@ -2968,10 +2968,10 @@
                      </section>
                     </div><!-- end of accordion body -->
                 </div><!-- end of accordion item -->
-                <!------End Step 11 ------>
+                <!------End Step 12 ------>
 
-                <!------Start Step 12 ------>
-                <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='12') echo "active";?>">
+                <!------Start Step 13 ------>
+                <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='13') echo "active";?>">
                     <div class="accordion-header js-accordion-header">SUBMIT REPORT</div>
                     <div class="accordion-body js-accordion-body ">
                         <section>
@@ -2994,7 +2994,7 @@
                             <div class="form-row form-group">
                                 <div class="card-body">
                                     <div class="col-md-12 text-center">
-                                        <button type="button" class="btn btn-info btn-fill" id="btn-step-12" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+                                        <button type="button" class="btn btn-info btn-fill" id="btn-step-13" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                                         @if($thisDate->month >= 3 && $thisDate->month <= 12)
                                         <button type="button" class="btn btn-info btn-fill" id="final-submit" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-mail-forward fa-fw" aria-hidden="true" ></i>&nbsp; Submit</button>
                                         @endif
@@ -3005,7 +3005,7 @@
                         </section>
                     </div><!-- end of accordion body -->
                 </div><!-- end of accordion item -->
-                <!------End Step 12 ------>
+                <!------End Step 13 ------>
 
                 </div><!-- end of accordion -->
             </form>
@@ -3256,8 +3256,8 @@
       // reveal the active accordion bodies
       $('.js-accordion-item.active').find('> .js-accordion-body').show();
     },
-    toggle: function($this) {
 
+    toggle: function($this) {
       if(settings.oneOpen && $this[0] != $this.closest('.js-accordion').find('> .js-accordion-item.active > .js-accordion-header')[0]) {
         $this.closest('.js-accordion')
                .find('> .js-accordion-item')
@@ -3268,7 +3268,23 @@
       // show/hide the clicked accordion item
       $this.closest('.js-accordion-item').toggleClass('active');
       $this.next().stop().slideToggle(settings.speed);
-    }
+    },
+
+     // Open accordion item programmatically by header ID
+     openAccordionItem: function(headerID) {
+            var $accordionHeader = $('#' + headerID);
+            var $accordionItem = $accordionHeader.closest('.js-accordion-item');
+
+            // Close all other items if oneOpen is true
+            if (settings.oneOpen) {
+                $accordion_item.not($accordionItem).removeClass('active');
+                $accordion_item.not($accordionItem).find('.js-accordion-body').slideUp();
+            }
+
+            // Toggle the clicked accordion item
+            $accordionItem.toggleClass('active');
+            $accordionItem.find('.js-accordion-body').stop().slideToggle(settings.speed);
+        }
   }
 })();
 
@@ -3312,14 +3328,10 @@ $(document).ready(function(){
         $("#FurthestStep").val('5');
         $("#financial_report").submit();
     });
-    $("#btn-step-55").click(function() {
+    $("#btn-step-6").click(function() {
         if (!EnsureReRegistration()) {
         return false;
         }
-        $("#FurthestStep").val('55');
-        $("#financial_report").submit();
-    });
-    $("#btn-step-6").click(function() {
         $("#FurthestStep").val('6');
         $("#financial_report").submit();
     });
@@ -3328,24 +3340,24 @@ $(document).ready(function(){
         $("#financial_report").submit();
     });
     $("#btn-step-8").click(function() {
-        if (!EnsureReconciliation()) {
-        return false;
-        }
         $("#FurthestStep").val('8');
         $("#financial_report").submit();
     });
     $("#btn-step-9").click(function() {
-        if (!EnsureChapterQuestions()) {
+        if (!EnsureStatement()) {
         return false;
         }
         $("#FurthestStep").val('9');
         $("#financial_report").submit();
     });
-       $("#btn-step-10").click(function() {
-        $("#FurthestStep").val('10');
+    $("#btn-step-11").click(function() {
+        if (!EnsureQuestions()) {
+        return false;
+        }
+        $("#FurthestStep").val('11');
         $("#financial_report").submit();
     });
-    $("#btn-step-11").click(function() {
+    $("#btn-step-12").click(function() {
         var agreeChk = $("#TotalAwardNominations").val();
         if(agreeChk > 0){
             if (($("input[name='AwardsAgree']:checked").length)<=0) {
@@ -3353,56 +3365,77 @@ $(document).ready(function(){
                 return false;
             }
             else{
-                $("#FurthestStep").val('11');
+                $("#FurthestStep").val('12');
                 $("#financial_report").submit();
             }
         }else{
-            $("#FurthestStep").val('11');
+            $("#FurthestStep").val('12');
             $("#financial_report").submit();
         }
-
     });
-        $("#btn-step-12").click(function() {
+        $("#btn-step-13").click(function() {
         if (!EnsureSubmitInformation()) {
         return false;
         }
-        $("#FurthestStep").val('12');
-        $("#financial_report").submit();
-    });
-        $("#btn-save").click(function() {
         $("#FurthestStep").val('13');
         $("#financial_report").submit();
     });
-    $("#final-submit").click(function() {
+        $("#btn-save").click(function() {
+        $("#FurthestStep").val('14');
+        $("#financial_report").submit();
+    });
+        $("#final-submit").click(function() {
         if (!EnsureRoster()) {
+            $(this).prop('disabled', false);
+            return false;
+        }
+        else if (!EnsureMembers()) {
+            $(this).prop('disabled', false);
             return false;
         }
         else if (!EnsureServiceProject()) {
+            $(this).prop('disabled', false);
             return false;
         }
         else if (!EnsureReRegistration()) {
+            $(this).prop('disabled', false);
+            return false;
+        }
+        else if (!EnsureQuestions()) {
+            $(this).prop('disabled', false);
+            return false;
+        }
+        else if (!EnsureStatement()) {
+            $(this).prop('disabled', false);
+            return false;
+        }
+        else if (!Ensure990()) {
+            $(this).prop('disabled', false);
             return false;
         }
         else if (!EnsureReconciliation()) {
-            return false;
-        }
-        else if (!EnsureChapterQuestions()) {
+            $(this).prop('disabled', false);
             return false;
         }
         else if (!EnsureSubmitInformation()) {
+            $(this).prop('disabled', false);
             return false;
         }
         var completedEmail = $("#CompletedEmail").val();
         if (!isValidEmail(completedEmail)) {
             alert("Please enter a valid email address.");
+            $(this).prop('disabled', false);
             return false;
         }
         var result = confirm("This will finalize and submit your report.  You will no longer be able to edit this report.  Do you wish to continue?");
         if (result) {
             $(this).prop('disabled', true);
             $("#submitted").val('1');
-            $("#FurthestStep").val('13');
+            $("#FurthestStep").val('15');
             $("#financial_report").submit();
+        } else {
+            console.log("User cancelled the submission");
+            $(this).prop('disabled', false);
         }
     });
 });
@@ -3413,79 +3446,216 @@ $(document).ready(function(){
         return emailRegex.test(email);
     }
 
-    function EnsureRoster(){
-        if(document.getElementById('RosterPath').value==""){
-            alert("Your chapter's roster was not uploaded in CHAPTER DUES section.");
+    function EnsureRoster() {
+        var rosterPath = document.getElementById('RosterPath');
+        if (!rosterPath || rosterPath.value == "") {
+            alert("Your chapter's roster was not uploaded in CHAPTER DUES section. \n\nPlease upload Roster to Continue.");
+            accordion.openAccordionItem('accordion-header-members');
             return false;
         }
-        return true; // All checks passed, allow submission
+        return true;
     }
 
-    function EnsureServiceProject(){
-        if(document.getElementById('ServiceProjectDesc0').value==""){
-            alert("Project Description is required in SERVICE PROJECT section.");
+    function EnsureMembers() {
+        var changeDues = document.getElementById('optChangeDues');
+        var newOldDifferent = document.getElementById('optNewOldDifferent');
+        var noFullDues = document.getElementById('optNoFullDues');
+        if (!changeDues || changeDues.value == "" || !newOldDifferent || newOldDifferent.value == "" || !noFullDues || noFullDues.value == "") {
+            alert("Please answer required questions in the CHAPTER DUES section to Continue.");
+            accordion.openAccordionItem('accordion-header-members');
+            return false;
+        }
+        return true;
+    }
+
+    function EnsureServiceProject() {
+        var serviceProjectDesc0 = document.getElementById('ServiceProjectDesc0');
+        if (!serviceProjectDesc0 || serviceProjectDesc0.value == "") {
+            alert("At least one Service Project is required in SERVICE PROJECT section. \n\nPlease enter Service Project information to Continue.");
+            accordion.openAccordionItem('accordion-header-service');
             $("#ServiceProjectDesc0").focus();
             return false;
         }
-        else if(document.getElementById('ServiceProjectIncome0').value==""){
-            alert("Income amount is required in SERVICE PROJECT section.");
-            $("#ServiceProjectIncome0").focus();
-            return false;
-        }
-        else if(document.getElementById('ServiceProjectSupplies0').value==""){
-            alert("Supplies & Expenses amount is required in SERVICE PROJECT section.");
-            $("#ServiceProjectSupplies0").focus();
-            return false;
-        }
-        else if(document.getElementById('ServiceProjectDonatedCharity0').value==""){
-            alert("Charity Donation amount is required in SERVICE PROJECT section.");
-            $("#ServiceProjectDonatedCharity0").focus();
-            return false;
-        }
-        else if(document.getElementById('ServiceProjectDonatedM2M0').value==""){
-            alert("M2M Donation amount is required in SERVICE PROJECT section.");
-            $("#ServiceProjectDonatedM2M0").focus();
-            return false;
-        }
-        return true; // All checks passed, allow submission
+        return true;
     }
 
-    function EnsureReRegistration(){
-        if(document.getElementById('AnnualRegistrationFee').value==""){
-            alert("Chapter Re-registration is required in INTERNATIONAL EVENTS & RE-REGISTRATION section.");
+    function EnsureReRegistration() {
+        var annualRegistrationFee = document.getElementById('AnnualRegistrationFee');
+        if (!annualRegistrationFee || annualRegistrationFee.value == "") {
+            alert("Chapter Re-registration is required in INTERNATIONAL EVENTS & RE-REGISTRATION section. \n\nPlease enter Annual Re-Registration Payment to Continue.");
+            accordion.openAccordionItem('accordion-header-rereg');
             $("#AnnualRegistrationFee").focus();
             return false;
         }
-        return true; // All checks passed, allow submission
+        return true;
     }
 
-    function EnsureReconciliation(){
-        if(document.getElementById('BankStatementIncluded').value=="" && document.getElementById('StatementPath').value=="" ){
-            alert("Your chapter's Bank Statement was not uploaded in the BANK RECONCILIATION section, but you indicated the file was attached.");
+    function EnsureStatement() {
+        var bankStatementIncluded = document.getElementById('BankStatementIncluded');
+        var statementPath = document.getElementById('StatementPath');
+        if (bankStatementIncluded && bankStatementIncluded.value == "1" && (!statementPath || statementPath.value == "")) {
+            accordion.openAccordionItem('accordion-header-reconciliation');
+            alert("Your chapter's Bank Statement was not uploaded in the BANK RECONCILIATION section, but you indicated the file was attached. \n\nPlease upload Bank Statement to Continue.");
             return false;
         }
-        return true; // All checks passed, allow submission
+        return true;
     }
 
-    function EnsureChapterQuestions(){
-        if(document.getElementById('FileIRS').value=="" && document.getElementById('990NPath').value=="" ){
-            alert("Your chapter's 990N filing confirmation was not uploaded in the CHAPTER QUESTIONS section, but you indicated the file was attached.");
-            return false;
+    function EnsureReconciliation() {
+        if (TotalFees != TreasuryBalanceNow) {
+            var proceedAnyway = confirm("Your report does not balance. Your Treasury Balance Now and Reconciled Bank Balance should match before submitting your report. \n\nClick OK to Submit Anyway. \nClick Cancel to Return to Report.");
+            if (!proceedAnyway) {
+                accordion.openAccordionItem('accordion-header-reconciliation');
+                return false;
+            }
         }
-        return true; // All checks passed, allow submission
+        return true;
     }
 
-    function EnsureSubmitInformation(){
-        if(document.getElementById('CompletedName').value==""){
-            alert("Please include the name of the person submitting the report.");
-            return false;
+    function EnsureQuestions() {
+        var requiredQuestions = [
+            'ReceiveCompensation', 'FinancialBenefit', 'InfluencePolitical', 'VoteAllActivities',
+            'BoughtPins', 'BoughtMerch', 'OfferedMerch', 'ByLawsAvailable', 'ChildrensRoom',
+            'Playgroups', 'ChildOutings', 'MotherOutings', 'MeetingSpeakers', 'SpeakerFrequency',
+            'ParkDays', 'ContributionsNotRegNP', 'PerformServiceProject', 'SisterChapter',
+            'InternationalEvent', 'FileIRS', 'BankStatementIncluded'
+        ];
+
+        for (var i = 0; i < requiredQuestions.length; i++) {
+            var question = document.getElementById(requiredQuestions[i]);
+            if (!question || question.value == "") {
+                alert("Please answer all questions in the CHAPTER QUESTIONS section to Continue.");
+                accordion.openAccordionItem('accordion-header-questions');
+                return false;
+            }
         }
-        else if(document.getElementById('CompletedEmail').value==""){
-            alert("Please include the eamil address of the person submitting the report.");
-            return false;
-        }
-        return true; // All checks passed, allow submission
+        return true;
     }
+
+    function Ensure990() {
+        var fileIRS = document.getElementById('FileIRS');
+        var path990N = document.getElementById('990NPath');
+        if (fileIRS && fileIRS.value == "1" && path990N && path990N.value == "") {
+            alert("Your chapter's 990N filing confirmation was not uploaded in the CHAPTER QUESTIONS section, but you indicated the file was attached. \n\nPlease upload 990 Confirmation to Continue.");
+            accordion.openAccordionItem('accordion-header-questions');
+            return false;
+        }
+        return true;
+    }
+
+    function EnsureSubmitInformation() {
+        var completedName = document.getElementById('CompletedName');
+        var completedEmail = document.getElementById('CompletedEmail');
+        if (!completedName || completedName.value == "") {
+            alert("Please enter the name of the person submitting the report to Continue.");
+            $("#CompletedName").focus();
+            return false;
+        } else if (!completedEmail || completedEmail.value == "") {
+            alert("Please enter the email address of the person submitting the report to Continue.");
+            $("#CompletedEmail").focus();
+            return false;
+        }
+        return true;
+    }
+
+
+//     function EnsureRoster(){
+//         if(document.getElementById('RosterPath').value==""){
+//             alert("Your chapter's roster was not uploaded in CHAPTER DUES section. \n\nPlease upload Roster to Continue.");
+//             accordion.openAccordionItem('accordion-header-members');
+//             return false;
+//         }
+//         return true; // All checks passed, allow submission
+//     }
+
+//     function EnsureMembers(){
+//         if(document.getElementById('optChangeDues').value=="" || document.getElementById('optNewOldDifferent').value=="" || document.getElementById('optNoFullDues').value==""){
+//             alert("Please answer required questions in the CHAPTER DUES section to Continue.");
+//             accordion.openAccordionItem('accordion-header-members');
+//             return false;
+//         }
+//         return true; // All checks passed, allow submission
+//     }
+
+//     function EnsureServiceProject(){
+//         if(document.getElementById('ServiceProjectDesc0').value==""){
+//             alert("At least one Service Project is required in SERVICE PROJECT section. \n\nPlease enter Service Project information to Continue.");
+//             accordion.openAccordionItem('accordion-header-service');
+//             $("#ServiceProjectDesc0").focus();
+//             return false;
+//         }
+//         return true; // All checks passed, allow submission
+//     }
+
+//     function EnsureReRegistration(){
+//         if(document.getElementById('AnnualRegistrationFee').value==""){
+//             alert("Chapter Re-registration is required in INTERNATIONAL EVENTS & RE-REGISTRATION section. \n\nPlease enter Annual Re-Registration Payment to Continue.");
+//             accordion.openAccordionItem('accordion-header-rereg');
+//             $("#AnnualRegistrationFee").focus();
+//             return false;
+//         }
+//         return true; // All checks passed, allow submission
+//     }
+
+//     function EnsureStatement(){
+//         if(document.getElementById('BankStatementIncluded').value=="1" && document.getElementById('StatementPath').value=="" ){
+//             accordion.openAccordionItem('accordion-header-reconciliation');
+//             alert("Your chapter's Bank Statement was not uploaded in the BANK RECONCILIATION section, but you indicated the file was attached. \n\nPlease upload Bank Statement to Continue.");
+//             return false;
+//         }
+//         return true; // All checks passed, allow submission
+//     }
+
+//     function EnsureReconciliation(){
+//         if (TotalFees != TreasuryBalanceNow) {
+//         var proceedAnyway = confirm("Your report does not balance. Your Treasury Balance Now and Reconciled Bank Balance should match before submitting your report. \n\nClick OK to Submit Anyway. \nClick Cancel to Return to Report.");
+//         if (!proceedAnyway) {
+//             accordion.openAccordionItem('accordion-header-reconciliation');
+//             return false;
+//         }
+//     }
+//     return true; // All checks passed or user chose to proceed, allow submission
+// }
+
+//     function EnsureQuestions(){
+//         if(document.getElementById('ReceiveCompensation').value=="" || document.getElementById('FinancialBenefit').value=="" || document.getElementById('InfluencePolitical').value==""
+//         || document.getElementById('VoteAllActivities').value=="" || document.getElementById('BoughtPins').value=="" || document.getElementById('BoughtMerch').value==""
+//         || document.getElementById('OfferedMerch').value=="" || document.getElementById('ByLawsAvailable').value=="" || document.getElementById('ChildrensRoom').value==""
+//         || document.getElementById('Playgroups').value=="" || document.getElementById('ChildOutings').value=="" || document.getElementById('MotherOutings').value==""
+//         || document.getElementById('MeetingSpeakers').value=="" || document.getElementById('SpeakerFrequency').value=="" || document.getElementById('ParkDays').value==""
+//         || document.getElementById('ContributionsNotRegNP').value=="" || document.getElementById('PerformServiceProject').value=="" || document.getElementById('SisterChapter').value==""
+//         || document.getElementById('InternationalEvent').value=="" || document.getElementById('FileIRS').value=="" || document.getElementById('BankStatementIncluded').value==""){
+//             alert("Please answer all questions in the CHAPTER QUESTIONS section to Continue.");
+//             accordion.openAccordionItem('accordion-header-questions');
+//             return false;
+//         }
+//         return true; // All checks passed, allow submission
+//     }
+
+//      function Ensure990() {
+//         var fileIRS = document.getElementById('FileIRS');
+//         var path990N = document.getElementById('990NPath');
+//         if (fileIRS && fileIRS.value == "1" && path990N && path990N.value == "") {
+//             alert("Your chapter's 990N filing confirmation was not uploaded in the CHAPTER QUESTIONS section, but you indicated the file was attached. \n\nPlease upload 990 Confirmation to Continue.");
+//             accordion.openAccordionItem('accordion-header-questions');
+//             return false;
+//         }
+//         return true;
+//     }
+
+//     function EnsureSubmitInformation(){
+//         if(document.getElementById('CompletedName').value==""){
+//             alert("Please enter the name of the person submitting the report to Continue.");
+//             $("#CompletedName").focus();
+//             return false;
+//         }
+//         else if(document.getElementById('CompletedEmail').value==""){
+//             alert("Please enter the eamil address of the person submitting the report to Continue.");
+//             $("#CompletedEmail").focus();
+//             return false;
+//         }
+//         return true; // All checks passed, allow submission
+//     }
 </script>
 
 <script>

@@ -176,7 +176,7 @@
             <div class="accordion js-accordion">
 				<!------Start Step 1 ------>
 				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] <='1') echo "active";?>">
-					<div class="accordion-header js-accordion-header">CHAPTER DUES</div>
+					<div class="accordion-header js-accordion-header" id="accordion-header-members">CHAPTER DUES</div>
 					<div class="accordion-body js-accordion-body">
 						<section>
                             Did your chapter change dues this year?&nbsp;&nbsp;&nbsp;
@@ -538,7 +538,7 @@
 
 				<!------Start Step 3 ------>
 				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='3') echo "active";?>">
-					<div class="accordion-header js-accordion-header">SERVICE PROJECTS</div>
+					<div class="accordion-header js-accordion-header" id="accordion-header-service">SERVICE PROJECTS</div>
 					<div class="accordion-body js-accordion-body">
 					<section>
                         <table width="100%" style="border-collapse: collapse;">
@@ -673,7 +673,7 @@
 
 				<!------Start Step 4 ------>
 				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='4') echo "active";?>">
-				<div class="accordion-header js-accordion-header">PARTIES & MEMBER BENEFITS</div>
+				<div class="accordion-header js-accordion-header" id="accordion-header-parties">PARTIES & MEMBER BENEFITS</div>
 				<div class="accordion-body js-accordion-body">
 				<section>
                     <table width="75%" style="border-collapse: collapse;">
@@ -898,8 +898,8 @@
 			</div><!-- end of accordion item -->
 			<!------End Step 5 ------>
 
-            <!------Start Step 5 ------>
-			    <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='5') echo "active";?>">
+            <!------Start Step 6 ------>
+			    <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='6') echo "active";?>">
                     <div class="accordion-header js-accordion-header">INTERNATIONAL EVENTS & RE-REGISTRATION</div>
                     <div class="accordion-body js-accordion-body">
                     <section>
@@ -975,22 +975,22 @@
                                     <label for="Step12_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                                 </div>
                                 <div class="col-md-12">
-                                    <textarea class="form-control" style="width:100%" rows="8" name="Step12_Log" id="Step12_Log" readonly><?php echo $financial_report_array['step_12_notes_log']; ?></textarea>
+                                    <textarea class="form-control" style="width:100%" rows="8" name="Step6_Log" id="Step6_Log" readonly><?php echo $financial_report_array['step_6_notes_log']; ?></textarea>
                                 </div>
                             </div>
 
                             <div class="col-md-12 mar_bot_20">
                                 <div class="col-md-12">
-                                    <label for="Step12_Note">Note:</label>
+                                    <label for="Step6_Note">Note:</label>
                                 </div>
                                 <div class="col-md-12">
-                                    <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(12)" name="Step12_Note" id="Step12_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+                                    <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(6)" name="Step6_Note" id="Step6_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
                                 </div>
                             </div>
 
                             <div class="col-md-12 mar_bot_20">
                                 <div class="col-md-12">
-                                    <button type="button" id="AddNote12" class="btn btn-large btn-success" onclick="AddNote(12)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                    <button type="button" id="AddNote6" class="btn btn-large btn-success" onclick="AddNote(6)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                 </div>
                             </div>
 
@@ -1002,17 +1002,17 @@
                 <div class="form-row form-group">
                     <div class="card-body">
                         <div class="col-md-12 text-center">
-                          <button type="submit" id="btn-step-5" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+                          <button type="submit" id="btn-step-6" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                         </div>
                     </div>
                 </div>
                     </section>
                 </div><!-- end of accordion body -->
                 </div><!-- end of accordion item -->
-                <!------End Step 5 ------>
+                <!------End Step 6 ------>
 
-			<!------Start Step 6 ------>
-		    <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='6') echo "active";?>">
+			<!------Start Step 7 ------>
+		    <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='7') echo "active";?>">
 				<div class="accordion-header js-accordion-header">DONATIONS TO YOUR CHAPTER</div>
 				<div class="accordion-body js-accordion-body">
 				<section>
@@ -1130,20 +1130,20 @@
 										<label for="Step6_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 									</div>
 									<div class="col-md-12">
-										<textarea class="form-control" style="width:100%" rows="8" name="Step6_Log" id="Step6_Log" readonly><?php echo $financial_report_array['step_6_notes_log']; ?></textarea>
+										<textarea class="form-control" style="width:100%" rows="8" name="Step7_Log" id="Step7_Log" readonly><?php echo $financial_report_array['step_7_notes_log']; ?></textarea>
 									</div>
 								</div>
 								<div class="col-md-12 mar_bot_20">
 									<div class="col-md-12">
-										<label for="Step6_Note">Note:</label>
+										<label for="Step7_Note">Note:</label>
 									</div>
 									<div class="col-md-12">
-										<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(6)" name="Step6_Note" id="Step6_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+										<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(7)" name="Step7_Note" id="Step7_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
 									</div>
 								</div>
 								<div class="col-md-12 mar_bot_20">
 									<div class="col-md-12">
-										<button type="button" id="AddNote6" class="btn btn-large btn-success" onclick="AddNote(6)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+										<button type="button" id="AddNote7" class="btn btn-large btn-success" onclick="AddNote(7)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 									</div>
 								</div>
 
@@ -1153,17 +1153,17 @@
 					<div class="form-row form-group">
 						<div class="card-body">
 							<div class="col-md-12 text-center">
-							  <button type="submit" id="btn-step-6" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+							  <button type="submit" id="btn-step-7" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
 							</div>
 						</div>
 					</div>
 				</section>
 				</div><!-- end of accordion body -->
 				</div><!-- end of accordion item -->
-				<!------End Step 6 ------>
+				<!------End Step 7 ------>
 
-				<!------Start Step 7 ------>
-				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='7') echo "active";?>">
+				<!------Start Step 8 ------>
+				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='8') echo "active";?>">
 					<div class="accordion-header js-accordion-header">OTHER INCOME & EXPENSES</div>
 					<div class="accordion-body js-accordion-body">
 					<section>
@@ -1229,20 +1229,20 @@
 									<label for="Step7_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 								</div>
 								<div class="col-md-12">
-									<textarea class="form-control" style="width:100%" rows="8" name="Step7_Log" id="Step7_Log" readonly><?php echo $financial_report_array['step_7_notes_log']; ?></textarea>
+									<textarea class="form-control" style="width:100%" rows="8" name="Step8_Log" id="Step8_Log" readonly><?php echo $financial_report_array['step_8_notes_log']; ?></textarea>
 								</div>
 							</div>
 							<div class="col-md-12 mar_bot_20">
 								<div class="col-md-12">
-									<label for="Step7_Note">Note:</label>
+									<label for="Step8_Note">Note:</label>
 								</div>
 								<div class="col-md-12">
-									<textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(7)"  name="Step7_Note" id="Step7_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+									<textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(8)"  name="Step8_Note" id="Step8_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
 								</div>
 							</div>
 							<div class="col-md-12 mar_bot_20">
 								<div class="col-md-12">
-									<button type="button" id="AddNote7" class="btn btn-large btn-success" onclick="AddNote(7)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+									<button type="button" id="AddNote8" class="btn btn-large btn-success" onclick="AddNote(8)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 								</div>
 							</div>
 						</div>
@@ -1252,18 +1252,18 @@
 					<div class="form-row form-group">
 						<div class="card-body">
 							<div class="col-md-12 text-center">
-							  <button type="submit" id="btn-step-7" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+							  <button type="submit" id="btn-step-8" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
 							</div>
 						</div>
 					</div>
 				</section>
 			  </div><!-- end of accordion body -->
 			  </div><!-- end of accordion item -->
-				<!------End Step 7 ------>
+				<!------End Step 8 ------>
 
-                <!------Start Step 10 ------>
-		  	<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='10') echo "active";?>">
-				<div class="accordion-header js-accordion-header">FINANCIAL SUMMARY</div>
+                <!------Start Step 9 ------>
+		  	<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='9') echo "active";?>">
+				<div class="accordion-header js-accordion-header" id="accordion-header-financial">FINANCIAL SUMMARY</div>
 				<div class="accordion-body js-accordion-body">
 				<section>
                     <?php
@@ -1375,20 +1375,20 @@
 						<label for="Step10_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 					</div>
 					<div class="col-md-12">
-						<textarea class="form-control" style="width:100%" rows="8" name="Step10_Log" id="Step10_Log" readonly><?php echo $financial_report_array['step_10_notes_log']; ?></textarea>
+						<textarea class="form-control" style="width:100%" rows="8" name="Step9_Log" id="Step9_Log" readonly><?php echo $financial_report_array['step_9_notes_log']; ?></textarea>
 					</div>
 				</div>
 				<div class="col-md-12 mar_bot_20">
 					<div class="col-md-12">
-						<label for="Step10_Note">Note:</label>
+						<label for="Step9_Note">Note:</label>
 					</div>
 					<div class="col-md-12">
-						<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(10)" name="Step1_Note" id="Step10_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+						<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
 					</div>
 				</div>
 				<div class="col-md-12 mar_bot_20">
 					<div class="col-md-12">
-						<button type="button" id="AddNote10" class="btn btn-large btn-success" onclick="AddNote(10)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+						<button type="button" id="AddNote9" class="btn btn-large btn-success" onclick="AddNote(9)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 					</div>
 				</div>
 			</div>
@@ -1397,18 +1397,18 @@
          <div class="form-row form-group">
                                 <div class="card-body">
                                     <div class="col-md-12 text-center">
-                                      <button type="submit" id="btn-step-10" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+                                      <button type="submit" id="btn-step-9" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                                     </div>
                                 </div>
                         </div>
 				</section>
 			</div><!-- end of accordion body -->
 			</div><!-- end of accordion item -->
-			<!------End Step 10 ------>
+			<!------End Step 9 ------>
 
-				<!------Start Step 8 ------>
-				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='8') echo "active";?>">
-					<div class="accordion-header js-accordion-header">BANK RECONCILIATION</div>
+				<!------Start Step 10 ------>
+				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='10') echo "active";?>">
+					<div class="accordion-header js-accordion-header" id="accordion-header-reconciliation">BANK RECONCILIATION</div>
 					<div class="accordion-body js-accordion-body">
 					<section>
                         <div class="flex-container">
@@ -1616,22 +1616,22 @@
 								<label for="Step8_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 							</div>
 							<div class="col-md-12">
-								<textarea class="form-control" style="width:100%" rows="8" name="Step8_Log" id="Step8_Log" readonly><?php echo $financial_report_array['step_8_notes_log']; ?></textarea>
+								<textarea class="form-control" style="width:100%" rows="8" name="Step10_Log" id="Step10_Log" readonly><?php echo $financial_report_array['step_10_notes_log']; ?></textarea>
 							</div>
 						</div>
 
 						<div class="col-md-12 mar_bot_20">
 							<div class="col-md-12">
-								<label for="Step8_Note">Note:</label>
+								<label for="Step10_Note">Note:</label>
 							</div>
 							<div class="col-md-12">
-								<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(8)" name="Step8_Note" id="Step8_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+								<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(10)" name="Step10_Note" id="Step10_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
 							</div>
 						</div>
 
 						<div class="col-md-12 mar_bot_20">
 							<div class="col-md-12">
-								<button type="button" id="AddNote8" class="btn btn-large btn-success" onclick="AddNote(8)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+								<button type="button" id="AddNote10" class="btn btn-large btn-success" onclick="AddNote(10)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 							</div>
 						</div>
 				</div>
@@ -1641,18 +1641,18 @@
 				 <div class="form-row form-group">
 						<div class="card-body">
 							<div class="col-md-12 text-center">
-							  <button type="submit" id="btn-step-8" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+							  <button type="submit" id="btn-step-10" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
 							</div>
 						</div>
 				</div>
 			</section>
 			</div><!-- end of accordion body -->
 			</div><!-- end of accordion item -->
-			<!------End Step 8 ------>
+			<!------End Step 10 ------>
 
-			<!------Start Step 9 ------>
-			<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='9') echo "active";?>">
-			<div class="accordion-header js-accordion-header">CHAPTER QUESTIONS</div>
+			<!------Start Step 11 ------>
+			<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='11') echo "active";?>">
+			<div class="accordion-header js-accordion-header" ID="accordion-header-questions">CHAPTER QUESTIONS</div>
 				<div class="accordion-body js-accordion-body">
 				<section>
                     <table>
@@ -1942,20 +1942,20 @@
 								<label for="Step9_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 							</div>
 							<div class="col-md-12">
-								<textarea class="form-control" style="width:100%" rows="8" name="Step9_Log" id="Step9_Log" readonly><?php echo $financial_report_array['step_9_notes_log']; ?></textarea>
+								<textarea class="form-control" style="width:100%" rows="8" name="Step11_Log" id="Step11_Log" readonly><?php echo $financial_report_array['step_11_notes_log']; ?></textarea>
 							</div>
 						</div>
 						<div class="col-md-12 mar_bot_20">
 							<div class="col-md-12">
-								<label for="Step9_Note">Note:</label>
+								<label for="Step11_Note">Note:</label>
 							</div>
 							<div class="col-md-12">
-								<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+								<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(11)" name="Step11_Note" id="Step11_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
 							</div>
 						</div>
 						<div class="col-md-12 mar_bot_20">
 							<div class="col-md-12">
-								<button type="button" id="AddNote9" class="btn btn-large btn-success" onclick="AddNote(9)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+								<button type="button" id="AddNote11" class="btn btn-large btn-success" onclick="AddNote(11)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 							</div>
 						</div>
 
@@ -1965,17 +1965,17 @@
 				 <div class="form-row form-group">
 						<div class="card-body">
 							<div class="col-md-12 text-center">
-							  <button type="submit" id="btn-step-9" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+							  <button type="submit" id="btn-step-11" class="btn btn-info btn-blue" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
 							</div>
 						</div>
 				</div>
 			  </section>
 		  </div><!-- end of accordion body -->
 		  </div><!-- end of accordion item -->
-			<!------End Step 9 ------>
+			<!------End Step 11 ------>
 
-			<!------Start Step 11 ------>
-			<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='11') echo "active";?>">
+			<!------Start Step 12 ------>
+			<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='12') echo "active";?>">
                 <div class="accordion-header js-accordion-header">AWARD NOMINATIONS</div>
 				<div class="accordion-body js-accordion-body">
 					<section>
@@ -2502,22 +2502,22 @@
 											<label for="Step11_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 										</div>
 										<div class="col-md-12">
-											<textarea class="form-control" style="width:100%" rows="8" name="Step11_Log" id="Step11_Log" readonly><?php echo $financial_report_array['step_11_notes_log']; ?></textarea>
+											<textarea class="form-control" style="width:100%" rows="8" name="Step12_Log" id="Step12_Log" readonly><?php echo $financial_report_array['step_12_notes_log']; ?></textarea>
 										</div>
 									</div>
 
 									<div class="col-md-12 mar_bot_20">
 										<div class="col-md-12">
-											<label for="Step11_Note">Note:</label>
+											<label for="Step12_Note">Note:</label>
 										</div>
 										<div class="col-md-12">
-											<textarea class="form-control" style="width:100%" oninput="EnableNoteLogButton(11)" rows="3" name="Step11_Note" id="Step11_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+											<textarea class="form-control" style="width:100%" oninput="EnableNoteLogButton(12)" rows="3" name="Step12_Note" id="Step12_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
 										</div>
 									</div>
 
 									<div class="col-md-12 mar_bot_20">
 										<div class="col-md-12">
-											<button type="button" id="AddNote11" class="btn btn-large btn-success" onclick="AddNote(11)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+											<button type="button" id="AddNote12" class="btn btn-large btn-success" onclick="AddNote(12)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 										</div>
 									</div>
 
@@ -2535,9 +2535,11 @@
 					</section>
 				</div>
             </div>
+            			<!------End Step 12 ------>
 
-			<!------Start Step 12 ------>
-				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='12') echo "active";?>">
+
+			<!------Start Step 13 ------>
+				<div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited_coord'] =='13') echo "active";?>">
 					<div class="accordion-header js-accordion-header">REVIEW SUMMARY</div>
 					<div class="accordion-body js-accordion-body">
 						<section>
@@ -2967,7 +2969,23 @@
       // show/hide the clicked accordion item
       $this.closest('.js-accordion-item').toggleClass('active');
       $this.next().stop().slideToggle(settings.speed);
-    }
+    },
+
+     // Open accordion item programmatically by header ID
+     openAccordionItem: function(headerID) {
+            var $accordionHeader = $('#' + headerID);
+            var $accordionItem = $accordionHeader.closest('.js-accordion-item');
+
+            // Close all other items if oneOpen is true
+            if (settings.oneOpen) {
+                $accordion_item.not($accordionItem).removeClass('active');
+                $accordion_item.not($accordionItem).find('.js-accordion-body').slideUp();
+            }
+
+            // Toggle the clicked accordion item
+            $accordionItem.toggleClass('active');
+            $accordionItem.find('.js-accordion-body').stop().slideToggle(settings.speed);
+        }
   }
 })();
 
@@ -2994,19 +3012,39 @@ $(document).ready(function(){
 	});
 
 	$("#review-complete").click(function() {
-		var result=confirm("This will finalize this report and flag it as 'review complete'.  Do you wish to continue?");
-		if(result){
-
-		var post_balance = $('#post_balance').val();
+        if (!CheckMembers()) {
+        return false;
+        }
+        else if (!CheckService()) {
+        return false;
+        }
+        else if (!CheckParties()) {
+        return false;
+        }
+        else  if (!CheckFinancial()) {
+        return false;
+        }
+        else if (!CheckReconciliation()) {
+        return false;
+        }
+        else if (!CheckQuestions()) {
+        return false;
+        }
+        var post_balance = $('#post_balance').val();
 		if(post_balance == null || post_balance == ''){
 			alert('Please enter Ending Balance in Section 12');
 			$('#post_balance').focus();
 			return false;
 		}
+		var result=confirm("This will finalize this report and flag it as 'review complete'.  Do you wish to continue?");
+		if(result){
             $("#submit_type").val('review_complete');
             $("#FurthestStep").val('13');
             $("#financial_report").submit();
-		}
+		 } else {
+            console.log("User cancelled the submission");
+            $(this).prop('disabled', false);
+        }
 	});
 
 	$("#review-clear").click(function() {
@@ -3020,6 +3058,9 @@ $(document).ready(function(){
 	});
 
 	$("#btn-step-1").click(function() {
+        if (!CheckMembers()) {
+        return false;
+        }
 		$("#FurthestStep").val('1');
 		$("#financial_report").submit();
 	});
@@ -3028,10 +3069,16 @@ $(document).ready(function(){
 		$("#financial_report").submit();
 	});
 	$("#btn-step-3").click(function() {
+        if (!CheckService()) {
+        return false;
+        }
 		$("#FurthestStep").val('3');
 		$("#financial_report").submit();
 	});
 	$("#btn-step-4").click(function() {
+        if (!CheckParties()) {
+        return false;
+        }
 		$("#FurthestStep").val('4');
 		$("#financial_report").submit();
 	});
@@ -3052,24 +3099,33 @@ $(document).ready(function(){
 		$("#financial_report").submit();
 	});
 	$("#btn-step-9").click(function() {
+        if (!CheckFinancial()) {
+        return false;
+        }
 		$("#FurthestStep").val('9');
 		$("#financial_report").submit();
 	});
-	$("#btn-step-10").click(function() {
-		$("#FurthestStep").val('10');
-		$("#financial_report").submit();
-	});
-	$("#btn-step-11").click(function() {
-		$("#FurthestStep").val('11');
-		$("#financial_report").submit();
-	});
-	$("#btn-step-12").click(function() {
+    $("#btn-step-10").click(function() {
 	    var post_balance = $('#post_balance').val();
 		if(post_balance == null || post_balance == ''){
 			alert('Please enter Ending Balance');
 			$('#post_balance').focus();
 			return false;
 		}
+        else if (!CheckReconciliation()) {
+        return false;
+        }
+		$("#FurthestStep").val('10');
+		$("#financial_report").submit();
+	});
+	$("#btn-step-11").click(function() {
+        if (!CheckQuestions()) {
+        return false;
+        }
+		$("#FurthestStep").val('11');
+		$("#financial_report").submit();
+	});
+    $("#btn-step-12").click(function() {
 		$("#FurthestStep").val('12');
 		$("#financial_report").submit();
 	});
@@ -3088,9 +3144,6 @@ $(document).ready(function(){
 });
 </script>
 <script>
-
-
-
     if(TotalFees != TreasuryBalanceNow){
             document.getElementById("ReconciledBankBalanceWarning").style.backgroundColor = "yellow";
             document.getElementById("ReconciledBankBalanceWarning").value = "Reconciled Bank Balance does not match treasury balance now. These numbers must match for your report to be in balance"
@@ -3101,9 +3154,6 @@ $(document).ready(function(){
             document.getElementById("ReconciledBankBalanceWarning").value = ""
             document.getElementById("ReconciledBankBalanceWarning").style.borderStyle = "none";
         }
-
-
-
 
 	document.getElementById('addAwardsLink').addEventListener('click', function(event) {
         if (<?php echo ($financial_report_array['review_complete'] != "" || !$submitted) ? 'true' : 'false'; ?>) {
@@ -3141,13 +3191,13 @@ $(document).ready(function(){
             3: 'Service Projects',
             4: 'Parties',
             5 :'Operating',
-            6: 'Donations',
-            7: 'Other',
-            8: 'Reconciliation',
-            9: 'Questions',
-            10: 'Financials',
-            11: 'Awards',
-            12: 'International',
+            6: 'International',
+            7: 'Donations',
+            8: 'Other',
+            9: 'Financials',
+            10: 'Reconciliation',
+            11: 'Questions',
+            12: 'Awards',
         }
 
         var noteTextValue = noteText[NoteNumber] || NoteNumber;
@@ -3186,109 +3236,184 @@ $(document).ready(function(){
 		}
 	}
 
-	function CheckReviewAnswers(){
-		if(!document.getElementById("checkRosterAttached").val === null || document.getElementById("checkRosterAttached").val === ''){
-			alert("You have not verified a roster was attached.");
-			document.getElementById("checkRosterAttached").focus();
-			return false;
-		}
+    function CheckMembers() {
+        var rosterPath = document.getElementById('checkRosterAttached');
+        var rosterPath = document.getElementById('checkRenewalSeemsRight');
+        if (!checkRosterAttached || checkRosterAttached.value == "" || !checkRenewalSeemsRight || checkRenewalSeemsRight.value == "") {
+            alert("Answer Review Questins in CHAPTER DUES section to Continue.");
+            accordion.openAccordionItem('accordion-header-members');
+            return false;
+        }
+        return true;
+    }
 
-		if(!document.getElementById("checkServiceProject").val === null || document.getElementById("checkServiceProject").val === ''){
-			alert("You have not verified a service project was completed.");
-			document.getElementById("checkServiceProject").focus();
-			return false;
-		}
+    function CheckService() {
+        var rosterPath = document.getElementById('checkServiceProject');
+        var rosterPath = document.getElementById('checkM2MDonation');
+        if (!checkServiceProject || checkServiceProject.value == "" || !checkM2MDonation || checkM2MDonation.value == "") {
+            alert("Answer Review Questins in SERVICE PROJECTS section to Continue.");
+            accordion.openAccordionItem('accordion-header-service');
+            return false;
+        }
+        return true;
+    }
 
-		if(!document.getElementById("chec_party_percentage").val === null || document.getElementById("check_party_percentage").val === ''){
-			alert("You have not indicated if the chapter's party/member benefit percentage was under 15%.");
-			document.getElementById("check_party_percentage").focus();
-			return false;
-		}
+    function CheckParties() {
+        var rosterPath = document.getElementById('check_party_percentage');
+        if (!check_party_percentage || check_party_percentage.value == "") {
+            alert("Answer Review Questins in PARTIES & MEMBER BENEFITS section to Continue.");
+            accordion.openAccordionItem('accordion-header-parties');
+            return false;
+        }
+        return true;
+    }
 
-		if(!document.getElementById("checkM2MDonation").val === null || document.getElementById("checkM2MDonation").val === ''){
-			alert("You have not indicated if the chapter donated to the M2M Fund.");
-			document.getElementById("checkM2MDonation").focus();
-			return false;
-		}
+    function CheckFinancial() {
+        var rosterPath = document.getElementById('checkTotalIncome');
+        if (!checkTotalIncome || checkTotalIncome.value == "") {
+            alert("Answer Review Questins in FINANCIAL SUMMARY section to Continue.");
+            accordion.openAccordionItem('accordion-header-financial');
+            return false;
+        }
+        return true;
+    }
 
-		if(!document.getElementById("checkRenewalSeemsRight").val === null || document.getElementById("heckRenewalSeemsRight").val === ''){
-			alert("You have not indicated if the renewal numbers 'seem right'.");
-			document.getElementById("checkRenewalSeemsRight").focus();
-			return false;
-		}
+    function CheckReconciliation() {
+        var rosterPath = document.getElementById('check_beginning_balance');
+        var rosterPath = document.getElementById('checkBankStatementIncluded');
+        var rosterPath = document.getElementById('checkBankStatementMatches');
+        var rosterPath = document.getElementById('post_balance');
+        if (!check_beginning_balance || check_beginning_balance.value == "" || !checkBankStatementIncluded || checkBankStatementIncluded.value == ""
+            || !checkBankStatementMatches || checkBankStatementMatches.value == "" || !post_balance || post_balance.value == "") {
+            alert("Answer Review Questins in RECONCILIATION section to Continue.");
+            accordion.openAccordionItem('accordion-header-reconciliation');
+            return false;
+        }
+        return true;
+    }
 
-		if(!document.getElementById("checkAttendedTraining").val === null || document.getElementById("checkAttendedTraining").val === ''){
-			alert("You have not indicated if the chapter attended training.");
-			document.getElementById("checkAttendedTraining").focus();
-			return false;
-		}
+    function CheckQuestions() {
+        var rosterPath = document.getElementById('checkPurchasedPins');
+        var rosterPath = document.getElementById('checkPurchasedMCMerch');
+        var rosterPath = document.getElementById('checkOfferedMerch');
+        var rosterPath = document.getElementById('checkBylawsMadeAvailable');
+        var rosterPath = document.getElementById('checkSisteredAnotherChapter');
+        var rosterPath = document.getElementById('checkAttendedTraining');
+        var rosterPath = document.getElementById('checkCurrent990NAttached');
+        if (!checkPurchasedPins || checkPurchasedPins.value == "" || !checkPurchasedMCMerch || checkPurchasedMCMerch.value == ""
+            || !checkOfferedMerch || checkOfferedMerch.value == "" || !checkBylawsMadeAvailable || checkBylawsMadeAvailable.value == ""
+            || !checkSisteredAnotherChapter || checkSisteredAnotherChapter.value == "" || !checkAttendedTraining || checkAttendedTraining.value == ""
+            || !checkCurrent990NAttached || checkCurrent990NAttached.value == "") {
+            alert("Answer Review Questins in CHAPTER QUESTIONS section to Continue.");
+            accordion.openAccordionItem('accordion-header-questions');
+            return false;
+        }
+        return true;
+    }
 
-		if(!document.getElementById("checkBankStatementIncluded").val === null || document.getElementById("checkBankStatementIncluded").val === ''){
-			alert("You have not indicated if the chapter included a bank statement for the end of the year.");
-			document.getElementById("checkBankStatementIncluded").focus();
-			return false;
-		}
+    // function CheckReviewAnswers(){
+	// 	if(!document.getElementById("checkRosterAttached").val === null || document.getElementById("checkRosterAttached").val === ''){
+	// 		alert("You have not verified a roster was attached.");
+	// 		document.getElementById("checkRosterAttached").focus();
+	// 		return false;
+	// 	}
 
-		if(!document.getElementById("checkBankStatementMatches").val === null || document.getElementById("checkBankStatementMatches").val === ''){
-			alert("You have not indicated if the chapter's bank balance matches stated bank balance.");
-			document.getElementById("checkBankStatementMatches").focus();
-			return false;
-		}
+	// 	if(!document.getElementById("checkServiceProject").val === null || document.getElementById("checkServiceProject").val === ''){
+	// 		alert("You have not verified a service project was completed.");
+	// 		document.getElementById("checkServiceProject").focus();
+	// 		return false;
+	// 	}
 
-		if(!document.getElementById("checkPurchasedPins").val === null || document.getElementById("checkPurchasedPins").val === ''){
-			alert("You have not indicated if the chapter purchased pins.");
-			document.getElementById("checkPurchasedPins").focus();
-			return false;
-		}
+	// 	if(!document.getElementById("chec_party_percentage").val === null || document.getElementById("check_party_percentage").val === ''){
+	// 		alert("You have not indicated if the chapter's party/member benefit percentage was under 15%.");
+	// 		document.getElementById("check_party_percentage").focus();
+	// 		return false;
+	// 	}
 
-		if(!document.getElementById("checkPurchasedMCMerch").val === null || document.getElementById("checkPurchasedMCMerch").val === ''){
-			alert("You have not indicated if the chapter purchased other MOMS Club merchandise.");
-			document.getElementById("checkPurchasedMCMerch").focus();
-			return false;
-		}
-		if(!document.getElementById("checkOfferedMerch").val === null || document.getElementById("checkOfferedMerch").val === ''){
-			alert("You have not indicated if the chapter Offered MOMS Club merchandise.");
-			document.getElementById("checkOfferedMerch").focus();
-			return false;
-		}
+	// 	if(!document.getElementById("checkM2MDonation").val === null || document.getElementById("checkM2MDonation").val === ''){
+	// 		alert("You have not indicated if the chapter donated to the M2M Fund.");
+	// 		document.getElementById("checkM2MDonation").focus();
+	// 		return false;
+	// 	}
 
-		if(!document.getElementById("checkBylawsMadeAvailable").val === null || document.getElementById("checkBylawsMadeAvailable").val === ''){
-			alert("You have not indicated if the chapter made the by-laws available to members.");
-			document.getElementById("checkBylawsMadeAvailable").focus();
-			return false;
-		}
+	// 	if(!document.getElementById("checkRenewalSeemsRight").val === null || document.getElementById("heckRenewalSeemsRight").val === ''){
+	// 		alert("You have not indicated if the renewal numbers 'seem right'.");
+	// 		document.getElementById("checkRenewalSeemsRight").focus();
+	// 		return false;
+	// 	}
 
-		if(!document.getElementById("checkCurrent990NAttached").val === null || document.getElementById("checkCurrent990NAttached").val === ''){
-			alert("You have not indicated if the chapter attached their 990N filing confirmation.");
-			document.getElementById("checkCurrent990NAttached").focus();
-			return false;
-		}
+	// 	if(!document.getElementById("checkAttendedTraining").val === null || document.getElementById("checkAttendedTraining").val === ''){
+	// 		alert("You have not indicated if the chapter attended training.");
+	// 		document.getElementById("checkAttendedTraining").focus();
+	// 		return false;
+	// 	}
 
-		if(!document.getElementById("checkTotalIncome").val === null || document.getElementById("checkTotalIncome").val === ''){
-			alert("You have not indicated if the chapter's total income is less than $50,000.");
-			document.getElementById("checkTotalIncome").focus();
-			return false;
-		}
+	// 	if(!document.getElementById("checkBankStatementIncluded").val === null || document.getElementById("checkBankStatementIncluded").val === ''){
+	// 		alert("You have not indicated if the chapter included a bank statement for the end of the year.");
+	// 		document.getElementById("checkBankStatementIncluded").focus();
+	// 		return false;
+	// 	}
 
-		if(!document.getElementById("checkSisteredAnotherChapter").val === null || document.getElementById("checkSisteredAnotherChapter").val === ''){
-			alert("You have not indicated if the chapter sistered another chapter.");
-			document.getElementById("checkSisteredAnotherChapter").focus();
-			return false;
-		}
+	// 	if(!document.getElementById("checkBankStatementMatches").val === null || document.getElementById("checkBankStatementMatches").val === ''){
+	// 		alert("You have not indicated if the chapter's bank balance matches stated bank balance.");
+	// 		document.getElementById("checkBankStatementMatches").focus();
+	// 		return false;
+	// 	}
 
-		if(document.getElementById("post_balance").val === null || document.getElementById("post_balance").val === ''){
-			alert("You have not entered the Ending Balance");
-			document.getElementById("post_balance").focus();
-			return false;
-		}
+	// 	if(!document.getElementById("checkPurchasedPins").val === null || document.getElementById("checkPurchasedPins").val === ''){
+	// 		alert("You have not indicated if the chapter purchased pins.");
+	// 		document.getElementById("checkPurchasedPins").focus();
+	// 		return false;
+	// 	}
 
-		if(document.getElementById("AssignedReviewer").val === null || document.getElementById("AssignedReviewer").val === ''){
-			alert("You have not select a Reviewer");
-			document.getElementById("AssignedReviewer").focus();
-			return false;
-		}
-		return true;
-	}
+	// 	if(!document.getElementById("checkPurchasedMCMerch").val === null || document.getElementById("checkPurchasedMCMerch").val === ''){
+	// 		alert("You have not indicated if the chapter purchased other MOMS Club merchandise.");
+	// 		document.getElementById("checkPurchasedMCMerch").focus();
+	// 		return false;
+	// 	}
+	// 	if(!document.getElementById("checkOfferedMerch").val === null || document.getElementById("checkOfferedMerch").val === ''){
+	// 		alert("You have not indicated if the chapter Offered MOMS Club merchandise.");
+	// 		document.getElementById("checkOfferedMerch").focus();
+	// 		return false;
+	// 	}
+
+	// 	if(!document.getElementById("checkBylawsMadeAvailable").val === null || document.getElementById("checkBylawsMadeAvailable").val === ''){
+	// 		alert("You have not indicated if the chapter made the by-laws available to members.");
+	// 		document.getElementById("checkBylawsMadeAvailable").focus();
+	// 		return false;
+	// 	}
+
+	// 	if(!document.getElementById("checkCurrent990NAttached").val === null || document.getElementById("checkCurrent990NAttached").val === ''){
+	// 		alert("You have not indicated if the chapter attached their 990N filing confirmation.");
+	// 		document.getElementById("checkCurrent990NAttached").focus();
+	// 		return false;
+	// 	}
+
+	// 	if(!document.getElementById("checkTotalIncome").val === null || document.getElementById("checkTotalIncome").val === ''){
+	// 		alert("You have not indicated if the chapter's total income is less than $50,000.");
+	// 		document.getElementById("checkTotalIncome").focus();
+	// 		return false;
+	// 	}
+
+	// 	if(!document.getElementById("checkSisteredAnotherChapter").val === null || document.getElementById("checkSisteredAnotherChapter").val === ''){
+	// 		alert("You have not indicated if the chapter sistered another chapter.");
+	// 		document.getElementById("checkSisteredAnotherChapter").focus();
+	// 		return false;
+	// 	}
+
+	// 	if(document.getElementById("post_balance").val === null || document.getElementById("post_balance").val === ''){
+	// 		alert("You have not entered the Ending Balance");
+	// 		document.getElementById("post_balance").focus();
+	// 		return false;
+	// 	}
+
+	// 	if(document.getElementById("AssignedReviewer").val === null || document.getElementById("AssignedReviewer").val === ''){
+	// 		alert("You have not select a Reviewer");
+	// 		document.getElementById("AssignedReviewer").focus();
+	// 		return false;
+	// 	}
+	// 	return true;
+	// }
 
 </script>
 @endsection
