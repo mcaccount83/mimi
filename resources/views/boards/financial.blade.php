@@ -56,7 +56,7 @@
             <div class="accordion js-accordion">
                 <!------Start Step 1 ------>
                 <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] <='1') echo "active";?>" >
-                    <div class="accordion-header js-accordion-header">CHAPTER DUES</div>
+                    <div class="accordion-header js-accordion-header" id="accordion-header-dues">CHAPTER DUES</div>
                     <div class="accordion-body js-accordion-body">
                         <section>
                             <div class="col-md-12" id="RosterBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['roster_path']) echo "style=\"display: none;\"";} ?>>
@@ -412,7 +412,7 @@
 
                 <!------Start Step 3 ------>
                 <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='3') echo "active";?>">
-                    <div class="accordion-header js-accordion-header">SERVICE PROJECTS</div>
+                    <div class="accordion-header js-accordion-header" id="accordion-header-service">SERVICE PROJECTS</div>
                     <div class="accordion-body js-accordion-body ">
                     <section>
                         <div class="form-row form-group">
@@ -837,7 +837,7 @@
 
             <!------Start Step 5 ------>
             <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='55') echo "active";?>">
-                <div class="accordion-header js-accordion-header">INTERNATIONAL EVENTS & RE-REGISTRATION</div>
+                <div class="accordion-header js-accordion-header" id="accordion-header-rereg">INTERNATIONAL EVENTS & RE-REGISTRATION</div>
                 <div class="accordion-body js-accordion-body ">
                     <section>
                     <div class="form-row form-group">
@@ -1849,7 +1849,7 @@
 
             <!------Start Step 9 ------>
             <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='9') echo "active";?>">
-            <div class="accordion-header js-accordion-header">CHAPTER QUESTIONS</div>
+            <div class="accordion-header js-accordion-header" id="accordion-header-questions">CHAPTER QUESTIONS</div>
                 <div class="accordion-body js-accordion-body">
                 <section>
                 <div id="form-step-8" role="form" data-toggle="validator" class="form-row form-group">
@@ -3407,13 +3407,13 @@ $(document).ready(function(){
         else if (!EnsureReconciliation()) {
             return false;
         }
+        else if (!EnsureBalance()) {
+            return false;
+        }
         else if (!EnsureChapterQuestions()) {
             return false;
         }
         else if (!EnsureSubmitInformation()) {
-            return false;
-        }
-        else if (!EnsureBalance()) {
             return false;
         }
         var completedEmail = $("#CompletedEmail").val();
@@ -3439,7 +3439,8 @@ $(document).ready(function(){
 
     function EnsureRoster(){
         if(document.getElementById('RosterPath').value==""){
-            alert("Your chapter's roster was not uploaded in CHAPTER DUES section.");
+            alert("Your chapter's roster was not uploaded in CHAPTER DUES section. \n\nPlease upload Roster to Continue.");
+            accordion.openAccordionItem('accordion-header-dues');
             return false;
         }
         return true; // All checks passed, allow submission
@@ -3447,36 +3448,38 @@ $(document).ready(function(){
 
     function EnsureServiceProject(){
         if(document.getElementById('ServiceProjectDesc0').value==""){
-            alert("Project Description is required in SERVICE PROJECT section.");
+            alert("At least one Service Project is required in SERVICE PROJECT section.  \n\nPlease enter Service Project(s) to Continue.");
+            accordion.openAccordionItem('accordion-header-service');
             $("#ServiceProjectDesc0").focus();
             return false;
         }
-        else if(document.getElementById('ServiceProjectIncome0').value==""){
-            alert("Income amount is required in SERVICE PROJECT section.");
-            $("#ServiceProjectIncome0").focus();
-            return false;
-        }
-        else if(document.getElementById('ServiceProjectSupplies0').value==""){
-            alert("Supplies & Expenses amount is required in SERVICE PROJECT section.");
-            $("#ServiceProjectSupplies0").focus();
-            return false;
-        }
-        else if(document.getElementById('ServiceProjectDonatedCharity0').value==""){
-            alert("Charity Donation amount is required in SERVICE PROJECT section.");
-            $("#ServiceProjectDonatedCharity0").focus();
-            return false;
-        }
-        else if(document.getElementById('ServiceProjectDonatedM2M0').value==""){
-            alert("M2M Donation amount is required in SERVICE PROJECT section.");
-            $("#ServiceProjectDonatedM2M0").focus();
-            return false;
-        }
+        // else if(document.getElementById('ServiceProjectIncome0').value==""){
+        //     alert("Income amount is required in SERVICE PROJECT section.");
+        //     $("#ServiceProjectIncome0").focus();
+        //     return false;
+        // }
+        // else if(document.getElementById('ServiceProjectSupplies0').value==""){
+        //     alert("Supplies & Expenses amount is required in SERVICE PROJECT section.");
+        //     $("#ServiceProjectSupplies0").focus();
+        //     return false;
+        // }
+        // else if(document.getElementById('ServiceProjectDonatedCharity0').value==""){
+        //     alert("Charity Donation amount is required in SERVICE PROJECT section.");
+        //     $("#ServiceProjectDonatedCharity0").focus();
+        //     return false;
+        // }
+        // else if(document.getElementById('ServiceProjectDonatedM2M0').value==""){
+        //     alert("M2M Donation amount is required in SERVICE PROJECT section.");
+        //     $("#ServiceProjectDonatedM2M0").focus();
+        //     return false;
+        // }
         return true; // All checks passed, allow submission
     }
 
     function EnsureReRegistration(){
         if(document.getElementById('AnnualRegistrationFee').value==""){
-            alert("Chapter Re-registration is required in INTERNATIONAL EVENTS & RE-REGISTRATION section.");
+            alert("Chapter Re-registration is required in INTERNATIONAL EVENTS & RE-REGISTRATION section. \n\nPlease enter your annual re-registration payment to Continue.");
+            accordion.openAccordionItem('accordion-header-rereg');
             $("#AnnualRegistrationFee").focus();
             return false;
         }
@@ -3484,8 +3487,14 @@ $(document).ready(function(){
     }
 
     function EnsureReconciliation(){
-        if(document.getElementById('BankStatementIncluded').value=="" && document.getElementById('StatementPath').value=="" ){
-            alert("Your chapter's Bank Statement was not uploaded in the BANK RECONCILIATION section, but you indicated the file was attached.");
+        if(document.getElementById('BankStatementIncluded').value==""){
+            alert("Please let us know if your Bank Statement is included to Continue.");
+            accordion.openAccordionItem('accordion-header-questions');
+            return false;
+        }
+        else if(document.getElementById('BankStatementIncluded').value=="1" && document.getElementById('StatementPath').value=="" ){
+            alert("Your chapter's Bank Statement was not uploaded in the BANK RECONCILIATION section, but you indicated the file was attached. \n\nPlease upload Bank Statement to Continue.");
+            accordion.openAccordionItem('accordion-header-reconciliation');
             return false;
         }
         return true; // All checks passed, allow submission
@@ -3502,10 +3511,15 @@ $(document).ready(function(){
     return true; // All checks passed or user chose to proceed, allow submission
 }
 
-
     function EnsureChapterQuestions(){
-        if(document.getElementById('FileIRS').value=="" && document.getElementById('990NPath').value=="" ){
-            alert("Your chapter's 990N filing confirmation was not uploaded in the CHAPTER QUESTIONS section, but you indicated the file was attached.");
+        if(document.getElementById('FileIRS').value==""){
+            alert("Please let us know if your 990 Confirmation s included to Continue.");
+            accordion.openAccordionItem('accordion-header-questions');
+            return false;
+        }
+        else if(document.getElementById('FileIRS').value=="1" && document.getElementById('990NPath').value=="" ){
+            alert("Your chapter's 990N filing confirmation was not uploaded in the CHAPTER QUESTIONS section, but you indicated the file was attached. \n\nPlease upload your 990N Confirmation to Continue.");
+            accordion.openAccordionItem('accordion-header-questions');
             return false;
         }
         return true; // All checks passed, allow submission
@@ -3513,11 +3527,13 @@ $(document).ready(function(){
 
     function EnsureSubmitInformation(){
         if(document.getElementById('CompletedName').value==""){
-            alert("Please include the name of the person submitting the report.");
+            alert("Please include the name of the person submitting the report to Continue.");
+            $("#CompletedName").focus();
             return false;
         }
         else if(document.getElementById('CompletedEmail').value==""){
-            alert("Please include the eamil address of the person submitting the report.");
+            alert("Please include the eamil address of the person submitting the report to Continue.");
+            $("#CompletedEmail").focus();
             return false;
         }
         return true; // All checks passed, allow submission
