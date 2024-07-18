@@ -1242,8 +1242,8 @@
                 <!------End Step 7 ------>
 
                 <!------Start Step 8 ------>
-                  <div id="reconciliation" class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='8') echo "active";?>">
-                    <div class="accordion-header js-accordion-header" id="accordion-header-reconciliation">BANK RECONCILIATION</div>
+                  <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='8') echo "active";?>">
+                    <div class="accordion-header js-accordion-header">BANK RECONCILIATION</div>
                     <div class="accordion-body js-accordion-body ">
                     <section>
 
@@ -3231,67 +3231,46 @@
             }
 </script>
 <script>
-    var accordion = (function() {
+    var accordion = (function(){
     var $accordion = $('.js-accordion');
     var $accordion_header = $accordion.find('.js-accordion-header');
     var $accordion_item = $('.js-accordion-item');
-
     // default settings
     var settings = {
         speed: 400,   // animation speed
         oneOpen: false   // close all other accordion items if true
     };
 
-    return {
-        // pass configurable object literal
-        init: function($settings) {
-            $accordion_header.on('click', function() {
-                accordion.toggle($(this));
-            });
+  return {
+    // pass configurable object literal
+    init: function($settings) {
+      $accordion_header.on('click', function() {
+        accordion.toggle($(this));
+      });
 
-            $.extend(settings, $settings);
+      $.extend(settings, $settings);
+      // ensure only one accordion is active if oneOpen is true
+      if(settings.oneOpen && $('.js-accordion-item.active').length > 1) {
+        $('.js-accordion-item.active:not(:first)').removeClass('active');
+      }
+      // reveal the active accordion bodies
+      $('.js-accordion-item.active').find('> .js-accordion-body').show();
+    },
+    toggle: function($this) {
 
-            // ensure only one accordion is active if oneOpen is true
-            if (settings.oneOpen && $('.js-accordion-item.active').length > 1) {
-                $('.js-accordion-item.active:not(:first)').removeClass('active');
-            }
-
-            // reveal the active accordion bodies
-            $('.js-accordion-item.active').find('> .js-accordion-body').show();
-        },
-
-        toggle: function($this) {
-            if (settings.oneOpen && $this[0] != $this.closest('.js-accordion').find('> .js-accordion-item.active > .js-accordion-header')[0]) {
-                $this.closest('.js-accordion')
-                    .find('> .js-accordion-item')
-                    .removeClass('active')
-                    .find('.js-accordion-body')
-                    .slideUp();
-            }
-
-            // show/hide the clicked accordion item
-            $this.closest('.js-accordion-item').toggleClass('active');
-            $this.next().stop().slideToggle(settings.speed);
-        },
-
-        // Open accordion item programmatically by header ID
-        openAccordionItem: function(headerID) {
-            var $accordionHeader = $('#' + headerID);
-            var $accordionItem = $accordionHeader.closest('.js-accordion-item');
-
-            // Close all other items if oneOpen is true
-            if (settings.oneOpen) {
-                $accordion_item.not($accordionItem).removeClass('active');
-                $accordion_item.not($accordionItem).find('.js-accordion-body').slideUp();
-            }
-
-            // Toggle the clicked accordion item
-            $accordionItem.toggleClass('active');
-            $accordionItem.find('.js-accordion-body').stop().slideToggle(settings.speed);
-        }
-    };
+      if(settings.oneOpen && $this[0] != $this.closest('.js-accordion').find('> .js-accordion-item.active > .js-accordion-header')[0]) {
+        $this.closest('.js-accordion')
+               .find('> .js-accordion-item')
+               .removeClass('active')
+               .find('.js-accordion-body')
+               .slideUp()
+      }
+      // show/hide the clicked accordion item
+      $this.closest('.js-accordion-item').toggleClass('active');
+      $this.next().stop().slideToggle(settings.speed);
+    }
+  }
 })();
-
 
 $(document).ready(function(){
     // $("#full-print-div").hide();
@@ -3413,9 +3392,6 @@ $(document).ready(function(){
         else if (!EnsureSubmitInformation()) {
             return false;
         }
-        else if (!EnsureBalance()) {
-            return false;
-        }
         var completedEmail = $("#CompletedEmail").val();
         if (!isValidEmail(completedEmail)) {
             alert("Please enter a valid email address.");
@@ -3490,15 +3466,6 @@ $(document).ready(function(){
         }
         return true; // All checks passed, allow submission
     }
-
-    function EnsureBalance(){
-        if(TotalFees != TreasuryBalanceNow){
-            alert("Your report does not balance.  Your Treasury Balance Now and Reconciled Bank Balance should match before submitting your report.");
-                accordion.openAccordionItem('accordion-header-reconciliation');
-        return false;
-    }
-    return true; // All checks passed, allow submission
-}
 
     function EnsureChapterQuestions(){
         if(document.getElementById('FileIRS').value=="" && document.getElementById('990NPath').value=="" ){
