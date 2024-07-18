@@ -3491,14 +3491,17 @@ $(document).ready(function(){
         return true; // All checks passed, allow submission
     }
 
-    function EnsureBalance(){
-        if(TotalFees != TreasuryBalanceNow){
-            alert("Your report does not balance.  Your Treasury Balance Now and Reconciled Bank Balance should match before submitting your report.");
-                accordion.openAccordionItem('accordion-header-reconciliation');
-        return false;
+    function EnsureBalance() {
+    if (TotalFees != TreasuryBalanceNow) {
+        var proceedAnyway = confirm("Your report does not balance. Your Treasury Balance Now and Reconciled Bank Balance should match before submitting your report. \n\nClick OK to Submit Anyway.  \nClick Cancel to Return to Report.");
+        if (!proceedAnyway) {
+            accordion.openAccordionItem('accordion-header-reconciliation');
+            return false;
+        }
     }
-    return true; // All checks passed, allow submission
+    return true; // All checks passed or user chose to proceed, allow submission
 }
+
 
     function EnsureChapterQuestions(){
         if(document.getElementById('FileIRS').value=="" && document.getElementById('990NPath').value=="" ){
