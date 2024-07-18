@@ -968,10 +968,10 @@ class CoordinatorController extends Controller
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => date('Y-m-d H:i:s')]);
 
-            $financial_report_array = FinancialReport::find($chapter_id);
-            if (! empty($financial_report_array)) {
-                DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [null, $chapter_id]);
-            }
+            // $financial_report_array = FinancialReport::find($chapter_id);
+            // if (! empty($financial_report_array)) {
+            //     DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [null, $chapter_id]);
+            // }
 
             DB::commit();
 
