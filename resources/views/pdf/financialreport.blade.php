@@ -736,7 +736,7 @@
                     {{ $formattedAmount }}</strong></td>
                 <td></td><td></td></tr>
             <tr><td>Ending Balance (Treasury Balance Now)<td>
-                    <td><strong>{{ '$'.($treasuryBalance)}}</strong></td>
+                    <td><strong>{{ '$'.number_format($treasuryBalance, 2)}}</strong></td>
                     <td></td><td></td></tr>
         </tbody>
     </table>
@@ -791,7 +791,7 @@
             <tr><td>Reconciled Bank Statement</td>
                 <td><strong>{{ '$'.sprintf('%0.2f',$pdfData ['bank_balance_now'] + $totalReconciliation) }}</strong></td></tr>
             <tr><td>Treasury Balance Now</td>
-                <td><strong>{{ '$'.($treasuryBalance)}}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($treasuryBalance, 2)}}</strong></td></tr>
         </tbody>
     </table>
     <br>
