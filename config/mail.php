@@ -3,8 +3,7 @@
 return [
 
     'mailers' => [
-        'mailgun' => [
-            'transport' => 'mailgun',
+        'smtp' => [
             // 'client' => [
             //     'timeout' => 5,
             // ],

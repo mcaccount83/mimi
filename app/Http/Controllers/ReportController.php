@@ -1750,7 +1750,7 @@ class ReportController extends Controller
                         ->cc($cc_email)
                         ->send(new EOYElectionReportReminder($data));
 
-                    usleep(500000); // Delay for 0.5 seconds between each batch
+                    // usleep(500000); // Delay for 0.5 seconds between each batch
                 }
             }
         }
@@ -1851,7 +1851,7 @@ class ReportController extends Controller
                         ->cc($cc_email)
                         ->send(new EOYFinancialReportReminder($data));
 
-                    usleep(500000); // Delay for 0.5 seconds between each batch
+                    // usleep(500000); // Delay for 0.5 seconds between each batch
                 }
             }
         }
@@ -1960,7 +1960,7 @@ class ReportController extends Controller
                         ->cc($cc_email)
                         ->send(new EOYLateReportReminder($data));
 
-                    usleep(500000); // Delay for 0.5 seconds between each batch
+                    // usleep(500000); // Delay for 0.5 seconds between each batch
                 }
             }
         }

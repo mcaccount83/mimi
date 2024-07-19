@@ -972,7 +972,7 @@
 
                             <div class="col-md-12 mar_bot_20">
                                 <div class="col-md-12">
-                                    <label for="Step12_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                                    <label for="Step6_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                                 </div>
                                 <div class="col-md-12">
                                     <textarea class="form-control" style="width:100%" rows="8" name="Step6_Log" id="Step6_Log" readonly><?php echo $financial_report_array['step_6_notes_log']; ?></textarea>
@@ -1127,7 +1127,7 @@
 							<div class="form-row">
 								<div class="col-md-12 mar_bot_20">
 									<div class="col-md-12">
-										<label for="Step6_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+										<label for="Step7_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 									</div>
 									<div class="col-md-12">
 										<textarea class="form-control" style="width:100%" rows="8" name="Step7_Log" id="Step7_Log" readonly><?php echo $financial_report_array['step_7_notes_log']; ?></textarea>
@@ -1226,7 +1226,7 @@
 						<div class="form-row">
 							<div class="col-md-12 mar_bot_20">
 								<div class="col-md-12">
-									<label for="Step7_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+									<label for="Step8_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 								</div>
 								<div class="col-md-12">
 									<textarea class="form-control" style="width:100%" rows="8" name="Step8_Log" id="Step8_Log" readonly><?php echo $financial_report_array['step_8_notes_log']; ?></textarea>
@@ -1372,7 +1372,7 @@
                 </div>
 				<div class="col-md-12 mar_bot_20">
 					<div class="col-md-12">
-						<label for="Step10_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+						<label for="Step9_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 					</div>
 					<div class="col-md-12">
 						<textarea class="form-control" style="width:100%" rows="8" name="Step9_Log" id="Step9_Log" readonly><?php echo $financial_report_array['step_9_notes_log']; ?></textarea>
@@ -1430,7 +1430,7 @@
                                 &nbsp;&nbsp;&nbsp;
                             </div>
                             <div class="flex-item">
-                                Ending Balance (Treasury Balance Now)&nbsp;&nbsp;&nbsp;<strong>{{ '$'.($treasuryBalance)}}</strong><br>
+                                Ending Balance (Treasury Balance Now)&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($treasuryBalance, 2)}}</strong><br>
                             </div>
                             <div class="flex-item">
                                 &nbsp;&nbsp;&nbsp;
@@ -1501,7 +1501,7 @@
                             </table>
                         <br>
                         Reconciled Bank Statement:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.sprintf('%0.2f',$financial_report_array ['bank_balance_now'] + $totalReconciliation) }}</strong><br>
-                        Treasury Balance Now:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.($treasuryBalance)}}</strong><br>
+                        Treasury Balance Now:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($treasuryBalance, 2)}}</strong><br>
                         <div class="col-md-12 float-right">
                             <div class="form-group">
                                 <textarea class="form-control" style="width:100%" rows="3" name="ReconciledBankBalanceWarning" id="ReconciledBankBalanceWarning" disabled></textarea>
@@ -1613,7 +1613,7 @@
 							<div class="clearfix"></div>
 						<div class="col-md-12 mar_bot_20">
 							<div class="col-md-12">
-								<label for="Step8_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+								<label for="Step10_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 							</div>
 							<div class="col-md-12">
 								<textarea class="form-control" style="width:100%" rows="8" name="Step10_Log" id="Step10_Log" readonly><?php echo $financial_report_array['step_10_notes_log']; ?></textarea>
@@ -1939,7 +1939,7 @@
                         </div>
 						<div class="col-md-12 mar_bot_20">
 							<div class="col-md-12">
-								<label for="Step9_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+								<label for="Step11_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 							</div>
 							<div class="col-md-12">
 								<textarea class="form-control" style="width:100%" rows="8" name="Step11_Log" id="Step11_Log" readonly><?php echo $financial_report_array['step_11_notes_log']; ?></textarea>
@@ -2499,7 +2499,7 @@
 									<div class="clearfix"></div>
 									<div class="col-md-12 mar_bot_20">
 										<div class="col-md-12">
-											<label for="Step11_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+											<label for="Step12_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 										</div>
 										<div class="col-md-12">
 											<textarea class="form-control" style="width:100%" rows="8" name="Step12_Log" id="Step12_Log" readonly><?php echo $financial_report_array['step_12_notes_log']; ?></textarea>
