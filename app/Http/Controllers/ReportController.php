@@ -1888,11 +1888,13 @@ class ReportController extends Controller
             'board_details.board_position_id')
             ->join('state', 'chapters.state', '=', 'state.id')
             ->join('board_details', 'chapters.id', '=', 'board_details.chapter_id')
+            ->join('financial_report', 'chapters.id', '=', 'financial_report.chapter_id')
             ->whereIn('board_details.board_position_id', [1, 2, 3, 4, 5])
+            ->where('financial_report.reviewer_id', null)
             ->where('chapters.conference', $corConfId)
             ->where(function ($query) {
-                $query->where('chapters.new_board_submitted', '=', '0')
-                    ->orWhere('chapters.financial_report_received', '=', '0');
+                $query->where('chapters.new_board_submitted', null)
+                    ->orWhere('chapters.financial_report_received', null);
             })
             ->where('created_at', '<=', date('Y-06-30'))
             ->where('chapters.is_active', 1)

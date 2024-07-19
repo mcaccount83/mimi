@@ -397,7 +397,7 @@
 
             <?php if ($bigSisterCondition) { ?>
                 <div class="box-body text-center">
-                Be sure to save all Region, Reporting and Chapter ionformation before sending Welcome Letter to a new Big Sister.<br>
+                Be sure to save all Region, Reporting and Chapter information before sending Welcome Letter to a new Big Sister.<br>
                 <button type="button" class="btn btn-themeBlue margin" id="letter"><i class="fa fa-envelope fa-fw" aria-hidden="true"></i>&nbsp; Send Big Sister Welcome Email</button>
             </div>
             <?php } ?>
