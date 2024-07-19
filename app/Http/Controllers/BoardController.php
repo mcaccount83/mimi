@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Illuminate\Support\Facades\Session;
 
 class BoardController extends Controller
 {
@@ -1528,6 +1529,8 @@ class BoardController extends Controller
             // $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
             // $isActive = $borDetails['is_active'];
 
+            Session::put('chapterid', $chapterId);
+
             $user = $request->user();
             $borDetails = $user->BoardDetails;
             $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
@@ -1563,8 +1566,10 @@ class BoardController extends Controller
     /**
      * Save EOY Financial Report All Board Members
      */
-    public function storeFinancialReport(Request $request, $chapter_id): RedirectResponse
+    public function storeFinancialReport(Request $request, $chapterId): RedirectResponse
     {
+        $chapterId = Session::get('chapterid');
+        $chapter_id = $chapterId;
 
         if (! $chapter_id) {
             return redirect()->to('/login')->with('error', 'Your session has expired, Please log in again');
