@@ -1600,6 +1600,7 @@ class BoardController extends Controller
 
         $reviewer_id = $chapterDetails[0]->reviewer_id;
         $coorDetails = DB::table('coordinator_details as cd')
+            ->select('cd.*')
             ->where('cd.coordinator_id', '=', $reviewer_id)
             ->get();
 
