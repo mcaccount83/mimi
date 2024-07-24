@@ -61,11 +61,19 @@
                 </thead>
                 <tbody>
                 @foreach($chapterList as $list)
-                @php
+                    @php
                     $emailDetails = app('App\Http\Controllers\ChapterController')->getEmailDetails($list->chap_id);
                     $emailListCord = $emailDetails['emailListCord'];
                     $cc_string = $emailDetails['cc_string'];
-                @endphp
+                    $financialReportReceived = $emailDetails['report_received'];
+                    $name = $emailDetails['name'];
+                    $state = $emailDetails['state'];
+                    $mimi_url = "https://momsclub.org/mimi";
+
+                    $mail_message = "Don't forget to complete the Financial Report for your chapter!  This report is available now and is due no later than July 10th at 11:59pm.<br>
+                            After receiving your completed reports, your Coordinator Team will review the report and reach out if they have any questions.<br>
+                            The Financial Report (as well as the Board Election Report) can be accessed by logging into your MIMI account $mimi_url and selecting the buttons at the top of your screen.<br>"
+                    @endphp
                   <tr>
 						<td><center><a href="<?php echo url("/chapter/financial/{$list->chap_id}") ?>"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a></center></td>
                         <td><center>
@@ -75,7 +83,11 @@
                                     {{-- <a href="{{ url("/chapter/financial/pdf/{$list->chap_id}") }}" target="_blank"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></a> --}}
                                 @endif
                             </center></td>
-                        <td><center><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Financial Report Review - MOMS Club of {{ $list->name }}, {{ $list->state }}"><i class="fa fa-envelope-o fa-lg" aria-hidden="true"></i></a></center></td>
+                        <td>
+                            <?php if ($financialReportReceived == null) { ?>
+                            <center><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Financial Report Reminder | {{$name}}, {{$state}}&body={{ urlencode($mail_message) }}"><i class="fa fa-envelope-o fa-lg" aria-hidden="true"></i></a></center></td>
+                            <?php }?>
+                        </td>
                         <td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
                         <td>{{ $list->fname }} {{ $list->lname }}</td>

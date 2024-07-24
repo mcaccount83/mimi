@@ -157,8 +157,10 @@ class ChapterController extends Controller
     public function getEmailDetails($id)
     {
         $chapterList = DB::table('chapters')
-            ->select('chapters.id as id', 'chapters.primary_coordinator_id as primary_coordinator_id')
-            ->where('chapters.id', '=', $id)
+            ->select('chapters.id as id', 'chapters.primary_coordinator_id as primary_coordinator_id', 'chapters.financial_report_received as report_received',
+                'chapters.new_board_submitted as board_submitted', 'chapters.ein_letter as ein_letter', 'chapters.name as name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                ->where('chapters.id', '=', $id)
             ->first();
 
         $chapterEmailList = DB::table('board_details as bd')
@@ -216,6 +218,11 @@ class ChapterController extends Controller
         return [
             'emailListCord' => $emailListCord,
             'cc_string' => $cc_string,
+            'board_submitted' => $chapterList->board_submitted,
+            'report_received' => $chapterList->report_received,
+            'ein_letter' => $chapterList->ein_letter,
+            'name' => $chapterList->name,
+            'state' => $chapterList->state,
         ];
 
     }

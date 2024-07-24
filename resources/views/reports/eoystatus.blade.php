@@ -44,6 +44,7 @@
               <thead>
 			    <tr>
 				<th>Edit</th>
+                <th>Email</th>
 				<th>State</th>
                 <th>Name</th>
                 <th>Board Report Received</th>
@@ -55,13 +56,46 @@
                 <tbody>
 
                 @foreach($chapterList as $list)
-                  <tr>
+                    @php
+                    $emailDetails = app('App\Http\Controllers\ChapterController')->getEmailDetails($list->id);
+                    $emailListCord = $emailDetails['emailListCord'];
+                    $cc_string = $emailDetails['cc_string'];
+                    $boardElectionReportReceived = $emailDetails['board_submitted'];
+                    $financialReportReceived = $emailDetails['report_received'];
+                    $einLetterCopyReceived = $emailDetails['ein_letter'];
+                    $name = $emailDetails['name'];
+                    $state = $emailDetails['state'];
+                    $mimi_url = "https://momsclub.org/mimi";
+
+                    $mail_message = "At this time, we have not received one or more of your chapter's End of Year Reports. They are now considered PAST DUE.<br>
+                    The following items are missing:<ul>";
+
+                    if ($boardElectionReportReceived == null) {
+                        $mail_message .= "<li>Board Election Report</li>";
+                    }
+                    if ($financialReportReceived == null) {
+                        $mail_message .= "<li>Financial Report</li>";
+                    }
+                    if ($einLetterCopyReceived == null) {
+                        $mail_message .= "<li>Copy of EIN Letter</li>";
+                    }
+
+                    $mail_message .= "</ul>";
+                    $mail_message .= "Please submit through your MIMI account ($mimi_url) as soon as possible. If you are having trouble submitting, have any questions, or need more time, please let us know!<br>";
+
+                    @endphp
+                    <tr>
                       <td>
                          <?php if (Session::get('positionid') >=5 && Session::get('positionid') <=7){ ?>
 						    <center><a href="<?php echo url("/chapter/statusview/{$list->id}") ?>"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a></center>
                         <?php }?>
                           </td>
-				        <td>{{ $list->state }}</td>
+                        <td>
+                          <?php if ($boardElectionReportReceived == null || $financialReportReceived == null) { ?>
+                            <center><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=End of Year Reports - Late Notice | {{$name}}, {{$state}}&body={{ urlencode($mail_message) }}"><i class="fa fa-envelope-o fa-lg" aria-hidden="true"></i></a></center>
+                          <?php }?>
+                        </td>
+                        <td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
                         <td style="background-color: @if($list->new_board_submitted == '1') transparent; @else #FFC7CE; @endif;">
                             @if($list->new_board_submitted == '1')

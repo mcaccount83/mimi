@@ -45,6 +45,7 @@
               <thead>
 			    <tr>
 				<th>Review</th>
+                <th>Email</th>
 				<th>State</th>
                 <th>Name</th>
                 <th>Primary Coordinator</th>
@@ -55,6 +56,26 @@
                 <tbody>
 
                 @foreach($chapterList as $list)
+                    @php
+                    $emailDetails = app('App\Http\Controllers\ChapterController')->getEmailDetails($list->id);
+                    $emailListCord = $emailDetails['emailListCord'];
+                    $cc_string = $emailDetails['cc_string'];
+                    $boardElectionReportReceived = $emailDetails['board_submitted'];
+                    $name = $emailDetails['name'];
+                    $state = $emailDetails['state'];
+                    $mimi_url = "https://momsclub.org/mimi";
+
+                    $mail_message = "Don't forget to complete the Board Election Report for your chapter!  This report is available now and should be filled out as soon as your chapter has held its election but is due no later than June 30th at 11:59pm.<br>
+                            Please submit your report as soon as possible to ensure that your incoming board members have access to all the tools they need to be successful. The information from the report is used for<br><ul>";
+                    $mail_message .="<li>Chapter Contacts for your Coordinator Team</li>";
+                    $mail_message .="<li>Access to MIMI</li>";
+                    $mail_message .="<li>Inclusion in the Board Discussion Group</li>";
+                    $mail_message .="<li>Receipt of Conference Newsletter</li>";
+                    $mail_message .="<li>Automated Messages from MIMI, including Re-Registration payment reminders</li>";
+
+                    $mail_message .="</ul>";
+                    $mail_message .="The Board Election Report can be accessed by logging into your MIMI account $mimi_url and selecting the buttons at the top of your screen.<br>";
+                    @endphp
                   <tr>
                       <td>
                          <?php if (Session::get('positionid') >=5 && Session::get('positionid') <=7){ ?>
@@ -64,6 +85,11 @@
 								<center><a href="<?php echo url("/chapter/boardinfo/{$list->id}") ?>"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a></center>
 							@endif
                         <?php }?>
+                          </td>
+                          <td>
+                            <?php if ($boardElectionReportReceived == null ){ ?>
+                              <center><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Board Election Reminder | {{$name}}, {{$state}}&body={{ urlencode($mail_message) }}"><i class="fa fa-envelope-o fa-lg" aria-hidden="true"></i></a></center>
+                            <?php }?>
                           </td>
                             <td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
