@@ -70,13 +70,13 @@
                     $mail_message = "At this time, we have not received one or more of your chapter's End of Year Reports. They are now considered PAST DUE.<br>
                     The following items are missing:<ul>";
 
-                    if ($boardElectionReportReceived == null) {
+                    if ($boardElectionReportReceived == null || $boardElectionReportReceived == 0) {
                         $mail_message .= "<li>Board Election Report</li>";
                     }
-                    if ($financialReportReceived == null) {
+                    if ($financialReportReceived == null || $financialReportReceived == 0) {
                         $mail_message .= "<li>Financial Report</li>";
                     }
-                    if ($einLetterCopyReceived == null) {
+                    if ($einLetterCopyReceived == null || $einLetterCopyReceived == 0) {
                         $mail_message .= "<li>Copy of EIN Letter</li>";
                     }
 
@@ -91,7 +91,7 @@
                         <?php }?>
                           </td>
                         <td>
-                          <?php if ($boardElectionReportReceived == null || $financialReportReceived == null) { ?>
+                          <?php if ($boardElectionReportReceived == null || $financialReportReceived == null || $boardElectionReportReceived == 0 || $financialReportReceived == 0) { ?>
                             <center><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=End of Year Reports - Late Notice | {{$name}}, {{$state}}&body={{ urlencode($mail_message) }}"><i class="fa fa-envelope-o fa-lg" aria-hidden="true"></i></a></center>
                           <?php }?>
                         </td>

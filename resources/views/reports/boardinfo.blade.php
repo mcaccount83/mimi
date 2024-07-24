@@ -87,7 +87,7 @@
                         <?php }?>
                           </td>
                           <td>
-                            <?php if ($boardElectionReportReceived == null ){ ?>
+                            <?php if ($boardElectionReportReceived == null || $boardElectionReportReceived == 0){ ?>
                               <center><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Board Election Reminder | {{$name}}, {{$state}}&body={{ urlencode($mail_message) }}"><i class="fa fa-envelope-o fa-lg" aria-hidden="true"></i></a></center>
                             <?php }?>
                           </td>

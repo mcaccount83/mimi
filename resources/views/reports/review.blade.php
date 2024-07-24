@@ -84,7 +84,7 @@
                                 @endif
                             </center></td>
                         <td>
-                            <?php if ($financialReportReceived == null) { ?>
+                            <?php if ($financialReportReceived == null  || $financialReportReceived == 0) { ?>
                             <center><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Financial Report Reminder | {{$name}}, {{$state}}&body={{ urlencode($mail_message) }}"><i class="fa fa-envelope-o fa-lg" aria-hidden="true"></i></a></center></td>
                             <?php }?>
                         </td>
