@@ -3854,7 +3854,8 @@ class ChapterController extends Controller
         $rangeEndDate = Carbon::create($thisyear, $monthRangeEnd, 1)->endOfMonth();
 
         // Convert $month to words
-        $monthInWords = strftime('%B', strtotime("2000-$month-01"));
+        // $monthInWords = strftime('%B', strtotime("2000-$month-01"));
+        $monthInWords = Carbon::createFromFormat('m', $month)->format('F');
 
         // Format dates as "mm-dd-yyyy"
         $rangeStartDateFormatted = date('m-d-Y', strtotime($rangeStartDate));
@@ -3987,8 +3988,10 @@ class ChapterController extends Controller
         $rangeEndDate = Carbon::create($thisyear, $monthRangeEnd, 1)->endOfMonth();
 
         // Convert $month to words
-        $monthInWords = strftime('%B', strtotime("2000-$month-01"));
-        $lastMonthInWords = strftime('%B', strtotime("2000-$lastMonth-01"));
+        // $monthInWords = strftime('%B', strtotime("2000-$month-01"));
+        // $lastMonthInWords = strftime('%B', strtotime("2000-$lastMonth-01"));
+        $monthInWords = Carbon::createFromFormat('m', $month)->format('F');
+        $lastMonthInWords = Carbon::createFromFormat('m', $lastMonth)->format('F');
 
         // Format dates as "mm-dd-yyyy"
         $rangeStartDateFormatted = date('m-d-Y', strtotime($rangeStartDate));
