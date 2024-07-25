@@ -2174,17 +2174,16 @@ class BoardController extends Controller
                     Mail::to($to_email2)
                         ->send(new EOYFinancialReportThankYou($mailData, $coordinator_array, $pdfPath));
 
-                if($reviewer_id == null)
-                    DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapter_id]);
-                    Mail::to($to_email)
-                        ->send(new EOYFinancialSubmitted($mailData, $coordinator_array, $pdfPath));
+                    if($reviewer_id == null){
+                        DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapter_id]);
+                        Mail::to($to_email)
+                            ->send(new EOYFinancialSubmitted($mailData, $coordinator_array, $pdfPath));
+                    }
 
-                if($reviewer_id != null)
-                    Mail::to($to_email3)
-                        ->send(new EOYFinancialSubmitted($mailData, $coordinator_array, $pdfPath));
-
-                    // Mail::to($to_email2)
-                    //     ->send(new EOYFinancialReportThankYou($mailData, $coordinator_array, $pdfPath));
+                    if($reviewer_id != null){
+                        Mail::to($to_email3)
+                            ->send(new EOYFinancialSubmitted($mailData, $coordinator_array, $pdfPath));
+                    }
                 }
 
                 $report->save();
