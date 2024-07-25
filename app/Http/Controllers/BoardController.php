@@ -27,8 +27,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Illuminate\Support\Facades\Session;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class BoardController extends Controller
 {
@@ -2174,13 +2174,13 @@ class BoardController extends Controller
                     Mail::to($to_email2)
                         ->send(new EOYFinancialReportThankYou($mailData, $coordinator_array, $pdfPath));
 
-                    if($reviewer_id == null){
+                    if ($reviewer_id == null) {
                         DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapter_id]);
                         Mail::to($to_email)
                             ->send(new EOYFinancialSubmitted($mailData, $coordinator_array, $pdfPath));
                     }
 
-                    if($reviewer_id != null){
+                    if ($reviewer_id != null) {
                         Mail::to($to_email3)
                             ->send(new EOYFinancialSubmitted($mailData, $coordinator_array, $pdfPath));
                     }
