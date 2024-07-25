@@ -3386,9 +3386,9 @@ class ChapterController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->where('ch.id', $id)
             ->get();
-        $maxDateLimit = date('Y-m-d');
-        $minDateLimit = date('Y-m-d', strtotime('first day of january this year'));
-        $minDateLimit = '';
+        $maxDateLimit = Carbon::now()->format('Y-m-d');
+        $minDateLimit = Carbon::now()->subYear()->format('Y-m-d');
+        // $minDateLimit = '';
         $data = ['chapterList' => $chapterList, 'maxDateLimit' => $maxDateLimit, 'minDateLimit' => $minDateLimit];
 
         return view('chapters.m2mdonation')->with($data);
@@ -3648,9 +3648,9 @@ class ChapterController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->where('ch.id', $id)
             ->get();
-        $maxDateLimit = date('Y-m-d');
-        $minDateLimit = date('Y-m-d', strtotime('first day of january this year'));
-        $minDateLimit = '';
+        $maxDateLimit = Carbon::now()->format('Y-m-d');
+        $minDateLimit = Carbon::now()->subYear()->format('Y-m-d');
+        // $minDateLimit = '';
         $data = ['chapterList' => $chapterList, 'maxDateLimit' => $maxDateLimit, 'minDateLimit' => $minDateLimit];
 
         return view('chapters.re-regnotes')->with($data);
@@ -3706,9 +3706,9 @@ class ChapterController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->where('ch.id', $id)
             ->get();
-        $maxDateLimit = date('Y-m-d');
-        $minDateLimit = date('Y-m-d', strtotime('first day of january this year'));
-        $minDateLimit = '';
+        $maxDateLimit = Carbon::now()->format('Y-m-d');
+        $minDateLimit = Carbon::now()->subYear()->format('Y-m-d');
+        // $minDateLimit = '';
         $data = ['chapterList' => $chapterList, 'maxDateLimit' => $maxDateLimit, 'minDateLimit' => $minDateLimit];
 
         return view('chapters.payment')->with($data);
@@ -3854,12 +3854,11 @@ class ChapterController extends Controller
         $rangeEndDate = Carbon::create($thisyear, $monthRangeEnd, 1)->endOfMonth();
 
         // Convert $month to words
-        // $monthInWords = strftime('%B', strtotime("2000-$month-01"));
         $monthInWords = Carbon::createFromFormat('m', $month)->format('F');
 
         // Format dates as "mm-dd-yyyy"
-        $rangeStartDateFormatted = date('m-d-Y', strtotime($rangeStartDate));
-        $rangeEndDateFormatted = date('m-d-Y', strtotime($rangeEndDate));
+        $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
+        $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
         $chapters = Chapter::select('chapters.name as chapter_name', 'state.state_short_name as chapter_state', 'board_details.email as bor_email',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
@@ -3988,14 +3987,12 @@ class ChapterController extends Controller
         $rangeEndDate = Carbon::create($thisyear, $monthRangeEnd, 1)->endOfMonth();
 
         // Convert $month to words
-        // $monthInWords = strftime('%B', strtotime("2000-$month-01"));
-        // $lastMonthInWords = strftime('%B', strtotime("2000-$lastMonth-01"));
         $monthInWords = Carbon::createFromFormat('m', $month)->format('F');
         $lastMonthInWords = Carbon::createFromFormat('m', $lastMonth)->format('F');
 
         // Format dates as "mm-dd-yyyy"
-        $rangeStartDateFormatted = date('m-d-Y', strtotime($rangeStartDate));
-        $rangeEndDateFormatted = date('m-d-Y', strtotime($rangeEndDate));
+        $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
+        $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
         $chapters = Chapter::select('chapters.name as chapter_name', 'state.state_short_name as chapter_state', 'board_details.email as bor_email',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',

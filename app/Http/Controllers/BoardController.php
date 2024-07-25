@@ -901,7 +901,6 @@ class BoardController extends Controller
         $late_date = Carbon::create($next_renewal_year, $late_month, 1);
 
         // Convert $start_month to words
-        // $start_monthInWords = strftime('%B', strtotime("2000-$start_month-01"));
         $start_monthInWords = Carbon::createFromFormat('m', $start_month)->format('F');
 
         // Determine the range start and end months correctly
@@ -910,13 +909,7 @@ class BoardController extends Controller
 
         // Adjust range for January
         if ($start_month == 1) {
-            $monthRangeStart = 12;
-        } else {
-            $monthRangeEnd = $start_month - 1;
-        }
-
-        // Adjust range for January
-        if ($month == 1) {
+            $monthRangeStart = 1;
             $monthRangeEnd = 12;
         }
 

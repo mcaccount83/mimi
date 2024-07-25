@@ -58,14 +58,14 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label>Date Payment Received</label> <span class="field-required">*</span>
-                <!-- max="<?php echo $maxDateLimit;?>" -->
-                <input type="date" class="form-control my-colorpicker1" name="PaymentDate" id="PaymentDate" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" value="" min="<?php echo $minDateLimit;?>"  required />
-
-              </div>
-              </div>
+                <div class="col-sm-6 col-xs-12">
+                    <div class="form-group">
+                        <label>Date Payment Received</label> <span class="field-required">*</span>
+                        <input type="date" class="form-control my-colorpicker1" name="PaymentDate" id="PaymentDate"
+                            pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))"
+                            value="" min="<?php echo $minDateLimit; ?>" max="<?php echo $maxDateLimit; ?>" required />
+                    </div>
+                </div>
               <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">

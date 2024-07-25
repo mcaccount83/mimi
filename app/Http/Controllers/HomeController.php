@@ -117,35 +117,28 @@ class HomeController extends Controller
             $late_month = $start_month + 1;
 
             $due_date = Carbon::create($next_renewal_year, $start_month, 1);
-            $late_date = Carbon::create($next_renewal_year, $late_month, 1);
+        $late_date = Carbon::create($next_renewal_year, $late_month, 1);
 
-            // Convert $start_month to words
-            // $start_monthInWords = strftime('%B', strtotime("2000-$start_month-01"));
-            $start_monthInWords = Carbon::createFromFormat('m', $start_month)->format('F');
+        // Convert $start_month to words
+        $start_monthInWords = Carbon::createFromFormat('m', $start_month)->format('F');
 
-            // Determine the range start and end months correctly
-            $monthRangeStart = $start_month;
-            $monthRangeEnd = $start_month - 1;
+        // Determine the range start and end months correctly
+        $monthRangeStart = $start_month;
+        $monthRangeEnd = $start_month - 1;
 
-            // Adjust range for January
-            if ($start_month == 1) {
-                $monthRangeStart = 12;
-            } else {
-                $monthRangeEnd = $start_month - 1;
-            }
+        // Adjust range for January
+        if ($start_month == 1) {
+            $monthRangeStart = 1;
+            $monthRangeEnd = 12;
+        }
 
-            // Adjust range for January
-            if ($month == 1) {
-                $monthRangeEnd = 12;
-            }
+        // Create Carbon instances for start and end dates
+        $rangeStartDate = Carbon::create($year, $monthRangeStart, 1);
+        $rangeEndDate = Carbon::create($year, $monthRangeEnd, 1)->endOfMonth();
 
-            // Create Carbon instances for start and end dates
-            $rangeStartDate = Carbon::create($year, $monthRangeStart, 1);
-            $rangeEndDate = Carbon::create($year, $monthRangeEnd, 1)->endOfMonth();
-
-            // Format the dates as words
-            $rangeStartDateFormatted = $rangeStartDate->format('F jS');
-            $rangeEndDateFormatted = $rangeEndDate->format('F jS');
+        // Format the dates as words
+        $rangeStartDateFormatted = $rangeStartDate->format('F jS');
+        $rangeEndDateFormatted = $rangeEndDate->format('F jS');
 
             if ($borPositionId == 1 && $isActive == 1) {
                 $chapterList = DB::table('chapters as ch')

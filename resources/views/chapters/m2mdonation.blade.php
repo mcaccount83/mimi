@@ -42,13 +42,18 @@
                 <input type="text" name="ch_long_name" class="form-control my-colorpicker1" maxlength="200" required value="{{ $chapterList[0]->statename }} - {{ $chapterList[0]->name }}"  readonly>
               </div>
               </div>
-                 <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label>M2M Donation Date</label>
-                <input type="date" name="ch_m2m_date" id="ch_m2m_date" class="form-control my-colorpicker1" value="{{ $chapterList[0]->m2m_date }}" >
-              </div>
-              </div>
+                <!-- /.form group -->
+            <div class="col-sm-6 col-xs-12">
+                <div class="form-group">
+                    <label>M2M Donation Date</label>
+                    <input type="date" name="ch_m2m_date" id="ch_m2m_date"
+                        class="form-control my-colorpicker1"
+                        value="{{ $chapterList[0]->m2m_date }}"
+                        min="<?php echo $minDateLimit; ?>"
+                        max="<?php echo $maxDateLimit; ?>">
+                </div>
+            </div>
+
               <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
@@ -57,12 +62,17 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label>Sustaining Chapter Donation Date</label>
-                <input type="date" name="ch_sustaining_date" id="ch_sustaining_date" class="form-control my-colorpicker1" value="{{ $chapterList[0]->sustaining_date }}" >
-              </div>
-              </div>
+            <div class="col-sm-6 col-xs-12">
+                <div class="form-group">
+                    <label>Sustaining Chapter Donation Date</label>
+                    <input type="date" name="ch_sustaining_date" id="ch_sustaining_date"
+                        class="form-control my-colorpicker1"
+                        value="{{ $chapterList[0]->sustaining_date }}"
+                        min="<?php echo $minDateLimit; ?>"
+                        max="<?php echo $maxDateLimit; ?>" >
+                </div>
+            </div>
+
               <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
