@@ -1529,7 +1529,7 @@ class BoardController extends Controller
             // $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
             // $isActive = $borDetails['is_active'];
 
-            Session::put('chapterid', $chapterId);
+            $request->session()->put('chapterid', $chapterId);
 
             $user = $request->user();
             $borDetails = $user->BoardDetails;
@@ -1568,7 +1568,7 @@ class BoardController extends Controller
      */
     public function storeFinancialReport(Request $request, $chapterId): RedirectResponse
     {
-        $chapterId = Session::get('chapterid');
+        $chapterId = $request->session()->get('chapterid');
         $chapter_id = $chapterId;
 
         if (! $chapter_id) {
