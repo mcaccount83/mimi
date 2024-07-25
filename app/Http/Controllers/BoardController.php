@@ -28,7 +28,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Illuminate\Support\Facades\Session;
 
 class BoardController extends Controller
 {
@@ -1529,7 +1528,7 @@ class BoardController extends Controller
             // $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
             // $isActive = $borDetails['is_active'];
 
-            Session::put('chapterid', $chapterId);
+            $request->session()->put('chapterid', $chapterId);
 
             $user = $request->user();
             $borDetails = $user->BoardDetails;
@@ -1568,7 +1567,7 @@ class BoardController extends Controller
      */
     public function storeFinancialReport(Request $request, $chapterId): RedirectResponse
     {
-        $chapterId = Session::get('chapterid');
+        $chapterId = $request->session()->get('chapterid');
         $chapter_id = $chapterId;
 
         if (! $chapter_id) {
@@ -2174,13 +2173,13 @@ class BoardController extends Controller
                     Mail::to($to_email2)
                         ->send(new EOYFinancialReportThankYou($mailData, $coordinator_array, $pdfPath));
 
-                    if($reviewer_id == null){
+                    if ($reviewer_id == null) {
                         DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapter_id]);
                         Mail::to($to_email)
                             ->send(new EOYFinancialSubmitted($mailData, $coordinator_array, $pdfPath));
                     }
 
-                    if($reviewer_id != null){
+                    if ($reviewer_id != null) {
                         Mail::to($to_email3)
                             ->send(new EOYFinancialSubmitted($mailData, $coordinator_array, $pdfPath));
                     }

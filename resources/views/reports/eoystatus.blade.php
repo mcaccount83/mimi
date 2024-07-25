@@ -138,10 +138,12 @@
                 </div>
               </div>
               </div>
+            </div>
+
               <div class="box-body text-center">
+                <p>**Known issue - will not send more than 10 messages.**</p>
               <a title="EOY Late Notices will be sent to all chapters who have not submitted reports." href="{{ route('report.eoylatereminder') }}"><button class="btn btn-themeBlue margin"><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; Send EOY Late Notices</button></a>
           <a href="{{ route('export.eoystatus')}}"><button class="btn btn-themeBlue margin"><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export EOY Status List</button></a>
-            </div>
            </div>
           <!-- /.box -->
         </div>
