@@ -125,8 +125,8 @@
             </div>
 			  <div class="box-body text-center">
 				<?php if (Session::get('positionid') >=5 && Session::get('positionid') <=7){ ?>
-                    <p>**Known issue - will not send more than 10 messages.**</p>
-                    <a title="Board Election Report reminders will be sent to all chapters who have not submitted a report." href="{{ route('report.boardinforeminder') }}"><button class="btn btn-themeBlue margin"><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; Send Board Election Reminders</button></a>
+                    <p>**Known issue - may not send more than 10 messages before returning 500 error.**</p>
+                    <a href="{{ route('report.boardinforeminder') }}" onclick="return confirmSendReminder();">><button class="btn btn-themeBlue margin"><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; Send Board Election Reminders</button></a>
 				    <button type="button" id="board-active" class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>><i class="fa fa-play fa-fw" aria-hidden="true" ></i>&nbsp; Make Received Boards Active</button>
 				    <a href="{{ route('export.boardelection')}}"><button class="btn btn-themeBlue margin"><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export UN-Activated Board List</button></a>
 				<?php }?>
@@ -161,6 +161,11 @@ function showPrimary() {
         window.location.href = base_url;
     }
 }
+
+function confirmSendReminder() {
+        return confirm('This action will send reminders to all chapters who have not submitted their Board Election Report. \n\nAre you sure you want to send the Board Elecion Report Reminders?');
+    }
+
 
 </script>
 @endsection

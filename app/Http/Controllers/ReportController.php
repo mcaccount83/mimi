@@ -1520,7 +1520,7 @@ class ReportController extends Controller
 
         $baseQuery = DB::table('chapters as ch')
             ->select('ch.id as chap_id', 'ch.primary_coordinator_id as primary_coordinator_id', 'ch.name as name', 'ch.financial_report_received as financial_report_received',
-                'ch.financial_report_complete as report_complete', 'cd.coordinator_id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state',
+                'ch.financial_report_complete as report_complete', 'ch.report_extension as report_extension', 'ch.extension_notes as extension_notes', 'cd.coordinator_id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state',
                 'fr.submitted as report_received', 'fr.review_complete as review_complete', 'fr.post_balance as post_balance', 'fr.financial_pdf_path as financial_pdf_path', 'cd_reviewer.first_name as pcfname', 'cd_reviewer.last_name as pclname')
             ->join('state as st', 'ch.state', '=', 'st.id')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
@@ -1782,17 +1782,24 @@ class ReportController extends Controller
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         //Get Chapter List mapped with login coordinator
-        $chapters = Chapter::select('chapters.name as name', 'state.state_short_name as state', 'board_details.email as bor_email',
+        $chapters = Chapter::select('chapters.*', 'chapters.name as name', 'state.state_short_name as state', 'board_details.email as bor_email',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
             'board_details.board_position_id')
             ->join('state', 'chapters.state', '=', 'state.id')
             ->join('board_details', 'chapters.id', '=', 'board_details.chapter_id')
+            ->join('financial_report', 'chapters.id', '=', 'financial_report.chapter_id')
             ->whereIn('board_details.board_position_id', [1, 2, 3, 4, 5])
+            ->where('financial_report.reviewer_id', null)
+            ->where(function ($query) {
+                $query->where('chapters.report_extension', '=', '0')
+                    ->orWhereNull('chapters.report_extension');
+            })
             ->where('chapters.conference', $corConfId)
             ->where(function ($query) {
                 $query->where('chapters.financial_report_received', '=', '0')
                     ->orWhereNull('chapters.financial_report_received');
-            })->where('created_at', '<=', date('Y-06-30'))
+            })
+            ->where('created_at', '<=', date('Y-06-30'))
             ->where('chapters.is_active', 1)
             ->get();
 
@@ -1891,10 +1898,19 @@ class ReportController extends Controller
             ->join('financial_report', 'chapters.id', '=', 'financial_report.chapter_id')
             ->whereIn('board_details.board_position_id', [1, 2, 3, 4, 5])
             ->where('financial_report.reviewer_id', null)
-            ->where('chapters.conference', $corConfId)
             ->where(function ($query) {
-                $query->where('chapters.new_board_submitted', null)
-                    ->orWhere('chapters.financial_report_received', null);
+                $query->where('chapters.report_extension', '=', '0')
+                    ->orWhereNull('chapters.report_extension');
+            })            ->where('chapters.conference', $corConfId)
+            // ->where(function ($query) {
+            //     $query->where('chapters.new_board_submitted', null)
+            //         ->orWhere('chapters.financial_report_received', null);
+            // })
+            ->where(function ($query) {
+                $query->where('chapters.new_board_submitted', '=', '0')
+                    ->orWhereNull('chapters.new_board_submitted')
+                    ->orwhere('chapters.financial_report_received', '=', '0')
+                    ->orWhereNull('chapters.financial_report_received');
             })
             ->where('created_at', '<=', date('Y-06-30'))
             ->where('chapters.is_active', 1)

@@ -52,11 +52,12 @@
                   <th>Name</th>
                  <th>Primary Coordinator</th>
                  <th>Assigned Reviewer</th>
+                 <th>Extension Given</th>
                  <th>Report Received</th>
                  <th>Date Received</th>
                  <th>Review Completed</th>
                  <th>Date Completed</th>
-                 <th>Ending Balance</th>
+                 {{-- <th>Ending Balance</th> --}}
                 </tr>
                 </thead>
                 <tbody>
@@ -92,6 +93,13 @@
 						<td>{{ $list->name }}</td>
                         <td>{{ $list->fname }} {{ $list->lname }}</td>
                         <td>{{ $list->pcfname }} {{$list->pclname}}</td>
+                        <td style="background-color: @if($list->report_extension == '1') #FFEB9C; @else transparent; @endif;">
+                            @if($list->report_extension == '1')
+                                YES
+                            @else
+
+                            @endif
+                        </td>
                         <td style="background-color: @if($list->financial_report_received == '1') transparent; @else #FFC7CE; @endif;">
                             @if($list->financial_report_received == '1')
                                 YES
@@ -120,13 +128,13 @@
 
                             @endif
 						</td>
-                        <td>
+                        {{-- <td>
                             @if($list->post_balance != null)
                             ${{ $list->post_balance }}
                             @else
-                            No Balance Entered
+
                             @endif
-                        </td>
+                        </td> --}}
 			        </tr>
                   @endforeach
                   </tbody>
@@ -147,8 +155,8 @@
             </div>
         </div>
               <div class="box-body text-center">
-                <p>**Known issue - will not send more than 10 messages.**</p>
-              <a title="Financial Report reminders will be sent to all chapters who have not submitted a report." href="{{ route('report.financialreminder') }}"><button class="btn btn-themeBlue margin"><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; Send Financial Report Reminders</button></a>
+                <p>**Known issue - may not send more than 10 messages before returning 500 error.**</p>
+              <a href="{{ route('report.financialreminder') }}" onclick="return confirmSendReminder();"><button class="btn btn-themeBlue margin"><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; Send Financial Report Reminders</button></a>
            </div>
           <!-- /.box -->
         </div>
@@ -178,6 +186,10 @@ function show2Primary() {
         window.location.href = base_url;
     }
 }
+
+function confirmSendReminder() {
+        return confirm('This action will send reminders to all chapters who have not submitted their Financial Report, excluding those with an extension or wtih an assigned reviewer. \n\nAre you sure you want to send the Financial Report Reminders?');
+    }
 
 </script>
 @endsection

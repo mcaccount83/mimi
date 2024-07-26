@@ -47,6 +47,7 @@
                 <th>Email</th>
 				<th>State</th>
                 <th>Name</th>
+                <th>Extension Given<br>Do Not Send Late Notice</th>
                 <th>Board Report Received</th>
                 <th>Board Report Activated</th>
 				<th>Financial Report Received</th>
@@ -97,6 +98,13 @@
                         </td>
                         <td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
+                        <td style="background-color: @if($list->report_extension == '1') #FFEB9C; @else transparent; @endif;">
+                            @if($list->report_extension == '1')
+                                YES
+                            @else
+
+                            @endif
+                        </td>
                         <td style="background-color: @if($list->new_board_submitted == '1') transparent; @else #FFC7CE; @endif;">
                             @if($list->new_board_submitted == '1')
                                 YES
@@ -141,9 +149,9 @@
             </div>
 
               <div class="box-body text-center">
-                <p>**Known issue - will not send more than 10 messages.**</p>
-              <a title="EOY Late Notices will be sent to all chapters who have not submitted reports." href="{{ route('report.eoylatereminder') }}"><button class="btn btn-themeBlue margin"><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; Send EOY Late Notices</button></a>
-          <a href="{{ route('export.eoystatus')}}"><button class="btn btn-themeBlue margin"><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export EOY Status List</button></a>
+                <p>**Known issue - may not send more than 10 messages before returning 500 error.**</p>
+                <a href="{{ route('report.eoylatereminder') }}" onclick="return confirmSendReminder();"> <button class="btn btn-themeBlue margin"><i class="fa fa-envelope-o fa-fw" aria-hidden="true"></i>&nbsp; Send EOY Late Notices </button> </a>
+                <a href="{{ route('export.eoystatus')}}"><button class="btn btn-themeBlue margin"><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export EOY Status List</button></a>
            </div>
           <!-- /.box -->
         </div>
@@ -164,6 +172,9 @@
     }
 }
 
+function confirmSendReminder() {
+        return confirm('This action will send a Late Notice to all chapters who have not submitted their Board Election Report OR their Financial Report, excluding those with an extension or an assigned reviewer. \n\nAre you sure you want to send the EOY Late Notices?');
+    }
 
 </script>
 @endsection

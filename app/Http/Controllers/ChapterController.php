@@ -5119,7 +5119,8 @@ class ChapterController extends Controller
 
         $chapterList = DB::table('chapters as ch')
             ->select('ch.id', 'ch.name', 'ch.state', 'ch.region', 'ch.new_board_submitted', 'ch.new_board_active', 'ch.financial_report_received', 'financial_report_complete',
-                'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
+                'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id',
+                'ch.report_extension', 'ch.extension_notes')
             ->leftJoin('board_details as bd', 'ch.id', '=', 'bd.chapter_id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $id)
@@ -5156,6 +5157,8 @@ class ChapterController extends Controller
             $chapter->new_board_active = (int) $request->has('ch_board_active');
             $chapter->financial_report_received = (int) $request->has('ch_financial_received');
             $chapter->financial_report_complete = (int) $request->has('ch_financial_complete');
+            $chapter->report_extension = (int) $request->has('ch_report_extension');
+            $chapter->extension_notes = $request->input('ch_extension_notes');
             $chapter->last_updated_by = $lastUpdatedBy;
             $chapter->last_updated_date = date('Y-m-d H:i:s');
             $chapter->save();
