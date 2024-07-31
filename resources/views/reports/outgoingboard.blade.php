@@ -2,16 +2,22 @@
 
 @section('content')
  <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-      <h1>
-      Outgoing Board Report
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Outgoing Board Report</li>
-      </ol>
-    </section>
+ <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Outgoing Board Report</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">Outgoing Board Report</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
     @if ($message = Session::get('success'))
       <div class="alert alert-success">
 		<button type="button" class="close" data-dismiss="alert">×</button>
@@ -30,20 +36,19 @@
         <p>{{ $message }}</p>
     </div>
 @endif
+
     <!-- Main content -->
-    @csrf
     <section class="content">
-      <div class="row">
-		<div class="col-md-12">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">Report of Outgoing Board Members</h3>
-
-            </div>
-            <!-- /.box-header -->
-
-            <div class="box-body table-responsive">
-              <table id="chapterlist" class="table table-bordered table-hover">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Report of Outgoing Board Members</h3>
+                    </div>
+                     <!-- /.card-header -->
+        <div class="card-body">
+            <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
                   <th>Chapter ID</th>
@@ -64,27 +69,23 @@
                   @endforeach
                   </tbody>
                 </table>
-                <div class="radio-chk labelcheck">
-                    <div class="col-sm-6 col-xs-12">
-                      <div class="form-group">
-                          <label style="display: block;"><input type="checkbox" name="showPrimary" id="showPrimary" class="ios-switch green bigswitch" {{$checkBoxStatus}} onchange="showPrimary()" /><div><div></div></div>
-                          </label>
-                        <span> Only Show Outgoing Board Members with no User Account</span>
-                      </div>
-                    </div>
-                    </div>
-                </div>
-
-                <div class="box-body text-center">
-                    <button type="button" id="outgoing-active" class="btn btn-themeBlue margin" onclick="return activateOutgoing()"><i class="fa fa-play fa-fw" aria-hidden="true" ></i>&nbsp; Update Outgoing Board Members</button>
             </div>
-
+            <!-- /.card-body -->
+            <div class="col-sm-12">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
+                    <label class="custom-control-label" for="showPrimary">Only Show Outgoing Board Members with no User Account</label>
+                </div>
+            </div>
+            <div class="card-body text-center">
+                    <button type="button" id="outgoing-active" class="btn bg-gradient-primary" onclick="return activateOutgoing()"><i class="fas fa-play " ></i>&nbsp;&nbsp;&nbsp;Update Outgoing Board Members</button>
+            </div>
+        </div>
           <!-- /.box -->
         </div>
       </div>
+    </div>
     </section>
-    <!-- Main content -->
-
     <!-- /.content -->
 
 @endsection
@@ -101,20 +102,19 @@ var base_url = '{{ url("/adminreports/outgoingboard") }}';
     }
 }
 
-     function activateOutgoing(){
-             $.ajax({
-               url: '{{ route('report.outgoingactivate') }}',
-               type: 'POST',
-               data: { _token: '{{csrf_token()}}' },
-               success: function(response) {
-                     window.location.href = "{{ route('report.outgoingboard') }}";
+function activateOutgoing(){
+        $.ajax({
+        url: '{{ route('report.outgoingactivate') }}',
+        type: 'POST',
+        data: { _token: '{{csrf_token()}}' },
+        success: function(response) {
+                window.location.href = "{{ route('report.outgoingboard') }}";
 
-               },
-               error: function (jqXHR, exception) {
-               }
-           });
-         }
-
+        },
+        error: function (jqXHR, exception) {
+        }
+    });
+}
 
 </script>
 @endsection

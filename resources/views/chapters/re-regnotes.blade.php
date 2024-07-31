@@ -1,31 +1,39 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
- <section class="content-header">
-      <h1>
-        Chapter Re-Registrations
-       <small>Notes</small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Chapter Re-Registrations</li>
-      </ol>
-    </section>
+<!-- Content Wrapper. Contains page content -->
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Chapter Re-Registration&nbsp;<small>(Notes)</small></h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">Chapter Re-Registration</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
 
     <!-- Main content -->
     <form method="POST" action='{{ route("chapter.makereregnotes",$chapterList[0]->id) }}'>
     @csrf
     <section class="content">
-      <div class="row">
-		<div class="col-md-12">
-          <div class="box card">
-            <div class="box-header with-border">
-              <h3 class="box-title">Re-Registration Notes</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Re-Registratin Notes</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="row">
               <!-- /.form group -->
-              <div class="col-sm-12 col-xs-12">
+              <div class="col-sm-12">
               <div class="form-group">
 
 				<input type="hidden" name="ch_nxt_renewalyear" value="{{ $chapterList[0]->next_renewal_year }}">
@@ -39,50 +47,40 @@
 				<input type="hidden" name="ch_state" value="{{ $chapterList[0]->statename }}">
 
 					<label>Chapter name</label>
-               		<input type="text" name="ch_fullname" class="form-control my-colorpicker1" maxlength="200" required value="{{ $chapterList[0]->statename }} - {{ $chapterList[0]->name }}" readonly>
+               		<input type="text" name="ch_fullname" class="form-control" maxlength="200" required value="{{ $chapterList[0]->statename }} - {{ $chapterList[0]->name }}" readonly>
 
               </div>
 			  </div>
-			  <div class="col-sm-12 col-xs-12">
+			  <div class="col-sm-12">
               <div class="form-group">
 			  	<label>Last Payment</label>
-               		<input type="text" name="ch_lastpay" class="form-control my-colorpicker1" maxlength="200" required value="{{ $chapterList[0]->dues_last_paid }}" readonly>
+               		<input type="text" name="ch_lastpay" class="form-control" maxlength="200" required value="{{ $chapterList[0]->dues_last_paid }}" readonly>
 
               </div>
 			  </div>
 			                <!-- /.form group -->
-              <div class="col-sm-12 col-xs-12">
+              <div class="col-sm-12">
               <div class="form-group">
                 <label>Re-Registration Notes (not visible to board members)</label>
-                <input type="text" name="ch_regnotes" id="ch_regnotes" class="form-control my-colorpicker1" maxlength="50" value="{{ $chapterList[0]->reg_notes}}" >
+                <input type="text" name="ch_regnotes" id="ch_regnotes" class="form-control" maxlength="50" value="{{ $chapterList[0]->reg_notes}}" >
               </div>
               </div>
 
-
-              <!-- /.form group -->
-              <div class="col-sm-12 col-xs-12">
-
-
-
-
-              </div>
             </div>
-           </div>
-      </div>
-
             <!-- /.box-body -->
-            <div class="box-body text-center">
-              <button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate()"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-              <a href="{{ route('chapter.registration') }}" class="btn btn-themeBlue margin"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
+            <div class="card-body text-center">
+              <button type="submit" class="btn bg-gradient-primary" onclick="return PreSaveValidate()"><i class="fas fa-save" ></i>&nbsp;&nbsp;&nbsp;Save</button>
+              <a href="{{ route('chapter.registration') }}" class="btn bg-gradient-primary"><i class="fas fa-reply" ></i>&nbsp;&nbsp;&nbsp;Back</a>
               </div>
 
-            <!-- /.box-body -->
-
+            </div>
+            <!-- /.box -->
           </div>
-          <!-- /.box -->
-
+        </div>
     </section>
+
     </form>
+
 @endsection
 @section('customscript')
 <script>

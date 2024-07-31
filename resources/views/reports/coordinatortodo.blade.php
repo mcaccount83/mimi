@@ -1,29 +1,34 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
- <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-      Coordinator ToDo List Report
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Coordinator ToDo List Report</li>
-      </ol>
-    </section>
-    <!-- Main content -->
-    <section class="content">
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Coordinatr ToDo List Report</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">Coordinatr ToDo List Report</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+   <!-- Main content -->
+   <section class="content">
+    <div class="container-fluid">
       <div class="row">
-		<div class="col-md-12">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">Report of Coordinator ToDo List</h3>
-
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Report of Coordinator ToDo List</h3>
             </div>
-            <!-- /.box-header -->
-
-            <div class="box-body table-responsive">
-              <table id="coordinatorlist" class="table table-bordered table-hover">
+            <!-- /.card-header -->
+        <div class="card-body">
+            <table id="coordinatorlist" class="table table-sm table-hover" >
 				<thead>
 				@php
                   use Illuminate\Support\Carbon;
@@ -66,7 +71,8 @@
                     <td>{{ $list->cor_lname }}</td>
 					<td>{{ $list->position }}</td>
                     <td>{{ $list->todo_month }}</td>
-                    <td style="background-color: @if($list->todo_check_chapters == '1') transparent; @else #FFC7CE; @endif;">
+                    <td  @if($list->todo_check_chapters == '1')style="background-color: transparent;"
+                        @else style="background-color:#dc3545; color: #ffffff;" @endif>
                         @if($list->todo_check_chapters == '1')
                             YES
                         @else
@@ -74,7 +80,8 @@
                         @endif
                     </td>
                     @if (($currentMonth == 2) || ($currentMonth == 3))
-                    <td style="background-color: @if($list->todo_election_faq == '1') transparent; @else #FFC7CE; @endif;">
+                    <td  @if($list->todo_election_faq == '1')style="background-color: transparent;"
+                        @else style="background-color:#dc3545; color: #ffffff;" @endif>
                         @if($list->todo_election_faq == '1')
                             YES
                         @else
@@ -90,12 +97,13 @@
                   </tbody>
                 </table>
             </div>
-           </div>
-          <!-- /.box -->
+            <!-- /.card-body -->
+            </div>
+            <div class="card-body text-center">&nbsp;</div>
         </div>
+    </div>
       </div>
     </section>
-    <!-- Main content -->
 
     <!-- /.content -->
 

@@ -1,819 +1,1089 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{config('app.name')}}</title>
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <!-- Bootstrap 3.3.7 -->
-    <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/font-awesome/css/font-awesome.min.css') }}">
-    <!-- Ionicons -->
-    <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/Ionicons/css/ionicons.min.css') }}">
-    <!-- Theme style -->
-    <link rel="stylesheet" href="{{ asset('coordinator_theme/dist/css/AdminLTE.min.css') }}">
-    <!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
-    <link rel="stylesheet" href="{{ asset('coordinator_theme/dist/css/skins/_all-skins.min.css') }}">
-    <!-- Morris chart -->
-    <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/morris.js/morris.css') }}">
-    <!-- jvectormap -->
-    <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/jvectormap/jquery-jvectormap.css') }}">
-    <!-- Date Picker -->
-    <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
-    <!-- Daterange picker -->
-    <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/bootstrap-daterangepicker/daterangepicker.css') }}">
-	<!-- iCheck for checkboxes and radio inputs -->
-    <link rel="stylesheet" href="{{ asset('coordinator_theme/plugins/iCheck/all.css') }}">
-    <!-- bootstrap wysihtml5 - text editor -->
-    <link rel="stylesheet" href="{{ asset('coordinator_theme/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css') }}">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ asset('coordinator_theme/dist/css/custom.css') }}">
-    <!-- Custom CSS for Financial Report -->
-    <link rel="stylesheet" href="{{ asset('chapter_theme/css/custom_financial.css') }}">
-    <!-- Data Table -->
-    <link rel="stylesheet" href="{{ asset('coordinator_theme/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
-    <!-- Google Font -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-    <script>
-        window.onload = function () {
-            if (window.history && window.history.pushState) {
-                window.history.pushState('preventBack', null, '');
-                window.onpopstate = function () {
-                    location.reload();
-                };
-            }
-        };
-    </script>
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/coordinator_theme/plugins/fontawesome-free/css/all.min.css">
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="/coordinator_theme/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+
+<!-- daterange picker -->
+<link rel="stylesheet" href="/coordinator_theme/plugins/daterangepicker/daterangepicker.css">
+<!-- iCheck for checkboxes and radio inputs -->
+<link rel="stylesheet" href="/coordinator_theme/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+<!-- Bootstrap Color Picker -->
+{{-- <link rel="stylesheet" href="/coordinator_theme/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css"> --}}
+<!-- Tempusdominus Bootstrap 4 -->
+<link rel="stylesheet" href="/coordinator_theme/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+<!-- Select2 -->
+<link rel="stylesheet" href="/coordinator_theme/plugins/select2/css/select2.min.css">
+<link rel="stylesheet" href="/coordinator_theme/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+<!-- Bootstrap4 Duallistbox -->
+{{-- <link rel="stylesheet" href="/coordinator_theme/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css}"> --}}
+<!-- BS Stepper -->
+{{-- <link rel="stylesheet" href="/coordinator_theme/plugins/bs-stepper/css/bs-stepper.min.css"> --}}
+
+
+<!-- DataTables -->
+<link rel="stylesheet" href="/coordinator_theme/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="/coordinator_theme/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+<link rel="stylesheet" href="/coordinator_theme/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+
+  <!-- Custom CSS -->
+  {{-- <link rel="stylesheet" href="/coordinator_theme/dist/css/custom.css"> --}}
+  <!-- Custom CSS for Financial Report -->
+  {{-- <link rel="stylesheet" href="/chapter_theme/css/custom_financial.css"> --}}
+
+  <!-- CSRF Token -->
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <title>{{config('app.name')}}</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+  <script>
+    window.onload = function () {
+        if (window.history && window.history.pushState) {
+            window.history.pushState('preventBack', null, '');
+            window.onpopstate = function () {
+                location.reload();
+            };
+        }
+    };
+  </script>
+
+<style>
+  .fa-layers {
+        display: inline-block;
+        position: relative;
+        width: 1.25em;
+        height: 1em;
+        vertical-align: middle;
+    }
+    .fa-layers .fas {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .nav-icon {
+        margin-right: 10px;
+    }
+    .nav-link {
+        display: flex;
+        align-items: center;
+    }
+
+    .custom-logo {
+        width: 70px; /* Adjust width as needed */
+        height: 70px; /* Adjust height as needed */
+        display: block;
+        margin: 10px auto; /* Centers horizontally and adds top and bottom margin */
+    }
+
+    .brand-link {
+        display: flex;
+        justify-content: center; /* Centers items horizontally */
+        align-items: center; /* Centers items vertically */
+        margin-top: 10px; /* Adds top margin */
+    }
+</style>
+
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini fixed">
-<div class="wrapper">
-  <header class="main-header">
-    <!-- Logo -->
-    <a href="{{ route('home') }}" class="logo">
-      <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>M</b>C</span>
-      <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b><img src="{{ asset('coordinator_theme/dist/img/logo.png') }}" alt=""></b></span>
-    </a>
-    <!-- Header Navbar: style can be found in header.less -->
-    <nav class="navbar navbar-static-top">
-      <!-- Sidebar toggle button-->
-      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-        <span class="sr-only">Toggle navigation</span>
-      </a>
-      <div class="navbar-custom-menu">
-        <ul class="nav navbar-nav">
-           <li class="dropdown user user-menu">
-            <a href="https://momsclub.org/" target="_blank" class="hidden-xs">Return to Main Site</a>
-          </li>
-         </ul>
-      </div>
-    </nav>
-  </header>
-  <!-- Left side column. contains the logo and sidebar -->
-  <aside class="main-sidebar">
-    <section class="sidebar">
-      <ul class="sidebar-menu" data-widget="tree">
-        <li class="header"></li>
+<body class="hold-transition sidebar-mini layout-fixed">
+    <!-- Site wrapper -->
+    <div class="wrapper">
 
         @php
-            $coordinatorCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
-            $founderCondition = $positionid == 7;  //*Founder
-            $conferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 7);  //*CC-Founder
-            $assistConferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //CC-Founder & ACC
-            $regionalCoordinatorCondition = ($positionid >= 5 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*RC-Founder & ACC
-            $assistRegionalCoordinatorCondition = ($positionid >= 4 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*ARC-Founder & ACC
-            $supervisingCoordinatorCondition =  ($positionid >= 3 && $positionid <= 7 || $positionid == 25);  //*SC-Founder & ACC
-            $areaCoordinatorCondition =  ($positionid >= 2 && $positionid <= 7 || $positionid == 25);  //*AC-Founder & ACC
-            $bigSisterCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
+        $coordinatorCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
+        $founderCondition = $positionid == 7;  //*Founder
+        $conferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 7);  //*CC-Founder
+        $assistConferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //CC-Founder & ACC
+        $regionalCoordinatorCondition = ($positionid >= 5 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*RC-Founder & ACC
+        $assistRegionalCoordinatorCondition = ($positionid >= 4 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*ARC-Founder & ACC
+        $supervisingCoordinatorCondition =  ($positionid >= 3 && $positionid <= 7 || $positionid == 25);  //*SC-Founder & ACC
+        $areaCoordinatorCondition =  ($positionid >= 2 && $positionid <= 7 || $positionid == 25);  //*AC-Founder & ACC
+        $bigSisterCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
 
-            $eoyTestCondition = ($positionid >= 6 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25) ||
-                    ($positionid == 29 || $secpositionid == 29);  //CC-Founder & ACC, AR Tester
-            $eoyReportCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25) ||
-                    ($positionid == 19 || $secpositionid == 19) || ($positionid == 29 || $secpositionid == 29);  //*BS-Founder & ACC, AR Reviewer, AR Tester
-            $eoyReportConditionDISABLED = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
-            $inquiriesCondition = ($positionid == 8 || $secpositionid == 8);  //*Inquiries Coordinator
-            $webReviewCondition = ($positionid == 9 || $secpositionid == 9);  //*Website Reviewer
-            $einCondition = ($positionid == 12 || $secpositionid == 12);  //*EIN Coordinator
-            $adminReportCondition = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
-            $m2mCondition = ($positionid == 21 || $secpositionid == 21);  //*M2M Committee
-            $listAdminCondition = ($positionid == 23 || $secpositionid == 23);  //*ListAdmin
-        @endphp
+        $eoyTestCondition = ($positionid >= 6 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25) ||
+                ($positionid == 29 || $secpositionid == 29);  //CC-Founder & ACC, AR Tester
+        $eoyReportCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25) ||
+                ($positionid == 19 || $secpositionid == 19) || ($positionid == 29 || $secpositionid == 29);  //*BS-Founder & ACC, AR Reviewer, AR Tester
+        $eoyReportConditionDISABLED = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
+        $inquiriesCondition = ($positionid == 8 || $secpositionid == 8);  //*Inquiries Coordinator
+        $webReviewCondition = ($positionid == 9 || $secpositionid == 9);  //*Website Reviewer
+        $einCondition = ($positionid == 12 || $secpositionid == 12);  //*EIN Coordinator
+        $adminReportCondition = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
+        $m2mCondition = ($positionid == 21 || $secpositionid == 21);  //*M2M Committee
+        $listAdminCondition = ($positionid == 23 || $secpositionid == 23);  //*ListAdmin
+    @endphp
 
-        @php
-            $admin = DB::table('admin')
-                ->select('admin.*',
-                    DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),)
-                ->leftJoin('coordinator_details as cd', 'admin.updated_id', '=', 'cd.coordinator_id')
-                ->orderBy('admin.id', 'desc') // Assuming 'id' represents the order of insertion
-                ->first();
+    @php
+        $admin = DB::table('admin')
+            ->select('admin.*',
+                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),)
+            ->leftJoin('coordinator_details as cd', 'admin.updated_id', '=', 'cd.coordinator_id')
+            ->orderBy('admin.id', 'desc') // Assuming 'id' represents the order of insertion
+            ->first();
 
-            $eoy_testers = $admin->eoy_testers;
-            $eoy_coordinators = $admin->eoy_coordinators;
+        $eoy_testers = $admin->eoy_testers;
+        $eoy_coordinators = $admin->eoy_coordinators;
 
-            $testers_yes = ($eoy_testers == 1);
-            $coordinators_yes = ($eoy_coordinators == 1);
-        @endphp
+        $testers_yes = ($eoy_testers == 1);
+        $coordinators_yes = ($eoy_coordinators == 1);
+    @endphp
 
-        <li class="{{ Request::is('coordinator/dashboard') ? 'active' : '' }}  ">
-          <a href="{{ route('coordinator.showdashboard') }}">
-            <i class="fa fa-tachometer"></i> <span>Dashboard</span>
-          </a>
-        </li>
-
-        @if ($coordinatorCondition)
-            <li class="{{ Request::is('chapter/list') ? 'active' : '' }} {{ Request::is('chapter/create') ? 'active' : '' }} {{ Request::is('chapter/edit/*') ? 'active' : ''}} {{ Request::is('chapterlist') ? 'active' : '' }}  ">
-            <a href="{{ route('chapter.list') }}">
-                <i class="fa fa-list"></i> <span>Chapter List</span>
-            </a>
-            </li>
-        @endif
-
-        @if ($regionalCoordinatorCondition)
-            <li class="{{ Request::is('chapter/zapped') ? 'active' : '' }} {{ Request::is('chapter/zapped/view/*') ? 'active' : ''}}">
-            <a href="{{ route('chapter.zapped') }}">
-                <i class="fa fa-ban"></i>
-                <span>Zapped Chapter List</span>
-            </a>
-            </li>
-        @endif
-
-        @if ($regionalCoordinatorCondition || $inquiriesCondition)
-            <li class="{{ Request::is('chapter/re-registration') ? 'active' : '' }} {{ Request::is('chapter/re-registration/payment/*') ? 'active' : '' }}">
-            <a href="{{ route('chapter.registration') }}">
-                <i class="fa fa-credit-card"></i> <span>Re-Registrations</span>
-            </a>
-            </li>
-        @endif
-
-        @if ($regionalCoordinatorCondition || $inquiriesCondition)
-            <li class="{{ Request::is('chapter/inquiries') ? 'active' : '' }} {{ Request::is('chapter/inquiriesview/*') ? 'active' : '' }}">
-            <a href="{{ route('chapter.inquiries') }}">
-                <i class="fa fa-map-marker"></i>
-                <span>Inquiries</span>
-            </a>
-            </li>
-        @endif
-
-        @if ($inquiriesCondition)
-            <li class="{{ Request::is('chapter/inquirieszapped') ? 'active' : '' }} ">
-            <a href="{{ route('chapter.inquirieszapped') }}">
-                <i class="fa fa-ban"></i>
-                <span>Zapped Chapters</span>
-            </a>
-            </li>
-        @endif
-
-        @if ($regionalCoordinatorCondition || $webReviewCondition)
-            <li class="{{ Request::is('chapter/website') ? 'active' : '' }} {{ Request::is('chapter/website/edit/*') ? 'active' : '' }}">
-            <a href="{{ route('chapter.website') }}">
-                <i class="fa fa-laptop"></i><span>Website Review </span>
-                </a>
-            </li>
-        @endif
-
-        @if ($adminReportCondition || $listAdminCondition)
-            <li class="{{ Request::is('reports/boardlist') ? 'active' : '' }}">
-            <a href="{{ route('report.boardlist') }}">
-                <i class="fa fa-bars"></i><span>BoardList</span>
-            </a>
-            </li>
-        @endif
-
-        @if ($supervisingCoordinatorCondition)
-            <li class="{{ Request::is('coordinatorlist') ? 'active' : '' }} {{ Request::is('coordinator/create') ? 'active' : '' }} {{ Request::is('coordinator/edit/*') ? 'active' : '' }} {{ Request::is('coordinator/role/*') ? 'active' : '' }}">
-            <a href="{{ route('coordinator.list') }}">
-                <i class="fa fa-user"></i>
-                <span>Coordinator List</span>
-            </a>
-            </li>
-        @endif
-
-        @if ($assistConferenceCoordinatorCondition)
-            <li class="{{ Request::is('coordinator/retired') ? 'active' : '' }} {{ Request::is('coordinator/retired/view/*') ? 'active' : '' }}">
-            <a href="{{ route('coordinator.retired') }}">
-                <i class="fa fa-user-times"></i>
-                <span>Retired Coordinator List</span>
-            </a>
-            </li>
-        @endif
-
-         @if ($einCondition || $inquiriesCondition)
-            <li class="<?php if (($positionid == 12)){ ?> {{ Request::is('home') ? 'active' : '' }}<?php }?> {{ Request::is('chapter/international') ? 'active' : '' }}">
-            <a href="{{ route('chapter.inter') }}">
-                <i class="fa fa-list"></i>
-                <span>International Chapter List</span>
-            </a>
-            </li>
-        @endif
-
-        @if ($einCondition)
-            <li class="{{ Request::is('chapter/international/zap') ? 'active' : '' }}  {{ Request::is('chapter/international/zapped/view/*') ? 'active' : ''}}">
-            <a href="{{ route('chapter.interzap') }}">
-                <i class="fa fa-ban"></i>
-                <span>International Zapped Chapter List</span>
-            </a>
-            </li>
-        @endif
-
-        @if ($positionid == 0 )
-            <li class="{{ Request::is('coordinator/international') ? 'active' : '' }}">
-            <a href="{{ route('coordinator.inter') }}">
-                <i class="fa fa-user"></i>
-                <span>International Coordinator List</span></a>
-            </li>
-        @endif
-
-        @if($positionid == 0)
-            <li class="{{ Request::is('coordinator/retiredinternational') ? 'active' : '' }} {{ Request::is('coordinator/retired/view/*') ? 'active' : '' }}">
-            <a href="{{ route('coordinator.retinter') }}">
-                <i class="fa fa-user-times"></i>
-                <span>International Retired Coordinator List</span></a>
-            </li>
-        @endif
-
-        @if ($einCondition)
-            <li class="{{ Request::is('reports/inteinstatus') ? 'active' : '' }}">
-            <a href="{{ route('report.inteinstatus') }}">
-                    <i class="fa fa-bank"></i> <span>Chapter EIN Status</span></a>
-            </li>
-        @endif
-
-        @if ($m2mCondition)
-            <li class="{{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
-            <a href="{{ route('report.intm2mdonation') }}">
-                    <i class="fa fa-money"></i> <span>M2M Donations</span></a>
-            </li>
-        @endif
-
-        @if ($adminReportCondition)
-            <li class="treeview {{ Request::is('chapter/international') ? 'active' : '' }} {{ Request::is('chapter/international/*') ? 'active' : '' }} {{ Request::is('coordinator/international') ? 'active' : '' }} {{ Request::is('coordinator/international/view/*') ? 'active' : '' }} {{ Request::is('coordinator/international/*') ? 'active' : '' }} {{ Request::is('coordinator/retiredinternational') ? 'active' : '' }}  {{ Request::is('coordinator/retiredinternational/view/*') ? 'active' : ''}} {{ Request::is('reports/inteinstatus') ? 'active' : '' }} {{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
-                <a href="#"><i class="fa fa-globe"></i> <span>International Lists</span>
-                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                </a>
-                <ul class="treeview-menu">
-                    <li class="{{ Request::is('chapter/international') ? 'active' : '' }} {{ Request::is('chapter/international/view/*') ? 'active' : '' }}">
-            <a href="{{ route('chapter.inter') }}">
-                <i class="fa fa-list"></i>
-                <span>Chapter List</span>
-            </a>
-            </li>
-                <li class="{{ Request::is('chapter/international/zap') ? 'active' : '' }}  {{ Request::is('chapter/international/zapped/view/*') ? 'active' : ''}}">
-            <a href="{{ route('chapter.interzap') }}">
-                <i class="fa fa-ban"></i>
-                <span>Zapped Chapter List</span>
-            </a>
-            </li>
-                <li class="{{ Request::is('coordinator/international') ? 'active' : '' }} {{ Request::is('coordinator/international/view/*') ? 'active' : '' }}">
-            <a href="{{ route('coordinator.inter') }}">
-                <i class="fa fa-user"></i>
-                <span>Coordinator List</span>
-            </a>
-            </li>
-                <li class="{{ Request::is('coordinator/retiredinternational') ? 'active' : '' }} {{ Request::is('coordinator/retiredinternational/view/*') ? 'active' : ''}}">
-            <a href="{{ route('coordinator.retinter') }}">
-                <i class="fa fa-user-times"></i>
-                <span>Retired Coordinator List</span>
-            </a>
+         <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
-                <li class="{{ Request::is('reports/inteinstatus') ? 'active' : '' }}">
-            <a href="{{ route('report.inteinstatus') }}">
-                    <i class="fa fa-bank"></i> <span>Chapter EIN Status</span>
-                    </a>
-                    </li>
-                    <li class="{{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
-            <a href="{{ route('report.intm2mdonation') }}">
-                    <i class="fa fa-money"></i> <span>M2M Donations</span>
-                    </a>
-            </li>
-                </ul>
-            </li>
-        @endif
-
-        @if ($regionalCoordinatorCondition)
-            <li class="treeview {{ Request::is('reports/chapterstatus') ? 'active' : '' }} {{ Request::is('reports/chapternew') ? 'active' : '' }} {{ Request::is('reports/chapterlarge') ? 'active' : '' }} {{ Request::is('reports/chapterprobation') ? 'active' : '' }} {{ Request::is('reports/chaptercoordinators') ? 'active' : '' }} {{ Request::is('reports/m2mdonation') ? 'active' : '' }} {{ Request::is('chapter/m2mdonation/*') ? 'active' : '' }} {{ Request::is('reports/einstatus') ? 'active' : '' }} {{ Request::is('reports/socialmedia') ? 'active' : '' }}">
-                <a href="#"><i class="fa fa-home "></i> <span>Chapter Reports</span>
-                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                </a>
-                <ul class="treeview-menu">
-                <li class="{{ Request::is('reports/chapterstatus') ? 'active' : '' }}"><a href="{{ route('report.chapterstatus') }}">
-                    <i class="fa fa-check"></i> <span>Chapter Status</span>
-                    </a>
-                </li>
-                <li class="{{ Request::is('reports/einstatus') ? 'active' : '' }}"><a href="{{ route('report.einstatus') }}">
-                    <i class="fa fa-bank"></i> <span>Chapter EIN Status</span>
-                    </a>
-                </li>
-                @if ($assistConferenceCoordinatorCondition)
-                <li class="{{ Request::is('reports/chapternew') ? 'active' : '' }}"><a href="{{ route('report.chapternew') }}">
-                    <i class="fa fa-plus-square"></i> <span>New Chapters</span>
-                    </a>
-                </li>
-                @endif
-                <li class="{{ Request::is('reports/chapterlarge') ? 'active' : '' }}"><a href="{{ route('report.chapterlarge') }}">
-                    <i class="fa fa-expand"></i> <span>Large Chapters</span>
-                    </a>
-                </li>
-                <li class="{{ Request::is('reports/chapterprobation') ? 'active' : '' }}"><a href="{{ route('report.chapterprobation') }}">
-                    <i class="fa fa-times-circle"></i> <span>Probation Chapters</span>
-                    </a>
-                </li>
-                <li class="{{ Request::is('reports/m2mdonation') ? 'active' : '' }} {{ Request::is('chapter/m2mdonation/*') ? 'active' : '' }}"><a href="{{ route('report.m2mdonation') }}">
-                    <i class="fa fa-money"></i> <span>M2M Donations</span>
-                    </a>
-                </li>
-                <li class="{{ Request::is('reports/socialmedia') ? 'active' : '' }}"><a href="{{ route('report.socialmedia') }}">
-                    <i class="fa fa-share-alt"></i> <span>Social Media</span>
-                    </a>
-                </li>
-                <li class="{{ Request::is('reports/chaptercoordinators') ? 'active' : '' }}"><a href="{{ route('report.chaptercoordinators') }}">
-                    <i class="fa fa-users"></i> <span>Chapter Coordinator</span>
-                    </a>
-                </li>
-
-                </ul>
-            </li>
-        @endif
-
-        @if ($coordinatorCondition)
-            <li class="treeview {{ Request::is('reports/chaptervolunteer') ? 'active' : '' }} {{ Request::is('reports/coordinatortodo') ? 'active' : '' }} {{ Request::is('reports/intcoordinatortodo') ? 'active' : '' }} {{ Request::is('reports/appreciation') ? 'active' : '' }} {{ Request::is('reports/birthday') ? 'active' : '' }} {{ Request::is('coordinator/appreciation/*') ? 'active' : '' }} {{ Request::is('reports/reportingtree') ? 'active' : '' }}">
-                <a href="#"><i class="fa fa-child"></i> <span>Coordinator Reports</span>
-                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span></a>
-                <ul class="treeview-menu">
-                @if ($supervisingCoordinatorCondition)
-                    <li class="{{ Request::is('reports/chaptervolunteer') ? 'active' : '' }}"><a href="{{ route('report.chaptervolunteer') }}">
-                        <i class="fa fa-pie-chart"></i> <span>Volunteer Utilization</span>
-                        </a>
-                    </li>
-                @endif
-                @if (($positionid ==6 || $positionid ==25))
-                    <li class="{{ Request::is('reports/coordinatortodo') ? 'active' : '' }}"><a href="{{ route('report.coordinatortodo') }}">
-                        <i class="fa fa-check-square-o"></i> <span>Coordinator ToDo</span>
-                        </a>
-                    </li>
-                @endif
-                @if ($founderCondition)
-                    <li class="{{ Request::is('reports/intcoordinatortodo') ? 'active' : '' }}"><a href="{{ route('report.intcoordinatortodo') }}">
-                        <i class="fa fa-check-square-o"></i> <span>Coordinator ToDo</span>
-                        </a>
-                    </li>
-                @endif
-                @if ($assistConferenceCoordinatorCondition)
-                    <li class="{{ Request::is('reports/appreciation') ? 'active' : '' }} {{ Request::is('coordinator/appreciation/*') ? 'active' : '' }}"><a href="{{ route('report.appreciation') }}">
-                        <i class="fa fa-gift"></i> <span>Volunteer Appreciation</span>
-                        </a>
-                    </li>
-                @endif
-                @if ($regionalCoordinatorCondition)
-                    <li class="{{ Request::is('reports/birthday') ? 'active' : '' }} {{ Request::is('coordinator/birthday/*') ? 'active' : '' }}"><a href="{{ route('report.birthday') }}">
-                        <i class="fa fa-birthday-cake"></i> <span>Volunteer Birthdays</span>
-                        </a>
-                    </li>
-                @endif
-                <li class="{{ Request::is('reports/reportingtree') ? 'active' : '' }}"><a href="{{ route('report.reportingtree') }}">
-                    <i class="fa fa-sitemap"></i> <span>Reporting Tree</span>
-                    </a>
-                </li>
-                </ul>
-            </li>
-        @endif
-
-        @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes))
-        <li class="treeview {{ Request::is('yearreports/*') ? 'active' : '' }} {{ Request::is('chapter/financial/*') ? 'active' : ''}} {{ Request::is('chapter/boardinfo/*') ? 'active' : ''}}  {{ Request::is('chapter/boundaryview/*') ? 'active' : '' }} {{ Request::is('chapter/statusview/*') ? 'active' : ''}} {{ Request::is('chapter/awardsview/*') ? 'active' : '' }} {{ Request::is('yearreports/addawards') ? 'active' : '' }}">
-            <a href="#"><i class="fa fa-bar-chart"></i> <span>EOY Reports</span>
-              <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-            </a>
-            <ul class="treeview-menu">
-                <li class="{{ Request::is('yearreports/eoystatus') ? 'active' : '' }} {{ Request::is('chapter/statusview/*') ? 'active' : ''}}">
-                    <a href="{{ route('report.eoystatus') }}">
-                  <i class="fa fa-list-ol"></i> <span>End of Year Status</span>
-                  </a>
-              </li>
-              <li class="{{ Request::is('yearreports/boardinfo') ? 'active' : '' }} {{ Request::is('chapter/boardinfo/*') ? 'active' : ''}}">
-                <a href="{{ route('report.boardinfo') }}">
-                  <i class="fa fa-users"></i> <span>Board Reports</span>
-                  </a>
-              </li>
-              <li class="{{ Request::is('yearreports/review') ? 'active' : '' }} {{ Request::is('chapter/financial/*') ? 'active' : ''}}">
-                <a href="{{ route('report.review') }}">
-                  <i class="fa fa-usd"></i> <span>Financial Reports</span>
-                  </a>
-              </li>
-
-              <li class="{{ Request::is('yearreports/boundaryissue') ? 'active' : '' }}  {{ Request::is('chapter/boundaryview/*') ? 'active' : '' }}">
-                <a href="{{ route('report.issues') }} ">
-                  <i class="fa fa-map-o"></i> <span>Boundary issues</span>
-                  </a>
-              </li>
-              <li class="{{ Request::is('yearreports/chapteraward') ? 'active' : '' }} {{ Request::is('yearreports/addawards') ? 'active' : '' }} {{ Request::is('chapter/awardsview/*') ? 'active' : '' }}">
-                <a href="{{ route('report.awards') }}">
-                  <i class="fa fa-trophy"></i> <span>Chapter Awards</span>
-                  </a>
-              </li>
             </ul>
-            </li>
-        @endif
-
-        @if ($adminReportCondition)
-            <li class="treeview {{ Request::is('admin/eoy') ? 'active' : '' }}  {{ Request::is('admin/reregdate') ? 'active' : '' }} {{ Request::is('admin/reregdate/*') ? 'active' : '' }} {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }} {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }} {{ Request::is('adminreports/multipleboard') ? 'active' : '' }} {{ Request::is('adminreports/nopresident') ? 'active' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
-                <a href="#"><i class="fa fa-cogs"></i> <span>Admin Items</span>
-                <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
-                </a>
-                <ul class="treeview-menu">
-            <li class="{{ Request::is('admin/eoy') ? 'active' : '' }}">
-                <a href="{{ route('admin.eoy') }}">
-                    <i class="fa fa-bullseye"></i>
-                    <span>EOY Procedures</span>
-                </a>
+            <!-- Right navbar links -->
+            <ul class="navbar-nav ml-auto">
+                <!-- Navbar Link -->
+                <li class="nav-item">
+                    <a href="https://momsclub.org/" target="_blank" class="hidden-xs">Return to Main Site</a>
                 </li>
-                <li class="{{ Request::is('admin/reregdate') ? 'active' : '' }} {{ Request::is('admin/reregdate/*') ? 'active' : '' }}">
-                    <a href="{{ route('admin.reregdate') }}">
-                        <i class="fa fa-calendar-o"></i>
-                        <span>Re-Reg Renewal Dates</span>
-                    </a>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <a href="{{ route('home') }}" class="band-link">
+                <img src="{{ asset('coordinator_theme/dist/img/logo.png') }}" alt="MC" class="brand-image img-circle elevation-3 custom-logo">
+            </a>
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-item">
+                            <a href="{{ route('coordinator.showdashboard') }}" class="nav-link {{ Request::is('coordinator/dashboard') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+                        @if ($coordinatorCondition)
+                        <li class="nav-item">
+                            <a href="{{ route('chapter.list') }}" class="nav-link {{ Request::is('chapter/list') ? 'active' : '' }} {{ Request::is('chapter/edit/*') ? 'active' : '' }}
+                                     {{ Request::is('chapter/create') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-list"></i>
+                                <p>Chapter List</p>
+                            </a>
+                        </li>
+                        @endif
+                        @if ($regionalCoordinatorCondition)
+                        <li class="nav-item">
+                            <a href="{{ route('chapter.zapped') }}" class="nav-link {{ Request::is('chapter/zapped') ? 'active' : '' }}  {{ Request::is('chapter/zapped/view/*') ? 'active' : '' }}">
+                                <span class="nav-icon fa-layers fa-fw">
+                                    <i class="fas fa-list"></i>
+                                    <i class="fas fa-slash"></i>
+                                </span>
+                                <p>Zapped Chapter List</p>
+                            </a>
+                        </li>
+                        @endif
+                        @if ($regionalCoordinatorCondition || $inquiriesCondition)
+                        <li class="nav-item">
+                            <a href="{{ route('chapter.registration') }}" class="nav-link {{ Request::is('chapter/re-registration') ? 'active' : '' }} {{ Request::is('chapter/re-registration/payment/*') ? 'active' : '' }}
+                                    {{ Request::is('chapter/re-registration/notes/*') ? 'active' : '' }}">
+                                <i class="nav-icon far fa-credit-card"></i>
+                                <p>Re-Registration</p>
+                            </a>
+                        </li>
+                        @endif
+                        @if ($regionalCoordinatorCondition || $inquiriesCondition)
+                        <li class="nav-item">
+                            <a href="{{ route('chapter.inquiries') }}" class="nav-link {{ Request::is('chapter/inquiries') ? 'active' : '' }} {{ Request::is('chapter/inquiriesview/*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-map-marker-alt"></i>
+                                <p>Inquiries</p>
+                            </a>
+                        </li>
+                        @endif
+                        @if ($inquiriesCondition)
+                        <li class="nav-item">
+                            <a href="{{ route('chapter.inquirieszapped') }}" class="nav-link {{ Request::is('chapter/inquirieszapped') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-ban"></i>
+                                <p>Zapped Chapters</p>
+                            </a>
+                        </li>
+                        @endif
+                        @if ($regionalCoordinatorCondition || $webReviewCondition)
+                        <li class="nav-item">
+                            <a href="{{ route('chapter.website') }}" class="nav-link {{ Request::is('chapter/website') ? 'active' : '' }} {{ Request::is('chapter/website/edit/*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-laptop"></i>
+                                <p>Website Review</p>
+                            </a>
+                        </li>
+                        @endif
+                        @if ($adminReportCondition || $listAdminCondition)
+                        <li class="nav-item">
+                            <a href="{{ route('report.boardlist') }}" class="nav-link {{ Request::is('reports/boardlist') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-bars"></i>
+                                <p>BoardList</p>
+                            </a>
+                        </li>
+                        @endif
+                        @if ($adminReportCondition || $listAdminCondition)
+                        <li class="nav-item">
+                            <a href="{{ route('coordinator.list') }}" class="nav-link {{ Request::is('coordinatorlist') ? 'active' : '' }} {{ Request::is('coordinator/create') ? 'active' : '' }}
+                                {{ Request::is('coordinator/edit/*') ? 'active' : '' }} {{ Request::is('coordinator/role/*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-user-friends"></i>
+                                <p>Coordinator List</p>
+                            </a>
+                        </li>
+                        @endif
+                        @if ($regionalCoordinatorCondition || $inquiriesCondition)
+                        <li class="nav-item">
+                            <a href="{{ route('coordinator.retired') }}" class="nav-link {{ Request::is('coordinator/retired') ? 'active' : '' }} {{ Request::is('coordinator/retired/view/*') ? 'active' : '' }}">
+                                <span class="nav-icon fa-layers fa-fw">
+                                    <i class="fas fa-user-friends"></i>
+                                    <i class="fas fa-slash"></i>
+                                </span>
+                                <p>Retired Coordinator List</p>
+                            </a>
+                        </li>
+                        @endif
+                        @if ($einCondition || $inquiriesCondition)
+                        <li class="nav-item">
+                            <a href="{{ route('chapter.inter') }}" class="nav-link <?php if (($positionid == 12)){ ?> {{ Request::is('home') ? 'active' : '' }}<?php }?>  {{ Request::is('chapter/international') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-list"></i>
+                                <p>International Chapter List</p>
+                            </a>
+                        </li>
+                        @endif
+                        @if ($einCondition)
+                        <li class="nav-item">
+                            <a href="{{ route('chapter.interzap') }}" class="nav-link {{ Request::is('chapter/international/zap') ? 'active' : '' }} {{ Request::is('chapter/international/zapped/view/*') ? 'active' : '' }}">
+                                <span class="nav-icon fa-layers fa-fw">
+                                    <i class="fas fa-list"></i>
+                                    <i class="fas fa-slash"></i>
+                                </span>
+                                <p>International Zapped Chapter List</p>
+                            </a>
+                        </li>
+                        @endif
+                        @if ($einCondition)
+                        <li class="nav-item">
+                            <a href="{{ route('report.inteinstatus') }}" class="nav-link {{ Request::is('reports/inteinstatus') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-university"></i>
+                                <p>Chapter EIN Status</p>
+                            </a>
+                        </li>
+                        @endif
+                        @if ($m2mCondition)
+                        <li class="nav-item">
+                            <a href="{{ route('report.intm2mdonation') }}" class="nav-link {{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-money-bill-alt"></i>
+                                <p>M2M Donations</p>
+                            </a>
+                        </li>
+                        @endif
+
+                        @if ($adminReportCondition)
+                        <li class="nav-item {{ Request::is('chapter/international') ? 'menu-open' : '' }} {{ Request::is('chapter/international/view/*') ? 'menu-open' : '' }}
+                                            {{ Request::is('chapter/international/zap') ? 'menu-open' : '' }} {{ Request::is('chapter/international/zapped/view/*') ? 'menu-open' : '' }}
+                                            {{ Request::is('chapter/international/zap') ? 'menu-open' : '' }} {{ Request::is('chapter/international/zapped/view/*') ? 'menu-open' : '' }}
+                                            {{ Request::is('coordinator/international') ? 'menu-open' : '' }} {{ Request::is('coordinator/international/view/*') ? 'menu-open' : '' }}
+                                            {{ Request::is('coordinator/retiredinternational') ? 'menu-open' : '' }} {{ Request::is('coordinator/retiredinternational/view/*') ? 'menu-open' : '' }}
+                                            {{ Request::is('reports/inteinstatus') ? 'menu-open' : '' }} {{ Request::is('reports/intm2mdonation') ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ Request::is('chapter/international') ? 'active' : '' }} {{ Request::is('chapter/international/view/*') ? 'active' : '' }}
+                                                        {{ Request::is('chapter/international/zap') ? 'active' : '' }} {{ Request::is('chapter/international/zapped/view/*') ? 'active' : '' }}
+                                                        {{ Request::is('chapter/international/zap') ? 'active' : '' }} {{ Request::is('chapter/international/zapped/view/*') ? 'active' : '' }}
+                                                        {{ Request::is('coordinator/international') ? 'active' : '' }} {{ Request::is('coordinator/international/view/*') ? 'active' : '' }}
+                                                        {{ Request::is('coordinator/retiredinternational') ? 'active' : '' }} {{ Request::is('coordinator/retiredinternational/view/*') ? 'active' : '' }}
+                                                        {{ Request::is('reports/inteinstatus') ? 'active' : '' }} {{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
+                                <i class="nav-icon fa fa-globe"></i>
+                                <p>International Lists<i class="fas fa-angle-left right"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                <a href="{{ route('chapter.inter') }}" class="nav-link {{ Request::is('chapter/international') ? 'active' : '' }} {{ Request::is('chapter/international/view/*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-list"></i>
+                                    <p>Chapter List</p>
+                                </a>
+                            </li>
+                                <li class="nav-item">
+                                <a href="{{ route('chapter.interzap') }}" class="nav-link {{ Request::is('chapter/international/zap') ? 'active' : '' }} {{ Request::is('chapter/international/zapped/view/*') ? 'active' : '' }}">
+                                    <span class="nav-icon fa-layers fa-fw">
+                                        <i class="fas fa-list"></i>
+                                        <i class="fas fa-slash"></i>
+                                    </span>
+                                    <p>Zapped Chapter List</p>
+                                </a>
+                            </li>
+                                <li class="nav-item">
+                                <a href="{{ route('coordinator.inter') }}" class="nav-link {{ Request::is('coordinator/international') ? 'active' : '' }} {{ Request::is('coordinator/international/view/*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-user-friends"></i>
+                                    <p>Coordinator List</p>
+                                </a>
+                            </li>
+                                <li class="nav-item">
+                                <a href="{{ route('coordinator.retinter') }}" class="nav-link {{ Request::is('coordinator/retiredinternational') ? 'active' : '' }} {{ Request::is('coordinator/retiredinternational/view/*') ? 'active' : '' }}">
+                                    <span class="nav-icon fa-layers fa-fw">
+                                        <i class="fas fa-user-friends"></i>
+                                        <i class="fas fa-slash"></i>
+                                    </span>
+                                    <p>Retired Coordinator List</p>
+                                </a>
+                                </li>
+                                <li class="nav-item">
+                                <a href="{{ route('report.inteinstatus') }}" class="nav-link {{ Request::is('reports/inteinstatus') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-university"></i>
+                                    <p>Chapter EIN Status</p>
+                                </a>
+                                </li>
+                                <li class="nav-item">
+                                <a href="{{ route('report.intm2mdonation') }}" class="nav-link {{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-money-bill-alt"></i>
+                                    <p>M2M Donations</p>
+                                </a>
+                            </li>
+                            </ul>
+                        </li>
+                        @endif
+
+                        @if ($regionalCoordinatorCondition)
+                        <li class="nav-item {{ Request::is('reports/chapterstatus') ? 'menu-open' : '' }} {{ Request::is('reports/chapternew') ? 'menu-open' : '' }}
+                                            {{ Request::is('reports/chapterlarge') ? 'menu-open' : '' }} {{ Request::is('reports/chapterprobation') ? 'menu-open' : '' }}
+                                            {{ Request::is('reports/chaptercoordinators') ? 'menu-open' : '' }} {{ Request::is('reports/m2mdonation') ? 'menu-open' : '' }}
+                                            {{ Request::is('chapter/m2mdonation/*') ? 'menu-open' : '' }} {{ Request::is('reports/einstatus') ? 'menu-open' : '' }}
+                                            {{ Request::is('reports/socialmedia') ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ Request::is('reports/chapterstatus') ? 'active' : '' }} {{ Request::is('reports/chapternew') ? 'active' : '' }}
+                                                        {{ Request::is('reports/chapterlarge') ? 'active' : '' }} {{ Request::is('reports/chapterprobation') ? 'active' : '' }}
+                                                        {{ Request::is('reports/chaptercoordinators') ? 'active' : '' }} {{ Request::is('reports/m2mdonation') ? 'active' : '' }}
+                                                        {{ Request::is('chapter/m2mdonation/*') ? 'active' : '' }} {{ Request::is('reports/einstatus') ? 'active' : '' }}
+                                                        {{ Request::is('reports/socialmedia') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-laptop-house"></i>
+                                <p>Chapter Reports<i class="fas fa-angle-left right"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                <a href="{{ route('report.chapterstatus') }}" class="nav-link {{ Request::is('reports/chapterstatus') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-check-square"></i>
+                                    <p>Chapter Status</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('report.einstatus') }}" class="nav-link {{ Request::is('reports/einstatus') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-university"></i>
+                                    <p>Chapter EIN Status</p>
+                                </a>
+                            </li>
+                            @if ($assistConferenceCoordinatorCondition)
+                                <li class="nav-item">
+                                <a href="{{ route('report.chapternew') }}" class="nav-link {{ Request::is('reports/chapternew') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-plus-square"></i>
+                                    <p>New Chapters</p>
+                                </a>
+                            </li>
+                            @endif
+                                <li class="nav-item">
+                                <a href="{{ route('report.chapterlarge') }}" class="nav-link {{ Request::is('reports/chapterlarge') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-expand-alt"></i>
+                                    <p>Large Chapters</p>
+                                </a>
+                                </li>
+                                <li class="nav-item">
+                                <a href="{{ route('report.chapterprobation') }}" class="nav-link {{ Request::is('reports/chapterprobation') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-times-circle"></i>
+                                    <p>Probation Chapters</p>
+                                </a>
+                                </li>
+                                <li class="nav-item">
+                                <a href="{{ route('report.m2mdonation') }}" class="nav-link {{ Request::is('reports/m2mdonation') ? 'active' : '' }} {{ Request::is('chapter/m2mdonation/*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-money-bill-alt"></i>
+                                    <p>M2M Donations</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('report.socialmedia') }}" class="nav-link {{ Request::is('reports/socialmedia') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-share-alt"></i>
+                                    <p>Social Media</p>
+                                </a>
+                                </li>
+                            <li class="nav-item">
+                                <a href="{{ route('report.chaptercoordinators') }}" class="nav-link {{ Request::is('reports/chaptercoordinators') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-house-user"></i>
+                                    <p>Chapter Coordinators</p>
+                                </a>
+                                </li>
+                            </ul>
+                        </li>
+                        @endif
+
+                        @if ($coordinatorCondition)
+                        <li class="nav-item {{ Request::is('reports/chaptervolunteer') ? 'menu-open' : '' }} {{ Request::is('reports/coordinatortodo') ? 'menu-open' : '' }}
+                                            {{ Request::is('reports/intcoordinatortodo') ? 'menu-open' : '' }} {{ Request::is('reports/appreciation') ? 'menu-open' : '' }}
+                                            {{ Request::is('reports/birthday') ? 'menu-open' : '' }} {{ Request::is('coordinator/appreciation/*') ? 'menu-open' : '' }}
+                                            {{ Request::is('reports/reportingtree') ? 'menu-open' : '' }} {{ Request::is('coordinator/birthday/*') ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ Request::is('reports/chaptervolunteer') ? 'active' : '' }} {{ Request::is('reports/coordinatortodo') ? 'active' : '' }}
+                                                        {{ Request::is('reports/intcoordinatortodo') ? 'active' : '' }} {{ Request::is('reports/appreciation') ? 'active' : '' }}
+                                                        {{ Request::is('reports/birthday') ? 'active' : '' }} {{ Request::is('coordinator/appreciation/*') ? 'active' : '' }}
+                                                        {{ Request::is('reports/reportingtree') ? 'active' : '' }} {{ Request::is('coordinator/birthday/*') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-laptop-house"></i>
+                                <p>Coordinator Reports<i class="fas fa-angle-left right"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                @if ($supervisingCoordinatorCondition)
+                                <li class="nav-item">
+                                <a href="{{ route('report.chaptervolunteer') }}" class="nav-link {{ Request::is('reports/chaptervolunteer') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-check-square"></i>
+                                    <p>Volunteer Utilization</p>
+                                </a>
+                            </li>
+                            @endif
+                            @if (($positionid ==6 || $positionid ==25))
+                            <li class="nav-item">
+                                <a href="{{ route('report.coordinatortodo') }}" class="nav-link {{ Request::is('reports/coordinatortodo') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-university"></i>
+                                    <p>Cooordinator ToDo</p>
+                                </a>
+                            </li>
+                            @endif
+                            @if ($founderCondition)
+                            <li class="nav-item">
+                                <a href="{{ route('report.intcoordinatortodo') }}" class="nav-link {{ Request::is('reports/intcoordinatortodo') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-plus-square"></i>
+                                    <p>Coordinator ToDo</p>
+                                </a>
+                            </li>
+                            @endif
+                            @if ($assistConferenceCoordinatorCondition)
+                                <li class="nav-item">
+                                <a href="{{ route('report.appreciation') }}" class="nav-link {{ Request::is('reports/appreciation') ? 'active' : '' }} {{ Request::is('coordinator/appreciation/*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-expand-alt"></i>
+                                    <p>Volunteer Appreciation</p>
+                                </a>
+                                </li>
+                                @endif
+                                @if ($regionalCoordinatorCondition)
+                                <li class="nav-item">
+                                <a href="{{ route('report.birthday') }}" class="nav-link {{ Request::is('reports/birthday') ? 'active' : '' }} {{ Request::is('coordinator/birthday/*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-times-circle"></i>
+                                    <p>Volunteer Birthdays</p>
+                                </a>
+                                </li>
+                                @endif
+                                <li class="nav-item">
+                                <a href="{{ route('report.reportingtree') }}" class="nav-link {{ Request::is('reports/reportingtree') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-money-bill-alt"></i>
+                                    <p>Reporting Tree</p>
+                                </a>
+                            </li>
+                            </ul>
+                        </li>
+                        @endif
+
+                        @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes))
+                        <li class="nav-item {{ Request::is('yearreports/*') ? 'menu-open' : '' }} {{ Request::is('chapter/financial/*') ? 'menu-open' : '' }}
+                                            {{ Request::is('chapter/boardinfo/*') ? 'menu-open' : '' }} {{ Request::is('chapter/boundaryview/*') ? 'menu-open' : '' }}
+                                            {{ Request::is('chapter/statusview/*') ? 'menu-open' : '' }} {{ Request::is('chapter/awardsview/*') ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ Request::is('yearreports/*') ? 'active' : '' }} {{ Request::is('chapter/financial/*') ? 'active' : '' }}
+                                                        {{ Request::is('chapter/boardinfo/*') ? 'active' : '' }} {{ Request::is('chapter/boundaryview/*') ? 'active' : '' }}
+                                                        {{ Request::is('chapter/statusview/*') ? 'active' : '' }} {{ Request::is('chapter/awardsview/*') ? 'active' : '' }}">
+                                <i class="nav-icon far fa-chart-bar"></i>
+                                <p>EOY Reports<i class="fas fa-angle-left right"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                <a href="{{ route('report.eoystatus') }}" class="nav-link {{ Request::is('yearreports/eoystatus') ? 'active' : '' }} {{ Request::is('chapter/statusview/*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-tasks"></i>
+                                    <p>End of Year Status</p>
+                                </a>
+                            </li>
+                                <li class="nav-item">
+                                <a href="{{ route('report.boardinfo') }}" class="nav-link {{ Request::is('yearreports/boardinfo') ? 'active' : '' }} {{ Request::is('chapter/boardinfo/*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-users"></i>
+                                    <p>Board Reports</p>
+                                </a>
+                            </li>
+                                <li class="nav-item">
+                                <a href="{{ route('report.review') }}" class="nav-link {{ Request::is('yearreports/review') ? 'active' : '' }} {{ Request::is('chapter/financial/*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                                    <p>Financial Reports</p>
+                                </a>
+                            </li>
+                                <li class="nav-item">
+                                <a href="{{ route('report.issues') }}" class="nav-link {{ Request::is('yearreports/boundaryissue') ? 'active' : '' }} {{ Request::is('chapter/boundaryview/*') ? 'active' : '' }}">
+                                    <i class="nav-icon far fa-map"></i>
+                                    <p>Boundary Issues</p>
+                                </a>
+                                </li>
+                                <li class="nav-item">
+                                <a href="{{ route('report.awards') }}" class="nav-link {{ Request::is('yearreports/chapterawards') ? 'active' : '' }} {{ Request::is('yearreports/addawards') ? 'active' : '' }}
+                                        {{ Request::is('chapter/awardsview/*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-award"></i>
+                                    <p>Chapter Awards</p>
+                                </a>
+                                </li>
+                            </ul>
+                        </li>
+                        @endif
+
+                        @if ($adminReportCondition)
+                        <li class="nav-item {{ Request::is('admin/eoy') ? 'menu-open' : '' }} {{ Request::is('admin/reregdate') ? 'menu-open' : '' }}
+                                            {{ Request::is('admin/reregdate/*') ? 'menu-open' : '' }} {{ Request::is('adminreports/duplicateuser') ? 'menu-open' : '' }}
+                                            {{ Request::is('adminreports/duplicateboardid') ? 'menu-open' : '' }} {{ Request::is('adminreports/multipleboard') ? 'menu-open' : '' }}
+                                            {{ Request::is('adminreports/nopresident') ? 'menu-open' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ Request::is('admin/eoy') ? 'active' : '' }} {{ Request::is('admin/reregdate') ? 'active' : '' }}
+                                                        {{ Request::is('admin/reregdate/*') ? 'active' : '' }} {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }}
+                                                        {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }} {{ Request::is('adminreports/multipleboard') ? 'active' : '' }}
+                                                        {{ Request::is('adminreports/nopresident') ? 'active' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-cogs"></i>
+                                <p>Admin Items<i class="fas fa-angle-left right"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                <a href="{{ route('admin.eoy') }}" class="nav-link {{ Request::is('admin/eoy') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-bullseye"></i>
+                                    <p>EOY Procedures</p>
+                                </a>
+                            </li>
+                                <li class="nav-item">
+                                <a href="{{ route('admin.reregdate') }}" class="nav-link {{ Request::is('admin/reregdate') ? 'active' : '' }} {{ Request::is('aadmin/reregdate/*') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-calendar-alt"></i>
+                                    <p>Re-Reg Renewal Dates</p>
+                                </a>
+                            </li>
+                                <li class="nav-item">
+                                <a href="{{ route('report.duplicateuser') }}" class="nav-link {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-user-plus"></i>
+                                    <p>Duplicate Users</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('report.duplicateboardid') }}" class="nav-link {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-exchange-alt"></i>
+                                    <p>Duplicate Board IDs</p>
+                                </a>
+                                </li>
+                                <li class="nav-item">
+                                <a href="{{ route('report.multipleboard') }}" class="nav-link {{ Request::is('adminreports/multipleboard') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-random"></i>
+                                    <p>Multiple Boards</p>
+                                </a>
+                                </li>
+                                <li class="nav-item">
+                                <a href="{{ route('report.nopresident') }}" class="nav-link {{ Request::is('adminreports/nopresident') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-minus-circle"></i>
+                                    <p>No President</p>
+                                </a>
+                                </li>
+                                <li class="nav-item">
+                                <a href="{{ route('report.outgoingboard') }}" class="nav-link {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-share"></i>
+                                    <p>Outgoing Board</p>
+                                </a>
+                            </li>
+                                <li class="nav-item">
+                                <a href="{{ route('logs') }}" target="_blank" class="nav-link {{ Request::is('logs') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-exclamation-triangle"></i>
+                                    <p>Error Logs</p>
+                                </a>
+                                </li>
+                                <li class="nav-item">
+                                <a href="{{ url(config('sentemails.routepath')) }}" target="_blank" class="nav-link {{ Request::is('admin/sentemails') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-share-square"></i>
+                                    <p>Sent Email</p>
+                                </a>
+                                </li>
+                            </ul>
+                        </li>
+                        @endif
+
+                        <li class="nav-item {{ Request::is('reports/downloads') ? 'menu-open' : '' }} {{ Request::is('admin/bugs') ? 'menu-open' : '' }}
+                                            {{ Request::is('admin/resources') ? 'menu-open' : '' }} {{ Request::is('admin/toolkit') ? 'menu-open' : '' }}">
+                            <a href="#" class="nav-link {{ Request::is('reports/downloads') ? 'active' : '' }} {{ Request::is('admin/bugs') ? 'active' : '' }}
+                                                        {{ Request::is('admin/resources') ? 'active' : '' }} {{ Request::is('admin/toolkit') ? 'active' : '' }} ">
+                                <i class="nav-icon fas fa-cogs"></i>
+                                <p>Resources<i class="fas fa-angle-left right"></i></p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                        @if ($assistConferenceCoordinatorCondition)
+                        <li class="nav-item">
+                            <a href="{{ route('report.downloads') }}" class="nav-link {{ Request::is('reports/downloads') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-download"></i>
+                            <p>Download Reports</p>
+                            </a>
+                        </li>
+                        @endif
+                        @if ($regionalCoordinatorCondition)
+                        <li class="nav-item">
+                            <a href="{{ route('admin.bugs') }}" class="nav-link {{ Request::is('admin/bugs') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-bug"></i>
+                            <p>MIMI Bugs & Wishes</p>
+                            </a>
+                        </li>
+                        @endif
+                        <li class="nav-item">
+                            <a href="{{ route('admin.resources') }}" class="nav-link {{ Request::is('admin/resources') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-folder-open"></i>
+                            <p>Chapter Resources</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('admin.toolkit') }}" class="nav-link {{ Request::is('admin/toolkit') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-toolbox"></i>
+                            <p>Coordinator Toolkit</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="https://momsclub.org/elearning/" target="_blank" class="nav-link">
+                            <i class="nav-icon fas fa-graduation-cap"></i>
+                            <p>eLearning</p>
+                            </a>
+                        </li>
                     </li>
-            <li class="{{ Request::is('adminreports/duplicateuser') ? 'active' : '' }}">
-            <a href="{{ route('report.duplicateuser') }}">
-                <i class="fa fa-user-plus"></i>
-                <span>Duplicate Users</span>
-            </a>
-            </li>
-            <li class="{{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }}">
-            <a href="{{ route('report.duplicateboardid') }}">
-                <i class="fa fa-exchange"></i>
-                <span>Duplicate Board Id</span>
-            </a>
-            </li>
-            <li class="{{ Request::is('adminreports/multipleboard') ? 'active' : '' }}">
-            <a href="{{ route('report.multipleboard') }}">
-                <i class="fa fa-random"></i>
-                <span>Multiple Boards</span>
-            </a>
-            </li>
-            <li class="{{ Request::is('adminreports/nopresident') ? 'active' : '' }}">
-            <a href="{{ route('report.nopresident') }}">
-                <i class="fa fa-minus-circle"></i>
-                <span>No President</span>
-            </a>
-            </li>
-            <li class="{{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
-                <a href="{{ route('report.outgoingboard') }}">
-                <i class="fa fa-share"></i>
-                <span>Outgoing Board</span>
-                </a>
-            </li>
-            <li class="{{ Request::is('logs') ? 'active' : '' }}">
-                <a href="{{ route('logs') }}" target="_blank">
-                <i class="fa fa-exclamation-triangle"></i>
-                <span>Error Logs</span>
-                </a>
-            </li>
-            <li class="{{ Request::is('admin/sentemails') ? 'active' : '' }}">
-                <a href="{{ url(config('sentemails.routepath')) }}" target="_blank">
-                <i class="fa fa-share-square-o"></i>
-                <span>Sent Email</span>
-                </a>
-            </li>
                 </ul>
-            </li>
-        @endif
 
-        @if ($assistConferenceCoordinatorCondition)
-        <li class="{{ Request::is('reports/downloads') ? 'active' : '' }}">
-            <a href="{{ route('report.downloads') }}"><i class="fa fa-download"></i> <span>Download Reports</span></a>
-        </li>
-        @endif
+                        <li class="nav-item">
+                            <a href="{{ route('coordinator.showprofile') }}" class="nav-link {{ Request::is('coordinator/profile') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-user-circle"></i>
+                            <p>Update Profile</p>
+                            </a>
+                        </li>
 
-        @if ($regionalCoordinatorCondition)
-            <li class="{{ Request::is('admin/bugs') ? 'active' : '' }}">
-            <a href="{{ route('admin.bugs') }}">
-                <i class="fa fa-bug"></i>
-                <span>MIMI Bugs & Wishes</span>
-            </a>
-            </li>
-        @endif
+                        <li class="nav-item">
+                            <a href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                                    document.getElementById('logout-form').submit();">
+                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;&nbsp;{{ __('Logout') }}</span>
+                        </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                                        @csrf
+                        </form>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- /.sidebar-menu -->
+            </div>
+            <!-- /.sidebar -->
+        </aside>
 
-        <li class="{{ Request::is('admin/resources') ? 'active' : '' }}">
-            <a href="{{ route('admin.resources') }}">
-                <i class="fa fa-briefcase"></i>
-                <span>Chapter Resources</span>
-            </a>
-        </li>
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Default box -->
+                        <div class="content-wrapper">
+                            @yield('content')
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
 
-        <li class="{{ Request::is('admin/toolkit') ? 'active' : '' }}">
-            <a href="{{ route('admin.toolkit') }}">
-                <i class="fa fa-briefcase"></i>
-                <span>Coordinator Toolkit</span>
-            </a>
-        </li>
-
-        {{-- <div class="too" style="padding-left:15px; padding-top:9px;"><a href="https://momsclub.org/coordinator-toolkit/" target="_blank"><i class="fa fa-briefcase"></i>&nbsp;&nbsp;&nbsp;Coordinator Toolkit</a></div> --}}
-
-        <div class="too" style="padding-left:15px; padding-top:20px;"><a href="https://momsclub.org/elearning/" target="_blank"><i class="fa fa-graduation-cap"></i>&nbsp;&nbsp;eLearning Library</a></div>
-
-        <div class="too" style="padding-left:15px; padding-top: 20px;">
-
-        @if ($positionid >=1 && $positionid <=24)
-            <li class="{{ Request::is('coordinator/profile') ? 'active' : '' }}">
-                <a href="{{ route('coordinator.showprofile') }}">
-                    <i class="fa fa-user-circle"></i><span>&nbsp; Update Profile </br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<sub>(<?php echo $loggedIn;?>)</sub></span></a>
-            </li></div>
-        @endif
-
-        <li class="">
-          <a href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                <i class="fa fa-sign-out"></i> <span>        {{ __('Logout') }}</span>
-
-           </a>
-		    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-           </form>
-        </li>
-      </ul>
-    </section>
-    <!-- /.sidebar -->
-  </aside>
-  <div class="content-wrapper">
-   @yield('content')
-   </div>
-  <footer class="main-footer">
-        <strong>Copyright &copy; <?php echo date('Y');?> <a href="https://momsclub.org/" target="_blank">MOMS Club</a>.</strong> All rights
-    reserved.
-  </footer>
+    </div>
+    <footer class="main-footer">
+        <strong>Copyright &copy; <?php echo date('Y'); ?> <a href="https://momsclub.org/" target="_blank">MOMS Club</a>.</strong> All rights reserved.
+    </footer>
 </div>
-</body>
 
-<!-- jQuery 3 -->
-<script src="{{ asset('coordinator_theme/bower_components/jquery/dist/jquery.min.js') }}"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="{{ asset('coordinator_theme/bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-  $.widget.bridge('uibutton', $.ui.button);
-</script>
-<!-- DataTables -->
-<script src="{{ asset('coordinator_theme/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('coordinator_theme/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
-<!-- Bootstrap 3.3.7 -->
-<script src="{{ asset('coordinator_theme/bower_components/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-<!-- Morris.js charts -->
-<script src="{{ asset('coordinator_theme/bower_components/raphael/raphael.min.js') }}"></script>
-<script src="{{ asset('coordinator_theme/bower_components/morris.js/morris.min.js') }}"></script>
-<!-- Sparkline -->
-<script src="{{ asset('coordinator_theme/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js') }}"></script>
-<!-- jvectormap -->
-<script src="{{ asset('coordinator_theme/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js') }}"></script>
-<script src="{{ asset('coordinator_theme/plugins/jvectormap/jquery-jvectormap-world-mill-en.js') }}"></script>
-<!-- jQuery Knob Chart -->
-<script src="{{ asset('coordinator_theme/bower_components/jquery-knob/dist/jquery.knob.min.js') }}"></script>
-<!-- daterangepicker -->
-<script src="{{ asset('coordinator_theme/bower_components/moment/min/moment.min.js') }}"></script>
-<script src="{{ asset('coordinator_theme/bower_components/bootstrap-daterangepicker/daterangepicker.js') }}"></script>
-<!-- datepicker -->
-<script src="{{ asset('coordinator_theme/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
-<!-- Bootstrap WYSIHTML5 -->
-<script src="{{ asset('coordinator_theme/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js') }}"></script>
-<!-- Slimscroll -->
-<script src="{{ asset('coordinator_theme/bower_components/jquery-slimscroll/jquery.slimscroll.min.js') }}"></script>
-<!-- iCheck 1.0.1 -->
-<script src="{{ asset('coordinator_theme/plugins/iCheck/icheck.min.js') }}"></script>
-<!-- FastClick -->
-<script src="{{ asset('coordinator_theme/bower_components/fastclick/lib/fastclick.js') }}"></script>
+<!-- jQuery -->
+<script src="/coordinator_theme/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="/coordinator_theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- overlayScrollbars -->
+<script src="/coordinator_theme/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
-<script src="{{ asset('coordinator_theme/dist/js/adminlte.min.js') }}"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{{ asset('coordinator_theme/dist/js/pages/dashboard.js') }}"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="{{ asset('coordinator_theme/dist/js/demo.js') }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+
+<!-- Select2 -->
+<script src="/coordinator_theme/plugins/select2/js/select2.full.min.js"></script>
+<!-- Bootstrap4 Duallistbox -->
+{{-- <script src="/coordinator_theme/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script> --}}
+<!-- InputMask -->
+<script src="/coordinator_theme/plugins/moment/moment.min.js"></script>
+<script src="/coordinator_theme/plugins/inputmask/jquery.inputmask.min.js"></script>
+<!-- date-range-picker -->
+<script src="/coordinator_theme/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="/coordinator_theme/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<!-- Bootstrap Switch -->
+{{-- <script src="/coordinator_theme/plugins/bootstrap-switch/js/bootstrap-switch.min.js}"></script> --}}
+<!-- BS-Stepper -->
+{{-- <script src="{/coordinator_theme/plugins/bs-stepper/js/bs-stepper.min.js"></script> --}}
+
+
+<!-- DataTables  & Plugins -->
+<script src="/coordinator_theme/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/coordinator_theme/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="/coordinator_theme/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/coordinator_theme/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="/coordinator_theme/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="/coordinator_theme/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="/coordinator_theme/plugins/jszip/jszip.min.js"></script>
+<script src="/coordinator_theme/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="/coordinator_theme/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="/coordinator_theme/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="/coordinator_theme/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="/coordinator_theme/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
 <script>
-   //iCheck for checkbox and radio inputs
-    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
-      checkboxClass: 'icheckbox_minimal-blue',
-      radioClass   : 'iradio_minimal-blue'
-    })
-    //Red color scheme for iCheck
-    $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
-      checkboxClass: 'icheckbox_minimal-red',
-      radioClass   : 'iradio_minimal-red'
-    })
-    //Flat red color scheme for iCheck
-    $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
-      checkboxClass: 'icheckbox_flat-green',
-      radioClass   : 'iradio_flat-green'
+   $(function () {
+    //Initialize Select2 Elements
+    $('.select2').select2()
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
     })
 
-    //Colorpicker
-    $('.my-colorpicker1').colorpicker()
-    //color picker with addon
-    $('.my-colorpicker2').colorpicker()
+    //Datemask dd/mm/yyyy
+    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+    //Datemask2 mm/dd/yyyy
+    $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+    //Money Euro
+    $('[data-mask]').inputmask()
+
+    //Date picker
+    $('#datepicker').datetimepicker({
+        format: 'L'
+    });
+     //Date picker
+     $('#datepicker1').datetimepicker({
+        format: 'L'
+    });
+
+
+    //Date and time picker
+    $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
+
+    //Date range picker
+    $('#reservation').daterangepicker()
+    //Date range picker with time picker
+    $('#reservationtime').daterangepicker({
+      timePicker: true,
+      timePickerIncrement: 30,
+      locale: {
+        format: 'MM/DD/YYYY hh:mm A'
+      }
+    })
+    //Date range as a button
+    $('#daterange-btn').daterangepicker(
+      {
+        ranges   : {
+          'Today'       : [moment(), moment()],
+          'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+          'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
+          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+          'This Month'  : [moment().startOf('month'), moment().endOf('month')],
+          'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        },
+        startDate: moment().subtract(29, 'days'),
+        endDate  : moment()
+      },
+      function (start, end) {
+        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+      }
+    )
 
     //Timepicker
-    $('.timepicker').timepicker({
-      showInputs: false
+    $('#timepicker').datetimepicker({
+      format: 'LT'
     })
-</script>
 
-<script type="text/javascript">
-//format dates in tables to display as MM-DD-YYYY but stil sort correctly
-function initializeDataTable(selector, options, columnDefs) {
-    $(selector).DataTable({
-        ...options,
-        columnDefs: columnDefs.map(def => {
-            if (def.type === 'date') {
-                return {
-                    ...def,
-                    render: function (data, type, row) {
-                        if (type === 'sort') {
-                            return row[def.targets]; // Use original date for sorting
-                        }
-                        return def.format ? moment(data).format(def.format) : data || def.noPayment || ''; // Format date for display if specified
-                    }
-                };
-            }
-            return def;
-        })
+    //Bootstrap Duallistbox
+    // $('.duallistbox').bootstrapDualListbox()
+
+    //Bootstrap Switch
+    // $("input[data-bootstrap-switch]").each(function(){
+    //   $(this).bootstrapSwitch('state', $(this).prop('checked'));
+    // })
+
+  })
+
+
+  // BS-Stepper Init
+//   document.addEventListener('DOMContentLoaded', function () {
+//     window.stepper = new Stepper(document.querySelector('.bs-stepper'))
+//   })
+
+
+ </script>
+
+ <script type="text/javascript">
+ //format dates in tables to display as MM-DD-YYYY but stil sort correctly
+//  function initializeDataTable(selector, options, columnDefs) {
+//      $(selector).DataTable({
+//          ...options,
+//          columnDefs: columnDefs.map(def => {
+//              if (def.type === 'date') {
+//                  return {
+//                      ...def,
+//                      render: function (data, type, row) {
+//                          if (type === 'sort') {
+//                              return row[def.targets]; // Use original date for sorting
+//                          }
+//                          return def.format ? moment(data).format(def.format) : data || def.noPayment || ''; // Format date for display if specified
+//                      }
+//                  };
+//              }
+//              return def;
+//          })
+//      });
+//  }
+
+ $(function () {
+    $('#chapterlist').DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
     });
-}
 
-$(document).ready(function() {
-    initializeDataTable('#chapterlist', {
-        paging: true,
-        lengthChange: true,
-        searching: true,
-        ordering: true,
-        info: false,
-        autoWidth: false
-    }, []);
+    $('#coordinatorlist').DataTable({
+      "paging": true,
+      "lengthChange": true,
+      "searching": true,
+      "ordering": true,
+      "info": true,
+      "autoWidth": false,
+      "responsive": true,
+    });
 
-    initializeDataTable('#chapterlist_reReg', {
-        paging: true,
-        lengthChange: true,
-        searching: true,
-        ordering: true,
-        info: false,
-        autoWidth: false,
-        order: [[0, 'asc']]
-    }, [
-        { targets: 6, type: 'date', format: null },
-        {
-            targets: 7, render: function(data, type, row) {
-                if (type === 'display' && data === 'Invalid date') {
-                    return null;
-                }
-                return data;
-            }
-        }
-    ]);
+  });
 
-    initializeDataTable('#chapterlist_reRegDate', {
-        paging: true,
-        lengthChange: true,
-        searching: true,
-        ordering: true,
-        info: false,
-        autoWidth: false,
-        order: [[0, 'asc']]
-    }, [
-        { targets: 3, type: 'date', format: null },
-        {
-            targets: 4, render: function(data, type, row) {
-                if (type === 'display' && data === 'Invalid date') {
-                    return null;
-                }
-                return data;
-            }
-        }
-    ]);
+  function convertDateFormat(dateString) {
+        var parts = dateString.split('-');
+        return parts[1] + '/' + parts[2] + '/' + parts[0];
+    }
 
-    initializeDataTable('#chapterlist_einStatus', {
-        paging: true,
-        lengthChange: true,
-        searching: true,
-        ordering: true,
-        info: false,
-        autoWidth: false,
-        order: [[0, 'asc']]
-    }, [
-        { targets: 2, type: 'date', format: null },
-    ]);
+    function applyDateMask() {
+        $('.date-mask').each(function() {
+            var originalDate = $(this).text();
+            var formattedDate = convertDateFormat(originalDate);
+            $(this).text(formattedDate);
+        });
+        Inputmask({"mask": "99/99/9999"}).mask(".date-mask");
+    }
 
-    initializeDataTable('#chapterlist_inteinStatus', {
-        paging: true,
-        lengthChange: true,
-        searching: true,
-        ordering: true,
-        info: false,
-        autoWidth: false,
-        order: [[0, 'asc']]
-    }, [
-        { targets: 3, type: 'date', format: null },
-    ]);
+    $(document).ready(function() {
+        var table = $('#coordinatorlist').DataTable();
 
-    initializeDataTable('#chapterlist_large', {
-        paging: true,
-        lengthChange: true,
-        searching: true,
-        ordering: true,
-        info: false,
-        autoWidth: false,
-        order: [[0, 'asc']]
-    }, [
-        {
-            targets: 4, render: function(data, type, row) {
-                if (type === 'display' && data === 'Invalid date') {
-                    return null;
-                }
-                return data;
-            }
-        }
-    ]);
+        applyDateMask();
 
-    initializeDataTable('#chapterlist_donation', {
-        paging: true,
-        lengthChange: true,
-        searching: true,
-        ordering: true,
-        info: false,
-        autoWidth: false,
-        order: [[0, 'asc']]
-    }, [
-        {
-            targets: 4,
-            render: function(data, type, row) {
-                if (type === 'display' && data === 'Invalid date') {
-                    return null;
-                }
-                return data;
-            }
-        }, // Note the comma here
-        {
-            targets: 6,
-            render: function(data, type, row) {
-                if (type === 'display' && data === 'Invalid date') {
-                    return null;
-                }
-                return data;
-            }
-        }
-    ]);
+        table.on('draw', function() {
+            applyDateMask();
+        });
+    });
 
-    initializeDataTable('#chapterlist_review', {
-        paging: true,
-        lengthChange: true,
-        searching: true,
-        ordering: true,
-        info: false,
-        autoWidth: false,
-        order: [[0, 'asc']]
-    }, [
-        {
-            targets: 9, render: function(data, type, row) {
-                if (type === 'display' && data === 'Invalid date') {
-                    return null;
-                }
-                return data;
-            }
-        }
-    ]);
 
-    initializeDataTable('#coordinatorlist', {
-        paging: true,
-        lengthChange: true,
-        searching: true,
-        ordering: true,
-        info: false,
-        autoWidth: false
-    }, []);
+  function applyPhoneMask() {
+        Inputmask({"mask": "(999) 999-9999"}).mask(".phone-mask");
+    }
 
-    initializeDataTable('#coordinatorlist_birthday', {
-        paging: true,
-        lengthChange: true,
-        searching: true,
-        ordering: true,
-        info: false,
-        autoWidth: false,
-        order: [[0, 'asc']]
-    }, [
-        { targets: 5, type: 'date', format: null },
-        {
-            targets: 6, render: function(data, type, row) {
-                if (type === 'display' && data === 'Invalid date') {
-                    return null;
-                }
-                return data;
-            }
-        }
-    ]);
-});
-</script>
-@yield('customscript')
-</html>
+    $(document).ready(function() {
+        var table = $('#chapterlist').DataTable();
+
+        applyPhoneMask();
+
+        table.on('draw', function() {
+            applyPhoneMask();
+        });
+
+        applyDateMask();
+
+        table.on('draw', function() {
+            applyDateMask();
+        });
+
+    });
+
+
+
+//  $(document).ready(function() {
+    //  initializeDataTable('#chapterlist', {
+    //      paging: true,
+    //      lengthChange: true,
+    //      searching: true,
+    //      ordering: true,
+    //      info: false,
+    //      autoWidth: false
+    //  }, []);
+
+
+
+
+    //  initializeDataTable('#chapterlist_reReg', {
+    //      paging: true,
+    //      lengthChange: true,
+    //      searching: true,
+    //      ordering: true,
+    //      info: false,
+    //      autoWidth: false,
+    //      order: [[0, 'asc']]
+    //  }, [
+    //      { targets: 6, type: 'date', format: null },
+    //      {
+    //          targets: 7, render: function(data, type, row) {
+    //              if (type === 'display' && data === 'Invalid date') {
+    //                  return null;
+    //              }
+    //              return data;
+    //          }
+    //      }
+    //  ]);
+
+    //  initializeDataTable('#chapterlist_reRegDate', {
+    //      paging: true,
+    //      lengthChange: true,
+    //      searching: true,
+    //      ordering: true,
+    //      info: false,
+    //      autoWidth: false,
+    //      order: [[0, 'asc']]
+    //  }, [
+    //      { targets: 3, type: 'date', format: null },
+    //      {
+    //          targets: 4, render: function(data, type, row) {
+    //              if (type === 'display' && data === 'Invalid date') {
+    //                  return null;
+    //              }
+    //              return data;
+    //          }
+    //      }
+    //  ]);
+
+    //  initializeDataTable('#chapterlist_einStatus', {
+    //      paging: true,
+    //      lengthChange: true,
+    //      searching: true,
+    //      ordering: true,
+    //      info: false,
+    //      autoWidth: false,
+    //      order: [[0, 'asc']]
+    //  }, [
+    //      { targets: 2, type: 'date', format: null },
+    //  ]);
+
+    //  initializeDataTable('#chapterlist_inteinStatus', {
+    //      paging: true,
+    //      lengthChange: true,
+    //      searching: true,
+    //      ordering: true,
+    //      info: false,
+    //      autoWidth: false,
+    //      order: [[0, 'asc']]
+    //  }, [
+    //      { targets: 3, type: 'date', format: null },
+    //  ]);
+
+    //  initializeDataTable('#chapterlist_large', {
+    //      paging: true,
+    //      lengthChange: true,
+    //      searching: true,
+    //      ordering: true,
+    //      info: false,
+    //      autoWidth: false,
+    //      order: [[0, 'asc']]
+    //  }, [
+    //      {
+    //          targets: 4, render: function(data, type, row) {
+    //              if (type === 'display' && data === 'Invalid date') {
+    //                  return null;
+    //              }
+    //              return data;
+    //          }
+    //      }
+    //  ]);
+
+    //  initializeDataTable('#chapterlist_donation', {
+    //      paging: true,
+    //      lengthChange: true,
+    //      searching: true,
+    //      ordering: true,
+    //      info: false,
+    //      autoWidth: false,
+    //      order: [[0, 'asc']]
+    //  }, [
+    //      {
+    //          targets: 4,
+    //          render: function(data, type, row) {
+    //              if (type === 'display' && data === 'Invalid date') {
+    //                  return null;
+    //              }
+    //              return data;
+    //          }
+    //      }, // Note the comma here
+    //      {
+    //          targets: 6,
+    //          render: function(data, type, row) {
+    //              if (type === 'display' && data === 'Invalid date') {
+    //                  return null;
+    //              }
+    //              return data;
+    //          }
+    //      }
+    //  ]);
+
+    //  initializeDataTable('#chapterlist_review', {
+    //      paging: true,
+    //      lengthChange: true,
+    //      searching: true,
+    //      ordering: true,
+    //      info: false,
+    //      autoWidth: false,
+    //      order: [[0, 'asc']]
+    //  }, [
+    //      {
+    //          targets: 9, render: function(data, type, row) {
+    //              if (type === 'display' && data === 'Invalid date') {
+    //                  return null;
+    //              }
+    //              return data;
+    //          }
+    //      }
+    //  ]);
+
+    //  initializeDataTable('#coordinatorlist', {
+    //      paging: true,
+    //      lengthChange: true,
+    //      searching: true,
+    //      ordering: true,
+    //      info: false,
+    //      autoWidth: false
+    //  }, []);
+
+//      initializeDataTable('#coordinatorlist_birthday', {
+//          paging: true,
+//          lengthChange: true,
+//          searching: true,
+//          ordering: true,
+//          info: false,
+//          autoWidth: false,
+//          order: [[0, 'asc']]
+//      }, [
+//          { targets: 5, type: 'date', format: null },
+//          {
+//              targets: 6, render: function(data, type, row) {
+//                  if (type === 'display' && data === 'Invalid date') {
+//                      return null;
+//                  }
+//                  return data;
+//              }
+//          }
+//      ]);
+//  });
+ </script>
+ @yield('customscript')
+ </html>
+

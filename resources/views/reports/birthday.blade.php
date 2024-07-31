@@ -1,33 +1,47 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
- <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-      Volunteer Birthday Report
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Volunteer Birthday Report</li>
-      </ol>
-    </section>
-@if ($message = Session::get('success'))
-      <div class="alert alert-success">
-         <p>{{ $message }}</p>
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Volunteer Birthday Report</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">Volunteer Birthday Report</li>
+          </ol>
+        </div>
       </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+     @if ($message = Session::get('success'))
+    <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <p>{{ $message }}</p>
+    </div>
     @endif
+    @if ($message = Session::get('fail'))
+    <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <p>{{ $message }}</p>
+    </div>
+    @endif
+
     <!-- Main content -->
     <section class="content">
-      <div class="row">
-		<div class="col-md-12">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">Report of Volunteer Birthdays</h3>
-            </div>
-            <!-- /.box-header -->
-
-            <div class="box-body table-responsive">
-              <table id="coordinatorlist_birthday" class="table table-bordered table-hover">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Report of Volunteer Birthdays</h3>
+                </div>
+                <!-- /.card-header -->
+            <div class="card-body">
+                <table id="coordinatorlist" class="table table-sm table-hover" >
 				<thead>
 			    <tr>
 			        <th>Edit</th>
@@ -43,23 +57,25 @@
 
                 @foreach($coordinatorList as $list)
                   <tr>
-                      <td><center><a href="<?php echo url("/coordinator/birthday/{$list->cor_id}") ?>"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a></center></td>
+                      <td class="text-center align-middle">
+                        <a href="<?php echo url("/coordinator/birthday/{$list->cor_id}") ?>"><i class="fas fa-edit"></i></a></td>
                       <td>{{ $list->cor_conf }}</td>
                       <td>{{ $list->reg }}</td>
                     <td>{{ $list->cor_fname }}</td>
                     <td>{{ $list->cor_lname }}</td>
-                    <td>{{ $list->month }}  {{ $list->b_day }}</td>
-                    <td>{{ $list->card_sent }}</td>
+                    <td data-sort="{{str_pad($list->b_month, 2, '0', STR_PAD_LEFT) . '-' .  $list->b_day}}">{{ $list->month }}  {{ $list->b_day }}</td>
+                    <td><span class="date-mask">{{ $list->card_sent }}</span></td>
                     </tr>
                   @endforeach
                   </tbody>
                 </table>
             </div>
-           </div>
-
-          <!-- /.box -->
+           <!-- /.card-body -->
         </div>
+        <div class="card-body text-center">&nbsp;</div>
+    </div>
       </div>
+    </div>
     </section>
     <!-- Main content -->
 

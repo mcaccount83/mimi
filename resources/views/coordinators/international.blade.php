@@ -1,28 +1,34 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
- <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-      International Coordinator List
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">International Coordinator List</li>
-      </ol>
-    </section>
-    <!-- Main content -->
-    <section class="content">
-      <div class="row">
-		<div class="col-md-12">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">List of International Coordinators</h3>
-            </div>
-            <!-- /.box-header -->
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>International Coordinator List</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">International Coordinator List</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
 
-            <div class="box-body table-responsive">
-              <table id="coordinatorlist" class="table table-bordered table-hover">
+   <!-- Main content -->
+   <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">List of International Coordinators</h3>
+            </div>
+            <!-- /.card-header -->
+        <div class="card-body">
+              <table id="coordinatorlist" class="table table-sm table-hover">
               <thead>
 			    <tr>
 			      <th>Details</th>
@@ -38,7 +44,7 @@
                 <tbody>
                 @foreach($intCoordinatorList as $list)
                   <tr>
-                        <td><center><a href="<?php echo url("/coordinator/international/view/{$list->cor_id}") ?>"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></a></center></td>
+                        <td><center><a href="<?php echo url("/coordinator/international/view/{$list->cor_id}") ?>"><i class="fas fa-eye"></i></a></center></td>
                         <td>{{ $list->cor_cid }}</td>
                         <td>{{ $list->reg_name }}</td>
                         <td>{{ $list->cor_fname }}</td>
@@ -50,15 +56,14 @@
                   </tbody>
                 </table>
              </div>
-       <div class="box-body text-center">
-            <!--<a href=""><button class="btn btn-themeBlue margin">Export Coordinator List</button></a>-->
-              </div>
+             <!-- /.card-body -->
+             <div class="card-body text-center">&nbsp; </div>
             </div>
             <!-- /.box -->
         </div>
       </div>
+    </div>
     </section>
-    <!-- Main content -->
 
     <!-- /.content -->
 

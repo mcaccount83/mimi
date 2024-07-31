@@ -1,28 +1,39 @@
 @extends('layouts.coordinator_theme')
+<style>
+    .hidden-column {
+        display: none !important;
+    }
+    </style>
 
 @section('content')
- <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-      Inquiries Chapter List
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Inquiries Chapter List</li>
-      </ol>
-    </section>
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Inquiries Chapter List</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">Inquiries Chapter List</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
     <!-- Main content -->
     <section class="content">
-      <div class="row">
-		<div class="col-md-12">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">List of Inquiries Chapter</h3>
-              </div>
-            <!-- /.box-header -->
-
-            <div class="box-body table-responsive">
-              <table id="chapterlist" class="table table-bordered table-hover">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">List of Inquiries Chapters</h3>
+                </div>
+                <!-- /.card-header -->
+            <div class="card-body">
+              <table id="chapterlist" class="table table-sm table-hover">
               <thead>
 			    <tr>
 					<th>Details</th>
@@ -35,24 +46,24 @@
                     <th>Inquiries Notes</th>
                     <th>Inquiries Email</th>
 
-					<th style="display:none"></th>
+                    <th class="hidden-column"></th>
                 </tr>
                 </thead>
                 <tbody>
 				<?php $row = 0;?>
                 @foreach($inquiriesList as $list)
                   <tr>
-						<td><center><a href="<?php echo url("/chapter/inquiriesview/{$list->id}") ?>"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></a></center></td>
+						<td><center><a href="<?php echo url("/chapter/inquiriesview/{$list->id}") ?>"><i class="fas fa-eye"></i></a></center></td>
                         <td><center><button type="button" class="btn btn-xs" onclick="return CopyEmail(<?php echo $row?>);" style="background-color: transparent; border: none;">
-                            <i class="fa fa-files-o fa-lg text-primary" aria-hidden="true"></i></button></center></td>
+                            <i class="far fa-copy fa-lg text-primary" ></i></button></center></td>
 
 						<td><center><button type="button" class="btn btn-xs" onclick="return CopyInquiryResp(<?php echo $row?>);" style="background-color: transparent; border: none;">
-                            <i class="fa fa-files-o fa-lg text-primary" aria-hidden="true"></i></button></center></td>
+                            <i class="far fa-copy fa-lg text-primary" ></i></button></center></td>
 						<td bgcolor="<?php
 							if($list->status=='4' || $list->status=='6')
-									echo "#FF0000";
+                                    echo 'background-color: #dc3545; color: #ffffff;';
 							elseif($list->status=='5')
-									echo "#ffff00";
+									echo "#ffc107";
 
 							?>">
 							@if($list->status=='4' || $list->status=='6')
@@ -72,8 +83,8 @@
 						<?php
 						    echo " <td id=email" . $row . ">" . $list->inq_con . "</td> \n";
 							{
-							echo " <td  id=response" . $row . " style=\"display:none;\">" .
-								"Thanks for your interest in MOMS Club! You live in the boundaries of our MOMS Club of " . $list->chapter_name . ", " . $list->state . " chapter. I have forwarded your inquiry to them and you should hear within the next couple of days. If you don't hear, please let me know and I'll make sure they received your inquiry. If you would like to contact them directly yourself, you can reach them at " . $list->inq_con . "."
+                                echo " <td id=response" . $row . " class=\"hidden-column\">" .
+                                    "Thanks for your interest in MOMS Club! You live in the boundaries of our MOMS Club of " . $list->chapter_name . ", " . $list->state . " chapter. I have forwarded your inquiry to them and you should hear within the next couple of days. If you don't hear, please let me know and I'll make sure they received your inquiry. If you would like to contact them directly yourself, you can reach them at " . $list->inq_con . "."
 						. "</td> \n";
 						}
 						?>
@@ -85,9 +96,9 @@
                 </table>
             </div>
 
-            <div class="box-body text-center">
+            <div class="card-body text-center">
 
-              <button type="button" class="btn btn-themeBlue margin" onclick="CopyNoChapter()" id="btnNoChapter" name="nochapter"><i class="fa fa-files-o fa-fw" aria-hidden="true" ></i>&nbsp; Copy NO Chapter Response</button>
+              <button type="button" class="btn bg-gradient-primary" onclick="CopyNoChapter()" id="btnNoChapter" name="nochapter"><i class="fas fa-copy" ></i>&nbsp;&nbsp;&nbsp;Copy NO Chapter Response</button>
 
 
           </div>

@@ -1,41 +1,49 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
- <!-- Content Header (Page header) -->
- <section class="content-header">
-      <h1>
-        Chapter Awards
-       <small>Edit</small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Chapter Awards</li>
-      </ol>
-    </section>
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Chapter Awards&nbsp;<small>(Add)</small></h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">Chapter Awards</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
     <!-- Main content -->
     <form method="POST" action='{{ route("chapter.updateawards",$chapterList[0]->id) }}'>
     @csrf
-   <section class="content">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="box card">
-            <div class="box-header with-border">
-              <h3 class="box-title">Chapter</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Chapter</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="row">
               <!-- /.form group -->
-              <div class="col-sm-4 col-xs-12">
+              <div class="col-sm-4">
               <div class="form-group">
                 <label>MOMS Club of</label>
-                <input type="text" name="ch_name" class="form-control my-colorpicker1" maxlength="200" required value="{{ $chapterList[0]->name }}" disabled>
+                <input type="text" name="ch_name" class="form-control" maxlength="200" required value="{{ $chapterList[0]->name }}" disabled>
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-4 col-xs-12">
+              <div class="col-sm-4">
               <div class="form-group">
                 <label>State</label>
-                <select id="ch_state" name="ch_state" class="form-control select2" style="width: 100%;" required disabled>
+                <select id="ch_state" name="ch_state" class="form-control select2-bs4" style="width: 100%;" required disabled>
                   <option value="">Select State</option>
                     @foreach($stateArr as $state)
                       <option value="{{$state->id}}" {{$chapterList[0]->state == $state->id  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
@@ -44,10 +52,10 @@
                 <input type="hidden" name="ch_hid_state" value="{{ $chapterList[0]->state }}">
               </div>
               </div>
-              <div class="col-sm-4 col-xs-12">
+              <div class="col-sm-4">
               <div class="form-group">
                 <label>Region</label> <span class="field-required">*</span>
-                <select id="ch_region" name="ch_region" class="form-control select2" style="width: 100%;" required disabled>
+                <select id="ch_region" name="ch_region" class="form-control select2-bs4" style="width: 100%;" required disabled>
                   <option value="">Select Region</option>
                     @foreach($regionList as $rl)
                       <option value="{{$rl->id}}" {{$chapterList[0]->region == $rl->id  ? 'selected' : ''}} >{{$rl->long_name}} </option>
@@ -56,11 +64,16 @@
                 <input type="hidden" name="ch_hid_region" value="{{ $chapterList[0]->region }}">
               </div>
               </div>
+            </div>
+        </div>
 
-              <div class="box-header with-border mrg-t-10">
-                <h3 class="box-title">Awards</h3>
-              </div>
-              <div class="box-body">
+                <div class="card-header">
+                    <h3 class="card-title">Awards</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="row">
+          <!-- /.form group -->
                     <div class="col-md-12">
                         <div class="form-group col-md-4">
                             <label for="NominationType1">Award #1:</label>
@@ -79,7 +92,7 @@
                             <div class="col-md-12">
                             <div class="form-inline">
                                 <label style="display: block;">Status:<span class="field-required">*</span></label>
-                                <select id="checkAward1Approved" name="checkAward1Approved" class="form-control select2" style="width: 150px;">
+                                <select id="checkAward1Approved" name="checkAward1Approved" class="form-control select2-bs4" style="width: 150px;">
                                     <option value="" {{ is_null($financial_report_array->check_award_1_approved) ? 'selected' : '' }} >Please Select</option>
                                     <option value="0" {{$financial_report_array->check_award_1_approved === 0 ? 'selected' : ''}}>No</option>
                                     <option value="1" {{$financial_report_array->check_award_1_approved == 1 ? 'selected' : ''}}>Yes</option>
@@ -111,7 +124,7 @@
                             <div class="col-md-12">
                             <div class="form-inline">
                                 <label style="display: block;">Status:<span class="field-required">*</span></label>
-                                <select id="checkAward2Approved" name="checkAward2Approved" class="form-control select2" style="width: 150px;" >
+                                <select id="checkAward2Approved" name="checkAward2Approved" class="form-control select2-bs4" style="width: 150px;" >
                                     <option value="" {{ is_null($financial_report_array->check_award_2_approved) ? 'selected' : '' }} >Please Select</option>
                                     <option value="0" {{$financial_report_array->check_award_2_approved === 0 ? 'selected' : ''}}>No</option>
                                     <option value="1" {{$financial_report_array->check_award_2_approved == 1 ? 'selected' : ''}}>Yes</option>
@@ -143,7 +156,7 @@
                             <div class="col-md-12">
                             <div class="form-inline">
                                 <label style="display: block;">Status:<span class="field-required">*</span></label>
-                                <select id="checkAward3Approved" name="checkAward3Approved" class="form-control select2" style="width: 150px;" >
+                                <select id="checkAward3Approved" name="checkAward3Approved" class="form-control select2-bs4" style="width: 150px;" >
                                     <option value="" {{ is_null($financial_report_array->check_award_3_approved) ? 'selected' : '' }} >Please Select</option>
                                     <option value="0" {{$financial_report_array->check_award_3_approved === 0 ? 'selected' : ''}}>No</option>
                                     <option value="1" {{$financial_report_array->check_award_3_approved == 1 ? 'selected' : ''}}>Yes</option>
@@ -175,7 +188,7 @@
                             <div class="col-md-12">
                             <div class="form-inline">
                                 <label style="display: block;">Status:<span class="field-required">*</span></label>
-                                <select id="checkAward4Approved" name="checkAward4Approved" class="form-control select2" style="width: 150px;" >
+                                <select id="checkAward4Approved" name="checkAward4Approved" class="form-control select2-bs4" style="width: 150px;" >
                                     <option value="" {{ is_null($financial_report_array->check_award_4_approved) ? 'selected' : '' }} >Please Select</option>
                                     <option value="0" {{$financial_report_array->check_award_4_approved === 0 ? 'selected' : ''}}>No</option>
                                     <option value="1" {{$financial_report_array->check_award_4_approved == 1 ? 'selected' : ''}}>Yes</option>
@@ -207,7 +220,7 @@
                             <div class="col-md-12">
                             <div class="form-inline">
                                 <label style="display: block;">Status:<span class="field-required">*</span></label>
-                                <select id="checkAward5Approved" name="checkAward5Approved" class="form-control select2" style="width: 150px;" >
+                                <select id="checkAward5Approved" name="checkAward5Approved" class="form-control select2-bs4" style="width: 150px;" >
                                     <option value="" {{ is_null($financial_report_array->check_award_5_approved) ? 'selected' : '' }} >Please Select</option>
                                     <option value="0" {{$financial_report_array->check_award_5_approved === 0 ? 'selected' : ''}}>No</option>
                                     <option value="1" {{$financial_report_array->check_award_5_approved == 1 ? 'selected' : ''}}>Yes</option>
@@ -221,14 +234,16 @@
                            </div>
                     </div>
                 </div>
-                </div>
-                </div>
-              <div class="box-body text-center">
-                    <button type="submit" class="btn btn-themeBlue margin"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-                    <button type="button" class="btn btn-themeBlue margin" onclick="window.history.go(-1); return false;"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</button>
+            </div>
+
+
+              <div class="card-body text-center">
+                    <button type="submit" class="btn bg-gradient-primary"><i class="fas fa-save" ></i>&nbsp;&nbsp;&nbsp;Save</button>
+                    <button type="button" class="btn bg-gradient-primary" onclick="window.history.go(-1); return false;"><i class="fas fa-reply" ></i>&nbsp;&nbsp;&nbsp;Back</button>
               </div>
               </div>
             </div>
+        </div>
         </section>
     </form>
 @endsection

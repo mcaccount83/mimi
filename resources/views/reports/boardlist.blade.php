@@ -2,28 +2,34 @@
 
 @section('content')
  <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-      BoardList
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">BoardList</li>
-      </ol>
-    </section>
-    <!-- Main content -->
-    <section class="content">
-      <div class="row">
-		<div class="col-md-12">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">BoardList</h3>
+ <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>BoardList</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">BoardList</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
 
-            </div>
-            <!-- /.box-header -->
-
-            <div class="box-body table-responsive">
-              <table id="chapterlist" class="table table-bordered table-hover">
+             <!-- Main content -->
+     <section class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">List of Board Email Addresses</h3>
+                </div>
+                <!-- /.card-header -->
+            <div class="card-body">
+              <table id="chapterlist" class="table table-sm table-hover">
               <thead>
 			    <tr>
 			      <th>Conf</th>
@@ -32,9 +38,9 @@
                   <th>Chapter Email</th>
                   <th>Prez Email</th>
                   <th>AVP Email</th>
-              <th>MVP Email</th>
-              <th>Sec Email</th>
-              <th>Treas Email</th>
+                <th>MVP Email</th>
+                <th>Sec Email</th>
+                <th>Treas Email</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -53,8 +59,9 @@
                   @endforeach
                   </tbody>
                 </table>
-                <div class="box-body text-center">
-                    <a href="{{ route('export.boardlist','0') }}"><button class="btn btn-themeBlue margin"><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export BoardList</button></a>
+            </div>
+                <div class="card-body text-center">
+                    <a href="{{ route('export.boardlist','0') }}"><button class="btn bg-gradient-primary"><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export BoardList</button></a>
                 </div>
             </div>
            </div>

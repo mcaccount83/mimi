@@ -1,33 +1,33 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
- <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-      International M2M Donations Report
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">M2M Donations</li>
-      </ol>
-    </section>
-    	 @if ($message = Session::get('success'))
-      <div class="alert alert-success">
-         <p>{{ $message }}</p>
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>International M2M Donations Report</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">International M2M Donations Report</li>
+          </ol>
+        </div>
       </div>
-    @endif
-    <!-- Main content -->
-    <section class="content">
+    </div><!-- /.container-fluid -->
+  </section>
+
+ <!-- Main content -->
+ <section class="content">
+    <div class="container-fluid">
       <div class="row">
-		<div class="col-md-12">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">International M2M Donations</h3>
-
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">International M2M Donations</h3>
             </div>
-            <!-- /.box-header -->
-
-            <div class="box-body table-responsive">
+            <!-- /.card-header -->
+        <div class="card-body">
               <table id="chapterlist" class="table table-bordered table-hover">
               <thead>
 			    <tr>
@@ -54,18 +54,16 @@
                   @endforeach
                   </tbody>
                 </table>
-
                 </div>
+                <div class="card-body text-center">&nbsp;</div>
               </div>
               </div>
             </div>
 
            </div>
           <!-- /.box -->
-        </div>
-      </div>
+
     </section>
-    <!-- Main content -->
 
     <!-- /.content -->
 

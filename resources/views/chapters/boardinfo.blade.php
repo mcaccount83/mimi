@@ -1,42 +1,49 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
- <section class="content-header">
-      <h1>
-        Board Election Report
-       <small>Edit</small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Board Election Report</li>
-      </ol>
-    </section>
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Board Election Report&nbsp;<small>(Edit)</small></h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">Board Election Report</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
 
     <!-- Main content -->
     <form id="board-info" method="POST" action='{{ route("chapter.createboardinfo",$chapterList[0]->id) }}'>
     @csrf
     <input type="hidden" name="submit_type" id="submit_type" value="" />
-    <section class="content">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="box card">
-            <div class="box-header with-border">
-              <h3 class="box-title">Chapter</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-                <!-- /.form group -->
-              <div class="col-sm-4 col-xs-12">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Re-Registration Payment</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="row">
+          <!-- /.form group -->
+              <div class="col-sm-4">
               <div class="form-group">
                 <label>MOMS Club of</label>
-                <input type="text" name="ch_name" class="form-control my-colorpicker1" disabled value="{{ $chapterList[0]->name }}">
+                <input type="text" name="ch_name" class="form-control" disabled value="{{ $chapterList[0]->name }}">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-4 col-xs-12">
+              <div class="col-sm-4">
               <div class="form-group">
                 <label>State</label>
-                <select id="ch_state" name="ch_state" class="form-control select2" style="width: 100%;" disabled>
+                <select id="ch_state" name="ch_state" class="form-control select2-sb4" style="width: 100%;" disabled>
                   <option value="">Select State</option>
                     @foreach($stateArr as $state)
                       <option value="{{$state->id}}" {{$chapterList[0]->state == $state->id  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
@@ -45,19 +52,23 @@
               </div>
               </div>
               </div>
-                            <div class="box-header with-border mrg-t-10">
-                <h3 class="box-title">Boundaries</h3>
-              </div>
-              <div class="box-body">
-              <!-- /.form group -->
-              <div class="col-sm-12 col-xs-12">
+            </div>
+
+            <div class="card-header">
+                <h3 class="card-title">Boundraies</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row">
+      <!-- /.form group -->
+              <div class="col-sm-12">
               <div class="form-group">
                 <label>Boundary Description</label>
-                <input type="text" name="ch_name" class="form-control my-colorpicker1" maxlength="200"  value="{{ $chapterList[0]->territory }}" readonly>
+                <input type="text" name="ch_name" class="form-control" maxlength="200"  value="{{ $chapterList[0]->territory }}" readonly>
               </div>
               </div>
 
-                <div class="col-sm-6 col-xs-12">
+                <div class="col-sm-6">
                     <div class="form-group">
                         <label class="span-t mrg-10">
                             <input type="radio" class="" name="BoundaryStatus" onclick="return BoundaryError(false)" id="BoundaryStatus1" value="0" <?php if (!is_null($chapterList[0]->boundary_issues) && (!$chapterList[0]->boundary_issues == 1)) echo "checked"; ?> required readonly>
@@ -66,7 +77,7 @@
                         </label>
                     </div>
                 </div>
-                <div class="col-sm-6 col-xs-12">
+                <div class="col-sm-6">
                     <div class="form-group">
                         <label class="span-t mrg-10">
                             <input type="radio" class="" name="BoundaryStatus" onClick="return BoundaryError(true)" id="BoundaryStatus2" value="1" <?php if ($chapterList[0]->boundary_issues == 1) echo "checked"; ?> required readonly>
@@ -75,96 +86,104 @@
                         </label>
                     </div>
                 </div>
-                <div class="col-sm-12 col-xs-12">
+                <div class="col-sm-12">
                 <div class="form-group" id="BoundaryIssueLabel">
                     <label id="">PLEASE INDICATE WHICH PART OF THE BOUNDARIES DO NOT MATCH YOUR RECORDS:</label>
-                    <input type="text" name="BoundaryIssue" id="BoundaryIssue" class="form-control my-colorpicker1" value="{{ $chapterList[0]->boundary_issue_notes }}" maxlength="250" readonly>
+                    <input type="text" name="BoundaryIssue" id="BoundaryIssue" class="form-control" value="{{ $chapterList[0]->boundary_issue_notes }}" maxlength="250" >
                 </div>
               </div>
               </div>
-              <div class="box-header with-border mrg-t-10">
-                <h3 class="box-title">Inquiries</h3>
-              </div>
-              <div class="box-body">
-              <!-- /.form group -->
-              		<div class="col-sm-12 col-xs-12">
+            </div>
+
+            <div class="card-header">
+                <h3 class="card-title">Inquiries</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row">
+      <!-- /.form group -->
+              		<div class="col-sm-12">
 							<div class="form-group">
 								<label>Email Address to Give to MOMS Interested in joining your Chapter</label> <span class="field-required">*</span>
 								<input type="text" name="InquiriesContact" class="form-control" value="{{ $chapterList[0]->inquiries_contact }}" required maxlength="50">
 							</div>
 						</div>
                  <!-- /.form group -->
-                 <div class="col-sm-6 col-xs-12">
+                 <div class="col-sm-6">
                     <div class="form-group">
                       <label>Chapter Website</label>
-                      <input type="text" name="ch_website" class="form-control my-colorpicker1" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}" maxlength="50" id="validate_url" onchange="is_url(); updateWebsiteStatus();">
+                      <input type="text" name="ch_website" class="form-control" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}" maxlength="50" id="validate_url" onchange="is_url(); updateWebsiteStatus();">
                     </div>
                     </div>
                       <!-- /.form group -->
-               <div class="col-sm-6 col-xs-12">
+               <div class="col-sm-6">
                 <div class="form-group">
                     <label>Website Link Status</label> <span class="field-required">*</span>
-                    <select id="ch_webstatus" name="ch_webstatus" class="form-control select2" style="width: 100%;" required>
+                    <select id="ch_webstatus" name="ch_webstatus" class="form-control select2-sb4" style="width: 100%;" required>
                         <option value="0" id="option0" {{$chapterList[0]->website_status == 0 ? 'selected' : ''}} disabled>Website Not Linked</option>
                         <option value="1" id="option1" {{$chapterList[0]->website_status == 1 ? 'selected' : ''}} disabled>Website Linked</option>
                         <option value="2" id="option2" {{$chapterList[0]->website_status == 2 ? 'selected' : ''}}>Add Link Requested</option>
                         <option value="3" id="option3" {{$chapterList[0]->website_status == 3 ? 'selected' : ''}}>Do Not Link</option>
                     </select>
-
                 </div>
             </div>
-            <div class="box-header with-border mrg-t-10">
-                <h3 class="box-title">President</h3>
-              </div>
-              <div class="box-body">
-              <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+        </div>
+    </div>
+
+    <div class="card-header">
+        <h3 class="card-title">President</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <div class="row">
+<!-- /.form group -->
+              <div class="col-sm-6">
               <div class="form-group">
                 <label>First Name</label> <span class="field-required">*</span>
-                <input type="text" name="ch_pre_fname" class="form-control my-colorpicker1" value="{{ $PREDetails[0]->pre_fname }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_pre_fname" class="form-control" value="{{ $PREDetails[0]->pre_fname }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6">
               <div class="form-group">
                 <label>Last Name</label> <span class="field-required">*</span>
-                <input type="text" name="ch_pre_lname" class="form-control my-colorpicker1" value="{{ $PREDetails[0]->pre_lname }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_pre_lname" class="form-control" value="{{ $PREDetails[0]->pre_lname }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
                             <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6">
               <div class="form-group">
                 <label>Email</label> <span class="field-required">*</span>
-                <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control my-colorpicker1" onblur="checkDuplicateEmail(this.value,this.id)" value="{{ $PREDetails[0]->pre_email }}" maxlength="50" required>
+                <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{ $PREDetails[0]->pre_email }}" maxlength="50" required>
                 <input type="hidden" id="ch_pre_email_chk" value="{{ $PREDetails[0]->pre_email }}">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label>Phone</label> <span class="field-required">*</span>
-                <input type="text" name="ch_pre_phone" id="ch_pre_phone" class="form-control my-colorpicker1" value="{{ $PREDetails[0]->pre_phone }}" maxlength="12" required onkeypress="return isPhone(event)">
-              </div>
-              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                    <label>Phone</label><span class="field-required">*</span>
+                        <input type="text" name="ch_pre_phone" id="ch_pre_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{ $PREDetails[0]->pre_phone }}" required>
+                </div>
+            </div>
               <!-- /.form group -->
-              <div class="col-sm-12 col-xs-12">
+              <div class="col-sm-12">
               <div class="form-group">
                 <label>Street Address</label> <span class="field-required">*</span>
-                <input type="text" name="ch_pre_street" class="form-control my-colorpicker1" maxlength="250" value="{{ $PREDetails[0]->pre_addr }}">
+                <input type="text" name="ch_pre_street" class="form-control" maxlength="250" value="{{ $PREDetails[0]->pre_addr }}">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-4 col-xs-12">
+              <div class="col-sm-4">
               <div class="form-group">
                 <label>City</label> <span class="field-required">*</span>
-                <input type="text" name="ch_pre_city" class="form-control my-colorpicker1" maxlength="50" value="{{ $PREDetails[0]->pre_city }}" required onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_pre_city" class="form-control" maxlength="50" value="{{ $PREDetails[0]->pre_city }}" required onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-4 col-xs-12">
+              <div class="col-sm-4">
               <div class="form-group">
                 <label>State</label> <span class="field-required">*</span>
-                <select name="ch_pre_state" class="form-control select2" style="width: 100%;" required>
+                <select name="ch_pre_state" class="form-control select2-sb4" style="width: 100%;" required>
                 <option value="">Select State</option>
                     @foreach($stateArr as $state)
                       <option value="{{$state->state_short_name}}" {{$PREDetails[0]->pre_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
@@ -173,65 +192,78 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-4 col-xs-12">
+              <div class="col-sm-4">
               <div class="form-group">
                 <label>Zip</label> <span class="field-required">*</span>
-                <input type="text" name="ch_pre_zip" class="form-control my-colorpicker1" value="{{ $PREDetails[0]->pre_zip }}" maxlength="10" required onkeypress="return isNumber(event)">
+                <input type="text" name="ch_pre_zip" class="form-control" value="{{ $PREDetails[0]->pre_zip }}" maxlength="10" required onkeypress="return isNumber(event)">
               </div>
               </div>
                 <input type="hidden" name="presID" id="presID" value="<?php echo $PREDetails[0]->ibd_id; ?>" />
               </div>
-              <div class="box-header with-border mrg-t-10">
-                <h3 class="box-title">AVP</h3>
-              </div>
-              <div class="box-body">
-              <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+            </div>
+
+            <div class="card-header">
+                <h3 class="card-title">AVP</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row">
+                     <!-- /.form group -->
+              <div class="col-sm-12">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" name="AVPVacant" id="AVPVacant" class="custom-control-input" {{$AVPDetails[0]->avp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
+                    <label class="custom-control-label" for="AVPVacant">Vacant</label>
+                </div>
+                </div>
+                <div class="col-sm-12 avp-field">&nbsp;</div>
+      <!-- /.form group -->
+              <div class="col-sm-6 avp-field">
               <div class="form-group">
                 <label>First Name</label>
-                <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control my-colorpicker1" value="{{$AVPDetails[0]->avp_fname != ''  ? $AVPDetails[0]->avp_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control" value="{{$AVPDetails[0]->avp_fname != ''  ? $AVPDetails[0]->avp_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 avp-field">
               <div class="form-group">
                 <label>Last Name</label>
-                <input type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control my-colorpicker1" value="{{$AVPDetails[0]->avp_lname != ''  ? $AVPDetails[0]->avp_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control" value="{{$AVPDetails[0]->avp_lname != ''  ? $AVPDetails[0]->avp_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 avp-field">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="ch_avp_email" id="ch_avp_email" class="form-control my-colorpicker1" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$AVPDetails[0]->avp_email != ''  ? $AVPDetails[0]->avp_email : ''}}" maxlength="50">
+                <input type="email" name="ch_avp_email" id="ch_avp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$AVPDetails[0]->avp_email != ''  ? $AVPDetails[0]->avp_email : ''}}" maxlength="50">
                 <input type="hidden" id="ch_avp_email_chk" value="{{ $AVPDetails[0]->avp_email }}">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label>Phone</label>
-                <input type="text" name="ch_avp_phone" id="ch_avp_phone" class="form-control my-colorpicker1" value="{{$AVPDetails[0]->avp_phone != ''  ? $AVPDetails[0]->avp_phone : ''}}" maxlength="12" required onkeypress="return isPhone(event)">
-              </div>
-              </div>
+              <div class="col-sm-6  avp-field">
+                <div class="form-group">
+                  <label>Phone</label>
+                  <input type="text" name="ch_avp_phone" id="ch_avp_phone" class="form-control " data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$AVPDetails[0]->avp_phone != ''  ? $AVPDetails[0]->avp_phone : ''}}">
+                </div>
+                </div>
+
               <!-- /.form group -->
-               <div class="col-sm-12 col-xs-12">
+               <div class="col-sm-12 avp-field">
               <div class="form-group">
                 <label>Street Address</label>
-                <input type="text" name="ch_avp_street" id="ch_avp_street" class="form-control my-colorpicker1" rows="4" maxlength="250" value="{{$AVPDetails[0]->avp_addr != ''  ? $AVPDetails[0]->avp_addr : ''}}">
+                <input type="text" name="ch_avp_street" id="ch_avp_street" class="form-control" rows="4" maxlength="250" value="{{$AVPDetails[0]->avp_addr != ''  ? $AVPDetails[0]->avp_addr : ''}}">
               </div>
               </div>
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 avp-field">
               <div class="form-group">
                 <label>City</label>
-                <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control my-colorpicker1" value="{{$AVPDetails[0]->avp_city != ''  ? $AVPDetails[0]->avp_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control" value="{{$AVPDetails[0]->avp_city != ''  ? $AVPDetails[0]->avp_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 avp-field">
               <div class="form-group">
                 <label>State</label>
-                <select name="ch_avp_state" id="ch_avp_state" class="form-control select2" style="width: 100%;" >
+                <select name="ch_avp_state" id="ch_avp_state" class="form-control select2-sb4" style="width: 100%;" >
                 <option value="">Select State</option>
                     @foreach($stateArr as $state)
                       <option value="{{$state->state_short_name}}" {{$AVPDetails[0]->avp_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
@@ -240,76 +272,87 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 avp-field">
               <div class="form-group">
                 <label>Zip</label>
-                <input type="text" name="ch_avp_zip" id="ch_avp_zip" maxlength="10" class="form-control my-colorpicker1" value="{{$AVPDetails[0]->avp_zip != ''  ? $AVPDetails[0]->avp_zip : ''}}" onkeypress="return isNumber(event)">
+                <input type="text" name="ch_avp_zip" id="ch_avp_zip" maxlength="10" class="form-control" value="{{$AVPDetails[0]->avp_zip != ''  ? $AVPDetails[0]->avp_zip : ''}}" onkeypress="return isNumber(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="radio-chk">
-                <div class="col-sm-6 col-xs-12">
+              {{-- <div class="radio-chk">
+                <div class="col-sm-6">
                     <div class="form-group">
                         <label>Vacant</label>
                         <label style="display: block;"><input type="checkbox" name="AVPVacant" id="AVPVacant" class="ios-switch green bigswitch" {{$AVPDetails[0]->avp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" /><div><div></div></div>
                         </label>
                     </div>
                 </div>
-              </div>
+              </div> --}}
              <input type="hidden" name="avpID" id="avpID" value="<?php echo $AVPDetails[0]->ibd_id; ?>" />
+            </div>
+              </div>
 
-              </div>
-              <div class="box-header with-border mrg-t-10">
-                <h3 class="box-title">MVP</h3>
-              </div>
-              <div class="box-body">
-              <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="card-header">
+                <h3 class="card-title">MVP</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row">
+                    <!-- /.form group -->
+              <div class="col-sm-12">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" name="MVPVacant" id="MVPVacant" class="custom-control-input" {{$MVPDetails[0]->mvp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
+                    <label class="custom-control-label" for="MVPVacant">Vacant</label>
+                </div>
+                </div>
+                <div class="col-sm-12 mvp-field">&nbsp;</div>
+      <!-- /.form group -->
+              <div class="col-sm-6 mvp-field">
               <div class="form-group">
                 <label>First Name</label>
-                <input type="text" name="ch_mvp_fname" id="ch_mvp_fname"  class="form-control my-colorpicker1" value="{{$MVPDetails[0]->mvp_fname != ''  ? $MVPDetails[0]->mvp_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_mvp_fname" id="ch_mvp_fname"  class="form-control" value="{{$MVPDetails[0]->mvp_fname != ''  ? $MVPDetails[0]->mvp_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 mvp-field">
               <div class="form-group">
                 <label>Last Name</label>
-                <input type="text" name="ch_mvp_lname" id="ch_mvp_lname" class="form-control my-colorpicker1" value="{{$MVPDetails[0]->mvp_lname != ''  ? $MVPDetails[0]->mvp_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_mvp_lname" id="ch_mvp_lname" class="form-control" value="{{$MVPDetails[0]->mvp_lname != ''  ? $MVPDetails[0]->mvp_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 mvp-field">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="ch_mvp_email" id="ch_mvp_email" class="form-control my-colorpicker1" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$MVPDetails[0]->mvp_email != ''  ? $MVPDetails[0]->mvp_email : ''}}" maxlength="50">
+                <input type="email" name="ch_mvp_email" id="ch_mvp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$MVPDetails[0]->mvp_email != ''  ? $MVPDetails[0]->mvp_email : ''}}" maxlength="50">
                 <input type="hidden" id="ch_mvp_email_chk" value="{{ $MVPDetails[0]->mvp_email }}">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label>Phone</label>
-                <input type="text" name="ch_mvp_phone" id="ch_mvp_phone" class="form-control my-colorpicker1" value="{{$MVPDetails[0]->mvp_phone != ''  ? $MVPDetails[0]->mvp_phone : ''}}" maxlength="12" required onkeypress="return isPhone(event)">
-              </div>
-              </div>
+              <div class="col-sm-6 mvp-field">
+                <div class="form-group">
+                  <label>Phone</label>
+                  <input type="text" name="ch_mvp_phone" id="ch_mvp_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$MVPDetails[0]->mvp_phone != ''  ? $MVPDetails[0]->mvp_phone : ''}}">
+                </div>
+                </div>
                <!-- /.form group -->
-               <div class="col-sm-12 col-xs-12">
+               <div class="col-sm-12 mvp-field">
               <div class="form-group">
                 <label>Street Address</label>
-                <input type="text" name="ch_mvp_street" id="ch_mvp_street" class="form-control my-colorpicker1" rows="4" maxlength="250" value="{{$MVPDetails[0]->mvp_addr != ''  ? $MVPDetails[0]->mvp_addr : ''}}">
+                <input type="text" name="ch_mvp_street" id="ch_mvp_street" class="form-control" rows="4" maxlength="250" value="{{$MVPDetails[0]->mvp_addr != ''  ? $MVPDetails[0]->mvp_addr : ''}}">
               </div>
               </div>
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 mvp-field">
               <div class="form-group">
                 <label>City</label>
-                <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control my-colorpicker1" value="{{$MVPDetails[0]->mvp_city != ''  ? $MVPDetails[0]->mvp_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control" value="{{$MVPDetails[0]->mvp_city != ''  ? $MVPDetails[0]->mvp_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 mvp-field">
               <div class="form-group">
                 <label>State</label>
-                <select name="ch_mvp_state" id="ch_mvp_state" class="form-control select2" style="width: 100%;">
+                <select name="ch_mvp_state" id="ch_mvp_state" class="form-control select2-sb4" style="width: 100%;">
                 <option value="">Select State</option>
                     @foreach($stateArr as $state)
                       <option value="{{$state->state_short_name}}" {{$MVPDetails[0]->mvp_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
@@ -318,75 +361,87 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 mvp-field">
               <div class="form-group">
                 <label>Zip</label>
-                <input type="text" name="ch_mvp_zip" id="ch_mvp_zip" maxlength="10" class="form-control my-colorpicker1" value="{{$MVPDetails[0]->mvp_zip != ''  ? $MVPDetails[0]->mvp_zip : ''}}" onkeypress="return isNumber(event)">
+                <input type="text" name="ch_mvp_zip" id="ch_mvp_zip" maxlength="10" class="form-control" value="{{$MVPDetails[0]->mvp_zip != ''  ? $MVPDetails[0]->mvp_zip : ''}}" onkeypress="return isNumber(event)">
               </div>
               </div>
               <!-- /.form group -->
-               <div class="radio-chk">
-                <div class="col-sm-6 col-xs-12">
+               {{-- <div class="radio-chk">
+                <div class="col-sm-6">
                     <div class="form-group">
                         <label>Vacant</label>
                         <label style="display: block;"><input type="checkbox" name="MVPVacant" id="MVPVacant" class="ios-switch green bigswitch" {{$MVPDetails[0]->mvp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)"/><div><div></div></div>
                         </label>
                     </div>
                 </div>
-              </div>
+              </div> --}}
              <input type="hidden" name="mvpID" id="mvpID" value="<?php echo $MVPDetails[0]->ibd_id; ?>" />
               </div>
-              <div class="box-header with-border mrg-t-10">
-                <h3 class="box-title">Treasurer</h3>
-              </div>
-              <div class="box-body">
-              <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+            </div>
+
+              <div class="card-header">
+                    <h3 class="card-title">Treasurer</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="row">
+                        <!-- /.form group -->
+              <div class="col-sm-12">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input" {{$TRSDetails[0]->trs_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
+                    <label class="custom-control-label" for="TreasVacant">Vacant</label>
+                </div>
+                </div>
+                <div class="col-sm-12 treas-field">&nbsp;</div>
+          <!-- /.form group -->
+              <div class="col-sm-6 treas-field">
               <div class="form-group">
                 <label>First Name</label>
-                <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control my-colorpicker1" value="{{$TRSDetails[0]->trs_fname != ''  ? $TRSDetails[0]->trs_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control" value="{{$TRSDetails[0]->trs_fname != ''  ? $TRSDetails[0]->trs_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 treas-field">
               <div class="form-group">
                 <label>Last Name</label>
-                <input type="text" name="ch_trs_lname" id="ch_trs_lname" class="form-control my-colorpicker1" value="{{$TRSDetails[0]->trs_lname != ''  ? $TRSDetails[0]->trs_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_trs_lname" id="ch_trs_lname" class="form-control" value="{{$TRSDetails[0]->trs_lname != ''  ? $TRSDetails[0]->trs_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
              <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 treas-field">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="ch_trs_email" id="ch_trs_email" class="form-control my-colorpicker1" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$TRSDetails[0]->trs_email != ''  ? $TRSDetails[0]->trs_email : ''}}" maxlength="50">
+                <input type="email" name="ch_trs_email" id="ch_trs_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$TRSDetails[0]->trs_email != ''  ? $TRSDetails[0]->trs_email : ''}}" maxlength="50">
                 <input type="hidden" id="ch_trs_email_chk" value="{{ $TRSDetails[0]->trs_email }}">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label>Phone</label>
-                <input type="text" name="ch_trs_phone" id="ch_trs_phone" class="form-control my-colorpicker1" value="{{$TRSDetails[0]->trs_phone != ''  ? $TRSDetails[0]->trs_phone : ''}}" maxlength="12" required onkeypress="return isPhone(event)">
-              </div>
-              </div>
+              <div class="col-sm-6 treas-field">
+                <div class="form-group">
+                  <label>Phone</label>
+                  <input type="text" name="ch_trs_phone" id="ch_trs_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$TRSDetails[0]->trs_phone != ''  ? $TRSDetails[0]->trs_phone : ''}}">
+                </div>
+                </div>
                <!-- /.form group -->
-               <div class="col-sm-12 col-xs-12">
+               <div class="col-sm-12 treas-field">
               <div class="form-group">
                 <label>Street Address</label>
-                <input type="text" name="ch_trs_street" id="ch_trs_street" class="form-control my-colorpicker1" rows="4" maxlength="250" valie="{{$TRSDetails[0]->trs_addr != ''  ? $TRSDetails[0]->trs_addr : ''}}">
+                <input type="text" name="ch_trs_street" id="ch_trs_street" class="form-control" rows="4" maxlength="250" valie="{{$TRSDetails[0]->trs_addr != ''  ? $TRSDetails[0]->trs_addr : ''}}">
               </div>
               </div>
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 treas-field">
               <div class="form-group">
                 <label>City</label>
-                <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control my-colorpicker1" value="{{$TRSDetails[0]->trs_city != ''  ? $TRSDetails[0]->trs_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control" value="{{$TRSDetails[0]->trs_city != ''  ? $TRSDetails[0]->trs_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 treas-field">
               <div class="form-group">
                 <label>State</label>
-                <select name="ch_trs_state" id="ch_trs_state" class="form-control select2" style="width: 100%;">
+                <select name="ch_trs_state" id="ch_trs_state" class="form-control select2-sb4" style="width: 100%;">
                 <option value="">Select State</option>
                     @foreach($stateArr as $state)
                       <option value="{{$state->state_short_name}}" {{$TRSDetails[0]->trs_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
@@ -395,76 +450,87 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 treas-field">
               <div class="form-group">
                 <label>Zip</label>
-                <input type="text" name="ch_trs_zip" id="ch_trs_zip" maxlength="10" class="form-control my-colorpicker1" value="{{$TRSDetails[0]->trs_zip != ''  ? $TRSDetails[0]->trs_zip : ''}}" onkeypress="return isNumber(event)">
+                <input type="text" name="ch_trs_zip" id="ch_trs_zip" maxlength="10" class="form-control" value="{{$TRSDetails[0]->trs_zip != ''  ? $TRSDetails[0]->trs_zip : ''}}" onkeypress="return isNumber(event)">
               </div>
               </div>
               <!-- /.form group -->
-               <div class="radio-chk">
-                <div class="col-sm-6 col-xs-12">
+               {{-- <div class="radio-chk">
+                <div class="col-sm-6">
                     <div class="form-group">
                         <label>Vacant</label>
                         <label style="display: block;"><input type="checkbox" name="TreasVacant" id="TreasVacant" class="ios-switch green bigswitch" {{$TRSDetails[0]->trs_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)"/><div><div></div></div>
                         </label>
                     </div>
                 </div>
-              </div>
+              </div> --}}
              <input type="hidden" name="trsID" id="trsID" value="<?php echo $TRSDetails[0]->ibd_id; ?>" />
+            </div>
+              </div>
 
-              </div>
-              <div class="box-header with-border mrg-t-10">
-                <h3 class="box-title">Secretary</h3>
-              </div>
-              <div class="box-body">
-              <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="card-header">
+                <h3 class="card-title">Secretary</h3>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="row">
+                    <!-- /.form group -->
+              <div class="col-sm-12">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" name="SecVacant" id="SecVacant" class="custom-control-input" {{$SECDetails[0]->sec_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
+                    <label class="custom-control-label" for="SecVacant">Vacant</label>
+                </div>
+                </div>
+                <div class="col-sm-12 sec-field">&nbsp;</div>
+      <!-- /.form group -->
+              <div class="col-sm-6 sec-field">
               <div class="form-group">
                 <label>First Name</label>
-                <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control my-colorpicker1" value="{{$SECDetails[0]->sec_fname != ''  ? $SECDetails[0]->sec_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control" value="{{$SECDetails[0]->sec_fname != ''  ? $SECDetails[0]->sec_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 sec-field">
               <div class="form-group">
                 <label>Last Name</label>
-                <input type="text" name="ch_sec_lname" id="ch_sec_lname" class="form-control my-colorpicker1" value="{{$SECDetails[0]->sec_lname != ''  ? $SECDetails[0]->sec_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_sec_lname" id="ch_sec_lname" class="form-control" value="{{$SECDetails[0]->sec_lname != ''  ? $SECDetails[0]->sec_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
              <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 sec-field">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="ch_sec_email" id="ch_sec_email" class="form-control my-colorpicker1" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$SECDetails[0]->sec_email != ''  ? $SECDetails[0]->sec_email : ''}}" maxlength="50">
+                <input type="email" name="ch_sec_email" id="ch_sec_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$SECDetails[0]->sec_email != ''  ? $SECDetails[0]->sec_email : ''}}" maxlength="50">
                 <input type="hidden" id="ch_sec_email_chk" value="{{ $SECDetails[0]->sec_email }}">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
-              <div class="form-group">
-                <label>Phone</label>
-                <input type="text" name="ch_sec_phone" id="ch_sec_phone" maxlength="12" class="form-control my-colorpicker1" value="{{$SECDetails[0]->sec_phone != ''  ? $SECDetails[0]->sec_phone : ''}}" maxlength="12" required onkeypress="return isPhone(event)">
-              </div>
-              </div>
+              <div class="col-sm-6 sec-field">
+                <div class="form-group">
+                  <label>Phone</label>
+                  <input type="text" name="ch_sec_phone" id="ch_sec_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$SECDetails[0]->sec_phone != ''  ? $SECDetails[0]->sec_phone : ''}}" >
+                </div>
+                </div>
                <!-- /.form group -->
-               <div class="col-sm-12 col-xs-12">
+               <div class="col-sm-12 sec-field">
               <div class="form-group">
                 <label>Street Address</label>
-                <input type="text" name="ch_sec_street" id="ch_sec_street" class="form-control my-colorpicker1" rows="4" maxlength="250" value="{{$SECDetails[0]->sec_addr != ''  ? $SECDetails[0]->sec_addr : ''}}">
+                <input type="text" name="ch_sec_street" id="ch_sec_street" class="form-control" rows="4" maxlength="250" value="{{$SECDetails[0]->sec_addr != ''  ? $SECDetails[0]->sec_addr : ''}}">
               </div>
               </div>
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 sec-field">
               <div class="form-group">
                 <label>City</label>
-                <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control my-colorpicker1" value="{{$SECDetails[0]->sec_city != ''  ? $SECDetails[0]->sec_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control" value="{{$SECDetails[0]->sec_city != ''  ? $SECDetails[0]->sec_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 sec-field">
               <div class="form-group">
                 <label>State</label>
-                <select name="ch_sec_state" id="ch_sec_state" class="form-control select2" style="width: 100%;">
+                <select name="ch_sec_state" id="ch_sec_state" class="form-control select2-sb4" style="width: 100%;">
                 <option value="">Select State</option>
                     @foreach($stateArr as $state)
                       <option value="{{$state->state_short_name}}" {{$SECDetails[0]->sec_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
@@ -473,38 +539,35 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 col-xs-12">
+              <div class="col-sm-6 sec-field">
               <div class="form-group">
                 <label>Zip</label>
-                <input type="text" name="ch_sec_zip" id="ch_sec_zip" maxlength="10" class="form-control my-colorpicker1" value="{{$SECDetails[0]->sec_zip != ''  ? $SECDetails[0]->sec_zip : ''}}" onkeypress="return isNumber(event)">
+                <input type="text" name="ch_sec_zip" id="ch_sec_zip" maxlength="10" class="form-control" value="{{$SECDetails[0]->sec_zip != ''  ? $SECDetails[0]->sec_zip : ''}}" onkeypress="return isNumber(event)">
               </div>
               </div>
               <!-- /.form group -->
-               <div class="radio-chk">
-                <div class="col-sm-6 col-xs-12">
+               {{-- <div class="radio-chk">
+                <div class="col-sm-6">
                     <div class="form-group">
                         <label>Vacant</label>
                         <label style="display: block;"><input type="checkbox" name="SecVacant" id="SecVacant" class="ios-switch green bigswitch" {{$SECDetails[0]->sec_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)"/><div><div></div></div>
                         </label>
                     </div>
                 </div>
-              </div>
+              </div> --}}
               <input type="hidden" name="secID" id="secID" value="<?php echo $SECDetails[0]->ibd_id; ?>" />
               </div>
-
-              </div>
-      </div>
-
-            <!-- /.box-body -->
-            <div class="box-body text-center">
-              <button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate(true)"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-              <button type="button" class="btn btn-themeBlue margin" onclick="return PreSaveValidate(false)" ><i class="fa fa-user-plus fa-fw" aria-hidden="true" ></i>&nbsp; Activate Board</button>
-              <a href="{{ route('report.boardinfo') }}" class="btn btn-themeBlue margin"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
             </div>
 
             <!-- /.box-body -->
+            <div class="card-body text-center">
+              <button type="submit" class="btn bg-gradient-primary" onclick="return PreSaveValidate(true)"><i class="fas fa-save" ></i>&nbsp; Save</button>
+              <button type="button" class="btn bg-gradient-primary" onclick="return PreSaveValidate(false)" ><i class="fas fa-user-plus" ></i>&nbsp; Activate Board</button>
+              <a href="{{ route('report.boardinfo') }}" class="btn bg-gradient-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
+            </div>
 
-          </div>
+        </div>
+    </div>
           <!-- /.box -->
         </div>
       </div>
@@ -514,11 +577,6 @@
 
   @section('customscript')
   <script>
-
-       // Disable fields and buttons
- //      $(document).ready(function () {
- //           $('input, select, textarea').prop('disabled', true);
-  //  });
 
 
    function isNumber(evt) {
@@ -553,29 +611,57 @@ function BoundaryError(error){
             $("#BoundaryIssueLabel").prop("",true);
         }
     }
-  $( document ).ready(function() {
-    var phoneListArr = ["ch_pre_phone","ch_avp_phone","ch_mvp_phone","ch_trs_phone","ch_sec_phone"];
-    for (var i = phoneListArr.length - 1; i >= 0; i--) {
-        var inputValue = $("#"+phoneListArr[i]).val();
-        if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
-        var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
-        $("#"+phoneListArr[i]).val(reInputValue);
+
+    // Function to handle show/hide logic for vacant checkboxes
+    function handleVacantCheckbox(checkboxId, fieldClass) {
+        var fields = $("." + fieldClass);
+
+        $("#" + checkboxId).change(function () {
+            if ($(this).prop("checked")) {
+                fields.hide().find('input, select, textarea').prop('required', false).val(null);
+            } else {
+                fields.show().find('input, select, textarea').prop('required', true);
+            }
+        });
+
+        // Initial show/hide logic on page load
+        if ($("#" + checkboxId).prop("checked")) {
+            fields.hide().find('input, select, textarea').prop('required', false).val(null);
+        } else {
+            fields.show().find('input, select, textarea').prop('required', true);
+        }
     }
-    $("#ch_pre_phone").keyup(function() {
-        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });
-    $("#ch_avp_phone").keyup(function() {
-        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });
-    $("#ch_mvp_phone").keyup(function() {
-        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });
-    $("#ch_trs_phone").keyup(function() {
-        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });
-    $("#ch_sec_phone").keyup(function() {
-        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });
+
+    // Apply the logic for each checkbox with a specific class
+    handleVacantCheckbox("MVPVacant", "mvp-field");
+    handleVacantCheckbox("AVPVacant", "avp-field");
+    handleVacantCheckbox("SecVacant", "sec-field");
+    handleVacantCheckbox("TreasVacant", "treas-field");
+
+
+  $( document ).ready(function() {
+    // var phoneListArr = ["ch_pre_phone","ch_avp_phone","ch_mvp_phone","ch_trs_phone","ch_sec_phone"];
+    // for (var i = phoneListArr.length - 1; i >= 0; i--) {
+    //     var inputValue = $("#"+phoneListArr[i]).val();
+    //     if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
+    //     var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
+    //     $("#"+phoneListArr[i]).val(reInputValue);
+    // }
+    // $("#ch_pre_phone").keyup(function() {
+    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
+    // });
+    // $("#ch_avp_phone").keyup(function() {
+    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
+    // });
+    // $("#ch_mvp_phone").keyup(function() {
+    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
+    // });
+    // $("#ch_trs_phone").keyup(function() {
+    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
+    // });
+    // $("#ch_sec_phone").keyup(function() {
+    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
+    // });
 
     var check = <?php echo "\"" . $chapterList[0]->boundary_issues . "\""; ?>;
 

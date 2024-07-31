@@ -1,16 +1,23 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
- <section class="content-header">
-      <h1>
-      Coordinator Profile
-       <small>Update</small>
-       </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Coordinator Profile</li>
-      </ol>
-    </section>
+ <!-- Content Wrapper. Contains page content -->
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Coordinator Profile&nbsp;<small>(Update)</small></h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">Coordinator Profile</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
     @if ($message = Session::get('success'))
 		<div class="alert alert-success">
 			<button type="button" class="close" data-dismiss="alert">×</button>
@@ -25,50 +32,53 @@
     @endif
 
     <!-- Main content -->
-    <form method="POST" action='{{ route("coordinator.updateprofile",$coordinatorDetails[0]->coordinator_id) }}'">
+    <form method="POST" action='{{ route("coordinator.updateprofile",$coordinatorDetails[0]->coordinator_id) }}'>
     @csrf
     <section class="content">
-		<div class="row">
-		<div class="col-md-12">
-			<div class="box card">
-				<div class="box-header with-border mrg-t-10">
-					<h3 class="box-title">Personal Information</h3>
-				</div>
-				<div class="box-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Personal Information</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="row">
 				  <!-- /.form group -->
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>First Name</label><span class="field-required">*</span>
-						<input type="text" name="cord_fname" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->first_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_fname" class="form-control" value="{{ $coordinatorDetails[0]->first_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 					<!-- /.form group -->
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>Last Name</label><span class="field-required">*</span>
-						<input type="text" name="cord_lname" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->last_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_lname" class="form-control" value="{{ $coordinatorDetails[0]->last_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 
 					<!-- /.form group -->
-					<div class="col-sm-12 col-xs-12">
+					<div class="col-sm-12">
 						<div class="form-group">
 							<label>Street Address</label><span class="field-required">*</span>
-							<input name="cord_addr" class="form-control my-colorpicker1" rows="4" maxlength="250" value="{{ $coordinatorDetails[0]->address }}" required>
+							<input name="cord_addr" class="form-control" rows="4" maxlength="250" value="{{ $coordinatorDetails[0]->address }}" required>
 						</div>
 					</div>
 					<!-- /.form group -->
-					<div class="col-sm-3 col-xs-12">
+					<div class="col-sm-3">
 						<div class="form-group">
 							<label>City</label><span class="field-required">*</span>
-							<input type="text" name="cord_city" class="form-control my-colorpicker1" maxlength="50" value="{{ $coordinatorDetails[0]->city }}" required onkeypress="return isAlphanumeric(event)">
+							<input type="text" name="cord_city" class="form-control" maxlength="50" value="{{ $coordinatorDetails[0]->city }}" required onkeypress="return isAlphanumeric(event)">
 						</div>
 					</div>
 					<!-- /.form group -->
-					<div class="col-sm-3 col-xs-12">
+					<div class="col-sm-3">
 					  <div class="form-group">
 						<label>State</label><span class="field-required">*</span>
-						<select name="cord_state" class="form-control select2" style="width: 100%;" required>
+						<select name="cord_state" class="form-control select2-sb4" style="width: 100%;" required>
 						<option value="">Select State</option>
 							@foreach($stateArr as $state)
 							  <option value="{{$state->state_short_name}}" {{$coordinatorDetails[0]->state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
@@ -78,10 +88,10 @@
 					</div>
 					<!-- /.form group -->
 
-					<div class="col-sm-3 col-xs-12">
+					<div class="col-sm-3">
 					  <div class="form-group">
 						<label>Country</label><span class="field-required">*</span>
-						<select id="cord_country" name="cord_country" class="form-control select2" style="width: 100%;" required>
+						<select id="cord_country" name="cord_country" class="form-control select2-sb4" style="width: 100%;" required>
 						<option value="">Select Country</option>
 							@foreach($countryArr as $con)
 							  <option value="{{$con->short_name}}" {{$coordinatorDetails[0]->country == $con->short_name  ? 'selected' : ''}}>{{$con->name}}</option>
@@ -89,43 +99,43 @@
 						</select>
 					  </div>
 					</div>
-					<div class="col-sm-3 col-xs-12">
+					<div class="col-sm-3">
 					  <div class="form-group">
 						<label>Zip</label><span class="field-required">*</span>
-						<input type="text" name="cord_zip" class="form-control my-colorpicker1" maxlength="10" value="{{ $coordinatorDetails[0]->zip }}" required onkeypress="return isNumber(event)">
+						<input type="text" name="cord_zip" class="form-control" maxlength="10" value="{{ $coordinatorDetails[0]->zip }}" required onkeypress="return isNumber(event)">
 					  </div>
 					</div>
 					<!-- /.form group -->
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>E-mail</label><span class="field-required">*</span>
-						<input type="email" name="cord_email" id="cord_email" class="form-control my-colorpicker1" onblur="checkDuplicateEmail(this.value,this.id)" maxlength="50" value="{{ $coordinatorDetails[0]->email }}" required>
+						<input type="email" name="cord_email" id="cord_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" maxlength="50" value="{{ $coordinatorDetails[0]->email }}" required>
 						<input type="hidden" id="cord_email_chk" value="{{ $coordinatorDetails[0]->email }}">
 					  </div>
 					</div>
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>Secondary E-mail</label>
-						<input type="email" name="cord_sec_email" id="cord_sec_email" class="form-control my-colorpicker1"  maxlength="50" value="{{ $coordinatorDetails[0]->sec_email }}">
+						<input type="email" name="cord_sec_email" id="cord_sec_email" class="form-control"  maxlength="50" value="{{ $coordinatorDetails[0]->sec_email }}">
 						 </div>
 					</div>
 					<!-- /.form group -->
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>Phone</label><span class="field-required">*</span>
-						<input type="text" name="cord_phone" id="cord_phone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->phone }}" maxlength="12" required onkeypress="return isPhone(event)">
+						<input type="text" name="cord_phone" id="cord_phone" class="form-control" value="{{ $coordinatorDetails[0]->phone }}" maxlength="12" required onkeypress="return isPhone(event)">
 					  </div>
 					</div>
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>Alternate Phone</label>
-						<input type="text" name="cord_altphone" id="cord_altphone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->alt_phone }}" maxlength="12" onkeypress="return isPhone(event)">
+						<input type="text" name="cord_altphone" id="cord_altphone" class="form-control" value="{{ $coordinatorDetails[0]->alt_phone }}" maxlength="12" onkeypress="return isPhone(event)">
 					  </div>
 					</div>
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-6">
 						<div class="form-group">
 						<label>Birthday Month</label><span class="field-required">*</span>
-						<select name="cord_month" class="form-control select2" style="width: 100%;" required>
+						<select name="cord_month" class="form-control select2-sb4" style="width: 100%;" required>
 						  <option value="">Select Month</option>
 						  @foreach($foundedMonth as $key=>$val)
 
@@ -134,20 +144,20 @@
 						</select>
 						</div>
 					</div>
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-6">
 						<div class="form-group">
 						<label>Birthday Day</label><span class="field-required">*</span>
-						<input type="number" name="cord_day" class="form-control my-colorpicker1" min="1" max="31" value="{{ $coordinatorDetails[0]->birthday_day }}" required>
+						<input type="number" name="cord_day" class="form-control" min="1" max="31" value="{{ $coordinatorDetails[0]->birthday_day }}" required>
 						</div>
 					</div>
 
-                    <div class="col-sm-6 col-xs-12">
+                    <div class="col-sm-6">
                         <div class="form-group">
                                 <label>Update Password</label>
                                 <input  type="password" class="form-control cls-pswd" placeholder="***********" name="cord_pswd" id="cord_pswd" value="" maxlength="30" >
                             </div>
                         </div>
-                        <div class="col-sm-6 col-xs-12">
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Confirm Updated Password</label>
                                 <input  type="password" class="form-control cls-pswd" placeholder="***********" name="cord_pswd_cnf" id="cord_pswd_cnf" value="" maxlength="30">
@@ -155,21 +165,25 @@
                             </div>
                         </div>
                     </div>
+                </div>
 
-				<div class="box-header with-border mrg-t-10">
-					<h3 class="box-title">Coordinator Information</h3>
-				</div>
-				<div class="box-body">
-                    <div class="col-sm-4 col-xs-12">
+                <div class="card-header">
+                    <h3 class="card-title">Coordinator Information</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="row">
+                   <!-- /.form group -->
+                    <div class="col-sm-4">
                         <div class="form-group">
                           <label>Coordinator Start Date</label>
-                          <input type="text" name="cord_phone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->coordinator_start_date }}" disabled>
+                          <input type="text" name="cord_phone" class="form-control" value="{{ $coordinatorDetails[0]->coordinator_start_date }}" disabled>
                         </div>
                       </div>
-                      <div class="col-sm-4 col-xs-12">
+                      <div class="col-sm-4">
 						<div class="form-group">
 						<label>Primary Position</label>
-						<select name="cord_month" class="form-control select2" style="width: 100%;" disabled>
+						<select name="cord_month" class="form-control select2-sb4" style="width: 100%;" disabled>
 						   <option value=""></option>
 							@foreach($positionList as $pos)
 							  <option value="{{$pos->id}}" {{$coordinatorDetails[0]->position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
@@ -177,10 +191,10 @@
 						</select>
 						</div>
 					</div>
-					<div class="col-sm-4 col-xs-12">
+					<div class="col-sm-4">
 						<div class="form-group">
 						<label>Secondary Position</label>
-						<select name="cord_month" class="form-control select2" style="width: 100%;" disabled>
+						<select name="cord_month" class="form-control select2-sb4" style="width: 100%;" disabled>
 						  <option value=""></option>
 							@foreach($positionList as $pos)
 							  <option value="{{$pos->id}}" {{$coordinatorDetails[0]->sec_position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
@@ -188,16 +202,16 @@
 						</select>
 						</div>
 					</div>
-                    <div class="col-sm-4 col-xs-12">
+                    <div class="col-sm-4">
                         <div class="form-group">
                           <label>Home Chapter</label><span class="field-required">*</span>
-                          <input type="text" name="cord_chapter" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->home_chapter }}" maxlength="50"  >
+                          <input type="text" name="cord_chapter" class="form-control" value="{{ $coordinatorDetails[0]->home_chapter }}" maxlength="50"  >
                         </div>
                       </div>
-					<div class="col-sm-4 col-xs-12">
+					<div class="col-sm-4">
 						<div class="form-group">
 						<label>Region</label>
-						<select name="cord_month" class="form-control select2" style="width: 100%;" disabled>
+						<select name="cord_month" class="form-control select2-sb4" style="width: 100%;" disabled>
 						 <option value=""></option>
 							@foreach($regionList as $reg)
 							  <option value="{{$reg->id}}" {{$coordinatorDetails[0]->region_id == $reg->id  ? 'selected' : ''}}>{{$reg->long_name}}</option>
@@ -205,10 +219,10 @@
 						</select>
 						</div>
 					</div>
-					<div class="col-sm-4 col-xs-12">
+					<div class="col-sm-4">
 						<div class="form-group">
 						<label>Conference</label>
-						<select name="cord_month" class="form-control select2" style="width: 100%;" disabled>
+						<select name="cord_month" class="form-control select2-sb4" style="width: 100%;" disabled>
 						  <option value=""></option>
 						  @foreach($confList as $con)
 							  <option value="{{$con->id}}" {{$coordinatorDetails[0]->conference_id == $con->id  ? 'selected' : ''}}>{{$con->conference_name}}</option>
@@ -217,7 +231,7 @@
 						</div>
 					</div>
 
-					<div class="col-sm-12 col-xs-12">
+					<div class="col-sm-12">
 						<div class="form-group">
 						<label>Supervising Coordinator: </label>
                         <div class="box-body">
@@ -225,19 +239,28 @@
                             <a href="mailto:{{ $primaryCoordinatorList[0]->cor_email }}">{{ $primaryCoordinatorList[0]->cor_email }}</a><br/>
                             {{ $primaryCoordinatorList[0]->cor_phone }}<br/>
                             </p>
-				</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-		</div>
+        </div>
 
+        <div class="card-header">
+            <h3 class="card-title">&nbsp;</h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+            <div class="row">
+           <!-- /.form group -->
 		<!-- /.box-body -->
-		<div class="box-body text-center">
-			<button type="submit" class="btn btn-themeBlue margin" onclick="return PreSaveValidate();"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-			<button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);"><i class="fa fa-undo fa-fw" aria-hidden="true" ></i>&nbsp; Reset</button>
-			<a href="{{ route('home') }}" class="btn btn-themeBlue margin"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
+		<div class="card-body text-center">
+			<button type="submit" class="btn bg-gradient-primary" onclick="return PreSaveValidate();"><i class="fas fa-save" ></i>&nbsp;&nbsp;&nbsp;Save</button>
+			<button type="button" class="btn bg-gradient-primary" onclick="ConfirmCancel(this);"><i class="fas fa-undo" ></i>&nbsp;&nbsp;&nbsp;Reset</button>
+			<a href="{{ route('home') }}" class="btn bg-gradient-primary"><i class="fa fa-reply" ></i>&nbsp;&nbsp;&nbsp;Back</a>
 		</div>
-		 <div class="box-body text-center">
-			<button type="button" class="btn btn-themeBlue margin" onclick="window.open('https://momsclub.org/coordinator-toolkit/')"><i class="fa fa-briefcase fa-fw" aria-hidden="true" ></i>&nbsp; Coordinator Toolkit</button>
-			<button type="button" class="btn btn-themeBlue margin" onclick="window.open('https://momsclub.org/elearning/')"><i class="fa fa-graduation-cap fa-fw" aria-hidden="true" ></i>&nbsp; eLearning Library</button>
+		 <div class="card-body text-center">
+			<button type="button" class="btn bg-gradient-primary" onclick="window.open('https://momsclub.org/coordinator-toolkit/')"><i class="fas fa-toolbox" ></i>&nbsp;&nbsp;&nbsp;Coordinator Toolkit</button>
+			<button type="button" class="btn bg-gradient-primary" onclick="window.open('https://momsclub.org/elearning/')"><i class="fas fa-graduation-cap" ></i>&nbsp;&nbsp;&nbsp;eLearning Library</button>
 		</div>
         <!-- /.box-body -->
         </div>

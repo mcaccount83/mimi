@@ -1,33 +1,53 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
- <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-      Boundary Issues Report
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Boundary Issues Report</li>
-      </ol>
-    </section>
-        	 @if ($message = Session::get('success'))
-      <div class="alert alert-success">
-         <p>{{ $message }}</p>
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Boundary Issues Report</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">Boundary Issues Report</li>
+          </ol>
+        </div>
       </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+    @if ($message = Session::get('success'))
+    <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <p>{{ $message }}</p>
+    </div>
     @endif
+    @if ($message = Session::get('fail'))
+    <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <p>{{ $message }}</p>
+    </div>
+    @endif
+    @if ($message = Session::get('info'))
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <p>{{ $message }}</p>
+    </div>
+    @endif
+
     <!-- Main content -->
     <section class="content">
-      <div class="row">
-		<div class="col-md-12">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">Report of Boundary Issues</h3>
-            </div>
-            <!-- /.box-header -->
-
-            <div class="box-body table-responsive">
-              <table id="chapterlist" class="table table-bordered table-hover">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Report of Boundary Issues</h3>
+                </div>
+                <!-- /.card-header -->
+            <div class="card-body">
+                <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
 					<th>Review</th>
@@ -42,12 +62,14 @@
                 @foreach($chapterList as $list)
                 @if($list->boundary_issue_notes != '')
                   <tr>
-						<td><center><a href="<?php echo url("/chapter/boundaryview/{$list->id}") ?>"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a></center></td>
+						<td class="text-center align-middle">
+                            <a href="<?php echo url("/chapter/boundaryview/{$list->id}") ?>"><i class="fas fa-edit"></i></a></td>
 						<td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
                         <td>{{ $list->boundary_issue_notes}}</td>
                         <td>{{ $list->territory}}</td>
-                        <td style="background-color: @if($list->boundary_issue_resolved == '1') transparent; @else #FF000050; @endif;">
+                        <td @if($list->boundary_issue_resolved == '1')style="background-color: transparent;"
+                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->boundary_issue_resolved == '1')
                                 YES
                             @else
@@ -59,27 +81,22 @@
                   @endforeach
                   </tbody>
                 </table>
-				 <div class="radio-chk labelcheck">
-              <div class="col-sm-6 col-xs-12">
-                <div class="form-group">
-                    <label style="display: block;"><input type="checkbox" name="showPrimary" id="showPrimary" class="ios-switch green bigswitch" {{$checkBoxStatus}} onchange="showPrimary()" /><div><div></div></div>
-
-                  </label>
-                  <span> Only show chapters I am Primary Reviewer for</span>
-                </div>
-              </div>
-              </div>
             </div>
-
-           </div>
+            <!-- /.card-body -->
+                <div class="col-sm-12">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
+                        <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
+                    </div>
+                </div>
+                <div class="card-body text-center">&nbsp;</div>
+              </div>
           <!-- /.box -->
         </div>
       </div>
+    </div>
     </section>
-    <!-- Main content -->
-
     <!-- /.content -->
-
 @endsection
 @section('customscript')
 <script>

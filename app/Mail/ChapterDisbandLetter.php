@@ -31,7 +31,7 @@ class ChapterDisbandLetter extends Mailable
     public function build(): static
     {
         return $this
-            ->subject('Chapter Disdand Letter')
+            ->subject('Chapter Disband Letter')
             ->replyTo($this->mailData['cc_email'])
             ->markdown('emails.chapterupdate.chapterdisbandletter')
             ->attach($this->pdfPath, [

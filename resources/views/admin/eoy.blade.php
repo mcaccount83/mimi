@@ -1,16 +1,23 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
- <section class="content-header">
-      <h1>
-        Admin
-       <small>Dashboard</small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Admin Dashboard</li>
-      </ol>
-    </section>
+<!-- Content Wrapper. Contains page content -->
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>EOY Procedures&nbsp;<small>(Complete for New Year Changeover/Reset)</small></h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">EOY Procedures</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
         <button type="button" class="close" data-dismiss="alert">×</button>
@@ -23,269 +30,171 @@
         <p>{{ $message }}</p>
         </div>
     @endif
-    {{-- {{ dd($admin) }} --}}
-
-
-    {{-- @foreach ($admin as $adminItem) --}}
 
 <!-- Main content -->
 <section class="content">
         <form method="POST" action='{{ route("admin.eoyupdate",$admin->id) }}'>
         @csrf
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-2">
+                        <h4>Fiscal Year: {{ $admin->fiscal_year }}</h4>
+                    </div>
+                    <div class="col-md-10">
+                        <p><strong>Complete in April/May to prepare for testing and going live with Annual Reports.</strong><br>
+                            Board Election Report will automatically be available for Chapters on <strong>May 1st</strong> when Report is activated below.<br>
+                                Financial Reports will automatically be available for Chapters on <strong>June 1st</strong> when Report is activated below.</p>
+                                <br>
+                    </div>
 
-        <div class="row">
-          <div class="col-md-12">
-            <div class="box card">
-              <div class="box-header with-border">
-            <h3 class="box-title">End of Year Procedures</h3>
-            <h4>Complete and Reset for New Year</h4>
-          </div>
+            <div class="col-md-4">
+                <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Remove/Copy/Reset SQL Database Tables</h3><br>
+                        <p style="color: #007bff">Check when complete.</p>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="col-sm-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="truncate_incoming" id="truncate_incoming" class="custom-control-input" {{$admin->truncate_incoming ? 'checked' : '' }} />
+                                <label class="custom-control-label" for="truncate_incoming">Remove data (truncate) from incoming_board_member table</label>
+                                </div>
+                            </div>
+                        <div class="col-sm-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="truncate_outgoing" id="truncate_outgoing" class="custom-control-input" {{$admin->truncate_outgoing ? 'checked' : '' }} />
+                                <label class="custom-control-label" for="truncate_outgoing">Remove data (truncate) from outgoing_board_member table</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="copy_FRtoCH" id="copy_FRtoCH" class="custom-control-input" {{$admin->copy_FRtoCH ? 'checked' : '' }} />
+                                <label class="custom-control-label" for="copy_FRtoCH">Copy ending balance from financial_repot table to chapters table</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="copy_financial" id="copy_financial" class="custom-control-input" {{$admin->copy_financial ? 'checked' : '' }} />
+                                <label class="custom-control-label" for="copy_financial">Copy/Rename Financial Reports Table</label>
+                                </div>
+                            </div>
+                        <div class="col-sm-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="copy_CHtoFR" id="copy_CHtoFR" class="custom-control-input" {{$admin->copy_CHtoFR ? 'checked' : '' }} />
+                                <label class="custom-control-label" for="copy_CHtoFR">Insert chapter list and starting balance from chapters table to financial_repot table</label>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
 
-              <!-- /.box-header -->
+            <div class="col-md-4">
+                <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Activate MIMI Menus and Information for Viewing</h3><br>
+                        <p style="color: #007bff">Check to activate the menu and information items for Coordinators.</p>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="col-sm-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="eoy_testers" id="eoy_testers" class="custom-control-input" {{$admin->eoy_testers ? 'checked' : '' }} />
+                                <label class="custom-control-label" for="eoy_testers">Annual Reports - Display items for Testers</label>
+                                </div>
+                            </div>
+                        <div class="col-sm-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="eoy_coordinators" id="eoy_coordinators" class="custom-control-input" {{$admin->eoy_coordinators ? 'checked' : '' }} />
+                                <label class="custom-control-label" for="eoy_coordinators">Annual Reports - Display items for Coordinators</label>
+                                </div>
+                            </div>
+                </div>
+                </div>
 
- <!-- /.box-header -->
- <div class="box-body">
-    <!-- /.form group -->
-    <div class="row">
-      <div class="col-md-2">
-        <div class="form-group">
-    <h4><label>Fiscal Year: {{ $admin->fiscal_year }}</label>
-        {{-- <select id="fiscalYearDropdown">
-            @foreach ($fiscalYears as $year)
-                <option value="{{ $year }}">{{ $year }}</option>
-            @endforeach
-        </select> --}}
+                <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Activate Board and Financial Report Buttons for Viewing</h3><br>
+                        <p style="color: #007bff">Check to activate the buttons/links for Board Members.</p>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="col-sm-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="eoy_boardreport" id="eoy_boardreport" class="custom-control-input" {{$admin->eoy_boardreport ? 'checked' : '' }} />
+                                <label class="custom-control-label" for="eoy_boardreport">Board Election Report for Chapters</label>
+                                </div>
+                            </div>
+                        <div class="col-sm-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="eoy_financialreport" id="eoy_financialreport" class="custom-control-input" {{$admin->eoy_financialreport ? 'checked' : '' }} />
+                                <label class="custom-control-label" for="eoy_financialreport">Financial Report for Chapters</label>
+                                </div>
+                            </div>
+                </div>
+                </div>
+            </div>
 
-    </h4>
-    </div>
-</div>
+            <div class="col-md-4">
+                <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Copy Data from SQL Database Tables</h3><br>
+                        <p style="color: #007bff">Check when complete.</p>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="col-sm-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="copy_chapters" id="copy_chapters" class="custom-control-input" {{$admin->copy_chapters ? 'checked' : '' }} />
+                                <label class="custom-control-label" for="copy_chapters">Copy/Rename Chapters Table</label>
+                                </div>
+                            </div>
+                        <div class="col-sm-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="copy_users" id="copy_users" class="custom-control-input" {{$admin->copy_users ? 'checked' : '' }} />
+                                <label class="custom-control-label" for="copy_users">Copy/Rename Users Table</label>
+                                </div>
+                            </div>
+                        <div class="col-sm-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="copy_boarddetails" id="copy_boarddetails" class="custom-control-input" {{$admin->copy_boarddetails ? 'checked' : '' }} />
+                                <label class="custom-control-label" for="copy_boarddetails">Copy/Rename Board Details Table</label>
+                                </div>
+                            </div>
+                        <div class="col-sm-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="copy_coordinatordetails" id="copy_coordinatordetails" class="custom-control-input" {{$admin->copy_coordinatordetails ? 'checked' : '' }} />
+                                <label class="custom-control-label" for="copy_coordinatordetails">Copy/Rename Coordinator Details Table</label>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
 
-        <div class="col-md-10">
+                <div class="card-body text-center">
+                        <button type="submit" class="btn bg-gradient-primary"><i class="fas fa-save" ></i>&nbsp;&nbsp;&nbsp;Save</button>
+                </div>
+            </div>
+        </form>
 
-        <p><strong>Complete in April/May to prepare for testing and going live with Annual Reports.</strong><br>
-            Board Election Report will automatically be available for Chapters on <strong>May 1st</strong> when Report is activated below.<br>
-                Financial Reports will automatically be available for Chapters on <strong>June 1st</strong> when Report is activated below.</p>
-                <br>
+            <div class="card-body text-center">
+                <div id="readOnlyText" class="description text-center">
+                    <p>Resetting for New Year will also turn MIMI menus and information items <strong><u>OFF</u></strong> for Coordinators by default.<br>
+                        Resetting for New Year will also turn Board Election and Financial Report buttons <strong><u>OFF</u></strong> for Chapters by default.
+                </p>
+                <h4>This CANNOT be undone!</h4>
+                </div>
+            <form method="POST" action="{{ route('resetYear') }}">
+                @csrf
+                <button type="submit" class="btn bg-gradient-warning"><i class="fas fa-share" ></i>&nbsp;&nbsp;&nbsp;Complete | Reset for New Year</button>
+            </form>
         </div>
-    </div>
-</div>
-          <div class="grid">
-            <div class="row">
-                <div class="col-md-12">
-
-            <!-- Grid item -->
-            <div class="grid-item col-md-4">
-                <div class="box">
-
-                        <h4>Remove/Copy/Reset SQL Database Tables</h4>
-                        <p>Check YES when complete.</p>
-                        <br>
-
-                        <div class="radio-chk">
-                <div class="col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label>Remove data (truncate) from incoming_board_member table</label>
-                        <label style="display: block;">
-                            <input type="checkbox" name="truncate_incoming" id="" class="ios-switch green bigswitch" {{ $admin->truncate_incoming == '1' ? 'checked' : '' }} />
-                            <div><div></div></div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="radio-chk">
-                <div class="col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label>Remove data (truncate) from outgoing_board_member table</label>
-                        <label style="display: block;">
-                            <input type="checkbox" name="truncate_outgoing" id="" class="ios-switch green bigswitch" {{ $admin->truncate_outgoing == '1' ? 'checked' : '' }} />
-                            <div><div></div></div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="radio-chk">
-                <div class="col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label>Copy ending balance from financial_repot table to chapters table</label>
-                        <label style="display: block;">
-                            <input type="checkbox" name="copy_FRtoCH" id="" class="ios-switch green bigswitch" {{ $admin->copy_FRtoCH == '1' ? 'checked' : '' }} />
-                            <div><div></div></div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="radio-chk">
-                <div class="col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label>Copy/Rename Financial Reports Table</label>
-                        <label style="display: block;">
-                            <input type="checkbox" name="copy_financial" id="" class="ios-switch green bigswitch" {{ $admin->copy_financial == '1' ? 'checked' : '' }} />
-                            <div><div></div></div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="radio-chk">
-                <div class="col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label>Insert chapter list and starting balance from chapters table to financial_repot table</label>
-                        <label style="display: block;">
-                            <input type="checkbox" name="copy_CHtoFR" id="" class="ios-switch green bigswitch" {{ $admin->copy_CHtoFR == '1' ? 'checked' : '' }} />
-                            <div><div></div></div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
- <!-- Grid item -->
- <div class="grid-item col-md-4">
-    <div class="box">
-
-            <h4>Activate MIMI Menus and Information for Viewing</h4>
-            <p>Check YES to activate the menu and information items for Coordinators.</p>
-            <br>
-            <div class="radio-chk">
-                <div class="col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label>Annual Reports - Display items for Testers</label>
-                        <label style="display: block;">
-                            <input type="checkbox" name="eoy_testers" id="" class="ios-switch green bigswitch" {{ $admin->eoy_testers == '1' ? 'checked' : '' }} />
-                            <div><div></div></div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="radio-chk">
-                <div class="col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label>Annual Reports - Display items for Coordinators</label>
-                        <label style="display: block;">
-                            <input type="checkbox" name="eoy_coordinators" id="" class="ios-switch green bigswitch" {{ $admin->eoy_coordinators == '1' ? 'checked' : '' }} />
-                            <div><div></div></div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <h4>Activate Board and Financial Report Buttons for Viewing</h4>
-            <p>Check YES to activate the buttons/links for Board Members.</p>
-            <br>
-            <div class="radio-chk">
-                <div class="col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label>Board Election Report for Chapters</label>
-                        <label style="display: block;">
-                            <input type="checkbox" name="eoy_boardreport" id="" class="ios-switch green bigswitch" {{ $admin->eoy_boardreport == '1' ? 'checked' : '' }} />
-                            <div><div></div></div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="radio-chk">
-                <div class="col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label>Financial Report for Chapters</label>
-                        <label style="display: block;">
-                            <input type="checkbox" name="eoy_financialreport" id="" class="ios-switch green bigswitch" {{ $admin->eoy_financialreport == '1' ? 'checked' : '' }} />
-                            <div><div></div></div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-     <!-- Grid item -->
- <div class="grid-item col-md-4">
-    <div class="box">
-
-            <h4>Copy Data from SQL Database Tables</h4>
-            <p>Check YES when complete.</p>
-            <br>
-
-            <div class="radio-chk">
-                <div class="col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label>Copy/Rename Chapters Table</label>
-                        <label style="display: block;">
-                            <input type="checkbox" name="copy_chapters" id="" class="ios-switch green bigswitch" {{ $admin->copy_chapters == '1' ? 'checked' : '' }} />
-                            <div><div></div></div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="radio-chk">
-                <div class="col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label>Copy/Rename Users Table</label>
-                        <label style="display: block;">
-                            <input type="checkbox" name="copy_users" id="" class="ios-switch green bigswitch" {{ $admin->copy_users == '1' ? 'checked' : '' }} />
-                            <div><div></div></div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="radio-chk">
-                <div class="col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label>Copy/Rename Board Details Table</label>
-                        <label style="display: block;">
-                            <input type="checkbox" name="copy_boarddetails" id="" class="ios-switch green bigswitch" {{ $admin->copy_boarddetails == '1' ? 'checked' : '' }} />
-                            <div><div></div></div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="radio-chk">
-                <div class="col-sm-12 col-xs-12">
-                    <div class="form-group">
-                        <label>Copy/Rename Coordinator Details Table</label>
-                        <label style="display: block;">
-                            <input type="checkbox" name="copy_coordinatordetails" id="" class="ios-switch green bigswitch" {{ $admin->copy_coordinatordetails == '1' ? 'checked' : '' }} />
-                            <div><div></div></div>
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
-</div>
-</div>
-
-        <div class="box-body text-center">
-            <button type="submit" class="btn btn-themeBlue margin"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-        <div>
-    </div>
-
-    <hr>
-    <div id="readOnlyText" class="description text-center">
-        <p><span style="color: red;">Resetting for New Year will also turn MIMI menus and information items <strong><u>OFF</u></strong> for Coordinators by default.<br>
-            Resetting for New Year will also turn Board Election and Financial Report buttons <strong><u>OFF</u></strong> for Chapters by default.
-    </span></p>
-    <h4>This CANNOT be undone!</h4>
-    </div>
-</form>
-<form method="POST" action="{{ route('resetYear') }}">
-    @csrf
-    <button type="submit" class="btn btn-themeBlue margin"><i class="fa fa-share fa-fw" aria-hidden="true" ></i>&nbsp; Complete | Reset for New Year</button>
-</form>
-
         <!-- /.box-body -->
         </div>
     </div>
 </div>
 </section>
-
-
-    <!-- /.content -->
 
 @endsection
 

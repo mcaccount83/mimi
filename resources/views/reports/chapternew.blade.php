@@ -1,29 +1,34 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
- <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-      New Chapter Report
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">New Chapter Report</li>
-      </ol>
-    </section>
-    <!-- Main content -->
-    <section class="content">
-      <div class="row">
-		<div class="col-md-12">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">Report of New Chapters 1 Year or Younger</h3>
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>New Chapter Report</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">New Chapter Report</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
 
-            </div>
-            <!-- /.box-header -->
-
-            <div class="box-body table-responsive">
-              <table id="chapterlist" class="table table-bordered table-hover">
+     <!-- Main content -->
+     <section class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Report of New Chapters <small>(1 Year or Younger)</small></h3>
+                </div>
+                <!-- /.card-header -->
+            <div class="card-body">
+                <table id="chapterlist" class="table table-sm table-hover" >
 				<thead>
 			    <tr>
 					<th>Details</th>
@@ -37,11 +42,13 @@
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
-						<td><center><a href="<?php echo url("/chapter/edit/{$list->ch_id}") ?>"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a></center></td>
+                    <td class="text-center align-middle">
+                            <a href="<?php echo url("/chapter/edit/{$list->ch_id}") ?>"><i class="fas fa-edit "></i></a></td>
 						<td>{{ $list->ch_state }}</td>
                         <td>{{ $list->ch_name }}</td>
 						<td>{{ $list->month_name }} {{ $list->year }}</td>
-                        <td style="background-color: @if($list->ein_letter_path != null) transparent; @else #FFC7CE; @endif;">
+                        <td  @if($list->ein_letter_path != null)style="background-color: transparent;"
+                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->ein_letter_path != null)
                                 YES
                             @else
@@ -54,6 +61,8 @@
                   @endforeach
                   </tbody>
                 </table>
+            </div>
+            <div class="card-body text-center"></div>
             </div>
            </div>
           <!-- /.box -->

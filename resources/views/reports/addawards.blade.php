@@ -44,7 +44,7 @@
                   <tr>
                       <td>
                          <?php if (Session::get('positionid') >=5 && Session::get('positionid') <=7 || $position = 25){ ?>
-							<center><a href="<?php echo url("/chapter/awardsview/{$list->id}") ?>"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a></center>
+							<center><a href="<?php echo url("/chapter/awardsview/{$list->id}") ?>"><i class="fas fa-edit"></i></a></center>
                         <?php }?>
                           </td>
 

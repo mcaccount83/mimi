@@ -1,16 +1,22 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
- <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-      Financial Reports
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Financial Reports</li>
-      </ol>
-    </section>
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Chapter Financial Report</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">Chapter Financial Report</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
     @if ($message = Session::get('success'))
       <div class="alert alert-success">
 		<button type="button" class="close" data-dismiss="alert">×</button>
@@ -29,20 +35,20 @@
         <p>{{ $message }}</p>
     </div>
 @endif
-    <!-- Main content -->
-    <section class="content">
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
       <div class="row">
-		<div class="col-md-12">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">Report of Chapter Financials</h3>
-              &nbsp;&nbsp;(Chapters that were added after June 30, <?php echo date('Y');?> will not be listed)
-
-            </div>
-            <!-- /.box-header -->
-
-            <div class="box-body table-responsive">
-              <table id="chapterlist_review" class="table table-bordered table-hover">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Report of Chapter Financials&nbsp;<small>(Chapters that were added after June 30, <?php echo date('Y');?> will not be listed)</small></h3>
+              </div>
+            <!-- /.card-header -->
+        <div class="card-body">
+            <table id="chapterlist" class="table table-sm table-hover" >
+              {{-- <table id="chapterlist_review" class="table table-bordered table-hover"> --}}
               <thead>
 			    <tr>
 					<th>Review</th>
@@ -76,54 +82,59 @@
                             The Financial Report (as well as the Board Election Report) can be accessed by logging into your MIMI account $mimi_url and selecting the buttons at the top of your screen.<br>"
                     @endphp
                   <tr>
-						<td><center><a href="<?php echo url("/chapter/financial/{$list->chap_id}") ?>"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a></center></td>
-                        <td><center>
+						<td class="text-center align-middle">
+                            <a href="<?php echo url("/chapter/financial/{$list->chap_id}") ?>"><i class="fas fa-edit"></i></a>
+                        </td>
+                        <td class="text-center align-middle">
                                 @if($list->financial_report_received == '1')
-                                {{-- <a id="viewPdfLink" href="https://drive.google.com/file/d/{{$list->financial_pdf_path}}/view" target="_blank"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></a>&nbsp; --}}
-                                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{$list->financial_pdf_path}}"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true" ></i></a>
-                                    {{-- <a href="{{ url("/chapter/financial/pdf/{$list->chap_id}") }}" target="_blank"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></a> --}}
+                                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{$list->financial_pdf_path}}"><i class="far fa-file-pdf" ></i></a>
                                 @endif
-                            </center></td>
-                        <td>
+                        </td>
+                        <td class="text-center align-middle">
                             <?php if ($financialReportReceived == null  || $financialReportReceived == 0) { ?>
-                            <center><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Financial Report Reminder | {{$name}}, {{$state}}&body={{ urlencode($mail_message) }}"><i class="fa fa-envelope-o fa-lg" aria-hidden="true"></i></a></center></td>
+                                <a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Financial Report Reminder | {{$name}}, {{$state}}&body={{ urlencode($mail_message) }}"><i class="far fa-envelope"></i></a>
                             <?php }?>
                         </td>
                         <td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
                         <td>{{ $list->fname }} {{ $list->lname }}</td>
                         <td>{{ $list->pcfname }} {{$list->pclname}}</td>
-                        <td style="background-color: @if($list->report_extension == '1') #FFEB9C; @else transparent; @endif;">
+                        <td @if($list->report_extension == '1')style="background-color: #ffc107;"
+                            @else style="background-color: transparent;" @endif>
                             @if($list->report_extension == '1')
                                 YES
                             @else
 
                             @endif
                         </td>
-                        <td style="background-color: @if($list->financial_report_received == '1') transparent; @else #FFC7CE; @endif;">
+                        <td @if($list->financial_report_received == '1')style="background-color: transparent;"
+                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->financial_report_received == '1')
                                 YES
                             @else
                                 NO
                             @endif
 						</td>
-                        <td style="background-color: @if($list->financial_report_received == '1') transparent; @else #FFC7CE; @endif;">
-                            {{-- @if($list->financial_report_received != null) --}}
-                                {{ $list->report_received }}
-                            {{-- @else
+                        <td @if($list->financial_report_received == '1')style="background-color: transparent;"
+                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->financial_report_received != null)
+                                <span class="date-mask">{{ $list->report_received }}</span>
+                            @else
 
-                            @endif --}}
+                            @endif
 						</td>
-                        <td style="background-color: @if($list->report_complete == '1') transparent; @else #FFC7CE; @endif;">
+                        <td @if($list->report_complete == '1')style="background-color: transparent;"
+                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->report_complete == '1')
                                 YES
                             @else
                                 NO
                             @endif
 						</td>
-                        <td style="background-color: @if($list->report_complete == '1') transparent; @else #FFC7CE; @endif;">
+                        <td @if($list->report_complete == '1')style="background-color: transparent;"
+                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->review_complete != null)
-                                {{ $list->review_complete }}
+                                <span class="date-mask">{{ $list->review_complete }}</span>
                             @else
 
                             @endif
@@ -139,28 +150,30 @@
                   @endforeach
                   </tbody>
                 </table>
-				 <div class="radio-chk labelcheck">
-              <div class="col-sm-6 col-xs-12">
-                <div class="form-group">
-                    <label style="display: block;"><input type="checkbox" name="showPrimary" id="showPrimary" class="ios-switch green bigswitch" {{$checkBoxStatus}} onchange="showPrimary()" /><div><div></div></div>
-                  </label>
-                  <span> Only show chapters I am Assigned Reviewer for</span>
-              <div class="radio-chk labelcheck">
-                        <label style="display: block;"><input type="checkbox" name="show2Primary" id="show2Primary" class="ios-switch green bigswitch" {{$checkBox2Status}} onchange="show2Primary()" /><div><div></div></div>
-                        </label>
-                    <span> Only show chapters I am Primary Coordinator for</span>
+            </div>
+            <!-- /.card-body -->
+                <div class="col-sm-12">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
+                        <label class="custom-control-label" for="showPrimary">Only show chapters I am Assigned Reviewer for</label>
+                    </div>
                 </div>
-            </div>
-            </div>
-            </div>
-        </div>
-              <div class="box-body text-center">
+                <div class="col-sm-12">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" name="show2Primary" id="show2Primary" class="custom-control-input" {{$checkBox2Status}} onchange="show2Primary()" />
+                        <label class="custom-control-label" for="show2Primary">Only show chapters I am primary for</label>
+                    </div>
+                </div>
+              <div class="card-body text-center">
                 <p>**Known issue - may not send more than 10 messages before returning 500 error.**</p>
-              <a href="{{ route('report.financialreminder') }}" onclick="return confirmSendReminder();"><button class="btn btn-themeBlue margin"><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; Send Financial Report Reminders</button></a>
+              <a href="{{ route('report.financialreminder') }}" onclick="return confirmSendReminder();"><button class="btn bg-gradient-primary"><i class="fas fa-envelope" ></i>&nbsp;&nbsp;&nbsp;Send Financial Report Reminders</button></a>
            </div>
+        </div>
+
           <!-- /.box -->
         </div>
       </div>
+    </div>
     </section>
     <!-- Main content -->
     <!-- /.content -->

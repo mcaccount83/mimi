@@ -1,16 +1,22 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
- <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1>
-      Retired Coordinator List
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Retired Coordinator List</li>
-      </ol>
+        <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+            <h1>Rtired Coordinator List</h1>
+            </div>
+            <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+                <li class="breadcrumb-item active">Retired Coordinator List</li>
+            </ol>
+            </div>
+        </div>
+        </div><!-- /.container-fluid -->
     </section>
+
     	@if ($message = Session::get('success'))
       <div class="alert alert-success">
 		<button type="button" class="close" data-dismiss="alert">×</button>
@@ -23,18 +29,19 @@
          <p>{{ $message }}</p>
       </div>
     @endif
-    <!-- Main content -->
-    <section class="content">
-      <div class="row">
-		<div class="col-md-12">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">List of Retired Coordinators</h3>
-            </div>
-            <!-- /.box-header -->
 
-            <div class="box-body table-responsive">
-              <table id="coordinatorlist" class="table table-bordered table-hover">
+    <!-- Main content -->
+   <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">List of Retired Coordinators</h3>
+            </div>
+            <!-- /.card-header -->
+        <div class="card-body">
+              <table id="coordinatorlist" class="table table-sm table-hover">
               <thead>
 			    <tr>
 				  <th>Details</th>
@@ -48,11 +55,11 @@
                 <tbody>
                 @foreach($retiredCoordinatorList as $list)
                   <tr>
-                        <td><center><a href="<?php echo url("/coordinator/retired/view/{$list->cor_id}") ?>"><i class="fa fa-eye fa-lg" aria-hidden="true"></i></a></center></td>
+                        <td><center><a href="<?php echo url("/coordinator/retired/view/{$list->cor_id}") ?>"><i class="fas fa-eye"></i></a></center></td>
                         <td>{{ $list->cor_fname }}</td>
                         <td>{{ $list->cor_lname }}</td>
                         <td>{{ $list->position }}</td>
-                         <td>{{ $list->cor_zapdate }}</td>
+                         <td><span class="date-mask">{{ $list->cor_zapdate }}</span></td>
 						<td>{{ $list->cor_reason }}</td>
 
                   </tr>
@@ -60,10 +67,10 @@
                   </tbody>
                 </table>
             </div>
-
-
-          <div class="box-body text-center"><a href="{{ route('export.retiredcoordinator')}}"><button class="btn btn-themeBlue margin"><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export Retired Coordinator List</button></a>
-        </div>
+              <!-- /.card-body -->
+              <div class="card-body text-center">
+                <a href="{{ route('export.retiredcoordinator')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download " ></i>&nbsp;&nbsp;&nbsp;Export Retired Coordinator List</button></a>
+            </div>
             </div>
 
            </div>
@@ -71,8 +78,6 @@
         </div>
       </div>
     </section>
-    </section>
-    <!-- Main content -->
 
     <!-- /.content -->
 

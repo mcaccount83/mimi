@@ -1,16 +1,22 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
- <section class="content-header">
-      <h1>
-        Admin
-       <small>Bugs</small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Bugs & Wishes</li>
-      </ol>
-    </section>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+          <h1>MIMI Bugs & Wishes</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">MIMI Bugs & Wishes</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
         <button type="button" class="close" data-dismiss="alert">×</button>
@@ -24,66 +30,50 @@
         </div>
     @endif
 
-<!-- Main content -->
     <section class="content">
-
-      <div class="row">
-        <div class="col-md-12">
-          <div class="box card">
-
-            <div class="box-header with-border">
-              <h3 class="box-title">MIMI Bugs & Wishes</h3>
+        <div class="container-fluid">
+            <div class="row">
+                &nbsp;&nbsp;<button type="button" class="btn bg-gradient-success" data-toggle="modal" data-target="#modal-task"><i class="fas fa-plus" ></i>&nbsp;&nbsp;&nbsp;Add Task</button>
             </div>
+            <div class="row">&nbsp;</div>
+            <div class="row">
 
-            <!-- /.box-header -->
-            <div class="box-body">
-              <!-- /.form group -->
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">To Do</h3>
-                                    &nbsp;&nbsp;&nbsp;
-                                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-task"><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Task</button>
-                                </div>
-                                <div class="box-body">
+                <div class="col-md-4">
+                    <div class="card card-secondary">
+                        <div class="card-header">
+                            <h3 class="card-title">To Do</h3>
+                        </div>
+                                <div class="card-body">
                                     @if($admin->where('status', 1)->isEmpty())
                                         <p>No jobs with this status</p>
                                     @else
                                         @foreach($admin->where('status', 1) as $adminItem)
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <div class="col-md-7">
-                                                    <h4>{{ $adminItem->task }}</h4>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                    <h5 style="background-color:
-                                                        @if ($adminItem->priority == 1)
-                                                            #C6EFCE     /*GREEN*/
-                                                        @elseif ($adminItem->priority == 2)
-                                                            #FFEB9C     /*YELLOW*/
-                                                        @elseif ($adminItem->priority == 3)
-                                                            #FFC7CE  /*RED*/
-                                                        @else
-                                                            #FFFFFF  /*WHITE*/
-                                                        @endif
-                                                    ">
-                                                        <center>{{ $adminItem->priority_word }}<center></h5>
-                                                    </div>
-                                                    <!-- Button to open modal for editing -->
-                                                    <div class="col-md-3 text-center">
-                                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#editTaskModal{{ $adminItem->id }}">
-                                                        <i class="fa fa-info-circle fa-fw" aria-hidden="true" ></i>&nbsp; Details
-                                                    </button>
-                                                    </div>
-                                                    <div class="col-md-12"><br></div>
-                                                </div>
+                                        <div class="card card-outline card-secondary">
+                                            <div class="card-header">
+                                              <h5 class="card-title">{{ $adminItem->task }}</h5>
+                                              <div class="card-tools">
+                                                <h5
+                                                    @if ($adminItem->priority == 1)
+                                                        style="background-color:#28a745; color: #ffffff;"
+                                                    @elseif ($adminItem->priority == 2)
+                                                        style="background-color:#ffc107;"
+                                                    @elseif ($adminItem->priority == 3)
+                                                        style="background-color:#dc3545; color: #ffffff;"
+                                                    @else
+                                                        style="background-color:#FFFFFF;"
+                                                    @endif
+                                                        >{{ $adminItem->priority_word }}</h5>
+                                              </div>
                                             </div>
-
+                                            <div class="card-body">
+                                              <p>
+                                                {{ $adminItem->details }}
+                                                <br><br>
+                                                <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#editTaskModal{{ $adminItem->id }}">
+                                                    <i class="fas fa-info-circle"></i>&nbsp;View/Edit Details</button>
+                                              </p>
+                                            </div>
+                                          </div>
                                             <!-- Modal for editing task -->
                                             <div class="modal fade" id="editTaskModal{{ $adminItem->id }}" tabindex="-1" role="dialog" aria-labelledby="editTaskModal{{ $adminItem->id }}Label" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
@@ -109,7 +99,7 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                 <label>Status</label>
-                                                                <select name="taskStatus" class="form-control select2" style="width: 100%;" id="taskStatus{{ $adminItem->id }}" {{ $canEditDetails ? '' : 'disabled' }}>
+                                                                <select name="taskStatus" class="form-control select2-bs4" style="width: 100%;" id="taskStatus{{ $adminItem->id }}" {{ $canEditDetails ? '' : 'disabled' }}>
                                                                     <option value="1" {{$adminItem->status == 1 ? 'selected' : ''}}>ToDo</option>
                                                                     <option value="2" {{$adminItem->status == 2 ? 'selected' : ''}}>In Progress</option>
                                                                     <option value="3" {{$adminItem->status == 3 ? 'selected' : ''}}>Done</option>
@@ -117,7 +107,7 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                 <label>Priority</label>
-                                                                <select name="taskPriority" class="form-control select2" style="width: 100%;" id="taskPriority{{ $adminItem->id }}" {{ $canEditDetails ? '' : 'disabled' }}>
+                                                                <select name="taskPriority" class="form-control select2-bs4" style="width: 100%;" id="taskPriority{{ $adminItem->id }}" {{ $canEditDetails ? '' : 'disabled' }}>
                                                                     <option value="1" {{$adminItem->priority == 1 ? 'selected' : ''}}>Low</option>
                                                                     <option value="2" {{$adminItem->priority == 2 ? 'selected' : ''}}>Normal</option>
                                                                     <option value="3" {{$adminItem->priority == 3 ? 'selected' : ''}}>High</option>
@@ -133,8 +123,8 @@
                                                         </div>
                                                         <div class="col-md-6"><br></div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times fa-fw" aria-hidden="true" ></i>&nbsp; Close</button>
-                                                            <button type="button" class="btn btn-success" onclick="updateTask({{ $adminItem->id }})"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save changes</button>
+                                                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp; Close</button>
+                                                            <button type="button" class="btn btn-success" onclick="updateTask({{ $adminItem->id }})"><i class="fas fa-save" ></i>&nbsp; Save changes</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -145,45 +135,42 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4">
-                            <div class="box">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">In Production</h3>
+                         <div class="col-md-4">
+                            <div class="card card-primary">
+                                <div class="card-header">
+                                    <h3 class="card-title">In Production</h3>
                                 </div>
-                                <div class="box-body">
-                                    @if($admin->where('status', 2)->isEmpty())
-                                        <p>No jobs with this status</p>
-                                    @else
-                                        @foreach($admin->where('status', 2) as $adminItem)
-                                            <div class="card">
-                                                <div class="card-body">
-                                                    <div class="col-md-7">
-                                                    <h4>{{ $adminItem->task }}</h4>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                    <h5 style="background-color:
+                                    <div class="card-body">
+                                        @if($admin->where('status', 2)->isEmpty())
+                                            <p>No jobs with this status</p>
+                                        @else
+                                            @foreach($admin->where('status', 2) as $adminItem)
+                                            <div class="card card-outline card-primary">
+                                                <div class="card-header">
+                                                <h5 class="card-title">{{ $adminItem->task }}</h5>
+                                                <div class="card-tools">
+                                                    <h5
                                                         @if ($adminItem->priority == 1)
-                                                            #C6EFCE     /*GREEN*/
+                                                            style="background-color:#28a745; color: #ffffff;"
                                                         @elseif ($adminItem->priority == 2)
-                                                            #FFEB9C     /*YELLOW*/
+                                                            style="background-color:#ffc107;"
                                                         @elseif ($adminItem->priority == 3)
-                                                            #FFC7CE  /*RED*/
+                                                            style="background-color:#dc3545; color: #ffffff;"
                                                         @else
-                                                            #FFFFFF  /*WHITE*/
+                                                            style="background-color:#FFFFFF;"
                                                         @endif
-                                                    ">
-                                                        <center>{{ $adminItem->priority_word }}<center></h5>
-                                                    </div>
-                                                    <!-- Button to open modal for editing -->
-                                                    <div class="col-md-3 text-center">
-                                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#editTaskModal{{ $adminItem->id }}">
-                                                        <i class="fa fa-info-circle fa-fw" aria-hidden="true" ></i>&nbsp; Details
-                                                    </button>
-                                                    </div>
-                                                    <div class="col-md-12"><br></div>
+                                                            >{{ $adminItem->priority_word }}</h5>
+                                                </div>
+                                                </div>
+                                                <div class="card-body">
+                                                <p>
+                                                    {{ $adminItem->details }}
+                                                    <br><br>
+                                                    <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#editTaskModal{{ $adminItem->id }}">
+                                                        <i class="fas fa-info-circle"></i>&nbsp;View/Edit Details</button>
+                                                </p>
                                                 </div>
                                             </div>
-
                                             <!-- Modal for editing task -->
                                             <div class="modal fade" id="editTaskModal{{ $adminItem->id }}" tabindex="-1" role="dialog" aria-labelledby="editTaskModal{{ $adminItem->id }}Label" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
@@ -209,7 +196,7 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                 <label>Status</label>
-                                                                <select name="taskStatus" class="form-control select2" style="width: 100%;" id="taskStatus{{ $adminItem->id }}" {{ $canEditDetails ? '' : 'disabled' }}>
+                                                                <select name="taskStatus" class="form-control select2-bs4" style="width: 100%;" id="taskStatus{{ $adminItem->id }}" {{ $canEditDetails ? '' : 'disabled' }}>
                                                                     <option value="1" {{$adminItem->status == 1 ? 'selected' : ''}}>ToDo</option>
                                                                     <option value="2" {{$adminItem->status == 2 ? 'selected' : ''}}>In Progress</option>
                                                                     <option value="3" {{$adminItem->status == 3 ? 'selected' : ''}}>Done</option>
@@ -217,7 +204,7 @@
                                                                 </div>
                                                                 <div class="col-md-6">
                                                                 <label>Priority</label>
-                                                                <select name="taskPriority" class="form-control select2" style="width: 100%;" id="taskPriority{{ $adminItem->id }}" {{ $canEditDetails ? '' : 'disabled' }}>
+                                                                <select name="taskPriority" class="form-control select2-bs4" style="width: 100%;" id="taskPriority{{ $adminItem->id }}" {{ $canEditDetails ? '' : 'disabled' }}>
                                                                     <option value="1" {{$adminItem->priority == 1 ? 'selected' : ''}}>Low</option>
                                                                     <option value="2" {{$adminItem->priority == 2 ? 'selected' : ''}}>Normal</option>
                                                                     <option value="3" {{$adminItem->priority == 3 ? 'selected' : ''}}>High</option>
@@ -233,8 +220,8 @@
                                                         </div>
                                                         <div class="col-md-6"><br></div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times fa-fw" aria-hidden="true" ></i>&nbsp; Close</button>
-                                                            <button type="button" class="btn btn-success" onclick="updateTask({{ $adminItem->id }})"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save changes</button>
+                                                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp; Close</button>
+                                                            <button type="button" class="btn btn-success" onclick="updateTask({{ $adminItem->id }})"><i class="fas fa-save" ></i>&nbsp; Save changes</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -245,46 +232,43 @@
                             </div>
                         </div>
 
-                            <div class="col-md-4">
-                                <div class="box">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">Done</h3>
-                                    </div>
-                                    <div class="box-body">
+
+                        <div class="col-md-4">
+                            <div class="card card-success">
+                                <div class="card-header">
+                                    <h3 class="card-title">Done</h3>
+                                </div>
+                                    <div class="card-body">
                                         @if($admin->where('status', 3)->isEmpty())
                                             <p>No jobs with this status</p>
                                         @else
                                             @foreach($admin->where('status', 3) as $adminItem)
-                                                <div class="card">
-                                                    <div class="card-body">
-                                                        <div class="col-md-7">
-                                                        <h4>{{ $adminItem->task }}</h4>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                        <h5 style="background-color:
-                                                            @if ($adminItem->priority == 1)
-                                                                #C6EFCE     /*GREEN*/
-                                                            @elseif ($adminItem->priority == 2)
-                                                                #FFEB9C     /*YELLOW*/
-                                                            @elseif ($adminItem->priority == 3)
-                                                                #FFC7CE  /*RED*/
-                                                            @else
-                                                                #FFFFFF  /*WHITE*/
-                                                            @endif
-                                                        ">
-                                                            <center>{{ $adminItem->priority_word }}<center></h5>
-                                                        </div>
-
-                                                        <!-- Button to open modal for editing -->
-                                                        <div class="col-md-3 text-center">
-                                                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#editTaskModal{{ $adminItem->id }}">
-                                                            <i class="fa fa-info-circle fa-fw" aria-hidden="true" ></i>&nbsp; Details
-                                                        </button>
-                                                        </div>
-                                                        <div class="col-md-12"><br></div>
-                                                    </div>
+                                            <div class="card card-outline card-success">
+                                                <div class="card-header">
+                                                <h5 class="card-title">{{ $adminItem->task }}</h5>
+                                                <div class="card-tools">
+                                                    <h5
+                                                        @if ($adminItem->priority == 1)
+                                                            style="background-color:#28a745; color: #ffffff;"
+                                                        @elseif ($adminItem->priority == 2)
+                                                            style="background-color:#ffc107;"
+                                                        @elseif ($adminItem->priority == 3)
+                                                            style="background-color:#dc3545; color: #ffffff;"
+                                                        @else
+                                                            style="background-color:#FFFFFF;"
+                                                        @endif
+                                                            >{{ $adminItem->priority_word }}</h5>
                                                 </div>
-
+                                                </div>
+                                                <div class="card-body">
+                                                <p>
+                                                    {{ $adminItem->details }}
+                                                    <br><br>
+                                                    <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#editTaskModal{{ $adminItem->id }}">
+                                                        <i class="fas fa-info-circle"></i>&nbsp;View/Edit Details</button>
+                                                </p>
+                                                </div>
+                                            </div>
                                                 <!-- Modal for editing task -->
                                                 <div class="modal fade" id="editTaskModal{{ $adminItem->id }}" tabindex="-1" role="dialog" aria-labelledby="editTaskModal{{ $adminItem->id }}Label" aria-hidden="true">
                                                     <div class="modal-dialog" role="document">
@@ -310,7 +294,7 @@
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                     <label>Status</label>
-                                                                    <select name="taskStatus" class="form-control select2" style="width: 100%;" id="taskStatus{{ $adminItem->id }}" {{ $canEditDetails ? '' : 'disabled' }}>
+                                                                    <select name="taskStatus" class="form-control select2-bs4" style="width: 100%;" id="taskStatus{{ $adminItem->id }}" {{ $canEditDetails ? '' : 'disabled' }}>
                                                                         <option value="1" {{$adminItem->status == 1 ? 'selected' : ''}}>ToDo</option>
                                                                         <option value="2" {{$adminItem->status == 2 ? 'selected' : ''}}>In Progress</option>
                                                                         <option value="3" {{$adminItem->status == 3 ? 'selected' : ''}}>Done</option>
@@ -318,7 +302,7 @@
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                     <label>Priority</label>
-                                                                    <select name="taskPriority" class="form-control select2" style="width: 100%;" id="taskPriority{{ $adminItem->id }}" disabled>
+                                                                    <select name="taskPriority" class="form-control select2-bs4" style="width: 100%;" id="taskPriority{{ $adminItem->id }}" disabled>
                                                                         <option value="1" {{$adminItem->priority == 1 ? 'selected' : ''}}>Low</option>
                                                                         <option value="2" {{$adminItem->priority == 2 ? 'selected' : ''}}>Normal</option>
                                                                         <option value="3" {{$adminItem->priority == 3 ? 'selected' : ''}}>High</option>
@@ -339,8 +323,8 @@
                                                             </div>
                                                             <div class="col-md-6"><br></div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times fa-fw" aria-hidden="true" ></i>&nbsp; Close</button>
-                                                                <button type="button" class="btn btn-success" onclick="updateTask({{ $adminItem->id }})"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save changes</button>
+                                                                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp; Close</button>
+                                                                <button type="button" class="btn btn-success" onclick="updateTask({{ $adminItem->id }})"><i class="fas fa-save" ></i>&nbsp; Save changes</button>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -374,7 +358,7 @@
                             <textarea class="form-control" id="taskDetailsNew" name="taskDetailsNew"></textarea>
                         </div>
                         <label>Priority</label>
-                            <select name="taskPriorityNew" class="form-control select2" style="width: 50%;" id="taskPriorityNew" >
+                            <select name="taskPriorityNew" class="form-control select2-bs4" style="width: 50%;" id="taskPriorityNew" >
                                 <option value="1" >Low</option>
                                 <option value="2" >Normal</option>
                                 <option value="3" >High</option>
@@ -382,8 +366,8 @@
                         </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times fa-fw" aria-hidden="true" ></i>&nbsp; Close</button>
-                    <button type="button" class="btn btn-success" onclick="return addTask()"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Add Task</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp; Close</button>
+                    <button type="button" class="btn btn-success" onclick="return addTask()"><i class="fas fa-save" ></i>&nbsp; Add Task</button>
                 </div>
             </div>
         </div>

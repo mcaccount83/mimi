@@ -1,16 +1,21 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
- <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-        Coordinator List
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Coordinator List</li>
-      </ol>
-    </section>
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Coordinator List</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">Coordinator List</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
 
 	 @if ($message = Session::get('success'))
       <div class="alert alert-success">
@@ -25,17 +30,18 @@
       </div>
     @endif
 
-    <!-- Main content -->
-    <section class="content">
+   <!-- Main content -->
+   <section class="content">
+    <div class="container-fluid">
       <div class="row">
-		<div class="col-md-12">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">List of Coordinators</h3>
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">List of Coordinators</h3>
             </div>
-            <!-- /.box-header -->
-            <div class="box-body table-responsive">
-              <table id="coordinatorlist" class="table table-bordered table-hover">
+            <!-- /.card-header -->
+        <div class="card-body">
+              <table id="coordinatorlist"  class="table table-sm table-hover">
                 <thead>
                   <tr>
                     <th>Details</th>
@@ -53,13 +59,13 @@
                 <tbody>
                   @foreach($coordinatorList as $list)
                     <tr>
-                      <td><center><a href="<?php echo url("/coordinator/edit/{$list->cor_id}") ?>"><i class="fa fa-edit fa-lg" aria-hidden="true"></i></a></center></td>
+                      <td><center><a href="<?php echo url("/coordinator/edit/{$list->cor_id}") ?>"><i class="fas fa-edit"></i></a></center></td>
                       <td>{{ $list->reg }}</td>
                       <td>{{ $list->cor_fname }}</td>
                       <td>{{ $list->cor_lname }}</td>
                       <td>{{ $list->position }}</td>
                       <td>{{ $list->sec_pos }}</td>
-                	  <td>{{ $list->coordinator_start_date }}</td>
+                	  <td><span class="date-mask">{{ $list->coordinator_start_date }}</span></td>
                       <td><a href="mailto:{{ $list->cor_email }}">{{ $list->cor_email }}</a></td>
                       <td>{{$list->report_fname}} {{$list->report_lname}}</td>
                       <td>{{ $list->cor_chapter }}</td>
@@ -68,29 +74,27 @@
                 </tbody>
               </table>
             </div>
-            <div class="radio-chk labelcheck">
-              <div class="col-sm-6 col-xs-12">
-                <div class="form-group">
-                    <label style="display: block;"><input type="checkbox" name="showPrimary" id="showPrimary" class="ios-switch green bigswitch" {{$checkBoxStatus}} onchange="showPrimary()" /><div><div></div></div>
-					</label>
-				   <span>Show only my direct reports</span>
+              <!-- /.card-body -->
+              <div class="col-sm-12">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
+                    <label class="custom-control-label" for="showPrimary">Show only my direct reports</label>
                 </div>
-              </div>
             </div>
-			<div class="clearfix"></div>
-            <div class="box-body text-center">
-              <a class="btn btn-themeBlue margin" href="{{ route('coordinator.create') }}"><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add New Coordinator</a>
+
+                <div class="card-body text-center">
+              <a class="btn bg-gradient-primary" href="{{ route('coordinator.create') }}"><i class="fas fa-plus" ></i>&nbsp;&nbsp;&nbsp;Add New Coordinator</a>
               <?php
 			 if($checkBoxStatus){ ?>
-				<a href="{{ route('export.coordinator',$corId) }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export Coordinator List</button></a>
+				<a href="{{ route('export.coordinator',$corId) }}"><button class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export Coordinator List</button></a>
 			<?php
 			 }
 			 else{ ?>
-				<a href="{{ route('export.coordinator','0') }}"><button class="btn btn-themeBlue margin" <?php if($countList ==0) echo "disabled";?>><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Export Coordinator List</button></a>
+				<a href="{{ route('export.coordinator','0') }}"><button class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export Coordinator List</button></a>
 			 <?php } ?>
 
 
-              <a class="btn btn-themeBlue margin" href="mailto:{{ $emailListCord }}"><i class="fa fa-envelope-o fa-fw" aria-hidden="true" ></i>&nbsp; E-mail Listed Coordinators</a>
+              <a class="btn bg-gradient-primary" href="mailto:{{ $emailListCord }}"><i class="fas fa-envelope" ></i>&nbsp;&nbsp;&nbsp;E-mail Listed Coordinators</a>
             </div>
          </div>
           <!-- /.box -->

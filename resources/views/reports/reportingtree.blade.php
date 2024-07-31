@@ -1,34 +1,44 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Coordinator Reporting Tree</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">Coordinator Reporting Tree</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
 
-    <section class="content-header">
-      <h1>
-      Coordinator Reporting Tree
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Coordinator Reporting Tree</li>
-      </ol>
-    </section>
-    <section class="content">
-      <div class="row">
-        <div class="col-md-12">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">Coordinator Reporting Tree</h3>
-              <div class="box-tools">
-                <div class="input-group input-group-sm" style="width: 250px;"></div>
+     <!-- Main content -->
+     <section class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Coordinator Reporting Tree</h3>
+                </div>
+                <!-- /.card-header -->
+            <div class="card-body text-center">
+                <div class="row">
+              <div id="chart_div">
+
               </div>
             </div>
-            <div class="box-body table-responsive" style="margin: 0 10px;">
-              <div id="chart_div"></div>
-            </div>
-            <div class="box-body text-center">
+            <div class="card-body text-center">
             </div>
           </div>
         </div>
       </div>
+    </div>
     </section>
 @endsection
 @section('customscript')

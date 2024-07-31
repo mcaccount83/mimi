@@ -1,16 +1,22 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
- <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-      M2M & Sustaining Chapter Donations Report
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">M2M & Sustaining Chapter Donations</li>
-      </ol>
-    </section>
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>M2M & Sustaning Chapter Donations Report</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">M2M & Sustaning Chapter Donations Report</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
     	 @if ($message = Session::get('success'))
       <div class="alert alert-success">
          <p>{{ $message }}</p>
@@ -21,19 +27,20 @@
          <p>{{ $message }}</p>
       </div>
     @endif
+
     <!-- Main content -->
     <section class="content">
-      <div class="row">
-		<div class="col-md-12">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">M2M & Sustaining Chapter Donations</h3>
-
-            </div>
-            <!-- /.box-header -->
-
-            <div class="box-body table-responsive">
-              <table id="chapterlist_donation" class="table table-bordered table-hover">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">List of Chapters</h3>
+                </div>
+                <!-- /.card-header -->
+            <div class="card-body">
+                <table id="chapterlist" class="table table-sm table-hover" >
+              {{-- <table id="chapterlist_donation" class="table table-bordered table-hover"> --}}
               <thead>
 			    <tr>
 					<?php if(Session::get('positionid') >=6 && Session::get('positionid') <=7){ ?><th>Donation</th><?php }?>
@@ -48,32 +55,26 @@
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
-	                    <?php if(Session::get('positionid') >=6 && Session::get('positionid') <=7){ ?><td>
-	                        <center><a href="<?php echo url("/chapter/m2mdonation/{$list->id}") ?>"><i class="fa fa-credit-card fa-lg" aria-hidden="true"></i></a></center><?php }?>
-	                    </td>
+	                    <?php if(Session::get('positionid') >=6 && Session::get('positionid') <=7){ ?>
+                            <td class="text-center align-middle">
+	                            <a href="<?php echo url("/chapter/m2mdonation/{$list->id}") ?>"><i class="far fa-credit-card "></i></a><?php }?></td>
 						<td>{{ $list->state }}</td>
                         <td>{{ $list->name }}</td>
 						<td>${{ $list->m2m_payment }}</td>
-						<td>{{ $list->m2m_date }}</td>
+						<td><span class="date-mask">{{ $list->m2m_date }}</span></td>
 						<td>${{ $list->sustaining_donation }}</td>
-						<td>{{ $list->sustaining_date }}</td>
+						<td><span class="date-mask">{{ $list->sustaining_date }}</span></td>
 			        </tr>
                   @endforeach
                   </tbody>
                 </table>
-
-                </div>
-              </div>
-              </div>
             </div>
-
+            <div class="card-body text-center">&nbsp;</div>
+            </div>
            </div>
-          <!-- /.box -->
         </div>
       </div>
     </section>
-    <!-- Main content -->
-
     <!-- /.content -->
 
 @endsection

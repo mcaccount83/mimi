@@ -1,16 +1,23 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
- <section class="content-header">
-      <h1>
-      Welcome, {{ $coordinatorDetails[0]->first_name }} {{ $coordinatorDetails[0]->last_name }}
-       <small></small>
-       </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Coordinator Dashboard</li>
-      </ol>
-    </section>
+<!-- Content Wrapper. Contains page content -->
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Welcome, {{ $coordinatorDetails[0]->first_name }} {{ $coordinatorDetails[0]->last_name }}</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">Chapter Details</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
     @if ($message = Session::get('success'))
 		<div class="alert alert-success">
 			<button type="button" class="close" data-dismiss="alert">×</button>
@@ -23,17 +30,24 @@
          <p>{{ $message }}</p>
 		</div>
     @endif
+
+
     <!-- Main content -->
     <form method="POST" action='{{ route("coordinator.updatedashboard",$coordinatorDetails[0]->coordinator_id) }}' id="update-dashboard">
     @csrf
+
     <section class="content">
-		<div class="row">
+        <div class="container-fluid">
+            <div class="row">
+
 		<div class="col-md-4">
-			<div class="box card">
-				<div class="box-header with-border mrg-t-10">
-					<h3 class="box-title">Monthly To Do List</h3>
-				</div>
-				<div class="box-body"><div class="todolist">
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Monthly ToDo List</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+			<div class="todolist">
 				@php
                   use Illuminate\Support\Carbon;
                   $currentMonth = Carbon::now()->month;
@@ -92,11 +106,12 @@
 				</div>
 				</div>
 
-				<div class="box card">
-				<div class="box-header with-border mrg-t-10">
-					<h3 class="box-title">Contact Your Coordinator</h3>
-				</div>
-				<div class="box-body">
+                <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">Contact Your Coordinator</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
 					<p style="font-size:16px">{{ $primaryCoordinatorList[0]->cor_f_name }} {{$primaryCoordinatorList[0]->cor_l_name}}<br/>
 					<a href="mailto:{{ $primaryCoordinatorList[0]->cor_email }}">{{ $primaryCoordinatorList[0]->cor_email }}</a><br/>
 					{{ $primaryCoordinatorList[0]->cor_phone }}
@@ -106,11 +121,12 @@
 		</div>
 
 		<div class="col-md-4">
-			<div class="box card">
-				<div class="box-header with-border mrg-t-10">
-					<h3 class="box-title">Important EOY Dates</h3>
-				</div>
-				<div class="box-body">
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Important EOY Dates</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
 					<p><ul><li><strong>March</strong> - Nomination Committees are selected and Election Process Begins for chapters</li>
 					<li><strong>June</strong> - In Person Elections are held at Genreral Business Meetings</li>
 					<li><strong>June 1</strong> - Election Reports are OPEN in MIMI and can be SUBMITTED as soon as elections are complete</li>
@@ -126,11 +142,12 @@
 		</div>
 
 		<div class="col-md-4">
-			<div class="box card">
-				<div class="box-header with-border mrg-t-10">
-					<h3 class="box-title">Resource Links</h3>
-				</div>
-				<div class="box-body">
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Resource Links</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
 				    <p style="font-size:16px"><a href="https://momsclub.org/resources/" target="_blank">Chapter Resources</a>:&nbsp;&nbsp;daytime support</p>
 					<p style="font-size:16px"><a href="https://momsclub.org/coordinator-toolkit/" target="_blank">Cordinator Toolkit</a>:&nbsp;&nbsp;Toolkit2021</p>
 					<p style="font-size:16px"><a href="https://momsclub.org/elearning/" target="_blank">eLearning Library</a>:&nbsp;&nbsp;Toolkit2021</p>

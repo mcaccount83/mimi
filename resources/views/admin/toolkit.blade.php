@@ -1,16 +1,39 @@
 @extends('layouts.coordinator_theme')
+<style>
+    .grid {
+    display: block; /* Masonry will handle the grid layout */
+    width: 100%; /* Ensure grid takes full width of container */
+}
+
+.grid-item {
+    width: 400px; /* Ensure grid items match the column width in Masonry options */
+    margin-bottom: 20px; /* Add bottom margin to avoid overlap */
+    box-sizing: border-box; /* Include padding and border in width */
+}
+
+.card {
+    width: 100%; /* Ensure card takes full width of grid item */
+    box-sizing: border-box; /* Include padding and border in width */
+}
+</style>
 
 @section('content')
- <section class="content-header">
-      <h1>
-        Admin
-       <small>Toolkit</small>
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Toolkit</li>
-      </ol>
-    </section>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+          <h1>Coordinator Toolkit&nbsp;<small>(Links & File Downloads)</small></h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">Coordinator Toolkit</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
         <button type="button" class="close" data-dismiss="alert">×</button>
@@ -26,40 +49,28 @@
 
 <!-- Main content -->
 <section class="content">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="box card">
-          <div class="box-header with-border">
-            <h3 class="box-title">Coordinator Toolkit - Links & File Downloads</h3>
-            <h4>Additional Resources that may be helpful for Coordinators and that Chapter may need in specific circumstances.</h4>
-          </div>
-          <!-- /.box-header -->
-          <div class="box-body">
-            <!-- /.form group -->
+    <div class="container-fluid">
+        <div class="row">
+            <p>&nbsp;&nbsp;Additional Resources that may be helpful for Coordinators and that Chapters may need in spcific circumstances.</p>
+        </div>
+        @if($canEditFiles)
             <div class="row">
-              <div class="col-md-12">
-                <div class="form-group">
-                  @if($canEditFiles)
-                      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-task"><i class="fa fa-plus fa-fw" aria-hidden="true"></i>&nbsp; Add Toolkit Item</button>
-                  @endif
-                  <hr>
-              </div>
-          </div>
-      </div>
+                &nbsp;&nbsp;<button type="button" class="btn bg-gradient-success" data-toggle="modal" data-target="#modal-task"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;Add Toolkit Item</button>
+            </div>
+            <div class="row">&nbsp;</div>
+        @endif
+        <div class="row">
 
-
-      <div class="grid">
-          <!-- Grid item -->
-          <div class="grid-item col-md-4">
-              <div class="box">
-                  <div class="box-header with-border">
-                      <h3 class="box-title">JOB DESCRIPTIONS</h3>
-                  </div>
-                  <div class="box-body">
+        <div class="grid">
+            <!-- Grid item -->
+            <div class="grid-item">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title">JOB DESCRIPTIONS</h3>
+                    </div>
+                        <div class="card-body">
                       @foreach($resources->where('category', 9) as $resourceItem)
-                      <div class="card">
-                          <div class="card-body">
-                              <h4>
+                              <p>
                                   @if ($resourceItem->link)
                                   <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                   @if($canEditFiles)
@@ -76,94 +87,20 @@
                                   <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
                                   @endif
                                   @endif
-                              </h4>
-                          </div>
-                      </div>
+                              </p>
                       @endforeach
                   </div>
               </div>
           </div>
-                            <!-- Grid item -->
-            <div class="grid-item col-md-4">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">NEED BASED FACT SHEETS</h3>
-                    </div>
-                    <div class="box-body">
-                        @foreach($resources->where('category', 8) as $resourceItem)
-                        <div class="card">
-                            <div class="card-body">
-                                <h4>
-                                    @if ($resourceItem->link)
-                                    <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                    @if($canEditFiles)
-                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                    @endif
-                                    @elseif ($resourceItem->file_path)
-                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                    @if($canEditFiles)
-                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                    @endif
-                                    @else
-                                    {{ $resourceItem->name }}&nbsp;
-                                    @if($canEditFiles)
-                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                    @endif
-                                    @endif
-                                </h4>
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
             <!-- Grid item -->
-            <div class="grid-item col-md-4">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">ADDITIONAL COORDINATOR RESOURCES</h3>
+            <div class="grid-item">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title">NEED BASED FACT SHEETS</h3>
                     </div>
-                    <div class="box-body">
-                        @foreach($resources->where('category', 10) as $resourceItem)
-                        <div class="card">
-                            <div class="card-body">
-                                <h4>
-                                    @if ($resourceItem->link)
-                                    <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                    @if($canEditFiles)
-                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                    @endif
-                                    @elseif ($resourceItem->file_path)
-                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
-                                    @if($canEditFiles)
-                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                    @endif
-                                    @else
-                                    {{ $resourceItem->name }}&nbsp;
-                                    @if($canEditFiles)
-                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
-                                    @endif
-                                    @endif
-                                </h4>
-                            </div>
-                        </div>
-                        @endforeach
                         <div class="card-body">
-                        <h4><a href="#" data-toggle="modal" data-target="#modal-positions">MIMI Position Abreviations</a></h4></div>
-                    </div>
-                </div>
-            </div>
-            <!-- Grid item -->
-            <div class="grid-item col-md-4">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">ADDITIONAL CHAPTER RESOURCES</h3>
-                    </div>
-                    <div class="box-body">
-                        @foreach($resources->where('category', 11) as $resourceItem)
-                        <div class="card">
-                            <div class="card-body">
-                                <h4>
+                        @foreach($resources->where('category', 8) as $resourceItem)
+                                <p>
                                     @if ($resourceItem->link)
                                     <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
                                     @if($canEditFiles)
@@ -180,16 +117,76 @@
                                     <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
                                     @endif
                                     @endif
-                                </h4>
-                            </div>
-                        </div>
+                                </p>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            <!-- Grid item -->
+            <div class="grid-item">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title">ADDITIONAL COORDINATOR RESOURCES</h3>
+                    </div>
+                        <div class="card-body">
+                        @foreach($resources->where('category', 10) as $resourceItem)
+                                <p>
+                                    @if ($resourceItem->link)
+                                    <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                    @if($canEditFiles)
+                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                    @endif
+                                    @elseif ($resourceItem->file_path)
+                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                    @if($canEditFiles)
+                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                    @endif
+                                    @else
+                                    {{ $resourceItem->name }}&nbsp;
+                                    @if($canEditFiles)
+                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                    @endif
+                                    @endif
+                                </p>
+                        @endforeach
+                        <p><a href="#" data-toggle="modal" data-target="#modal-positions">MIMI Position Abreviations</a></p>
+                    </div>
+                </div>
+            </div>
+            <!-- Grid item -->
+            <div class="grid-item">
+                <div class="card card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title">ADDITIONAL CHAPTER RESOURCES</h3>
+                    </div>
+                        <div class="card-body">
+                        @foreach($resources->where('category', 11) as $resourceItem)
+                                <p>
+                                    @if ($resourceItem->link)
+                                    <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                    @if($canEditFiles)
+                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                    @endif
+                                    @elseif ($resourceItem->file_path)
+                                    <a href="{{ $resourceItem->file_path }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
+                                    @if($canEditFiles)
+                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                    @endif
+                                    @else
+                                    {{ $resourceItem->name }}&nbsp;
+                                    @if($canEditFiles)
+                                    <span style="font-size: small;">&nbsp;|&nbsp;<a href="#" data-toggle="modal" data-target="#editResourceModal{{ $resourceItem->id }}">UPDATE</a></span>
+                                    @endif
+                                    @endif
+                                </p>
                         @endforeach
                     </div>
                 </div>
             </div>
 
-
+        </div>
             </div>
+        </div>
 
             <!-- Modal for MIMI Position Abriviations task -->
             <div class="modal fade" id="modal-positions">
@@ -265,7 +262,7 @@
                               </table>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times fa-fw" aria-hidden="true" ></i>&nbsp; Close</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
                         </div>
                     </div>
                 </div>
@@ -287,7 +284,7 @@
                                 <div class="col-md-12">
                                 <div class="form-group">
                                     <label for="fileCategory{{ $resourceItem->id }}">Category</label>
-                                    <select name="fileCategory" class="form-control select2" style="width: 50%;" id="fileCategory{{ $resourceItem->id }}" disabled>
+                                    <select name="fileCategory" class="form-control select2-bs4" style="width: 50%;" id="fileCategory{{ $resourceItem->id }}" disabled>
                                         <option value="8" {{ $resourceItem->category == 8 ? 'selected' : '' }}>Need Based Fact Sheet</option>
                                         <option value="9" {{ $resourceItem->category == 9 ? 'selected' : '' }}>Job Description</option>
                                         <option value="10" {{ $resourceItem->category == 10 ? 'selected' : '' }}>Resource for Coordinators</option>
@@ -336,8 +333,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times fa-fw" aria-hidden="true" ></i>&nbsp; Close</button>
-                            <button type="button" class="btn btn-success" onclick="updateFile({{ $resourceItem->id }})"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save changes</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
+                            <button type="button" class="btn btn-success" onclick="updateFile({{ $resourceItem->id }})"><i class="fas fa-save" ></i>&nbsp; Save changes</button>
                         </div>
                     </div>
                 </div>
@@ -356,7 +353,7 @@
                                 <form id="addResourceForm">
                                     <div class="form-group">
                                         <label>Category</label>
-                                        <select name="fileCategoryNew" class="form-control select2" style="width: 50%;" id="fileCategoryNew" >
+                                        <select name="fileCategoryNew" class="form-control select2-bs4" style="width: 50%;" id="fileCategoryNew" >
                                             <option value="8" >Need Based Fact Sheet</option>
                                             <option value="9" >Job Description</option>
                                             <option value="10" >Resource for Coordinators</option>
@@ -395,8 +392,8 @@
                                 </form>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-times fa-fw" aria-hidden="true" ></i>&nbsp; Close</button>
-                                <button type="button" class="btn btn-success" onclick="return addFile()"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Add Resource</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
+                                <button type="button" class="btn btn-success" onclick="return addFile()"><i class="fas fa-save" ></i>&nbsp; Add Resource</button>
                             </div>
                         </div>
                     </div>
@@ -414,8 +411,8 @@ $(document).ready(function() {
     var elem = document.querySelector('.grid');
     var msnry = new Masonry(elem, {
         itemSelector: '.grid-item',
-        columnWidth: '.grid-item', // Set column width to grid-item for consistent size
-        //gutter: 20, // Set gutter for spacing between items
+        columnWidth: 400, // Set a fixed column width (adjust as needed)
+        gutter: 20, // Set gutter for spacing between items
         percentPosition: true
     });
 });

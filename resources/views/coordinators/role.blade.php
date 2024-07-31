@@ -1,16 +1,23 @@
 @extends('layouts.coordinator_theme')
 
 @section('content')
+ <!-- Content Wrapper. Contains page content -->
  <section class="content-header">
-      <h1>
-      Coordinator List
-       <small>Role</small>
-       </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Coordinator List</li>
-      </ol>
-    </section>
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Coordinator Role&nbsp;<small>(Edit)</small></h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">Coordinator Role</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
 	@if ($message = Session::get('success'))
       <div class="alert alert-success">
 		<button type="button" class="close" data-dismiss="alert">×</button>
@@ -28,36 +35,40 @@
     <form id="role" method="POST" action='{{ route("coordinator.updaterole",$coordinatorDetails[0]->coordinator_id) }}'>
     @csrf
     <section class="content">
+        <div class="container-fluid">
 
         @php
             $bigSisterCondition = ($position_id == 1 );  //*Big Sister
         @endphp
 
-		<div class="row">
-		<div class="col-md-12">
-			<div class="box card">
-				<div class="box-header with-border mrg-t-10">
-					<h3 class="box-title">Coordinator</h3>
-				</div>
-				<div class="box-body">
-				    <div class="col-sm-6 col-xs-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card card-outline card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Personal Information</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+                                <div class="row">
+                      <!-- /.form group -->
+				    <div class="col-sm-6">
 					  <div class="form-group">
 						<label>First Name</label><span class="field-required">*</span>
-						<input type="text" name="cord_fname" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->first_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" readonly>
+						<input type="text" name="cord_fname" class="form-control" value="{{ $coordinatorDetails[0]->first_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" readonly>
 					  </div>
 					</div>
 					<!-- /.form group -->
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>Last Name</label><span class="field-required">*</span>
-						<input type="text" name="cord_lname" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->last_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" readonly>
+						<input type="text" name="cord_lname" class="form-control" value="{{ $coordinatorDetails[0]->last_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" readonly>
 					  </div>
 					</div>
 
-                  <div class="col-sm-4 col-xs-12">
+                  <div class="col-sm-4">
                     <div class="form-group">
                     <label>Reports To</label><span class="field-required">*</span>
-                    <select name="cord_report_pc" id="cord_report_pc" class="form-control select2" style="width: 100%;" required>
+                    <select name="cord_report_pc" id="cord_report_pc" class="form-control select2-sb4" style="width: 100%;" required>
 
                        @foreach($primaryCoordinatorList as $pcl)
                           <option value="{{$pcl->cid}}" {{$coordinatorDetails[0]->report_id == $pcl->cid  ? 'selected' : ''}}>{{$pcl->cor_f_name}} {{$pcl->cor_l_name}} ({{$pcl->pos}})</option>
@@ -66,10 +77,10 @@
                     <input type="hidden" name="OldReportPC" value="{{$coordinatorDetails[0]->report_id}}">
                 </div>
             </div>
-					<div class="col-sm-4 col-xs-12">
+					<div class="col-sm-4">
 						<div class="form-group">
 						<label>Primary Position</label><span class="field-required">*</span>
-						<select name="cord_pri_pos" id="cord_pos" class="form-control select2" style="width: 100%;" onChange="CheckPromotion(this)" required>
+						<select name="cord_pri_pos" id="cord_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" required>
 							@foreach($positionList as $pos)
 							  <option value="{{$pos->id}}" {{$coordinatorDetails[0]->position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
 							@endforeach
@@ -84,10 +95,10 @@
 						<input type="hidden" name="email" value="{{$coordinatorDetails[0]->email}}" />
 						<input type="hidden" name="RetireReason" id="RetireReason" value="" />
 					</div>
-					<div class="col-sm-4 col-xs-12">
+					<div class="col-sm-4">
 						<div class="form-group">
 						<label>Secondary Position</label>
-						<select name="cord_sec_pos" class="form-control select2" style="width: 100%;" onChange="CheckPromotion(this)">
+						<select name="cord_sec_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)">
 							<option value=""></option>
 							@foreach($positionList as $pos)
 							  <option value="{{$pos->id}}" {{$coordinatorDetails[0]->sec_position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
@@ -96,16 +107,16 @@
 						</div>
 						<input type="hidden" name="OldSecPosition" value="{{$coordinatorDetails[0]->sec_position_id}}">
 					</div>
-                    <div class="col-sm-4 col-xs-12">
+                    <div class="col-sm-4">
                         <div class="form-group">
                           <label>Home Chapter</label><span class="field-required">*</span>
-                          <input type="text" name="cord_chapter" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->home_chapter }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" >
+                          <input type="text" name="cord_chapter" class="form-control" value="{{ $coordinatorDetails[0]->home_chapter }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" >
                         </div>
                       </div>
-					<div class="col-sm-4 col-xs-12">
+					<div class="col-sm-4">
 						<div class="form-group">
 						<label>Conference</label><span class="field-required">*</span>
-						<select name="cord_conf" id= "cord_conf" class="form-control select2" style="width: 100%;" required>
+						<select name="cord_conf" id= "cord_conf" class="form-control select2-sb4" style="width: 100%;" required>
 
 						  @foreach($confList as $con)
 							  <option value="{{$con->id}}" {{$coordinatorDetails[0]->conference_id == $con->id  ? 'selected' : ''}}>{{$con->conference_name}}</option>
@@ -113,10 +124,10 @@
 						</select>
 						</div>
 					</div>
-					<div class="col-sm-4 col-xs-12">
+					<div class="col-sm-4">
 						<div class="form-group">
 						<label>Region</label><span class="field-required">*</span>
-						<select name="cord_region" id="cord_region" class="form-control select2" style="width: 100%;" required>
+						<select name="cord_region" id="cord_region" class="form-control select2-sb4" style="width: 100%;" required>
 							<option value="0" {{$coordinatorDetails[0]->region_id == 0  ? 'selected' : ''}}>None</option>
 							@foreach($regionList as $reg)
 							  <option value="{{$reg->id}}" {{$coordinatorDetails[0]->region_id == $reg->id  ? 'selected' : ''}}>{{$reg->long_name}}</option>
@@ -124,20 +135,20 @@
 						</select>
 						</div>
 					</div>
-                    <div class="col-sm-4 col-xs-12">
+                    <div class="col-sm-4">
                         <div class="form-group">
                           <label>Coordinator Start Date</label>
-                          <input type="text" name="cord_phone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->coordinator_start_date }}" disabled>
+                          <input type="text" name="cord_phone" class="form-control" value="{{ $coordinatorDetails[0]->coordinator_start_date }}" disabled>
                         </div>
                       </div>
-                  <div class="col-sm-4 col-xs-12">
+                  <div class="col-sm-4">
                     <div class="form-group">
                       <label>Last Promotion Date</label>
-                      <input type="text" name="CoordinatorPromoteDate" id="CoordinatorPromoteDate" class="form-control my-colorpicker1" value="{{ $lastPromoted }}" readonly>
+                      <input type="text" name="CoordinatorPromoteDate" id="CoordinatorPromoteDate" class="form-control" value="{{ $lastPromoted }}" readonly>
                     </div>
                     <input type="hidden" name="CoordinatorPromoteDateNew" id="CoordinatorPromoteDateNew"  value="{{$lastPromoted}}"/>
                   </div>
-                  <div class="col-sm-2 col-xs-12">
+                  <div class="col-sm-2">
 					<div class="radio-chk">
 							<div class="form-group">
 							<label>On Leave Of Absense</label>
@@ -146,104 +157,118 @@
 						</div>
 					</div>
 					</div>
-					<div class="col-sm-2 col-xs-12">
+					<div class="col-sm-2">
 					  <div class="form-group">
 						<label>Leave Date</label>
-						<input type="text" name="cord_altphone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->leave_date }}" disabled>
+						<input type="text" name="cord_altphone" class="form-control" value="{{ $coordinatorDetails[0]->leave_date }}" disabled>
 					  </div>
 					</div>
                 </div>
-					<div class="box-header with-border mrg-t-10"></div>
-					<div class="box-body">
-						<div class="col-sm-12 col-xs-12">
-							<div class="form-group mrg-b-30">
-							<label>Coordinators Directly Reporting to {{ $coordinatorDetails[0]->first_name }}:</label>
+            </div>
 
-							<table id="coordinator-list" class="nowraptable" width="100%">
-								<thead>
-								   <tr>
-										<th>First Name</th>
-										<th>Last Name</th>
-										<th>Change To Report To</th>
-										<th></th>
-								   </tr>
-								</thead>
-								<tbody>
-									<?php
-									$coordinator_list = DB::table('coordinator_details as cd')
-    ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-    ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-    ->join('region', 'cd.region_id', '=', 'region.id')
-    ->where('cd.report_id', $coordinatorDetails[0]->coordinator_id)
-    ->where('cd.is_active', 1)
-    ->get();
+					<div class="card-header">
+                        <h3 class="card-title">&nbsp;</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="row">
+              <!-- /.form group -->
+              <div class="col-sm-12">
+                <div class="form-group">
+                    <label>Coordinators Directly Reporting to {{ $coordinatorDetails[0]->first_name }}:</label>
+                    <table id="coordinator-list" class="nowraptable" width="100%">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Change To Report To</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $coordinator_list = DB::table('coordinator_details as cd')
+                                    ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+                                    ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                                    ->join('region', 'cd.region_id', '=', 'region.id')
+                                    ->where('cd.report_id', $coordinatorDetails[0]->coordinator_id)
+                                    ->where('cd.is_active', 1)
+                                    ->get();
 
-									$row_count=count($coordinator_list);
+                                $coordinator_options = DB::table('coordinator_details as cd')
+                                    ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+                                    ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                                    ->where(function ($query) use ($coordinatorDetails) {
+                                        $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
+                                            ->where('cd.position_id', '>=', 1)
+                                            ->where('cd.position_id', '<=', 6)
+                                            ->where('cd.is_active', 1);
+                                    })
+                                    ->orWhere(function ($query) use ($coordinatorDetails) {
+                                        $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
+                                            ->where('cd.position_id', 25)
+                                            ->where('cd.is_active', 1);
+                                    })
+                                    ->orderBy('cd.first_name')
+                                    ->orderBy('cd.last_name')
+                                    ->get();
 
-									$coordinator_options = DB::table('coordinator_details as cd')
-    ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-    ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-    ->where(function ($query) use ($coordinatorDetails) {
-        $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
-            ->where('cd.position_id', '>=', 1)
-            ->where('cd.position_id', '<=', 6)
-            ->where('cd.is_active', 1);
-    })
-    ->orWhere(function ($query) use ($coordinatorDetails) {
-        $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
-            ->where('cd.position_id', 25)
-            ->where('cd.is_active', 1);
-    })
-    ->orderBy('cd.first_name')
-    ->orderBy('cd.last_name')
-    ->get();
+                                $row_count = count($coordinator_list);
+                            @endphp
 
-									$row_countCO=count($coordinator_options);
-
-									for ($row = 0; $row < $row_count; $row++){
-										echo "<tr>";
-											echo "<td>".$coordinator_list[$row]->cor_f_name."</td>";
-											echo "<td>".$coordinator_list[$row]->cor_l_name."</td>";
-											echo "<td><select name=\"Report" . $row . "\" id=\"Report" . $row . "\" required>";
-											for ($row1 = 0; $row1 < $row_countCO; $row1++){
-												$sel ='';
-												if($coordinator_options[$row1]->cid == $coordinatorDetails[0]->coordinator_id)
-													$sel ='selected';
-												echo "<option value='".$coordinator_options[$row1]->cid."' $sel >".$coordinator_options[$row1]->cor_f_name.' '.$coordinator_options[$row1]->cor_l_name.' ('.$coordinator_options[$row1]->pos.')'."</option>";
-											}
-											echo "</select></td>";
-											echo " <td style=\"display:none;\"> <input type=\"hidden\" name=\"CoordinatorIDRow" . $row . "\" id=\"CoordinatorIDRow" . $row . "\" value=" . $coordinator_list[$row]->cid . "></td> \n";
-
-										echo "</tr>";
-									}
-									?>
-								</tbody>
-							</table>
-
-							</div>
-							<input type="hidden" name="CoordinatorCount" id="CoordinatorCount"  value="<?php echo $row_count;?>" />
-						</div>
-						<div class="clearfix"></div>
-						<div class="col-sm-8 col-xs-12">
-						  <div class="form-group">
-							<label>Select Direct Report To</label>
-							<select name="SelectCoordinator" id="SelectCoordinator" class="form-control select2" style="width: 100%;" onChange="ActivateCoordinatorButton(this)">
-						  <option value="" ></option>
-						   @foreach($directReportTo as $pcl)
-							  <option value="{{$pcl->cid}}" >{{$pcl->cor_f_name}} {{$pcl->cor_l_name}} ({{$pcl->pos}})</option>
-							@endforeach
-						</select>
-						  </div>
-						</div>
-						<div class="col-sm-4 col-xs-12">
-						  <div class="form-group">
-						  <button type="button" class="btn btn-themeBlue margin" id="AssignCoordinator" disabled onclick="AddCoordinator()">Assign Coordinator</button>
-						</div>
-						</div>
+                            @foreach ($coordinator_list as $index => $coordinator)
+                                <tr>
+                                    <td>{{ $coordinator->cor_f_name }}</td>
+                                    <td>{{ $coordinator->cor_l_name }}</td>
+                                    <td>
+                                        <select name="Report{{ $index }}" id="Report{{ $index }}" required>
+                                            @foreach ($coordinator_options as $option)
+                                                <option value="{{ $option->cid }}"
+                                                    {{ $option->cid == $coordinatorDetails[0]->coordinator_id ? 'selected' : '' }}>
+                                                    {{ $option->cor_f_name }} {{ $option->cor_l_name }} ({{ $option->pos }})
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td style="display:none;">
+                                        <input type="hidden" name="CoordinatorIDRow{{ $index }}" id="CoordinatorIDRow{{ $index }}" value="{{ $coordinator->cid }}">
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <input type="hidden" name="CoordinatorCount" id="CoordinatorCount" value="{{ $row_count }}" />
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-sm-8">
+                <div class="form-group">
+                    <label>Select Direct Report To</label>
+                    <select name="SelectCoordinator" id="SelectCoordinator" class="form-control" style="width: 100%;" onChange="ActivateCoordinatorButton(this)">
+                        <option value=""></option>
+                        @foreach ($directReportTo as $pcl)
+                            <option value="{{ $pcl->cid }}">{{ $pcl->cor_f_name }} {{ $pcl->cor_l_name }} ({{ $pcl->pos }})</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label>&nbsp;</label><br>
+                    <button type="button" class="btn bg-gradient-primary" id="AssignCoordinator" disabled onclick="AddCoordinator()">Assign Coordinator</button>
+                </div>
+            </div>
 					</div>
-					<div class="box-header with-border mrg-t-10"></div>
-					<div class="box-body">
-						<div class="col-sm-12 col-xs-12">
+                </div>
+
+                <div class="card-header">
+                    <h3 class="card-title">&nbsp;</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="row">
+          <!-- /.form group -->
+						<div class="col-sm-12">
 							<div class="form-group mrg-b-30">
 							<label>Coordinator is Primary For :</label>
 
@@ -268,8 +293,8 @@
                                         ->orderBy('chapters.name')
                                         ->get();
 
-                                                                        if($coordinatorDetails[0]->region_id ==0){
-                                                                            $coordinator_options = DB::table('coordinator_details as cd')
+                                    if($coordinatorDetails[0]->region_id ==0){
+                                        $coordinator_options = DB::table('coordinator_details as cd')
                                         ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
                                         ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
                                         ->where(function ($query) use ($coordinatorDetails) {
@@ -279,16 +304,16 @@
                                                 ->where('cd.is_active', 1);
                                         })
                                         ->orWhere(function ($query) use ($coordinatorDetails) {
-                                            $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
-                                                ->where('cd.position_id', 25)
-                                                ->where('cd.is_active', 1);
+                                    $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
+                                        ->where('cd.position_id', 25)
+                                        ->where('cd.is_active', 1);
                                         })
                                         ->orderBy('cd.first_name')
                                         ->orderBy('cd.last_name')
                                         ->get();
 
-                                                                        }else{
-                                                                            $coordinator_options = DB::table('coordinator_details as cd')
+                                        }else{
+                                    $coordinator_options = DB::table('coordinator_details as cd')
                                         ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
                                         ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
                                         ->where(function ($query) use ($coordinatorDetails) {
@@ -341,10 +366,10 @@
 							</div>
 						</div>
 						<div class="clearfix"></div>
-						<div class="col-sm-8 col-xs-12">
+						<div class="col-sm-8">
 						  <div class="form-group">
 							<label>Select Chapter</label>
-							<select name="SelectChapter" class="form-control select2" style="width: 100%;" id="SelectChapter" onChange="ActivateChapterButton(this)">
+							<select name="SelectChapter" class="form-control select2-sb4" style="width: 100%;" id="SelectChapter" onChange="ActivateChapterButton(this)">
 						  <option value="" ></option>
 						   @foreach($primaryChapterList as $pcl)
 							  <option value="{{$pcl->id}}">{{$pcl->state}} - {{$pcl->chapter_name}}</option>
@@ -352,58 +377,67 @@
 						</select>
 						  </div>
 						</div>
-						<div class="col-sm-4 col-xs-12">
+						<div class="col-sm-4">
 						  <div class="form-group">
-						  <button type="button" class="btn btn-themeBlue margin" id="AssignChapter" name="AssignChapter" disabled onclick="AddChapter()">Assign Chapter</button>
+                            <label>&nbsp;</label><br>
+						  <button type="button" class="btn bg-gradient-primary" id="AssignChapter" name="AssignChapter" disabled onclick="AddChapter()">Assign Chapter</button>
 						</div>
 						</div>
 					</div>
-					<div class="box-header with-border mrg-t-10">
-					</div>
-					<div class="box-body">
-					<div class="clearfix"></div>
-					<div class="col-sm-6 col-xs-12">
+
+                </div>
+
+                <div class="card-header">
+                    <h3 class="card-title">&nbsp;</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="row">
+          <!-- /.form group -->
+					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>Last Updated By</label>
-						<input type="text" name="cord_phone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->last_updated_by }}" disabled>
+						<input type="text" name="cord_phone" class="form-control" value="{{ $coordinatorDetails[0]->last_updated_by }}" disabled>
 					  </div>
 					</div>
-					<div class="col-sm-6 col-xs-12">
+					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>Last Updated Date</label>
-						<input type="text" name="cord_altphone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->last_updated_date }}" disabled>
+						<input type="text" name="cord_altphone" class="form-control" value="{{ $coordinatorDetails[0]->last_updated_date }}" disabled>
 					  </div>
 					</div>
 				</div>
             </div>
-		</div>
 
 		<!-- /.box-body -->
-		<div class="box-body text-center">
-			<button type="submit" class="btn btn-themeBlue margin"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-			<button type="button" class="btn btn-themeBlue margin" onclick="ConfirmCancel(this);"><i class="fa fa-undo fa-fw" aria-hidden="true" ></i>&nbsp; Reset</button>
+		<div class="card-body text-center">
+			<button type="submit" class="btn bg-gradient-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
+			<button type="button" class="btn bg-gradient-primary" onclick="ConfirmCancel(this);"><i class="fas fa-undo" ></i>&nbsp; Reset</button>
 
-			<a href='{{ route("coordinator.edit",$coordinatorDetails[0]->coordinator_id) }}' class="btn btn-themeBlue margin"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
+			<a href='{{ route("coordinator.edit",$coordinatorDetails[0]->coordinator_id) }}' class="btn bg-gradient-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
 
 		</div>
-		<div class="box-body text-center">
+		<div class="card-body text-center">
 			<?php if ($coordinatorDetails[0]->on_leave) {?>
-			<button type="button" class="btn btn-themeBlue margin" id="remove-leave"><i class="fa fa-user-plus fa-fw" aria-hidden="true" ></i>&nbsp; Remove Volunteer on Leave</button> <?php }
+			<button type="button" class="btn bg-gradient-primary" id="remove-leave"><i class="fas fa-user-plus" ></i>&nbsp; Remove Volunteer on Leave</button> <?php }
 			else { ?>
-			<button type="submit" class="btn btn-themeBlue margin" onclick="return PreRetireValidate(true)"><i class="fa fa-user-times fa-fw" aria-hidden="true" ></i>&nbsp; Put Volunteer on Leave</button>
+			<button type="submit" class="btn bg-gradient-primary" onclick="return PreRetireValidate(true)"><i class="fas fa-user-times" ></i>&nbsp; Put Volunteer on Leave</button>
 			<?php } ?>
-			<button type="submit" class="btn btn-themeBlue margin" onclick="return PreRetireValidate()"><i class="fa fa-user-times fa-fw" aria-hidden="true" ></i>&nbsp; Retire Volunteer</button>
+			<button type="submit" class="btn bg-gradient-primary" onclick="return PreRetireValidate()"><i class="fas fa-user-times" ></i>&nbsp; Retire Volunteer</button>
         </div>
 
             <?php if ($bigSisterCondition) { ?>
-                <div class="box-body text-center">
+                <div class="card-body text-center">
                 Be sure to save all Region, Reporting and Chapter information before sending Welcome Letter to a new Big Sister.<br>
-                <button type="button" class="btn btn-themeBlue margin" id="letter"><i class="fa fa-envelope fa-fw" aria-hidden="true"></i>&nbsp; Send Big Sister Welcome Email</button>
+                <button type="button" class="btn bg-gradient-primary" id="letter"><i class="fas fa-envelope"></i>&nbsp; Send Big Sister Welcome Email</button>
             </div>
             <?php } ?>
-
+        </div>
+    </div>
         <!-- /.box-body -->
         </div>
+    </div>
+</div>
     </section>
 </form>
 
