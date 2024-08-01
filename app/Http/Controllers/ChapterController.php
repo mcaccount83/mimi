@@ -3605,8 +3605,8 @@ class ChapterController extends Controller
                 ->orderBy('ch.name');
         } else {
             $checkBoxStatus = '';
-            $baseQuery->orderBy('ch.next_renewal_year', 'desc')
-                ->orderBy('ch.start_month_id', 'desc');
+            $baseQuery->orderByDesc('ch.next_renewal_year')
+                ->orderByDesc('ch.start_month_id');
         }
 
         $reChapterList = $baseQuery->get();
