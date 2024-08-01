@@ -774,6 +774,7 @@
         format: 'MM/DD/YYYY hh:mm A'
       }
     })
+
     //Date range as a button
     $('#daterange-btn').daterangepicker(
       {

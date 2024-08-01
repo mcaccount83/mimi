@@ -209,7 +209,6 @@
                                 $newMembers = $financial_report_array['total_new_members'] * $financial_report_array['dues_per_member'];
                                 $renewalMembers = $financial_report_array['total_renewed_members'] * $financial_report_array['dues_per_member'];
                                 $renewalMembersDiff = $financial_report_array['total_renewed_members'] * $financial_report_array['dues_per_member_renewal'];
-                                // $renewMembersOld = $financial_report_array['total_renewed_members'] * $financial_report_array['dues_per_member_renewal'];
                                 $newMembersNew = $financial_report_array['total_new_members_changed_dues'] * $financial_report_array['dues_per_member_new_changed'];
                                 $renewMembersNew = $financial_report_array['total_renewed_members_changed_dues'] * $financial_report_array['dues_per_member_new_changed'];
                                 $renewMembersNewDiff = $financial_report_array['total_renewed_members_changed_dues'] * $financial_report_array['dues_per_member_renewal_changed'];
@@ -258,10 +257,7 @@
 									</div>
                                     </div>
 								</div>
-								{{-- <div class="clearfix"></div> --}}
-                                {{-- <div class="col-md-12">&nbsp;</div> --}}
-
-                                {{-- <div class="col-md-12"> --}}
+                                <div class="card-body ">
                                     <div class="col-md-12">
                                         <div class="form-group row">
                                             <label>Excel roster attached and complete:<span class="field-required">*&nbsp;</span></label>
@@ -290,33 +286,32 @@
                                             </div>
                                         </div>
                                     </div>
-                                {{-- </div> --}}
 
-								{{-- <div class="col-md-12"> --}}
 									<div class="col-md-12">
 										<label for="Step1_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 									</div>
 									<div class="col-md-12">
 										<textarea class="form-control" rows="8" name="Step1_Log" id="Step1_Log" readonly style="width:100%"><?php echo $financial_report_array['step_1_notes_log']; ?></textarea>
 									</div>
-								{{-- </div> --}}
-								{{-- <div class="col-md-12"> --}}
+
 									<div class="col-md-12">
 										<label for="Step1_Note">Add New Note:</label>
 									</div>
 									<div class="col-md-12">
 										<textarea class="form-control" style="width:100%" rows="3" name="Step1_Note" id="Step1_Note" oninput="EnableNoteLogButton(1)" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
 									</div>
-								{{-- </div> --}}
-                                <div class="card-body ">
+                                </div>
+
+                                    <div class="card-body ">
 										<button type="button" id="AddNote1" class="btn bg-gradient-success" onclick="AddNote(1)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
-    							</div>
-						{{-- </div> --}}
-                    {{-- </div> --}}
-						<!-- end:report_review -->
-                        <div class="card-body text-center">
+                                    </div>
+
+                            <!-- end:report_review -->
+                            <div class="card-body text-center">
 								  <button type="submit" id="btn-step-1" class="btn bg-gradient-primary" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fas fa-save" ></i>&nbsp; Save</button>
 							</div>
+                        </div>
+                    </div>
 						</section>
 					</div>
 				</div>
@@ -407,34 +402,30 @@
 									</div>
 									<div class="card-body form-row">
 
-                                        {{-- <div class="col-md-12"> --}}
 											<div class="col-md-12">
 												<label for="Step2_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 											</div>
 											<div class="col-md-12">
                                                 <textarea class="form-control" rows="8" name="Step2_Log" id="Step2_Log" readonly style="width:100%"><?php echo $financial_report_array['step_2_notes_log']; ?></textarea>
                                             </div>
-										{{-- </div> --}}
 
-										{{-- <div class="card-body"> --}}
 											<div class="col-md-12">
 												<label for="Step2_Note">Ener New Note:</label>
 											</div>
 											<div class="col-md-12">
 												<textarea class="form-control" style="width:100%" rows="3" name="Step2_Note" id="Step2_Note" oninput="EnableNoteLogButton(2)" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
 											</div>
-										{{-- </div> --}}
 
                                         <div class="card-body">
 												<button type="button" id="AddNote2" class="btn bg-gradient-success" onclick="AddNote(2)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 										</div>
-									{{-- </div> --}}
-								{{-- </div> --}}
 								<!-- end:report_review -->
 
                                 <div class="card-body text-center">
-										<button type="submit" id="btn-step-2" class="btn bg-gradient-primary" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fas fa-save" ></i>&nbsp; Save</button>
+									<button type="submit" id="btn-step-2" class="btn bg-gradient-primary" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fas fa-save" ></i>&nbsp; Save</button>
+                                </div>
                             </div>
+                        </div>
 						</section>
 					</div>
 				</div>
@@ -548,35 +539,31 @@
                                             </div>
                                         </div>
                                     </div>
-                                {{-- </div> --}}
-								{{-- <div class="card-body"> --}}
+
 									<div class="col-md-12">
 										<label for="Step3_Log"><strong>Reviewer Notes Logged for this Section (not visible to chapter):</strong></label>
 									</div>
 									<div class="col-md-12">
                                         <textarea class="form-control" style="width:100%" rows="8" name="Step3_Log" id="Step3_Log" readonly><?php echo $financial_report_array['step_3_notes_log']; ?></textarea>
 									</div>
-								{{-- </div> --}}
 
-								{{-- <div class="col-md-12"> --}}
 									<div class="col-md-12">
 										<label for="Step3_Note">Enter New Note:</label>
 									</div>
 									<div class="col-md-12">
 										<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(3)" name="Step3_Note" id="Step3_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
 									</div>
-								{{-- </div> --}}
 
                                 <div class="card-body">
                                         <button type="button" id="AddNote3" class="btn btn-large btn-success" onclick="AddNote(3)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 								</div>
-							{{-- </div> --}}
-						{{-- </div> --}}
 						<!-- end:report_review -->
                         <div class="card-body text-center">
 						  <button type="submit" id="btn-step-3" class="btn bg-gradient-primary" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fas fa-save" ></i>&nbsp; Save</button>
-					</div>
-				</section>
+					    </div>
+                    </div>
+                </div>
+				    </section>
 				</div>
 				</div>
             </div>
@@ -591,7 +578,7 @@
                     </a>
                     <div id="collapseFour" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='4') echo 'show'; ?>" data-parent="#accordion">
                         <div class="card-body">
-				<section>
+				    <section>
                        <table width="75%" style="border-collapse: collapse;">
                         <thead>
                             <tr style="border-bottom: 1px solid #333;">
@@ -658,7 +645,6 @@
 						</div>
 						<div class="card-body form-row">
 
-                            {{-- <div class="col-md-12"> --}}
                                 <div class="col-md-12">
                                     <div class="form-group row">
                                         <label>Is the Chapter's Party Expense under 15%?<span class="field-required">*&nbsp;</span></label>
@@ -678,34 +664,31 @@
                                         </div>
                                     </div>
                                 </div>
-                            {{-- </div> --}}
-							{{-- <div class="card-body"> --}}
+
 								<div class="col-md-12">
 									<label for="Step4_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 								</div>
 								<div class="col-md-12">
 									<textarea class="form-control" style="width:100%" rows="8" name="Step4_Log" id="Step4_Log" readonly><?php echo $financial_report_array['step_4_notes_log']; ?></textarea>
 								</div>
-							{{-- </div> --}}
 
-							{{-- <div class="col-md-12"> --}}
 								<div class="col-md-12">
 									<label for="Step4_Note">Enter New Note:</label>
 								</div>
 								<div class="col-md-12">
 									<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(4)" name="Step4_Note" id="Step4_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
 								</div>
-							{{-- </div> --}}
 
                             <div class="card-body">
 									<button type="button" id="AddNote4" class="btn bg-gradient-success" onclick="AddNote(4)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 							</div>
-						{{-- </div> --}}
-					{{-- </div> --}}
+
 					<!-- end:report_review -->
                     <div class="card-body text-center">
                         <button type="submit" id="btn-step-4" class="btn bg-gradient-primary" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fas fa-save"></i>&nbsp; Save</button>
                     </div>
+                </div>
+            </div>
 				</section>
 				</div>
 				</div>
@@ -781,35 +764,32 @@
 
 					<div class="card-body form-row">
 
-						{{-- <div class="card-body"> --}}
 							<div class="col-md-12">
 								<label for="Step5_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 							</div>
 							<div class="col-md-12">
 								<textarea class="form-control" style="width:100%" rows="8" name="Step5_Log" id="Step5_Log" readonly><?php echo $financial_report_array['step_5_notes_log']; ?></textarea>
 							</div>
-						{{-- </div> --}}
 
-						{{-- <div class="col-md-12"> --}}
+
 							<div class="col-md-12">
 								<label for="Step5_Note">Note:</label>
 							</div>
 							<div class="col-md-12">
-								<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(5)" name="Step5_Note" id="Step5_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+								<textarea class="form-control" rows="3" style="width:100%" oninput="EnableNoteLogButton(5)" name="Step5_Note" id="Step5_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
 							</div>
-						{{-- </div> --}}
 
 						    <div class="card-body">
 								<button type="button" id="AddNote5" class="btn bg-gradient-success" onclick="AddNote(5)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
-						</div>
+						    </div>
 
 
-					{{-- </div> --}}
-				{{-- </div> --}}
-				<!-- end:report_review -->
-                <div class="card-body text-center">
-					  <button type="submit" id="btn-step-5" class="btn bg-gradient-primary" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fas fa-save" ></i>&nbsp; Save</button>
-			</div>
+                    <!-- end:report_review -->
+                    <div class="card-body text-center">
+                        <button type="submit" id="btn-step-5" class="btn bg-gradient-primary" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fas fa-save" ></i>&nbsp; Save</button>
+                    </div>
+                </div>
+            </div>
                 </section>
 			</div>
 			</div>
@@ -893,32 +873,30 @@
 
                         <div class="card-body form-row">
 
-                              {{-- <div class="clearfix"></div> --}}
-				{{-- <div class="col-md-12"> --}}
 					<div class="col-md-12">
 						<label for="Step6_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 					</div>
 					<div class="col-md-12">
 						<textarea class="form-control" style="width:100%" rows="8" name="Step6_Log" id="Step6_Log" readonly><?php echo $financial_report_array['step_6_notes_log']; ?></textarea>
 					</div>
-				{{-- </div> --}}
-				{{-- <div class="col-md-12"> --}}
+
 					<div class="col-md-12">
 						<label for="Step6_Note">Note:</label>
 					</div>
 					<div class="col-md-12">
 						<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(9)" name="Step6_Note" id="Step6_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
 					</div>
-				{{-- </div> --}}
-                <div class="card-body">
-						<button type="button" id="AddNote6" class="btn bg-gradient-success" onclick="AddNote(9)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
-				</div>
-			{{-- </div> --}}
-		{{-- </div> --}}
+
+                    <div class="card-body">
+                            <button type="button" id="AddNote6" class="btn bg-gradient-success" onclick="AddNote(9)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                    </div>
+
                     <!-- end:report_review -->
                     <div class="card-body text-center">
                           <button type="submit" id="btn-step-6" class="btn bg-gradient-primary" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fas fa-save" ></i>&nbsp; Save</button>
+                    </div>
                 </div>
+            </div>
                     </section>
                 </div>
                 </div>
@@ -1044,32 +1022,32 @@
 								<h4>Annual Report Review</h4>
 							</div>
 							<div class="card-body form-row">
-								{{-- <div class="col-md-12"> --}}
-									<div class="col-md-12">
+
+                                <div class="col-md-12">
 										<label for="Step7_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 									</div>
 									<div class="col-md-12">
 										<textarea class="form-control" style="width:100%" rows="8" name="Step7_Log" id="Step7_Log" readonly><?php echo $financial_report_array['step_7_notes_log']; ?></textarea>
 									</div>
-								{{-- </div> --}}
-								{{-- <div class="card-body"> --}}
+
 									<div class="col-md-12">
 										<label for="Step7_Note">Note:</label>
 									</div>
 									<div class="col-md-12">
 										<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(7)" name="Step7_Note" id="Step7_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
 									</div>
-								{{-- </div> --}}
+
                                 <div class="card-body">
 										<button type="button" id="AddNote7" class="btn bg-gradient-success" onclick="AddNote(7)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 								</div>
-							</div>
-						{{-- </div> --}}
+
 						<!-- end:report_review -->
                         <div class="card-body text-center">
 							  <button type="submit" id="btn-step-7" class="btn bg-gradient-primary" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fas fa-save" ></i>&nbsp; Save</button>
-					<div>
-				</section>
+                        <div>
+                        </div>
+                    </div>
+                    </section>
 				</div>
 				</div>
             </div>
@@ -1143,31 +1121,31 @@
 						</div>
 
 						<div class="card-body form-row">
-							{{-- <div class="card-body"> --}}
-								<div class="col-md-12">
+
+                            <div class="col-md-12">
 									<label for="Step8_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 								</div>
 								<div class="col-md-12">
 									<textarea class="form-control" style="width:100%" rows="8" name="Step8_Log" id="Step8_Log" readonly><?php echo $financial_report_array['step_8_notes_log']; ?></textarea>
 								</div>
 
-							{{-- <div class="col-md-12"> --}}
 								<div class="col-md-12">
 									<label for="Step8_Note">Note:</label>
 								</div>
 								<div class="col-md-12">
 									<textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(8)"  name="Step8_Note" id="Step8_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
 								</div>
-							{{-- </div> --}}
-                            <div class="card-body">
+
+                                <div class="card-body">
 									<button type="button" id="AddNote8" class="btn bg-gradient-success" onclick="AddNote(8)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 							</div>
-						</div>
-					{{-- </div> --}}
+
 					<!-- end:report_review -->
                     <div class="card-body text-center">
 							  <button type="submit" id="btn-step-8" class="btn bg-gradient-primary" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fas fa-save" ></i>&nbsp; Save</button>
 					</div>
+                </div>
+            </div>
 				</section>
 			  </div>
 			  </div>
@@ -1271,13 +1249,7 @@
 				<h4>Annual Report Review</h4>
 			</div>
 			<div class="card-body form-row">
-                {{-- <div class="col-md-12"> --}}
 
-                {{-- </div> --}}
-                {{-- <div class="clearfix"></div> --}}
-                {{-- <div class="card-body"> --}}
-
-                {{-- <div class="col-md-12"> --}}
                     <div class="col-md-12">
                         <div class="form-group row">
                             <label>Total Income/Revenue:</label>
@@ -1299,34 +1271,26 @@
                             </div>
                         </div>
                     </div>
-                {{-- </div> --}}
 
-
-                {{-- <div class="clearfix"></div> --}}
-
-				{{-- <div class="col-md-12"> --}}
 					<div class="col-md-12">
 						<label for="Step9_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 					</div>
 					<div class="col-md-12">
 						<textarea class="form-control" style="width:100%" rows="8" name="Step9_Log" id="Step9_Log" readonly><?php echo $financial_report_array['step_9_notes_log']; ?></textarea>
 					</div>
-				{{-- </div> --}}
-				{{-- <div class="col-md-12"> --}}
+
 					<div class="col-md-12">
 						<label for="Step9_Note">Note:</label>
 					</div>
 					<div class="col-md-12">
 						<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
 					</div>
-				{{-- </div> --}}
+
                 <div class="card-body">
 						<button type="button" id="AddNote9" class="btn bg-gradient-success" onclick="AddNote(9)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 				</div>
-			</div>
-		</div>
 
-		<!-- end:report_review -->
+		    <!-- end:report_review -->
                     <div class="card-body text-center">
                         <button type="submit" id="btn-step-9" class="btn bg-gradient-primary" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fas fa-save" ></i>&nbsp; Save</button>
                         </div>
@@ -1437,11 +1401,7 @@
                         <br>
                         Reconciled Bank Statement:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.sprintf('%0.2f',$financial_report_array ['bank_balance_now'] + $totalReconciliation) }}</strong><br>
                         Treasury Balance Now:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($treasuryBalance, 2)}}</strong><br>
-                        {{-- <div class="col-md-12 float-right">
-                            <div class="form-group">
-                                <textarea class="form-control" style="width:100%" rows="3" name="ReconciledBankBalanceWarning" id="ReconciledBankBalanceWarning" disabled></textarea>
-                            </div>
-                        </div> --}}
+
 				    <hr>
 
 				<!-- start:report_review -->
@@ -1449,7 +1409,8 @@
 					<div class="col-md-12">
 						<h4>Annual Report Review</h4>
 					</div>
-                            <div class="form-row">
+                            <div class="card-body form-row">
+
 								<div class="col-md-12" id="StatementBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['bank_statement_included_path']) echo "style=\"display: none;\"";} ?>>
 									<div class="col-md-12">
                                         <strong style="color:red">Please Note</strong><br>
@@ -1468,8 +1429,8 @@
                                            <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-statement1" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fas fa-undo" ></i>&nbsp; Replace Bank Statement</button>
 									</div>
                                     </div>
-								</div>
-								<div class="clearfix"></div>
+                                </div>
+
                                 <div class="col-md-12" id="Statement2Block" <?php if (!empty($financial_report_array)) {if ($financial_report_array['bank_statement_2_included_path']) echo "style=\"display: none;\"";} ?>>
 									<div class="col-md-12">
                                         <strong style="color:red">Please Note</strong><br>
@@ -1489,10 +1450,8 @@
 									</div>
                                     </div>
 								</div>
-                                <div class="clearfix"></div>
-                                <div class="col-md-12">&nbsp;</div>
+                                <div class="card-body">
 
-                            <div class="col-md-12">
                                 <div class="col-md-12">
                                     <div class="form-group row">
                                         <label>Ending Balance on Last Year's Report:</label>
@@ -1540,8 +1499,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
 
+                                    <div class="form-group row">
+                                        <div class="col-md-12">
                                         <div class="input-group row">
                                             <label for="post_balance">Enter Ending Balance (to be used as beginning balance on next year's report):</label>
                                            <div class="col-md-12 row">
@@ -1550,88 +1510,35 @@
                                             </div>
                                             <input type="text" class="form-control" min="0" step="0.01" name="post_balance" id="post_balance" style="width: 120px;" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['post_balance'] ?>">
                                         </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                        <div class="clearfix"></div>
-                        {{-- <div class="col-md-6">
-                            <div class="col-md-12">
-                            <div class="form-inline">
-                                <label style="display: block;">Does this year's Beginning Balance match last year's Ending Balance?<span class="field-required">*</span></label>
-                                <select id="check_beginning_balance" name="check_beginning_balance" class="form-control select2-sb4" style="width: 150px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-                                    <option value="" {{ is_null($financial_report_array->check_beginning_balance) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->check_beginning_balances === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->check_beginning_balance == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            </div>
-                        </div> --}}
-                                {{-- <div class="col-md-6">
-                                    <div class="col-md-12">
-                                    <div class="form-inline">
-                                        <label style="display: block;">Current bank statement included and balance matches chapter entry:<span class="field-required">*</span></label>
-                                        <select id="checkBankStatementIncluded" name="checkBankStatementIncluded" class="form-control select2-sb4" style="width: 150px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-                                            <option value="" {{ is_null($financial_report_array->check_bank_statement_included) ? 'selected' : '' }} disabled>Please Select</option>
-                                            <option value="0" {{$financial_report_array->check_bank_statement_included === 0 ? 'selected' : ''}}>No</option>
-                                            <option value="1" {{$financial_report_array->check_bank_statement_included == 1 ? 'selected' : ''}}>Yes</option>
-                                        </select>
-                                    </div>
-                                    </div>
-                                </div> --}}
-                                {{-- <div class="col-md-6">
-                                    <div class="col-md-12">
-                                    <div class="form-inline">
-                                        <label style="display: block;">Treasury Balance Now matches Reconciled Bank Balance:<span class="field-required">*</span></label>
-                                        <select id="checkBankStatementMatches" name="checkBankStatementMatches" class="form-control select2-sb4" style="width: 150px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-                                            <option value="" {{ is_null($financial_report_array->check_bank_statement_matches) ? 'selected' : '' }} disabled>Please Select</option>
-                                            <option value="0" {{$financial_report_array->check_bank_statement_matches === 0 ? 'selected' : ''}}>No</option>
-                                            <option value="1" {{$financial_report_array->check_bank_statement_matches == 1 ? 'selected' : ''}}>Yes</option>
-                                        </select>
-                                    </div>
-                                    </div>
-                                </div> --}}
-                                {{-- <div class="col-md-6">
-									<div class="col-md-12">
-								    <div class="form-group">
-							            <label for="post_balance">
-								            Enter Ending Balance (to be used as beginning balance on next year's report):
-							            </label>
-							        <div class="input-group"><span class="input-group-addon">$</span>
-							            <input type="number" class="form-control" min="0" step="0.01" name="post_balance" id="post_balance" style="width: 120px;" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['post_balance'] ?>"
-                                            <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-							        </div>
-						            </div>
-							        </div>
-							</div> --}}
-							{{-- <div class="clearfix"></div> --}}
-						<div class="col-md-12">
+
 							<div class="col-md-12">
 								<label for="Step10_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 							</div>
 							<div class="col-md-12">
 								<textarea class="form-control" style="width:100%" rows="8" name="Step10_Log" id="Step10_Log" readonly><?php echo $financial_report_array['step_10_notes_log']; ?></textarea>
 							</div>
-						</div>
 
-						<div class="col-md-12">
 							<div class="col-md-12">
 								<label for="Step10_Note">Note:</label>
 							</div>
 							<div class="col-md-12">
 								<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(10)" name="Step10_Note" id="Step10_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
 							</div>
-						</div>
+                        </div>
                         <div class="card-body">
 								<button type="button" id="AddNote10" class="btn bg-gradient-success" onclick="AddNote(10)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 							</div>
-				</div>
+                    <!-- end:report_review -->
+                    <div class="card-body text-center">
+                                <button type="submit" id="btn-step-10" class="btn bg-gradient-primary" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fas fa-save" ></i>&nbsp; Save</button>
+                    </div>
+                </div>
             </div>
-				<!-- end:report_review -->
-                <div class="card-body text-center">
-							  <button type="submit" id="btn-step-10" class="btn bg-gradient-primary" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fas fa-save" ></i>&nbsp; Save</button>
-				</div>
-			</section>
+                </section>
 			</div>
 			</div>
         </div>
@@ -1823,8 +1730,7 @@
 					<div class="col-md-12">
 						<h4>Annual Report Review</h4>
 					</div>
-                    <div class="form-row">
-                        <div class="clearfix"></div>
+                    <div class="card-body form-row">
                                 <div class="col-md-12" id="990NBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
 									<div class="col-md-12">
                                         <strong style="color:red">Please Note</strong><br>
@@ -1844,10 +1750,8 @@
 									</div>
                                     </div>
 								</div>
-								<div class="clearfix"></div>
-                                <div class="col-md-12">&nbsp;</div>
 
-                                <div class="col-md-12">
+
                                     <div class="col-md-12">
 
                                         <div class="form-group row">
@@ -1942,117 +1846,25 @@
                                             </div>
                                         </div>
 
-
                                     </div>
-                                </div>
 
-
-
-                        {{-- <div class="col-md-6">
-                            <div class="col-md-12">
-                            <div class="form-inline">
-                                <label style="display: block;">Did they purchase or have leftover pins? (Quesion 5)<span class="field-required">*</span></label>
-                                <select id="checkPurchasedPins" name="checkPurchasedPins" class="form-control select2-sb4" style="width: 150px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-                                    <option value="" {{ is_null($financial_report_array->check_purchased_pins) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->check_purchased_pins === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->check_purchased_pins == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            </div>
-                        </div> --}}
-                        {{-- <div class="col-md-6">
-                            <div class="col-md-12">
-                            <div class="form-inline">
-                                <label style="display: block;">Did they purchase MOMS Club merchandise? (Quesion 6):<span class="field-required">*</span></label>
-                                <select id="checkPurchasedMCMerch" name="checkPurchasedMCMerch" class="form-control select2-sb4" style="width: 150px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-                                    <option value="" {{ is_null($financial_report_array->check_purchased_mc_merch) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->check_purchased_mc_merch === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->check_purchased_mc_merch == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            </div>
-                        </div> --}}
-                        {{-- <div class="col-md-6">
-                            <div class="col-md-12">
-                            <div class="form-inline">
-                                <label style="display: block;">Did they offer MOMS Club merchandise or info on how to buy to members? (Question 7)<span class="field-required">*</span></label>
-                                <select id="checkOfferedMerch" name="checkOfferedMerch" class="form-control select2-sb4" style="width: 150px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-                                    <option value="" {{ is_null($financial_report_array->check_offered_merch) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->check_offered_merch === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->check_offered_merch == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            </div>
-                        </div> --}}
-                        {{-- <div class="col-md-6">
-                            <div class="col-md-12">
-                            <div class="form-inline">
-                                <label style="display: block;">Did they make the Manual/By-Laws available to members? (Question 8)<span class="field-required">*</span></label>
-                                <select id="checkBylawsMadeAvailable" name="checkBylawsMadeAvailable" class="form-control select2-sb4" style="width: 150px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-                                    <option value="" {{ is_null($financial_report_array->check_bylaws_available) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->check_bylaws_available === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->check_bylaws_available == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            </div>
-                        </div> --}}
-                        {{-- <div class="col-md-6">
-                            <div class="col-md-12">
-                            <div class="form-inline">
-                                <label style="display: block;">Did they Sistered another chapter? (Question 20)<span class="field-required">*</span></label>
-                                <select id="checkSisteredAnotherChapter" name="checkSisteredAnotherChapter" class="form-control select2-sb4" style="width: 150px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-                                    <option value="" {{ is_null($financial_report_array->check_sistered_another_chapter) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->check_sistered_another_chapter === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->check_sistered_another_chapter == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            </div>
-                        </div> --}}
-                        {{-- <div class="col-md-6">
-                            <div class="col-md-12">
-                            <div class="form-inline">
-                                <label style="display: block;">Did they attended an in person or viurtual International Event? (Question 21)<span class="field-required">*</span></label>
-                                <select id="checkAttendedTraining" name="checkAttendedTraining" class="form-control select2-sb4" style="width: 150px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-                                    <option value="" {{ is_null($financial_report_array->check_attended_training) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->check_attended_training === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->check_attended_training == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            </div>
-                        </div> --}}
-                        {{-- <div class="col-md-6">
-                            <div class="col-md-12">
-                            <div class="form-inline">
-                                <label style="display: block;">Did they attach proof of 990N Filing with the date range of <strong>7/1/<?php echo date('Y')-1 .' - 6/30/'.date('Y');?></strong>?<span class="field-required">*</span></label>
-                                <select id="checkCurrent990NAttached" name="checkCurrent990NAttached" class="form-control select2-sb4" style="width: 150px;" required <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>>
-                                    <option value="" {{ is_null($financial_report_array->check_current_990N_included) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->check_current_990N_included === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->check_current_990N_included == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            </div>
-                        </div> --}}
-						<div class="col-md-12">
 							<div class="col-md-12">
 								<label for="Step11_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 							</div>
 							<div class="col-md-12">
 								<textarea class="form-control" style="width:100%" rows="8" name="Step11_Log" id="Step11_Log" readonly><?php echo $financial_report_array['step_11_notes_log']; ?></textarea>
 							</div>
-						</div>
-						<div class="col-md-12">
 							<div class="col-md-12">
 								<label for="Step11_Note">Note:</label>
 							</div>
 							<div class="col-md-12">
 								<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(11)" name="Step11_Note" id="Step11_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
 							</div>
-						</div>
-                        <div class="card-body">
+
+                            <div class="card-body">
 								<button type="button" id="AddNote11" class="btn bg-gradient-success" onclick="AddNote(11)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 							</div>
-					</div>
-				</div>
+
 				<!-- end:report_review -->
                 <div class="card-body text-center">
 							  <button type="submit" id="btn-step-11" class="btn bg-gradient-primary" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fas fa-save" ></i>&nbsp; Save</button>
@@ -2611,13 +2423,14 @@
                                     <div class="card-body">
 											<button type="button" id="AddNote12" class="btn bg-gradient-success" onclick="AddNote(12)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 										</div>
-								</div>
-							</div>
+
 							<!-- end:report_review -->
 						</div>
                         <div class="card-body text-center">
 							 <button type="submit" id="btn-step-11" class="btn bg-gradient-primary" <?php if($financial_report_array['review_complete']!="" || !$submitted) echo "disabled"; ?>><i class="fas fa-save" ></i>&nbsp; Save</button>
 						</div>
+                    </div>
+                </div>
 					</section>
 				</div>
             </div>
