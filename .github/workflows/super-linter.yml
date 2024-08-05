@@ -36,6 +36,9 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --prefer-dist --no-progress --ignore-platform-reqs -vvv
 
+      - name: Check PHPStan installation
+        run: ls -la vendor/bin/phpstan
+
       - name: Run PHPStan for static analysis
         run: vendor/bin/phpstan analyse
 
@@ -45,4 +48,5 @@ jobs:
           VALIDATE_ALL_CODEBASE: true
           DEFAULT_BRANCH: "main"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
