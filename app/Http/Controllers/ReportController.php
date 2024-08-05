@@ -1901,7 +1901,7 @@ class ReportController extends Controller
             ->where(function ($query) {
                 $query->where('chapters.report_extension', '=', '0')
                     ->orWhereNull('chapters.report_extension');
-            })            ->where('chapters.conference', $corConfId)
+            })->where('chapters.conference', $corConfId)
             // ->where(function ($query) {
             //     $query->where('chapters.new_board_submitted', null)
             //         ->orWhere('chapters.financial_report_received', null);
