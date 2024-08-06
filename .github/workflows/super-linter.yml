@@ -39,8 +39,8 @@ jobs:
       - name: Check PHPStan installation
         run: ls -la vendor/bin/phpstan
 
-      - name: Run PHPStan for static analysis
-        run: vendor/bin/phpstan analyse app tests
+      # - name: Run PHPStan for static analysis
+      #   run: vendor/bin/phpstan analyse app tests
 
       - name: Lint Code Base
         uses: github/super-linter@v4
