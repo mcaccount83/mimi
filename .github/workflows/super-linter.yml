@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -40,7 +40,7 @@ jobs:
         run: ls -la vendor/bin/phpstan
 
       - name: Run PHPStan for static analysis
-        run: vendor/bin/phpstan analyse
+        run: vendor/bin/phpstan analyse app tests
 
       - name: Lint Code Base
         uses: github/super-linter@v4
@@ -48,5 +48,6 @@ jobs:
           VALIDATE_ALL_CODEBASE: true
           DEFAULT_BRANCH: "main"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
 
