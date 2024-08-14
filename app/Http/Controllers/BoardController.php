@@ -1226,7 +1226,6 @@ class BoardController extends Controller
             $ch_webstatus = 0; // Set it to 0 if it's blank
         }
 
-
         DB::beginTransaction();
         try {
             $chapter->inquiries_contact = $request->input('InquiriesContact');
@@ -2316,7 +2315,7 @@ class BoardController extends Controller
         $pdfPath = storage_path('app/pdf_reports/'.$filename);
         $pdf->save($pdfPath);
 
-        $googleClient = new Client();
+        $googleClient = new Client;
         $client_id = \config('services.google.client_id');
         $client_secret = \config('services.google.client_secret');
         $refresh_token = \config('services.google.refresh_token');
@@ -2392,7 +2391,7 @@ class BoardController extends Controller
             return $confRecord->folder_id;
         } else {
             // Conference folder doesn't exist, create it
-            $client = new Client();
+            $client = new Client;
             $folderMetadata = [
                 'name' => "Conference $conf",
                 'parents' => [$sharedDriveId],
@@ -2428,7 +2427,7 @@ class BoardController extends Controller
             return $stateRecord->folder_id;
         } else {
             // State folder doesn't exist, create it
-            $client = new Client();
+            $client = new Client;
             $folderMetadata = [
                 'name' => $state,
                 'parents' => [$confFolderId],
@@ -2465,7 +2464,7 @@ class BoardController extends Controller
             return $chapterRecord->folder_id;
         } else {
             // Chapter folder doesn't exist, create it
-            $client = new Client();
+            $client = new Client;
             $folderMetadata = [
                 'name' => $chapterName,
                 'parents' => [$stateFolderId],

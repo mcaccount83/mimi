@@ -131,7 +131,7 @@ class PaymentController extends Controller
 
         /* Create a merchantAuthenticationType object with authentication details
             retrieved from the constants file */
-        $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+        $merchantAuthentication = new AnetAPI\MerchantAuthenticationType;
         $merchantAuthentication->setName(config('settings.authorizenet_api_login_id'));
         $merchantAuthentication->setTransactionKey(config('settings.authorizenet_transaction_key'));
 
@@ -139,24 +139,24 @@ class PaymentController extends Controller
         $refId = 'ref'.time();
 
         // Create the payment data for a credit card
-        $creditCard = new AnetAPI\CreditCardType();
+        $creditCard = new AnetAPI\CreditCardType;
         $creditCard->setCardNumber($cardNumber);
         $creditCard->setExpirationDate($expirationDate);
         $creditCard->setCardCode($cvv);
 
         // Add the payment data to a paymentType object
-        $paymentOne = new AnetAPI\PaymentType();
+        $paymentOne = new AnetAPI\PaymentType;
         $paymentOne->setCreditCard($creditCard);
 
         // Generate a random invoice number
         $randomInvoiceNumber = mt_rand(100000, 999999);
         // Create order information
-        $order = new AnetAPI\OrderType();
+        $order = new AnetAPI\OrderType;
         $order->setInvoiceNumber($randomInvoiceNumber);
         $order->setDescription('Re-Registration Payment');
 
         // Set the customer's Bill To address
-        $customerAddress = new AnetAPI\CustomerAddressType();
+        $customerAddress = new AnetAPI\CustomerAddressType;
         $customerAddress->setFirstName($first);
         $customerAddress->setLastName($last);
         $customerAddress->setCompany($company);
@@ -167,28 +167,28 @@ class PaymentController extends Controller
         $customerAddress->setCountry('USA');
 
         // Set the customer's identifying information
-        $customerData = new AnetAPI\CustomerDataType();
+        $customerData = new AnetAPI\CustomerDataType;
         $customerData->setType('individual');
         $customerData->setId($chapterId);
         $customerData->setEmail($email);
 
         // Add values for transaction settings
-        $duplicateWindowSetting = new AnetAPI\SettingType();
+        $duplicateWindowSetting = new AnetAPI\SettingType;
         $duplicateWindowSetting->setSettingName('duplicateWindow');
         $duplicateWindowSetting->setSettingValue('60');
 
         // Add some merchant defined fields. These fields won't be stored with the transaction,
         // but will be echoed back in the response.
-        $merchantDefinedField1 = new AnetAPI\UserFieldType();
+        $merchantDefinedField1 = new AnetAPI\UserFieldType;
         $merchantDefinedField1->setName('MemberCount');
         $merchantDefinedField1->setValue($members);
 
-        $merchantDefinedField2 = new AnetAPI\UserFieldType();
+        $merchantDefinedField2 = new AnetAPI\UserFieldType;
         $merchantDefinedField2->setName('SustainingDonation');
         $merchantDefinedField2->setValue($sustaining);
 
         // Create a TransactionRequestType object and add the previous objects to it
-        $transactionRequestType = new AnetAPI\TransactionRequestType();
+        $transactionRequestType = new AnetAPI\TransactionRequestType;
         //$transactionRequestType->setTransactionType('authOnlyTransaction');
         $transactionRequestType->setTransactionType('authCaptureTransaction');
         $transactionRequestType->setAmount($amount);
@@ -201,7 +201,7 @@ class PaymentController extends Controller
         $transactionRequestType->addToUserFields($merchantDefinedField2);
 
         // Assemble the complete transaction request
-        $request = new AnetAPI\CreateTransactionRequest();
+        $request = new AnetAPI\CreateTransactionRequest;
         $request->setMerchantAuthentication($merchantAuthentication);
         $request->setRefId($refId);
         $request->setTransactionRequest($transactionRequestType);
@@ -415,7 +415,7 @@ class PaymentController extends Controller
 
         /* Create a merchantAuthenticationType object with authentication details
             retrieved from the constants file */
-        $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+        $merchantAuthentication = new AnetAPI\MerchantAuthenticationType;
         $merchantAuthentication->setName(config('settings.authorizenet_api_login_id'));
         $merchantAuthentication->setTransactionKey(config('settings.authorizenet_transaction_key'));
 
@@ -423,24 +423,24 @@ class PaymentController extends Controller
         $refId = 'ref'.time();
 
         // Create the payment data for a credit card
-        $creditCard = new AnetAPI\CreditCardType();
+        $creditCard = new AnetAPI\CreditCardType;
         $creditCard->setCardNumber($cardNumber);
         $creditCard->setExpirationDate($expirationDate);
         $creditCard->setCardCode($cvv);
 
         // Add the payment data to a paymentType object
-        $paymentOne = new AnetAPI\PaymentType();
+        $paymentOne = new AnetAPI\PaymentType;
         $paymentOne->setCreditCard($creditCard);
 
         // Generate a random invoice number
         $randomInvoiceNumber = mt_rand(100000, 999999);
         // Create order information
-        $order = new AnetAPI\OrderType();
+        $order = new AnetAPI\OrderType;
         $order->setInvoiceNumber($randomInvoiceNumber);
         $order->setDescription('Mother-to-Mother Donation');
 
         // Set the customer's Bill To address
-        $customerAddress = new AnetAPI\CustomerAddressType();
+        $customerAddress = new AnetAPI\CustomerAddressType;
         $customerAddress->setFirstName($first);
         $customerAddress->setLastName($last);
         $customerAddress->setCompany($company);
@@ -451,13 +451,13 @@ class PaymentController extends Controller
         $customerAddress->setCountry('USA');
 
         // Set the customer's identifying information
-        $customerData = new AnetAPI\CustomerDataType();
+        $customerData = new AnetAPI\CustomerDataType;
         $customerData->setType('individual');
         $customerData->setId($chapterId);
         $customerData->setEmail($email);
 
         // Add values for transaction settings
-        $duplicateWindowSetting = new AnetAPI\SettingType();
+        $duplicateWindowSetting = new AnetAPI\SettingType;
         $duplicateWindowSetting->setSettingName('duplicateWindow');
         $duplicateWindowSetting->setSettingValue('60');
 
@@ -467,12 +467,12 @@ class PaymentController extends Controller
         // $merchantDefinedField1->setName('MemberCount');
         // $merchantDefinedField1->setValue($members);
 
-        $merchantDefinedField1 = new AnetAPI\UserFieldType();
+        $merchantDefinedField1 = new AnetAPI\UserFieldType;
         $merchantDefinedField1->setName('Donation');
         $merchantDefinedField1->setValue($donation);
 
         // Create a TransactionRequestType object and add the previous objects to it
-        $transactionRequestType = new AnetAPI\TransactionRequestType();
+        $transactionRequestType = new AnetAPI\TransactionRequestType;
         //$transactionRequestType->setTransactionType('authOnlyTransaction');
         $transactionRequestType->setTransactionType('authCaptureTransaction');
         $transactionRequestType->setAmount($amount);
@@ -484,7 +484,7 @@ class PaymentController extends Controller
         $transactionRequestType->addToUserFields($merchantDefinedField1);
 
         // Assemble the complete transaction request
-        $request = new AnetAPI\CreateTransactionRequest();
+        $request = new AnetAPI\CreateTransactionRequest;
         $request->setMerchantAuthentication($merchantAuthentication);
         $request->setRefId($refId);
         $request->setTransactionRequest($transactionRequestType);

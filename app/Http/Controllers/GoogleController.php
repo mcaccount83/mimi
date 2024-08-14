@@ -80,7 +80,7 @@ class GoogleController extends Controller
 
         $fileContentBase64 = base64_encode($fileContent);
 
-        $client = new Client();
+        $client = new Client;
 
         $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
             'headers' => [
@@ -133,7 +133,7 @@ class GoogleController extends Controller
             return $confRecord->folder_id;
         } else {
             // Conference folder doesn't exist, create it
-            $client = new Client();
+            $client = new Client;
             $folderMetadata = [
                 'name' => "Conference $conf",
                 'parents' => [$sharedDriveId],
@@ -169,7 +169,7 @@ class GoogleController extends Controller
             return $stateRecord->folder_id;
         } else {
             // State folder doesn't exist, create it
-            $client = new Client();
+            $client = new Client;
             $folderMetadata = [
                 'name' => $state,
                 'parents' => [$confFolderId],
@@ -206,7 +206,7 @@ class GoogleController extends Controller
             return $chapterRecord->folder_id;
         } else {
             // Chapter folder doesn't exist, create it
-            $client = new Client();
+            $client = new Client;
             $folderMetadata = [
                 'name' => $chapterName,
                 'parents' => [$stateFolderId],
@@ -267,7 +267,7 @@ class GoogleController extends Controller
         $fileContentBase64 = base64_encode($fileContent);
         $metadataJson = json_encode($fileMetadata);
 
-        $client = new Client();
+        $client = new Client;
 
         $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
             'headers' => [
@@ -327,7 +327,7 @@ class GoogleController extends Controller
         $fileContentBase64 = base64_encode($fileContent);
         $metadataJson = json_encode($fileMetadata);
 
-        $client = new Client();
+        $client = new Client;
 
         $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
             'headers' => [
@@ -387,7 +387,7 @@ class GoogleController extends Controller
         $fileContentBase64 = base64_encode($fileContent);
         $metadataJson = json_encode($fileMetadata);
 
-        $client = new Client();
+        $client = new Client;
 
         $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
             'headers' => [
@@ -447,7 +447,7 @@ class GoogleController extends Controller
         $fileContentBase64 = base64_encode($fileContent);
         $metadataJson = json_encode($fileMetadata);
 
-        $client = new Client();
+        $client = new Client;
 
         $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
             'headers' => [
@@ -507,7 +507,7 @@ class GoogleController extends Controller
         $fileContentBase64 = base64_encode($fileContent);
         $metadataJson = json_encode($fileMetadata);
 
-        $client = new Client();
+        $client = new Client;
 
         $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
             'headers' => [
@@ -567,7 +567,7 @@ class GoogleController extends Controller
         $fileContentBase64 = base64_encode($fileContent);
         $metadataJson = json_encode($fileMetadata);
 
-        $client = new Client();
+        $client = new Client;
 
         $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
             'headers' => [
@@ -627,7 +627,7 @@ class GoogleController extends Controller
         $fileContentBase64 = base64_encode($fileContent);
         $metadataJson = json_encode($fileMetadata);
 
-        $client = new Client();
+        $client = new Client;
 
         $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
             'headers' => [
@@ -687,7 +687,7 @@ class GoogleController extends Controller
         $fileContentBase64 = base64_encode($fileContent);
         $metadataJson = json_encode($fileMetadata);
 
-        $client = new Client();
+        $client = new Client;
 
         $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
             'headers' => [
@@ -747,7 +747,7 @@ class GoogleController extends Controller
         $fileContentBase64 = base64_encode($fileContent);
         $metadataJson = json_encode($fileMetadata);
 
-        $client = new Client();
+        $client = new Client;
 
         $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
             'headers' => [
@@ -793,7 +793,7 @@ class GoogleController extends Controller
         $fileContent = file_get_contents($file->getPathname());
         $fileContentBase64 = base64_encode($fileContent);
 
-        $client = new Client();
+        $client = new Client;
 
         $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
             'headers' => [
@@ -838,7 +838,7 @@ class GoogleController extends Controller
         $fileContent = file_get_contents($file->getPathname());
         $fileContentBase64 = base64_encode($fileContent);
 
-        $client = new Client();
+        $client = new Client;
 
         $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
             'headers' => [

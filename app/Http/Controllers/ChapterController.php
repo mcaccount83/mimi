@@ -2961,7 +2961,7 @@ class ChapterController extends Controller
         $pdfPath = storage_path('app/pdf_reports/'.$filename);
         $pdf->save($pdfPath);
 
-        $googleClient = new Client();
+        $googleClient = new Client;
         $client_id = \config('services.google.client_id');
         $client_secret = \config('services.google.client_secret');
         $refresh_token = \config('services.google.refresh_token');
