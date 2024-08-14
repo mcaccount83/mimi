@@ -1,53 +1,58 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
+    <body class="hold-transition login-page">
+        <div class="login-box">
+            <div class="login-logo">
+                <a href="{{ route('home') }}" class="band-link">
+                    <img src="{{ asset('coordinator_theme/dist/img/logo.png') }}" alt="MC" width="120">
+                </a>
+                </div>
+    <!-- /.login-logo -->
+    <div class="card">
+        <div class="card-body login-card-body">
+        <p class="login-box-msg">{{ __('You forgot your password? Here you can easily retrieve a new password.') }}</p>
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+            <form method="POST" id="forgot-pswd" action="{{ route('password.email') }}">
+                @csrf
 
-                    <form method="POST" id="forgot-pswd" action="{{ route('password.email') }}">
-                        @csrf
+            @if (session('status'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('status') }}
+                </div>
+            @endif
 
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required>
-
-                                @if ($errors->has('email'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary" id="email-btn" onclick="return validate();">
-                                    {{ __('Send Password Reset Link') }}
-                                </button>
-                               <!-- <button type="button" class="btn btn-primary" onclick="window.history.go(-1); return false;">
-                                    {{ __('Cancel') }}
-                                </button>-->
-								<a href="{{ route('home') }}" class="btn btn-primary">Cancel</a>
-                            </div>
-                        </div>
-                    </form>
+            <div class="input-group mb-3">
+            <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ old('email') }}" required placeholder="Email">
+                @if ($errors->has('email'))
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $errors->first('email') }}</strong>
+                    </span>
+                @endif
+            <div class="input-group-append">
+                <div class="input-group-text">
+                <span class="fas fa-envelope"></span>
                 </div>
             </div>
+            </div>
+            <div class="row">
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary btn-block" id="email-btn" onclick="return validate();">{{ __('Send Password Reset Link') }}</button>
+            </div>
+            <!-- /.col -->
+            </div>
+        </form>
+
+        <p class="mt-3 mb-1">
+            <a href="{{ route('home') }}">Return to Login</a>
+        </p>
         </div>
+        <!-- /.login-card-body -->
     </div>
-</div>
+    </div>
+    <!-- /.login-box -->
+    </body>
+
 @endsection
 @section('customscript')
 <script>
