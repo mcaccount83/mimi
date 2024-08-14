@@ -11,7 +11,7 @@
         "php": "^8.2",
         "almasaeed2010/adminlte": "~3.2",
         "authorizenet/authorizenet": "^2.0",
-        "barryvdh/laravel-dompdf": "^2.2",
+        "barryvdh/laravel-dompdf": "^3.0",
         "dcblogdev/laravel-sent-emails": "^2.0",
         "google/apiclient": "^2.17",
         "guzzlehttp/guzzle": "^7.8",
