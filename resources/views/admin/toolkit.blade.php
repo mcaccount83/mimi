@@ -96,7 +96,7 @@
             <div class="grid-item">
                 <div class="card card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title">NEED BASED FACT SHEETS</h3>
+                        <h3 class="card-title">NEED BASED FACT SHEETS FOR CHAPTERS</h3>
                     </div>
                         <div class="card-body">
                         @foreach($resources->where('category', 8) as $resourceItem)
