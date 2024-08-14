@@ -108,14 +108,15 @@
                         <div class="form-group">
                             <label>Website Link Status</label>
                             <select id="ch_webstatus" name="ch_webstatus" class="form-control select2" style="width: 100%;" required>
-                                <option value="0" id="option0" {{$chapterList[0]->website_status == 0 ? 'selected' : ''}} disabled>Website Not Linked</option>
-                                <option value="1" id="option1" {{$chapterList[0]->website_status == 1 ? 'selected' : ''}} disabled>Website Linked</option>
+                                <option value="0" id="option0" {{$chapterList[0]->website_status == 0 ? 'selected' : ''}} {{ $chapterList[0]->website_status == 0 ? '' : 'disabled' }}>Website Not Linked</option>
+                                <option value="1" id="option1" {{$chapterList[0]->website_status == 1 ? 'selected' : ''}} {{ $chapterList[0]->website_status == 1 ? '' : 'disabled' }}>Website Linked</option>
                                 <option value="2" id="option2" {{$chapterList[0]->website_status == 2 ? 'selected' : ''}}>Add Link Requested</option>
                                 <option value="3" id="option3" {{$chapterList[0]->website_status == 3 ? 'selected' : ''}}>Do Not Link</option>
                             </select>
+
+                            <input type="hidden" name="ch_hid_webstatus" id="ch_hid_webstatus" value="{{ $chapterList[0]->website_status }}">
                         </div>
                     </div>
-                </div>
               <!-- /.form group -->
               <div class="col-sm-12 col-xs-12">
               <div class="form-group">
@@ -554,12 +555,30 @@ $(document).ready(function() {
 });
 
 // Disable Web Link Status option 0 and 1
-document.getElementById('option0').disabled = true;
-document.getElementById('option1').disabled = true;
+// document.getElementById('option0').disabled = true;
+// document.getElementById('option1').disabled = true;
 
-document.querySelector('form').addEventListener('submit', function(){
-        document.querySelector('button[type="submit"]').setAttribute('disabled', 'disabled');
+// document.querySelector('form').addEventListener('submit', function(){
+//         document.querySelector('button[type="submit"]').setAttribute('disabled', 'disabled');
+//     });
+
+document.getElementById('ch_webstatus').addEventListener('change', function() {
+        // Update hidden input field with the new value only if the selected option is not disabled
+        var selectedOption = this.options[this.selectedIndex];
+        if (!selectedOption.disabled) {
+            document.getElementById('ch_hid_webstatus').value = this.value;
+        }
     });
+
+    // Ensure the hidden field is updated with the selected value on form submission
+    document.forms[0].addEventListener('submit', function() {
+        var selectedOption = document.getElementById('ch_webstatus').options[document.getElementById('ch_webstatus').selectedIndex];
+        if (selectedOption.disabled) {
+            document.getElementById('ch_hid_webstatus').value = selectedOption.value;
+        }
+    });
+
+
 
 function is_url() {
         var str = $("#validate_url").val().trim(); // Trim leading and trailing whitespace

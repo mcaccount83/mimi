@@ -169,7 +169,7 @@
             <div class="sidebar">
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
-                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
                         <li class="nav-item">
                             <a href="{{ route('coordinator.showdashboard') }}" class="nav-link {{ Request::is('coordinator/dashboard') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -705,8 +705,6 @@
 
 <!-- Select2 -->
 <script src="/coordinator_theme/plugins/select2/js/select2.full.min.js"></script>
-<!-- Bootstrap4 Duallistbox -->
-{{-- <script src="/coordinator_theme/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script> --}}
 <!-- InputMask -->
 <script src="/coordinator_theme/plugins/moment/moment.min.js"></script>
 <script src="/coordinator_theme/plugins/inputmask/jquery.inputmask.min.js"></script>
@@ -714,11 +712,6 @@
 <script src="/coordinator_theme/plugins/daterangepicker/daterangepicker.js"></script>
 <!-- Tempusdominus Bootstrap 4 -->
 <script src="/coordinator_theme/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-<!-- Bootstrap Switch -->
-{{-- <script src="/coordinator_theme/plugins/bootstrap-switch/js/bootstrap-switch.min.js}"></script> --}}
-<!-- BS-Stepper -->
-{{-- <script src="{/coordinator_theme/plugins/bs-stepper/js/bs-stepper.min.js"></script> --}}
-
 
 <!-- DataTables  & Plugins -->
 <script src="/coordinator_theme/plugins/datatables/jquery.dataTables.min.js"></script>
@@ -760,7 +753,6 @@
         format: 'L'
     });
 
-
     //Date and time picker
     $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
 
@@ -799,46 +791,12 @@
       format: 'LT'
     })
 
-    //Bootstrap Duallistbox
-    // $('.duallistbox').bootstrapDualListbox()
-
-    //Bootstrap Switch
-    // $("input[data-bootstrap-switch]").each(function(){
-    //   $(this).bootstrapSwitch('state', $(this).prop('checked'));
-    // })
 
   })
 
-
-  // BS-Stepper Init
-//   document.addEventListener('DOMContentLoaded', function () {
-//     window.stepper = new Stepper(document.querySelector('.bs-stepper'))
-//   })
-
-
  </script>
 
- <script type="text/javascript">
- //format dates in tables to display as MM-DD-YYYY but stil sort correctly
-//  function initializeDataTable(selector, options, columnDefs) {
-//      $(selector).DataTable({
-//          ...options,
-//          columnDefs: columnDefs.map(def => {
-//              if (def.type === 'date') {
-//                  return {
-//                      ...def,
-//                      render: function (data, type, row) {
-//                          if (type === 'sort') {
-//                              return row[def.targets]; // Use original date for sorting
-//                          }
-//                          return def.format ? moment(data).format(def.format) : data || def.noPayment || ''; // Format date for display if specified
-//                      }
-//                  };
-//              }
-//              return def;
-//          })
-//      });
-//  }
+ <script>
 
  $(function () {
     $('#chapterlist').DataTable({
@@ -909,181 +867,6 @@
 
     });
 
-
-
-//  $(document).ready(function() {
-    //  initializeDataTable('#chapterlist', {
-    //      paging: true,
-    //      lengthChange: true,
-    //      searching: true,
-    //      ordering: true,
-    //      info: false,
-    //      autoWidth: false
-    //  }, []);
-
-
-
-
-    //  initializeDataTable('#chapterlist_reReg', {
-    //      paging: true,
-    //      lengthChange: true,
-    //      searching: true,
-    //      ordering: true,
-    //      info: false,
-    //      autoWidth: false,
-    //      order: [[0, 'asc']]
-    //  }, [
-    //      { targets: 6, type: 'date', format: null },
-    //      {
-    //          targets: 7, render: function(data, type, row) {
-    //              if (type === 'display' && data === 'Invalid date') {
-    //                  return null;
-    //              }
-    //              return data;
-    //          }
-    //      }
-    //  ]);
-
-    //  initializeDataTable('#chapterlist_reRegDate', {
-    //      paging: true,
-    //      lengthChange: true,
-    //      searching: true,
-    //      ordering: true,
-    //      info: false,
-    //      autoWidth: false,
-    //      order: [[0, 'asc']]
-    //  }, [
-    //      { targets: 3, type: 'date', format: null },
-    //      {
-    //          targets: 4, render: function(data, type, row) {
-    //              if (type === 'display' && data === 'Invalid date') {
-    //                  return null;
-    //              }
-    //              return data;
-    //          }
-    //      }
-    //  ]);
-
-    //  initializeDataTable('#chapterlist_einStatus', {
-    //      paging: true,
-    //      lengthChange: true,
-    //      searching: true,
-    //      ordering: true,
-    //      info: false,
-    //      autoWidth: false,
-    //      order: [[0, 'asc']]
-    //  }, [
-    //      { targets: 2, type: 'date', format: null },
-    //  ]);
-
-    //  initializeDataTable('#chapterlist_inteinStatus', {
-    //      paging: true,
-    //      lengthChange: true,
-    //      searching: true,
-    //      ordering: true,
-    //      info: false,
-    //      autoWidth: false,
-    //      order: [[0, 'asc']]
-    //  }, [
-    //      { targets: 3, type: 'date', format: null },
-    //  ]);
-
-    //  initializeDataTable('#chapterlist_large', {
-    //      paging: true,
-    //      lengthChange: true,
-    //      searching: true,
-    //      ordering: true,
-    //      info: false,
-    //      autoWidth: false,
-    //      order: [[0, 'asc']]
-    //  }, [
-    //      {
-    //          targets: 4, render: function(data, type, row) {
-    //              if (type === 'display' && data === 'Invalid date') {
-    //                  return null;
-    //              }
-    //              return data;
-    //          }
-    //      }
-    //  ]);
-
-    //  initializeDataTable('#chapterlist_donation', {
-    //      paging: true,
-    //      lengthChange: true,
-    //      searching: true,
-    //      ordering: true,
-    //      info: false,
-    //      autoWidth: false,
-    //      order: [[0, 'asc']]
-    //  }, [
-    //      {
-    //          targets: 4,
-    //          render: function(data, type, row) {
-    //              if (type === 'display' && data === 'Invalid date') {
-    //                  return null;
-    //              }
-    //              return data;
-    //          }
-    //      }, // Note the comma here
-    //      {
-    //          targets: 6,
-    //          render: function(data, type, row) {
-    //              if (type === 'display' && data === 'Invalid date') {
-    //                  return null;
-    //              }
-    //              return data;
-    //          }
-    //      }
-    //  ]);
-
-    //  initializeDataTable('#chapterlist_review', {
-    //      paging: true,
-    //      lengthChange: true,
-    //      searching: true,
-    //      ordering: true,
-    //      info: false,
-    //      autoWidth: false,
-    //      order: [[0, 'asc']]
-    //  }, [
-    //      {
-    //          targets: 9, render: function(data, type, row) {
-    //              if (type === 'display' && data === 'Invalid date') {
-    //                  return null;
-    //              }
-    //              return data;
-    //          }
-    //      }
-    //  ]);
-
-    //  initializeDataTable('#coordinatorlist', {
-    //      paging: true,
-    //      lengthChange: true,
-    //      searching: true,
-    //      ordering: true,
-    //      info: false,
-    //      autoWidth: false
-    //  }, []);
-
-//      initializeDataTable('#coordinatorlist_birthday', {
-//          paging: true,
-//          lengthChange: true,
-//          searching: true,
-//          ordering: true,
-//          info: false,
-//          autoWidth: false,
-//          order: [[0, 'asc']]
-//      }, [
-//          { targets: 5, type: 'date', format: null },
-//          {
-//              targets: 6, render: function(data, type, row) {
-//                  if (type === 'display' && data === 'Invalid date') {
-//                      return null;
-//                  }
-//                  return data;
-//              }
-//          }
-//      ]);
-//  });
  </script>
  @yield('customscript')
  </html>

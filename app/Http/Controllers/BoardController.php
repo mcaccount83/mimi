@@ -1220,13 +1220,21 @@ class BoardController extends Controller
             $issue_note = '';
         }
 
+        $ch_webstatus = $request->input('ch_webstatus');
+
+        if (empty(trim($ch_webstatus))) {
+            $ch_webstatus = 0; // Set it to 0 if it's blank
+        }
+
+
         DB::beginTransaction();
         try {
             $chapter->inquiries_contact = $request->input('InquiriesContact');
             $chapter->boundary_issues = $request->input('BoundaryStatus');
             $chapter->boundary_issue_notes = $issue_note;
             $chapter->website_url = $request->input('ch_website');
-            $chapter->website_status = $request->input('ch_webstatus');
+            // $chapter->website_status = $request->input('ch_webstatus');
+            $chapter->website_status = $ch_webstatus;
             $chapter->egroup = $request->input('ch_onlinediss');
             $chapter->social1 = $request->input('ch_social1');
             $chapter->social2 = $request->input('ch_social2');

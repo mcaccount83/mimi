@@ -962,10 +962,9 @@
               <button type="button" class="btn bg-gradient-primary" onclick="ConfirmCancel(this);" ><i class="fas fa-undo"></i>&nbsp; Reset Data</button>
             @endif
               <a href="{{ route('chapter.list') }}" class="btn bg-gradient-primary"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
-              </div>
 
-              <div class="card-body text-center">
-            @if($assistConferenceCoordinatorCondition)
+                <br><br>
+                    @if($assistConferenceCoordinatorCondition)
                 <button type="button" class="btn bg-gradient-primary" onclick="return UpdateEIN()"><i class="fas fa-university"  ></i>&nbsp; Update EIN</button>
                 @if(empty($chapterList[0]->ein_letter_path))
                     <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-ein"><i class="fas fa-upload" ></i>&nbsp; Upload EIN Letter</button>
