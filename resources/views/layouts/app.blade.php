@@ -7,6 +7,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{config('app.name')}}</title>
 
+     <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
@@ -14,7 +16,7 @@
   <!-- icheck bootstrap -->
   <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <script>
         window.onload = function () {
             if (window.history && window.history.pushState) {
