@@ -9,36 +9,27 @@
   <!-- Bootstrap CSS -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-  {{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/fontawesome-free/css/all.min.css"> --}}
+  <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/fontawesome-free/css/all.min.css">
   <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.0/css/OverlayScrollbars.min.css">
-  {{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/overlayScrollbars/css/OverlayScrollbars.min.css"> --}}
+  <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
   {{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/dist/css/AdminLTE.min.css"> --}}
 
 <!-- daterange picker -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/daterangepicker/3.1/daterangepicker.css">
-{{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/daterangepicker/daterangepicker.css"> --}}
+<link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/daterangepicker/daterangepicker.css">
 <!-- iCheck for checkboxes and radio inputs -->
 <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
 <!-- Tempusdominus Bootstrap 4 -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/css/tempusdominus-bootstrap-4.min.css">
-{{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css"> --}}
+<link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
 <!-- Select2 -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap4-theme/1.1.0/select2-bootstrap4.min.css">
-{{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/select2/css/select2.min.css">
-<link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css"> --}}
+<link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/select2/css/select2.min.css">
+<link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 
 <!-- DataTables -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.bootstrap4.min.css">
-{{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
 <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-<link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-buttons/css/buttons.bootstrap4.min.css"> --}}
+<link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 
   <!-- Custom CSS -->
   {{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/dist/css/custom.css"> --}}
@@ -697,49 +688,28 @@
 </div>
 
 <!-- jQuery -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-{{-- <script src="{{ config('settings.base_url') }}coordinator_theme/plugins/jquery/jquery.min.js"></script> --}}
+<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-{{-- <script src="{{ config('settings.base_url') }}coordinator_theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script> --}}
+<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- overlayScrollbars -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/overlayscrollbars/1.13.0/js/jquery.overlayScrollbars.min.js"></script>
-{{-- <script src="{{ config('settings.base_url') }}coordinator_theme/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script> --}}
+<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 {{-- <script src="{{ config('settings.base_url') }}coordinator_theme/dist/js/adminlte.min.js"></script> --}}
 
 
 <!-- Select2 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js"></script>
-{{-- <script src="{{ config('settings.base_url') }}coordinator_theme/plugins/select2/js/select2.full.min.js"></script> --}}
+<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/select2/js/select2.full.min.js"></script>
 <!-- InputMask -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
-{{-- <script src="{{ config('settings.base_url') }}coordinator_theme/plugins/inputmask/jquery.inputmask.min.js"></script> --}}
-<!-- moment -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-{{-- <script src="{{ config('settings.base_url') }}coordinator_theme/plugins/moment/moment.min.js"></script> --}}
+<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/moment/moment.min.js"></script>
+<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/inputmask/jquery.inputmask.min.js"></script>
 <!-- date-range-picker -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/daterangepicker/3.1/daterangepicker.js"></script>
-{{-- <script src="{{ config('settings.base_url') }}coordinator_theme/plugins/daterangepicker/daterangepicker.js"></script> --}}
+<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/daterangepicker/daterangepicker.js"></script>
 <!-- Tempusdominus Bootstrap 4 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.39.0/js/tempusdominus-bootstrap-4.min.js"></script>
-{{-- <script src="{{ config('settings.base_url') }}coordinator_theme/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script> --}}
-<!-- DataTables -->
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/bs4/1.11.5/js/dataTables.bootstrap4.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap4.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.bootstrap4.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.colVis.min.js"></script>
+<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 
-{{-- <script src="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables/jquery.dataTables.min.js"></script>
+<!-- DataTables  & Plugins -->
+<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
@@ -750,7 +720,7 @@
 <script src="{{ config('settings.base_url') }}coordinator_theme/plugins/pdfmake/vfs_fonts.js"></script>
 <script src="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
 <script src="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-buttons/js/buttons.print.min.js"></script>
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-buttons/js/buttons.colVis.min.js"></script> --}}
+<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
 <script>
    $(function () {
