@@ -13,7 +13,8 @@
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+  {{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/dist/css/AdminLTE.min.css"> --}}
 
 <!-- daterange picker -->
 <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/daterangepicker/daterangepicker.css">
@@ -693,8 +694,8 @@
 <!-- overlayScrollbars -->
 <script src="{{ config('settings.base_url') }}coordinator_theme/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
-{{-- <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script> --}}
-<script src="{{ config('settings.base_url') }}coordinator_theme/dist/js/adminlte.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+{{-- <script src="{{ config('settings.base_url') }}coordinator_theme/dist/js/adminlte.min.js"></script> --}}
 
 
 <!-- Select2 -->
