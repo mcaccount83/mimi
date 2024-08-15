@@ -32,11 +32,11 @@
     </div>
 
 <!-- jQuery -->
-<script src="{{ config('settings.base_url') }}plugins/jquery/jquery.min.js"></script>
+<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
-<script src="{{ config('settings.base_url') }}plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
-<script src="{{ config('settings.base_url') }}dist/js/adminlte.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 </body>
 
 @yield('customscript')
