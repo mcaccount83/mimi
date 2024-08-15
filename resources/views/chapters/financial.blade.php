@@ -263,11 +263,11 @@
                                             <label>Excel roster attached and complete:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-md-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkRosterAttached" value="1" {{ $financial_report_array['check_roster_attached'] == 1 ? 'checked' : '' }} required>
+                                                    <input class="form-check-input" type="radio" name="checkRosterAttached" value="1" {{ $financial_report_array['check_roster_attached'] === 1 ? 'checked' : '' }} required>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkRosterAttached" value="0" {{ $financial_report_array['check_roster_attached'] == 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkRosterAttached" value="0" {{ $financial_report_array['check_roster_attached'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -276,11 +276,11 @@
                                             <label>Number of members listed, dues received, and renewal paid "seem right":<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-md-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkRenewalSeemsRight" value="1" {{ $financial_report_array['check_renewal_seems_right'] == 1 ? 'checked' : '' }} required>
+                                                    <input class="form-check-input" type="radio" name="checkRenewalSeemsRight" value="1" {{ $financial_report_array['check_renewal_seems_right'] === 1 ? 'checked' : '' }} required>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkRenewalSeemsRight" value="0" {{ $financial_report_array['check_renewal_seems_right'] == 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkRenewalSeemsRight" value="0" {{ $financial_report_array['check_renewal_seems_right'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -516,11 +516,11 @@
                                             <label>Minimum of one service project completed:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-md-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkServiceProject" value="1" {{ $financial_report_array['check_minimum_service_project'] == 1 ? 'checked' : '' }} required>
+                                                    <input class="form-check-input" type="radio" name="checkServiceProject" value="1" {{ $financial_report_array['check_minimum_service_project'] === 1 ? 'checked' : '' }} required>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkServiceProject" value="0" {{ $financial_report_array['check_minimum_service_project'] == 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkServiceProject" value="0" {{ $financial_report_array['check_minimum_service_project'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -529,11 +529,11 @@
                                             <label>Made a donation to the M2M Fund:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-md-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkM2MDonation" value="1" {{ $financial_report_array['check_m2m_donation'] == 1 ? 'checked' : '' }} required>
+                                                    <input class="form-check-input" type="radio" name="checkM2MDonation" value="1" {{ $financial_report_array['check_m2m_donation'] === 1 ? 'checked' : '' }} required>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkM2MDonation" value="0" {{ $financial_report_array['check_m2m_donation'] == 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkM2MDonation" value="0" {{ $financial_report_array['check_m2m_donation'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -650,15 +650,15 @@
                                         <label>Is the Chapter's Party Expense under 15%?<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-md-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="2" {{ $financial_report_array['check_party_percentage'] == 2 ? 'checked' : '' }} required>
+                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="2" {{ $financial_report_array['check_party_percentage'] === 2 ? 'checked' : '' }} required>
                                                 <label class="form-check-label">They are under 15%</label>
                                             </div>
                                             <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="1" {{ $financial_report_array['check_party_percentage'] == 1 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="1" {{ $financial_report_array['check_party_percentage'] === 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label">They are between 15-20%</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="0" {{ $financial_report_array['check_party_percentage'] == 0 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="0" {{ $financial_report_array['check_party_percentage'] === 0 ? 'checked' : '' }}>
                                                 <label class="form-check-label">They are over 20%</label>
                                             </div>
                                         </div>
@@ -1261,11 +1261,11 @@
                             <label>Is the Total Income/Revenue less than $50,000?<span class="field-required">*&nbsp;</span></label>
                             <div class="col-md-12 row">
                                 <div class="form-check" style="margin-right: 20px;">
-                                    <input class="form-check-input" type="radio" name="checkTotalIncome" value="1" {{ $financial_report_array['check_total_income_less'] == 1 ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="radio" name="checkTotalIncome" value="1" {{ $financial_report_array['check_total_income_less'] === 1 ? 'checked' : '' }}>
                                     <label class="form-check-label">Yes</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="checkTotalIncome" value="0" {{ $financial_report_array['check_total_income_less'] == 0 ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="radio" name="checkTotalIncome" value="0" {{ $financial_report_array['check_total_income_less'] === 0 ? 'checked' : '' }}>
                                     <label class="form-check-label">No</label>
                                 </div>
                             </div>
@@ -1464,11 +1464,11 @@
                                         <label>Does this year's Beginning Balance match last year's Ending Balance?<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-md-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="check_beginning_balance" value="1" {{ $financial_report_array['check_beginning_balance'] == 1 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="check_beginning_balance" value="1" {{ $financial_report_array['check_beginning_balance'] === 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label">Yes</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="check_beginning_balance" value="0" {{ $financial_report_array['check_beginning_balance'] == 0 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="check_beginning_balance" value="0" {{ $financial_report_array['check_beginning_balance'] === 0 ? 'checked' : '' }}>
                                                 <label class="form-check-label">No</label>
                                             </div>
                                         </div>
@@ -1477,11 +1477,11 @@
                                         <label>Current bank statement included and balance matches chapter entry:<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-md-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="checkBankStatementIncluded" value="1" {{ $financial_report_array['check_bank_statement_included'] == 1 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="checkBankStatementIncluded" value="1" {{ $financial_report_array['check_bank_statement_included'] === 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label">Yes</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="checkBankStatementIncluded" value="0" {{ $financial_report_array['check_bank_statement_included'] == 0 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="checkBankStatementIncluded" value="0" {{ $financial_report_array['check_bank_statement_included'] === 0 ? 'checked' : '' }}>
                                                 <label class="form-check-label">No</label>
                                             </div>
                                         </div>
@@ -1490,11 +1490,11 @@
                                         <label>Treasury Balance Now matches Reconciled Bank Balance:<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-md-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="checkBankStatementMatches" value="1" {{ $financial_report_array['check_bank_statement_matches'] == 1 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="checkBankStatementMatches" value="1" {{ $financial_report_array['check_bank_statement_matches'] === 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label">Yes</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="checkBankStatementMatches" value="0" {{ $financial_report_array['check_bank_statement_matches'] == 0 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="checkBankStatementMatches" value="0" {{ $financial_report_array['check_bank_statement_matches'] === 0 ? 'checked' : '' }}>
                                                 <label class="form-check-label">No</label>
                                             </div>
                                         </div>
@@ -1758,11 +1758,11 @@
                                             <label>Did they purchase or have leftover pins? (Quesion 5):<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-md-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkPurchasedPins" value="1" {{ $financial_report_array['check_purchased_pins'] == 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkPurchasedPins" value="1" {{ $financial_report_array['check_purchased_pins'] === 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkPurchasedPins" value="0" {{ $financial_report_array['check_purchased_pins'] == 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkPurchasedPins" value="0" {{ $financial_report_array['check_purchased_pins'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -1771,11 +1771,11 @@
                                             <label>Did they purchase MOMS Club merchandise? (Quesion 6):<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-md-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="1" {{ $financial_report_array['check_purchased_mc_merch'] == 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="1" {{ $financial_report_array['check_purchased_mc_merch'] === 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="0" {{ $financial_report_array['check_purchased_mc_merch'] == 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="0" {{ $financial_report_array['check_purchased_mc_merch'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -1784,24 +1784,25 @@
                                             <label>Did they offer MOMS Club merchandise or info on how to buy to members? (Question 7):<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-md-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkOfferedMerch" value="1" {{ $financial_report_array['check_offered_merch'] == 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkOfferedMerch" value="1" {{ $financial_report_array['check_offered_merch'] === 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkOfferedMerch" value="0" {{ $financial_report_array['check_offered_merch'] == 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkOfferedMerch" value="0" {{ $financial_report_array['check_offered_merch'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="form-group row">
                                             <label>Did they make the Manual/By-Laws available to members? (Question 8):<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-md-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="1" {{ $financial_report_array['check_bylaws_available'] == 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="1" {{ $financial_report_array['check_bylaws_available'] === 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="0" {{ $financial_report_array['check_bylaws_available'] == 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="0" {{ $financial_report_array['check_bylaws_available'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -1810,11 +1811,11 @@
                                             <label>Did they Sistered another chapter? (Question 20):<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-md-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="1" {{ $financial_report_array['check_sistered_another_chapter'] == 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="1" {{ $financial_report_array['check_sistered_another_chapter'] === 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="0" {{ $financial_report_array['check_sistered_another_chapter'] == 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="0" {{ $financial_report_array['check_sistered_another_chapter'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -1823,11 +1824,11 @@
                                             <label>Did they attended an in person or viurtual International Event? (Question 21):<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-md-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkAttendedTraining" value="1" {{ $financial_report_array['check_attended_training'] == 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkAttendedTraining" value="1" {{ $financial_report_array['check_attended_training'] === 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkAttendedTraining" value="0" {{ $financial_report_array['check_attended_training'] == 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkAttendedTraining" value="0" {{ $financial_report_array['check_attended_training'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -1836,11 +1837,11 @@
                                             <label>Did they attach proof of 990N Filing with the date range of <strong>7/1/<?php echo date('Y')-1 .' - 6/30/'.date('Y');?></strong>?<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-md-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="1" {{ $financial_report_array['check_current_990N_included'] == 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="1" {{ $financial_report_array['check_current_990N_included'] === 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="0" {{ $financial_report_array['check_current_990N_included'] == 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="0" {{ $financial_report_array['check_current_990N_included'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
