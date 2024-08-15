@@ -1784,11 +1784,11 @@
                                             <label>Did they offer MOMS Club merchandise or info on how to buy to members? (Question 7):<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-md-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkPurchasedPins" value="1" {{ $financial_report_array['check_purchased_pins'] == 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkOfferedMerch" value="1" {{ $financial_report_array['check_offered_merch'] == 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkPurchasedPins" value="0" {{ $financial_report_array['check_purchased_pins'] == 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkOfferedMerch" value="0" {{ $financial_report_array['check_offered_merch'] == 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
