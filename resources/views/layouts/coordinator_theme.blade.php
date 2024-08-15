@@ -6,14 +6,14 @@
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Bootstrap CSS -->
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  {{-- <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> --}}
   <!-- Font Awesome -->
   <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/fontawesome-free/css/all.min.css">
   <!-- overlayScrollbars -->
   <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/dist/css/AdminLTE.min.css">
 
 <!-- daterange picker -->
 <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/daterangepicker/daterangepicker.css">
@@ -693,7 +693,9 @@
 <!-- overlayScrollbars -->
 <script src="{{ config('settings.base_url') }}coordinator_theme/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
-<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script> --}}
+<script src="{{ config('settings.base_url') }}coordinator_theme/dist/js/adminlte.min.js"></script>
+
 
 <!-- Select2 -->
 <script src="{{ config('settings.base_url') }}coordinator_theme/plugins/select2/js/select2.full.min.js"></script>
