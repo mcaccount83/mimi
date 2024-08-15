@@ -53,8 +53,12 @@ Route::get('/getdirectreport', [CoordinatorController::class, 'getDirectReportin
 Route::get('/getchapterprimary', [CoordinatorController::class, 'getChapterPrimaryFor'])->name('get.chapterprimary');
 Route::get('/chapterlinks', [ChapterController::class, 'chapterLinks'])->name('chapter.links');
 
-Route::get('/test-500', function () {abort(500);});
-Route::get('/test-404', function () {abort(404);});
+Route::get('/test-500', function () {
+    abort(500);
+});
+Route::get('/test-404', function () {
+    abort(404);
+});
 
 /**
  * Routes for Public Pages

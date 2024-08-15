@@ -8,9 +8,9 @@
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{ env('BASE_URL') }}coordinator_theme/plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/fontawesome-free/css/all.min.css">
   <!-- Theme style -->
-  <link rel="stylesheet" href="{{ env('BASE_URL') }}coordinator_theme/dist/css/adminlte.min.css">
+  <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/dist/css/adminlte.min.css">
 
   <style>
     html, body {
@@ -57,10 +57,10 @@
 </body>
 
   <!-- jQuery -->
-<script src="{{ env('BASE_URL') }}coordinator_theme/plugins/jquery/jquery.min.js"></script>
+<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
-<script src="{{ env('BASE_URL') }}coordinator_theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
-<script src="{{ env('BASE_URL') }}coordinator_theme/dist/js/adminlte.min.js"></script>
+<script src="{{ config('settings.base_url') }}coordinator_theme/dist/js/adminlte.min.js"></script>
 </body>
 </html>

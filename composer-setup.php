@@ -697,7 +697,7 @@ class Installer
         }
         $this->disableTls = $disableTls;
         $this->cafile = $caFile;
-        $this->errHandler = new ErrorHandler();
+        $this->errHandler = new ErrorHandler;
     }
 
     /**

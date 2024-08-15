@@ -491,7 +491,7 @@ class AdminController extends Controller
     {
         try {
             // Create a new Admin instance
-            $admin = new Admin();
+            $admin = new Admin;
 
             // Calculate the fiscal year (current year - next year)
             $currentYear = Carbon::now()->year;
