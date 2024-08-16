@@ -46,7 +46,9 @@
                             <a href="<?php echo url("/chapter/edit/{$list->ch_id}") ?>"><i class="fas fa-edit "></i></a></td>
 						<td>{{ $list->ch_state }}</td>
                         <td>{{ $list->ch_name }}</td>
-						<td>{{ $list->month_name }} {{ $list->year }}</td>
+                        <td data-sort="{{ $list->year . '-' . str_pad($list->start_month, 2, '0', STR_PAD_LEFT) }}">
+                            {{ $list->start_month }} {{ $list->year }}
+                        </td>
                         <td  @if($list->ein_letter_path != null)style="background-color: transparent;"
                             @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->ein_letter_path != null)

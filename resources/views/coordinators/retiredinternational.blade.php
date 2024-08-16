@@ -48,7 +48,7 @@
                         <td>{{ $list->reg_name }}</td>
                         <td>{{ $list->cor_fname }}</td>
                         <td>{{ $list->cor_lname }}</td>
-                        <td>{{ $list->zapdate }}</td>
+                        <td><span class="date-mask">{{ $list->zapdate }}</span></td>
                         <td>{{ $list->reason }}</td>
 
                   </tr>

@@ -897,7 +897,6 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-            <p>Changes to listed Primary & Secondary Coordinators will show after page is saved.</p>
             <div class="row">
               <!-- /.form group -->
               <div class="col-sm-4">
@@ -1155,7 +1154,7 @@ function updateWebsiteStatus() {
     }
 }
 
-  $(document ).ready(function() {
+//   $(document ).ready(function() {
     // var phoneListArr = ["ch_pre_phone","ch_avp_phone","ch_mvp_phone","ch_trs_phone","ch_sec_phone"];
     // for (var i = phoneListArr.length - 1; i >= 0; i--) {
     //     var inputValue = $("#"+phoneListArr[i]).val();
@@ -1180,34 +1179,68 @@ function updateWebsiteStatus() {
     //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
     // });
 
-    var selectedCorId = $("select#ch_primarycor option").filter(":selected").val();
-    if(selectedCorId !=""){
-      $.ajax({
-        url: '{{ url("/checkreportid/") }}' + '/' + selectedCorId,
+//     $(document ).ready(function() {
+
+//     var selectedCorId = $("select#ch_primarycor option").filter(":selected").val();
+//     if(selectedCorId !=""){
+//       $.ajax({
+//         url: '{{ url("/checkreportid/") }}' + '/' + selectedCorId,
+//             type: "GET",
+//             success: function(result) {
+//                $("#display_corlist").html(result);
+//             },
+//             error: function (jqXHR, exception) {
+
+//             }
+//         });
+//     }
+//      function checkReportId(val){
+//           $.ajax({
+//             url: '{{ url("/checkreportid/") }}' + '/' + val,
+//             type: "GET",
+//             success: function(result) {
+//                $("#display_corlist").html(result);
+//             },
+//             error: function (jqXHR, exception) {
+
+//             }
+//         });
+
+//       }
+
+//   });
+
+
+$(document).ready(function() {
+
+// Function to load the coordinator list based on the selected value
+function loadCoordinatorList(corId) {
+    if(corId != "") {
+        $.ajax({
+            url: '{{ url("/checkreportid/") }}' + '/' + corId,
             type: "GET",
             success: function(result) {
                $("#display_corlist").html(result);
             },
             error: function (jqXHR, exception) {
-
+               console.log("Error: ", jqXHR, exception);
             }
         });
     }
-     function checkReportId(val){
-          $.ajax({
-            url: '{{ url("/checkreportid/") }}' + '/' + val,
-            type: "GET",
-            success: function(result) {
-               $("#display_corlist").html(result);
-            },
-            error: function (jqXHR, exception) {
+}
 
-            }
-        });
+// Get the selected coordinator ID on page load
+var selectedCorId = $("#ch_primarycor").val();
+loadCoordinatorList(selectedCorId);
 
-      }
+// Update the coordinator list when the dropdown changes
+$("#ch_primarycor").change(function() {
+    var selectedValue = $(this).val();
+    loadCoordinatorList(selectedValue);
+});
 
-  });
+});
+
 
 
 // Function to handle show/hide logic for vacant checkboxes

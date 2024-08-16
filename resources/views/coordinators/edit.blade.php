@@ -123,13 +123,13 @@
 					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>Phone</label><span class="field-required">*</span>
-						<input type="text" name="cord_phone" id="cord_phone" class="form-control" value="{{ $coordinatorDetails[0]->phone }}" maxlength="12" required onkeypress="return isPhone(event)" autocomplete="nope">
+						<input type="text" name="cord_phone" id="cord_phone" class="form-control" value="{{ $coordinatorDetails[0]->phone }}"  data-inputmask='"mask": "(999) 999-9999"' data-mask>
 					  </div>
 					</div>
 					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>Alternate Phone</label>
-						<input type="text" name="cord_altphone" id="cord_altphone" class="form-control" value="{{ $coordinatorDetails[0]->alt_phone }}" maxlength="12" onkeypress="return isPhone(event)" autocomplete="nope">
+						<input type="text" name="cord_altphone" id="cord_altphone" class="form-control" value="{{ $coordinatorDetails[0]->alt_phone }}"  data-inputmask='"mask": "(999) 999-9999"' data-mask>
 					  </div>
 					</div>
 					<div class="col-sm-6">
@@ -424,22 +424,22 @@ function isPhone() {
 
 
 
-  $( document ).ready(function() {
-	var phoneListArr = ["cord_phone","cord_altphone"];
-    for (var i = phoneListArr.length - 1; i >= 0; i--) {
-        var inputValue = $("#"+phoneListArr[i]).val();
-        if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
-        var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
-        $("#"+phoneListArr[i]).val(reInputValue);
-    }
-	$("#cord_phone").keyup(function() {
-        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });
-	$("#cord_altphone").keyup(function() {
-        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });
+//   $( document ).ready(function() {
+// 	var phoneListArr = ["cord_phone","cord_altphone"];
+//     for (var i = phoneListArr.length - 1; i >= 0; i--) {
+//         var inputValue = $("#"+phoneListArr[i]).val();
+//         if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
+//         var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
+//         $("#"+phoneListArr[i]).val(reInputValue);
+//     }
+// 	$("#cord_phone").keyup(function() {
+//         this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
+//     });
+// 	$("#cord_altphone").keyup(function() {
+//         this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
+//     });
 
-  });
+//   });
 
 
    //submit validation function

@@ -32,6 +32,7 @@
               {{-- <table id="chapterlist_einStatus" class="table table-bordered table-hover"> --}}
               <thead>
 			    <tr>
+                    <th>Notes</th>
 				  <th>State</th>
                   <th>Name</th>
                   <th>Start Date</th>
@@ -39,15 +40,22 @@
                     <th>Letter On File</th>
                     <!--<th>Letter On File</th>-->
                     <th>Letter Link</th>
+                    <th>EIN/IRS Notes</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
-
+                    <td>
+                        @if (Session::get('positionid') == 6)
+                        <center><a href="{{ url("/chapter/einnotes/{$list->id}") }}"><i class="fas fa-pencil-alt"></i></a></center>
+                        @endif
+                    </td>
 						<td>{{ $list->state }}</td>
                         <td>{{ $list->name }}</td>
-						<td>{{ $list->start_month }} {{ $list->start_year }}</td>
+                        <td data-sort="{{ $list->start_year . '-' . str_pad($list->start_month, 2, '0', STR_PAD_LEFT) }}">
+                            {{ $list->start_month }} {{ $list->start_year }}
+                        </td>
 						<td>{{ $list->ein }}</td>
                         <td  @if($list->ein_letter_path != null)style="background-color: transparent;"
                             @else style="background-color:#dc3545; color: #ffffff;" @endif>
@@ -63,6 +71,8 @@
 						    @else
 						    <a href="{{ $list->ein_letter_path }}" target="blank">{{ $list->name }} EIN Letter</a>
 						    @endif</td>
+                            <td>{{ $list->ein_notes }}</td>
+
 			        </tr>
                   @endforeach
                   </tbody>

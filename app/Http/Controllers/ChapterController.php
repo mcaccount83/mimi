@@ -3320,6 +3320,79 @@ class ChapterController extends Controller
     }
 
     /**
+     * ReRegistration Notes
+     */
+    public function showEinNotes(Request $request, $id)
+    {
+        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $user = User::find($request->user()->id);
+        // Check if user is not found
+        if (! $user) {
+            return redirect()->route('home');
+        }
+
+        $corDetails = $user->CoordinatorDetails;
+        // Check if BoardDetails is not found for the user
+        if (! $corDetails) {
+            return redirect()->route('home');
+        }
+
+        $corId = $corDetails['coordinator_id'];
+        $corConfId = $corDetails['conference_id'];
+        $chapterList = DB::table('chapters as ch')
+            ->select('ch.id', 'ch.name', 'ch.ein', 'ch.ein_notes',
+                'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.conference_id as cor_confid', 'cd.email as cor_email', 'bd.email as bor_email', 'st.state_short_name as statename')
+            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('bd.board_position_id', '=', '1')
+            ->where('ch.id', $id)
+            ->get();
+        $maxDateLimit = Carbon::now()->format('Y-m-d');
+        $minDateLimit = Carbon::now()->subYear()->format('Y-m-d');
+        // $minDateLimit = '';
+        $data = ['chapterList' => $chapterList, 'maxDateLimit' => $maxDateLimit, 'minDateLimit' => $minDateLimit];
+
+        return view('chapters.einnotes')->with($data);
+    }
+
+    /**
+     * EIN/IRS Notes (store)
+     */
+    public function createEinNotes(Request $request, $id): RedirectResponse
+    {
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corId = $corDetails['coordinator_id'];
+        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+
+        $nextRenewalYear = $request->input('ch_nxt_renewalyear');
+
+        //$nextRenewalYear = date('Y');
+        $primaryCordEmail = $request->input('ch_pc_email');
+        $boardPresEmail = $request->input('ch_pre_email');
+        $chapter = Chapter::find($id);
+        DB::beginTransaction();
+        try {
+
+            $chapter->ein_notes = $request->input('ch_einnotes');
+
+            $chapter->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            DB::rollback();
+            // Log the error
+            Log::error($e);
+
+            return redirect()->to('/reports/einstatus')->with('fail', 'Something went wrong, Please try again.');
+        }
+
+        return redirect()->to('/reports/einstatus')->with('success', 'Your EIN/IRS Notes have been saved');
+    }
+
+    /**
      * Reset Password
      */
     public function updateChapterResetPassword(Request $request): JsonResponse
