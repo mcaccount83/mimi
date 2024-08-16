@@ -2899,30 +2899,36 @@ $("#review-clear").click(function() {
 	});
 
     $("#review-complete").click(function() {
-        // if (!CheckMembers()) {
-        // return false;
-        // }
-        // else if (!CheckService()) {
-        // return false;
-        // }
-        // else if (!CheckParties()) {
-        // return false;
-        // }
-        // else  if (!CheckFinancial()) {
-        // return false;
-        // }
-        // else if (!CheckReconciliation()) {
-        // return false;
-        // }
-        // else if (!CheckQuestions()) {
-        // return false;
-        // }
-        // var post_balance = $('#post_balance').val();
-		// if(post_balance == null || post_balance == ''){
-		// 	alert('Please enter Ending Balance in Section 12');
-		// 	$('#post_balance').focus();
-		// 	return false;
-		// }
+        if (!CheckMembers()) {
+        console.log('CheckMembers failed');
+        return false;
+    }
+    if (!CheckService()) {
+        console.log('CheckService failed');
+        return false;
+    }
+    if (!CheckParties()) {
+        console.log('CheckParties failed');
+        return false;
+    }
+    if (!CheckFinancial()) {
+        console.log('CheckFinancial failed');
+        return false;
+    }
+    if (!CheckReconciliation()) {
+        console.log('CheckReconciliation failed');
+        return false;
+    }
+    if (!CheckQuestions()) {
+        console.log('CheckQuestions failed');
+        return false;
+    }
+        var post_balance = $('#post_balance').val();
+		if(post_balance == null || post_balance == ''){
+			alert('Please enter Ending Balance in Section 12');
+			$('#post_balance').focus();
+			return false;
+		}
 		var result=confirm("This will finalize this report and flag it as 'review complete'.  Do you wish to continue?");
 		if(result){
             $("#submit_type").val('review_complete');
@@ -3112,10 +3118,11 @@ document.getElementById('AssignedReviewer').addEventListener('change', function(
 	}
 
     function CheckMembers() {
-        var rosterPath = document.getElementById('checkRosterAttached');
-        var rosterPath = document.getElementById('checkRenewalSeemsRight');
-        if (!checkRosterAttached || checkRosterAttached.value == "" || !checkRenewalSeemsRight || checkRenewalSeemsRight.value == "") {
-            alert("Answer Review Questins in CHAPTER DUES section to Continue.");
+        var checkRosterAttached = document.querySelector('input[name="checkRosterAttached"]:checked');
+        var checkRenewalSeemsRight = document.querySelector('input[name="checkRenewalSeemsRight"]:checked');
+
+        if (!checkRosterAttached || !checkRenewalSeemsRight) {
+            alert("Answer Review Questions in CHAPTER DUES section to Continue.");
             accordion.openAccordionItem('accordion-header-members');
             return false;
         }
@@ -3123,10 +3130,11 @@ document.getElementById('AssignedReviewer').addEventListener('change', function(
     }
 
     function CheckService() {
-        var rosterPath = document.getElementById('checkServiceProject');
-        var rosterPath = document.getElementById('checkM2MDonation');
-        if (!checkServiceProject || checkServiceProject.value == "" || !checkM2MDonation || checkM2MDonation.value == "") {
-            alert("Answer Review Questins in SERVICE PROJECTS section to Continue.");
+        var checkServiceProject = document.querySelector('input[name="checkServiceProject"]:checked');
+        var checkM2MDonation = document.querySelector('input[name="checkM2MDonation"]:checked');
+
+        if (!checkServiceProject || !checkM2MDonation) {
+            alert("Answer Review Questions in SERVICE PROJECTS section to Continue.");
             accordion.openAccordionItem('accordion-header-service');
             return false;
         }
@@ -3134,9 +3142,10 @@ document.getElementById('AssignedReviewer').addEventListener('change', function(
     }
 
     function CheckParties() {
-        var rosterPath = document.getElementById('check_party_percentage');
-        if (!check_party_percentage || check_party_percentage.value == "") {
-            alert("Answer Review Questins in PARTIES & MEMBER BENEFITS section to Continue.");
+        var check_party_percentage = document.querySelector('input[name="check_party_percentage"]:checked');
+
+        if (!check_party_percentage) {
+            alert("Answer Review Questions in PARTIES & MEMBER BENEFITS section to Continue.");
             accordion.openAccordionItem('accordion-header-parties');
             return false;
         }
@@ -3144,9 +3153,10 @@ document.getElementById('AssignedReviewer').addEventListener('change', function(
     }
 
     function CheckFinancial() {
-        var rosterPath = document.getElementById('checkTotalIncome');
-        if (!checkTotalIncome || checkTotalIncome.value == "") {
-            alert("Answer Review Questins in FINANCIAL SUMMARY section to Continue.");
+        var checkTotalIncome = document.querySelector('input[name="checkTotalIncome"]:checked');
+
+        if (!checkTotalIncome) {
+            alert("Answer Review Questions in FINANCIAL SUMMARY section to Continue.");
             accordion.openAccordionItem('accordion-header-financial');
             return false;
         }
@@ -3154,13 +3164,13 @@ document.getElementById('AssignedReviewer').addEventListener('change', function(
     }
 
     function CheckReconciliation() {
-        var rosterPath = document.getElementById('check_beginning_balance');
-        var rosterPath = document.getElementById('checkBankStatementIncluded');
-        var rosterPath = document.getElementById('checkBankStatementMatches');
-        var rosterPath = document.getElementById('post_balance');
-        if (!check_beginning_balance || check_beginning_balance.value == "" || !checkBankStatementIncluded || checkBankStatementIncluded.value == ""
-            || !checkBankStatementMatches || checkBankStatementMatches.value == "" || !post_balance || post_balance.value == "") {
-            alert("Answer Review Questins in RECONCILIATION section to Continue.");
+        var check_beginning_balance = document.querySelector('input[name="check_beginning_balance"]:checked');
+        var checkBankStatementIncluded = document.querySelector('input[name="checkBankStatementIncluded"]:checked');
+        var checkBankStatementMatches = document.querySelector('input[name="checkBankStatementMatches"]:checked');
+        var post_balance = document.getElementById('post_balance');
+
+        if (!check_beginning_balance || !checkBankStatementIncluded || !checkBankStatementMatches || !post_balance) {
+            alert("Answer Review Questions in RECONCILIATION section to Continue.");
             accordion.openAccordionItem('accordion-header-reconciliation');
             return false;
         }
@@ -3168,23 +3178,97 @@ document.getElementById('AssignedReviewer').addEventListener('change', function(
     }
 
     function CheckQuestions() {
-        var rosterPath = document.getElementById('checkPurchasedPins');
-        var rosterPath = document.getElementById('checkPurchasedMCMerch');
-        var rosterPath = document.getElementById('checkOfferedMerch');
-        var rosterPath = document.getElementById('checkBylawsMadeAvailable');
-        var rosterPath = document.getElementById('checkSisteredAnotherChapter');
-        var rosterPath = document.getElementById('checkAttendedTraining');
-        var rosterPath = document.getElementById('checkCurrent990NAttached');
-        if (!checkPurchasedPins || checkPurchasedPins.value == "" || !checkPurchasedMCMerch || checkPurchasedMCMerch.value == ""
-            || !checkOfferedMerch || checkOfferedMerch.value == "" || !checkBylawsMadeAvailable || checkBylawsMadeAvailable.value == ""
-            || !checkSisteredAnotherChapter || checkSisteredAnotherChapter.value == "" || !checkAttendedTraining || checkAttendedTraining.value == ""
-            || !checkCurrent990NAttached || checkCurrent990NAttached.value == "") {
-            alert("Answer Review Questins in CHAPTER QUESTIONS section to Continue.");
+        var checkPurchasedPins = document.querySelector('input[name="checkPurchasedPins"]:checked');
+        var checkPurchasedMCMerch = document.querySelector('input[name="checkPurchasedMCMerch"]:checked');
+        var checkOfferedMerch = document.querySelector('input[name="checkOfferedMerch"]:checked');
+        var checkBylawsMadeAvailable = document.querySelector('input[name="checkBylawsMadeAvailable"]:checked');
+        var checkSisteredAnotherChapter = document.querySelector('input[name="checkSisteredAnotherChapter"]:checked');
+        var checkAttendedTraining = document.querySelector('input[name="checkAttendedTraining"]:checked');
+        var checkCurrent990NAttached = document.querySelector('input[name="checkCurrent990NAttached"]:checked');
+
+        if (!checkPurchasedPins || !checkPurchasedMCMerch || !checkOfferedMerch || !checkBylawsMadeAvailable
+            || !checkSisteredAnotherChapter || !checkAttendedTraining || !checkCurrent990NAttached) {
+            alert("Answer Review Questions in CHAPTER QUESTIONS section to Continue.");
             accordion.openAccordionItem('accordion-header-questions');
             return false;
         }
         return true;
     }
+
+    // function CheckMembers() {
+    //     var rosterPath = document.getElementById('checkRosterAttached');
+    //     var rosterPath = document.getElementById('checkRenewalSeemsRight');
+    //     if (!checkRosterAttached || checkRosterAttached.value == "" || !checkRenewalSeemsRight || checkRenewalSeemsRight.value == "") {
+    //         alert("Answer Review Questins in CHAPTER DUES section to Continue.");
+    //         accordion.openAccordionItem('accordion-header-members');
+    //         return false;
+    //     }
+    //     return true;
+    // }
+
+    // function CheckService() {
+    //     var rosterPath = document.getElementById('checkServiceProject');
+    //     var rosterPath = document.getElementById('checkM2MDonation');
+    //     if (!checkServiceProject || checkServiceProject.value == "" || !checkM2MDonation || checkM2MDonation.value == "") {
+    //         alert("Answer Review Questins in SERVICE PROJECTS section to Continue.");
+    //         accordion.openAccordionItem('accordion-header-service');
+    //         return false;
+    //     }
+    //     return true;
+    // }
+
+    // function CheckParties() {
+    //     var rosterPath = document.getElementById('check_party_percentage');
+    //     if (!check_party_percentage || check_party_percentage.value == "") {
+    //         alert("Answer Review Questins in PARTIES & MEMBER BENEFITS section to Continue.");
+    //         accordion.openAccordionItem('accordion-header-parties');
+    //         return false;
+    //     }
+    //     return true;
+    // }
+
+    // function CheckFinancial() {
+    //     var rosterPath = document.getElementById('checkTotalIncome');
+    //     if (!checkTotalIncome || checkTotalIncome.value == "") {
+    //         alert("Answer Review Questins in FINANCIAL SUMMARY section to Continue.");
+    //         accordion.openAccordionItem('accordion-header-financial');
+    //         return false;
+    //     }
+    //     return true;
+    // }
+
+    // function CheckReconciliation() {
+    //     var rosterPath = document.getElementById('check_beginning_balance');
+    //     var rosterPath = document.getElementById('checkBankStatementIncluded');
+    //     var rosterPath = document.getElementById('checkBankStatementMatches');
+    //     var rosterPath = document.getElementById('post_balance');
+    //     if (!check_beginning_balance || check_beginning_balance.value == "" || !checkBankStatementIncluded || checkBankStatementIncluded.value == ""
+    //         || !checkBankStatementMatches || checkBankStatementMatches.value == "" || !post_balance || post_balance.value == "") {
+    //         alert("Answer Review Questins in RECONCILIATION section to Continue.");
+    //         accordion.openAccordionItem('accordion-header-reconciliation');
+    //         return false;
+    //     }
+    //     return true;
+    // }
+
+    // function CheckQuestions() {
+    //     var rosterPath = document.getElementById('checkPurchasedPins');
+    //     var rosterPath = document.getElementById('checkPurchasedMCMerch');
+    //     var rosterPath = document.getElementById('checkOfferedMerch');
+    //     var rosterPath = document.getElementById('checkBylawsMadeAvailable');
+    //     var rosterPath = document.getElementById('checkSisteredAnotherChapter');
+    //     var rosterPath = document.getElementById('checkAttendedTraining');
+    //     var rosterPath = document.getElementById('checkCurrent990NAttached');
+    //     if (!checkPurchasedPins || checkPurchasedPins.value == "" || !checkPurchasedMCMerch || checkPurchasedMCMerch.value == ""
+    //         || !checkOfferedMerch || checkOfferedMerch.value == "" || !checkBylawsMadeAvailable || checkBylawsMadeAvailable.value == ""
+    //         || !checkSisteredAnotherChapter || checkSisteredAnotherChapter.value == "" || !checkAttendedTraining || checkAttendedTraining.value == ""
+    //         || !checkCurrent990NAttached || checkCurrent990NAttached.value == "") {
+    //         alert("Answer Review Questins in CHAPTER QUESTIONS section to Continue.");
+    //         accordion.openAccordionItem('accordion-header-questions');
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
     // function CheckReviewAnswers(){
 	// 	if(!document.getElementById("checkRosterAttached").val === null || document.getElementById("checkRosterAttached").val === ''){
