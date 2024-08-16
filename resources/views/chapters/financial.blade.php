@@ -2878,6 +2878,63 @@
 //   }
 // })();
 
+$("#unsubmit").click(function() {
+		var result=confirm("Unsubmitting this report will make it editable by the chapter again and will disable coordinator editing until the chapter has resubmitted - any unsaved changes will be lost.  Do you wish to continue?");
+		if(result){
+			$("#submitted").val('');
+			$("#submit_type").val('UnSubmit');
+			$("#FurthestStep").val('13');
+			$("#financial_report").submit();
+		}
+	});
+
+$("#review-clear").click(function() {
+		var result=confirm("This will clear the 'review complete' flag and coordinators will be able to edit the report again.  Do you wish to continue?");
+		if(result){
+            $("#submitted").val('');
+			$("#submit_type").val('review_clear');
+			$("#FurthestStep").val('13');
+			$("#financial_report").submit();
+		}
+	});
+
+    $("#review-complete").click(function() {
+        // if (!CheckMembers()) {
+        // return false;
+        // }
+        // else if (!CheckService()) {
+        // return false;
+        // }
+        // else if (!CheckParties()) {
+        // return false;
+        // }
+        // else  if (!CheckFinancial()) {
+        // return false;
+        // }
+        // else if (!CheckReconciliation()) {
+        // return false;
+        // }
+        // else if (!CheckQuestions()) {
+        // return false;
+        // }
+        // var post_balance = $('#post_balance').val();
+		// if(post_balance == null || post_balance == ''){
+		// 	alert('Please enter Ending Balance in Section 12');
+		// 	$('#post_balance').focus();
+		// 	return false;
+		// }
+		var result=confirm("This will finalize this report and flag it as 'review complete'.  Do you wish to continue?");
+		if(result){
+            $("#submit_type").val('review_complete');
+            $("#FurthestStep").val('13');
+            $("#financial_report").submit();
+		 } else {
+            console.log("User cancelled the submission");
+            $(this).prop('disabled', false);
+        }
+	});
+
+
 document.getElementById('AssignedReviewer').addEventListener('change', function() {
         var emailMessageGroup = document.getElementById('emailMessageGroup');
         if (this.value != '') {
