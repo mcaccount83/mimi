@@ -1,11 +1,4 @@
 @extends('layouts.coordinator_theme')
-<style>
-.card-body {
-    width: 100%;
-    float: left;
-}
-
-</style>
 
 @section('content')
 
@@ -34,7 +27,6 @@
       <?php endif; ?>
       <h4><small>Have some questions about reviewing this?  <a href="https://momsclub.org/reviewing-reports-faq/"   target="_blank">Check out our FAQ!</a></small></h4>
 
-
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -59,22 +51,20 @@
 		</div>
     @endif
 
-
     <!-- Main content -->
     <section class="content">
+        <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("chapter.storefinancial", $chapterid) }}' novalidate>
+            @csrf
+            <input type="hidden" name="submitted" id="submitted" value="{{ $submitted }}" />
+            <input type="hidden" name="FurthestStep" id="FurthestStep" value="<?php if($financial_report_array['farthest_step_visited_coord'] != null) echo $financial_report_array['farthest_step_visited_coord']; else echo '13'; ?>" />
+            <input type="hidden" name="submit_type" id="submit_type" value="" />
+
+        <div class="container-fluid">
         <div class="row">
-            <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("chapter.storefinancial", $chapterid) }}' novalidate>
-                @csrf
-                <input type="hidden" name="submitted" id="submitted" value="{{ $submitted }}" />
-                {{-- <input type="hidden" name="FurthestStep" id="FurthestStep" value="{{ $financial_report_array['farthest_step_visited_coord'] ?? 0 }}" /> --}}
-                <input type="hidden" name="FurthestStep" id="FurthestStep" value="<?php if($financial_report_array['farthest_step_visited_coord'] != null) echo $financial_report_array['farthest_step_visited_coord']; else echo '13'; ?>" />
-
-                <input type="hidden" name="submit_type" id="submit_type" value="" />
-
-                <div class="col-12 accordion" id="accordion">
+                <div class="col-12"  id="accordion">
                     	<!------Start Step 1 ------>
                     <div class="card card-primary card-outline <?php if($financial_report_array['farthest_step_visited_coord'] =='1') echo "active";?>">
-                        <a class="d-block w-100" data-toggle="collapse" href="#collapseOne">
+                        <a class="d-block" style="width: 100%;" data-toggle="collapse" href="#collapseOne">
                             <div class="card-header" id="accordion-header-members">
                                 <h4 class="card-title w-100" >CHAPTER DUES</h4>
                             </div>
@@ -2809,6 +2799,7 @@
             <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn bg-gradient-primary" <?php if(!$submitted =='1') echo "disabled"; ?>><i class="fas fa-file-pdf" ></i>&nbsp; Download PDF</a>
         </div>
     </div>
+</div>
 </div>
 
 @endsection
