@@ -39,18 +39,8 @@
     <!-- Add the bg color to the header using any of the bg-* classes -->
     <div class="widget-user-header bg-primary">
         <div class="widget-user-image">
-            <img class="img-circle elevation-2" src="{{ asset('theme/dist/img/logo.png') }}" alt="MC">
+            <img class="img-circle elevation-2" src="{{ asset('theme/dist/img/logo.png') }}" alt="MC" style="width: 115px; height: 115px;">
           </div>
-
-        {{-- <div class="card card-row card-primary">
-            <div class="card-header" style="position: relative;"> --}}
-                {{-- <div class="text-center">
-                    <img class="profile-user-img img-circle elevation-3"
-                        src="{{ asset('theme/dist/img/logo.png') }}"
-                        alt=""
-                        style="position: absolute; top: 0; left: 50%; transform: translate(-50%, -25%);
-                        border: 3px solid #fff; padding: 0; margin: 0;">
-                </div> --}}
                 </div>
                 <div class="card-body">
                     @php
@@ -417,7 +407,6 @@
                         <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input" {{$TRSDetails[0]->trs_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
                         <label class="custom-control-label" for="TreasVacant">Vacant</label>
                     </div>
-
                 </div>
                 <div class="card-body">
                         <div class="row" id="checkRadios">
