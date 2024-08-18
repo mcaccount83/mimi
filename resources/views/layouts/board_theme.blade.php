@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{config('app.name')}}</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free/css/all.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/daterangepicker/daterangepicker.css">
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
+    <script>
+        window.onload = function () {
+            if (window.history && window.history.pushState) {
+                window.history.pushState('preventBack', null, '');
+                window.onpopstate = function () {
+                    location.reload();
+                };
+            }
+        };
+    </script>
+</head>
+
+<body class="hold-transition layout-top-nav">
+    <div class="wrapper">
+
+          <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
+    <div class="container">
+        {{-- <a href="{{ route('home') }}" class="navbar-brand">
+            <img src="{{ asset('theme/dist/img/logo.png') }}" alt="MC" class="brand-image img-circle elevation-3" >
+          </a> --}}
+
+      <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+        <!-- Left navbar links -->
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('home')}}" >
+                <span class="no-icon">MIMI Profile</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('board.resources')}}" >
+                <span class="no-icon">Chapter Resources</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://momsclub.org/elearning/" target="_blank">
+                <span class="no-icon">eLearning Library</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Right navbar links -->
+      <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();
+                        document.getElementById('logout-form').submit();">
+            <span class="no-icon">{{ __('Logout') }}</span>
+
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+            </form>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <!-- /.navbar -->
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container">
+
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+        @yield('content')
+    </div>
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <!-- To the right -->
+    <div class="float-right d-none d-sm-inline">
+        Copyright &copy;
+        <script>
+            document.write(new Date().getFullYear())
+        </script>
+        <a href="https://momsclub.org/" target="_blank">MOMS Club</a>. &nbsp;All rights reserved.
+    </div>
+    <!-- Default to the left -->
+
+  </footer>
+</div>
+<!-- ./wrapper -->
+
+<!-- REQUIRED SCRIPTS -->
+
+<!-- jQuery -->
+<script src="{{ config('settings.base_url') }}theme/plugins/jquery/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script src="{{ config('settings.base_url') }}theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- overlayScrollbars -->
+<script src="{{ config('settings.base_url') }}theme/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- AdminLTE App -->
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+
+<!-- Select2 -->
+<script src="{{ config('settings.base_url') }}theme/plugins/select2/js/select2.full.min.js"></script>
+<!-- InputMask -->
+<script src="{{ config('settings.base_url') }}theme/plugins/moment/moment.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/inputmask/jquery.inputmask.min.js"></script>
+<!-- date-range-picker -->
+<script src="{{ config('settings.base_url') }}theme/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="{{ config('settings.base_url') }}theme/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+
+<script>
+    //Datemask dd/mm/yyyy
+    $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+    //Datemask2 mm/dd/yyyy
+    $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+    //databask
+    $('[data-mask]').inputmask()
+
+</script>
+<script>
+ function applyPhoneMask() {
+        Inputmask({"mask": "(999) 999-9999"}).mask(".phone-mask");
+    }
+
+  </script>
+
+@yield('customscript')
+
+</body>
+</html>

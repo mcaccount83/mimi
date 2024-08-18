@@ -1,4 +1,19 @@
-@extends('layouts.chapter_theme')
+@extends('layouts.board_theme')
+<style>
+    .ml-2 {
+        margin-left: 0.5rem !important; /* Adjust the margin to control spacing */
+    }
+
+    .custom-control-input:checked ~ .custom-control-label {
+    color: black; /* Label color when toggle is ON */
+}
+
+.custom-control-input:not(:checked) ~ .custom-control-label {
+    color: #b0b0b0; /* Subdued label color when toggle is OFF */
+    opacity: 0.6;   /* Optional: Adds a subdued effect */
+}
+
+</style>
 
 @section('content')
 
@@ -17,36 +32,42 @@
 		</div>
     @endif
 </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card card-user">
-                <div class="card-image color_header">
+<div class="row">
+    <div class="col-md-12">
+ <!-- Widget: user widget style 1 -->
+ <div class="card card-widget widget-user">
+    <!-- Add the bg color to the header using any of the bg-* classes -->
+    <div class="widget-user-header bg-primary">
+        <div class="widget-user-image">
+            <img class="img-circle elevation-2" src="{{ asset('theme/dist/img/logo.png') }}" alt="MC">
+          </div>
+
+        {{-- <div class="card card-row card-primary">
+            <div class="card-header" style="position: relative;"> --}}
+                {{-- <div class="text-center">
+                    <img class="profile-user-img img-circle elevation-3"
+                        src="{{ asset('theme/dist/img/logo.png') }}"
+                        alt=""
+                        style="position: absolute; top: 0; left: 50%; transform: translate(-50%, -25%);
+                        border: 3px solid #fff; padding: 0; margin: 0;">
+                </div> --}}
                 </div>
                 <div class="card-body">
-                @php
-                    $thisDate = \Illuminate\Support\Carbon::now();
-                @endphp
-                    <div class="author">
-							<div class="border-gray avatar">
-								<img src="{{ asset('chapter_theme/img/logo.png') }}" alt="...">
-							</div>
-                           <h2 class="moms-c"> MOMS Club of {{ $chapterList[0]->name }}, {{$chapterState}} </h2>
-                        <h4 class="ein">
-                            EIN: {{ $chapterList[0]->ein }}
-                        </h4>
-                        <p class="description">
-                            Boundaries: {{ $chapterList[0]->territory }}
-                        </p>
-                    </div>
-                        <p class="description text-center">
-                            <b>{{$chapterList[0]->first_name}} {{$chapterList[0]->last_name}}, {{$boardPositionAbbreviation}}</b>
-                        </p>
+                    @php
+                        $thisDate = \Illuminate\Support\Carbon::now();
+                    @endphp
+                <div class="col-md-12"><br><br></div>
+                    <h2 class="text-center"> MOMS Club of {{ $chapterList[0]->name }}, {{$chapterState}} </h2>
+                    <h4 class="text-center"> EIN: {{ $chapterList[0]->ein }} </h4>
+                    <h4 class="text-center">Boundaries: {{ $chapterList[0]->territory }} </h4>
+                <div class="col-md-12"><br><br></div>
+                    <h4 class="text-center"> {{$chapterList[0]->first_name}} {{$chapterList[0]->last_name}}, {{$boardPositionAbbreviation}}</h4>
                     <p class="description text-center">
-                           Welcome to the MOMS Club's "MOMS information Management Interface" -- MIMI!
+                           Welcome to the MOMS information Management Interface, affectionately called MIMI!
                            </br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
                         </p>
-                        <div id="readOnlyText" class="description text-center">
-                        @if($thisDate->month >= 5 && $thisDate->month <= 8)
+                <div id="readOnlyText" class="description text-center">
+                        @if($thisDate->month >= 5 && $thisDate->month <= 7)
                             <p><span style="color: red;">All Board Member Information is <strong>READ ONLY</strong> at this time.<br>
                                 @if($chapterList[0]->new_board_active != '1')
                                 In order to add new board members to MIMI, please complete the Board Election Report.<br>
@@ -59,11 +80,11 @@
                                     Outgoing Board Members can still log in and access Financial Reports Only.</p>
                             @endif
                         @endif
-                    </div>
+                </div>
                 </div>
 
-            </div>
-        </div>
+            {{-- </div>
+        </div> --}}
 
         @php
             $admin = DB::table('admin')
@@ -79,10 +100,10 @@
             $financialreport_yes = ($eoy_financialreport == 1);
         @endphp
 
-        {{-- <div class="col-md-12"> --}}
-		    <div class="card">
-                <div class="card-body">
-                    <div class="row">
+        {{-- <div class="col-md-12">
+            <div class="card card-primary card-outline"> --}}
+                    <div class="card-body">
+	                    <div class="row">
                     @foreach($chapterList as $list)
                         @if ($thisDate->gte($due_date))
                         <div class=" col-md-12 text-center">
@@ -95,72 +116,72 @@
                                 Your chapter's anniversary month was <strong>{{ $startMonth }}</strong>.&nbsp; Your Re-registration payment is now considered overdue.
                             </p>
                             @endif
-                            <div class="col-md-12"><br></div>
-                                <a href="{{ route('board.showreregpayment') }}" class="btn btn-info btn-fill">
-                                    <i class="fa fa-money fa-fw" aria-hidden="true"></i>&nbsp; PAY HERE
+                                <a href="{{ route('board.showreregpayment') }}" class="btn btn-primary">
+                                    <i class="fas fa-dollar-sign"></i>&nbsp; PAY HERE
                                 </a>
                             </div>
-                            <hr>
-                            <div class="col-md-12"><br></div>
+                            <div class="col-md-12"><br><br></div>
                         @endif
+                        <div class="col-md-12 text-center">
+                            <p><span >
+                                Reports and Letters available for your chapter can be viewed/downloaded here.
+                            </p>
+                                @if($list->ein_letter=='1')
+                                    <a class="btn btn-primary" href="{{ $chapterList[0]->ein_letter_path }}" target="blank">
+                                        <i class="fas fa-university"></i>&nbsp; Chapter EIN Letter
+                                    </a>
+                                @else
+                                    <a class="btn btn-primary disabled" href="#">
+                                        <i class="fas fa-university"></i>&nbsp; No EIN Letter on File
+                                    </a>
+                                @endif
+                                <button id="GoodStanding" type="button" class="btn btn-primary" onclick="window.location.href='{{ route('pdf.chapteringoodstanding', ['id' => $list->id]) }}'">
+                                    <i class="fas fa-home"></i>&nbsp; Good Standing Chapter Letter
+                                </button>
+                                <button id="ReportPDF" type="button" class="btn btn-primary" onclick="">
+                                    <i class="fas fa-file-pdf"></i>&nbsp; Financial Report PDF
+                                </button>
+                        </div>
                         <div class="col-md-12"><br></div>
 
                         <div class="col-md-12 text-center">
-                            <div class="col-md-6 float-left">
-                                @if($list->ein_letter=='1')
-                                    <a class="btn btn-info btn-fill" href="{{ $chapterList[0]->ein_letter_path }}" target="blank">
-                                        <i class="fa fa-bank fa-fw" aria-hidden="true"></i>&nbsp; View/Download Chapter EIN Letter
-                                    </a>
-                                @else
-                                    <a class="btn btn-info btn-fill disabled" href="#">
-                                        <i class="fa fa-bank fa-fw" aria-hidden="true"></i>&nbsp; No EIN Letter on File
-                                    </a>
-                                @endif
-                            </div>
-                            <div class="col-md-6 float-left">
-                                <button id="GoodStanding" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('pdf.chapteringoodstanding', ['id' => $list->id]) }}'">
-                                    <i class="fa fa-bank fa-fw" aria-hidden="true"></i>&nbsp; View/Download Good Standing Letter
-                                </button>
-                            </div>
-                            <div class="col-md-12"><br></div>
-                            <br><br>
-                        </div>
-
-                        <div class="col-md-12 text-center">
-                            <div class="col-md-6 float-left">
-                                @if($thisDate->month >= 6 && $thisDate->month <= 12 && $boardreport_yes)
+                            <p><span >
+                                End of Year Filing for your chapter should be done here.
+                            </p>
+                                 @if($thisDate->month >= 6 && $thisDate->month <= 12 && $boardreport_yes)
                                         @if($list->new_board_active!='1')
-                                            <button id="BoardReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $list->id]) }}'">
-                                                <i class="fa fa-user-plus fa-fw" aria-hidden="true"></i>&nbsp; {{ date('Y') . '-' . (date('Y') + 1) }} Board Election Report
+                                            <button id="BoardReport" type="button" class="btn btn-primary" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $list->id]) }}'">
+                                                <i class="fas fa-users"></i>&nbsp; {{ date('Y') . '-' . (date('Y') + 1) }} Board Report
                                             </button>
                                         @else
-                                            <a class="btn btn-info btn-fill disabled" href="#">
-                                                <i class="fa fa-bank fa-fw" aria-hidden="true"></i>&nbsp; Board Report Activated
+                                            <a class="btn btn-primary disabled" href="#">
+                                                <i class="fas fa-users"></i>&nbsp; Board Report Activated
                                             </a>
                                         @endif
                                 @else
-                                    <a class="btn btn-info btn-fill disabled" href="#">
-                                        <i class="fa fa-bank fa-fw" aria-hidden="true"></i>&nbsp; Board Report Not Available
+                                    <a class="btn btn-primary disabled" href="#">
+                                        <i class="fas fa-users"></i>&nbsp; Board Report Not Available
                                     </a>
                                 @endif
-                            </div>
-                            <div class="col-md-6 float-left">
                                 @if($thisDate->month >= 6 && $thisDate->month <= 12 && $financialreport_yes)
-                                        <button id="FinancialReport" type="button" class="btn btn-info btn-fill" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $list->id]) }}'">
-                                            <i class="fa fa-usd fa-fw" aria-hidden="true"></i>&nbsp; {{ date('Y')-1 .'-'.date('Y') }} Financial Report
+                                        <button id="FinancialReport" type="button" class="btn btn-primary" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $list->id]) }}'">
+                                            <i class="fas fa-file-invoice-dollar"></i>&nbsp; {{ date('Y')-1 .'-'.date('Y') }} Financial Report
                                         </button>
                                 @else
-                                    <a class="btn btn-info btn-fill disabled" href="#">
-                                        <i class="fa fa-bank fa-fw" aria-hidden="true"></i>&nbsp; Financial Report Not Available
+                                    <a class="btn btn-primary disabled" href="#">
+                                        <i class="fas fa-file-invoice-dollar"></i>&nbsp; Financial Report Not Available
                                     </a>
                                 @endif
-                            </div>
                         </div>
 
                     @endforeach
                 </div>
             </div>
 
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="card card-primary card-outline">
                 <form method="POST" action='{{ route("board.update",$chapterList[0]->id) }}' autocomplete="off">
 				@csrf
                 <div class="card-header">
@@ -181,6 +202,21 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Email</label> <span class="field-required">*</span>
+                                    <input  type="email" name="ch_pre_email" id="ch_pre_email" class="form-control" placeholder="Email ID" value="{{ $chapterList[0]->bd_email }}" maxlength="50" required >
+									<input  type="hidden" id="ch_pre_email_chk" value="{{ $chapterList[0]->bd_email }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Phone</label> <span class="field-required">*</span>
+                                    <input  type="text" name="ch_pre_phone" id="ch_pre_phone" class="form-control" placeholder="Phone" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{ $chapterList[0]->phone }}" >
+                                </div>
+                            </div>
+                            </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -217,22 +253,6 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Email ID</label> <span class="field-required">*</span>
-                                    <input  type="email" name="ch_pre_email" id="ch_pre_email" class="form-control" placeholder="Email ID" value="{{ $chapterList[0]->bd_email }}" maxlength="50" required >
-									<input  type="hidden" id="ch_pre_email_chk" value="{{ $chapterList[0]->bd_email }}">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Phone</label> <span class="field-required">*</span>
-                                    <input  type="text" name="ch_pre_phone" id="ch_pre_phone" class="form-control" placeholder="Phone" value="{{ $chapterList[0]->phone }}" maxlength="12" required onkeypress="return isPhone(event)" >
-                                </div>
-                            </div>
-                            </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
                                     <label>Update Password</label>
                                     <input  type="password" class="form-control cls-pswd" placeholder="***********" name="ch_pre_pswd" id="ch_pre_pswd" value="" maxlength="30" >
                                 </div>
@@ -248,11 +268,14 @@
                          <div class="clearfix"></div>
 
                 </div>
-                <div class="card-header">
-                    <h4 class="card-title">AVP</h4>
+                <div class="card-header d-flex align-items-center">
+                    <h4 class="card-title mb-0">AVP</h4>
+                    <div class="custom-control custom-switch ml-2">
+                        <input type="checkbox" name="AVPVacant" id="AVPVacant" class="custom-control-input" {{$AVPDetails[0]->avp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
+                        <label class="custom-control-label" for="AVPVacant">Vacant</label>
+                    </div>
                 </div>
                 <div class="card-body">
-
                         <div class="row" id="checkRadios">
                             <div class="col-md-6 avp-field">
                                 <div class="form-group">
@@ -264,6 +287,21 @@
                                 <div class="form-group">
                                     <label>Last Name</label><span id="ch_avp_lname_req" class="field-required">*</span>
                                     <input  type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control" placeholder="Last Name" value="{{$AVPDetails[0]->avp_lname != ''  ? $AVPDetails[0]->avp_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row radio-chk">
+                            <div class="col-md-6 avp-field">
+                                <div class="form-group">
+                                    <label>Email</label><span id="ch_avp_email_req" class="field-required">*</span>
+                                    <input  type="email" name="ch_avp_email" id="ch_avp_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$AVPDetails[0]->avp_email != ''  ? $AVPDetails[0]->avp_email : ''}}" maxlength="50">
+									<input  type="hidden" id="ch_avp_email_chk" value="{{ $AVPDetails[0]->avp_email }}" >
+                                </div>
+                            </div>
+                            <div class="col-md-6 avp-field">
+                                <div class="form-group">
+                                    <label>Phone</label><span id="ch_avp_phone_req" class="field-required">*</span>
+                                    <input  type="text" name="ch_avp_phone" id="ch_avp_phone" class="form-control" placeholder="Phone" placeholder="Phone" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$AVPDetails[0]->avp_phone != ''  ? $AVPDetails[0]->avp_phone : ''}}">
                                 </div>
                             </div>
                         </div>
@@ -296,39 +334,19 @@
                             <div class="col-md-4 pl-1 avp-field">
                                 <div class="form-group">
                                     <label>Zip Code</label><span id="ch_avp_zip_req" class="field-required">*</span>
-                                    <input  type="text" name="ch_avp_zip" id="ch_avp_zip" class="form-control" placeholder="ZIP Code" value="{{$AVPDetails[0]->avp_zip != ''  ? $AVPDetails[0]->avp_zip : ''}}" maxlength="10" ="return isNumber(event)" readonly>
+                                    <input  type="text" name="ch_avp_zip" id="ch_avp_zip" class="form-control" placeholder="ZIP Code" value="{{$AVPDetails[0]->avp_zip != ''  ? $AVPDetails[0]->avp_zip : ''}}" maxlength="10"  onkeypress="return isNumber(event)" >
                                 </div>
                             </div>
                         </div>
-                        <div class="row radio-chk">
-                            <div class="col-md-5 avp-field">
-                                <div class="form-group">
-                                    <label>Email ID</label><span id="ch_avp_email_req" class="field-required">*</span>
-                                    <input  type="email" name="ch_avp_email" id="ch_avp_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$AVPDetails[0]->avp_email != ''  ? $AVPDetails[0]->avp_email : ''}}" maxlength="50">
-									<input  type="hidden" id="ch_avp_email_chk" value="{{ $AVPDetails[0]->avp_email }}" >
-                                </div>
-                            </div>
-                            <div class="col-md-5 avp-field">
-                                <div class="form-group">
-                                    <label>Phone</label><span id="ch_avp_phone_req" class="field-required">*</span>
-                                    <input  type="text" name="ch_avp_phone" id="ch_avp_phone" class="form-control" placeholder="Phone" value="{{$AVPDetails[0]->avp_phone != ''  ? $AVPDetails[0]->avp_phone : ''}}" maxlength="12" onkeypress="return isPhone(event)" >
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label>Vacant</label>
-                                    <label style="display: block;"><input  type="checkbox" name="AVPVacant" id="AVPVacant" class="ios-switch green bigswitch" {{$AVPDetails[0]->avp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)"  /><div><div></div></div></label>
-
-                                </div>
-                            </div>
-                            </div>
-
                 </div>
-                <div class="card-header">
-                    <h4 class="card-title">MVP</h4>
+                <div class="card-header d-flex align-items-center">
+                    <h4 class="card-title mb-0">MVP</h4>
+                    <div class="custom-control custom-switch ml-2">
+                        <input type="checkbox" name="MVPVacant" id="MVPVacant" class="custom-control-input" {{$MVPDetails[0]->mvp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
+                        <label class="custom-control-label" for="MVPVacant">Vacant</label>
+                    </div>
                 </div>
                 <div class="card-body">
-
                         <div class="row" id="checkRadios">
                             <div class="col-md-6 mvp-field">
                                 <div class="form-group">
@@ -343,6 +361,21 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row radio-chk">
+                            <div class="col-md-6 mvp-field">
+                                <div class="form-group">
+                                    <label>Email</label><span id="ch_mvp_email_req" class="field-required">*</span>
+                                    <input  type="email" name="ch_mvp_email" id="ch_mvp_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$MVPDetails[0]->mvp_email != ''  ? $MVPDetails[0]->mvp_email : ''}}" maxlength="50" >
+									<input  type="hidden" id="ch_mvp_email_chk" value="{{ $MVPDetails[0]->mvp_email }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mvp-field">
+                                <div class="form-group">
+                                    <label>Phone</label><span id="ch_mvp_phone_req" class="field-required">*</span>
+                                    <input  type="text" name="ch_mvp_phone" id="ch_mvp_phone" class="form-control" placeholder="Phone" placeholder="Phone" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$MVPDetails[0]->mvp_phone != ''  ? $MVPDetails[0]->mvp_phone : ''}}">
+                                </div>
+                            </div>
+                            </div>
                         <div class="row">
                             <div class="col-md-12 mvp-field">
                                 <div class="form-group ">
@@ -376,35 +409,17 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row radio-chk">
-                            <div class="col-md-5 mvp-field">
-                                <div class="form-group">
-                                    <label>Email ID</label><span id="ch_mvp_email_req" class="field-required">*</span>
-                                    <input  type="email" name="ch_mvp_email" id="ch_mvp_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$MVPDetails[0]->mvp_email != ''  ? $MVPDetails[0]->mvp_email : ''}}" maxlength="50" >
-									<input  type="hidden" id="ch_mvp_email_chk" value="{{ $MVPDetails[0]->mvp_email }}">
-                                </div>
-                            </div>
-                            <div class="col-md-5 mvp-field">
-                                <div class="form-group">
-                                    <label>Phone</label><span id="ch_mvp_phone_req" class="field-required">*</span>
-                                    <input  type="text" name="ch_mvp_phone" id="ch_mvp_phone" class="form-control" placeholder="Phone" value="{{$MVPDetails[0]->mvp_phone != ''  ? $MVPDetails[0]->mvp_phone : ''}}" maxlength="12" onkeypress="return isPhone(event)" >
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label>Vacant</label>
-                                    <label style="display: block;"><input  type="checkbox" name="MVPVacant" id="MVPVacant" class="ios-switch green bigswitch" {{$MVPDetails[0]->mvp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)"/><div><div></div></div></label>
-
-                                </div>
-                            </div>
-                            </div>
 
                 </div>
-                <div class="card-header">
-                    <h4 class="card-title">TREASURER</h4>
+                <div class="card-header d-flex align-items-center">
+                    <h4 class="card-title mb-0">TREASURER</h4>
+                    <div class="custom-control custom-switch ml-2">
+                        <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input" {{$TRSDetails[0]->trs_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
+                        <label class="custom-control-label" for="TreasVacant">Vacant</label>
+                    </div>
+
                 </div>
                 <div class="card-body">
-
                         <div class="row" id="checkRadios">
                             <div class="col-md-6 treas-field">
                                 <div class="form-group">
@@ -419,6 +434,21 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row radio-chk">
+                            <div class="col-md-6 treas-field">
+                                <div class="form-group">
+                                    <label>Email</label><span id="ch_trs_email_req" class="field-required">*</span>
+                                    <input  type="email" name="ch_trs_email" id="ch_trs_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$TRSDetails[0]->trs_email != ''  ? $TRSDetails[0]->trs_email : ''}}" maxlength="50" >
+									<input  type="hidden" id="ch_trs_email_chk" value="{{ $TRSDetails[0]->trs_email }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6 treas-field">
+                                <div class="form-group">
+                                    <label>Phone</label><span id="ch_trs_phone_req" class="field-required">*</span>
+                                    <input  type="text" name="ch_trs_phone" id="ch_trs_phone" class="form-control" placeholder="Phone" placeholder="Phone" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$TRSDetails[0]->trs_phone != ''  ? $TRSDetails[0]->trs_phone : ''}}">
+                                </div>
+                            </div>
+                            </div>
                         <div class="row">
                             <div class="col-md-12 treas-field">
                                 <div class="form-group">
@@ -452,35 +482,16 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row radio-chk">
-                            <div class="col-md-5 treas-field">
-                                <div class="form-group">
-                                    <label>Email ID</label><span id="ch_trs_email_req" class="field-required">*</span>
-                                    <input  type="email" name="ch_trs_email" id="ch_trs_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$TRSDetails[0]->trs_email != ''  ? $TRSDetails[0]->trs_email : ''}}" maxlength="50" >
-									<input  type="hidden" id="ch_trs_email_chk" value="{{ $TRSDetails[0]->trs_email }}">
-                                </div>
-                            </div>
-                            <div class="col-md-5 treas-field">
-                                <div class="form-group">
-                                    <label>Phone</label><span id="ch_trs_phone_req" class="field-required">*</span>
-                                    <input  type="text" name="ch_trs_phone" id="ch_trs_phone" class="form-control" placeholder="Phone" value="{{$TRSDetails[0]->trs_phone != ''  ? $TRSDetails[0]->trs_phone : ''}}" maxlength="12" onkeypress="return isPhone(event)">
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label>Vacant</label>
-                                    <label style="display: block;"><input  type="checkbox" name="TreasVacant" id="TreasVacant" class="ios-switch green bigswitch" {{$TRSDetails[0]->trs_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)"/><div><div></div></div></label>
-
-                                </div>
-                            </div>
-                            </div>
 
                 </div>
-                <div class="card-header">
-                    <h4 class="card-title">SECRETARY</h4>
+                <div class="card-header d-flex align-items-center">
+                    <h4 class="card-title mb-0">SECRETARY</h4>
+                    <div class="custom-control custom-switch ml-2">
+                        <input type="checkbox" name="SecVacant" id="SecVacant" class="custom-control-input" {{$SECDetails[0]->sec_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
+                        <label class="custom-control-label" for="SecVacant">Vacant</label>
+                    </div>
                 </div>
                 <div class="card-body">
-
                         <div class="row" id="checkRadios">
                             <div class="col-md-6 sec-field">
                                 <div class="form-group">
@@ -495,6 +506,21 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row radio-chk">
+                            <div class="col-md-6 sec-field">
+                                <div class="form-group">
+                                    <label>Email</label><span id="ch_sec_email_req" class="field-required">*</span>
+                                    <input  type="email" name="ch_sec_email" id="ch_sec_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$SECDetails[0]->sec_email != ''  ? $SECDetails[0]->sec_email : ''}}" maxlength="50" >
+									<input  type="hidden" id="ch_sec_email_chk" value="{{ $SECDetails[0]->sec_email }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6 sec-field">
+                                <div class="form-group">
+                                    <label>Phone</label><span id="ch_sec_phone_req" class="field-required">*</span>
+                                    <input  type="text" name="ch_sec_phone" id="ch_sec_phone" class="form-control" placeholder="Phone" placeholder="Phone" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$SECDetails[0]->sec_phone != ''  ? $SECDetails[0]->sec_phone : ''}}" >
+                                </div>
+                            </div>
+                            </div>
                         <div class="row">
                             <div class="col-md-12 sec-field">
                                 <div class="form-group">
@@ -528,28 +554,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row radio-chk">
-                            <div class="col-md-5 sec-field">
-                                <div class="form-group">
-                                    <label>Email ID</label><span id="ch_sec_email_req" class="field-required">*</span>
-                                    <input  type="email" name="ch_sec_email" id="ch_sec_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$SECDetails[0]->sec_email != ''  ? $SECDetails[0]->sec_email : ''}}" maxlength="50" >
-									<input  type="hidden" id="ch_sec_email_chk" value="{{ $SECDetails[0]->sec_email }}">
-                                </div>
-                            </div>
-                            <div class="col-md-5 sec-field">
-                                <div class="form-group">
-                                    <label>Phone</label><span id="ch_sec_phone_req" class="field-required">*</span>
-                                    <input  type="text" name="ch_sec_phone" id="ch_sec_phone" class="form-control" placeholder="Phone" value="{{$SECDetails[0]->sec_phone != ''  ? $SECDetails[0]->sec_phone : ''}}" maxlength="12" onkeypress="return isPhone(event)" >
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label>Vacant</label>
-                                    <label style="display: block;"><input  type="checkbox" name="SecVacant" id="SecVacant" class="ios-switch green bigswitch" {{$SECDetails[0]->sec_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)"/><div><div></div></div></label>
-
-                                </div>
-                            </div>
-                            </div>
 
                 </div>
                 <div class="card-header">
@@ -557,28 +561,43 @@
                 </div>
                 <div class="card-body">
 
-                        <div class="row">
-                            <div class="col-sm-6 col-xs-12">
-                                <div class="form-group">
-                                  <label>Chapter Website</label>
-                                  <input type="text" name="ch_website" class="form-control my-colorpicker1" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}" maxlength="50" id="validate_url" onchange="is_url(); updateWebsiteStatus();">
-                                </div>
-                                </div>
-                                  <!-- /.form group -->
-                                  <div class="col-sm-6 col-xs-12">
-                                    <div class="form-group">
-                                        <label>Website Link Status</label>
-                                        <select id="ch_webstatus" name="ch_webstatus" class="form-control select2" style="width: 100%;" required>
-                                            <option value="0" id="option0" {{$chapterList[0]->website_status == 0 ? 'selected' : ''}} {{ $chapterList[0]->website_status == 0 ? '' : 'disabled' }}>Website Not Linked</option>
-                                            <option value="1" id="option1" {{$chapterList[0]->website_status == 1 ? 'selected' : ''}} {{ $chapterList[0]->website_status == 1 ? '' : 'disabled' }}>Website Linked</option>
-                                            <option value="2" id="option2" {{$chapterList[0]->website_status == 2 ? 'selected' : ''}}>Add Link Requested</option>
-                                            <option value="3" id="option3" {{$chapterList[0]->website_status == 3 ? 'selected' : ''}}>Do Not Link</option>
-                                        </select>
-
-                                        <input type="hidden" name="ch_hid_webstatus" id="ch_hid_webstatus" value="{{ $chapterList[0]->website_status }}">
-                                    </div>
-                                </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-xs-12">
+                            <div class="form-group">
+                                <label>Chapter Website</label>
+                                <input type="text" name="ch_website" class="form-control"
+                                    placeholder="http://www.momsclubofchaptername.com"
+                                    value="{{$chapterList[0]->website_url}}" maxlength="50"
+                                    id="validate_url" onchange="is_url(); checkWebsiteChanged();">
                             </div>
+                        </div>
+
+                        <!-- Static Status Display -->
+                        <div class="col-sm-6 col-xs-12" id="staticStatusField" style="display: block;">
+                            <div class="form-group">
+                                <label>Website Link Status</label>
+                                <p>{{ $chapterList[0]->website_status == 0 ? 'Website Not Linked' :
+                                    ($chapterList[0]->website_status == 1 ? 'Website Linked' :
+                                    ($chapterList[0]->website_status == 2 ? 'Add Link Requested' :
+                                    'Do Not Link')) }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Editable Status Dropdown -->
+                        <div class="col-sm-6 col-xs-12" id="editableStatusField" style="display: none;">
+                            <div class="form-group">
+                                <label>Website Link Status</label>
+                                <select id="ch_webstatus" name="ch_webstatus" class="form-control select2" style="width: 100%;" required>
+                                    <option value="0" {{$chapterList[0]->website_status == 0 ? 'selected' : ''}} {{ $chapterList[0]->website_status == 0 ? '' : 'disabled' }}>Website Not Linked</option>
+                                    <option value="1" {{$chapterList[0]->website_status == 1 ? 'selected' : ''}} {{ $chapterList[0]->website_status == 1 ? '' : 'disabled' }}>Website Linked</option>
+                                    <option value="2" {{$chapterList[0]->website_status == 2 ? 'selected' : ''}}>Add Link Requested</option>
+                                    <option value="3" {{$chapterList[0]->website_status == 3 ? 'selected' : ''}}>Do Not Link</option>
+                                </select>
+
+                                <input type="hidden" name="ch_hid_webstatus" id="ch_hid_webstatus" value="{{ $chapterList[0]->website_status }}">
+                            </div>
+                        </div>
+                    </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
@@ -669,14 +688,16 @@
                         <div class="row">
                             <div class="col-md-6 BoardInfoStatus">
                                 <div class="form-group">
-                                    <label><?php echo $a = date('Y'); echo "-"; echo $a + 1;?> Board Info Received</label>
-                                    <p>{{$chapterList[0]->new_board_submitted == '1' ? 'Received' : 'Not Received'}}</p>
+                                    <label><?php echo $a = date('Y'); echo "-"; echo $a + 1;?> BOARD ELECTION REPORT</label>
+                                    <p>{{$chapterList[0]->new_board_submitted == '1' ? 'Received' : 'Not Received'}}
+                                    {{$chapterList[0]->new_board_active == '1' ? ' & Activated' : ''}}</p>
                                 </div>
                             </div>
                             <div class="col-md-6 FinancialReportStatus">
                                 <div class="form-group">
-                                    <label><?php echo date('Y') - 1 . '-' . date('Y');?> Financial Report Received</label>
-                                    <p>{{$chapterList[0]->financial_report_received == '1' ? 'Received' : 'Not Received'}}</p>
+                                    <label><?php echo date('Y') - 1 . '-' . date('Y');?> FINANCIAL REPORT</label>
+                                    <p>{{$chapterList[0]->financial_report_received == '1' ? 'Received' : 'Not Received'}}
+                                    {{$chapterList[0]->financial_report_complete == '1' ? ' & Review Complete' : ''}}</p>
                                 </div>
                             </div>
                 </div>
@@ -696,21 +717,21 @@
 
                 <div class="card-body card-b"><hr></div>
                    <div class="box-body text-center">
-                    <button id="Save" type="submit" class="btn btn-info btn-fill" onclick="return PreSaveValidate()"><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
+                    <button id="Save" type="submit" class="btn btn-primary" onclick="return PreSaveValidate()"><i class="fas fa-save" ></i>&nbsp; Save</button>
                 </form>
 
-                <a href="{{ route('logout') }}" class="btn btn-info btn-fill"
+                <a href="{{ route('logout') }}" class="btn btn-primary"
                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                 <span>{{ __('Logout') }}</span>
+                 <span><i class="fas fa-undo" ></i>&nbsp; {{ __('Logout') }}</span>
              </a>
              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                  @csrf
              </form>
                 </div><br>
                     <div class="box-body text-center">
-                    {{-- <button type="button" class="btn btn-info btn-fill" onclick="window.open('https://groups.google.com/a/momsclub.org/g/2023-24boardlist)"><i class="fa fa-list fa-fw" aria-hidden="true" ></i>&nbsp; BoardList Forum</button> --}}
-                    <button type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-info btn-fill"><i class="fa fa-graduation-cap fa-fw" aria-hidden="true" ></i>&nbsp; eLearning Library</button>
-                    <a href="{{ route('board.resources') }}" class="btn btn-info btn-fill"><i class="fa fa-briefcase fa-fw" aria-hidden="true" ></i>&nbsp; Chapter Resources</a>
+                    {{-- <button type="button" class="btn btn-primary" onclick="window.open('https://groups.google.com/a/momsclub.org/g/2023-24boardlist)"><i class="fa fa-list fa-fw" aria-hidden="true" ></i>&nbsp; BoardList Forum</button> --}}
+                    <button type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-primary"><i class="fa fa-graduation-cap fa-fw" aria-hidden="true" ></i>&nbsp; eLearning Library</button>
+                    <a href="{{ route('board.resources') }}" class="btn btn-primary"><i class="fa fa-briefcase fa-fw" aria-hidden="true" ></i>&nbsp; Chapter Resources</a>
                 </div>
                 </div>
             </div>
@@ -722,7 +743,7 @@ $(document).ready(function () {
     var currentDate = new Date();
     var currentMonth = currentDate.getMonth() + 1; // JavaScript months are 0-based
 
-    if (currentMonth >= 5 && currentMonth <= 8) {
+    if (currentMonth >= 5 && currentMonth <= 7) {
         // Disable all input fields, select elements, textareas, and Save button except the logout elements
         $('input, select, textarea').not('#logout-form input, #logout-form select, #logout-form textarea').prop('disabled', true);
         $('#Save').prop('disabled', true);
@@ -738,11 +759,25 @@ $(document).ready(function () {
     }
 });
 
+
 /* Disables Web Link Status options 0 and 1 */
 //ALWAYS leave thise fiels set to "true"
 // document.getElementById('option0').disabled = true;
 // document.getElementById('option1').disabled = true;
 
+var originalWebsiteUrl = "{{$chapterList[0]->website_url}}"; // Original value from the database
+
+function checkWebsiteChanged() {
+    var currentValue = document.getElementById('validate_url').value;
+
+    if (currentValue !== originalWebsiteUrl) {
+        document.getElementById('staticStatusField').style.display = 'none';
+        document.getElementById('editableStatusField').style.display = 'block';
+    } else {
+        document.getElementById('staticStatusField').style.display = 'block';
+        document.getElementById('editableStatusField').style.display = 'none';
+    }
+}
 document.getElementById('ch_webstatus').addEventListener('change', function() {
         // Update hidden input field with the new value only if the selected option is not disabled
         var selectedOption = this.options[this.selectedIndex];
@@ -760,28 +795,28 @@ document.getElementById('ch_webstatus').addEventListener('change', function() {
     });
 
 $( document ).ready(function() {
-	var phoneListArr = ["ch_pre_phone", "ch_avp_phone", "ch_mvp_phone", "ch_trs_phone", "ch_sec_phone"];
-    for (var i = phoneListArr.length - 1; i >= 0; i--) {
-        var inputValue = $("#"+phoneListArr[i]).val();
-        if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
-        var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
-        $("#"+phoneListArr[i]).val(reInputValue);
-    }
-	$("ch_pre_phone").keyup(function() {
-        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });
-	$("ch_avp_phone").keyup(function() {
-        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });
-    $("ch_mvp_phone").keyup(function() {
-        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });
-    $("ch_trs_phone").keyup(function() {
-        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });
-    $("ch_sec_phone").keyup(function() {
-        this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    });
+	// var phoneListArr = ["ch_pre_phone", "ch_avp_phone", "ch_mvp_phone", "ch_trs_phone", "ch_sec_phone"];
+    // for (var i = phoneListArr.length - 1; i >= 0; i--) {
+    //     var inputValue = $("#"+phoneListArr[i]).val();
+    //     if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
+    //     var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
+    //     $("#"+phoneListArr[i]).val(reInputValue);
+    // }
+	// $("ch_pre_phone").keyup(function() {
+    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
+    // });
+	// $("ch_avp_phone").keyup(function() {
+    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
+    // });
+    // $("ch_mvp_phone").keyup(function() {
+    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
+    // });
+    // $("ch_trs_phone").keyup(function() {
+    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
+    // });
+    // $("ch_sec_phone").keyup(function() {
+    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
+    // });
 
     var pcid = $("#pcid").val();
     if (pcid != "") {
@@ -832,13 +867,13 @@ $( document ).ready(function() {
     handleVacantCheckbox("SecVacant", "sec-field");
     handleVacantCheckbox("TreasVacant", "treas-field");
 
-function isPhone() {
-    if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode != 8) {
-        event.keyCode = 0;
-        alert("Please Enter Number Only");
-        return false;
-    }
-}
+// function isPhone() {
+//     if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode != 8) {
+//         event.keyCode = 0;
+//         alert("Please Enter Number Only");
+//         return false;
+//     }
+// }
 
 function is_url() {
         var str = $("#validate_url").val().trim(); // Trim leading and trailing whitespace
@@ -906,15 +941,15 @@ function PreSaveValidate(){
             return false;
           }
 
-    var phoneListArr = ["ch_pre_phone", "ch_avp_phone", "ch_mvp_phone", "ch_trs_phone", "ch_sec_phone"];
+    // var phoneListArr = ["ch_pre_phone", "ch_avp_phone", "ch_mvp_phone", "ch_trs_phone", "ch_sec_phone"];
 
-        for (var i = 0; i < phoneListArr.length; i++) {
-            var inputField = document.getElementById(phoneListArr[i]);
-            var inputValue = inputField.value;
-            inputValue = inputValue.replace(/-/g, ''); // Remove hyphens
-            inputValue = inputValue.replace(/\D/g, '').substring(0, 10); // Remove non-digits and limit to 10 digits
-            inputField.value = inputValue; // Update the input field with the cleaned value
-        }
+    //     for (var i = 0; i < phoneListArr.length; i++) {
+    //         var inputField = document.getElementById(phoneListArr[i]);
+    //         var inputValue = inputField.value;
+    //         inputValue = inputValue.replace(/-/g, ''); // Remove hyphens
+    //         inputValue = inputValue.replace(/\D/g, '').substring(0, 10); // Remove non-digits and limit to 10 digits
+    //         inputField.value = inputValue; // Update the input field with the cleaned value
+    //     }
 
     var NewPassword=document.getElementById("ch_pre_pswd").value;
         //They changed their password
