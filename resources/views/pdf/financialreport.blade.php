@@ -41,18 +41,18 @@
                     <td>&nbsp;&nbsp;&nbsp;</td>
                 @if ($pdfData['different_dues'] != 1)
                 <td>Dues Collected:</td>
-                    <td>{{ '$'.sprintf('%0.2f',$pdfData['dues_per_member']) }}</td></tr>
+                    <td>{{ '$'.number_format($pdfData['dues_per_member'], 2) }}</td></tr>
                 @endif
                 @if ($pdfData['different_dues'] == 1)
                 <td>New Dues Collected:</td>
-                    <td>{{ '$'.sprintf('%0.2f',$pdfData['dues_per_member']) }}</td></tr>
+                    <td>{{ '$'.number_format($pdfData['dues_per_member'], 2) }}</td></tr>
                 @endif
                 <tr><td>Renewed Members:</td>
                     <td>{{ $pdfData['total_renewed_members'] }}</td>
                     <td>&nbsp;&nbsp;&nbsp;</td>
                 @if ($pdfData['different_dues'] == 1)
                 <td>Renewal Dues Collected:</td>
-                    <td>{{ '$'.sprintf('%0.2f',$pdfData['dues_per_member_renewal']) }}</td></tr>
+                    <td>{{ '$'.number_format($pdfData['dues_per_member_renewal'], 2) }}</td></tr>
                 @endif
             @endif
             @if ($pdfData['changed_dues'] == 1)
@@ -61,36 +61,36 @@
                     <td>&nbsp;&nbsp;&nbsp;</td>
                 @if ($pdfData['different_dues'] != 1)
                 <td>Dues Collected (OLD dues amount):</td>
-                    <td>{{ '$'.sprintf('%0.2f',$pdfData['dues_per_member']) }}</td></tr>
+                    <td>{{ '$'.number_format($pdfData['dues_per_member'], 2) }}</td></tr>
                 @endif
                 @if ($pdfData['different_dues'] == 1)
                 <td>New Dues Collected (OLD dues amount):</td>
-                    <td>{{ '$'.sprintf('%0.2f',$pdfData['dues_per_member']) }}</td></tr>
+                    <td>{{ '$'.number_format($pdfData['dues_per_member'], 2) }}</td></tr>
                 @endif
                 <tr><td>Renewed Members (OLD dues amount):</td>
                     <td>{{ $pdfData['total_renewed_members'] }}</td>
                     <td>&nbsp;&nbsp;&nbsp;</td>
                 @if ($pdfData['different_dues'] == 1)
                 <td>Renewal Dues Collected (OLD dues amount):</td>
-                    <td>{{ '$'.sprintf('%0.2f',$pdfData['dues_per_member_renewal']) }}</td></tr>
+                    <td>{{ '$'.number_format($pdfData['dues_per_member_renewal'], 2) }}</td></tr>
                 @endif
                 <tr><td>New Members (NEW dues amount):</td>
                     <td>{{ $pdfData['total_new_members_changed_dues'] }}</td>
                     <td>&nbsp;&nbsp;&nbsp;</td>
                 @if ($pdfData['different_dues'] != 1)
                 <td>Dues Collected (NEW dues amount):</td>
-                    <td>{{ '$'.sprintf('%0.2f',$pdfData['dues_per_member_new_changed']) }}</td></tr>
+                    <td>{{ '$'.number_format($pdfData['dues_per_member_new_changed'], 2) }}</td></tr>
                 @endif
                 @if ($pdfData['different_dues'] == 1)
                 <td>New Dues Collected (NEW dues amount):</td>
-                    <td>{{ '$'.sprintf('%0.2f',$pdfData['dues_per_member_new_changed']) }}</td></tr>
+                    <td>{{ '$'.number_format($pdfData['dues_per_member_new_changed'], 2) }}</td></tr>
                 @endif
                 <tr><td>Renewed Members (NEW dues amount):</td>
                     <td>{{ $pdfData['total_renewed_members_changed_dues'] }}</td>
                     <td>&nbsp;&nbsp;&nbsp;</td>
                 @if ($pdfData['different_dues'] == 1)
                 <td>Renewal Dues Collected (NEW dues amount):</td>
-                    <td>{{ '$'.sprintf('%0.2f',$pdfData['dues_per_member_renewal_changed']) }}</td></tr>
+                    <td>{{ '$'.number_format($pdfData['dues_per_member_renewal_changed'], 2) }}</td></tr>
                 @endif
             @endif
             @if ($pdfData['not_all_full_dues'] == 1)
@@ -103,38 +103,37 @@
                     <td>{{ $pdfData['members_who_paid_partial_dues'] }}</td>
                     <td>&nbsp;&nbsp;&nbsp;</td>
                 <td>Partial Dues Collected:</td>
-                    <td>{{ '$'.sprintf('%0.2f',$pdfData['total_partial_fees_collected']) }}</td></tr>
+                    <td>{{ '$'.number_format($pdfData['total_partial_fees_collected'], 2) }}</td></tr>
                 <tr><td>Assiciate Members:</td>
                     <td>{{ $pdfData['total_associate_members'] }}</td>
                     <td>&nbsp;&nbsp;&nbsp;</td>
                 <td>Associate Dues Collected:</td>
-                    <td>{{ '$'.sprintf('%0.2f',$pdfData['associate_member_fee']) }}</td></tr>
+                    <td>{{ '$'.number_format($pdfData['associate_member_fee'], 2) }}</td></tr>
             @endif
         </tbody>
     </table>
-            <?php
+        <?php
             $newMembers = $pdfData['total_new_members'] * $pdfData['dues_per_member'];
-                                $renewalMembers = $pdfData['total_renewed_members'] * $pdfData['dues_per_member'];
-                                $renewalMembersDiff = $pdfData['total_renewed_members'] * $pdfData['dues_per_member_renewal'];
-                                // $renewMembersOld = $pdfData['total_renewed_members'] * $pdfData['dues_per_member_renewal'];
-                                $newMembersNew = $pdfData['total_new_members_changed_dues'] * $pdfData['dues_per_member_new_changed'];
-                                $renewMembersNew = $pdfData['total_renewed_members_changed_dues'] * $pdfData['dues_per_member_new_changed'];
-                                $renewMembersNewDiff = $pdfData['total_renewed_members_changed_dues'] * $pdfData['dues_per_member_renewal_changed'];
-                                $partialMembers = $pdfData['members_who_paid_partial_dues'] * $pdfData['total_partial_fees_collected'];
-                                $associateMembers = $pdfData['total_associate_members'] * $pdfData['associate_member_fee'];
+            $renewalMembers = $pdfData['total_renewed_members'] * $pdfData['dues_per_member'];
+            $renewalMembersDiff = $pdfData['total_renewed_members'] * $pdfData['dues_per_member_renewal'];
+            $newMembersNew = $pdfData['total_new_members_changed_dues'] * $pdfData['dues_per_member_new_changed'];
+            $renewMembersNew = $pdfData['total_renewed_members_changed_dues'] * $pdfData['dues_per_member_new_changed'];
+            $renewMembersNewDiff = $pdfData['total_renewed_members_changed_dues'] * $pdfData['dues_per_member_renewal_changed'];
+            $partialMembers = $pdfData['members_who_paid_partial_dues'] * $pdfData['total_partial_fees_collected'];
+            $associateMembers = $pdfData['total_associate_members'] * $pdfData['associate_member_fee'];
 
-                                $totalMembers = $pdfData['total_new_members'] +$pdfData['total_renewed_members'] + $pdfData['total_new_members_changed_dues'] + $pdfData['total_renewed_members_changed_dues']
-                                        + $pdfData['members_who_paid_partial_dues'] + $pdfData['total_associate_members']+ $pdfData['members_who_paid_no_dues'];
+            $totalMembers = $pdfData['total_new_members'] +$pdfData['total_renewed_members'] + $pdfData['total_new_members_changed_dues'] + $pdfData['total_renewed_members_changed_dues']
+                    + $pdfData['members_who_paid_partial_dues'] + $pdfData['total_associate_members']+ $pdfData['members_who_paid_no_dues'];
 
-                                if ($pdfData['different_dues'] == 1 && $pdfData['changed_dues'] == 1) {
-                                    $totalDues = $newMembers + $renewalMembersDiff + $newMembersNew + $renewMembersNewDiff + $partialMembers + $associateMembers;
-                                } elseif ($pdfData['different_dues'] == 1) {
-                                    $totalDues = $newMembers + $renewalMembersDiff + $partialMembers + $associateMembers;
-                                } elseif ($pdfData['changed_dues'] == 1) {
-                                    $totalDues = $newMembers + $renewalMembers + $newMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
-                                } else {
-                                    $totalDues = $newMembers + $renewalMembers + $partialMembers + $associateMembers;
-                                }
+            if ($pdfData['different_dues'] == 1 && $pdfData['changed_dues'] == 1) {
+                $totalDues = $newMembers + $renewalMembersDiff + $newMembersNew + $renewMembersNewDiff + $partialMembers + $associateMembers;
+            } elseif ($pdfData['different_dues'] == 1) {
+                $totalDues = $newMembers + $renewalMembersDiff + $partialMembers + $associateMembers;
+            } elseif ($pdfData['changed_dues'] == 1) {
+                $totalDues = $newMembers + $renewalMembers + $newMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
+            } else {
+                $totalDues = $newMembers + $renewalMembers + $partialMembers + $associateMembers;
+            }
         ?>
     <br>
     <table width="50%">
@@ -142,7 +141,7 @@
             <tr><td><strong>Total Members:</strong></td>
                 <td><strong>{{ $totalMembers }}</strong></td></tr>
             <tr><td><strong>Total Dues Collected:</strong></td>
-                <td><strong>{{ '$'.sprintf('%0.2f',$totalDues) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($totalDues, 2) }}</strong></td></tr>
         </tbody>
     </table>
     <br>
@@ -154,14 +153,14 @@
     <table width="50%">
         <tbody>
             <tr><td>Meeting Room Fees:</td>
-                    <td>{{ '$'.sprintf('%0.2f',$pdfData['manditory_meeting_fees_paid']) }}</td></tr>
+                    <td>{{ '$'.number_format($pdfData['manditory_meeting_fees_paid'], 2) }}</td></tr>
             <tr><td>Voluntary Donations Paid:</td>
-                    <td>{{ '$'.sprintf('%0.2f',$pdfData['voluntary_donations_paid']) }}</td></tr>
+                    <td>{{ '$'.number_format($pdfData['voluntary_donations_paid'], 2) }}</td></tr>
             <tr><td><strong>Total Meeting Room Expenses:</strong></td>
-                    <td><strong>{{ '$'.sprintf('%0.2f',$pdfData['manditory_meeting_fees_paid'] + $pdfData['voluntary_donations_paid']) }}</b></strong></tr>
+                    <td><strong>{{ '$'.number_format($pdfData['manditory_meeting_fees_paid'] + $pdfData['voluntary_donations_paid'], 2) }}</b></strong></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;</td></tr>
             <tr><td>Paid Babysitter Expense:</td>
-                    <td>{{ '$'.sprintf('%0.2f',$pdfData['paid_baby_sitters']) }}</tr>
+                    <td>{{ '$'.number_format($pdfData['paid_baby_sitters'], 2) }}</tr>
                 <tr><td>Children's Room Miscellaneous:</td>
                     <td></td></tr>
         </tbody>
@@ -190,8 +189,8 @@
                         foreach ($childrens_room as $row) {
                             echo "<tr>";
                             echo "<td>" . $row['childrens_room_desc'] . "</td>";
-                            echo "<td>" . ($row['childrens_room_supplies'] ? "$" . number_format($row['childrens_room_supplies'], 2) : "$0.00") . "</td>";
-                            echo "<td>" . ($row['childrens_room_other'] ? "$" . number_format($row['childrens_room_other'], 2) : "$0.00") . "</td>";
+                            echo "<td>" . ($row['childrens_room_supplies'] ? "$" . number_format(floatval(str_replace(',', '', $row['childrens_room_supplies'])), 2) : "$0.00") . "</td>";
+                            echo "<td>" . ($row['childrens_room_other'] ? "$" . number_format(floatval(str_replace(',', '', $row['childrens_room_other'])), 2) : "$0.00") . "</td>";
                             echo "</tr>";
 
                             $totalChildrenSupplies += floatval($row['childrens_room_supplies']);
@@ -215,7 +214,7 @@
     <table width="50%">
         <tbody>
                 <tr><td><strong>Total Children's Room Expenses:</strong></td>
-                    <td><strong>{{ '$'.sprintf('%0.2f',$pdfData['paid_baby_sitters'] + $totalChildrensRoomExpenses) }}</strong></td></tr>
+                    <td><strong>{{ '$'.number_format($pdfData['paid_baby_sitters'] + $totalChildrensRoomExpenses, 2) }}</strong></td></tr>
         </tbody>
     </table>
     <br>
@@ -252,10 +251,10 @@
                         foreach ($service_projects as $row) {
                             echo "<tr>";
                             echo "<td>" . $row['service_project_desc'] . "</td>";
-                            echo "<td>" . ($row['service_project_income'] ? "$" . number_format($row['service_project_income'], 2) : "$0.00") . "</td>";
-                            echo "<td>" . ($row['service_project_supplies'] ? "$" . number_format($row['service_project_supplies'], 2) : "$0.00") . "</td>";
-                            echo "<td>" . ($row['service_project_charity'] ? "$" . number_format($row['service_project_charity'], 2) : "$0.00") . "</td>";
-                            echo "<td>" . ($row['service_project_m2m'] ? "$" . number_format($row['service_project_m2m'], 2) : "$0.00") . "</td>";
+                            echo "<td>" . ($row['service_project_income'] ? "$" . number_format(floatval(str_replace(',', '', $row['service_project_income'])), 2) : "$0.00") . "</td>";
+                            echo "<td>" . ($row['service_project_supplies'] ? "$" . number_format(floatval(str_replace(',', '', $row['service_project_supplies'])), 2) : "$0.00") . "</td>";
+                            echo "<td>" . ($row['service_project_charity'] ? "$" . number_format(floatval(str_replace(',', '', $row['service_project_charity'])), 2) : "$0.00") . "</td>";
+                            echo "<td>" . ($row['service_project_m2m'] ? "$" . number_format(floatval(str_replace(',', '', $row['service_project_m2m'])), 2) : "$0.00") . "</td>";
                             echo "</tr>";
 
                             $totalServiceIncome += floatval($row['service_project_income']);
@@ -283,9 +282,9 @@
     <table width="50%" >
         <tbody>
             <tr><td><strong>Total Service Project Income:</strong></td>
-                <td><strong>{{ '$'.sprintf('%0.2f',$totalServiceIncome) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($totalServiceIncome, 2) }}</strong></td></tr>
             <tr><td><strong>Total Service Project Expenses:</strong></td>
-                <td><strong>{{ '$'.sprintf('%0.2f',$totalServiceProjectExpenses) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($totalServiceProjectExpenses, 2) }}</strong></td></tr>
         </tbody>
     </table>
     <br>
@@ -318,8 +317,8 @@
                         foreach ($party_expenses as $row) {
                             echo "<tr>";
                             echo "<td>" . $row['party_expense_desc'] . "</td>";
-                            echo "<td>" . ($row['party_expense_income'] ? "$" . number_format($row['party_expense_income'], 2) : "$0.00") . "</td>";
-                            echo "<td>" . ($row['party_expense_expenses'] ? "$" . number_format($row['party_expense_expenses'], 2) : "$0.00") . "</td>";
+                            echo "<td>" . ($row['party_expense_income'] ? "$" . number_format(floatval(str_replace(',', '', $row['party_expense_income'])), 2) : "$0.00") . "</td>";
+                            echo "<td>" . ($row['party_expense_expenses'] ? "$" . number_format(floatval(str_replace(',', '', $row['party_expense_expenses'])), 2) : "$0.00") . "</td>";
                             echo "</tr>";
 
                             $totalPartyIncome += floatval($row['party_expense_income']);
@@ -348,9 +347,9 @@
     <table width="50%">
         <tbody>
             <tr><td><strong>Total Member Benefit Income:</strong></td>
-                <td><strong>{{ '$'.sprintf('%0.2f',$totalPartyIncome) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($totalPartyIncome, 2) }}</strong></td></tr>
             <tr><td><strong>Total Member Benefit Expenses:</strong></td>
-                <td><strong>{{ '$'.sprintf('%0.2f',$totalPartyExpense) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($totalPartyExpense, 2) }}</strong></td></tr>
             <tr><td><strong>Member Benefit/Dues Income Percentage:</strong></td>
                 <td><strong>{{ number_format($partyPercentage * 100, 2) }}%</strong></td>
         </tbody>
@@ -363,9 +362,9 @@
     </div>
         <table width="100%">
             <tr>
-                <td>Printing Costs:  {{ '$'.sprintf('%0.2f',$pdfData['office_printing_costs']) }}<br></td>
-                <td>Postage Costs:  {{ '$'.sprintf('%0.2f',$pdfData['office_postage_costs']) }}<br></td>
-                <td>Membership Pins:  {{ '$'.sprintf('%0.2f',$pdfData['office_membership_pins_cost']) }}<br></td>
+                <td>Printing Costs:  {{ '$'.number_format($pdfData['office_printing_costs'], 2) }}<br></td>
+                <td>Postage Costs:  {{ '$'.number_format($pdfData['office_postage_costs'], 2) }}<br></td>
+                <td>Membership Pins:  {{ '$'.number_format($pdfData['office_membership_pins_cost'], 2) }}<br></td>
             </tr>
         </tbody>
     </table>
@@ -391,7 +390,7 @@
                         foreach ($other_office_expenses as $row) {
                             echo "<tr>";
                             echo "<td>" . $row['office_other_desc'] . "</td>";
-                            echo "<td>" . ($row['office_other_expense'] ? "$" . number_format($row['office_other_expense'], 2) : "$0.00") . "</td>";
+                            echo "<td>" . ($row['office_other_expense'] ? "$" . number_format(floatval(str_replace(',', '', $row['office_other_expense'])), 2) : "$0.00") . "</td>";
                             echo "</tr>";
 
                             $totalOfficeExpense += floatval($row['office_other_expense']);
@@ -412,8 +411,8 @@
     <table width="50%" >
         <tbody>
             <tr><td><strong>Total Office/Operating Expenses:</strong></td>
-                <td><strong>{{ '$'.sprintf('%0.2f',$pdfData['office_printing_costs'] + $pdfData['office_postage_costs'] +
-                    $pdfData['office_membership_pins_cost'] + $totalOfficeExpense) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($pdfData['office_printing_costs'] + $pdfData['office_postage_costs'] +
+                    $pdfData['office_membership_pins_cost'] + $totalOfficeExpense, 2) }}</strong></td></tr>
         </tbody>
     </table>
     <br>
@@ -446,8 +445,8 @@
                         foreach ($international_event_array as $row) {
                             echo "<tr>";
                             echo "<td>" . $row['intl_event_desc'] . "</td>";
-                            echo "<td>" . ($row['intl_event_income'] ? "$" . number_format($row['intl_event_income'], 2) : "$0.00") . "</td>";
-                            echo "<td>" . ($row['intl_event_expenses'] ? "$" . number_format($row['intl_event_expenses'], 2) : "$0.00") . "</td>";
+                            echo "<td>" . ($row['intl_event_income'] ? "$" . number_format(floatval(str_replace(',', '', $row['intl_event_income'])), 2) : "$0.00") . "</td>";
+                            echo "<td>" . ($row['intl_event_expenses'] ? "$" . number_format(floatval(str_replace(',', '', $row['intl_event_expenses'])), 2) : "$0.00") . "</td>";
                             echo "</tr>";
 
                             $totalEventIncome += floatval($row['intl_event_income']);
@@ -470,12 +469,12 @@
     <table width="50%"  >
         <tbody>
             <tr><td><strong>Total Event Registration Income:</strong></td>
-                <td><strong>{{ '$'.sprintf('%0.2f',$totalEventIncome) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($totalEventIncome, 2) }}</strong></td></tr>
             <tr><td><b>Total Event Registration Expenses:</b></td>
-                <td><strong>{{ '$'.sprintf('%0.2f',$totalEventExpense) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($totalEventExpense, 2) }}</strong></td></tr>
             <tr><td>&nbsp;</td></tr>
             <tr><td><strong>Chapter Re-Registration:</strong></td>
-                <td><strong>{{ '$'.sprintf('%0.2f',$pdfData['annual_registration_fee']) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($pdfData['annual_registration_fee'], 2) }}</strong></td></tr>
         </tbody>
     </table>
     <br>
@@ -510,7 +509,7 @@
                             echo "<td>" . $row['mon_donation_desc'] . "</td>";
                             echo "<td>" . $row['mon_donation_info'] . "</td>";
                             echo "<td>" . $row['mon_donation_date'] . "</td>";
-                            echo "<td>" . ($row['mon_donation_amount'] ? "$" . number_format($row['mon_donation_amount'], 2) : "$0.00") . "</td>";
+                            echo "<td>" . ($row['mon_donation_amount'] ? "$" . number_format(floatval(str_replace(',', '', $row['mon_donation_amount'])), 2) : "$0.00") . "</td>";
                             echo "</tr>";
 
                             $totalDonationAmount += floatval($row['mon_donation_amount']);
@@ -533,7 +532,7 @@
     <table width="50%" >
         <tbody>
             <tr><td><strong>Total Monetary Donations:</strong></td>
-                <td><strong>{{ '$'.sprintf('%0.2f', $totalDonationAmount) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format( $totalDonationAmount, 2) }}</strong></td></tr>
         </tbody>
     </table>
     <br>
@@ -602,8 +601,8 @@
                         foreach ($other_income_and_expenses_array as $row) {
                             echo "<tr>";
                             echo "<td>" . $row['other_desc'] . "</td>";
-                            echo "<td>" . ($row['other_income'] ? "$" . number_format($row['other_income'], 2) : "$0.00") . "</td>";
-                            echo "<td>" . ($row['other_expenses'] ? "$" . number_format($row['other_expenses'], 2) : "$0.00") . "</td>";
+                            echo "<td>" . ($row['other_income'] ? "$" . number_format(floatval(str_replace(',', '', $row['other_income'])), 2) : "$0.00") . "</td>";
+                            echo "<td>" . ($row['other_expenses'] ? "$" . number_format(floatval(str_replace(',', '', $row['other_expenses'])), 2) : "$0.00") . "</td>";
                             echo "</tr>";
 
                             $totalOtherIncome += floatval($row['other_income']);
@@ -626,9 +625,9 @@
     <table width="50%" >
         <tbody>
             <tr><td><strong>Total Other Income:</strong></td>
-                <td><strong>{{ '$'.sprintf('%0.2f',$totalOtherIncome) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($totalOtherIncome, 2) }}</strong></td></tr>
             <tr><td><strong>Total Other Expenses:</strong></td>
-                <td><strong>{{ '$'.sprintf('%0.2f',$totalOtherExpenses) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($totalOtherExpenses, 2) }}</strong></td></tr>
         </tbody>
     </table>
     <br>
@@ -648,69 +647,69 @@
         <tbody>
             <tr><td><strong>INCOME</strong></td></tr>
             <tr><td style="border-top: 1px solid #333;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Membership Dues Income</td>
-            <td style="border-top: 1px solid #333;">{{ '$'.sprintf('%0.2f',$totalDues) }}</td></tr>
+            <td style="border-top: 1px solid #333;">{{ '$'.number_format($totalDues, 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Project Income</td>
-            <td>{{ '$'.sprintf('%0.2f',$totalServiceIncome) }}</td></tr>
+            <td>{{ '$'.number_format($totalServiceIncome, 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Party/Member Benefit Income</td>
-            <td>{{ '$'.sprintf('%0.2f',$totalPartyIncome) }}</td></tr>
+            <td>{{ '$'.number_format($totalPartyIncome, 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Monetary Donations to Chapter</td>
-            <td>{{ '$'.sprintf('%0.2f',$totalDonationAmount) }}</td></tr>
+            <td>{{ '$'.number_format($totalDonationAmount, 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;International Event Registration</td>
-            <td>{{ '$'.sprintf('%0.2f',$totalEventIncome) }}</td></tr>
+            <td>{{ '$'.number_format($totalEventIncome, 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other Income</td>
-            <td>{{ '$'.sprintf('%0.2f',$totalOtherIncome) }}</td></tr>
+            <td>{{ '$'.number_format($totalOtherIncome, 2) }}</td></tr>
             <tr><td><strong>TOTAL INCOME:</strong></td>
-            <td><strong>{{ '$'.sprintf('%0.2f',$totalIncome) }}</strong></td></tr>
+            <td><strong>{{ '$'.number_format($totalIncome, 2) }}</strong></td></tr>
             <tr><td>&nbsp;</td></tr>
             <tr><td><strong>EXPENSES<strong></td></tr>
             <tr><td style="border-top: 1px solid #333;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Meeting Room Expenses</td>
-            <td style="border-top: 1px solid #333;">{{ '$'.sprintf('%0.2f',$pdfData['manditory_meeting_fees_paid'] + $pdfData['voluntary_donations_paid']) }}</td></tr>
+            <td style="border-top: 1px solid #333;">{{ '$'.number_format($pdfData['manditory_meeting_fees_paid'] + $pdfData['voluntary_donations_paid'], 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Children's Room Expenses:</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supplies</td>
-            <td>{{ '$'.sprintf('%0.2f',$totalChildrenSupplies) }}</td></tr>
+            <td>{{ '$'.number_format($totalChildrenSupplies, 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paid Sitters</td>
-            <td>{{ '$'.sprintf('%0.2f',$pdfData['paid_baby_sitters'])  }}</td></tr>
+            <td>{{ '$'.number_format($pdfData['paid_baby_sitters'], 2)  }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other</td>
-            <td>{{ '$'.sprintf('%0.2f',$totalChildrenOther) }}</td></tr>
+            <td>{{ '$'.number_format($totalChildrenOther, 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Children's Room Expense Total</td>
-            <td>{{ '$'.sprintf('%0.2f',$pdfData['paid_baby_sitters'] + $totalChildrensRoomExpenses) }}</td></tr>
+            <td>{{ '$'.number_format($pdfData['paid_baby_sitters'] + $totalChildrensRoomExpenses, 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Project Expenses</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supplies:</td>
-            <td>{{ '$'.sprintf('%0.2f',$totalServiceSupplies) }}</td></tr>
+            <td>{{ '$'.number_format($totalServiceSupplies, 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Charitable Donations</td>
-            <td>{{ '$'.sprintf('%0.2f',$totalServiceCharity) }}</td></tr>
+            <td>{{ '$'.number_format($totalServiceCharity, 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;M2M fund Donation</td>
-            <td>{{ '$'.sprintf('%0.2f',$totalServiceM2M) }}</td></tr>
+            <td>{{ '$'.number_format($totalServiceM2M, 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Project Expense Total</td>
-            <td>{{ '$'.sprintf('%0.2f',$totalServiceProjectExpenses) }}</td></tr>
+            <td>{{ '$'.number_format($totalServiceProjectExpenses, 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Party/Member Benefit Expenses</td>
-            <td> {{ '$'.sprintf('%0.2f',$totalPartyExpense) }}</td></tr>
+            <td> {{ '$'.number_format($totalPartyExpense, 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Office/Operating Expenses</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Printing</td>
-            <td>{{ '$'.sprintf('%0.2f',$pdfData['office_printing_costs']) }}</td></tr>
+            <td>{{ '$'.number_format($pdfData['office_printing_costs'], 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Postage</td>
-            <td>{{ '$'.sprintf('%0.2f',$pdfData['office_postage_costs']) }}</td></tr>
+            <td>{{ '$'.number_format($pdfData['office_postage_costs'], 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Membership Pins</td>
-            <td>{{ '$'.sprintf('%0.2f',$pdfData['office_membership_pins_cost']) }}</td></tr>
+            <td>{{ '$'.number_format($pdfData['office_membership_pins_cost'], 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other</td>
-            <td>{{ '$'.sprintf('%0.2f',$totalOfficeExpense) }}</td></tr>
+            <td>{{ '$'.number_format($totalOfficeExpense, 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Office/Operating Expense Total</td>
-            <td>{{ '$'.sprintf('%0.2f',$pdfData['office_printing_costs'] + $pdfData['office_postage_costs'] +
-                $pdfData['office_membership_pins_cost'] + $totalOfficeExpense) }}</td></tr>
+            <td>{{ '$'.number_format($pdfData['office_printing_costs'] + $pdfData['office_postage_costs'] +
+                $pdfData['office_membership_pins_cost'] + $totalOfficeExpense, 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Annual Chapter Re-registration Fee</td>
-            <td>{{ '$'.sprintf('%0.2f',$pdfData['annual_registration_fee'])  }}</td></tr>
+            <td>{{ '$'.number_format($pdfData['annual_registration_fee'], 2)  }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;International Event Registration</td>
-            <td>{{ '$'.sprintf('%0.2f',$totalEventExpense) }}</td></tr>
+            <td>{{ '$'.number_format($totalEventExpense, 2) }}</td></tr>
             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other Expenses</td>
-            <td>{{ '$'.sprintf('%0.2f',$totalOtherExpenses) }}</td></tr>
+            <td>{{ '$'.number_format($totalOtherExpenses, 2) }}</td></tr>
             <tr><td><strong>TOTAL EXPENSES</strong></td>
-            <td><strong>{{ '$'.sprintf('%0.2f',$totalExpenses) }}</strong></td></tr>
+            <td><strong>{{ '$'.number_format($totalExpenses, 2) }}</strong></td></tr>
             <tr><td>&nbsp;</td></tr>
             <tr><td style="border-top: 1px solid #333; border-bottom: 1px solid #333;"><strong>PROFIT (LOSS)</strong></td>
             <td style="border-top: 1px solid #333; border-bottom: 1px solid #333;"><strong>
             @php
                 $netAmount = $totalIncome - $totalExpenses;
-                $formattedAmount = ($netAmount < 0) ? '($' . number_format(abs($netAmount), 2) . ')' : '$' . number_format($netAmount, 2);
+                $formattedAmount = ($netAmount < 0) ? '($' .number_format(abs($netAmount), 2) . ')' : '$' . number_format($netAmount, 2);
             @endphp
             {{ $formattedAmount }}</strong></td></tr>
         </tbody>
@@ -724,9 +723,9 @@
     <table width="100%" >
         <tbody>
             <tr><td>Beginning Balance<td>
-                    <td><strong>{{ '$'.($pdfData ['amount_reserved_from_previous_year'])}}</strong></td>
+                    <td><strong>{{ '$'.number_format($pdfData ['amount_reserved_from_previous_year'], 2)}}</strong></td>
                 <td>Ending Bank Statement Balance<td>
-                    <td><strong>{{ '$'.($pdfData ['bank_balance_now'])}}</strong></td></tr>
+                    <td><strong>{{ '$'.number_format($pdfData ['bank_balance_now'], 2)}}</strong></td></tr>
             <tr><td>Profit (Loss)<td>
                     <td><strong>
                     @php
@@ -769,8 +768,8 @@
                                 echo "<td>" . $row['bank_rec_date'] . "</td>";
                                 echo "<td>" . $row['bank_rec_check_no'] . "</td>";
                                 echo "<td>" . $row['bank_rec_desc'] . "</td>";
-                                echo "<td>" . ($row['bank_rec_payment_amount'] ? "$" . number_format($row['bank_rec_payment_amount'], 2) : "$0.00") . "</td>";
-                                echo "<td>" . ($row['bank_rec_desposit_amount'] ? "$" . number_format($row['bank_rec_desposit_amount'], 2) : "$0.00") . "</td>";
+                                echo "<td>" . ($row['bank_rec_payment_amount'] ? "$" . number_format(floatval(str_replace(',', '', $row['bank_rec_payment_amount'])), 2) : "$0.00") . "</td>";
+                                echo "<td>" . ($row['bank_rec_desposit_amount'] ? "$" . number_format(floatval(str_replace(',', '', $row['bank_rec_desposit_amount'])), 2) : "$0.00") . "</td>";
                             echo "</tr>";
 
                             $totalPayments += floatval($row['bank_rec_payment_amount']);
@@ -789,7 +788,7 @@
         <tbody>
             <tr>*NOTE: Reconciled Bank Statement & Treasury Balance Now MUST match for Financial Report to be in Balance.</tr>
             <tr><td>Reconciled Bank Statement</td>
-                <td><strong>{{ '$'.sprintf('%0.2f',$pdfData ['bank_balance_now'] + $totalReconciliation) }}</strong></td></tr>
+                <td><strong>{{ '$'.number_format($pdfData ['bank_balance_now'] + $totalReconciliation, 2)}}</strong></td></tr>
             <tr><td>Treasury Balance Now</td>
                 <td><strong>{{ '$'.number_format($treasuryBalance, 2)}}</strong></td></tr>
         </tbody>
@@ -854,117 +853,102 @@
                 <td>Did you have speakers at any meetings?</td></tr>
             <tr><td></td>
                 <td><strong>{{ $pdfData ['meeting_speakers'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['meeting_speakers_explanation']}}</strong></td></tr>
-            <tr><td>14.</td>
-                <td>If you had speakers, check any of the topics that were covered:</td></tr>
+                @php
+                    $meetingSpeakersArray = [];
+                    if (isset($pdfData['meeting_speakers_array']) && !is_null($pdfData['meeting_speakers_array'])) {
+                        $decodedArray = json_decode($pdfData['meeting_speakers_array'], true);
+                        if (json_last_error() === JSON_ERROR_NONE) {
+                            $meetingSpeakersArray = $decodedArray;
+                        } else {
+                            \Log::error('JSON decoding error: ' . json_last_error_msg(), ['data' => $pdfData['meeting_speakers_array']]);
+                        }
+                    }
+
+                    $meetingSpeakersMapping = [
+                        '0' => 'N/A',
+                        '1' => 'Child Rearing',
+                        '2' => 'Schools/Education',
+                        '3' => 'Home Management',
+                        '4' => 'Politics',
+                        '5' => 'Other Non-Profit',
+                        '6' => 'Other',
+                    ];
+                @endphp
+
+                @if (!empty($meetingSpeakersArray))
                 <tr><td></td>
-                    <td><strong>
-                        @php
-                        $meetingSpeakersArray = [];
-                        if (isset($pdfData['meeting_speakers_array']) && !is_null($pdfData['meeting_speakers_array'])) {
-                            $decodedArray = json_decode($pdfData['meeting_speakers_array'], true);
+                    <td><strong>{{ implode(', ', array_map(function($value) use ($meetingSpeakersMapping) {
+                        return $meetingSpeakersMapping[$value] ?? 'Unknown';
+                    }, $meetingSpeakersArray)) }}</strong></td></tr>
+                @endif
+            <tr><td>14.</td>
+                <td>Did you have any discussion topics at your meetings? If yes, how often?</td></tr>
+            <tr><td></td>
+                <td><strong>{{ $pdfData['discussion_topic_frequency'] == 1 ? '1-3 Times' : ($pdfData['discussion_topic_frequency'] == 2 ? '4-6 Times' :
+                    ($pdfData['discussion_topic_frequency'] == 3 ? '7-9 Times' : ($pdfData['discussion_topic_frequency'] == 4 ? '10+ Times' : 'NO'))) }}</strong></td></tr>
+            <tr><td>15.</td>
+                <td>Did your chapter have scheduled park days? If yes, how often?</td></tr>
+            <tr><td></td>
+                <td><strong>{{ $pdfData['park_day_frequency'] == 1 ? '1-3 Times' : ($pdfData['park_day_frequency'] == 2 ? '4-6 Times' :
+                    ($pdfData['park_day_frequency'] == 3 ? '7-9 Times' : ($pdfData['park_day_frequency'] == 4 ? '10+ Times' : 'NO'))) }}</strong></td></tr>
+            <tr><td>16.</td>
+                <td>Did your chapter have any of the following activity groups?</td></tr>
+                <tr><td></td>
+                <td><strong>
+                    @php
+                        $activityArray = [];
+                        if (isset($pdfData['activity_array']) && !is_null($pdfData['activity_array'])) {
+                            $decodedArray = json_decode($pdfData['activity_array'], true);
                             if (json_last_error() === JSON_ERROR_NONE) {
-                                $meetingSpeakersArray = $decodedArray;
+                                $activityArray = $decodedArray;
                             } else {
-                                \Log::error('JSON decoding error: ' . json_last_error_msg(), ['data' => $pdfData['meeting_speakers_array']]);
+                                \Log::error('JSON decoding error: ' . json_last_error_msg(), ['data' => $pdfData['activity_array']]);
                             }
                         }
 
-                        $meetingSpeakersMapping = [
+                        $activityMapping = [
                             '0' => 'N/A',
-                            '1' => 'Child Rearing',
-                            '2' => 'Schools/Education',
-                            '3' => 'Home Management',
-                            '4' => 'Politics',
-                            '5' => 'Other Non-Profit',
+                            '1' => 'Cooking',
+                            '2' => 'Cost Cutting Tips',
+                            '3' => 'Mommy Playgroup',
+                            '4' => 'Babysitting Co-op',
+                            '5' => 'MOMS Night Out',
                             '6' => 'Other',
                         ];
                     @endphp
 
-                    @if (!empty($meetingSpeakersArray))
-                        {{ implode(', ', array_map(function($value) use ($meetingSpeakersMapping) {
-                            return $meetingSpeakersMapping[$value] ?? 'Unknown';
-                        }, $meetingSpeakersArray)) }}
+                    @if (!empty($activityArray))
+                        {{ implode(', ', array_map(function($value) use ($activityMapping) {
+                            return $activityMapping[$value] ?? 'Unknown';
+                        }, $activityArray)) }}
                     @else
                         N/A
                     @endif
-
-
-                    </strong></td></tr>
-                    <tr><td>15.</td>
-                        <td>Did you have any discussion topics at your meetings? If yes, how often?</td></tr>
-                    <tr><td></td>
-                        <td><strong>{{ $pdfData['discussion_topic_frequency'] == 1 ? '1-3 Times' : ($pdfData['discussion_topic_frequency'] == 2 ? '4-6 Times' :
-                            ($pdfData['discussion_topic_frequency'] == 3 ? '7-9 Times' : ($pdfData['discussion_topic_frequency'] == 4 ? '10+ Times' : 'NO'))) }}</strong></td></tr>
-                    <tr><td>16.</td>
-                        <td>Did your chapter have scheduled park days? If yes, how often?</td></tr>
-                    <tr><td></td>
-                        <td><strong>{{ $pdfData['park_day_frequency'] == 1 ? '1-3 Times' : ($pdfData['park_day_frequency'] == 2 ? '4-6 Times' :
-                            ($pdfData['park_day_frequency'] == 3 ? '7-9 Times' : ($pdfData['park_day_frequency'] == 4 ? '10+ Times' : 'NO'))) }}</strong></td></tr>
-
-            <tr><td>17.</td>
-                <td>Did your chapter have any of the following activity groups?</td></tr>
-                <tr><td></td>
-                <td><strong>
-   @php
-    $activityArray = [];
-    if (isset($pdfData['activity_array']) && !is_null($pdfData['activity_array'])) {
-        $decodedArray = json_decode($pdfData['activity_array'], true);
-        if (json_last_error() === JSON_ERROR_NONE) {
-            $activityArray = $decodedArray;
-        } else {
-            \Log::error('JSON decoding error: ' . json_last_error_msg(), ['data' => $pdfData['activity_array']]);
-        }
-    }
-
-    $activityMapping = [
-        '0' => 'N/A',
-        '1' => 'Cooking',
-        '2' => 'Cost Cutting Tips',
-        '3' => 'Mommy Playgroup',
-        '4' => 'Babysitting Co-op',
-        '5' => 'MOMS Night Out',
-        '6' => 'Other',
-    ];
-@endphp
-
-@if (!empty($activityArray))
-    {{ implode(', ', array_map(function($value) use ($activityMapping) {
-        return $activityMapping[$value] ?? 'Unknown';
-    }, $activityArray)) }}
-@else
-    N/A
-@endif
-
-
                 </strong></td></tr>
-            <tr><td>18.</td>
+            <tr><td>17.</td>
                 <td>Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity?</td></tr>
             <tr><td></td>
                 <td><strong>{{ $pdfData ['contributions_not_registered_charity'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['contributions_not_registered_charity_explanation']}}</strong></td></tr>
-            <tr><td>19.</td>
+            <tr><td>18.</td>
                 <td>Did your chapter perform at least one service project to benefit mothers or children?</td></tr>
             <tr><td></td>
                 <td><strong>{{ $pdfData ['at_least_one_service_project'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['at_least_one_service_project_explanation']}}</strong></td></tr>
-            <tr><td>20.</td>
+            <tr><td>19.</td>
                 <td>Did your chapter sister another chapter?</td></tr>
             <tr><td></td>
                 <td><strong>{{ $pdfData ['sister_chapter'] == 1 ? 'YES' : 'NO' }}</strong></td></tr>
-            <tr><td>21.</td>
+            <tr><td>20.</td>
                 <td>Did your chapter attend an International Event?</td></tr>
             <tr><td></td>
                 <td><strong>{{ $pdfData ['international_event'] == 1 ? 'YES' : 'NO' }}</strong></td></tr>
-            <tr><td>22.</td>
+            <tr><td>21.</td>
                 <td>Did your chapter file their IRS 990N?</td></tr>
             <tr><td></td>
                 <td><strong>{{ $pdfData ['file_irs'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['file_irs_explanation']}}</strong></td></tr>
-            <tr><td>23.</td>
+            <tr><td>22.</td>
                 <td>Is a copy of your chapter's most recent bank statement included with the copy of this report that you are submitting to International?</td></tr>
             <tr><td></td>
-                <td><strong>{{ $pdfData ['bank_statement_included'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['bank_statement_included_explanation']}}</strong></td></tr>
-            <tr><td>24.</td>
-                <td>If your group does not have any bank accounts, where is the chapter money kept?</td></tr>
-            <tr><td></td>
-                <td><strong>{{ $pdfData ['wheres_the_money'] ?? 'N/A'}}</strong></td></tr>
+                <td><strong>{{ $pdfData ['bank_statement_included'] == 1 ? 'YES' : 'NO' }}&nbsp;&nbsp;  {{ $pdfData ['bank_statement_included_explanation']}}{{ $pdfData ['wheres_the_money']}}</strong></td></tr>
         </tbody>
     </table>
     <br>

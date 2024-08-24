@@ -1726,7 +1726,11 @@ class BoardController extends Controller
 
         // BANK RECONCILLIATION
         $amount_reserved_from_previous_year = $input['AmountReservedFromLastYear'];
+        $amount_reserved_from_previous_year = str_replace(',', '', $amount_reserved_from_previous_year);
+
         $bank_balance_now = $input['BankBalanceNow'];
+        $bank_balance_now = str_replace(',', '', $bank_balance_now);
+
         $petty_cash = $input['PettyCash'];
 
         $BankRecArray = null;

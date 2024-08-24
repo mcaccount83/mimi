@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.public_theme')
 
 @section('content')
 <div class="container">
@@ -13,7 +13,7 @@
                         @else
                         <form method="POST" action="{{ route('register') }}" aria-label="{{ __('Register') }}">
                         @endisset
-						
+
 						@csrf
 
                         <div class="form-group row">

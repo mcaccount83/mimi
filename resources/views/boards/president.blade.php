@@ -1,17 +1,17 @@
 @extends('layouts.board_theme')
 <style>
     .ml-2 {
-        margin-left: 0.5rem !important; /* Adjust the margin to control spacing */
+        margin-left: 0.5rem !important; /* Adjust the margin to control spacing for Vacant Buttons */
     }
 
     .custom-control-input:checked ~ .custom-control-label {
-    color: black; /* Label color when toggle is ON */
-}
+        color: black; /* Label color when toggle is ON for Vacant Buttons */
+    }
 
-.custom-control-input:not(:checked) ~ .custom-control-label {
-    color: #b0b0b0; /* Subdued label color when toggle is OFF */
-    opacity: 0.6;   /* Optional: Adds a subdued effect */
-}
+    .custom-control-input:not(:checked) ~ .custom-control-label {
+        color: #b0b0b0; /* Subdued label color when toggle is OFF for Vacant Buttons */
+        opacity: 0.6;   /* Optional: Adds a subdued effectfor Vacant Buttons */
+    }
 
 </style>
 
@@ -125,12 +125,21 @@
                                         <i class="fas fa-university"></i>&nbsp; No EIN Letter on File
                                     </a>
                                 @endif
-                                <button id="GoodStanding" type="button" class="btn btn-primary" onclick="window.location.href='{{ route('pdf.chapteringoodstanding', ['id' => $list->id]) }}'">
+                                <button id="GoodStanding" type="button" class="btn btn-primary" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $list->id]) }}', '_blank')">
                                     <i class="fas fa-home"></i>&nbsp; Good Standing Chapter Letter
                                 </button>
-                                <button id="ReportPDF" type="button" class="btn btn-primary" onclick="">
-                                    <i class="fas fa-file-pdf"></i>&nbsp; Financial Report PDF
-                                </button>
+
+                                @if($financial_report_array->financial_pdf_path!=null)
+                                    <a id="btn-download-pdf" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn btn-primary" ><i class="fas fa-download" ></i>&nbsp; Financial Report PDF</a>
+
+                                    {{-- <button id="downloadPdfLink" type="button" class="btn btn-primary" onclick="window.location.href='https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>'">
+                                        <i class="fas fa-file-pdf"></i>&nbsp; Financial Report PDF</a>
+                                    </button> --}}
+                                @else
+                                    <button id="ReportPDF" type="button" class="btn btn-primary" onclick="">
+                                        <i class="fas fa-file-pdf"></i>&nbsp; No Financial Report on File
+                                    </button>
+                                @endif
                         </div>
                         <div class="col-md-12"><br></div>
 

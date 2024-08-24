@@ -154,6 +154,18 @@
         Inputmask({"mask": "(999) 999-9999"}).mask(".phone-mask");
     }
 
+     // Currency mask
+     function applyCurrencyMask() {
+    Inputmask({
+        alias: 'currency',
+        rightAlign: false,
+        groupSeparator: ',',
+        digits: 2,
+        digitsOptional: false,
+        placeholder: '0'
+    }).mask(".currency-mask");
+    }
+
   </script>
 
 @yield('customscript')

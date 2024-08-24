@@ -1,6 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.public_theme')
 
 @section('content')
+<div class="row justify-content-center">
+
     <body class="hold-transition login-page">
         <div class="login-box">
             <div class="login-logo">
@@ -94,6 +96,7 @@
                     <!-- /.login-card-body -->
                 </div>
             </div>
+        </div>
     </body>
 @endsection
 @section('customscript')

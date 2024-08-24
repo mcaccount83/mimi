@@ -1,33 +1,41 @@
-@extends('layouts.chapter_theme')
+@extends('layouts.board_theme')
 
 @section('content')
 
-<div class="container">
-    <div>
-        @if ($message = Session::get('success'))
-            <div class="alert alert-success">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-             <p>{{ $message }}</p>
-            </div>
-        @endif
-        @if ($message = Session::get('fail'))
-            <div class="alert alert-danger">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-             <p>{{ $message }}</p>
-            </div>
-        @endif
-    </div>
+<div class="container" id="test">
+    <div class="container">
+        <div>
+            @if ($message = Session::get('success'))
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                <p>{{ $message }}</p>
+                </div>
+            @endif
+            @if ($message = Session::get('fail'))
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                <p>{{ $message }}</p>
+                </div>
+            @endif
+        </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="card card-user">
-                    <div class="card-image color_header">
-                    </div>
-                    <div class="card-body">
-                        <div class="author">
-                                <div class="border-gray avatar">
-                                    <img src="{{ asset('chapter_theme/img/logo.png') }}" alt="...">
-                                </div>
-                               <h2 class="moms-c"> MOMS Club of {{ $chapterList[0]->name }}, {{$chapterState}} </h2>
+         <!-- Widget: user widget style 1 -->
+         <div class="card card-widget widget-user">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div class="widget-user-header bg-primary">
+                <div class="widget-user-image">
+                    <img class="img-circle elevation-2" src="{{ asset('theme/dist/img/logo.png') }}" alt="MC" style="width: 115px; height: 115px;">
+                  </div>
+                        </div>
+                        <div class="card-body">
+                    @php
+                        $thisDate = \Carbon\Carbon::now();
+                    @endphp
+                    <div class="col-md-12"><br><br></div>
+                        <h2 class="text-center"> MOMS Club of {{ $chapterList[0]->name }}, {{ $chapterState }} </h2>
+                        <h4 class="text-center"> General Chapter Resources</h4>
+
                         </div>
                         <div class="col-md-12"><br></div>
                         <div class="col-md-12"><center>Your chapter's anniversary month is <strong>{{ $startMonth }}</strong>.</center></div>
@@ -43,9 +51,14 @@
                                 <div class="col-md-12" style="color: red;"><center>Your chapter's re-registration payment is now considered overdue.</center></div>
                             @endif
                         @endif
-                        </div>
+                        <div class="col-md-12"><br></div>
 
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline">
                     <div class="card-body">
+	                    <div class="row">
                         <div class="col-md-12"><strong>Last Year's Re-Registration Information</strong></div>
 
                         <div class="col-md-12">
@@ -152,7 +165,7 @@
                             </div>
 
                             <div class="col-md-3">
-                            <label for="expiration_date" ">{{ __('Expiration Date (MM/YY)') }}</label> <span class="field-required">*</span>
+                            <label for="expiration_date" >{{ __('Expiration Date (MM/YY)') }}</label> <span class="field-required">*</span>
                                 <input id="expiration_date" type="text" class="form-control @error('expiration_date') is-invalid @enderror" name="expiration_date" required autocomplete="off" maxlength="5">
                                 @error('expiration_date')
                                 <span class="invalid-feedback" role="alert">
@@ -208,11 +221,12 @@
                             </div>
                         </div>
 
-                        <div class="form-group text-center">
+                        <div class="card-body text-center">
                             <div class="col-md-12" style="color: red;"><center>Page will automatically re-direct after payment submission with success or error message.<br>
                                 DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
-                            <button type="submit" class="btn btn-info btn-fill"><i class="fa fa-share fa-fw" aria-hidden="true" ></i>&nbsp;{{ __('Submit Payment') }}</button>
-                            <a href="{{ route('home') }}" class="btn btn-info btn-fill"><i class="fa fa-home fa-fw" aria-hidden="true" ></i>&nbsp; Back to HOME</a>
+                            <br>
+                                <button type="submit" class="btn btn-primary"><i class="fas fa-share" ></i>&nbsp;{{ __('Submit Payment') }}</button>
+                            <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-home" ></i>&nbsp; Back to Profile</a>
                         </div>
                     </form>
                 </div>

@@ -27,7 +27,7 @@
             <div class="col-12">
                 <div class="card card-outline card-primary">
                 <div class="card-header">
-                    <h3 class="card-title">Re-Registration Payment</h3>
+                    <h3 class="card-title">Chapter Information</h3>
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
@@ -52,83 +52,98 @@
               </div>
               </div>
               </div>
-            </div>
+            {{-- </div>
 
-            <div class="card-header">
-                <h3 class="card-title">Boundraies</h3>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body">
+            <div class="card-body"> --}}
                 <div class="row">
-      <!-- /.form group -->
-              <div class="col-sm-12">
-              <div class="form-group">
-                <label>Boundary Description</label>
-                <input type="text" name="ch_name" class="form-control" maxlength="200"  value="{{ $chapterList[0]->territory }}" readonly>
-              </div>
-              </div>
-
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label class="span-t mrg-10">
-                            <input type="radio" class="" name="BoundaryStatus" onclick="return BoundaryError(false)" id="BoundaryStatus1" value="0" <?php if (!is_null($chapterList[0]->boundary_issues) && (!$chapterList[0]->boundary_issues == 1)) echo "checked"; ?> required readonly>
-                            <span>Boundaries are correct</span>
-
-                        </label>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>Boundaries listed in MIMI (used for Inquiries)</label>
+                            <input type="text" name="ch_boundry" class="form-control" value="{{ $chapterList[0]->territory }}"  maxlength="250" readonly>
+                        </div>
                     </div>
                 </div>
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label class="span-t mrg-10">
-                            <input type="radio" class="" name="BoundaryStatus" onClick="return BoundaryError(true)" id="BoundaryStatus2" value="1" <?php if ($chapterList[0]->boundary_issues == 1) echo "checked"; ?> required readonly>
-                            <span>Boundaries are not correct</span>
-
-                        </label>
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <label>Are your listed boundaries correct?<span class="field-required">*</span></label>
+                        <div class="col-12 row">
+                            <div class="form-check" style="margin-right: 20px;">
+                                <input class="form-check-input" type="radio" id="BoundaryStatusYes" name="BoundaryStatus" value="0" {{ $chapterList[0]->boundary_issues === 0 ? 'checked' : '' }} onChange="ShowBoundaryError()">
+                                <label class="form-check-label" for="BoundaryStatusYes">Yes</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" id="BoundaryStatusNo" name="BoundaryStatus" value="1" {{ $chapterList[0]->boundary_issues === 1 ? 'checked' : '' }} onChange="ShowBoundaryError()">
+                                <label class="form-check-label" for="BoundaryStatusNo">No</label>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="col-sm-12">
-                <div class="form-group" id="BoundaryIssueLabel">
-                    <label id="">PLEASE INDICATE WHICH PART OF THE BOUNDARIES DO NOT MATCH YOUR RECORDS:</label>
-                    <input type="text" name="BoundaryIssue" id="BoundaryIssue" class="form-control" value="{{ $chapterList[0]->boundary_issue_notes }}" maxlength="250" >
-                </div>
-              </div>
-              </div>
-            </div>
+                    <div class="form-group row" id="divBoundaryIssue">
+                            <label for="BoundaryIssue">Please indicate which part of the Boundaries not NOT match our records<span class="field-required">*</span></label>
+                            <input type="text" rows="2"class="form-control" name="BoundaryIssue" id="BoundaryIssue" value="{{ $chapterList[0]->boundary_issue_notes }}" ></input>
+                        </div>
+                    </div>
 
-            <div class="card-header">
-                <h3 class="card-title">Inquiries</h3>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-                <div class="row">
-      <!-- /.form group -->
-              		<div class="col-sm-12">
+                    <div class="row">
+						<div class="col-md-12">
 							<div class="form-group">
-								<label>Email Address to Give to MOMS Interested in joining your Chapter</label> <span class="field-required">*</span>
-								<input type="text" name="InquiriesContact" class="form-control" value="{{ $chapterList[0]->inquiries_contact }}" required maxlength="50">
+								<label>Email Address to Give to MOMS Interested in joining your Chapter</label>
+								<input type="text" name="InquiriesContact" class="form-control" value="{{ $chapterList[0]->inquiries_contact }}" required maxlength="50" required>
 							</div>
 						</div>
-                 <!-- /.form group -->
-                 <div class="col-sm-6">
-                    <div class="form-group">
-                      <label>Chapter Website</label>
-                      <input type="text" name="ch_website" class="form-control" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}" maxlength="50" id="validate_url" onchange="is_url(); updateWebsiteStatus();">
                     </div>
-                    </div>
-                      <!-- /.form group -->
-               <div class="col-sm-6">
-                <div class="form-group">
-                    <label>Website Link Status</label> <span class="field-required">*</span>
-                    <select id="ch_webstatus" name="ch_webstatus" class="form-control select2-sb4" style="width: 100%;" required>
-                        <option value="0" id="option0" {{$chapterList[0]->website_status == 0 ? 'selected' : ''}} disabled>Website Not Linked</option>
-                        <option value="1" id="option1" {{$chapterList[0]->website_status == 1 ? 'selected' : ''}} disabled>Website Linked</option>
-                        <option value="2" id="option2" {{$chapterList[0]->website_status == 2 ? 'selected' : ''}}>Add Link Requested</option>
-                        <option value="3" id="option3" {{$chapterList[0]->website_status == 3 ? 'selected' : ''}}>Do Not Link</option>
-                    </select>
-                </div>
+  <!-- /.form group -->
+  <div class="row">
+    <div class="col-6">
+        <div class="form-group">
+          <label>Chapter Website</label>
+          <input type="text" name="ch_website" class="form-control my-colorpicker1" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}" maxlength="50" id="validate_url" onchange="is_url(); updateWebsiteStatus();">
+        </div>
+        </div>
+          <!-- /.form group -->
+          <div class="col-6 ">
+            <div class="form-group">
+                <label>Website Link Status</label>
+                <select id="ch_webstatus" name="ch_webstatus" class="form-control " style="width: 100%;" required>
+                    <option value="0" id="option0" {{$chapterList[0]->website_status == 0 ? 'selected' : ''}} {{ $chapterList[0]->website_status == 0 ? '' : 'disabled' }}>Website Not Linked</option>
+                    <option value="1" id="option1" {{$chapterList[0]->website_status == 1 ? 'selected' : ''}}> Website Linked</option>
+                    <option value="2" id="option2" {{$chapterList[0]->website_status == 2 ? 'selected' : ''}}>Add Link Requested</option>
+                    <option value="3" id="option3" {{$chapterList[0]->website_status == 3 ? 'selected' : ''}}>Do Not Link</option>
+                </select>
+
+                <input type="hidden" name="ch_hid_webstatus" id="ch_hid_webstatus" value="{{ $chapterList[0]->website_status }}">
             </div>
         </div>
-    </div>
+        <!-- /.form group -->
+        {{-- <div class="col-12 ">
+        <div class="form-group">
+            <label>Online Discussion Group (Meetup, Google Groups, etc)</label>
+            <input type="text" name="ch_onlinediss" class="form-control my-colorpicker1" value="{{ $chapterList[0]->egroup}}" maxlength="50" >
+        </div>
+        </div>
+        <!-- /.form group -->
+                        <div class="col-md-4 ">
+                            <div class="form-group">
+            <label>Facebook</label>
+            <input type="text" name="ch_social1" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social1}}" maxlength="50" >
+        </div>
+        </div>
+        <!-- /.form group -->
+        <div class="col-md-4 ">
+        <div class="form-group">
+            <label>Twitter</label>
+            <input type="text" name="ch_social2" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social2}}" maxlength="50" >
+        </div>
+        </div>
+        <!-- /.form group -->
+        <div class="col-md-4">
+        <div class="form-group">
+            <label>Instagram</label>
+            <input type="text" name="ch_social3" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social3}}" maxlength="50" >
+                </div>
+                    </div> --}}
+
+            </div>
+        </div>
 
     <div class="card-header">
         <h3 class="card-title">President</h3>
@@ -202,19 +217,23 @@
               </div>
             </div>
 
-            <div class="card-header">
-                <h3 class="card-title">AVP</h3>
+            <div class="card-header d-flex align-items-center">
+                <h4 class="card-title mb-0">AVP</h4>
+                <div class="custom-control custom-switch ml-2">
+                    <input type="checkbox" name="AVPVacant" id="AVPVacant" class="custom-control-input" {{$AVPDetails[0]->avp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
+                    <label class="custom-control-label" for="AVPVacant">Vacant</label>
+                </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
                 <div class="row">
                      <!-- /.form group -->
-              <div class="col-sm-12">
+              {{-- <div class="col-sm-12">
                 <div class="custom-control custom-switch">
                     <input type="checkbox" name="AVPVacant" id="AVPVacant" class="custom-control-input" {{$AVPDetails[0]->avp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
                     <label class="custom-control-label" for="AVPVacant">Vacant</label>
                 </div>
-                </div>
+                </div> --}}
                 <div class="col-sm-12 avp-field">&nbsp;</div>
       <!-- /.form group -->
               <div class="col-sm-6 avp-field">
@@ -292,19 +311,23 @@
             </div>
               </div>
 
-              <div class="card-header">
-                <h3 class="card-title">MVP</h3>
+              <div class="card-header d-flex align-items-center">
+                <h4 class="card-title mb-0">MVP</h4>
+                <div class="custom-control custom-switch ml-2">
+                    <input type="checkbox" name="MVPVacant" id="MVPVacant" class="custom-control-input" {{$MVPDetails[0]->mvp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
+                    <label class="custom-control-label" for="MVPVacant">Vacant</label>
+                </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
                 <div class="row">
                     <!-- /.form group -->
-              <div class="col-sm-12">
+              {{-- <div class="col-sm-12">
                 <div class="custom-control custom-switch">
                     <input type="checkbox" name="MVPVacant" id="MVPVacant" class="custom-control-input" {{$MVPDetails[0]->mvp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
                     <label class="custom-control-label" for="MVPVacant">Vacant</label>
                 </div>
-                </div>
+                </div> --}}
                 <div class="col-sm-12 mvp-field">&nbsp;</div>
       <!-- /.form group -->
               <div class="col-sm-6 mvp-field">
@@ -381,19 +404,23 @@
               </div>
             </div>
 
-              <div class="card-header">
-                    <h3 class="card-title">Treasurer</h3>
+            <div class="card-header d-flex align-items-center">
+                <h4 class="card-title mb-0">Treasurer</h4>
+                <div class="custom-control custom-switch ml-2">
+                    <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input" {{$TRSDetails[0]->trs_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
+                    <label class="custom-control-label" for="TreasVacant">Vacant</label>
                 </div>
+            </div>
                 <!-- /.card-header -->
                 <div class="card-body">
                     <div class="row">
                         <!-- /.form group -->
-              <div class="col-sm-12">
+              {{-- <div class="col-sm-12">
                 <div class="custom-control custom-switch">
                     <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input" {{$TRSDetails[0]->trs_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
                     <label class="custom-control-label" for="TreasVacant">Vacant</label>
                 </div>
-                </div>
+                </div> --}}
                 <div class="col-sm-12 treas-field">&nbsp;</div>
           <!-- /.form group -->
               <div class="col-sm-6 treas-field">
@@ -470,19 +497,23 @@
             </div>
               </div>
 
-              <div class="card-header">
-                <h3 class="card-title">Secretary</h3>
+              <div class="card-header d-flex align-items-center">
+                <h4 class="card-title mb-0">Secretary</h4>
+                <div class="custom-control custom-switch ml-2">
+                    <input type="checkbox" name="SecVacant" id="SecVacant" class="custom-control-input" {{$SECDetails[0]->sec_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
+                    <label class="custom-control-label" for="SecVacant">Vacant</label>
+                </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
                 <div class="row">
                     <!-- /.form group -->
-              <div class="col-sm-12">
+              {{-- <div class="col-sm-12">
                 <div class="custom-control custom-switch">
                     <input type="checkbox" name="SecVacant" id="SecVacant" class="custom-control-input" {{$SECDetails[0]->sec_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
                     <label class="custom-control-label" for="SecVacant">Vacant</label>
                 </div>
-                </div>
+                </div> --}}
                 <div class="col-sm-12 sec-field">&nbsp;</div>
       <!-- /.form group -->
               <div class="col-sm-6 sec-field">
@@ -599,18 +630,34 @@ function isPhone() {
         return false;
     }
 }
-function BoundaryError(error){
-        if (error){
-            $("#BoundaryIssue").prop("",false);
-            $("#BoundaryIssue").prop("required",true);
-            $("#BoundaryIssueLabel").prop("",false);
-        }
-        else{
-            $("#BoundaryIssue").prop("",true);
-            $("#BoundaryIssue").prop("required",false);
-            $("#BoundaryIssueLabel").prop("",true);
-        }
+// function BoundaryError(error){
+//         if (error){
+//             $("#BoundaryIssue").prop("",false);
+//             $("#BoundaryIssue").prop("required",true);
+//             $("#BoundaryIssueLabel").prop("",false);
+//         }
+//         else{
+//             $("#BoundaryIssue").prop("",true);
+//             $("#BoundaryIssue").prop("required",false);
+//             $("#BoundaryIssueLabel").prop("",true);
+//         }
+//     }
+
+
+//Boundary Visibility
+ShowBoundaryError();
+
+function ShowBoundaryError() {
+    var selectedValue = document.querySelector('input[name="BoundaryStatus"]:checked').value;
+
+    if (selectedValue == "1") {
+        $('#BoundaryIssue').addClass('tx-cls');
+        document.getElementById("divBoundaryIssue").style.display = 'block';
+    } else {
+        $('#BoundaryIssue').removeClass('tx-cls');
+        document.getElementById("divBoundaryIssue").style.display = 'none';
     }
+}
 
     // Function to handle show/hide logic for vacant checkboxes
     function handleVacantCheckbox(checkboxId, fieldClass) {
@@ -665,220 +712,220 @@ function BoundaryError(error){
 
     var check = <?php echo "\"" . $chapterList[0]->boundary_issues . "\""; ?>;
 
-    if(check == 0){
-        $("#BoundaryIssue").prop("",true);
-        $("#BoundaryIssue").prop("required",false);
-    }else{
-        $("#BoundaryIssue").prop("",false);
-        $("#BoundaryIssue").prop("required",true);
-    }
+//     if(check == 0){
+//         $("#BoundaryIssue").prop("",true);
+//         $("#BoundaryIssue").prop("required",false);
+//     }else{
+//         $("#BoundaryIssue").prop("",false);
+//         $("#BoundaryIssue").prop("required",true);
+//     }
 
-    var avp = $("#ch_avp_fname").val();
-    if(avp ==''){
-        $("#ch_avp_fname").prop("readonly",true);
-        $("#ch_avp_lname").prop("readonly",true);
-        $("#ch_avp_email").prop("readonly",true);
-        $("#ch_avp_street").prop("readonly",true);
-        $("#ch_avp_city").prop("readonly",true);
-        $("#ch_avp_zip").prop("readonly",true);
-        $("#ch_avp_phone").prop("readonly",true);
-        $("#ch_avp_state").prop("disabled",true);
-    }
-    var mvp = $("#ch_mvp_fname").val();
-    if(mvp ==''){
-        $("#ch_mvp_fname").prop("readonly",true);
-        $("#ch_mvp_lname").prop("readonly",true);
-        $("#ch_mvp_email").prop("readonly",true);
-        $("#ch_mvp_street").prop("readonly",true);
-        $("#ch_mvp_city").prop("readonly",true);
-        $("#ch_mvp_zip").prop("readonly",true);
-        $("#ch_mvp_phone").prop("readonly",true);
-        $("#ch_mvp_state").prop("disabled",true);
-    }
-    var trs = $("#ch_trs_fname").val();
-    if(trs ==''){
-        $("#ch_trs_fname").prop("readonly",true);
-        $("#ch_trs_lname").prop("readonly",true);
-        $("#ch_trs_email").prop("readonly",true);
-        $("#ch_trs_street").prop("readonly",true);
-        $("#ch_trs_city").prop("readonly",true);
-        $("#ch_trs_zip").prop("readonly",true);
-        $("#ch_trs_phone").prop("readonly",true);
-        $("#ch_trs_state").prop("disabled",true);
-    }
-    var sec = $("#ch_sec_fname").val();
-    if(sec ==''){
-        $("#ch_sec_fname").prop("readonly",true);
-        $("#ch_sec_lname").prop("readonly",true);
-        $("#ch_sec_email").prop("readonly",true);
-        $("#ch_sec_street").prop("readonly",true);
-        $("#ch_sec_city").prop("readonly",true);
-        $("#ch_sec_zip").prop("readonly",true);
-        $("#ch_sec_phone").prop("readonly",true);
-        $("#ch_sec_state").prop("disabled",true);
-    }
+//     var avp = $("#ch_avp_fname").val();
+//     if(avp ==''){
+//         $("#ch_avp_fname").prop("readonly",true);
+//         $("#ch_avp_lname").prop("readonly",true);
+//         $("#ch_avp_email").prop("readonly",true);
+//         $("#ch_avp_street").prop("readonly",true);
+//         $("#ch_avp_city").prop("readonly",true);
+//         $("#ch_avp_zip").prop("readonly",true);
+//         $("#ch_avp_phone").prop("readonly",true);
+//         $("#ch_avp_state").prop("disabled",true);
+//     }
+//     var mvp = $("#ch_mvp_fname").val();
+//     if(mvp ==''){
+//         $("#ch_mvp_fname").prop("readonly",true);
+//         $("#ch_mvp_lname").prop("readonly",true);
+//         $("#ch_mvp_email").prop("readonly",true);
+//         $("#ch_mvp_street").prop("readonly",true);
+//         $("#ch_mvp_city").prop("readonly",true);
+//         $("#ch_mvp_zip").prop("readonly",true);
+//         $("#ch_mvp_phone").prop("readonly",true);
+//         $("#ch_mvp_state").prop("disabled",true);
+//     }
+//     var trs = $("#ch_trs_fname").val();
+//     if(trs ==''){
+//         $("#ch_trs_fname").prop("readonly",true);
+//         $("#ch_trs_lname").prop("readonly",true);
+//         $("#ch_trs_email").prop("readonly",true);
+//         $("#ch_trs_street").prop("readonly",true);
+//         $("#ch_trs_city").prop("readonly",true);
+//         $("#ch_trs_zip").prop("readonly",true);
+//         $("#ch_trs_phone").prop("readonly",true);
+//         $("#ch_trs_state").prop("disabled",true);
+//     }
+//     var sec = $("#ch_sec_fname").val();
+//     if(sec ==''){
+//         $("#ch_sec_fname").prop("readonly",true);
+//         $("#ch_sec_lname").prop("readonly",true);
+//         $("#ch_sec_email").prop("readonly",true);
+//         $("#ch_sec_street").prop("readonly",true);
+//         $("#ch_sec_city").prop("readonly",true);
+//         $("#ch_sec_zip").prop("readonly",true);
+//         $("#ch_sec_phone").prop("readonly",true);
+//         $("#ch_sec_state").prop("disabled",true);
+//     }
 
   });
 
-  function ConfirmVacant(checkboxid) {
-    switch(checkboxid){
-                    case "AVPVacant":
-              if($("#AVPVacant").prop("checked") == true){
-                $("#ch_avp_fname").prop("readonly",true);
-                $("#ch_avp_lname").prop("readonly",true);
-                $("#ch_avp_email").prop("readonly",true);
-                $("#ch_avp_street").prop("readonly",true);
-                $("#ch_avp_city").prop("readonly",true);
-                $("#ch_avp_zip").prop("readonly",true);
-                $("#ch_avp_phone").prop("",true);
-                $("#ch_avp_state").prop("disabled",true);
-                $("#ch_avp_fname").val("");
-                $("#ch_avp_lname").val("");
-                $("#ch_avp_email").val("");
-                $("#ch_avp_street").val("");
-                $("#ch_avp_city").val("");
-                $("#ch_avp_zip").val("");
-                $("#ch_avp_phone").val("");
-                $("#ch_avp_state").val("");
-              }
-              else{
-                $("#ch_avp_fname").prop("readonly",false);
-                $("#ch_avp_lname").prop("readonly",false);
-                $("#ch_avp_email").prop("readonly",false);
-                $("#ch_avp_street").prop("readonly",false);
-                $("#ch_avp_city").prop("readonly",false);
-                $("#ch_avp_zip").prop("readonly",false);
-                $("#ch_avp_phone").prop("readonly",false);
-                $("#ch_avp_state").prop("disabled",false);
+//   function ConfirmVacant(checkboxid) {
+//     switch(checkboxid){
+//                     case "AVPVacant":
+//               if($("#AVPVacant").prop("checked") == true){
+//                 $("#ch_avp_fname").prop("readonly",true);
+//                 $("#ch_avp_lname").prop("readonly",true);
+//                 $("#ch_avp_email").prop("readonly",true);
+//                 $("#ch_avp_street").prop("readonly",true);
+//                 $("#ch_avp_city").prop("readonly",true);
+//                 $("#ch_avp_zip").prop("readonly",true);
+//                 $("#ch_avp_phone").prop("",true);
+//                 $("#ch_avp_state").prop("disabled",true);
+//                 $("#ch_avp_fname").val("");
+//                 $("#ch_avp_lname").val("");
+//                 $("#ch_avp_email").val("");
+//                 $("#ch_avp_street").val("");
+//                 $("#ch_avp_city").val("");
+//                 $("#ch_avp_zip").val("");
+//                 $("#ch_avp_phone").val("");
+//                 $("#ch_avp_state").val("");
+//               }
+//               else{
+//                 $("#ch_avp_fname").prop("readonly",false);
+//                 $("#ch_avp_lname").prop("readonly",false);
+//                 $("#ch_avp_email").prop("readonly",false);
+//                 $("#ch_avp_street").prop("readonly",false);
+//                 $("#ch_avp_city").prop("readonly",false);
+//                 $("#ch_avp_zip").prop("readonly",false);
+//                 $("#ch_avp_phone").prop("readonly",false);
+//                 $("#ch_avp_state").prop("disabled",false);
 
-                $("#ch_avp_fname").prop("required",true);
-                $("#ch_avp_lname").prop("required",true);
-                $("#ch_avp_email").prop("required",true);
-                $("#ch_avp_street").prop("required",true);
-                $("#ch_avp_city").prop("required",true);
-                $("#ch_avp_zip").prop("required",true);
-                $("#ch_avp_phone").prop("required",true);
-                $("#ch_avp_state").prop("required",true);
-              }
-            break;
-          case "MVPVacant":
-              if($("#MVPVacant").prop("checked") == true){
-                $("#ch_mvp_fname").prop("readonly",true);
-                $("#ch_mvp_lname").prop("readonly",true);
-                $("#ch_mvp_email").prop("readonly",true);
-                $("#ch_mvp_street").prop("readonly",true);
-                $("#ch_mvp_city").prop("readonly",true);
-                $("#ch_mvp_zip").prop("readonly",true);
-                $("#ch_mvp_phone").prop("readonly",true);
-                $("#ch_mvp_state").prop("disabled",true);
-                $("#ch_mvp_fname").val("");
-                $("#ch_mvp_lname").val("");
-                $("#ch_mvp_email").val("");
-                $("#ch_mvp_street").val("");
-                $("#ch_mvp_city").val("");
-                $("#ch_mvp_zip").val("");
-                $("#ch_mvp_phone").val("");
-                $("#ch_mvp_state").val("");
-              }
-              else{
-                $("#ch_mvp_fname").prop("readonly",false);
-                $("#ch_mvp_lname").prop("readonly",false);
-                $("#ch_mvp_email").prop("readonly",false);
-                $("#ch_mvp_street").prop("readonly",false);
-                $("#ch_mvp_city").prop("readonly",false);
-                $("#ch_mvp_zip").prop("readonly",false);
-                $("#ch_mvp_phone").prop("readonly",false);
-                $("#ch_mvp_state").prop("disabled",false);
-                $("#ch_mvp_fname").prop("required",true);
-                $("#ch_mvp_lname").prop("required",true);
-                $("#ch_mvp_email").prop("required",true);
-                $("#ch_mvp_street").prop("required",true);
-                $("#ch_mvp_city").prop("required",true);
-                $("#ch_mvp_zip").prop("required",true);
-                $("#ch_mvp_phone").prop("required",true);
-                $("#ch_mvp_state").prop("required",true);
-              }
-            break;
-          case "TreasVacant":
-              if($("#TreasVacant").prop("checked") == true){
-                $("#ch_trs_fname").prop("readonly",true);
-                $("#ch_trs_lname").prop("readonly",true);
-                $("#ch_trs_email").prop("readonly",true);
-                $("#ch_trs_street").prop("readonly",true);
-                $("#ch_trs_city").prop("readonly",true);
-                $("#ch_trs_zip").prop("readonly",true);
-                $("#ch_trs_phone").prop("readonly",true);
-                $("#ch_trs_state").prop("disabled",true);
-                $("#ch_trs_fname").val("");
-                $("#ch_trs_lname").val("");
-                $("#ch_trs_email").val("");
-                $("#ch_trs_street").val("");
-                $("#ch_trs_city").val("");
-                $("#ch_trs_zip").val("");
-                $("#ch_trs_phone").val("");
-                $("#ch_trs_state").val("");
-              }
-              else{
-                $("#ch_trs_fname").prop("readonly",false);
-                $("#ch_trs_lname").prop("readonly",false);
-                $("#ch_trs_email").prop("readonly",false);
-                $("#ch_trs_street").prop("readonly",false);
-                $("#ch_trs_city").prop("readonly",false);
-                $("#ch_trs_zip").prop("readonly",false);
-                $("#ch_trs_phone").prop("readonly",false);
-                $("#ch_trs_state").prop("disabled",false);
-                $("#ch_trs_fname").prop("required",true);
-                $("#ch_trs_lname").prop("required",true);
-                $("#ch_trs_email").prop("required",true);
-                $("#ch_trs_street").prop("required",true);
-                $("#ch_trs_city").prop("required",true);
-                $("#ch_trs_zip").prop("required",true);
-                $("#ch_trs_phone").prop("required",true);
-                $("#ch_trs_state").prop("required",true);
+//                 $("#ch_avp_fname").prop("required",true);
+//                 $("#ch_avp_lname").prop("required",true);
+//                 $("#ch_avp_email").prop("required",true);
+//                 $("#ch_avp_street").prop("required",true);
+//                 $("#ch_avp_city").prop("required",true);
+//                 $("#ch_avp_zip").prop("required",true);
+//                 $("#ch_avp_phone").prop("required",true);
+//                 $("#ch_avp_state").prop("required",true);
+//               }
+//             break;
+//           case "MVPVacant":
+//               if($("#MVPVacant").prop("checked") == true){
+//                 $("#ch_mvp_fname").prop("readonly",true);
+//                 $("#ch_mvp_lname").prop("readonly",true);
+//                 $("#ch_mvp_email").prop("readonly",true);
+//                 $("#ch_mvp_street").prop("readonly",true);
+//                 $("#ch_mvp_city").prop("readonly",true);
+//                 $("#ch_mvp_zip").prop("readonly",true);
+//                 $("#ch_mvp_phone").prop("readonly",true);
+//                 $("#ch_mvp_state").prop("disabled",true);
+//                 $("#ch_mvp_fname").val("");
+//                 $("#ch_mvp_lname").val("");
+//                 $("#ch_mvp_email").val("");
+//                 $("#ch_mvp_street").val("");
+//                 $("#ch_mvp_city").val("");
+//                 $("#ch_mvp_zip").val("");
+//                 $("#ch_mvp_phone").val("");
+//                 $("#ch_mvp_state").val("");
+//               }
+//               else{
+//                 $("#ch_mvp_fname").prop("readonly",false);
+//                 $("#ch_mvp_lname").prop("readonly",false);
+//                 $("#ch_mvp_email").prop("readonly",false);
+//                 $("#ch_mvp_street").prop("readonly",false);
+//                 $("#ch_mvp_city").prop("readonly",false);
+//                 $("#ch_mvp_zip").prop("readonly",false);
+//                 $("#ch_mvp_phone").prop("readonly",false);
+//                 $("#ch_mvp_state").prop("disabled",false);
+//                 $("#ch_mvp_fname").prop("required",true);
+//                 $("#ch_mvp_lname").prop("required",true);
+//                 $("#ch_mvp_email").prop("required",true);
+//                 $("#ch_mvp_street").prop("required",true);
+//                 $("#ch_mvp_city").prop("required",true);
+//                 $("#ch_mvp_zip").prop("required",true);
+//                 $("#ch_mvp_phone").prop("required",true);
+//                 $("#ch_mvp_state").prop("required",true);
+//               }
+//             break;
+//           case "TreasVacant":
+//               if($("#TreasVacant").prop("checked") == true){
+//                 $("#ch_trs_fname").prop("readonly",true);
+//                 $("#ch_trs_lname").prop("readonly",true);
+//                 $("#ch_trs_email").prop("readonly",true);
+//                 $("#ch_trs_street").prop("readonly",true);
+//                 $("#ch_trs_city").prop("readonly",true);
+//                 $("#ch_trs_zip").prop("readonly",true);
+//                 $("#ch_trs_phone").prop("readonly",true);
+//                 $("#ch_trs_state").prop("disabled",true);
+//                 $("#ch_trs_fname").val("");
+//                 $("#ch_trs_lname").val("");
+//                 $("#ch_trs_email").val("");
+//                 $("#ch_trs_street").val("");
+//                 $("#ch_trs_city").val("");
+//                 $("#ch_trs_zip").val("");
+//                 $("#ch_trs_phone").val("");
+//                 $("#ch_trs_state").val("");
+//               }
+//               else{
+//                 $("#ch_trs_fname").prop("readonly",false);
+//                 $("#ch_trs_lname").prop("readonly",false);
+//                 $("#ch_trs_email").prop("readonly",false);
+//                 $("#ch_trs_street").prop("readonly",false);
+//                 $("#ch_trs_city").prop("readonly",false);
+//                 $("#ch_trs_zip").prop("readonly",false);
+//                 $("#ch_trs_phone").prop("readonly",false);
+//                 $("#ch_trs_state").prop("disabled",false);
+//                 $("#ch_trs_fname").prop("required",true);
+//                 $("#ch_trs_lname").prop("required",true);
+//                 $("#ch_trs_email").prop("required",true);
+//                 $("#ch_trs_street").prop("required",true);
+//                 $("#ch_trs_city").prop("required",true);
+//                 $("#ch_trs_zip").prop("required",true);
+//                 $("#ch_trs_phone").prop("required",true);
+//                 $("#ch_trs_state").prop("required",true);
 
-              }
-            break;
-          case "SecVacant":
-              if($("#SecVacant").prop("checked") == true){
-                $("#ch_sec_fname").prop("readonly",true);
-                $("#ch_sec_lname").prop("readonly",true);
-                $("#ch_sec_email").prop("readonly",true);
-                $("#ch_sec_street").prop("readonly",true);
-                $("#ch_sec_city").prop("readonly",true);
-                $("#ch_sec_zip").prop("readonly",true);
-                $("#ch_sec_phone").prop("readonly",true);
-                $("#ch_sec_state").prop("disabled",true);
-                $("#ch_sec_fname").val("");
-                $("#ch_sec_lname").val("");
-                $("#ch_sec_email").val("");
-                $("#ch_sec_street").val("");
-                $("#ch_sec_city").val("");
-                $("#ch_sec_zip").val("");
-                $("#ch_sec_phone").val("");
-                $("#ch_sec_state").val("");
-              }
-              else{
-                $("#ch_sec_fname").prop("readonly",false);
-                $("#ch_sec_lname").prop("readonly",false);
-                $("#ch_sec_email").prop("readonly",false);
-                $("#ch_sec_street").prop("readonly",false);
-                $("#ch_sec_city").prop("readonly",false);
-                $("#ch_sec_zip").prop("readonly",false);
-                $("#ch_sec_phone").prop("readonly",false);
-                $("#ch_sec_state").prop("disabled",false);
-                $("#ch_sec_fname").prop("required",true);
-                $("#ch_sec_lname").prop("required",true);
-                $("#ch_sec_email").prop("required",true);
-                $("#ch_sec_street").prop("required",true);
-                $("#ch_sec_city").prop("required",true);
-                $("#ch_sec_zip").prop("required",true);
-                $("#ch_sec_phone").prop("required",true);
-                $("#ch_sec_state").prop("required",true);
-              }
-            break;
-    }
+//               }
+//             break;
+//           case "SecVacant":
+//               if($("#SecVacant").prop("checked") == true){
+//                 $("#ch_sec_fname").prop("readonly",true);
+//                 $("#ch_sec_lname").prop("readonly",true);
+//                 $("#ch_sec_email").prop("readonly",true);
+//                 $("#ch_sec_street").prop("readonly",true);
+//                 $("#ch_sec_city").prop("readonly",true);
+//                 $("#ch_sec_zip").prop("readonly",true);
+//                 $("#ch_sec_phone").prop("readonly",true);
+//                 $("#ch_sec_state").prop("disabled",true);
+//                 $("#ch_sec_fname").val("");
+//                 $("#ch_sec_lname").val("");
+//                 $("#ch_sec_email").val("");
+//                 $("#ch_sec_street").val("");
+//                 $("#ch_sec_city").val("");
+//                 $("#ch_sec_zip").val("");
+//                 $("#ch_sec_phone").val("");
+//                 $("#ch_sec_state").val("");
+//               }
+//               else{
+//                 $("#ch_sec_fname").prop("readonly",false);
+//                 $("#ch_sec_lname").prop("readonly",false);
+//                 $("#ch_sec_email").prop("readonly",false);
+//                 $("#ch_sec_street").prop("readonly",false);
+//                 $("#ch_sec_city").prop("readonly",false);
+//                 $("#ch_sec_zip").prop("readonly",false);
+//                 $("#ch_sec_phone").prop("readonly",false);
+//                 $("#ch_sec_state").prop("disabled",false);
+//                 $("#ch_sec_fname").prop("required",true);
+//                 $("#ch_sec_lname").prop("required",true);
+//                 $("#ch_sec_email").prop("required",true);
+//                 $("#ch_sec_street").prop("required",true);
+//                 $("#ch_sec_city").prop("required",true);
+//                 $("#ch_sec_zip").prop("required",true);
+//                 $("#ch_sec_phone").prop("required",true);
+//                 $("#ch_sec_state").prop("required",true);
+//               }
+//             break;
+//     }
 
-  }
+//   }
 
   //submit validation function
   function PreSaveValidate(show_submit_message){

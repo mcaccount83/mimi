@@ -89,6 +89,8 @@ class HomeController extends Controller
             $chapterDetails = Chapter::find($chapterId);
             $request->session()->put('chapterid', $chapterId);
 
+            $financial_report_array = FinancialReport::find($chapterId);
+
             $stateArr = DB::table('state')
                 ->select('state.*')
                 ->orderBy('id')
@@ -198,13 +200,13 @@ class HomeController extends Controller
                         'sec_state' => '', 'user_id' => ''];
                     $SECDetails = json_decode(json_encode($SECDetails));
                 }
-                $data = ['chapterState' => $chapterState, 'stateArr' => $stateArr, 'boardPositionAbbreviation' => $boardPositionAbbreviation, 'currentMonthAbbreviation' => $currentMonthAbbreviation,
+                $data = ['financial_report_array' => $financial_report_array, 'chapterState' => $chapterState, 'stateArr' => $stateArr, 'boardPositionAbbreviation' => $boardPositionAbbreviation, 'currentMonthAbbreviation' => $currentMonthAbbreviation,
                     'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'chapterList' => $chapterList,
                     'startMonth' => $start_monthInWords, 'thisMonth' => $month, 'due_date' => $due_date, 'late_date' => $late_date];
 
                 return view('boards.president')->with($data);
             } elseif ($borPositionId != 1 && $isActive == 1) {
-                $data = ['chapterState' => $chapterState, 'chapterDetails' => $chapterDetails, 'boardPositionAbbreviation' => $boardPositionAbbreviation, 'currentMonthAbbreviation' => $currentMonthAbbreviation,
+                $data = ['financial_report_array' => $financial_report_array, 'chapterState' => $chapterState, 'chapterDetails' => $chapterDetails, 'boardPositionAbbreviation' => $boardPositionAbbreviation, 'currentMonthAbbreviation' => $currentMonthAbbreviation,
                     'stateArr' => $stateArr, 'borPositionId' => $borPositionId, 'borDetails' => $borDetails,
                     'startMonth' => $start_monthInWords, 'thisMonth' => $month, 'due_date' => $due_date, 'late_date' => $late_date];
 

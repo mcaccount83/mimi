@@ -30,9 +30,16 @@
     </script>
 </head>
 <body>
-    <div id="app">
-    @yield('content')
+
+<body class="hold-transition sidebar-mini layout-boxed">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+
+    <div class="container-fluid" id="public">
+        @yield('content')
     </div>
+
+</div>
 
 <!-- jQuery -->
 <script src="{{ config('settings.base_url') }}theme/plugins/jquery/jquery.min.js"></script>

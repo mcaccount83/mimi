@@ -1,116 +1,136 @@
-@extends('layouts.chapter_theme')
+@extends('layouts.board_theme')
 
 @section('content')
 
 <div class="container" id="test">
-    <div>
-        @if ($message = Session::get('success'))
-            <div class="alert alert-success">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-             <p>{{ $message }}</p>
-            </div>
-        @endif
-        @if ($message = Session::get('fail'))
-            <div class="alert alert-danger">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-             <p>{{ $message }}</p>
-            </div>
-        @endif
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card card-user">
-                <div class="card-image color_header"></div>
-                <div class="card-body">
+    <div class="container">
+        <div>
+            @if ($message = Session::get('success'))
+                <div class="alert alert-success">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                 <p>{{ $message }}</p>
+                </div>
+            @endif
+            @if ($message = Session::get('fail'))
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                 <p>{{ $message }}</p>
+                </div>
+            @endif
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+         <!-- Widget: user widget style 1 -->
+         <div class="card card-widget widget-user">
+            <!-- Add the bg color to the header using any of the bg-* classes -->
+            <div class="widget-user-header bg-primary">
+                <div class="widget-user-image">
+                    <img class="img-circle elevation-2" src="{{ asset('theme/dist/img/logo.png') }}" alt="MC" style="width: 115px; height: 115px;">
+                  </div>
+                        </div>
+                        <div class="card-body">
                     @php
                         $thisDate = \Carbon\Carbon::now();
                     @endphp
-                    <div class="author">
-                            <div class="border-gray avatar">
-								<img src="{{ asset('chapter_theme/img/logo.png') }}" alt="...">
-							</div>
-                        <h2 class="moms-c"> MOMS Club of {{ $chapterDetails[0]->chapter_name }}, {{$chapterDetails[0]->state}}</h2>
-                        <h2 class="moms-c"> <?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</h2>
-                        <h4><center><?php if(!$chapterDetails[0]->financial_report_received) echo "<br>Please complete the report below with finanacial information about your chapter.<br>
-                            Reports are due by July 15th."; ?></center></h4>
-                        <h4><center><?php if($chapterDetails[0]->financial_report_received) echo "<br><font color=\"red\">Your chapter's Financial Report has been Submitted!<br>
-                            Please save a copy of the PDF for your records.</font>"; ?></center></h4>
+                    <div class="col-md-12"><br><br></div>
+                        <h2 class="text-center"> MOMS Club of {{ $chapterDetails[0]->chapter_name }}, {{ $chapterDetails[0]->state }} </h2>
+                        <h4 class="text-center"> <?php echo date('Y')-1 .'-'.date('Y');?> Financial Report</h4>
+                    <div class="col-md-12"><br></div>
+                    <h4 class="text-center"><?php if(!$chapterDetails[0]->financial_report_received) echo "<br>Please complete the report below with finanacial information about your chapter.<br>
+                        Reports are due by July 15th."; ?></h4>
+                    <h4 class="text-center"><?php if($chapterDetails[0]->financial_report_received) echo "<br><font color=\"red\">Your chapter's Financial Report has been Submitted!<br>
+                        Please save a copy of the PDF for your records.</font>"; ?></h4>
+                         <div class="col-md-12 text-center">
+                                @if($submitted =='1')
+                                <a id="btn-download-pdf" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn btn-primary" ><i class="fas fa-download" ></i>&nbsp; Download PDF</a>
+                                @endif
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            @auth
-            <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board.storefinancial", ["id" => Session::get("chapterid")]) }}' novalidate>
-            @csrf
-            <input type="hidden" name="id" value="{{ Session::get('chapterid') }}">
-            <input type="hidden" name="ch_name" value="<?php echo $chapterDetails[0]->chapter_name; ?>" />
-            <input type="hidden" name="ch_state" value="<?php echo $chapterDetails[0]->state; ?>" />
-            <input type="hidden" name="ch_pcid" value="<?php echo $chapterDetails[0]->pcid; ?>" />
-            <input type="hidden" name="ch_conf" value="<?php echo $chapterDetails[0]->conf; ?>" />
-            <input type="hidden" name="submitted" id="submitted" value="<?php echo $submitted; ?>" />
-            <input type="hidden" name="FurthestStep" id="FurthestStep" value="<?php if($financial_report_array['farthest_step_visited'] > 0) echo $financial_report_array['farthest_step_visited']; else echo "0"; ?>" />
 
-            <div class="accordion js-accordion">
-                <!------Start Step 1 ------>
-                <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] <='1') echo "active";?>" >
-                    <div class="accordion-header js-accordion-header" id="accordion-header-members">CHAPTER DUES</div>
-                    <div class="accordion-body js-accordion-body">
-                        <section>
-                            <div class="col-md-12" id="RosterBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['roster_path']) echo "style=\"display: none;\"";} ?>>
-                                <div class="col-md-12">
-                                    <strong style="color:red">Please Note</strong><br>
-                                        This will refresh the screen - be sure to save all work before clicking button to Upload Roster File.<br>
-                                    <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-roster" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Roster File</button>
-                                </div>
+        <div class="container-fluid">
+                @auth
+                    <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board.storefinancial", ["id" => Session::get("chapterid")]) }}' novalidate>
+                    @csrf
+                    <input type="hidden" name="id" value="{{ Session::get('chapterid') }}">
+                    <input type="hidden" name="ch_name" value="<?php echo $chapterDetails[0]->chapter_name; ?>" />
+                    <input type="hidden" name="ch_state" value="<?php echo $chapterDetails[0]->state; ?>" />
+                    <input type="hidden" name="ch_pcid" value="<?php echo $chapterDetails[0]->pcid; ?>" />
+                    <input type="hidden" name="ch_conf" value="<?php echo $chapterDetails[0]->conf; ?>" />
+                    <input type="hidden" name="submitted" id="submitted" value="<?php echo $submitted; ?>" />
+                    <input type="hidden" name="FurthestStep" id="FurthestStep" value="<?php if($financial_report_array['farthest_step_visited'] > 0) echo $financial_report_array['farthest_step_visited']; else echo "0"; ?>" />
+
+            <div class="row">
+                    <div class="col-12"  id="accordion">
+                        <!------Start Step 1 ------>
+                        <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='1') echo 'active';?>">
+                            <div class="card-header" id="accordion-header-members">
+                                <h4 class="card-title w-100">
+                                    <a class="d-block" data-toggle="collapse" href="#collapseOne" style="width: 100%;">CHAPTER DUES</a>
+                                </h4>
                             </div>
-                            <input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $financial_report_array['roster_path']; ?>">
-                            <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['roster_path']) echo "style=\"display: none;\"";} ?>>
-                                <div class="col-md-12" >
-                                    <div>
-                                        <label class="control-label" for="RosterLink">Chapter Roster File:</label>
-                                       <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['roster_path']; ?>">View Chapter Roster</a><br>
+                            <div id="collapseOne" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='1') echo 'show'; ?>" data-parent="#accordion">
+                                <div class="card-body">
+                                    <section>
+                        @if (!is_null($financial_report_array['roster_path']))
+                                <div class="col-md-12" id="RosterBlock">
+                                        <label>Chapter Roster Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $financial_report_array['roster_path'] }}">&nbsp; View Chapter Roster</a><br>
                                         <strong style="color:red">Please Note</strong><br>
-                                        This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
-                                       <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-roster" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Roster File</button>
+                                            This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
+                                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-roster" ><i class="fas fa-undo" ></i>&nbsp; Replace Roster File</button>
                                 </div>
+                            @else
+                                <div class="col-md-12" id="RosterBlock">
+                                        <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Upload Roster File.<br>
+                                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-roster" ><i class="fas fa-upload" ></i>&nbsp; Upload Roster File</button>
                                 </div>
-                            </div>
-                            <div class="clearfix"></div>
-                        <br>
-                        <div class="col-md-12 float-left">
-                            <div class="form-group">
+                            @endif
+                                <input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $financial_report_array['roster_path']; ?>">
+                                <div class="clearfix"></div>
+                            <div class="col-md-12"><br></div>
+                        <div class="col-md-12 ">
+                            <div class="col-12 form-group row">
                                 <label>Did your chapter change your dues this year?<span class="field-required">*</span></label>
-                                <select id="optChangeDues" name="optChangeDues" class="form-control select2" style="width: 25%;" required onchange="ChapterDuesQuestionsChange()">
-                                    <option value="" id="optChangeDuesNo"{{ is_null($financial_report_array->changed_dues) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" name="optChangeDues" id="optChangeDuesNo" {{$financial_report_array->changed_dues === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" name="optChangeDues" id="optChangeDuesYes" {{$financial_report_array->changed_dues == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
+                                <div class="col-md-12 row">
+                                    <div class="form-check" style="margin-right: 20px;">
+                                        <input class="form-check-input" type="radio" id="optChangeDuesYes" name="optChangeDues" value="1" {{ $financial_report_array->changed_dues === 1 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
+                                        <label class="form-check-label" for="optChangeDuesYes">Yes</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="optChangeDuesNo" name="optChangeDues" value="0" {{ $financial_report_array->changed_dues === 0 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
+                                        <label class="form-check-label" for="optChangeDuesNo">No</label>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-12 float-left">
-                            <div class="form-group">
+                            <div class="col-12 form-group row">
                                 <label>Did your chapter charge different amounts for new and returning members?<span class="field-required">*</span></label>
-                                <select id="optNewOldDifferent" name="optNewOldDifferent" class="form-control select2" style="width: 25%;" required onchange="ChapterDuesQuestionsChange()">
-                                    <option value="" id="optNewOldDifferentNo" {{ is_null($financial_report_array->different_dues) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" id="optNewOldDifferentNo" {{$financial_report_array->different_dues == 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" id="optNewOldDifferentYes" {{$financial_report_array->different_dues == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
+                                <div class="col-md-12 row">
+                                    <div class="form-check" style="margin-right: 20px;">
+                                        <input class="form-check-input" type="radio" id="optNewOldDifferentYes" name="optNewOldDifferent" value="1" {{ $financial_report_array->different_dues === 1 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
+                                        <label class="form-check-label" for="optNewOldDifferentYes">Yes</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="optNewOldDifferentNo" name="optNewOldDifferent" value="0" {{ $financial_report_array->different_dues === 0 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
+                                        <label class="form-check-label" for="optNewOldDifferentNo">No</label>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-12 float-left">
-                            <div class="form-group">
-                                <label> Did your chapter have any members who didn't pay full dues?<span class="field-required">*</span></label>
-                                <select id="optNoFullDues" name="optNoFullDues" class="form-control select2" style="width: 25%;" required onchange="ChapterDuesQuestionsChange()">
-                                    <option value="" id="optNoFullDuesNo"{{ is_null($financial_report_array->not_all_full_dues) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" id="optNoFullDuesNo" {{$financial_report_array->not_all_full_dues == 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" id="optNoFullDuesYes" {{$financial_report_array->not_all_full_dues == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
+                            <div class="col-12 form-group row">
+                                <label>Did your chapter have any members who didn't pay full dues?<span class="field-required">*</span></label>
+                                <div class="col-md-12 row">
+                                    <div class="form-check" style="margin-right: 20px;">
+                                        <input class="form-check-input" type="radio" id="optNoFullDuesYes" name="optNoFullDues" value="1" {{ $financial_report_array->not_all_full_dues === 1 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
+                                        <label class="form-check-label" for="optNoFullDuesYes">Yes</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="optNoFullDuesNo" name="optNoFullDues" value="0" {{ $financial_report_array->not_all_full_dues === 0 ? 'checked' : '' }} onchange="ChapterDuesQuestionsChange()">
+                                        <label class="form-check-label" for="optNoFullDuesNo">No</label>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <hr>
+                            <div class="col-md-12"><br></div>
                         <div class="form-row">
                            <div class="col-md-12">
                             <p><i>Note: Count all members who paid dues, even if they are not still members.</i></p>
@@ -119,7 +139,7 @@
                                 <div class="form-group">
                                     <label for="TotalNewMembers" id="lblTotalNewMembers">Total New Members (who paid dues)</label>
                                     <div class="">
-                                    <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" oninput="ChangeMemberCount()" name="TotalNewMembers" id="TotalNewMembers" min=0 value="<?php if(!empty($financial_report_array)) echo $financial_report_array['total_new_members'] ?>">
+                                    <input type="number" class="form-control txt-num" oninput="ChangeMemberCount()" name="TotalNewMembers" id="TotalNewMembers" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['total_new_members'] ?>">
                                     </div>
                                 </div>
                             </div>
@@ -129,7 +149,7 @@
                                     Total Renewed Members (who paid dues)
                                 </label>
                                 <div class="">
-                                <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" oninput="ChangeMemberCount()" name="TotalRenewedMembers" id="TotalRenewedMembers" min=0 value="<?php if(!empty($financial_report_array)) echo $financial_report_array['total_renewed_members'] ?>">
+                                <input type="number" class="form-control " oninput="ChangeMemberCount()" name="TotalRenewedMembers" id="TotalRenewedMembers" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['total_renewed_members'] ?>">
                                 </div>
                                 </div>
                             </div>
@@ -138,7 +158,7 @@
                                     <div class="form-group">
                                         <label for="TotalNewMembersNewFee">Total New Members (who paid NEW dues)</label>
                                         <div class="input-group">
-                                                                                <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" oninput="ChangeMemberCount()" name="TotalNewMembersNewFee" id="TotalNewMembersNewFee" min=0 value="<?php if(!empty($financial_report_array)) echo $financial_report_array['total_new_members_changed_dues'] ?>">
+                                            <input type="number" class="form-control " oninput="ChangeMemberCount()" name="TotalNewMembersNewFee" id="TotalNewMembersNewFee" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['total_new_members_changed_dues'] ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -146,8 +166,7 @@
                                     <div class="form-group">
                                     <label for="TotalRenewedMembersNewFee">Total Renewed Members (who paid NEW dues)</label>
                                     <div class="input-group">
-
-                                    <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" oninput="ChangeMemberCount()" name="TotalRenewedMembersNewFee" id="TotalRenewedMembersNewFee" min=0 value="<?php if(!empty($financial_report_array)) echo $financial_report_array['total_renewed_members_changed_dues'] ?>">
+                                    <input type="number"  class="form-control" oninput="ChangeMemberCount()" name="TotalRenewedMembersNewFee" id="TotalRenewedMembersNewFee" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['total_renewed_members_changed_dues'] ?>">
                                     </div>
                                     </div>
                                 </div>
@@ -157,10 +176,13 @@
                                     <label for="MemberDues" id="lblMemberDues">
                                         Member Dues
                                     </label>
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" name="MemberDues" oninput="ChangeMemberCount()" id="MemberDues" step="0.01" min=0 aria-describedby="sizing-addon1" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['dues_per_member'] ?>">
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                    <input type="text" class="form-control" name="MemberDues" oninput="ChangeMemberCount()" id="MemberDues" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['dues_per_member'] ?>"
+                                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                     </div>
+                                </div>
                                 </div>
                             </div>
                             <div class="col-md-6" id="ifChangedDues1" style="visibility:hidden">
@@ -168,29 +190,38 @@
                                     <label for="NewMemberDues" id="lblNewMemberDues">
                                         Member Dues (New Amount)
                                     </label>
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" name="NewMemberDues" oninput="ChangeMemberCount()" id="NewMemberDues" step="0.01" min=0 aria-describedby="sizing-addon1" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['dues_per_member_new_changed'] ?>">
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                    <input type="text" class="form-control" name="NewMemberDues" oninput="ChangeMemberCount()" id="NewMemberDues" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['dues_per_member_new_changed'] ?>"
+                                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                     </div>
+                                </div>
                                 </div>
                             </div>
                             <div class="col-md-12" id="ifChangedDuesDifferentPerMemberType" style="display:none">
                                 <div class="col-md-6 float-left nopadding-l">
                                     <div class="form-group">
                                         <label for="MemberDuesRenewal">Renewal Dues</label>
-                                        <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                        <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" name="MemberDuesRenewal"  oninput="ChangeMemberCount()" id="MemberDuesRenewal" step="0.01" min=0 value="<?php if(!empty($financial_report_array)) echo $financial_report_array['dues_per_member_renewal'] ?>">
+                                        <div class="form-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                        <input type="text" class="form-control " name="MemberDuesRenewal" oninput="ChangeMemberCount()" id="MemberDuesRenewal" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['dues_per_member_renewal'] ?>"
+                                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                         </div>
+                                    </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 float-left nopadding" id="ifChangedDuesDifferentPerMemberType1" style="visibility:hidden">
                                     <div class="form-group">
                                     <label for="NewMemberDuesRenewal">Renewal Dues (NEW Amount)</label>
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" name="NewMemberDuesRenewal" oninput="ChangeMemberCount()" id="NewMemberDuesRenewal" step="0.01" min=0 value="<?php if(!empty($financial_report_array)) echo $financial_report_array['dues_per_member_renewal_changed'] ?>">
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                    <input type="text" class="form-control" name="NewMemberDuesRenewal" oninput="ChangeMemberCount()" id="NewMemberDuesRenewal" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['dues_per_member_renewal_changed'] ?>"
+                                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                     </div>
+                                </div>
                                     </div>
                                 </div>
                             </div>
@@ -198,42 +229,48 @@
                                 <div class="col-md-6 float-left nopadding-l">
                                     <div class="form-group">
                                         <label for="MembersNoDues">Total Members Who Paid No Dues</label>
-                                        <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" name="MembersNoDues" id="MembersNoDues"  min="0" oninput="ChangeMemberCount()" min=0 value="<?php if(!empty($financial_report_array)) echo $financial_report_array['members_who_paid_no_dues'] ?>">
+                                        <input type="text" class="form-control" name="MembersNoDues" id="MembersNoDues" oninput="ChangeMemberCount()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['members_who_paid_no_dues'] ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-6 float-left " style="visibility:hidden"><div class="form-group">
                                         <label for="MembersNoDues">Hidden</label>
-                                        <input type="number" class="form-control"  value="0">
+                                        <input type="number" class="form-control" value="0">
                                     </div></div>
 
                                 <div class="col-md-6 float-left nopadding-l">
                                     <div class="form-group">
                                     <label for="TotalPartialDuesMembers">Total Members Who Paid Partial Dues</label>
-                                    <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" name="TotalPartialDuesMembers" id="TotalPartialDuesMembers" min="0" oninput="ChangeMemberCount()" min=0 value="<?php if(!empty($financial_report_array)) echo $financial_report_array['members_who_paid_partial_dues'] ?>">
+                                    <input type="number" class="form-control" name="TotalPartialDuesMembers" id="TotalPartialDuesMembers" oninput="ChangeMemberCount()"value="<?php if(!empty($financial_report_array)) echo $financial_report_array['members_who_paid_partial_dues'] ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-6 float-left nopadding">
                                     <div class="form-group">
                                     <label for="PartialDuesMemberDues">Total Partial Dues Amount Collected</label>
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" name="PartialDuesMemberDues" id="PartialDuesMemberDues" min="0" step="0.01" oninput="ChangeMemberCount()" min=0 value="<?php if(!empty($financial_report_array)) echo $financial_report_array['total_partial_fees_collected'] ?>">
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                    <input type="text" class="form-control " name="PartialDuesMemberDues" id="PartialDuesMemberDues" oninput="ChangeMemberCount()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['total_partial_fees_collected'] ?>"
+                                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                     </div>
+                                </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 float-left nopadding-l">
                                     <div class="form-group">
                                     <label for="TotalAssociateMembers">Total Associate Members</label>
-                                    <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" name="TotalAssociateMembers" id="TotalAssociateMembers" min="0" oninput="ChangeMemberCount()" min=0 value="<?php if(!empty($financial_report_array)) echo $financial_report_array['total_associate_members'] ?>">
+                                    <input type="number" class="form-control" name="TotalAssociateMembers" id="TotalAssociateMembers" oninput="ChangeMemberCount()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['total_associate_members'] ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-6 float-left nopadding">
                                     <div class="form-group">
                                     <label for="AssociateMemberDues">Associate Member Dues</label>
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" name="AssociateMemberDues" id="AssociateMemberDues" min="0" step="0.01" oninput="ChangeMemberCount()" min=0 value="<?php if(!empty($financial_report_array)) echo $financial_report_array['associate_member_fee'] ?>">
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                    <input type="text" class="form-control" name="AssociateMemberDues" id="AssociateMemberDues" oninput="ChangeMemberCount()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['associate_member_fee'] ?>"
+                                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                                     </div>
+                                </div>
                                     </div>
                                 </div>
                                 <p><small><i>Note: Associate Members are not dues-waived or reduced members. They are a separate category of members. Many chapters do not have any Associate Members, but if your
@@ -242,81 +279,94 @@
                             <div class="col-md-6 float-left">
                                 <div class="form-group">
                                     <label for="TotalMembers">Total Members</label>
-                                    <input type="number" onkeydown="return event.keyCode !== 69" class="form-control txt-num" name="TotalMembers" id="TotalMembers" disabled>
+                                    <input type="number" class="form-control" name="TotalMembers" id="TotalMembers" readonly>
                                 </div>
                             </div>
+                            <div class="col-md-6"><br></div>
                             <div class="col-md-6 float-left">
                                 <div class="form-group">
                                     <label for="TotalDues">Total Dues Collected</label>
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" onkeydown="return event.keyCode !== 69" class="form-control txt-num" name="TotalDues" id="TotalDues" step="0.01" aria-describedby="sizing-addon1" disabled=>
+                                    <div class="form-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                    <input type="text" class="form-control " name="TotalDues" id="TotalDues"
+                                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                     </div>
+                                </div>
                                 </div>
                             </div>
                             <hr>
                         </div>
-                        <div class="form-row form-group">
-                            <div class="card-body">
-                                <div class="col-md-12 text-center">
-                                  <button type="button" id="btn-step-1" class="btn btn-info btn-fill" onSubmit="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-                                </div>
-                            </div>
+
+                        <div class="card-body text-center">
+                                  <button type="button" id="btn-step-1" class="btn btn-primary"  ><i class="fas fa-save" ></i>&nbsp; Save</button>
                         </div>
                         </section>
                     </div>
                 </div>
+            </div>
                 <!------End Step 1 ------>
 
                 <!------Start Step 2 ------>
-                <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='2') echo "active";?>">
-                    <div class="accordion-header js-accordion-header">MONTHLY MEETING EXPENSES</div>
-                    <div class="accordion-body js-accordion-body">
+                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='2') echo "active";?>">
+                    <div class="card-header" id="accordion-header-members">
+                        <h4 class="card-title w-100">
+                            <a class="d-block" data-toggle="collapse" href="#collapseTwo" style="width: 100%;">MONTHLY MEETING EXPENSES</a>
+                        </h4>
+                    </div>
+                    <div id="collapseTwo" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='2') echo 'show'; ?>" data-parent="#accordion">
+                        <div class="card-body">
                         <section>
-                            <div class="form-row form-group">
+                            <div class="col-12 form-row form-group">
                                 <div class="col-md-6 float-left">
                                     <div class="form-group">
-                                        <label for="ManditoryMeetingFeesPaid">
-                                            Mandatory Meeting Room Fees Paid
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">$</span>
-                                            <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" name="ManditoryMeetingFeesPaid" id="ManditoryMeetingFeesPaid" oninput="ChangeMeetingFees()" min="0"  step="0.01" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['manditory_meeting_fees_paid']; else echo "0"; ?>">
+                                        <label for="ManditoryMeetingFeesPaid">Mandatory Meeting Room Fees Paid</label>
+                                        <div class="form-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                                <input type="text"  class="form-control" name="ManditoryMeetingFeesPaid" id="ManditoryMeetingFeesPaid" oninput="ChangeMeetingFees()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['manditory_meeting_fees_paid']; else echo "0"; ?>"
+                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 float-left">
                                     <div class="form-group">
-                                        <label for="VoluntaryDonationsPaid">
-                                            Voluntary Donations Paid
-                                        </label>
-                                        <div class="input-group">
-                                        <span class="input-group-addon">$</span>
-                                        <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" name="VoluntaryDonationsPaid" id="VoluntaryDonationsPaid" oninput="ChangeMeetingFees()" min="0"  step="0.01" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['voluntary_donations_paid']; else echo "0"; ?>">
+                                        <label for="VoluntaryDonationsPaid">Voluntary Donations Paid</label>
+                                        <div class="form-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                                <input type="text"  class="form-control" name="VoluntaryDonationsPaid" id="VoluntaryDonationsPaid" oninput="ChangeMeetingFees()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['voluntary_donations_paid']; else echo "0"; ?>"
+                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6 float-left">
                                     <div class="form-group">
-                                        <label for="TotalMeetingRoomExpenses">
-                                            Total Meeting Room Expenses
-                                        </label>
-                                        <div class="input-group">
-                                        <span class="input-group-addon">$</span>
-                                        <input type="number" onkeydown="return event.keyCode !== 69" class="form-control txt-num" name="TotalMeetingRoomExpenses" id="TotalMeetingRoomExpenses" disabled>
+                                        <label for="TotalMeetingRoomExpenses">Total Meeting Room Expenses</label>
+                                        <div class="form-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                                <input type="text" class="form-control" name="TotalMeetingRoomExpenses" id="TotalMeetingRoomExpenses"
+                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <hr>
                             </div>
-                            <div class="form-row form-group">
+                            <div class="col-12 form-row form-group">
                                 <p>Use this section to list individually any Children’s Room expenses. Examples include craft supplies and snacks.</p>
                                 <div class="col-md-6 float-left">
                                     <div class="form-group">
                                         <label for="PaidBabySitters">Paid Babysitter Expenses (if any)</label>
-                                        <div class="input-group">
-                                        <span class="input-group-addon">$</span>
-                                        <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" name="PaidBabySitters" id="PaidBabySitters"  min="0"  step="0.01" oninput="ChangeChildrensRoomExpenses()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['paid_baby_sitters'] ?>">
+                                        <div class="form-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                                <input type="text" class="form-control" name="PaidBabySitters" id="PaidBabySitters" oninput="ChangeChildrensRoomExpenses()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['paid_baby_sitters'] ?>"
+                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -330,92 +380,140 @@
                                     </div>
                                     <table width="100%" class="table table-bordered" id="childrens-room">
                                         <thead>
-                                        <tr>
-                                          <td>Description</td>
-                                          <td>Supplies</td>
-                                          <td>Other Expenses</td>
-                                        </tr>
+                                            <tr>
+                                                <td>Description</td>
+                                                <td>Supplies</td>
+                                                <td>Other Expenses</td>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        <?php
-                                            $childrens_room = null;
-                                            if(isset($financial_report_array['childrens_room_expenses'])){
-                                                $childrens_room=unserialize(base64_decode($financial_report_array['childrens_room_expenses']));
-                                                $ChildrensExpenseRowCount = is_array($childrens_room) ? count($childrens_room) : 0;
-                                            }
-                                            else{
-                                                $ChildrensExpenseRowCount = 1;
-                                            }
+                                            @php
+                                                $childrens_room = null;
+                                                $total_supplies = 0;
+                                                $total_other_expenses = 0;
 
-                                            for ($row = 0; $row < $ChildrensExpenseRowCount; $row++){
-                                            echo "<tr>";
-                                            echo "<td>
-                                                    <div class=\"form-group\">
-                                                        <input type=\"text\" class=\"form-control\" name=\"ChildrensRoomDesc" . $row . "\" id=\"ChildrensRoomDesc" . $row . "\" value=\"" . ($childrens_room[$row]['childrens_room_desc'] ?? '') . "\">
-                                                    </div>
-                                                </td>";
-
-                                            echo "<td>
-                                                    <div class=\"form-group\">
-                                                        <div class=\"input-group\">";
-                                                            echo "<span class = \"input-group-addon\">$</span>";
-                                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\"  name=\"ChildrensRoomSupplies" . $row . "\" id=\"ChildrensRoomSupplies" . $row . "\" oninput=\"ChangeChildrensRoomExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($childrens_room[$row]['childrens_room_supplies'] ?? '') . "\">";
-                                                        echo "</div>
-                                                    </div>
-                                                </td>";
-
-                                            echo "<td>
-                                                    <div class=\"form-group\">
-                                                        <div class=\"input-group\">";
-                                                            echo "<span class = \"input-group-addon\">$</span>";
-                                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ChildrensRoomOther" . $row . "\" id=\"ChildrensRoomOther" . $row . "\" oninput=\"ChangeChildrensRoomExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($childrens_room[$row]['childrens_room_other'] ?? '') . "\">";
-                                                        echo "</div>
-                                                    </div>
-                                                </td>";
-
-                                            echo "</tr>";
-                                        }
-                                        ?>
+                                                if(isset($financial_report_array['childrens_room_expenses'])){
+                                                    $childrens_room = unserialize(base64_decode($financial_report_array['childrens_room_expenses']));
+                                                    $ChildrensExpenseRowCount = is_array($childrens_room) ? count($childrens_room) : 0;
+                                                } else {
+                                                    $ChildrensExpenseRowCount = 1;
+                                                }
+                                            @endphp
+                                            @for ($row = 0; $row < $ChildrensExpenseRowCount; $row++)
+                                                @php
+                                                    $supplies = isset($childrens_room[$row]['childrens_room_supplies']) ? floatval(str_replace(['$', ','], '', $childrens_room[$row]['childrens_room_supplies'])) : 0;
+                                                    $other_expenses = isset($childrens_room[$row]['childrens_room_other']) ? floatval(str_replace(['$', ','], '', $childrens_room[$row]['childrens_room_other'])) : 0;
+                                                    $total_supplies += $supplies;
+                                                    $total_other_expenses += $other_expenses;
+                                                @endphp
+                                                <tr>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <input type="text" class="form-control" name="ChildrensRoomDesc{{ $row }}" id="ChildrensRoomDesc{{ $row }}" value="{{ $childrens_room[$row]['childrens_room_desc'] ?? '' }}">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text">$</span>
+                                                                </div>
+                                                                <input type="text" class="form-control" name="ChildrensRoomSupplies{{ $row }}" id="ChildrensRoomSupplies{{ $row }}" oninput="ChangeChildrensRoomExpenses()"
+                                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" value="{{ $childrens_room[$row]['childrens_room_supplies'] ?? '' }}">
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="form-group">
+                                                            <div class="input-group">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text">$</span>
+                                                                </div>
+                                                                <input type="text" class="form-control" name="ChildrensRoomOther{{ $row }}" id="ChildrensRoomOther{{ $row }}" oninput="ChangeChildrensRoomExpenses()"
+                                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" value="{{ $childrens_room[$row]['childrens_room_other'] ?? '' }}">
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            @endfor
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td><strong>Total</strong></td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text">$</span>
+                                                            </div>
+                                                            <input type="text" class="form-control" value="{{ number_format($total_supplies, 2) }}" readonly>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="form-group">
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text">$</span>
+                                                            </div>
+                                                            <input type="text" class="form-control" value="{{ number_format($total_other_expenses, 2) }}" readonly>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                                 <div class="col-md-12 float-left">
-                                    <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddChildrenExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Add Row</button>
-                                    <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteChildrenExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Remove Row</button>
+                                    <button type="button" class="btn btn-sm btn-success" onclick="AddChildrenExpenseRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
+                                    <button type="button" class="btn btn-sm btn-danger " onclick="DeleteChildrenExpenseRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
                                 </div>
+                                <div class="col-md-12"><br></div>
+                                {{-- <div class="col-md-6 float-left">
+                                    <div>
+                                        <label for="ChildrensRoomTotal">Children's Room Miscellaneous Total</label>
+                                        <div class="form-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                                <input type="text"  class="form-control" value="0.00" name="ChildrensRoomTotal"  id="ChildrensRoomTotal"  readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> --}}
                                 <div class="col-md-6 float-left">
                                     <div>
-                                        <label for="ChildrensRoomTotal">
-                                            Children's Room Miscellaneous Total
-                                        </label>
-                                        <div class="input-group">
-                                        <span class="input-group-addon">$</span>
-                                        <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" value="0.00"name="ChildrensRoomTotal"  id="ChildrensRoomTotal"  step="0.01" disabled>
+                                        <label for="ChildrensRoomTotal">Total Children's Room Expenses</label>
+                                        <div class="form-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                                <input type="text"  class="form-control" value="0.00" name="ChildrensRoomTotal"  id="ChildrensRoomTotal"  readonly>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <hr>
                             </div>
                             <input type="hidden" name="ChildrensExpenseRowCount" id="ChildrensExpenseRowCount" value="<?php echo $ChildrensExpenseRowCount; ?>" />
-                            <div class="form-row form-group">
-                                <div class="card-body">
-                                    <div class="col-md-12 text-center">
-                                        <button type="submit" id="btn-step-2" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-                                    </div>
-                                </div>
-
+                            <div class="card-body text-center">
+                                <button type="submit" id="btn-step-2" class="btn btn-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
                             </div>
                         </section>
                     </div>
                 </div>
+            </div>
                 <!------End Step 2 ------>
 
                 <!------Start Step 3 ------>
-                <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='3') echo "active";?>">
-                    <div class="accordion-header js-accordion-header" id="accordion-header-service">SERVICE PROJECTS</div>
-                    <div class="accordion-body js-accordion-body ">
+                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='3') echo "active";?>">
+                    <div class="card-header" id="accordion-header-members">
+                        <h4 class="card-title w-100">
+                            <a class="d-block" data-toggle="collapse" href="#collapseThree" style="width: 100%;">SERVICE PROJECTS</a>
+                        </h4>
+                    </div>
+                    <div id="collapseThree" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='3') echo 'show'; ?>" data-parent="#accordion">
+                        <div class="card-body">
                     <section>
-                        <div class="form-row form-group">
+                        <div class="col-12 form-row form-group">
                           <p>
                             A Service Project is one that benefits others OUTSIDE your chapter. However, a Service Project may also be a project to benefit a member-in-distress or one who has special emergency needs, if the needs are the reason for the project. For example, a fundraiser may benefit the International MOMS Club’s Mother-to-Mother Fund or may be used to help pay extreme medical expenses for a life-threatening illness suffered by a member’s child. (Any fundraisers or projects that benefited your chapter or members who are not suffering emergency or devastating situations should not be listed here. Those should be listed in Step 7.)
                           </p>
@@ -428,192 +526,195 @@
                         <div class="col-md-12 nopadding">
                             <table width="100%" class="table table-bordered" id="service-projects">
                                 <thead>
-                                <tr>
-                                  <td width="36%">Project Description<span class="field-required">*</span></td>
-                                  <td width="16%">Income</td>
-                                  <td width="16%">Supplies & Expenses</td>
-                                  <td width="16%">Charity Donation</td>
-                                  <td width="16%">M2M Donation</td>
-                                </tr>
+                                    <tr>
+                                        <td width="36%">Project Description<span class="field-required">*</span></td>
+                                        <td width="16%">Income</td>
+                                        <td width="16%">Supplies & Expenses</td>
+                                        <td width="16%">Charity Donation</td>
+                                        <td width="16%">M2M Donation</td>
+                                    </tr>
                                 </thead>
                                 <tbody>
-
-                                <?php
+                                    @php
                                         $service_projects = null;
+                                        $total_income = 0;
+                                        $total_expenses = 0;
+                                        $total_charity = 0;
+                                        $total_m2m = 0;
+
                                         if(isset($financial_report_array['service_project_array'])){
-                                            $service_projects=unserialize(base64_decode($financial_report_array['service_project_array']));
+                                            $service_projects = unserialize(base64_decode($financial_report_array['service_project_array']));
                                             $ServiceProjectRowCount = is_array($service_projects) ? count($service_projects) : 0;
-                                        }
-                                        else{
+                                        } else {
                                             $ServiceProjectRowCount = 1;
                                         }
-
-                                        // Hardcoded first row
-                                        echo "<tr>";
-                                        echo "<td>
-                                                <div class=\"form-group\">
-                                                    <textarea class=\"form-control\" rows=\"4\" name=\"ServiceProjectDesc0\" id=\"ServiceProjectDesc0\">" . ($service_projects[0]['service_project_desc'] ?? '') . "</textarea>
+                                    @endphp
+                                    @for ($row = 0; $row < $ServiceProjectRowCount; $row++)
+                                    @php
+                                        $income = isset($service_projects[$row]['service_project_income']) ? floatval(str_replace(['$', ','], '', $service_projects[$row]['service_project_income'])) : 0;
+                                        $expenses = isset($service_projects[$row]['service_project_supplies']) ? floatval(str_replace(['$', ','], '', $service_projects[$row]['service_project_supplies'])) : 0;
+                                        $charity = isset($service_projects[$row]['service_project_charity']) ? floatval(str_replace(['$', ','], '', $service_projects[$row]['service_project_charity'])) : 0;
+                                        $m2m = isset($service_projects[$row]['service_project_m2m']) ? floatval(str_replace(['$', ','], '', $service_projects[$row]['service_project_m2m'])) : 0;
+                                        $total_income += $income;
+                                        $total_expenses += $expenses;
+                                        $total_charity += $charity;
+                                        $total_m2m += $m2m;
+                                    @endphp
+                                        <tr>
+                                            <td>
+                                                <div class="form-group">
+                                                    <textarea class="form-control" rows="2" name="ServiceProjectDesc{{ $row }}" id="ServiceProjectDesc{{ $row }}">{{ $service_projects[$row]['service_project_desc'] ?? '' }}</textarea>
                                                 </div>
-                                              </td>";
-
-                                        echo "<td>
-                                                <div class=\"form-group\">
-                                                    <div class=\"input-group\">";
-                                                        echo "<span class = \"input-group-addon\">$</span>";
-                                                        echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectIncome0\" id=\"ServiceProjectIncome0\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($service_projects[0]['service_project_income'] ?? '') . "\">";
-                                                    echo "</div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">$</span>
+                                                        </div>
+                                                        <input type="text" class="form-control" name="ServiceProjectIncome{{ $row }}" id="ServiceProjectIncome{{ $row }}" oninput="ChangeServiceProjectExpenses()"
+                                                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" value="{{ $service_projects[$row]['service_project_income'] ?? '' }}">
+                                                    </div>
                                                 </div>
-                                              </td>";
-
-                                        echo "<td>
-                                                <div class=\"form-group\">
-                                                    <div class=\"input-group\"><span class = \"input-group-addon\">$</span>
-                                                    <input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectSupplies0\" id=\"ServiceProjectSupplies0\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($service_projects[0]['service_project_supplies'] ?? '') . "\">";
-                                                echo "</div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">$</span>
+                                                        </div>
+                                                        <input type="text" class="form-control" name="ServiceProjectSupplies{{ $row }}" id="ServiceProjectSupplies{{ $row }}" oninput="ChangeServiceProjectExpenses()"
+                                                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" value="{{ $service_projects[$row]['service_project_supplies'] ?? '' }}">
+                                                    </div>
                                                 </div>
-                                              </td>";
-
-                                        echo "<td>
-                                                <div class=\"form-group\">
-                                                    <div class=\"input-group\">
-                                                        <span class = \"input-group-addon\">$</span>
-                                                        <input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectDonatedCharity0\" id=\"ServiceProjectDonatedCharity0\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($service_projects[0]['service_project_charity'] ?? '') . "\">";
-                                                    echo "</div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">$</span>
+                                                        </div>
+                                                        <input type="text" class="form-control" name="ServiceProjectDonatedCharity{{ $row }}" id="ServiceProjectDonatedCharity{{ $row }}" oninput="ChangeServiceProjectExpenses()"
+                                                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" value="{{ $service_projects[$row]['service_project_charity'] ?? '' }}">
+                                                    </div>
                                                 </div>
-                                              </td>";
-
-                                        echo "<td>
-                                                <div class=\"form-group\">
-                                                    <div class=\"input-group\">
-                                                        <span class = \"input-group-addon\">$</span>
-                                                        <input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectDonatedM2M0\" id=\"ServiceProjectDonatedM2M0\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($service_projects[0]['service_project_m2m'] ?? '') . "\">";
-                                                    echo "</div>
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">$</span>
+                                                        </div>
+                                                        <input type="text" class="form-control" name="ServiceProjectDonatedM2M{{ $row }}" id="ServiceProjectDonatedM2M{{ $row }}" oninput="ChangeServiceProjectExpenses()"
+                                                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" value="{{ $service_projects[$row]['service_project_m2m'] ?? '' }}">
+                                                    </div>
                                                 </div>
-                                              </td>";
-                                        echo "</tr>";
-
-                                        // Dynamic rows
-                                        for ($row = 1; $row < $ServiceProjectRowCount; $row++){
-                                            echo "<tr>";
-                                            echo "<td>
-                                                    <div class=\"form-group\">
-                                                        <textarea class=\"form-control\" rows=\"4\" name=\"ServiceProjectDesc" . $row . "\" id=\"ServiceProjectDesc" . $row . "\">" . ($service_projects[$row]['service_project_desc'] ?? '') . "</textarea>
-                                                    </div>
-                                                  </td>";
-
-                                            echo "<td>
-                                                    <div class=\"form-group\">
-                                                        <div class=\"input-group\">";
-                                                            echo "<span class = \"input-group-addon\">$</span>";
-                                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectIncome" . $row . "\" id=\"ServiceProjectIncome" . $row . "\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($service_projects[$row]['service_project_income'] ?? '') . "\">";
-                                                        echo "</div>
-                                                    </div>
-                                                  </td>";
-
-                                            echo "<td>
-                                                    <div class=\"form-group\">
-                                                        <div class=\"input-group\">";
-                                                            echo "<span class = \"input-group-addon\">$</span>";
-                                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectSupplies" . $row . "\" id=\"ServiceProjectSupplies" . $row . "\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($service_projects[$row]['service_project_supplies'] ?? '') . "\">";
-                                                        echo "</div>
-                                                    </div>
-                                                  </td>";
-
-                                            echo "<td>
-                                                    <div class=\"form-group\">
-                                                        <div class=\"input-group\">";
-                                                            echo "<span class = \"input-group-addon\">$</span>";
-                                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectDonatedCharity" . $row . "\" id=\"ServiceProjectDonatedCharity" . $row . "\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($service_projects[$row]['service_project_charity'] ?? '') . "\">";
-                                                        echo "</div>
-                                                    </div>
-                                                  </td>";
-
-                                            echo "<td>
-                                                    <div class=\"form-group\">
-                                                        <div class=\"input-group\">";
-                                                            echo "<span class = \"input-group-addon\">$</span>";
-                                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"ServiceProjectDonatedM2M" . $row . "\" id=\"ServiceProjectDonatedM2M" . $row . "\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($service_projects[$row]['service_project_m2m'] ?? '') . "\">";
-                                                        echo "</div>
-                                                    </div>
-                                                  </td>";
-
-                                            echo "</tr>";
-                                        }
-                                        ?>
-
+                                            </td>
+                                        </tr>
+                                    @endfor
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td><strong>Total</strong></td>
+                                        <td>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="text" class="form-control" value="{{ number_format($total_income, 2) }}" readonly>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="text" class="form-control" value="{{ number_format($total_expenses, 2) }}" readonly>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="text" class="form-control" value="{{ number_format($total_charity, 2) }}" readonly>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="text" class="form-control" value="{{ number_format($total_m2m, 2) }}" readonly>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                         <div class="col-md-12 float-left">
-                            <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddServiceProjectRow()" >Add Row</button>
-                            <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteServiceProjectRow()" >Remove Row</button>
+                            <button type="button" class="btn btn-sm btn-success" onclick="AddServiceProjectRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
+                            <button type="button" class="btn btn-sm btn-danger " onclick="DeleteServiceProjectRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
                         </div>
+                        <div class="col-md-12"><br></div>
                         <div class="col-md-6 float-left">
                             <div class="form-group">
                                 <label for="ServiceProjectIncomeTotal">
-                                    Service Project Income Total
+                                    Total Service Project Income
                                 </label>
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" min="0"  step="0.01" name="ServiceProjectIncomeTotal"  id="ServiceProjectIncomeTotal" disabled>
+                                <div class="form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" min="0"  step="0.01" name="ServiceProjectIncomeTotal"  id="ServiceProjectIncomeTotal" readonly>
                                 </div>
                             </div>
                         </div>
+                        </div>
+                        <div class="col-md-6"><br></div>
                         <div class="col-md-6 float-left">
                             <div class="form-group">
-                                <label for="ServiceProjectSuppliesTotal">
-                                    Service Project Supply & Expense Total
+                                <label for="ServiceProjectExpenseTotal">
+                                    Total Service Project Expenses
                                 </label>
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" min="0"  step="0.01" name="ServiceProjectSuppliesTotal" id="ServiceProjectSuppliesTotal" disabled>
+                                <div class="form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" min="0"  step="0.01" name="ServiceProjectExpenseTotal"  id="ServiceProjectExpenseTotal" readonly>
                                 </div>
                             </div>
                         </div>
-                        <div class="clearfix"></div>
-                        <div class="col-md-6 float-left">
-                            <div class="form-group">
-                                <label for="ServiceProjectDonationTotal">
-                                    Charity Donation Total
-                                </label>
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" min="0"  step="0.01" name="ServiceProjectDonationTotal" id="ServiceProjectDonationTotal" disabled>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 float-left">
-                            <div class="form-group">
-                                <label for="ServiceProjectM2MDonationTotal">
-                                    M2M/Sustaining Chapter Donation Total
-                                </label>
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" min="0"  step="0.01" name="ServiceProjectM2MDonationTotal" id="ServiceProjectM2MDonationTotal" disabled>
-                                </div>
-                            </div>
-                        </div>
-                        <hr>
+                    </div>
                     </div>
                     <input type="hidden" name="ServiceProjectRowCount" id="ServiceProjectRowCount" value="<?php echo $ServiceProjectRowCount; ?>" />
-                    <div class="form-row form-group">
-                        <div class="card-body">
-                        <div class="col-md-12 text-center">
-                          <button type="button" class="btn btn-info btn-fill" id="btn-step-3" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-                        </div>
-                        </div>
+
+                    <div class="card-body text-center">
+                          <button type="button" class="btn btn-primary" id="btn-step-3" ><i class="fas fa-save" ></i>&nbsp; Save</button>
                     </div>
                 </section>
                 </div>
                 </div>
+            </div>
                 <!------End Step 3 ------>
 
                 <!------Start Step 4 ------>
-                <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='4') echo "active";?>">
-                <div class="accordion-header js-accordion-header">PARTIES & MEMBER BENEFITS</div>
-                <div class="accordion-body js-accordion-body ">
+                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='4') echo "active";?>">
+                    <div class="card-header" id="accordion-header-members">
+                        <h4 class="card-title w-100">
+                            <a class="d-block" data-toggle="collapse" href="#collapseFour" style="width: 100%;">PARTIES & MEMBER BENEFITS</a>
+                        </h4>
+                    </div>
+                    <div id="collapseFour" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='4') echo 'show'; ?>" data-parent="#accordion">
+                        <div class="card-body">
                 <section>
-                    <div class="form-row form-group">
+                    <div class="col-12 form-row form-group">
                       <p>
                         If your members paid to attend any parties or members-only fun activities organized by your chapter, enter the amounts they paid your chapter here. For example, if your members paid money to the chapter to attend a Museum Day or Halloween Party, include those payments here. Include all Year-End Chapter Banquet income in this section. Do not include any money paid to or from your chapter for reservations at International MOMS Club events like Regional/State Luncheons or Workshops – that is listed in Step 5.
                       </p>
@@ -625,105 +726,150 @@
                       <p>
                         If your chapter had any expenses for <strong>parties and/or members-only fun activities or expenses,</strong> enter the amounts here. Group all expenses for any party/activity into one entry for each event. (For example, one amount for all expenses for Holiday Party, one amount for Year-End Banquet, etc…) If everything was donated for the event, you will not have any expense listed here. You may list parties/activities with no expense, but be sure to explain that everything was potluck or donated in the description column, and put $0 in the expense column for that event. Also list gifts bought for members, members-only crafts, and/or refreshments for members-only activities below (modest gifts for volunteer recognition can be listed under “Other” Expenses).
                       </p>
-                        <table id="party-expenses" width="100%" class="table table-bordered">
-                            <thead>
+                      <table id="party-expenses" width="100%" class="table table-bordered">
+                        <thead>
                             <tr>
-                              <td>Party Name/Description (include date)</td>
-                              <td>Income</td>
-                              <td>Expenses</td>
+                                <td>Party Name/Description (include date)</td>
+                                <td>Income</td>
+                                <td>Expenses</td>
                             </tr>
-                            </thead>
-                            <tbody>
-                            <?php
+                        </thead>
+                        <tbody>
+                            @php
                                 $party_expenses = null;
-                                if(isset($financial_report_array['party_expense_array'])){
-                                    $party_expenses=unserialize(base64_decode($financial_report_array['party_expense_array']));
+                                $total_income = 0;
+                                $total_expenses = 0;
+
+                                if (isset($financial_report_array['party_expense_array'])) {
+                                    $party_expenses = unserialize(base64_decode($financial_report_array['party_expense_array']));
                                     $PartyExpenseRowCount = is_array($party_expenses) ? count($party_expenses) : 0;
-                                }
-                                else{
+                                } else {
                                     $PartyExpenseRowCount = 1;
                                 }
+                            @endphp
+                            @for ($row = 0; $row < $PartyExpenseRowCount; $row++)
+                            @php
+                                $income = isset($party_expenses[$row]['party_expense_income']) ? floatval(str_replace(['$', ','], '', $party_expenses[$row]['party_expense_income'])) : 0;
+                                $expenses = isset($party_expenses[$row]['party_expense_expenses']) ? floatval(str_replace(['$', ','], '', $party_expenses[$row]['party_expense_expenses'])) : 0;
+                                $total_income += $income;
+                                $total_expenses += $expenses;
+                            @endphp
 
-                                for ($row = 0; $row < $PartyExpenseRowCount; $row++){
-                                echo "<tr>";
-                                echo "<td>
-                                        <div class=\"form-group\">
-                                            <input type=\"text\" class=\"form-control\" name=\"PartyDesc" . $row . "\" id=\"PartyDesc" . $row . "\" value=\"" . ($party_expenses[$row]['party_expense_desc'] ?? '') . "\">
+                                <tr>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="PartyDesc{{ $row }}" id="PartyDesc{{ $row }}" value="{{ $party_expenses[$row]['party_expense_desc'] ?? '' }}">
                                         </div>
-                                    </td>";
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" class="form-control" name="PartyIncome{{ $row }}" id="PartyIncome{{ $row }}" oninput="ChangePartyExpenses()" value="{{ $party_expenses[$row]['party_expense_income'] ?? '' }}"
+                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" class="form-control" name="PartyExpenses{{ $row }}" id="PartyExpenses{{ $row }}" oinput="ChangePartyExpenses()" value="{{ $party_expenses[$row]['party_expense_expenses'] ?? '' }}"
+                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endfor
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td><strong>Total</strong></td>
+                                <td>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                            </div>
+                                            <input type="text" class="form-control" value="{{ number_format($total_income, 2) }}" readonly>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                            </div>
+                                            <input type="text" class="form-control" value="{{ number_format($total_expenses, 2) }}" readonly>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
 
-                                echo "<td>
-                                        <div class=\"form-group\">
-                                            <div class=\"input-group\">";
-                                                echo "<span class = \"input-group-addon\">$</span>";
-                                                echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"PartyIncome" . $row . "\" id=\"PartyIncome" . $row . "\" oninput=\"ChangePartyExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($party_expenses[$row]['party_expense_income'] ?? '') . "\">";
-                                            echo "</div>
-                                        </div>
-                                    </td>";
-
-                                echo "<td>
-                                        <div class=\"form-group\">
-                                            <div class=\"input-group\">";
-                                                echo "<span class = \"input-group-addon\">$</span>";
-                                                echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"PartyExpenses" . $row . "\" id=\"PartyExpenses" . $row . "\" oninput=\"ChangePartyExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($party_expenses[$row]['party_expense_expenses'] ?? '') . "\">";
-                                            echo "</div>
-                                        </div>
-                                    </td>";
-                                echo "</tr>";
-                            }
-                            ?>
-                            </tbody>
-                        </table>
                         <div class="col-md-12">
-                            <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddPartyExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Add Row</button>
-                            <button type="button" class="btn btn-danger btn-add-remove" onclick="DeletePartyExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Remove Row</button>
+                            <button type="button" class="btn btn-sm btn-success" onclick="AddPartyExpenseRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
+                            <button type="button" class="btn btn-sm btn-danger" onclick="DeletePartyExpenseRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
                         </div>
-                        <div class="col-md-12">
-                            <h4>Party/Member Benefit</h4>
-                        </div>
+                        <div class="col-md-12"><br></div>
                         <div class="col-md-6 float-left">
                             <div class="form-group">
                                 <label for="PartyIncomeTotal">
-                                    Income Total:
+                                    Total Benefit Income
                                 </label>
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" min="0"  step="0.01" name="PartyIncomeTotal" id="PartyIncomeTotal" disabled>
-                                </div>
+                                <div class="form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="PartyIncomeTotal" id="PartyIncomeTotal"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
+                            </div>
                             </div>
                         </div>
+                        </div>
+                        <div class="col-md-6"><br></div>
                         <div class="col-md-6 float-left">
                             <div class="form-group">
                                 <label for="PartyExpenseTotal">
-                                    Expense Total
+                                    Total Benefit Expenses
                                 </label>
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" min="0"  step="0.01" name="PartyExpenseTotal" id="PartyExpenseTotal" disabled>
-                                </div>
+                                <div class="form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="PartyExpenseTotal" id="PartyExpenseTotal"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                             </div>
+                            </div>
+                        </div>
                         </div>
                         <hr>
                     </div>
                     <input type="hidden" name="PartyExpenseRowCount" id="PartyExpenseRowCount" value="<?php echo $PartyExpenseRowCount; ?>" />
-                    <div class="form-row form-group">
-                        <div class="card-body">
-                            <div class="col-md-12 text-center">
-                              <button type="submit" id="btn-step-4" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-                            </div>
-                        </div>
+                    <div class="card-body text-center">
+                        <button type="submit" id="btn-step-4" class="btn btn-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
                     </div>
                 </section>
                 </div>
                 </div>
+            </div>
                 <!------End Step 4 ------>
 
                 <!------Start Step 5 ------>
-            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='5') echo "active";?>">
-                <div class="accordion-header js-accordion-header">OFFICE & OPERATING EXPENSES</div>
-                <div class="accordion-body js-accordion-body">
+                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='5') echo "active";?>">
+                    <div class="card-header" id="accordion-header-members">
+                        <h4 class="card-title w-100">
+                            <a class="d-block" data-toggle="collapse" href="#collapseFive" style="width: 100%;">OFFICE & OPERATING EXPENSES</a>
+                        </h4>
+                    </div>
+                    <div id="collapseFive" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='5') echo 'show'; ?>" data-parent="#accordion">
+                        <div class="card-body">
                     <section>
-                    <div class="form-row form-group">
+                    <div class="col-12 form-row form-group">
                       <p>
                         Use this section to list individually any Office Expenses or other Operating Expenses. Please include only one expense type per line (i.e. website hosting, advertising, etc.).
                       </p>
@@ -732,10 +878,13 @@
                             <label for="PrintingCosts">
                                 Printing Costs
                             </label>
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0"  step="0.01" name="PrintingCosts" id="PrintingCosts" oninput="ChangeOfficeExpenses()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['office_printing_costs']?>">
+                            <div class="form-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" name="PrintingCosts" id="PrintingCosts" oninput="ChangeOfficeExpenses()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['office_printing_costs']?>"
+                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
                             </div>
+                        </div>
                         </div>
                     </div>
                     <div class="col-md-4 float-left">
@@ -743,10 +892,13 @@
                             <label for="PostageCosts">
                                 Postage Costs
                             </label>
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0"  step="0.01" name="PostageCosts" id="PostageCosts" oninput="ChangeOfficeExpenses()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['office_postage_costs'] ?>">
+                            <div class="form-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" name="PostageCosts" id="PostageCosts" oninput="ChangeOfficeExpenses()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['office_postage_costs'] ?>"
+                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
                             </div>
+                        </div>
                         </div>
                     </div>
                     <div class="col-md-4 float-left">
@@ -754,93 +906,144 @@
                             <label for="MembershipPins">
                                 Membership Pins
                             </label>
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0"  step="0.01" name="MembershipPins" id="MembershipPins" oninput="ChangeOfficeExpenses()" value="<?php echo $financial_report_array['office_membership_pins_cost']; ?>">
+                            <div class="form-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" name="MembershipPins" id="MembershipPins" oninput="ChangeOfficeExpenses()" value="<?php echo $financial_report_array['office_membership_pins_cost']; ?>"
+                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
                             </div>
                         </div>
+                        </div>
                     </div>
+                    <div class="col-md-12"><br></div>
                     <div class="col-md-12 float-left">
-                        <label for="">
+                        <label for="office-expenses">
                             Other Office & Operating Expenses
                         </label>
                     </div>
                     <table id="office-expenses" width="100%" class="table table-bordered">
                         <thead>
-                        <tr>
-                          <td>Description of Expense</td>
-                          <td>Expenses</td>
-                        </tr>
+                            <tr>
+                                <td>Description of Expense</td>
+                                <td>Expenses</td>
+                            </tr>
                         </thead>
                         <tbody>
-                        <?php
-                            $other_office_expenses = null;
-                            if(isset($financial_report_array['office_other_expenses'])){
-                                $other_office_expenses=unserialize(base64_decode($financial_report_array['office_other_expenses']));
-                                //$OfficeExpenseRowCount = count($other_office_expenses);
-                                $OfficeExpenseRowCount = is_array($other_office_expenses) ? count($other_office_expenses) : 0;
-                            }
-                            else{
-                                $OfficeExpenseRowCount = 1;
-                            }
+                            @php
+                                $other_office_expenses = null;
+                                $total_expenses = 0;
 
-                            for ($row = 0; $row < $OfficeExpenseRowCount; $row++){
-                            echo "<tr>";
-                            echo "<td>
-                                    <div class=\"form-group\">
-                                        <input maxlength=\"250\" type=\"text\" class=\"form-control\" name=\"OfficeDesc" . $row . "\" id=\"OfficeDesc" . $row . "\" value=\"" . ($other_office_expenses[$row]['office_other_desc'] ?? '') . "\">
-                                    </div>
-                                </td>";
-
-                            echo "<td>
-                                    <div class=\"form-group\">
-                                        <div class=\"input-group\">";
-                                            echo "<span class = \"input-group-addon\">$</span>";
-                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"OfficeExpenses" . $row . "\" id=\"OfficeExpenses" . $row . "\" oninput=\"ChangeOfficeExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($other_office_expenses[$row]['office_other_expense'] ?? '') . "\">";
-                                        echo "</div>
-                                    </div>
-                                </td>";
-                            echo "</tr>";
-                        }
-                        ?>
+                                if (isset($financial_report_array['office_other_expenses'])) {
+                                    $other_office_expenses = unserialize(base64_decode($financial_report_array['office_other_expenses']));
+                                    $OfficeExpenseRowCount = is_array($other_office_expenses) ? count($other_office_expenses) : 0;
+                                } else {
+                                    $OfficeExpenseRowCount = 1;
+                                }
+                            @endphp
+                            @for ($row = 0; $row < $OfficeExpenseRowCount; $row++)
+                            @php
+                                $expenses = isset($other_office_expenses[$row]['office_other_expense']) ? floatval(str_replace(['$', ','], '', $other_office_expenses[$row]['office_other_expense'])) : 0;
+                                $total_expenses += $expenses;
+                            @endphp
+                                <tr>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="text" maxlength="250" class="form-control" name="OfficeDesc{{ $row }}" id="OfficeDesc{{ $row }}" value="{{ $other_office_expenses[$row]['office_other_desc'] ?? '' }}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" class="form-control" name="OfficeExpenses{{ $row }}" id="OfficeExpenses{{ $row }}" oninput="ChangeOfficeExpenses()" value="{{ $other_office_expenses[$row]['office_other_expense'] ?? '' }}"
+                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endfor
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td><strong>Total</strong></td>
+                                <td>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                            </div>
+                                            <input type="text" class="form-control" value="{{ number_format($total_expenses, 2) }}" readonly>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
                     <div class="col-md-12 float-left">
-                        <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddOfficeExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Add Row</button>
-                        <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteOfficeExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Remove Row</button>
+                        <button type="button" class="btn btn-sm btn-success " onclick="AddOfficeExpenseRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
+                        <button type="button" class="btn btn-sm btn-danger " onclick="DeleteOfficeExpenseRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
                     </div>
-                    <div class="col-md-4 float-left">
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-6 float-left">
                         <div class="form-group">
-                            <label for="OfficeExpenseTotal">
-                                Other Office & Operating Expenses Total
+                            <label for="TotalOperatingExpense">
+                                Total Office & Operating Expenses
                             </label>
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" onkeydown="return event.keyCode !== 69" class="form-control txt-num"  min="0"  step="0.01" name="OfficeExpenseTotal" id="OfficeExpenseTotal" disabled>
+                            <div class="form-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" name="TotalOperatingExpense" id="TotalOperatingExpense"
+                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                             </div>
                         </div>
-                    </div>
-                    <hr>
-                </div>
-                <input type="hidden" name="OfficeExpenseRowCount" id="OfficeExpenseRowCount" value="<?php echo $OfficeExpenseRowCount; ?>" />
-                <div class="form-row form-group">
-                    <div class="card-body">
-                        <div class="col-md-12 text-center">
-                          <button type="button" id="btn-step-5" class="btn btn-info btn-fill" onSubmit="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
                         </div>
                     </div>
+                </div>
+                <input type="hidden" name="OfficeExpenseRowCount" id="OfficeExpenseRowCount" value="<?php echo $OfficeExpenseRowCount; ?>" />
+                <div class="card-body text-center">
+                          <button type="button" id="btn-step-5" class="btn btn-primary" onSubmit="this.form.submit(); this.disabled=true;" ><i class="fas fa-save" ></i>&nbsp; Save</button>
                 </div>
                 </section>
                 </div><!-- end of accordion body -->
             </div><!-- end of accordion item -->
+        </div>
             <!------End Step 5 ------>
 
             <!------Start Step 6 ------>
-            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='6') echo "active";?>">
-                <div class="accordion-header js-accordion-header" id="accordion-header-rereg">INTERNATIONAL EVENTS & RE-REGISTRATION</div>
-                <div class="accordion-body js-accordion-body ">
+            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='6') echo "active";?>">
+                <div class="card-header" id="accordion-header-members">
+                    <h4 class="card-title w-100">
+                        <a class="d-block" data-toggle="collapse" href="#collapseSix" style="width: 100%;">INTERNATIONAL EVENTS & RE-REGISTRATION</a>
+                    </h4>
+                </div>
+                <div id="collapseSix" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='6') echo 'show'; ?>" data-parent="#accordion">
+                    <div class="card-body">
                     <section>
-                    <div class="form-row form-group">
+                        <div class="col-12 form-row form-group">
+                            <div class="col-md-12">
+                                <p>
+                                    Annual Chapter Registration Fee paid to International MOMS Club.  Due by the end of your chapter's anniversary month each year.
+                                  </p>
+                            </div>
+                            <div class="col-md-6 float-left">
+                                <div class="form-group">
+                                    <label for="AnnualRegistrationFee">
+                                        Chapter Registration Fee<span class="field-required">*</span>
+                                    </label>
+                                        <div class="form-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                    <input type="text" class="form-control" name="AnnualRegistrationFee" id="AnnualRegistrationFee" oninput="ChangeReRegistrationExpense()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['annual_registration_fee'] ?>"
+                                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" >
+                                </div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="col-md-12"><br></div>
+                    <div class="col-12 form-row form-group">
                       <p>
                         Use this section to list individually any Internaitonal Events (in person or virtual).
                         International Events include any State/Regional/Conference Luncheons, Workshops or other events sponsored or organized by the International MOMS Club. “Event income” includes all money paid to your treasury by members for their reservations at those events and any income from fundraisers held to help offset the expense of members attending an International event. Also include any donations to your chapter to help build your raffle basket or chapter display. “Event expenses” includes all money paid by your treasury to International for reservations or for members attending the event, raffle basket and display expenses, and any travel costs. If your chapter paid for all reservations from its treasury and did not charge members for attending, it will have expenses, but no income, in this category.
@@ -854,622 +1057,729 @@
                     <table id="international_events" width="100%" class="table table-bordered">
                         <thead>
                             <tr>
-                              <td>Description</td>
-                              <td>Income</td>
-                              <td>Expenses</td>
+                                <td>Description</td>
+                                <td>Income</td>
+                                <td>Expenses</td>
                             </tr>
                         </thead>
                         <tbody>
-                        <?php
-                            $international_event_array = null;
-                            if(isset($financial_report_array['international_event_array'])){
-                                $international_event_array=unserialize(base64_decode($financial_report_array['international_event_array']));
-                                //$InternationalEventRowCount = count($international_event_array);
-                                $InternationalEventRowCount = is_array($international_event_array) ? count($international_event_array) : 0;
-                            }
-                            else{
-                                $InternationalEventRowCount = 1;
-                            }
-                            for ($row = 0; $row < $InternationalEventRowCount; $row++){
-                            echo "<tr>";
-                            echo "<td>
-                                    <div class=\"form-group\">
-                                        <input type=\"text\" onKeyPress=\"if(this.value.length==30) return false;\" class=\"form-control\" name=\"InternationalEventDesc" . $row . "\" id=\"InternationalEventDesc" . $row . "\" value=\"" . ($international_event_array[$row]['intl_event_desc'] ?? '') . "\">
-                                    </div>
-                                </td>";
+                            @php
+                                $international_event_array = null;
+                                $total_income = 0;
+                                $total_expenses = 0;
 
-                            echo "<td>
-                                    <div class=\"form-group\">
-                                        <div class=\"input-group\">";
-                                            echo "<span class = \"input-group-addon\">$</span>";
-                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"InternationalEventIncome" . $row . "\" id=\"InternationalEventIncome" . $row . "\" oninput=\"ChangeInternationalEventExpense()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($international_event_array[$row]['intl_event_income'] ?? '') . "\">";
-                                        echo "</div>
-                                    </div>
-                                </td>";
-
-                            echo "<td>
-                                    <div class=\"form-group\">
-                                        <div class=\"input-group\">";
-                                            echo "<span class = \"input-group-addon\">$</span>";
-                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"InternationalEventExpense" . $row . "\" id=\"InternationalEventExpense" . $row . "\" oninput=\"ChangeInternationalEventExpense()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($international_event_array[$row]['intl_event_expenses'] ?? '') . "\">";
-                                        echo "</div>
-                                    </div>
-                                </td>";
-
-                            echo "</tr>";
-                        }
-                        ?>
+                                if (isset($financial_report_array['international_event_array'])) {
+                                    $international_event_array = unserialize(base64_decode($financial_report_array['international_event_array']));
+                                    $InternationalEventRowCount = is_array($international_event_array) ? count($international_event_array) : 0;
+                                } else {
+                                    $InternationalEventRowCount = 1;
+                                }
+                            @endphp
+                            @for ($row = 0; $row < $InternationalEventRowCount; $row++)
+                            @php
+                                $income = isset($international_event_array[$row]['intl_event_income']) ? floatval(str_replace(['$', ','], '', $international_event_array[$row]['intl_event_income'])) : 0;
+                                $expenses = isset($international_event_array[$row]['intl_event_expenses']) ? floatval(str_replace(['$', ','], '', $international_event_array[$row]['intl_event_expenses'])) : 0;
+                                $total_income += $income;
+                                $total_expenses += $expenses;
+                            @endphp
+                                <tr>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="InternationalEventDesc{{ $row }}" id="InternationalEventDesc{{ $row }}"
+                                                value="{{ $international_event_array[$row]['intl_event_desc'] ?? '' }}"
+                                                onkeypress="if(this.value.length==30) return false;">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" class="form-control" name="InternationalEventIncome{{ $row }}" id="InternationalEventIncome{{ $row }}" oninput="ChangeInternationalEventExpense()" value="{{ $international_event_array[$row]['intl_event_income'] ?? '' }}"
+                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" class="form-control" name="InternationalEventExpense{{ $row }}" id="InternationalEventExpense{{ $row }}" oninput="ChangeInternationalEventExpense()" value="{{ $international_event_array[$row]['intl_event_expenses'] ?? '' }}"
+                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endfor
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td><strong>Total</strong></td>
+                                <td>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                            </div>
+                                            <input type="text" class="form-control" value="{{ number_format($total_income, 2) }}" readonly>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                            </div>
+                                            <input type="text" class="form-control" value="{{ number_format($total_expenses, 2) }}" readonly>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
                     <div class="col-md-12 float-left">
-                    <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddInternationalEventRow()" <?php if($submitted) echo "disabled"; ?>>Add Row</button>
-                    <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteInternationalEventRow()" <?php if($submitted) echo "disabled"; ?>>Remove Row</button>
+                    <button type="button" class="btn btn-sm btn-success" onclick="AddInternationalEventRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="DeleteInternationalEventRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
                     </div>
                     <hr>
                 </div>
-
-                <div class="form-row form-group">
-                <div class="col-md-4 float-left">
+                <div class="col-md-12"><br></div>
+                <div class="col-12 form-row form-group">
+                <div class="col-md-6 float-left">
                     <div class="form-group">
                         <label for="InternationalEventIncomeTotal">
-                            International Event Registration Income
+                            Total Event Registration Income
                         </label>
-                        <div class="input-group">
-                        <span class="input-group-addon">$</span>
-                        <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0"  step="0.01" name="InternationalEventIncomeTotal" id="InternationalEventIncomeTotal" disabled>
-                        </div>
+                        <div class="form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                        <input type="text" class="form-control" name="InternationalEventIncomeTotal" id="InternationalEventIncomeTotal"
+                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
+                    </div>
+                    </div>
                     </div>
                 </div>
-                <div class="col-md-4 float-left">
+                <div class="col-md-6"><br></div>
+                <div class="col-md-6 float-left">
                     <div class="form-group">
                         <label for="InternationalEventExpenseTotal">
-                            International Event Registration Expenses
+                            Total Event Registration Expenses
                         </label>
-                        <div class="input-group">
-                        <span class="input-group-addon">$</span>
-                        <input type="number" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0"  step="0.01" name="InternationalEventExpenseTotal" id="InternationalEventExpenseTotal" disabled>
-                        </div>
+                        <div class="form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                        <input type="text" class="form-control" name="InternationalEventExpenseTotal" id="InternationalEventExpenseTotal"
+                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                     </div>
+                    </div>
+                </div>
                 </div>
                 <hr>
                 </div>
                 <input type="hidden" name="InternationalEventRowCount" name="InternationalEventRowCount" id="InternationalEventRowCount" value="<?php echo $InternationalEventRowCount; ?>" />
-                <div class="form-row form-group">
-                <div class="col-md-12">
-                  <h4>
-                    Chapter Re-registration
-                  </h4>
-                </div>
-                <div class="col-md-6 float-left">
-                    <div class="form-group">
-                        <label for="AnnualRegistrationFee">
-                            Annual Chapter Registration Fee paid to International MOMS Club<span class="field-required">*</span>
-                        </label>
-                        <div class="input-group">
-                        <span class="input-group-addon">$</span>
-                        <input type="number" onKeyPress="if(this.value.length==9) return false;" class="form-control txt-num" min="0"  step="0.01" name="AnnualRegistrationFee" id="AnnualRegistrationFee" onkeydown="return event.keyCode !== 69" oninput="ChangeReRegistrationExpense()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['annual_registration_fee'] ?>">
-                        </div>
-                    </div>
-                </div>
-                <hr>
-                </div>
-                <div class="form-row form-group">
-                    <div class="card-body">
-                        <div class="col-md-12 text-center">
-                          <button type="button" id="btn-step-6" class="btn btn-info btn-fill" onSubmit="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-                        </div>
-                    </div>
+
+                <div class="card-body text-center">
+                          <button type="button" id="btn-step-6" class="btn btn-primary" onSubmit="this.form.submit(); this.disabled=true;" ><i class="fas fa-save" ></i>&nbsp; Save</button>
                 </div>
                 </section>
                 </div><!-- end of accordion body -->
             </div><!-- end of accordion item -->
+        </div>
             <!------End Step 6 ------>
 
             <!------Start Step 7 ------>
-            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='7') echo "active";?>">
-                <div class="accordion-header js-accordion-header">DONATIONS TO YOUR CHAPTER</div>
-                <div class="accordion-body js-accordion-body ">
+            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='7') echo "active";?>">
+                <div class="card-header" id="accordion-header-members">
+                    <h4 class="card-title w-100">
+                        <a class="d-block" data-toggle="collapse" href="#collapseSeven" style="width: 100%;">DONATIONS TO YOUR CHAPTER</a>
+                    </h4>
+                </div>
+                <div id="collapseSeven" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='7') echo 'show'; ?>" data-parent="#accordion">
+                    <div class="card-body">
                 <section>
-                <div class="form-row form-group">
+                <div class="col-12 form-row form-group">
                     <label for="donation-income">
                         Monetary Donations:
                     </label>
                     <p>For each donation of money (cash or checks), please list Donor Name, Address, Date of Donation and Amount. If the money was donated for a specific purpose, list that, too. If you received grants, include that income here.</p>
                     <table id="donation-income" width="100%" class="table table-bordered">
                         <thead>
-                        <tr>
-                          <td>Purpose of Donation/How it was Used</td>
-                          <td>Donor Name & Address</td>
-                          <td>Date</td>
-                          <td>Amount</td>
-                        </tr>
+                            <tr>
+                                <td>Purpose of Donation/How it was Used</td>
+                                <td>Donor Name & Address</td>
+                                <td>Date</td>
+                                <td>Amount</td>
+                            </tr>
                         </thead>
                         <tbody>
-                            <?php
+                            @php
                                 $monetary_dontations_to_chapter = null;
-                                if(isset($financial_report_array['monetary_donations_to_chapter'])){
-                                    $monetary_dontations_to_chapter=unserialize(base64_decode($financial_report_array['monetary_donations_to_chapter']));
+                                $total_income = 0;
+
+                                if (isset($financial_report_array['monetary_donations_to_chapter'])) {
+                                    $monetary_dontations_to_chapter = unserialize(base64_decode($financial_report_array['monetary_donations_to_chapter']));
                                     $MonDonationRowCount = is_array($monetary_dontations_to_chapter) ? count($monetary_dontations_to_chapter) : 0;
-                                }
-                                else{
+                                } else {
                                     $MonDonationRowCount = 1;
                                 }
-
-                                for ($row = 0; $row < $MonDonationRowCount; $row++){
-                                echo "<tr>";
-                                echo "<td>
-                                        <div class=\"form-group\">
-                                            <input type=\"text\" class=\"form-control\" name=\"DonationDesc" . $row . "\" id=\"DonationDesc" . $row . "\" value=\"" . ($monetary_dontations_to_chapter[$row]['mon_donation_desc'] ?? '') . "\">
+                            @endphp
+                            @for ($row = 0; $row < $MonDonationRowCount; $row++)
+                            @php
+                                $income = isset($monetary_dontations_to_chapter[$row]['mon_donation_amount']) ? floatval(str_replace(['$', ','], '', $monetary_dontations_to_chapter[$row]['mon_donation_amount'])) : 0;
+                                $total_income += $income;
+                            @endphp
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="DonationDesc{{ $row }}" id="DonationDesc{{ $row }}" value="{{ $monetary_dontations_to_chapter[$row]['mon_donation_desc'] ?? '' }}">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="DonorInfo{{ $row }}" id="DonorInfo{{ $row }}" value="{{ $monetary_dontations_to_chapter[$row]['mon_donation_info'] ?? '' }}">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="date" class="form-control" name="MonDonationDate{{ $row }}" id="MonDonationDate{{ $row }}" value="{{ $monetary_dontations_to_chapter[$row]['mon_donation_date'] ?? '' }}"
+                                            data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask >
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                            </div>
+                                            <input type="text" class="form-control" name="DonationAmount{{ $row }}" id="DonationAmount{{ $row }}" oninput="ChangeDonationAmount()" value="{{ $monetary_dontations_to_chapter[$row]['mon_donation_amount'] ?? '' }}"
+                                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
                                         </div>
-                                    </td>";
-
-                                echo "<td>
-                                        <div class=\"form-group\">
-                                            <input type=\"text\" class=\"form-control\" name=\"DonorInfo" . $row . "\" id=\"DonorInfo" . $row . "\" value=\"" . ($monetary_dontations_to_chapter[$row]['mon_donation_info'] ?? '') . "\">
-                                        </div>
-                                    </td>";
-
-                                echo "<td>
-                                        <div class=\"form-group\">
-                                            <input type=\"date\" class=\"form-control\" min='2021-07-01' max='2022-06-30' name=\"MonDonationDate" . $row . "\" id=\"MonDonationDate" . $row . "\" value=\"" . ($monetary_dontations_to_chapter[$row]['mon_donation_date'] ?? '') . "\" onchange=\"IsValidDate(this)\">
-                                        </div>
-                                    </td>";
-
-                                echo "<td>
-                                        <div class=\"form-group\">
-                                            <div class=\"input-group\">";
-                                                echo "<span class = \"input-group-addon\">$</span>";
-                                                echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"DonationAmount" . $row . "\" id=\"DonationAmount" . $row . "\" oninput=\"ChangeDonationAmount()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($monetary_dontations_to_chapter[$row]['mon_donation_amount'] ?? '') . "\">";
-                                            echo "</div>
-                                        </div>
-                                    </td>";
-
-                                echo "</tr>";
-                            }
-                                ?>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endfor
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3"><strong>Total</strong></td>
+                                <td>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                            </div>
+                                            <input type="text" class="form-control" value="{{ number_format($total_income, 2) }}" readonly>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
+
                     <div class="col-md-12">
-                        <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddMonDonationRow()" <?php if($submitted) echo "disabled"; ?>>Add Row</button>
-                        <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteMonDonationRow()" <?php if($submitted) echo "disabled"; ?>>Remove Row</button>
+                        <button type="button" class="btn btn-sm btn-success " onclick="AddMonDonationRow()" ><i class="fas fa-plus" ></i>&nbsp; Add Row</button>
+                        <button type="button" class="btn btn-sm btn-danger " onclick="DeleteMonDonationRow()" ><i class="fas fa-minus" ></i>&nbsp; Remove Row</button>
                     </div>
-                    <div class="col-md-4 float-left">
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-6 float-left">
                     <div class="form-group">
                         <label for="DonationTotal">Monetary Donation Total</label>
-                        <div class="input-group">
-                        <span class="input-group-addon">$</span>
-                        <input type="number" class="form-control"  min="0"  step="0.01" name="DonationTotal" id="DonationTotal" disabled>
-                        </div>
+                        <div class="form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                        <input type="text" class="form-control"  name="DonationTotal" id="DonationTotal"
+                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
+                    </div>
+                    </div>
                     </div>
                     <input type="hidden" name="MonDonationRowCount" id="MonDonationRowCount" value="<?php echo $MonDonationRowCount; ?>" />
                 </div>
-                <hr>
                 </div>
-                <div class="form-row form-group">
+                <div class="col-md-12"><br></div>
+                <div class="col-12 form-row form-group">
                     <label for="donation-goods">
                         Non-Monetary Donations:
                     </label>
                     <p>For each donation, please list Donor Name, Address, Date of Donation, Items Donated, and purpose of donation. Do not include a value for items donated except in the case of gift cards. Do list the value of any gift cards received in the description.</p>
                     <table id="donation-goods" width="100%" class="table table-bordered">
                         <thead>
-                        <tr>
-                          <td>Item & Purpose of Donation/How it was Used</td>
-                          <td>Donor Name & Address</td>
-                          <td>Date</td>
-                        </tr>
+                            <tr>
+                                <td>Item & Purpose of Donation/How it was Used</td>
+                                <td>Donor Name & Address</td>
+                                <td>Date</td>
+                            </tr>
                         </thead>
                         <tbody>
-                            <?php
-                            $non_monetary_dontations_to_chapter = null;
-                            if(isset($financial_report_array['non_monetary_donations_to_chapter'])){
-                                $non_monetary_dontations_to_chapter=unserialize(base64_decode($financial_report_array['non_monetary_donations_to_chapter']));
-                                $NonMonDonationRowCount = is_array($non_monetary_dontations_to_chapter) ? count($non_monetary_dontations_to_chapter) : 0;
-                            }
-                            else{
-                                $NonMonDonationRowCount = 1;
-                            }
+                            @php
+                                $non_monetary_dontations_to_chapter = null;
+                                if (isset($financial_report_array['non_monetary_donations_to_chapter'])) {
+                                    $non_monetary_dontations_to_chapter = unserialize(base64_decode($financial_report_array['non_monetary_donations_to_chapter']));
+                                    $NonMonDonationRowCount = is_array($non_monetary_dontations_to_chapter) ? count($non_monetary_dontations_to_chapter) : 0;
+                                } else {
+                                    $NonMonDonationRowCount = 1;
+                                }
+                            @endphp
 
-                            for ($row = 0; $row < $NonMonDonationRowCount; $row++){
-                            echo "<tr>";
-                            echo "<td>
-                                    <div class=\"form-group\">
-                                        <input type=\"text\" class=\"form-control\" name=\"NonMonDonationDesc" . $row . "\" id=\"NonMonDonationDesc" . $row . "\" value=\"" . ($non_monetary_dontations_to_chapter[$row]['nonmon_donation_desc'] ?? '') . "\">
+                            @for ($row = 0; $row < $NonMonDonationRowCount; $row++)
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="NonMonDonationDesc{{ $row }}" id="NonMonDonationDesc{{ $row }}" value="{{ $non_monetary_dontations_to_chapter[$row]['nonmon_donation_desc'] ?? '' }}">
                                     </div>
-                                </td>";
-
-                            echo "<td>
-                                    <div class=\"form-group\">
-                                        <input type=\"text\" class=\"form-control\" name=\"NonMonDonorInfo" . $row . "\" id=\"NonMonDonorInfo" . $row . "\" value=\"" . ($non_monetary_dontations_to_chapter[$row]['nonmon_donation_info'] ?? '') . "\">
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="NonMonDonorInfo{{ $row }}" id="NonMonDonorInfo{{ $row }}" value="{{ $non_monetary_dontations_to_chapter[$row]['nonmon_donation_info'] ?? '' }}">
                                     </div>
-                                </td>";
-
-                            echo "<td>
-                                    <div class=\"form-group\">
-                                        <input type=\"date\" class=\"form-control\" min='2021-07-01' max='2022-06-30' name=\"NonMonDonationDate" . $row . "\" id=\"NonMonDonationDate" . $row . "\" value=\"" . ($non_monetary_dontations_to_chapter[$row]['nonmon_donation_date'] ?? '') . "\" onchange=\"IsValidDate(this)\">
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="date" class="form-control" name="NonMonDonationDate{{ $row }}" id="NonMonDonationDate{{ $row }}" value="{{ $non_monetary_dontations_to_chapter[$row]['nonmon_donation_date'] ?? '' }}"
+                                            data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask >
                                     </div>
-                                </td>";
-
-                            echo "</tr>";
-                        }
-                        ?>
+                                </td>
+                            </tr>
+                            @endfor
                         </tbody>
                     </table>
+
                     <div class="col-md-12 float-left">
-                        <button type="button"  class="btn btn-large btn-success btn-add-remove" onclick="AddNonMonDonationRow()" <?php if($submitted) echo "disabled"; ?>>Add Row</button>
-                        <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteNonMonDonationRow()" <?php if($submitted) echo "disabled"; ?>>Remove Row</button>
+                        <button type="button" class="btn btn-sm btn-success " onclick="AddNonMonDonationRow()">
+                            <i class="fas fa-plus"></i>&nbsp; Add Row
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="DeleteNonMonDonationRow()">
+                            <i class="fas fa-minus"></i>&nbsp; Remove Row
+                        </button>
                     </div>
+
                     <input type="hidden" name="NonMonDonationRowCount" id="NonMonDonationRowCount" value="<?php echo $NonMonDonationRowCount; ?>" />
                     <hr>
                     </div>
-                    <div class="form-row form-group">
-                        <div class="card-body">
-                            <div class="col-md-12 text-center">
-                              <button type="submit" id="btn-step-7" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-                            </div>
-                        </div>
+                    <div class="card-body text-center">
+                              <button type="submit" id="btn-step-7" class="btn btn-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
                     </div>
                 </section>
                 </div><!-- end of accordion body -->
                 </div><!-- end of accordion item -->
+            </div>
                 <!------End Step 7 ------>
 
                 <!------Start Step 8 ------>
-                <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='8') echo "active";?>">
-                    <div class="accordion-header js-accordion-header">OTHER INCOME & EXPENSES</div>
-                    <div class="accordion-body js-accordion-body ">
+                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='8') echo "active";?>">
+                    <div class="card-header" id="accordion-header-members">
+                        <h4 class="card-title w-100">
+                            <a class="d-block" data-toggle="collapse" href="#collapseEight" style="width: 100%;">OTHER INCOME & EXPENSES</a>
+                        </h4>
+                    </div>
+                    <div id="collapseEight" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='8') echo 'show'; ?>" data-parent="#accordion">
+                        <div class="card-body">
                     <section>
-                    <div class="form-row form-group">
+                    <div class="col-12 form-row form-group">
 
                         <p>If your chapter had any other income not listed elsewhere, enter those amounts and descriptions here. (If there are multiple entries of one type of income in your books, please group them together as one total for that type of entry below. For example, if local businesses paid for advertising in your newsletter, enter one amount for all the advertising sold by your chapter during the year.)</p>
                         <p>Use this section to list any fundraisers your chapter may have had to benefit the chapter or the members. If your chapter participated in any programs offering rebates, matching contributions or bonus cards, include that information here.</p>
+
                         <table id="other-office-expenses" width="100%" class="table table-bordered">
                             <thead>
-                            <tr>
-                              <td>Description of Expense/Incomed</td>
-                              <td>Income</td>
-                              <td>Expenses</td>
-                            </tr>
+                                <tr>
+                                    <td>Description of Expense/Income</td>
+                                    <td>Income</td>
+                                    <td>Expenses</td>
+                                </tr>
                             </thead>
                             <tbody>
-                            <?php
-                                $other_income_and_expenses_array = null;
-                                if(isset($financial_report_array['other_income_and_expenses_array'])){
-                                    $other_income_and_expenses_array=unserialize(base64_decode($financial_report_array['other_income_and_expenses_array']));
-                                    $OtherOfficeExpenseRowCount = is_array($other_income_and_expenses_array) ? count($other_income_and_expenses_array) : 0;
-                                }
-                                else{
-                                    $OtherOfficeExpenseRowCount = 2;
-                                }
+                                @php
+                                    $other_income_and_expenses_array = null;
+                                    $total_income = 0;
+                                    $total_expenses = 0;
 
-                                // Hardcoded first row
-                                echo "<tr>";
-                                echo "<td>
-                                        <div class=\"form-group\">
-                                            <input type=\"text\" class=\"form-control\" name=\"OtherOfficeDesc0\" id=\"OtherOfficeDesc0\" value=\"Outgoing Board Gifts\" readonly>
+                                    if (isset($financial_report_array['other_income_and_expenses_array'])) {
+                                        $other_income_and_expenses_array = unserialize(base64_decode($financial_report_array['other_income_and_expenses_array']));
+                                        $OtherOfficeExpenseRowCount = is_array($other_income_and_expenses_array) ? count($other_income_and_expenses_array) : 0;
+                                    } else {
+                                        $OtherOfficeExpenseRowCount = 2;
+                                    }
+                                @endphp
+                                @for ($row = 1; $row < $OtherOfficeExpenseRowCount; $row++)
+                                @php
+                                    $income = isset($other_income_and_expenses_array[$row]['other_income']) ? floatval(str_replace(['$', ','], '', $other_income_and_expenses_array[$row]['other_income'])) : 0;
+                                    $expenses = isset($other_income_and_expenses_array[$row]['other_expenses']) ? floatval(str_replace(['$', ','], '', $other_income_and_expenses_array[$row]['other_expenses'])) : 0;
+                                    $total_income += $income;
+                                    $total_expenses += $expenses;
+                                @endphp
+                                <tr>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="OtherOfficeDesc{{ $row }}" id="OtherOfficeDesc{{ $row }}"
+                                                value="{{ $other_income_and_expenses_array[$row]['other_desc'] ?? '' }}">
                                         </div>
-                                    </td>";
-
-                                echo "<td>
-                                        <div class=\"form-group\">
-                                            <div class=\"input-group\">";
-                                                echo "<span class = \"input-group-addon\">$</span>";
-                                                echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" onkeydown=\"return event.keyCode !== 69\" class=\"form-control txt-num\" min=\"0\" step=\"0.01\" name=\"OtherOfficeIncome0\" id=\"OtherOfficeIncome0\" oninput=\"ChangeOtherOfficeExpenses()\" value=\"" . ($other_income_and_expenses_array[0]['other_income'] ?? '') . "\">";
-                                            echo "</div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" class="form-control" name="OtherOfficeIncome{{ $row }}" id="OtherOfficeIncome{{ $row }}"
+                                                    oninput="ChangeOtherOfficeExpenses()" value="{{ $other_income_and_expenses_array[$row]['other_income'] ?? '' }}"
+                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                                            </div>
                                         </div>
-                                    </td>";
-
-                                echo "<td>
-                                        <div class=\"form-group\">
-                                            <div class=\"input-group\">";
-                                                echo "<span class = \"input-group-addon\">$</span>";
-                                                echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" onkeydown=\"return event.keyCode !== 69\" class=\"form-control txt-num\" min=\"0\" step=\"0.01\" name=\"OtherOfficeExpenses0\" id=\"OtherOfficeExpenses0\" oninput=\"ChangeOtherOfficeExpenses()\" value=\"" . ($other_income_and_expenses_array[0]['other_expenses'] ?? '') . "\">";
-                                            echo "</div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" class="form-control" name="OtherOfficeExpenses{{ $row }}" id="OtherOfficeExpenses{{ $row }}"
+                                                    oninput="ChangeOtherOfficeExpenses()" value="{{ $other_income_and_expenses_array[$row]['other_expenses'] ?? '' }}"
+                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                                            </div>
                                         </div>
-                                    </td>";
-                                echo "</tr>";
-
-                                // Dynamic rows
-                                for ($row = 1; $row < $OtherOfficeExpenseRowCount; $row++){
-                                    echo "<tr>";
-                                    echo "<td>
-                                            <div class=\"form-group\">
-                                                <input type=\"text\" class=\"form-control\" name=\"OtherOfficeDesc" . $row . "\" id=\"OtherOfficeDesc" . $row . "\" value=\"" . ($other_income_and_expenses_array[$row]['other_desc'] ?? '') . "\">
-                                            </div>
-                                        </td>";
-
-                                    echo "<td>
-                                            <div class=\"form-group\">
-                                                <div class=\"input-group\">";
-                                                    echo "<span class = \"input-group-addon\">$</span>";
-                                                    echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"OtherOfficeIncome" . $row . "\" id=\"OtherOfficeIncome" . $row . "\" oninput=\"ChangeOtherOfficeExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($other_income_and_expenses_array[$row]['other_income'] ?? '') . "\">";
-                                                echo "</div>
-                                            </div>
-                                        </td>";
-
-                                    echo "<td>
-                                            <div class=\"form-group\">
-                                                <div class=\"input-group\">";
-                                                    echo "<span class = \"input-group-addon\">$</span>";
-                                                    echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"OtherOfficeExpenses" . $row . "\" id=\"OtherOfficeExpenses" . $row . "\" oninput=\"ChangeOtherOfficeExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($other_income_and_expenses_array[$row]['other_expenses'] ?? '') . "\">";
-                                                echo "</div>
-                                            </div>
-                                        </td>";
-                                    echo "</tr>";
-                                }
-                                ?>
+                                    </td>
+                                </tr>
+                                @endfor
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td><strong>Total</strong></td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" class="form-control" value="{{ number_format($total_income, 2) }}" readonly>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" class="form-control" value="{{ number_format($total_expenses, 2) }}" readonly>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </table>
                         <div class="col-md-12 float-left">
-                        <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddOtherOfficeExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Add Row</button>
-                        <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteOtherOfficeExpenseRow()" <?php if($submitted) echo "disabled"; ?>>Remove Row</button>
+                            <button type="button" class="btn btn-sm btn-success" onclick="AddOtherOfficeExpenseRow()">
+                                <i class="fas fa-plus"></i>&nbsp; Add Row
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger" onclick="DeleteOtherOfficeExpenseRow()">
+                                <i class="fas fa-minus"></i>&nbsp; Remove Row
+                            </button>
                         </div>
-                        <div class="col-md-6 float-left">
+                        <div class="col-md-12"><br></div>
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="OtherOfficeIncomeTotal">
-                                    Other Income Total:
+                                    Total Other Income
                                 </label>
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0" step="0.01" name="OtherOfficeIncomeTotal" id="OtherOfficeIncomeTotal" disabled>
+                                <div class="form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="OtherOfficeIncomeTotal" id="OtherOfficeIncomeTotal"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 float-left">
+                        </div>
+                        <div class="col-md-6"><br></div>
+                        <div class="col-md-6 ">
                             <div class="form-group">
                                 <label for="OtherOfficeExpenseTotal">
-                                    Other Expense Total:
+                                    Total Other Expenses
                                 </label>
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0" step="0.01" name="OtherOfficeExpenseTotal" id="OtherOfficeExpenseTotal" disabled>
-                                </div>
+                                <div class="form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="OtherOfficeExpenseTotal" id="OtherOfficeExpenseTotal"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
+                            </div>
+                            </div>
                             </div>
                        </div>
                        <input type="hidden" name="OtherOfficeExpenseRowCount" id="OtherOfficeExpenseRowCount" value="<?php echo $OtherOfficeExpenseRowCount; ?>"/>
                         <hr>
                     </div>
-                    <div class="form-row form-group">
-                        <div class="card-body">
-                            <div class="col-md-12 text-center">
-                              <button type="submit" id="btn-step-8" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-                            </div>
-                        </div>
-
+                    <div class="card-body text-center">
+                              <button type="submit" id="btn-step-8" class="btn btn-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
                     </div>
                 </section>
                 </div><!-- end of accordion body -->
                 </div><!-- end of accordion item -->
+            </div>
                 <!------End Step 8 ------>
 
                 <!------Start Step 9 ------>
-                  <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='9') echo "active";?>">
-                    <div class="accordion-header js-accordion-header" id="accordion-header-reconciliation">BANK RECONCILIATION</div>
-                    <div class="accordion-body js-accordion-body ">
+                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='9') echo "active";?>">
+                    <div class="card-header" id="accordion-header-members">
+                        <h4 class="card-title w-100">
+                            <a class="d-block" data-toggle="collapse" href="#collapseNine" style="width: 100%;">BANK RECONCILIATION</a>
+                        </h4>
+                    </div>
+                    <div id="collapseNine" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='9') echo 'show'; ?>" data-parent="#accordion">
+                        <div class="card-body">
                     <section>
-
-                        <div class="col-md-12 mar_bot_20" id="StatementBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['bank_statement_included_path']) echo "style=\"display: none;\"";} ?>>
+                        @if (!is_null($financial_report_array['bank_statement_included_path']))
                             <div class="col-md-12">
-                                <strong style="color:red">Please Note</strong><br>
-                                    This will refresh the screen - be sure to save all work before clicking button to Upload Bank Statment.<br>
-                                <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-statement1" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Bank Statement</button>
+                                <label>Bank Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_included_path']; ?>" >&nbsp; View Bank Statement</a><br>
                             </div>
+                        @endif
+                        @if (!is_null($financial_report_array['bank_statement_2_included_path']))
+                            <div class="col-md-12">
+                                <label>Additional Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" >&nbsp; View Additional Bank Statement</a><br>
+                            </div>
+                        @endif
+                        <div class="col-md-12" id="StatementBlock">
+                            <strong style="color:red">Please Note</strong><br>
+                                This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
+                            @if (!is_null($financial_report_array['bank_statement_included_path']))
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement1" ><i class="fas fa-undo" ></i>&nbsp; Replace Bank Statement</button>
+                            @else
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement1" ><i class="fas fa-upload" ></i>&nbsp; Upload Bank Statement</button>
+                            @endif
                         </div>
-                        <input type="hidden" name="StatementFile" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
-                        <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['bank_statement_included_path']) echo "style=\"display: none;\"";} ?>>
-                            <div class="col-md-12" >
-                                <div>
-                                   <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_included_path']; ?>" >View Bank Statement</a><br>
-                                    <strong style="color:red">Please Note</strong><br>
-                                    This will refresh the screen - be sure to save all work before clicking button to Replace Bank Statement.<br>
-                                   <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-statement1" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Bank Statement</button>
-                            </div>
-                            </div>
-                        </div>
+                            <input type="hidden" name="StatementFile" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
                         <div class="clearfix"></div>
-                        <br>
-                        <div class="col-md-12 mar_bot_20" id="Statement2Block" <?php if (!empty($financial_report_array)) {if ($financial_report_array['bank_statement_2_included_path']) echo "style=\"display: none;\"";} ?>>
-                            <div class="col-md-12">
-                                <strong style="color:red">Please Note</strong><br>
-                                    This will refresh the screen - be sure to save all work before clicking button to Upload Additional Bank Statment.<br>
-                                <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-statement2" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Additional Bank Statement</button>
-                            </div>
+                        <div class="col-md-12"><br></div>
+                        <div class="col-md-12" id="Statement2Block">
+                            @if (!is_null($financial_report_array['bank_statement_2_included_path']))
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement2" ><i class="fas fa-undo" ></i>&nbsp; Replace Additional Bank Statement</button>
+                            @else
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement2" ><i class="fas fa-upload" ></i>&nbsp; Upload Additional Bank Statement</button>
+                            @endif
                         </div>
                         <input type="hidden" name="Statement2File" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
-                        <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['bank_statement_2_included_path']) echo "style=\"display: none;\"";} ?>>
-                            <div class="col-md-12" >
-                                <div>
-                                   <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" >View Additional Bank Statement</a><br>
-                                    <strong style="color:red">Please Note</strong><br>
-                                    This will refresh the screen - be sure to save all work before clicking button to Replace Additional Bank Statement.<br>
-                                   <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-statement2" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Additional Bank Statement</button>
-                            </div>
-                            </div>
-                        </div>
                         <div class="clearfix"></div>
-                        <br>
-                        <div class="form-row form-group">
-                    <div class="col-md-6 float-left">
-                        <div class="form-group">
-                            <label for="AmountReservedFromLastYear">
-                                This Year's Beginning Balance (July 1, <?php echo date('Y')-1;?>):
-                            </label>
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" oninput="TreasuryBalanceChange()" min="0" step="0.01" name="AmountReservedFromLastYear" id="AmountReservedFromLastYear" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['amount_reserved_from_previous_year'] ?>">
+                        <div class="col-md-12"><br></div>
+
+                        <div class="col-12 form-row form-group">
+                        <div class="col-md-6 ">
+                            <div class="form-group">
+                                <label for="AmountReservedFromLastYear">
+                                    This Year's Beginning Balance (July 1, <?php echo date('Y')-1;?>):
+                                </label>
+                                <div class="form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                        <input type="text" class="form-control" oninput="TreasuryBalanceChange()" name="AmountReservedFromLastYear" id="AmountReservedFromLastYear"
+                                            value="<?php if(!empty($financial_report_array)) echo $financial_report_array['amount_reserved_from_previous_year'] ?>"
+                                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 ">
+                            <div class="form-group">
+                                <label for="BankBalanceNow">
+                                    Last Bank Statement Balance (June 30, <?php echo date('Y');?>):
+                                </label>
+                                <div class="form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="BankBalanceNow" id="BankBalanceNow" oninput="ChangeBankRec()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['bank_balance_now'] ?>"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                            </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 float-left">
-                        <div class="form-group">
-                            <label for="BankBalanceNow">
-                                Last Bank Statement Balance (June 30, <?php echo date('Y');?>):
-                            </label>
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0" step="0.01" name="BankBalanceNow" id="BankBalanceNow" oninput="ChangeBankRec()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['bank_balance_now'] ?>">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 float-left" style="display:none" >
+                    <div class="col-md-6 " style="display:none" >
                         <div class="form-group">
                             <label for="PettyCash">
                                 Petty Cash on Hand (if any):
                             </label>
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" onKeyPress="if(this.value.length==9) return false;" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0" step="0.01" name="PettyCash" id="PettyCash" oninput="ChangeBankRec()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['petty_cash'] ?>">
-                            </div>
+                            <div class="form-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" name="PettyCash" id="PettyCash" oninput="ChangeBankRec()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['petty_cash'] ?>"
+                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                        </div>
+                        </div>
                         </div>
                    </div>
-                   <div class="col-md-6 float-left">
+                   <div class="col-md-6 ">
                     <div class="form-group">
                         <label for="TotalNetIncome">
                             Profit/Loss:
                         </label>
-                        <div class="input-group">
-                        <span class="input-group-addon">$</span>
-                        <input type="number" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0" step="0.01" name="TotalNetIncome" id="TotalNetIncome" disabled>
+                        <div class="form-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">$</span>
+                        <input type="text"class="form-control" name="TotalNetIncome" id="TotalNetIncome"
+                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                         </div>
                     </div>
+                    </div>
                 </div>
-                    <div class="col-md-6 float-left">
+                    <div class="col-md-6 ">
                         <div class="form-group">
                             <label for="TreasuryBalanceNow">
                                 Ending Balance (Treasury Balance Now):
                             </label>
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" onkeydown="return event.keyCode !== 69" class="form-control txt-num" min="0" step="0.01" name="TreasuryBalanceNow" id="TreasuryBalanceNow" disabled>
-                            </div>
+                            <div class="form-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" name="TreasuryBalanceNow" id="TreasuryBalanceNow"
+                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
+                        </div>
+                        </div>
                         </div>
                     </div>
                     <hr>
                 </div>
-                <div class="form-row form-group">
+                <div class="col-12 form-row form-group">
                   <p>If your most recent bank statement’s ending balance does not match your “Treasury Balance Now”, you must reconcile your checking account using the worksheet below so that the balances match.</p>
                   <p>To balance your account, start with your bank statement’s ending balance, then list any deposits and any outstanding payments. When done, the new reconciled balance will match your treasury balance.</p>
                   <p>View a step by step instruction video <a href="https://momsclub.org/elearning/courses/annual-financial-report-bank-reconciliation/">HERE</a>.</p>
                   <br>
-                  <label for="bank-rec">
-                  Bank Reconciliation:
-                </label>
+                <label>Bank Reconciliation:</label>
                     <table id="bank-rec" width="100%" class="table table-bordered">
                         <thead>
                             <tr>
-                              <td>Date</td>
-                              <td>Check No.</td>
-                              <td>Transaction Desc.</td>
-                              <td>Payment Amount</td>
-                              <td>Desposit Amount</td>
+                                <td>Date</td>
+                                <td>Check No.</td>
+                                <td>Transaction Desc.</td>
+                                <td>Payment Amount</td>
+                                <td>Deposit Amount</td>
                             </tr>
                         </thead>
                         <tbody>
-                        <?php
-                            $bank_rec_array = null;
-                            if(isset($financial_report_array['bank_reconciliation_array'])){
-                                $bank_rec_array=unserialize(base64_decode($financial_report_array['bank_reconciliation_array']));
-                                $BankRecRowCount = is_array($bank_rec_array) ? count($bank_rec_array) : 0;
-                            }
-                            else{
-                                $BankRecRowCount = 1;
-                            }
+                            @php
+                                $bank_rec_array = null;
+                                if (isset($financial_report_array['bank_reconciliation_array'])) {
+                                    $bank_rec_array = unserialize(base64_decode($financial_report_array['bank_reconciliation_array']));
+                                    $BankRecRowCount = is_array($bank_rec_array) ? count($bank_rec_array) : 0;
+                                } else {
+                                    $BankRecRowCount = 1;
+                                }
+                            @endphp
+                            @for ($row = 0; $row < $BankRecRowCount; $row++)
+                                <tr>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="date" class="form-control" name="BankRecDate{{ $row }}" id="BankRecDate{{ $row }}"
+                                            data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $bank_rec_array[$row]['bank_rec_date'] ?? '' }}" >
+                                        </div>
+                                    </td>
 
-                            for ($row = 0; $row < $BankRecRowCount; $row++){
-                            echo "<tr>";
-                            echo "<td>
-                                    <div class=\"form-group\">
-                                        <input type=\"date\" class=\"form-control\" name=\"BankRecDate" . $row . "\" id=\"BankRecDate" . $row . "\" value=\"" . ($bank_rec_array[$row]['bank_rec_date'] ?? '') . "\"  onchange=\"IsValidDate(this)\">
-                                    </div>
-                                </td>";
-
-                            echo "<td>
-                                    <div class=\"form-group\">
-                                        <input type=\"text\" class=\"form-control\" name=\"BankRecCheckNo" . $row . "\" id=\"BankRecCheckNo" . $row . "\" value=\"" . ($bank_rec_array[$row]['bank_rec_check_no'] ?? '') . "\">
-                                    </div>
-                                </td>";
-
-                            echo "<td>
-                                    <div class=\"form-group\">
-                                        <input type=\"text\" class=\"form-control\" name=\"BankRecDesc" . $row . "\" id=\"BankRecDesc" . $row . "\" value=\"" . ($bank_rec_array[$row]['bank_rec_desc'] ?? '') . "\">
-                                    </div>
-                                </td>";
-
-                            echo "<td>
-                                    <div class=\"form-group\">
-                                        <div class=\"input-group\">";
-                                            echo "<span class = \"input-group-addon\">$</span>";
-                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"BankRecPaymentAmount" . $row . "\" id=\"BankRecPaymentAmount" . $row . "\" oninput=\"ChangeBankRec()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($bank_rec_array[$row]['bank_rec_payment_amount'] ?? '') . "\">";
-                                        echo "</div>
-                                    </div>
-                                </td>";
-
-                            echo "<td>
-                                    <div class=\"form-group\">
-                                        <div class=\"input-group\">";
-                                            echo "<span class = \"input-group-addon\">$</span>";
-                                            echo "<input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\" min=\"0\"  step=\"0.01\" name=\"BankRecDepositAmount" . $row . "\" id=\"BankRecDepositAmount" . $row . "\" oninput=\"ChangeBankRec()\" onkeydown=\"return event.keyCode !== 69\" value=\"" . ($bank_rec_array[$row]['bank_rec_desposit_amount'] ?? '') . "\">";
-                                        echo "</div>
-                                    </div>
-                                </td>";
-                            echo "</tr>";
-                        }
-
-                                ?>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="BankRecCheckNo{{ $row }}" id="BankRecCheckNo{{ $row }}"
+                                                value="{{ $bank_rec_array[$row]['bank_rec_check_no'] ?? '' }}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="BankRecDesc{{ $row }}" id="BankRecDesc{{ $row }}"
+                                                value="{{ $bank_rec_array[$row]['bank_rec_desc'] ?? '' }}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" class="form-control" name="BankRecPaymentAmount{{ $row }}" id="BankRecPaymentAmount{{ $row }}"
+                                                    oninput="ChangeBankRec()" value="{{ $bank_rec_array[$row]['bank_rec_payment_amount'] ?? '' }}"
+                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" class="form-control" name="BankRecDepositAmount{{ $row }}" id="BankRecDepositAmount{{ $row }}"
+                                                    oninput="ChangeBankRec()" value="{{ $bank_rec_array[$row]['bank_rec_desposit_amount'] ?? '' }}"
+                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endfor
                         </tbody>
                     </table>
-                    <div class="col-md-12 float-left">
-                        <button type="button" class="btn btn-large btn-success btn-add-remove" onclick="AddBankRecRow()" <?php if($submitted) echo "disabled"; ?>>Add Row</button>
-                        <button type="button" class="btn btn-danger btn-add-remove" onclick="DeleteBankRecRow()" <?php if($submitted) echo "disabled"; ?>>Remove Row</button>
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-sm btn-success" onclick="AddBankRecRow()">
+                            <i class="fas fa-plus"></i>&nbsp; Add Row
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="DeleteBankRecRow()">
+                            <i class="fas fa-minus"></i>&nbsp; Remove Row
+                        </button>
                     </div>
-                    <div class="col-md-6 float-left">
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="ReconciledBankBalance">
                                 Reconciled Bank Balance:
                             </label>
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" class="form-control" min="0" step="0.01" name="ReconciledBankBalance" id="ReconciledBankBalance" disabled>
+                            <div class="form-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" name="ReconciledBankBalance" id="ReconciledBankBalance"
+                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                             </div>
+                        </div>
                         </div>
                     </div>
                     <div class="col-md-6"><br></div>
-                    <div class="col-md-6 float-left">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="TreasuryBalanceNowR">
                                 Treasury Balance Now:
                             </label>
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" class="form-control" min="0" step="0.01" name="TreasuryBalanceNowR" id="TreasuryBalanceNowR" disabled>
+                            <div class="form-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" name="TreasuryBalanceNowR" id="TreasuryBalanceNowR"
+                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-12 float-right">
-                        <div class="form-group">
-                            <textarea class="form-control" style="width:100%" rows="3" name="ReconciledBankBalanceWarning" id="ReconciledBankBalanceWarning" disabled></textarea>
                         </div>
                     </div>
+                    <div id="ReconciliationAlert" class="alert alert-warning" style="display: none;">
+                        <h5><i class="icon fas fa-exclamation-triangle"></i> Alert!</h5>
+                        <div id="ReconciledBankBalanceWarning" class="alert-message"></div>
+                    </div>
+                </div>
                     <input type="hidden" name="BankRecRowCount" id="BankRecRowCount" value="<?php echo $BankRecRowCount; ?>" />
                     <hr>
                 </div>
-                 <div class="form-row form-group">
-                        <div class="card-body">
-                            <div class="col-md-12 text-center">
-                              <button type="submit" id="btn-step-9" class="btn btn-info btn-fill" onClick="this.form.submit(); this.disabled=true;" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-                            </div>
-                        </div>
+                <div class="card-body text-center">
+                              <button type="submit" id="btn-step-9" class="btn btn-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
                 </div>
             </section>
             </div><!-- end of accordion body -->
             </div><!-- end of accordion item -->
+        </div>
             <!------End Step 9 ------>
 
             <!------Start Step 10 ------>
-            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='10') echo "active";?>">
-                <div class="accordion-header js-accordion-header">FINANCIAL SUMMARY</div>
-                <div class="accordion-body js-accordion-body ">
+            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='10') echo "active";?>">
+                <div class="card-header" id="accordion-header-members">
+                    <h4 class="card-title w-100">
+                        <a class="d-block" data-toggle="collapse" href="#collapseTen" style="width: 100%;">FINANCIAL SUMMARY</a>
+                    </h4>
+                </div>
+                <div id="collapseTen" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='10') echo 'show'; ?>" data-parent="#accordion">
+                    <div class="card-body">
                 <section>
-                <div class="form-row form-group">
+                <div class="col-12 form-row form-group">
                   <div class="col-sm-12">
                     <h3>July 1, <?php echo date('Y')-1 .' - June 30, '.date('Y');?></h3>
                   </div>
@@ -1482,10 +1792,13 @@
                               </label>
                             </div>
                             <div class="col-sm-6 float-left">
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" name="SumAmountReservedFromPreviousYear" id="SumAmountReservedFromPreviousYear" class="form-control" value="0.00" aria-describedby="sizing-addon1" disabled>
-                            </div>
+                                <div class="form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" name="SumAmountReservedFromPreviousYear" id="SumAmountReservedFromPreviousYear"
+                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
+                        </div>
+                        </div>
                             </div>
                         </div>
                     </div>
@@ -1496,10 +1809,11 @@
                             <p style="margin-left:10%;">Membership Dues Income:</p>
                         </div>
                         <div class="col-sm-6 float-left">
-                            <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" aria-describedby="sizing-addon1" name="SumMembershipDuesIncome" id="SumMembershipDuesIncome" disabled>
+                                <div class="form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumMembershipDuesIncome" id="SumMembershipDuesIncome"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1508,9 +1822,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumServiceProjectIncome" id="SumServiceProjectIncome" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumServiceProjectIncome" id="SumServiceProjectIncome"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1519,9 +1834,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumPartyIncome" id="SumPartyIncome" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumPartyIncome" id="SumPartyIncome"
+                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1530,9 +1846,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumMonetaryDonationIncome" id="SumMonetaryDonationIncome" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumMonetaryDonationIncome" id="SumMonetaryDonationIncome"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1541,9 +1858,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumInternationalEventIncome" id="SumInternationalEventIncome" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumInternationalEventIncome" id="SumInternationalEventIncome"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1552,9 +1870,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumOtherIncome" id="SumOtherIncome" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumOtherIncome" id="SumOtherIncome"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1564,9 +1883,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumTotalIncome" id="SumTotalIncome" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumTotalIncome" id="SumTotalIncome"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1582,9 +1902,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumMeetingRoomExpense" id="SumMeetingRoomExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumMeetingRoomExpense" id="SumMeetingRoomExpense"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1598,9 +1919,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                            <div class="input-group">
-                            <span class="input-group-addon">$</span>
-                            <input type="number" class="form-control" name="SumChildrensSuppliesExpense" id="SumChildrensSuppliesExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" name="SumChildrensSuppliesExpense" id="SumChildrensSuppliesExpense"
+                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                             </div>
                         </div>
                     </div>
@@ -1609,9 +1931,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumPaidSittersExpense" id="SumPaidSittersExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumPaidSittersExpense" id="SumPaidSittersExpense"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1620,9 +1943,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumChildrensOtherExpense" id="SumChildrensOtherExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumChildrensOtherExpense" id="SumChildrensOtherExpense"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1631,9 +1955,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumTotalChildrensRoomExpense" id="SumTotalChildrensRoomExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumTotalChildrensRoomExpense" id="SumTotalChildrensRoomExpense"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1649,9 +1974,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumServiceProjectExpense" id="SumServiceProjectExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumServiceProjectExpense" id="SumServiceProjectExpense"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1660,9 +1986,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumDonationExpense" id="SumDonationExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumDonationExpense" id="SumDonationExpense"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1671,9 +1998,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumM2MExpense" id="SumM2MExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumM2MExpense" id="SumM2MExpense"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1682,9 +2010,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumTotalServiceProjectExpense" id="SumTotalServiceProjectExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumTotalServiceProjectExpense" id="SumTotalServiceProjectExpense"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1694,9 +2023,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumPartyExpense" id="SumPartyExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumPartyExpense" id="SumPartyExpense"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1709,9 +2039,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumPrintingExpense" id="SumPrintingExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumPrintingExpense" id="SumPrintingExpense"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1720,9 +2051,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumPostageExpense" id="SumPostageExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumPostageExpense" id="SumPostageExpense"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1731,9 +2063,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumPinsExpense" id="SumPinsExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumPinsExpense" id="SumPinsExpense"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1742,9 +2075,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumOtherOperatingExpense" id="SumOtherOperatingExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumOtherOperatingExpense" id="SumOtherOperatingExpense"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1753,9 +2087,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumOperatingExpense" id="SumOperatingExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumOperatingExpense" id="SumOperatingExpense"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1764,9 +2099,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumChapterReRegistrationExpense" id="SumChapterReRegistrationExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumChapterReRegistrationExpense" id="SumChapterReRegistrationExpense"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1775,9 +2111,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumInternationalEventExpense" id="SumInternationalEventExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumInternationalEventExpense" id="SumInternationalEventExpense"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1786,9 +2123,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumOtherExpense" id="SumOtherExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumOtherExpense" id="SumOtherExpense"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                         </div>
@@ -1798,9 +2136,10 @@
                         </div>
                         <div class="col-sm-6 float-left">
                             <div class="form-group">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" class="form-control" name="SumTotalExpense" id="SumTotalExpense" disabled>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="SumTotalExpense" id="SumTotalExpense"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                 </div>
                             </div>
                             </div>
@@ -1816,9 +2155,10 @@
                             </div>
                             <div class="col-sm-6 float-left">
                                 <div class="form-group">
-                                    <div class="input-group">
-                                    <span class="input-group-addon">$</span>
-                                    <input type="number" class="form-control" name="SumTotalNetIncome" id="SumTotalNetIncome" disabled>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                    <input type="text" class="form-control" name="SumTotalNetIncome" id="SumTotalNetIncome"
+                                        data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -1833,10 +2173,11 @@
                                 </label>
                                 </div>
                                 <div class="col-sm-6 float-left">
-                                <div class="input-group">
-                                <span class="input-group-addon">$</span>
-                                <input type="number" name="SumTreasuryBalanceNow" id="SumTreasuryBalanceNow" class="form-control" aria-describedby="sizing-addon1" disabled>
-                                </div>
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                        <input type="text" name="SumTreasuryBalanceNow" id="SumTreasuryBalanceNow" class="form-control"
+                                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
+                                    </div>
                                 </div>
                                 </div>
                             </div>
@@ -1844,546 +2185,591 @@
                      </section>
             </div><!-- end of accordion body -->
             </div><!-- end of accordion item -->
+        </div>
             <!------End Step 10 ------>
 
-
             <!------Start Step 11 ------>
-            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='11') echo "active";?>">
-            <div class="accordion-header js-accordion-header" id="accordion-header-questions">CHAPTER QUESTIONS</div>
-                <div class="accordion-body js-accordion-body">
+            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='11') echo "active";?>">
+                <div class="card-header" id="accordion-header-members">
+                    <h4 class="card-title w-100">
+                        <a class="d-block" data-toggle="collapse" href="#collapseEleven" style="width: 100%;">CHAPTER QUESTIONS</a>
+                    </h4>
+                </div>
+                <div id="collapseEleven" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='11') echo 'show'; ?>" data-parent="#accordion">
+                    <div class="card-body">
                 <section>
                 <div id="form-step-8" role="form" data-toggle="validator" class="form-row form-group">
                     <p>During the last fiscal year (July 1, <?php echo date('Y')-1 .' - June 30, '.date('Y');?>)</p>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                                <label style="display: block;"><strong>1.</strong> Did anyone in your chapter receive any compensation or pay for their work with your chapter?<span class="field-required">*</span></label>
+
+                <div class="col-md-12" style="margin-left: 10px">
+                    <div class="form-group row">
+                        <label>1. Did anyone in your chapter receive any compensation or pay for their work with your chapter?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="ReceiveCompensationYes" name="ReceiveCompensation" value="1" {{ $financial_report_array->changed_dues === 1 ? 'checked' : '' }} onchange="ToggleReceiveCompensationExplanation()">
+                                <label class="form-check-label" for="ReceiveCompensationYes">Yes</label>
                             </div>
-                            <div class="col-md-3">
-                                <select id="ReceiveCompensation" name="ReceiveCompensation" class="form-control select2" style="width: 100%;" required onchange="ToggleReceiveCompensationExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->receive_compensation) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{ $financial_report_array->receive_compensation === 0 ? 'selected' : '' }}>No</option>
-                                    <option value="1" {{ $financial_report_array->receive_compensation == 1 ? 'selected' : '' }}>Yes</option>
-                                </select>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="ReceiveCompensationNo" name="ReceiveCompensation" value="0" {{ $financial_report_array->changed_dues === 0 ? 'checked' : '' }} onchange="ToggleReceiveCompensationExplanation()">
+                                <label class="form-check-label" for="ReceiveCompensationNo">No</label>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12" id="divReceiveCompensationExplanation">
-                        <div class="col-md-12">
+                        <div class="col-md-12" style="margin-bottom: 10px">
                             <label for="ReceiveCompensationExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
                                 <textarea class="form-control" rows="2" name="ReceiveCompensationExplanation" id="ReceiveCompensationExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['receive_compensation_explanation'];}?></textarea>
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                                <label style="display: block;"><strong>2.</strong> Did any officer, member or family of a member benefit financially in any way from the member’s position with your chapter?<span class="field-required">*</span></label>
+                    <div class="form-group row">
+                        <label>2. Did any officer, member or family of a member benefit financially in any way from the member’s position with your chapter?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="FinancialBenefitYes" name="FinancialBenefit" value="1" {{ $financial_report_array->financial_benefit === 1 ? 'checked' : '' }} onchange="ToggleFinancialBenefitExplanation()">
+                                <label class="form-check-label" for="FinancialBenefitYes">Yes</label>
                             </div>
-                            <div class="col-md-3">
-                                <select id="FinancialBenefit" name="FinancialBenefit" class="form-control select2" style="width: 100%" required onchange="ToggleFinancialBenefitExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->financial_benefit) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->financial_benefit === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->financial_benefit == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="FinancialBenefitNo" name="FinancialBenefit" value="0" {{ $financial_report_array->financial_benefit === 0 ? 'checked' : '' }} onchange="ToggleFinancialBenefitExplanation()">
+                                <label class="form-check-label" for="FinancialBenefitNo">No</label>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-12" id="divFinancialBenefitExplanation">
-                        <div class="col-md-12">
+                        <div class="col-md-12" style="margin-bottom: 10px">
                             <label for="FinancialBenefitExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
                             <textarea class="form-control" rows="2" name="FinancialBenefitExplanation" id="FinancialBenefitExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['financial_benefit_explanation'];} ?></textarea>
                         </div>
                     </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                                <label style="display: block;"><strong>3.</strong> Did your chapter attempt to influence any national, state/provincial, or local legislation, or did your chapter support any other organization that did?<span class="field-required">*</span></label>
+                    <div class="form-group row">
+                        <label>3. Did your chapter attempt to influence any national, state/provincial, or local legislation, or did your chapter support any other organization that did?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="InfluencePoliticalYes" name="InfluencePolitical" value="1" {{ $financial_report_array->influence_political === 1 ? 'checked' : '' }} onchange="ToggleInfluencePoliticalExplanation()">
+                                <label class="form-check-label" for="InfluencePoliticalYes">Yes</label>
                             </div>
-                            <div class="col-md-3">
-                                <select id="InfluencePolitical" name="InfluencePolitical" class="form-control select2" style="width: 100%;" required onchange="ToggleInfluencePoliticalExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->influence_political) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->influence_political === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->influence_political == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="InfluencePoliticalNo" name="InfluencePolitical" value="0" {{ $financial_report_array->influence_political === 0 ? 'checked' : '' }} onchange="ToggleInfluencePoliticalExplanation()">
+                                <label class="form-check-label" for="InfluencePoliticalNo">No</label>
                             </div>
                         </div>
                     </div>
                     <div class="col-sm-12" id="divInfluencePoliticalExplanation">
-                        <div class="col-md-12">
+                        <div class="col-md-12" style="margin-bottom: 10px">
                             <label for="InfluencePoliticalExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
                             <textarea class="form-control" rows="2" name="InfluencePoliticalExplanation" id="InfluencePoliticalExplanation" ><?php if (!is_null($financial_report_array)) {echo $financial_report_array['influence_political_explanation'];}?></textarea>
                         </div>
                     </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                                <label style="display: block;"><strong>4.</strong> Did your chapter vote on all activities and expenditures during the fiscal year?<span class="field-required">*</span></label>
+                    <div class="form-group row">
+                        <label>4. Did your chapter vote on all activities and expenditures during the fiscal year?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="VoteAllActivitiesYes" name="VoteAllActivities" value="1" {{ $financial_report_array->vote_all_activities === 1 ? 'checked' : '' }} onchange="ToggleVoteAllActivitiesExplanation()">
+                                <label class="form-check-label" for="VoteAllActivitiesYes">Yes</label>
                             </div>
-                            <div class="col-md-3">
-                                <select id="VoteAllActivities" name="VoteAllActivities" class="form-control select2" style="width: 100%;" required onchange="ToggleVoteAllActivitiesExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->vote_all_activities) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->vote_all_activities === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->vote_all_activities == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="VoteAllActivitiesNo" name="VoteAllActivities" value="0" {{ $financial_report_array->vote_all_activities === 0 ? 'checked' : '' }} onchange="ToggleVoteAllActivitiesExplanation()">
+                                <label class="form-check-label" for="VoteAllActivitiesNo">No</label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12" id="divVoteAllActivitiesExplanation">
-                        <div class="col-md-12">
+                    <div class="col-md-12" style="margin-bottom: 10px">
+                        <div class="col-sm-12" id="divVoteAllActivitiesExplanation">
                             <label for="VoteAllActivitiesExplanation">If no, briefly explain:<span class="field-required">*</span></label>
                             <textarea class="form-control" rows="2" name="VoteAllActivitiesExplanation" id="VoteAllActivitiesExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['vote_all_activities_explanation'];}?></textarea>
                         </div>
                     </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                                <label style="display: block;"><strong>5.</strong> Did you purchase pins from International? If No, why not?<span class="field-required">*</span></label>
+                    <div class="form-group row">
+                        <label>5. Did you purchase pins from International?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="BoughtPinsYes" name="BoughtPins" value="1" {{ $financial_report_array->purchase_pins === 1 ? 'checked' : '' }} onchange="ToggleBoughtPinsExplanation()">
+                                <label class="form-check-label" for="BoughtPinsYes">Yes</label>
                             </div>
-                            <div class="col-md-3">
-                                <select id="BoughtPins" name="BoughtPins" class="form-control select2" style="width: 100%;" required onchange="ToggleBoughtPinsExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->purchase_pins) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->purchase_pins === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->purchase_pins == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="BoughtPinsNo" name="BoughtPins" value="0" {{ $financial_report_array->purchase_pins === 0 ? 'checked' : '' }} onchange="ToggleBoughtPinsExplanation()">
+                                <label class="form-check-label" for="BoughtPinsNo">No</label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12" style="margin-bottom: 10px">
                         <div class="col-sm-12" id="divBoughtPinsExplanation">
                             <label for="BoughtPinsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
                             <textarea class="form-control" rows="2" name="BoughtPinsExplanation" id="BoughtPinsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['purchase_pins_explanation'];}?></textarea>
                         </div>
                     </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                                <label style="display: block;"><strong>6.</strong> Did you purchase any merchandise from International other than pins? If No, why not?<span class="field-required">*</span></label>
+                    <div class="form-group row">
+                        <label>6. Did you purchase any merchandise from International other than pins?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="BoughtMerchYes" name="BoughtMerch" value="1" {{ $financial_report_array->bought_merch === 1 ? 'checked' : '' }} onchange="ToggleBoughtMerchExplanation()">
+                                <label class="form-check-label" for="BoughtMerchYes">Yes</label>
                             </div>
-                            <div class="col-md-3">
-                                <select id="BoughtMerch" name="BoughtMerch" class="form-control select2" style="width: 100%;" required onchange="ToggleBoughtMerchExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->bought_merch) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->bought_merch === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->bought_merch == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="BoughtMerchNo" name="BoughtMerch" value="0" {{ $financial_report_array->bought_merch === 0 ? 'checked' : '' }} onchange="ToggleBoughtMerchExplanation()">
+                                <label class="form-check-label" for="BoughtMerchNo">No</label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12" style="margin-bottom: 10px">
                         <div class="col-sm-12" id="divBoughtMerchExplanation">
                             <label for="BoughtMerchExplanation">If no, briefly explain:<span class="field-required">*</span></label>
                             <textarea class="form-control" rows="2" name="BoughtMerchExplanation" id="BoughtMerchExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['bought_merch_explanation'];}?></textarea>
                         </div>
                     </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                                <label style="display: block;"><strong>7.</strong> Did you offer or inform your members about MOMS Club merchandise?<span class="field-required">*</span></label>
+                    <div class="form-group row">
+                        <label>7. Did you offer or inform your members about MOMS Club merchandise?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="OfferedMerchYes" name="OfferedMerch" value="1" {{ $financial_report_array->offered_merch === 1 ? 'checked' : '' }} onchange="ToggleOfferedMerchExplanation()">
+                                <label class="form-check-label" for="OfferedMerchYes">Yes</label>
                             </div>
-                            <div class="col-md-3">
-                                <select id="OfferedMerch" name="OfferedMerch" class="form-control select2" style="width: 100%;" required onchange="ToggleOfferedMerchExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->offered_merch) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->offered_merch === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->offered_merch == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="OfferedMerchNo" name="OfferedMerch" value="0" {{ $financial_report_array->offered_merch === 0 ? 'checked' : '' }} onchange="ToggleOfferedMerchExplanation()">
+                                <label class="form-check-label" for="OfferedMerchNo">No</label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12" style="margin-bottom: 10px">
                         <div class="col-sm-12" id="divOfferedMerchExplanation">
                             <label for="OfferedMerchExplanation">If no, briefly explain:<span class="field-required">*</span></label>
                             <textarea class="form-control" rows="2" name="OfferedMerchExplanation" id="OfferedMerchExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['offered_merch_explanation'];}?></textarea>
                         </div>
                     </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                                <label style="display: block;"><strong>8.</strong> Did you make the Bylaws and/or manual available for any chapter members that requested them?<span class="field-required">*</span></label>
+                    <div class="form-group row">
+                        <label>8. Did you make the Bylaws and/or manual available for any chapter members that requested them?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="ByLawsAvailableYes" name="ByLawsAvailable" value="1" {{ $financial_report_array->bylaws_available === 1 ? 'checked' : '' }} onchange="ToggleByLawsAvailableExplanation()">
+                                <label class="form-check-label" for="ByLawsAvailableYes">Yes</label>
                             </div>
-                            <div class="col-md-3">
-                                <select id="ByLawsAvailable" name="ByLawsAvailable" class="form-control select2" style="width: 100%;" required onchange="ToggleByLawsAvailableExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->bylaws_available) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->bylaws_available === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->bylaws_available == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="ByLawsAvailableNo" name="ByLawsAvailable" value="0" {{ $financial_report_array->bylaws_available === 0 ? 'checked' : '' }} onchange="ToggleByLawsAvailableExplanation()">
+                                <label class="form-check-label" for="ByLawsAvailableNo">No</label>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-12">
+                    <div class="col-md-12" style="margin-bottom: 10px">
                         <div class="col-sm-12" id="divByLawsAvailableExplanation">
                             <label for="ByLawsAvailableExplanation">If no, briefly explain:<span class="field-required">*</span></label>
                             <textarea class="form-control" rows="2" name="ByLawsAvailableExplanation" id="ByLawsAvailableExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['bylaws_available_explanation'];}?></textarea>
                         </div>
                     </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                            <label style="display: block;"><strong>9.</strong> Did you have a children’s room with babysitters?<span class="field-required">*</span></label>
-                        </div>
-                        <div class="col-md-3">
-                            <select id="ChildrensRoom" name="ChildrensRoom" class="form-control select2" style="width: 100%;" required>
-                                <option value="" {{ is_null($financial_report_array->childrens_room_sitters) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->childrens_room_sitters === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->childrens_room_sitters == 1 ? 'selected' : ''}}>Yes, with volunteer members</option>
-                                <option value="2" {{$financial_report_array->childrens_room_sitters == 2 ? 'selected' : ''}}>Yes, with paid sitters</option>
-                            </select>
+                    <div class="form-group row">
+                        <label>9. Did you have a children’s room with babysitters?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="ChildrensRoomPaid" name="ChildrensRoom" value="2" {{ $financial_report_array->childrens_room_sitters === 2 ? 'checked' : '' }} >
+                                <label class="form-check-label" for="ChildrensRoomPaid">Yes, with Paid Sitters</label>
+                            </div>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="ChildrensRoomVol" name="ChildrensRoom" value="1" {{ $financial_report_array->childrens_room_sitters === 1 ? 'checked' : '' }} >
+                                <label class="form-check-label" for="ChildrensRoomVol">Yes, with Volunteer Members</label>
+                            </div>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="ChildrensRoomNo" name="ChildrensRoom" value="0" {{ $financial_report_array->childrens_room_sitters === 0 ? 'checked' : '' }} >
+                                <label class="form-check-label" for="ChildrensRoomNo">No</label>
+                            </div>
                         </div>
                     </div>
-                </div>
-                    <div class="col-sm-12">
+                    <div class="col-md-12" style="margin-bottom: 10px">
                         <div class="col-sm-12" id="ChildrensRoomExplanation">
-                        <label for="ChildrensRoomExplanation">Briefly explain, if necessary:</label>
-                        <textarea class="form-control" rows="2" name="ChildrensRoomExplanation" id="ChildrensRoomExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['childrens_room_sitters_explanation'];}?></textarea>
-                    </div>
-                </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                            <label style="display: block;"><strong>10.</strong> Did you have playgroups? If so, how were they arranged.<span class="field-required">*</span></label>
-                        </div>
-                        <div class="col-md-3">
-                            <select id="Playgroups" name="Playgroups" class="form-control select2" style="width: 100%;" required>
-                                <option value="" {{ is_null($financial_report_array->playgroups) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->playgroups === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->playgroups == 1 ? 'selected' : ''}}>Yes, arranged by age</option>
-                                <option value="2" {{$financial_report_array->playgroups == 2 ? 'selected' : ''}}>Yes, multi-aged groups</option>
-                            </select>
+                            <label for="ChildrensRoomExplanation">Briefly explain, if necessary:</label>
+                            <textarea class="form-control" rows="2" name="ChildrensRoomExplanation" id="ChildrensRoomExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['childrens_room_sitters_explanation'];}?></textarea>
                         </div>
                     </div>
-                </div>
-                        <div class="col-sm-12">
-                            <div class="col-sm-12" id="PlaygroupsExplanation">
-                                <label for="PlaygroupsExplanation">Briefly explain, if necessary:</label>
-                                <textarea class="form-control" rows="2" name="PlaygroupsExplanation" id="PlaygroupsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['had_playgroups_explanation'];}?></textarea>
-                            </div>
-                        </div>
-                        <div class="col-md-12"><br></div>
-                        <div class="col-md-12 float-left">
-                            <div class="form-inline">
-                                <div class="col-md-9">
-                                <label style="display: block;"><strong>11.</strong> Did you have any child focused outings or activities?<span class="field-required">*</span></label>
+                    <div class="form-group row">
+                        <label>10. Did you have playgroups? If so, how were they arranged?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="col-md-12 row">
+                                <div class="form-check" style="margin-left: 20px;">
+                                    <input class="form-check-input" type="radio" id="PlaygroupsMulti" name="Playgroups" value="2" {{ $financial_report_array->playgroups === 2 ? 'checked' : '' }} >
+                                    <label class="form-check-label" for="PlaygroupsMulti">Yes, Multi-Aged Groups</label>
                                 </div>
-                                <div class="col-md-3">
-                                <select id="ChildOutings" name="ChildOutings" class="form-control select2" style="width: 100%;" required onchange="ToggleChildOutingsExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->child_outings) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->child_outings === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->child_outings == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
+                                <div class="form-check" style="margin-left: 20px;">
+                                    <input class="form-check-input" type="radio" id="PlaygroupsAge" name="Playgroups" value="1" {{ $financial_report_array->playgroups === 1 ? 'checked' : '' }} >
+                                    <label class="form-check-label" for="PlaygroupsAge">Yes, Arranged by Age</label>
+                                </div>
+                                <div class="form-check" style="margin-left: 20px;">
+                                    <input class="form-check-input" type="radio" id="PlaygroupsNo" name="Playgroups" value="0" {{ $financial_report_array->playgroups === 0 ? 'checked' : '' }} >
+                                    <label class="form-check-label" for="PlaygroupsNo">No</label>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12">
-                    <div class="col-sm-12" id="divChildOutingsExplanation">
-                        <label for="ChildOutingsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-                        <textarea class="form-control" rows="2" name="ChildOutingsExplanation" id="ChildOutingsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['child_outings_explanation'];}?></textarea>
+                    <div class="col-md-12" style="margin-bottom: 10px">
+                        <div class="col-sm-12" id="PlaygroupsExplanation">
+                            <label for="PlaygroupsExplanation">Briefly explain, if necessary:</label>
+                            <textarea class="form-control" rows="2" name="PlaygroupsExplanation" id="PlaygroupsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['had_playgroups_explanation'];}?></textarea>
+                        </div>
                     </div>
-                </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-md-9">
-                            <label style="display: block;"><strong>12.</strong> Did you have any mother focused outings or activities?<span class="field-required">*</span></label>
+                    <div class="form-group row">
+                        <label>11. Did you have any child focused outings or activities?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="ChildOutingsYes" name="ChildOutings" value="1" {{ $financial_report_array->child_outings === 1 ? 'checked' : '' }} onchange="ToggleChildOutingsExplanation()">
+                                <label class="form-check-label" for="ChildOutingsYes">Yes</label>
                             </div>
-                            <div class="col-md-3">
-                            <select id="MotherOutings" name="MotherOutings" class="form-control select2" style="width: 100%;" required onchange="ToggleMotherOutingsExplanation()">
-                                <option value="" {{ is_null($financial_report_array->mother_outings) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->mother_outings === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->mother_outings == 1 ? 'selected' : ''}}>Yes</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="col-sm-12" id="divMotherOutingsExplanation">
-                        <label for="MotherOutingsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-                        <textarea class="form-control" rows="2" name="MotherOutingsExplanation" id="MotherOutingsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['mother_outings_explanation'];}?></textarea>
-                    </div>
-                </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-sm-9">
-                            <label style="display: block;"><strong>13.</strong> Did you have speakers at any meetings?<span class="field-required">*</span></label>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="ChildOutingsNo" name="ChildOutings" value="0" {{ $financial_report_array->child_outings === 0 ? 'checked' : '' }} onchange="ToggleChildOutingsExplanation()">
+                                <label class="form-check-label" for="ChildOutingsNo">No</label>
                             </div>
-                            <div class="col-sm-3">
-                            <select id="MeetingSpeakers" name="MeetingSpeakers" class="form-control select2" style="width: 100%;" required onchange="ToggleMeetingSpeakersExplanation()">
-                                <option value="" {{ is_null($financial_report_array->meeting_speakers) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->meeting_speakers === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->meeting_speakers == 1 ? 'selected' : ''}}>Yes</option>
-                            </select>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="col-sm-12" id="divMeetingSpeakersExplanation">
-                        <label for="MeetingSpeakersExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-                        <textarea class="form-control" rows="2" name="MeetingSpeakersExplanation" id="MeetingSpeakersExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['meeting_speakers_explanation'];}?></textarea>
+                    <div class="col-md-12" style="margin-bottom: 10px">
+                        <div class="col-sm-12" id="divChildOutingsExplanation">
+                            <label for="ChildOutingsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="ChildOutingsExplanation" id="ChildOutingsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['child_outings_explanation'];}?></textarea>
+                        </div>
                     </div>
-                </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                            <label style="display: block;"><strong>14.</strong> If you had speakers, check any of the topics that were covered:<span class="field-required">*</span></label>
+                    <div class="form-group row">
+                        <label>12. Did you have any mother focused outings or activities?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="MotherOutingsYes" name="MotherOutings" value="1" {{ $financial_report_array->mother_outings === 1 ? 'checked' : '' }} onchange="ToggleMotherOutingsExplanation()">
+                                <label class="form-check-label" for="MotherOutingsYes">Yes</label>
                             </div>
-                            <div class="col-sm-12">
-                            <div class="col-sm-12">
-                            <select id="Speakers" name="Speakers[]" class="form-control select2" style="width: 200px; height: 200px;" multiple="multiple" required>
-                                <option value="" {{ is_null($financial_report_array->meeting_speakers_array) ? 'selected' : '' }}>N/A</option>
-                                @php
-                                    $selectedValues = is_null($financial_report_array->meeting_speakers_array)
-                                        ? []
-                                        : json_decode($financial_report_array->meeting_speakers_array);
-                                @endphp
-                                <option value="0" {{ in_array('0', $selectedValues) ? 'selected' : '' }}>Child Rearing</option>
-                                <option value="1" {{ in_array('1', $selectedValues) ? 'selected' : '' }}>Schools/Education</option>
-                                <option value="2" {{ in_array('2', $selectedValues) ? 'selected' : '' }}>Home Management</option>
-                                <option value="3" {{ in_array('3', $selectedValues) ? 'selected' : '' }}>Politics</option>
-                                <option value="4" {{ in_array('4', $selectedValues) ? 'selected' : '' }}>Other Non-Profit</option>
-                                <option value="5" {{ in_array('5', $selectedValues) ? 'selected' : '' }}>Other</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-sm-9">
-                            <label style="display: block;"><strong>15.</strong> Did you have any discussion topics at your meetings? If yes, how often?<span class="field-required">*</span></label>
-                        </div>
-                        <div class="col-sm-3">
-                            <select id="SpeakerFrequency" name="SpeakerFrequency" class="form-control select2" style="width: 100%;" required>
-                                <option value="" {{ is_null($financial_report_array->discussion_topic_frequency) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->discussion_topic_frequency === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->discussion_topic_frequency == 1 ? 'selected' : ''}}>1-3 Times</option>
-                                <option value="2" {{$financial_report_array->discussion_topic_frequency == 2 ? 'selected' : ''}}>4-6 Times</option>
-                                <option value="3" {{$financial_report_array->discussion_topic_frequency == 3 ? 'selected' : ''}}>7-9 Times</option>
-                                <option value="4" {{$financial_report_array->discussion_topic_frequency == 4 ? 'selected' : ''}}>10+ Times</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-sm-9">
-                            <label style="display: block;"><strong>16.</strong> Did your chapter have scheduled park days? If yes, how often?<span class="field-required">*</span></label>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="MotherOutingsNo" name="MotherOutings" value="0" {{ $financial_report_array->mother_outings === 0 ? 'checked' : '' }} onchange="ToggleMotherOutingsExplanation()">
+                                <label class="form-check-label" for="MotherOutingsNo">No</label>
                             </div>
-                            <div class="col-sm-3">
-                            <select id="ParkDays" name="ParkDays" class="form-control select2" style="width: 100%;" required>
-                                <option value="" {{ is_null($financial_report_array->park_day_frequency) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->park_day_frequency === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->park_day_frequency == 1 ? 'selected' : ''}}>1-3 Times</option>
-                                <option value="2" {{$financial_report_array->park_day_frequency == 2 ? 'selected' : ''}}>4-6 Times</option>
-                                <option value="3" {{$financial_report_array->park_day_frequency == 3 ? 'selected' : ''}}>7-9 Times</option>
-                                <option value="4" {{$financial_report_array->park_day_frequency == 4 ? 'selected' : ''}}>10+ Times</option>
-                            </select>
                         </div>
                     </div>
-                </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                            <label style="display: block;">17. Did your chapter have any of the following activity groups?<span class="field-required">*</span></label>
+                    <div class="col-md-12" style="margin-bottom: 10px">
+                        <div class="col-sm-12" id="divMotherOutingsExplanation">
+                            <label for="MotherOutingsExplanation">If no, briefly explain:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="MotherOutingsExplanation" id="MotherOutingsExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['mother_outings_explanation'];}?></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label>13. Did you have speakers at any meetings?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="MeetingSpeakersYes" name="MeetingSpeakers" value="1" {{ $financial_report_array->meeting_speakers === 1 ? 'checked' : '' }} onchange="ToggleMeetingSpeakersExplanation()">
+                                <label class="form-check-label" for="MeetingSpeakersYes">Yes</label>
                             </div>
-                            <div class="col-sm-12">
-                                <div class="col-sm-12">
-                            <select id="Activity" name="Activity[]" class="form-control select2" style="width: 200px; height: 200px;" multiple="multiple" required>
-                                <option value="" {{ is_null($financial_report_array->activity_array) ? 'selected' : '' }}>N/A</option>
-                                @php
-                                    $selectedValues = is_null($financial_report_array->activity_array)
-                                        ? []
-                                        : json_decode($financial_report_array->activity_array);
-                                @endphp
-                                <option value="0" {{ in_array('0', $selectedValues) ? 'selected' : '' }}>Cooking</option>
-                                <option value="1" {{ in_array('1', $selectedValues) ? 'selected' : '' }}>Cost Cutting Tips</option>
-                                <option value="2" {{ in_array('2', $selectedValues) ? 'selected' : '' }}>Mommy Playgroup</option>
-                                <option value="3" {{ in_array('3', $selectedValues) ? 'selected' : '' }}>Babysitting Co-op</option>
-                                <option value="4" {{ in_array('4', $selectedValues) ? 'selected' : '' }}>MOMS Night Out</option>
-                                <option value="5" {{ in_array('5', $selectedValues) ? 'selected' : '' }}>Other</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                </div>
-                <div class="col-sm-12">
-                     <div class="col-sm-12" id="divActivityOtherExplanation">
-                        <label for="ActivityOtherExplanation">If other, briefly explain:</label>
-                        <textarea class="form-control" rows="2" name="ActivityOtherExplanation" id="ActivityOtherExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['activity_other_explanation'];}?></textarea>
-                     </div>
-                    </div>
-                    <div class="clearfix"></div>
-                     <div class="col-md-12"><br></div>
-                     <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-sm-9">
-                            <label style="display: block;">18. Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity? If yes, please explain who received the contributions and why you chose them:<span class="field-required">*</span></label>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="MeetingSpeakersNo" name="MeetingSpeakers" value="0" {{ $financial_report_array->meeting_speakers === 0 ? 'checked' : '' }} onchange="ToggleMeetingSpeakersExplanation()">
+                                <label class="form-check-label" for="MeetingSpeakersNo">No</label>
                             </div>
-                            <div class="col-sm-3">
-                            <select id="ContributionsNotRegNP" name="ContributionsNotRegNP" class="form-control select2" style="width: 100%;" required onchange="ToggleContributionsNotRegNPExplanation()">
-                                <option value="" {{ is_null($financial_report_array->contributions_not_registered_charity) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->contributions_not_registered_charity === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->contributions_not_registered_charity == 1 ? 'selected' : ''}}>Yes</option>
-                            </select>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="col-sm-12" id="divContributionsNotRegNPExplanation">
-                        <label for="ContributionsNotRegNPExplanation">If yes, briefly explain:<span class="field-required">*</span></label>
-                        <textarea class="form-control" rows="2" name="ContributionsNotRegNPExplanation" id="ContributionsNotRegNPExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['contributions_not_registered_charity_explanation'];}?></textarea>
+                    <div class="col-md-12" style="margin-bottom: 10px">
+                        <div class="col-sm-12" id="divMeetingSpeakersExplanation">
+                            <label for="MeetingSpeakersExplanation">If no, briefly explain:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="MeetingSpeakersExplanation" id="MeetingSpeakersExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['meeting_speakers_explanation'];}?></textarea>
+                        </div>
                     </div>
-                </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-sm-9">
-                            <label style="display: block;">19. Did your chapter perform at least one service project to benefit mothers or children?<span class="field-required">*</span></label>
+                    <div class="form-group row" style="margin-left: 15px;" id="divMeetingSpeakersTopics">
+                        <label>If yes, check any of the topics that were covered:<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            @php
+                                $selectedValues = is_null($financial_report_array->meeting_speakers_array)
+                                    ? []
+                                    : json_decode($financial_report_array->meeting_speakers_array);
+                            @endphp
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="checkbox" id="Speakers0" name="Speakers[]" value="0" {{ in_array('0', $selectedValues) ? 'checked' : '' }} >
+                                <label class="form-check-label" for="Speakers0">Child Rearing</label>
                             </div>
-                            <div class="col-sm-3">
-                            <select id="PerformServiceProject" name="PerformServiceProject" class="form-control select2" style="width: 100%;" required onchange="TogglePerformServiceProjectExplanation()">
-                                <option value="" {{ is_null($financial_report_array->at_least_one_service_project) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->at_least_one_service_project === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->at_least_one_service_project == 1 ? 'selected' : ''}}>Yes</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="col-sm-12" id="divPerformServiceProjectExplanation">
-                        <label for="PerformServiceProjectExplanation">If no, briefly explain:<span class="field-required">*</span></label>
-                        <textarea class="form-control" rows="2" name="PerformServiceProjectExplanation" id="PerformServiceProjectExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['at_least_one_service_project_explanation'];}?></textarea>
-                    </div>
-                </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-sm-9">
-                            <label style="display: block;">20. Did your chapter sister another chapter?<span class="field-required">*</span></label>
-                            </div><div class="col-sm-3">
-                            <select id="SisterChapter" name="SisterChapter" class="form-control select2" style="width: 100%;" required>
-                                <option value="" {{ is_null($financial_report_array->sister_chapter) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->sister_chapter === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->sister_chapter == 1 ? 'selected' : ''}}>Yes</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-sm-9">
-                            <label style="display: block;">21. Did your chapter attend an International Event (in person or virtual)?<span class="field-required">*</span></label>
-                            </div><div class="col-sm-3">
-                            <select id="InternationalEvent" name="InternationalEvent" class="form-control select2" style="width: 100%;" required>
-                                <option value="" {{ is_null($financial_report_array->international_event) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->international_event === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->international_event == 1 ? 'selected' : ''}}>Yes</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 float-left">
-                        <div class="form-inline">
-                            <div class="col-sm-9">
-                            <label style="display: block;">22. Did your chapter file their IRS 990N for <?php echo date('Y')-1 .'-'.date('Y');?> (CANNOT BE DONE BEFORE JULY 1, <?php echo date('Y');?>)?<span class="field-required">*</span></label>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="checkbox" id="Speakers1" name="Speakers[]" value="1" {{ in_array('1', $selectedValues) ? 'checked' : '' }} >
+                                <label class="form-check-label" for="Speakers1">Schools/Education</label>
                             </div>
-                            <div class="col-sm-3">
-                            <select id="FileIRS" name="FileIRS" class="form-control select2" style="width: 100%;" required onchange="ToggleFileIRSExplanation()">
-                                <option value="" {{ is_null($financial_report_array->file_irs) ? 'selected' : '' }} disabled>Please Select</option>
-                                <option value="0" {{$financial_report_array->file_irs === 0 ? 'selected' : ''}}>No</option>
-                                <option value="1" {{$financial_report_array->file_irs == 1 ? 'selected' : ''}}>Yes</option>
-                            </select>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="checkbox" id="Speakers2" name="Speakers[]" value="2" {{ in_array('2', $selectedValues) ? 'checked' : '' }} >
+                                <label class="form-check-label" for="Speakers2">Home Management</label>
+                            </div>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="checkbox" id="Speakers3" name="Speakers[]" value="3" {{ in_array('3', $selectedValues) ? 'checked' : '' }} >
+                                <label class="form-check-label" for="Speakers3">Politics</label>
+                            </div>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="checkbox" id="Speakers4" name="Speakers[]" value="4" {{ in_array('4', $selectedValues) ? 'checked' : '' }} >
+                                <label class="form-check-label" for="Speakers4">Other Non-Profit</label>
+                            </div>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="checkbox" id="Speakers5" name="Speakers[]" value="5" {{ in_array('5', $selectedValues) ? 'checked' : '' }} onchange="ToggleMotherOutingsExplanation()">
+                                <label class="form-check-label" for="Speakers5">Other</label>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-12">
-                    <div class="col-sm-12" id="divFileIRSExplanation">
-                        <label for="FileIRSExplanation">If no, briefly explain:</label>
-                        <textarea class="form-control" rows="2" name="FileIRSExplanation" id="FileIRSExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['file_irs_explanation'];}?></textarea>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12 mar_bot_20" id="990NBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
-                        <div class="col-md-12">
-                            <strong style="color:red">Please Note</strong><br>
-                                This will refresh the screen - be sure to save all work before clicking button to Upload 990N Confirmation.<br>
-                            <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-990N" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload 990N Confirmation</button>
+                    <div class="form-group row">
+                        <label>14. Did you have any discussion topics at your meetings? If yes, how often?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="col-md-12 row">
+                                <div class="form-check" style="margin-left: 20px;">
+                                    <input class="form-check-input" type="radio" id="SpeakerFrequency4" name="SpeakerFrequency" value="4" {{ $financial_report_array->discussion_topic_frequency === 4 ? 'checked' : '' }} >
+                                    <label class="form-check-label" for="SpeakerFrequency4">10+ Times</label>
+                                </div>
+                                <div class="form-check" style="margin-left: 20px;">
+                                    <input class="form-check-input" type="radio" id="SpeakerFrequency3" name="SpeakerFrequency" value="3" {{ $financial_report_array->discussion_topic_frequency === 3 ? 'checked' : '' }} >
+                                    <label class="form-check-label" for="SpeakerFrequency3">7-9 Times</label>
+                                </div>
+                                <div class="form-check" style="margin-left: 20px;">
+                                    <input class="form-check-input" type="radio" id="SpeakerFrequency2" name="SpeakerFrequency" value="2" {{ $financial_report_array->discussion_topic_frequency === 2 ? 'checked' : '' }} >
+                                    <label class="form-check-label" for="SpeakerFrequency2">4-6 Times</label>
+                                </div>
+                                <div class="form-check" style="margin-left: 20px;">
+                                    <input class="form-check-input" type="radio" id="SpeakerFrequency1" name="SpeakerFrequency" value="1" {{ $financial_report_array->discussion_topic_frequency === 1 ? 'checked' : '' }} >
+                                    <label class="form-check-label" for="SpeakerFrequency1">1-3 Times</label>
+                                </div>
+                                <div class="form-check" style="margin-left: 20px;">
+                                    <input class="form-check-input" type="radio" id="SpeakerFrequencyNo" name="SpeakerFrequency" value="0" {{ $financial_report_array->discussion_topic_frequency === 0 ? 'checked' : '' }} >
+                                    <label class="form-check-label" for="SpeakerFrequencyNo">No</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $financial_report_array['file_irs_path']; ?>">
-                    <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
-                        <div class="col-md-12" >
-                            <div>
-                               <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['file_irs_path']; ?>">View 990N Confirmation</a><br>
-                               <br>
+                    <div class="form-group row">
+                        <label>15. Did your chapter have scheduled park days? If yes, how often?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="col-md-12 row">
+                                <div class="form-check" style="margin-left: 20px;">
+                                    <input class="form-check-input" type="radio" id="ParkDays4" name="ParkDays" value="4" {{ $financial_report_array->park_day_frequency === 4 ? 'checked' : '' }} >
+                                    <label class="form-check-label" for="ParkDays4">10+ Times</label>
+                                </div>
+                                <div class="form-check" style="margin-left: 20px;">
+                                    <input class="form-check-input" type="radio" id="ParkDays3" name="ParkDays" value="3" {{ $financial_report_array->park_day_frequency === 3 ? 'checked' : '' }} >
+                                    <label class="form-check-label" for="ParkDays3">7-9 Times</label>
+                                </div>
+                                <div class="form-check" style="margin-left: 20px;">
+                                    <input class="form-check-input" type="radio" id="ParkDays2" name="ParkDays" value="2" {{ $financial_report_array->park_day_frequency === 2 ? 'checked' : '' }} >
+                                    <label class="form-check-label" for="ParkDays2">4-6 Times</label>
+                                </div>
+                                <div class="form-check" style="margin-left: 20px;">
+                                    <input class="form-check-input" type="radio" id="ParkDays1" name="ParkDays" value="1" {{ $financial_report_array->park_day_frequency === 1 ? 'checked' : '' }} >
+                                    <label class="form-check-label" for="ParkDays1">1-3 Times</label>
+                                </div>
+                                <div class="form-check" style="margin-left: 20px;">
+                                    <input class="form-check-input" type="radio" id="ParkDaysNo" name="ParkDays" value="0" {{ $financial_report_array->park_day_frequency === 0 ? 'checked' : '' }} >
+                                    <label class="form-check-label" for="ParkDaysNo">No</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label>16. Did your chapter have any of the following activity groups?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            @php
+                                $selectedValues = is_null($financial_report_array->activity_array)
+                                    ? []
+                                    : json_decode($financial_report_array->activity_array);
+                            @endphp
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="checkbox" id="Activity0" name="Activity[]" value="0" {{ in_array('0', $selectedValues) ? 'checked' : '' }} onchange="ToggleActivityOtherExplanation()">
+                                <label class="form-check-label" for="Activity0">Cooking</label>
+                            </div>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="checkbox" id="Activity1" name="Activity[]" value="1" {{ in_array('1', $selectedValues) ? 'checked' : '' }} onchange="ToggleActivityOtherExplanation()">
+                                <label class="form-check-label" for="Activity1">Cost Cutting Tips</label>
+                            </div>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="checkbox" id="Activity2" name="Activity[]" value="2" {{ in_array('2', $selectedValues) ? 'checked' : '' }} onchange="ToggleActivityOtherExplanation()">
+                                <label class="form-check-label" for="Activity2">Mommy Playgroup</label>
+                            </div>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="checkbox" id="Activity3" name="Activity[]" value="3" {{ in_array('3', $selectedValues) ? 'checked' : '' }} onchange="ToggleActivityOtherExplanation()">
+                                <label class="form-check-label" for="Activity3">Babysitting Co-op</label>
+                            </div>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="checkbox" id="Activity4" name="Activity[]" value="4" {{ in_array('4', $selectedValues) ? 'checked' : '' }} onchange="ToggleActivityOtherExplanation()">
+                                <label class="form-check-label" for="Activity4">MOMS Night Out</label>
+                            </div>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="checkbox" id="Activity5" name="Activity[]" value="5" {{ in_array('5', $selectedValues) ? 'checked' : '' }} onchange="ToggleActivityOtherExplanation()">
+                                <label class="form-check-label" for="Activity5">Other</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-bottom: 10px">
+                        <div class="col-sm-12" id="divActivityOtherExplanation">
+                           <label for="ActivityOtherExplanation">If other, briefly explain:</label>
+                           <textarea class="form-control" rows="2" name="ActivityOtherExplanation" id="ActivityOtherExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['activity_other_explanation'];}?></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label>17. Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="ContributionsNotRegNPYes" name="ContributionsNotRegNP" value="1" {{ $financial_report_array->contributions_not_registered_charity === 1 ? 'checked' : '' }} onchange="ToggleContributionsNotRegNPExplanation()">
+                                <label class="form-check-label" for="ContributionsNotRegNPYes">Yes</label>
+                            </div>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="ContributionsNotRegNPNo" name="ContributionsNotRegNP" value="0" {{ $financial_report_array->contributions_not_registered_charity === 0 ? 'checked' : '' }} onchange="ToggleContributionsNotRegNPExplanation()">
+                                <label class="form-check-label" for="ContributionsNotRegNPNo">No</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-bottom: 10px">
+                        <div class="col-sm-12" id="divContributionsNotRegNPExplanation">
+                            <label for="ContributionsNotRegNPExplanation">If yes, please explain who received the contributions and why you chose them:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="ContributionsNotRegNPExplanation" id="ContributionsNotRegNPExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['contributions_not_registered_charity_explanation'];}?></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label>18. Did your chapter perform at least one service project to benefit mothers or children?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="PerformServiceProjectYes" name="PerformServiceProject" value="1" {{ $financial_report_array->at_least_one_service_project === 1 ? 'checked' : '' }} onchange="TogglePerformServiceProjectExplanation()">
+                                <label class="form-check-label" for="PerformServiceProjectYes">Yes</label>
+                            </div>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="PerformServiceProjectNo" name="PerformServiceProject" value="0" {{ $financial_report_array->at_least_one_service_project === 0 ? 'checked' : '' }} onchange="TogglePerformServiceProjectExplanation()">
+                                <label class="form-check-label" for="PerformServiceProjectNo">No</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-bottom: 10px">
+                        <div class="col-sm-12" id="divPerformServiceProjectExplanation">
+                            <label for="PerformServiceProjectExplanation">If no, briefly explain:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="PerformServiceProjectExplanation" id="PerformServiceProjectExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['at_least_one_service_project_explanation'];}?></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label>19. Did your chapter sister another chapter?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="SisterChapterYes" name="SisterChapter" value="1" {{ $financial_report_array->sister_chapter === 1 ? 'checked' : '' }} onchange="ToggleSisterChapterExplanation()">
+                                <label class="form-check-label" for="SisterChapterYes">Yes</label>
+                            </div>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="SisterChapterNo" name="SisterChapter" value="0" {{ $financial_report_array->sister_chapter === 0 ? 'checked' : '' }} onchange="ToggleSisterChapterExplanation()">
+                                <label class="form-check-label" for="SisterChapterNo">No</label>
+                            </div>
+                        </div>
+                    </div>
+                    {{-- <div class="col-sm-12">
+                        <div class="col-sm-12" id="divSisterChapterExplanation">
+                            <label for="SisterChapterExplanation">If yes, which chpater:<span class="field-required">*</span></label>
+                            <textarea class="form-control" rows="2" name="SisterChapterExplanation" id="SisterChapterExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['sister_chapter_explanation'];}?></textarea>
+                        </div>
+                    </div> --}}
+                    <div class="form-group row">
+                        <label>20. Did your chapter attend an International Event (in person or virtual)?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="InternationalEventYes" name="InternationalEvent" value="1" {{ $financial_report_array->international_event === 1 ? 'checked' : '' }} onchange="ToggleInternationalEventExplanation()">
+                                <label class="form-check-label" for="InternationalEventYes">Yes</label>
+                            </div>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="InternationalEventNo" name="InternationalEvent" value="0" {{ $financial_report_array->international_event === 0 ? 'checked' : '' }} onchange="ToggleInternationalEventExplanation()">
+                                <label class="form-check-label" for="SInternationalEventNo">No</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label>21. Did your chapter file their IRS 990N for <?php echo date('Y')-1 .'-'.date('Y');?> (CANNOT BE DONE BEFORE JULY 1, <?php echo date('Y');?>)?<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="FileIRSYes" name="FileIRS" value="1" {{ $financial_report_array->file_irs === 1 ? 'checked' : '' }} onchange="ToggleFileIRSExplanation()">
+                                <label class="form-check-label" for="FileIRSYes">Yes</label>
+                            </div>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="FileIRSNo" name="FileIRS" value="0" {{ $financial_report_array->file_irs === 0 ? 'checked' : '' }} onchange="ToggleFileIRSExplanation()">
+                                <label class="form-check-label" for="FileIRSNo">No</label>
+                            </div>
+                            <div class="form-check" style="margin-left: 20px">
+                                @if (!is_null($financial_report_array['file_irs_path']))
+                                    <a href="https://drive.google.com/uc?export=download&id={{ $financial_report_array['file_irs_path'] }}">View 990N Confirmation</a><br>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12" style="margin-bottom: 10px">
+                        <div class="col-sm-12" id="divFileIRSExplanation">
+                            <label for="FileIRSExplanation">If no, briefly explain:</label>
+                            <textarea class="form-control" rows="2" name="FileIRSExplanation" id="FileIRSExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['file_irs_explanation'];}?></textarea>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="col-12" id="FileIRSBlock">
+                        <div class="col-md-12 mar_bot_20" id="990NBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
+                            <div class="col-md-12">
                                 <strong style="color:red">Please Note</strong><br>
-                                This will refresh the screen - be sure to save all work before clicking button to Replace 990N Confirmation.<br>
-                               <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-990N" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace 990N Confirmation</button>
+                                    This will refresh the screen - be sure to save all work before clicking button to Upload 990N Confirmation.<br>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-990N" ><i class="fas fa-upload" ></i>&nbsp; Upload 990N Confirmation</button>
+                            </div>
                         </div>
+                        <input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $financial_report_array['file_irs_path']; ?>">
+                        <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
+                            <div class="col-md-12" >
+                                <div>
+                                {{-- <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['file_irs_path']; ?>">View 990N Confirmation</a><br>
+                                <br> --}}
+                                    <strong style="color:red">Please Note</strong><br>
+                                    This will refresh the screen - be sure to save all work before clicking button to Replace 990N Confirmation.<br>
+                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-990N" ><i class="fas fa-undo" ></i>&nbsp; Replace 990N Confirmation</button>
+                            </div>
+                            </div>
                         </div>
+                        <div class="clearfix"></div>
+                        <div class="col-md-12" ><br></div>
                     </div>
-                    <div class="clearfix"></div>
-                        <div class="col-md-12"><br></div>
-                        <div class="col-md-12 float-left">
-                            <div class="form-inline">
-                                <div class="col-sm-9">
-                                <label style="display: block;">23. Is a copy of your chapter’s most recent bank statement included with the copy of this report that you are submitting to International?<span class="field-required">*</span></label>
-                                </div>
-                                <div class="col-sm-3">
-                                <select id="BankStatementIncluded" name="BankStatementIncluded" class="form-control select2" style="width: 100%;" required onchange="ToggleBankStatementIncludedExplanation()">
-                                    <option value="" {{ is_null($financial_report_array->bank_statement_included) ? 'selected' : '' }} disabled>Please Select</option>
-                                    <option value="0" {{$financial_report_array->bank_statement_included === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$financial_report_array->bank_statement_included == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
+                    <div class="form-group row">
+                        <label>22. Is a copy of your chapter’s most recent bank statement included? Statement(s) can be uploaded or replaced in the Bank Reconciliation Section.<span class="field-required">*</span></label>
+                        <div class="col-md-12 row">
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="BankStatementIncludedYes" name="BankStatementIncluded" value="1" {{ $financial_report_array->bank_statement_included === 1 ? 'checked' : '' }} onchange="ToggleBankStatementIncludedExplanation()">
+                                <label class="form-check-label" for="BankStatementIncludedYes">Yes</label>
+                            </div>
+                            <div class="form-check" style="margin-left: 20px;">
+                                <input class="form-check-input" type="radio" id="BankStatementIncludedNo" name="BankStatementIncluded" value="0" {{ $financial_report_array->bank_statement_included === 0 ? 'checked' : '' }} onchange="ToggleBankStatementIncludedExplanation()">
+                                <label class="form-check-label" for="BankStatementIncludedNo">No</label>
+                            </div>
+                            <div class="form-check" style="margin-left: 20px">
+                                @if (!is_null($financial_report_array['bank_statement_included_path']))
+                                    <a href="https://drive.google.com/uc?export=download&id={{ $financial_report_array['bank_statement_included_path'] }}">View Bank Statement</a><br>
+                                @endif
+                            </div>
+                            <div class="form-check" style="margin-left: 20px">
+                                @if (!is_null($financial_report_array['bank_statement_2_included_path']))
+                                    <a href="https://drive.google.com/uc?export=download&id={{ $financial_report_array['bank_statement_2_included_path'] }}">View Additional Bank Statement</a><br>
+                                @endif
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-12">
+                    <div class="col-md-12" style="margin-bottom: 10px">
                         <div class="col-sm-12" id="divBankStatementIncludedExplanation">
                             <label for="BankStatementIncludedExplanation">If no, briefly explain:</label>
                             <textarea class="form-control" rows="2" name="BankStatementIncludedExplanation" id="BankStatementIncludedExplanation"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['bank_statement_included_explanation'];}?></textarea>
                         </div>
                     </div>
-                    <div class="col-md-12"><br></div>
-                        <div class="col-sm-12" >
-                            <div class="col-sm-12" id="WheresTheMoney">
-                            <label style="display: block;">24. If your group does not have any bank accounts, where is the chapter money kept?:</label>
+                    <div class="col-sm-12" >
+                        <div class="col-sm-12" id="WheresTheMoney">
+                            <label style="display: block;">If your group does not have any bank accounts, where is the chapter money kept?:</label>
                             <textarea class="form-control" rows="2" name="WheresTheMoney" id="WheresTheMoney"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['wheres_the_money'];}?></textarea>
                         </div>
                     </div>
+
+
+
+
+                </div>
+
+
+
                     </div>
-                    <div class="form-row form-group">
-                        <div class="card-body">
-                            <div class="col-md-12 text-center">
-                              <button type="button" class="btn btn-info btn-fill" id="btn-step-11" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-                            </div>
-                        </div>
+                    <div class="card-body text-center">
+                              <button type="button" class="btn btn-primary" id="btn-step-11" ><i class="fas fa-save" ></i>&nbsp; Save</button>
                     </div>
               </section>
           </div><!-- end of accordion body -->
           </div><!-- end of accordion item -->
+        </div>
             <!------End Step 11 ------>
 
             <!------Begin Step 12 ------>
-            <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='12') echo "active";?>">
-                <div class="accordion-header js-accordion-header">AWARD NOMINATIONS</div>
-                <div class="accordion-body js-accordion-body ">
+            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='12') echo "active";?>">
+                <div class="card-header" id="accordion-header-members">
+                    <h4 class="card-title w-100">
+                        <a class="d-block" data-toggle="collapse" href="#collapseTwelve" style="width: 100%;">AWARD NOMINATIONS</a>
+                    </h4>
+                </div>
+                <div id="collapseTwelve" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='12') echo 'show'; ?>" data-parent="#accordion">
+                    <div class="card-body">
                     <section>
-                    <div class="form-row form-group">
+                    <div class="col-12 form-row form-group">
                         <div class="box_brd_contentpad">
                             <div class="box_brd_title_box">
                                 <h4>Instructions for Recognition Entry</h4>
@@ -2430,15 +2816,19 @@
                                     </ul>
 
                                     <div class="award_sec_btn">
-                                        <button type="button" id="btnAddAwardNomination" class="btn btn-large btn-success btn-add-remove" onclick="AddAwardNomination()" <?php if($submitted || $financial_report_array['award_nominations']==5) echo "disabled"; ?>>Add Nomination</button>
-                                        <button type="button" id="btnDeleteAwardNomination" class="btn btn-danger btn-add-remove" onclick="DeleteAwardNomination()" <?php if($submitted || $financial_report_array['award_nominations']<1) echo "disabled"; ?>>Delete Nomination</button>
+                                        <button type="button" id="btnAddAwardNomination" class="btn btn-sm btn-success " onclick="AddAwardNomination()" <?php if($submitted || $financial_report_array['award_nominations']==5) echo "disabled"; ?>>
+                                            <i class="fas fa-plus"></i>&nbsp; Add Nomination</button>
+                                        <button type="button" id="btnDeleteAwardNomination" class="btn btn-sm btn-danger" onclick="DeleteAwardNomination()" <?php if($submitted || $financial_report_array['award_nominations']<1) echo "disabled"; ?>>
+                                            <i class="fas fa-minus"></i>&nbsp; Delete Nomination</button>
                                     </div>
                             </div>
                         </div>
                         <!-- Award 1 Start -->
-                        <div class="box_brd_contentpad" id="Award1Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_nominations']<1) echo "none;"; else echo "block;";} else echo "none;";?>">
+                        <div class="col-12 box_brd_contentpad" id="Award1Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_nominations']<1) echo "none;"; else echo "block;";} else echo "none;";?>">
                             <div class="box_brd_title_box">
-                                <div class="form-group">
+                                <div class="col-sm-12"><br></div>
+                                <h4>Award 1</h4>
+                                <div class="col-12 form-group">
                                 <label for="NominationType1">Select list:</label>
                                     <select class="form-control" id="NominationType1" name="NominationType1" onClick="ShowOutstandingCriteria(1)">
                                        <option style="display:none" disabled selected>Select an award type</option>
@@ -2451,7 +2841,6 @@
                                             <option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
                                     </select>
                                 </div>
-                            </div>
                                 <div class="col-sm-12">
                                         <div class="award_acc_con">
                                             <div id="OutstandingCriteria1" style="display: none;">
@@ -2502,10 +2891,9 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div><br></div>
                                     <div>
                                         <div>
-                                 <h4>Description</h4>
+                                 <label>Description:</label>
                                  <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
                                  <div class="form-group">
                                     <textarea class="form-control" rows="20" id="AwardDesc1" name="AwardDesc1"><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_1_outstanding_project_desc'];}?></textarea>
@@ -2515,7 +2903,7 @@
                                     <div class="col-md-12">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload Award 1 Files.<br>
-                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award1" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 1 Files</button>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award1" ><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 1 Files</button>
                                     </div>
                                 </div>
                                 <input type="hidden" name="Award1Path" id="Award1Path" value="<?php echo $financial_report_array['award_1_files']; ?>">
@@ -2526,7 +2914,7 @@
                                            <a href="<?php echo $financial_report_array['award_1_files']; ?>" target="_blank">View Award 1 Files</a><br>
                                             <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace Award 1 Files.<br>
-                                           <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-award1" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 1 Files</button>
+                                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-award1" ><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 1 Files</button>
                                     </div>
                                     </div>
                                 </div>
@@ -2537,9 +2925,11 @@
                     </div>
                         <!-- Award 1 Stop -->
                         <!-- Award 2 Start -->
-                        <div class="box_brd_contentpad" id="Award2Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_nominations']<2) echo "none;"; else echo "block;";} else echo "none;";?>">
+                        <div class="col-12 box_brd_contentpad" id="Award2Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_nominations']<2) echo "none;"; else echo "block;";} else echo "none;";?>">
                             <div class="box_brd_title_box">
-                                <div class="form-group">
+                                <div class="col-sm-12"><br></div>
+                                <h4>Award 2</h4>
+                                <div class="col-12 form-group">
                                 <label for="NominationType2">Select list:</label>
                                     <select class="form-control" id="NominationType2" name="NominationType2" onClick="ShowOutstandingCriteria(2)">
                                        <option style="display:none" disabled selected>Select an award type</option>
@@ -2603,10 +2993,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div><br></div>
                             <div>
                                 <div>
-                                 <h4>Description</h4>
+                                 <label>Description:</label>
                                  <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
                                  <div class="form-group">
                                     <textarea class="form-control" rows="20" id="AwardDesc2" name="AwardDesc2"><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_2_outstanding_project_desc'];}?></textarea>
@@ -2616,7 +3005,7 @@
                                     <div class="col-md-12">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload Award 2 Files.<br>
-                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award2" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 2 Files</button>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award2" ><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 2 Files</button>
                                     </div>
                                 </div>
                                 <input type="hidden" name="Award2Path" id="Award2Path" value="<?php echo $financial_report_array['award_2_files']; ?>">
@@ -2627,7 +3016,7 @@
                                            <a href="<?php echo $financial_report_array['award_2_files']; ?>" target="_blank">View Award 2 Files</a><br>
                                             <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace Award 2 Files.<br>
-                                           <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-award2" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 2 Files</button>
+                                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-award2" ><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 2 Files</button>
                                     </div>
                                     </div>
                                 </div>
@@ -2638,9 +3027,11 @@
                         </div>
                         <!-- Award 2 Stop -->
                         <!-- Award 3 Start -->
-                        <div class="box_brd_contentpad" id="Award3Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_nominations']<3) echo "none;"; else echo "block;";} else echo "none;";?>">
+                        <div class="col-12 box_brd_contentpad" id="Award3Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_nominations']<3) echo "none;"; else echo "block;";} else echo "none;";?>">
                             <div class="box_brd_title_box">
-                                <div class="form-group">
+                                <div class="col-sm-12"><br></div>
+                                <h4>Award 3</h4>
+                                <div class="col-12 form-group">
                                 <label for="NominationType3">Select list:</label>
                                     <select class="form-control" id="NominationType3" name="NominationType3" onClick="ShowOutstandingCriteria(3)">
                                        <option style="display:none" disabled selected>Select an award type</option>
@@ -2704,10 +3095,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div><br></div>
                             <div>
                                 <div>
-                                 <h4>Description</h4>
+                                 <label>Description:</label>
                                  <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
                                  <div class="form-group">
                                     <textarea class="form-control" rows="20" id="AwardDesc3" name="AwardDesc3"><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_3_outstanding_project_desc'];}?></textarea>
@@ -2717,7 +3107,7 @@
                                     <div class="col-md-12">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload Award 3 Files.<br>
-                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award3" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 3 Files</button>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award3" ><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 3 Files</button>
                                     </div>
                                 </div>
                                 <input type="hidden" name="Award3Path" id="Award3Path" value="<?php echo $financial_report_array['award_3_files']; ?>">
@@ -2728,7 +3118,7 @@
                                            <a href="<?php echo $financial_report_array['award_3_files']; ?>" target="_blank">View Award 3 Files</a><br>
                                             <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace Award 3 Files.<br>
-                                           <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-award3" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 3 Files</button>
+                                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-award3" ><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 3 Files</button>
                                     </div>
                                     </div>
                                 </div>
@@ -2739,9 +3129,11 @@
                         </div>
                         <!-- Award 3 Stop -->
                         <!-- Award 4 Start -->
-                        <div class="box_brd_contentpad" id="Award4Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_nominations']<4) echo "none;"; else echo "block;";} else echo "none;";?>">
+                        <div class="col-12 box_brd_contentpad" id="Award4Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_nominations']<4) echo "none;"; else echo "block;";} else echo "none;";?>">
                             <div class="box_brd_title_box">
-                                <div class="form-group">
+                                <div class="col-sm-12"><br></div>
+                                <h4>Award 4</h4>
+                                <div class="col-12 form-group">
                                 <label for="NominationType4">Select list:</label>
                                     <select class="form-control" id="NominationType4" name="NominationType4" onClick="ShowOutstandingCriteria(4)">
                                        <option style="display:none" disabled selected>Select an award type</option>
@@ -2805,10 +3197,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div><br></div>
                             <div>
                                 <div>
-                                 <h4>Description</h4>
+                                 <label>Description:</label>
                                  <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
                                  <div class="form-group">
                                     <textarea class="form-control" rows="20" id="AwardDesc4" name="AwardDesc4"><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_4_outstanding_project_desc'];}?></textarea>
@@ -2818,7 +3209,7 @@
                                     <div class="col-md-12">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload Award 4 Files.<br>
-                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award4" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 4 Files</button>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award4" ><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 4 Files</button>
                                     </div>
                                 </div>
                                 <input type="hidden" name="Award1Path" id="Award4Path" value="<?php echo $financial_report_array['award_4_files']; ?>">
@@ -2829,7 +3220,7 @@
                                            <a href="<?php echo $financial_report_array['award_4_files']; ?>" target="_blank">View Award 4 Files</a><br>
                                             <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace Award 4 Files.<br>
-                                           <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-award4" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 4 Files</button>
+                                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-award4" ><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 4 Files</button>
                                     </div>
                                     </div>
                                 </div>
@@ -2840,9 +3231,11 @@
                         </div>
                         <!-- Award 4 Stop -->
                         <!-- Award 5 Start -->
-                        <div class="box_brd_contentpad" id="Award5Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_nominations']<5) echo "none;"; else echo "block;";} else echo "none;";?>">
+                        <div class="col-12 box_brd_contentpad" id="Award5Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_nominations']<5) echo "none;"; else echo "block;";} else echo "none;";?>">
                             <div class="box_brd_title_box">
-                                <div class="form-group">
+                                <div class="col-sm-12"><br></div>
+                                <h4>Award 5</h4>
+                                <div class="col-12 form-group">
                                 <label for="NominationType5">Select list:</label>
                                     <select class="form-control" id="NominationType5" name="NominationType5" onClick="ShowOutstandingCriteria(5)">
                                        <option style="display:none" disabled selected>Select an award type</option>
@@ -2906,10 +3299,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div><br></div>
                             <div>
                                 <div>
-                                 <h4>Description</h4>
+                                 <label>Description:</label>
                                  <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
                                  <div class="form-group">
                                     <textarea class="form-control" rows="20" id="AwardDesc5" name="AwardDesc5"><?php if (!empty($financial_report_array)) {echo $financial_report_array['award_5_outstanding_project_desc'];}?></textarea>
@@ -2919,7 +3311,7 @@
                                     <div class="col-md-12">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload Award 5 Files.<br>
-                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award5" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 5 Files</button>
+                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award5" ><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 5 Files</button>
                                     </div>
                                 </div>
                                 <input type="hidden" name="Award5Path" id="Award5Path" value="<?php echo $financial_report_array['award_5_files']; ?>">
@@ -2930,7 +3322,7 @@
                                            <a href="<?php echo $financial_report_array['award_5_files']; ?>" target="_blank">View Award 5 Files</a><br>
                                             <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace Award 5 Files.<br>
-                                           <button type="button" class="btn btn-info btn-fill" data-toggle="modal" data-target="#modal-award5" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 5 Files</button>
+                                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-award5" ><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 5 Files</button>
                                     </div>
                                     </div>
                                 </div>
@@ -2943,40 +3335,50 @@
 
                         <div class="box_brd_contentpad" id="AwardSignatureBlock" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_nominations']<1) echo "none;"; else echo "block;";} else echo "none;";?>">
                               <div class="box_brd_title_box">
-                                 <h4>ALL ENTRIES MUST INCLUDE THIS SIGNED AGREEMENT</h4>
+                                <div class="col-sm-12"><br></div>
+                                 <label>ALL ENTRIES MUST INCLUDE THIS SIGNED AGREEMENT</label>
                               </div>
-                                <div class="award_acc_con">
-                                    <p>I, THE UNDERSIGNED, AFFIRM THAT I HAVE THE RIGHT TO SUBMIT THE ENCLOSED ENTRY TO THE INTERNATIONAL MOMS CLUB FOR CONSIDERATION IN THEIR OUTSTANDING CHAPTER RECOGNITIONS, THAT THE ENCLOSED INFORMATION IS ACCURATE AND COMPLETE TO THE BEST OF MY ABILITY AND THAT I HAVE RECEIVED PERMISSION TO ENTER THIS INFORMATION FROM ANY OTHER MEMBERS WHO MAY HAVE CONTRIBUTED TO THIS ENTRY OR THE ORIGINAL ACTIVITY/PROJECT THAT IS BEING CONSIDERED. I UNDERSTAND THAT, WHETHER OR NOT MY CHAPTER RECEIVES A RECOGNITION, THE ENCLOSED ENTRY WILL BECOME THE PROPERTY OF THE INTERNATIONAL MOMS CLUB AND THAT THE INFORMATION, PICTURES, CLIPPINGS AND/OR OTHER MATERIALS ENCLOSED MAY BE SHARED WITH OTHER MOMS CLUB CHAPTERS OR USED IN ANY WAY THE INTERNATIONAL MOMS CLUB SEES FIT, WITH NO COMPENSATION TO ME, OTHERS INVOLVED IN THIS PROJECT AND/OR THE CHAPTER(S). NO ENTRIES OR SUBMITTED MATERIALS WILL BE RETURNED AND THE INTERNATIONAL MOMS CLUB MAY REASSIGN ANY ENTRY TO ANOTHER CATEGORY IF IT DEEMS NECESSARY. RECOGNITIONS WILL BE GIVEN IN THE VARIOUS CATEGORIES ACCORDING TO THE DECISION OF THE INTERNATIONAL MOMS CLUB. THE AWARDING OF RECOGNITIONS WILL BE ACCORDING TO MERIT, AND THE INTERNATIONAL MOMS CLUB MAY DECIDE NOT TO GIVE AN AWARD IN ANY OR ALL CATEGORIES IF IT SO CHOOSES. ALL DECISIONS OF THE INTERNATIONAL MOMS CLUB ARE FINAL. ANY RECOGNITIONS ARE OFFICIALLY PRESENTED TO THE LOCAL CHAPTERS, NOT THE INDIVIDUAL, AND RECOGNITIONS WILL NOT BE PERSONALIZED WITH ANY INDIVIDUAL’S NAME. REPLACEMENT RECOGNITIONS MAY OR MAY NOT BE MADE AVAILABLE AT INTERNATIONAL’S DISCRETION, AND IF A REPLACEMENT IS MADE BECAUSE OF AN ERROR IN THE ENTRY INFORMATION, THE COST WILL BE PAID IN ADVANCE BY THE LOCAL CHAPTER.</p>
+                                <div class="award_acc_con form-check">
+                                    <p>I, the undersigned, affirm that I have the right to submit the enclosed entry to the International MOMS Club for consideration in their Outstanding Chapter Recognitions,
+                                        that the enclosed information is accurate and complete to the best of my ability and that I have received permission to enter this information from any other members
+                                        who may have contributed to this entry or the original activity/project that is being considered.  I undeerstand that, whether or not my chapter receives a recognition,
+                                        the enclosed entry will become the property of the International MOMS Club and that the information, pictures, clippings an/or other materials enclosed may be shared
+                                        wtih other MOMS Club Chapters or used in any way the Internation MOMS Club sees fit, with no compensation to me, others involved in this project and/or the chapter(s).
+                                        No entries or submitted materials will be returned and the International MOMS Club may reassign any entry to another category if it deems necessary.  Recognitions will
+                                        be given in the various categories according to the decision of the International MOMS Club. The awarding of recognitions will be according to merit, and the International
+                                        MOMS Club may decide not to give an award in any or all categories if it so chooses. All decisions of the International MOMS Club are final.  Any recognitions are officially
+                                        presented to the local chapters, not the individuals, and recognitions will not be personalized with any individual's name. Replacement reccognitions may or may not be made
+                                        available at International's discretion, adn if a replacement is made because of an error in the entry information, the cost will be pain in advance by the local chapter.
+                                    </p>
                                     <div class="checkbox">
-                                        <label><input type="checkbox" id="AwardsAgree" name="AwardsAgree" <?php if (isset($financial_report_array['award_agree']) && $financial_report_array['award_agree'] == 1) echo "checked"; ?>  required>I understand and agree to the above</label>
-                                    </div>
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="fa fa-user" aria-hidden="true"></i></span>
-                                        <input id="NominationSubmitor" name="NominationSubmitor" type="text" class="form-control" value="<?php echo $loggedInName; ?>" readonly>
+                                        <input class="form-check-input" type="checkbox" id="AwardsAgree" name="AwardsAgree" <?php if (isset($financial_report_array['award_agree']) && $financial_report_array['award_agree'] == 1) echo "checked"; ?>  required>
+                                        <label class="form-check-label"><strong>I understand and agree to the above</strong></label>
                                     </div>
                                 </div>
                             </div>
                     </div>
-                    <div class="form-row form-group">
-                       <div class="card-body">
-                          <div class="col-md-12 text-center">
-                             <button type="button" id="btn-step-12" class="btn btn-info btn-fill" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-
-                            </div>
-                       </div>
+                    <div class="card-body text-center">
+                             <button type="button" id="btn-step-12" class="btn btn-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
                     </div>
                      </section>
                     </div><!-- end of accordion body -->
                 </div><!-- end of accordion item -->
+            </div>
                 <!------End Step 12 ------>
 
                 <!------Start Step 13 ------>
-                <div class="accordion__item js-accordion-item <?php if($financial_report_array['farthest_step_visited'] =='13') echo "active";?>">
-                    <div class="accordion-header js-accordion-header">SUBMIT REPORT</div>
-                    <div class="accordion-body js-accordion-body ">
+                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='13') echo "active";?>">
+                    <div class="card-header" id="accordion-header-members">
+                        <h4 class="card-title w-100">
+                            <a class="d-block" data-toggle="collapse" href="#collapseThirteen" style="width: 100%;">SUBMIT REPORT</a>
+                        </h4>
+                    </div>
+                    <div id="collapseThirteen" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='13') echo 'show'; ?>" data-parent="#accordion">
+                        <div class="card-body">
                         <section>
                             <div class="form-row form-group">
-                            <p>Contact information for the person completing the reports for your chapter:</p>
+                                <div class="col-sm-12">
+                                    <strong>Contact information for the person who completed the report.</strong></div>
                                 <div class="col-md-6 float-left">
                                     <label for="CompletedName">
                                         Name (First & Last)
@@ -2990,47 +3392,36 @@
                                  <input type="text" name="CompletedEmail" id="CompletedEmail" class="form-control" value="<?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_email'];}?>" required >
                                 </div>
                             </div>
-                            <hr>
-                            <div class="form-row form-group">
-                                <div class="card-body">
-                                    <div class="col-md-12 text-center">
-                                        <button type="button" class="btn btn-info btn-fill" id="btn-step-13" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-                                        @if($thisDate->month >= 3 && $thisDate->month <= 12)
-                                        <button type="button" class="btn btn-info btn-fill" id="final-submit" <?php if($submitted =='1') echo "disabled"; ?>><i class="fa fa-mail-forward fa-fw" aria-hidden="true" ></i>&nbsp; Submit</button>
-                                        @endif
-                                    </div>
-                                    <hr style="height:3px;border:none;color:#0c71c3;background-color:#0c71c3;" />
-                                </div>
+                            <div class="card-body text-center">
+                                <button type="button" class="btn btn-primary" id="btn-step-13" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+                                @if($thisDate->month >= 3 && $thisDate->month <= 12)
+                                <button type="button" class="btn btn-success" id="final-submit" ><i class="fas fa-share-square" ></i>&nbsp; Submit</button>
+                                @endif
                             </div>
                         </section>
                     </div><!-- end of accordion body -->
                 </div><!-- end of accordion item -->
+            </div>
                 <!------End Step 13 ------>
 
                 </div><!-- end of accordion -->
             </form>
             @else
-    <p>Your session has expired. Please <a href="{{ url('/login') }}">log in</a> again.</p>
-@endif
-        </div>
-            <div class="col-md-12 text-center">
-                <br>
-                    @if($user_type !== 'outgoing')
-                        <a href="{{ route('home') }}" class="btn btn-info btn-fill"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
-                    @endif
-                    @if($submitted !='1')
-                        <button type="button" id="btn-save" class="btn btn-info btn-fill" ><i class="fa fa-floppy-o fa-fw" aria-hidden="true" ></i>&nbsp; Save</button>
-                    @endif
-                    @if($submitted =='1')
-                    {{-- <a id="viewPdfLink" href="https://drive.google.com/file/d/<?php echo $financial_report_array['financial_pdf_path']; ?>/view" target="_blank" class="btn btn-info btn-fill" <?php if(!$submitted =='1') echo "disabled"; ?>><i class="fa fa-file-pdf-o fa-fw" aria-hidden="true" ></i>&nbsp; View PDF</a> --}}
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn btn-info btn-fill" <?php if(!$submitted =='1') echo "disabled"; ?>><i class="fa fa-download fa-fw" aria-hidden="true" ></i>&nbsp; Download PDF</a>
+                <p>Your session has expired. Please <a href="{{ url('/login') }}">log in</a> again.</p>
+            @endif
 
-                        {{-- <a href='{{ url("/board/financial/pdf", ["id" => Session::get("chapterid")]) }}' target="_blank" class="">
-                        <button id="buttononclickdisable" class="btn btn-info btn-fill" onClick="this.disabled=true;"><i class="fa fa-file-pdf-o fa-fw" aria-hidden="true" ></i>&nbsp; View PDF</button>
-                        </a> --}}
-                    @endif
+            <div class="card-body text-center">
+                @if($user_type !== 'outgoing')
+                    <a href="{{ route('home') }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back</a>
+                @endif
+                @if($submitted !='1')
+                    <button type="button" id="btn-save" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp; Save</button>
+                @endif
+                @if($submitted =='1')
+                    <a id="btn-download-pdf" href="https://drive.google.com/uc?export=download&id={{ $financial_report_array['financial_pdf_path'] }}" class="btn btn-primary"><i class="fas fa-file-pdf"></i>&nbsp; Download PDF</a>
+                @endif
             </div>
-        </div>
+
         <!-- Modal Popups for Uploading Files -->
         <div class="modal fade" id="modal-roster">
             <div class="modal-dialog">
@@ -3044,8 +3435,8 @@
                             <input type="file" name='file' required>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-info btn-fill" id="btn-roster">Upload</button>
+                        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
+                        <button type="submit" class="btn btn-sm btn-success" id="btn-roster"><i class="fas fa-upload" ></i>&nbsp; Upload</button>
                         </form>
                     </div>
                 </div>
@@ -3063,8 +3454,8 @@
                             <input type="file" name='file' required>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-info btn-fill" id="btn-statement1">Upload</button>
+                        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
+                        <button type="submit" class="btn btn-sm btn-success" id="btn-statement1"><i class="fas fa-upload" ></i>&nbsp; Upload</button>
                         </form>
                     </div>
                 </div>
@@ -3082,8 +3473,8 @@
                             <input type="file" name='file' required>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-info btn-fill" id="btn-statement2">Upload</button>
+                        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
+                        <button type="submit" class="btn btn-sm btn-success" id="btn-statement2"><i class="fas fa-upload" ></i>&nbsp; Upload</button>
                         </form>
                     </div>
                 </div>
@@ -3101,8 +3492,8 @@
                             <input type="file" name='file' required>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-info btn-fill" id="btn-990N">Upload</button>
+                        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
+                        <button type="submit" class="btn btn-sm btn-success" id="btn-990N"><i class="fas fa-upload" ></i>&nbsp; Upload</button>
                         </form>
                     </div>
                 </div>
@@ -3120,8 +3511,8 @@
                             <input type="file" name='file' required>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-info btn-fill" id="btn-award1">Upload</button>
+                        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
+                        <button type="submit" class="btn btn-sm btn-success" id="btn-award1"><i class="fas fa-upload" ></i>&nbsp; Upload</button>
                         </form>
                     </div>
                 </div>
@@ -3139,8 +3530,8 @@
                             <input type="file" name='file' required>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-info btn-fill" id="btn-award2">Upload</button>
+                        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
+                        <button type="submit" class="btn btn-sm btn-success" id="btn-award2"><i class="fas fa-upload" ></i>&nbsp; Upload</button>
                         </form>
                     </div>
                 </div>
@@ -3158,8 +3549,8 @@
                             <input type="file" name='file' required>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-info btn-fill" id="btn-award3">Upload</button>
+                        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
+                        <button type="submit" class="btn btn-sm btn-success" id="btn-award3"><i class="fas fa-upload" ></i>&nbsp; Upload</button>
                         </form>
                     </div>
                 </div>
@@ -3177,8 +3568,8 @@
                             <input type="file" name='file' required>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-info btn-fill" id="btn-award4">Upload</button>
+                        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
+                        <button type="submit" class="btn btn-sm btn-success" id="btn-award4"><i class="fas fa-upload" ></i>&nbsp; Upload</button>
                         </form>
                     </div>
                 </div>
@@ -3196,8 +3587,8 @@
                             <input type="file" name='file' required>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-info btn-fill" id="btn-award5">Upload</button>
+                        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
+                        <button type="submit" class="btn brn-sm btn-success" id="btn-award5"><i class="fas fa-upload" ></i>&nbsp; Upload</button>
                         </form>
                     </div>
                 </div>
@@ -3206,239 +3597,297 @@
         <!-- End Modal Popups -->
     </div>
 </div>
+</div>
+
 @endsection
 @section('customscript')
 <script>
-    // /* Disable fields and buttons  */
-    // $(document).ready(function () {
-    //         $('#final-submit').show();  /*report status text (.show/.hide to change visibility)*/
-    // });
+/* Disable fields and buttons  */
+    $(document).ready(function () {
+        var submitted = {!! json_encode($chapterDetails[0]->financial_report_received) !!};
 
-    $('.demo1').fileselect();
-
-     $(window).on("load", function() {
-        LoadSteps();
-    });
-
-    function getConfirmation() {
-               var retVal = confirm("Do you want to continue ?");
-               if( retVal == true ) {
-                  document.getElementById("submitted").value='1';
-                  return true;
-               } else {
-                  return false;
-               }
-            }
-</script>
-<script>
-    var accordion = (function(){
-    var $accordion = $('.js-accordion');
-    var $accordion_header = $accordion.find('.js-accordion-header');
-    var $accordion_item = $('.js-accordion-item');
-    // default settings
-    var settings = {
-        speed: 400,   // animation speed
-        oneOpen: false   // close all other accordion items if true
-    };
-
-  return {
-    // pass configurable object literal
-    init: function($settings) {
-      $accordion_header.on('click', function() {
-        accordion.toggle($(this));
-      });
-
-      $.extend(settings, $settings);
-      // ensure only one accordion is active if oneOpen is true
-      if(settings.oneOpen && $('.js-accordion-item.active').length > 1) {
-        $('.js-accordion-item.active:not(:first)').removeClass('active');
-      }
-      // reveal the active accordion bodies
-      $('.js-accordion-item.active').find('> .js-accordion-body').show();
-    },
-
-    toggle: function($this) {
-      if(settings.oneOpen && $this[0] != $this.closest('.js-accordion').find('> .js-accordion-item.active > .js-accordion-header')[0]) {
-        $this.closest('.js-accordion')
-               .find('> .js-accordion-item')
-               .removeClass('active')
-               .find('.js-accordion-body')
-               .slideUp()
-      }
-      // show/hide the clicked accordion item
-      $this.closest('.js-accordion-item').toggleClass('active');
-      $this.next().stop().slideToggle(settings.speed);
-    },
-
-     // Open accordion item programmatically by header ID
-     openAccordionItem: function(headerID) {
-            var $accordionHeader = $('#' + headerID);
-            var $accordionItem = $accordionHeader.closest('.js-accordion-item');
-
-            // Close all other items if oneOpen is true
-            if (settings.oneOpen) {
-                $accordion_item.not($accordionItem).removeClass('active');
-                $accordion_item.not($accordionItem).find('.js-accordion-body').slideUp();
-            }
-
-            // Toggle the clicked accordion item
-            $accordionItem.toggleClass('active');
-            $accordionItem.find('.js-accordion-body').stop().slideToggle(settings.speed);
+        if (submitted == '1') {
+            $('button').not('#btn-back, #btn-download-pdf').prop('disabled', true);
+            $('input, select, textarea').not('#logout-form input, #logout-form select, #logout-form textarea').prop('disabled', true);
+        } else {
+            $('button, input, select, textarea').prop('disabled', false);
         }
-  }
-})();
-
-$(document).ready(function(){
-    // $("#full-print-div").hide();
-    accordion.init({ speed: 300, oneOpen: true });
-
-    $(".txt-num").keypress(function (e) {
-        var key = e.charCode || e.keyCode || 0;
-        if(key == 46){
-         return true;
-        }
-        if (key < 48 || key > 58) {
-            return false;
-        }
-    });
-
-    $("#btn-step-1").click(function() {
-        if (!EnsureRoster()) {
-        return false;
-        }
-        $("#FurthestStep").val('1');
-        $("#financial_report").submit();
-    });
-    $("#btn-step-2").click(function() {
-        $("#FurthestStep").val('2');
-        $("#financial_report").submit();
-    });
-    $("#btn-step-3").click(function() {
-        if (!EnsureServiceProject()) {
-        return false;
-        }
-        $("#FurthestStep").val('3');
-        $("#financial_report").submit();
-    });
-    $("#btn-step-4").click(function() {
-        $("#FurthestStep").val('4');
-        $("#financial_report").submit();
-    });
-    $("#btn-step-5").click(function() {
-        $("#FurthestStep").val('5');
-        $("#financial_report").submit();
-    });
-    $("#btn-step-6").click(function() {
-        if (!EnsureReRegistration()) {
-        return false;
-        }
-        $("#FurthestStep").val('6');
-        $("#financial_report").submit();
-    });
-    $("#btn-step-7").click(function() {
-        $("#FurthestStep").val('7');
-        $("#financial_report").submit();
-    });
-    $("#btn-step-8").click(function() {
-        $("#FurthestStep").val('8');
-        $("#financial_report").submit();
-    });
-    $("#btn-step-9").click(function() {
-        if (!EnsureStatement()) {
-        return false;
-        }
-        $("#FurthestStep").val('9');
-        $("#financial_report").submit();
-    });
-    $("#btn-step-11").click(function() {
-        if (!EnsureQuestions()) {
-        return false;
-        }
-        $("#FurthestStep").val('11');
-        $("#financial_report").submit();
-    });
-    $("#btn-step-12").click(function() {
-        var agreeChk = $("#TotalAwardNominations").val();
-        if(agreeChk > 0){
-            if (($("input[name='AwardsAgree']:checked").length)<=0) {
-                alert("Please select I understand and agree check box");
+        var allDisabled = true;
+        $('input, select, textarea').not('#logout-form input, #logout-form select, #logout-form textarea').each(function() {
+            if (!$(this).prop('disabled')) {
+                allDisabled = false;
                 return false;
             }
-            else{
-                $("#FurthestStep").val('12');
-                $("#financial_report").submit();
-            }
-        }else{
-            $("#FurthestStep").val('12');
-            $("#financial_report").submit();
-        }
-    });
-        $("#btn-step-13").click(function() {
-        if (!EnsureSubmitInformation()) {
-        return false;
-        }
-        $("#FurthestStep").val('13');
-        $("#financial_report").submit();
-    });
-        $("#btn-save").click(function() {
-        $("#FurthestStep").val('14');
-        $("#financial_report").submit();
-    });
-        $("#final-submit").click(function() {
-        if (!EnsureRoster()) {
-            $(this).prop('disabled', false);
-            return false;
-        }
-        else if (!EnsureMembers()) {
-            $(this).prop('disabled', false);
-            return false;
-        }
-        else if (!EnsureServiceProject()) {
-            $(this).prop('disabled', false);
-            return false;
-        }
-        else if (!EnsureReRegistration()) {
-            $(this).prop('disabled', false);
-            return false;
-        }
-        else if (!EnsureQuestions()) {
-            $(this).prop('disabled', false);
-            return false;
-        }
-        else if (!EnsureStatement()) {
-            $(this).prop('disabled', false);
-            return false;
-        }
-        else if (!Ensure990()) {
-            $(this).prop('disabled', false);
-            return false;
-        }
-        else if (!EnsureReconciliation()) {
-            $(this).prop('disabled', false);
-            return false;
-        }
-        else if (!EnsureSubmitInformation()) {
-            $(this).prop('disabled', false);
-            return false;
-        }
-        var completedEmail = $("#CompletedEmail").val();
-        if (!isValidEmail(completedEmail)) {
-            alert("Please enter a valid email address.");
-            $(this).prop('disabled', false);
-            return false;
-        }
-        var result = confirm("This will finalize and submit your report.  You will no longer be able to edit this report.  Do you wish to continue?");
-        if (result) {
-            $(this).prop('disabled', true);
-            $("#submitted").val('1');
-            $("#FurthestStep").val('15');
-            $("#financial_report").submit();
+        });
+
+        if (allDisabled) {
+            $('.description').show();
         } else {
-            console.log("User cancelled the submission");
-            $(this).prop('disabled', false);
+            $('.description').hide();
         }
+    });
+
+/* Curency Mask */
+    document.addEventListener("DOMContentLoaded", function() {
+        Inputmask().mask(document.querySelectorAll('[data-inputmask]'));
+
+        document.querySelector('form').addEventListener('submit', function(event) {
+            const inputs = document.querySelectorAll('[data-inputmask]');
+        });
+    });
+
+    function debounce(func, delay) {
+    let debounceTimer;
+    return function() {
+        const context = this;
+        const args = arguments;
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => func.apply(context, args), delay);
+    }
+}
+
+document.querySelectorAll('.input-field-selector').forEach(function(element) {
+    element.addEventListener('input', debounce(ChangeMemberCount, 300));
+});
+
+/* Last Step Visited */
+    // $(window).on("load", function() {
+    //     LoadSteps();
+    // });
+
+/* Save & Submit Cnnfirmation */
+    function getConfirmation() {
+        var retVal = confirm("Do you want to continue ?");
+        if( retVal == true ) {
+            document.getElementById("submitted").value='1';
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
+
+<script>
+/* Save & Submit Verification */
+$(document).ready(function() {
+    function submitFormWithStep(step) {
+        $("#FurthestStep").val(step);
+        $("#financial_report").submit();
+    }
+
+    $("#btn-step-1").click(function() {
+        if (!EnsureRoster()) return false;
+        if (!EnsureMembers()) return false;
+        submitFormWithStep(1);
+    });
+    $("#btn-step-2").click(function() {
+        submitFormWithStep(2);
+    });
+    $("#btn-step-3").click(function() {
+        if (!EnsureServiceProject()) return false;
+        submitFormWithStep(3);
+    });
+    $("#btn-step-4").click(function() {
+        submitFormWithStep(4);
+    });
+    $("#btn-step-5").click(function() {
+        submitFormWithStep(5);
+    });
+    $("#btn-step-6").click(function() {
+        if (!EnsureReRegistration()) return false;
+        submitFormWithStep(6);
+    });
+    $("#btn-step-7").click(function() {
+        submitFormWithStep(7);
+    });
+    $("#btn-step-8").click(function() {
+        submitFormWithStep(8);
+    });
+    $("#btn-step-9").click(function() {
+        if (!EnsureStatement()) return false;
+        submitFormWithStep(9);
+    });
+
+    $("#btn-step-11").click(function() {
+        if (!EnsureQuestions()) return false;
+        submitFormWithStep(11);
+    });
+    $("#btn-step-12").click(function() {
+        submitFormWithStep(12);
+    });
+    $("#btn-step-13").click(function() {
+        if (!EnsureSubmitInformation()) return false;
+        submitFormWithStep(13);
+    });
+    $("#btn-save").click(function() {
+        submitFormWithStep(14);
     });
 });
+
+$("#final-submit").click(function() {
+        if (!EnsureRoster()) {
+        return false;
+    }
+    if (!EnsureMembers()) {
+        return false;
+    }
+    if (!EnsureServiceProject()) {
+        return false;
+    }
+    if (!EnsureReRegistration()) {
+        return false;
+    }
+    if (!EnsureQuestions()) {
+        return false;
+    }
+    if (!EnsureSubmitInformation()) {
+        return false;
+    }
+    if (!EnsureReconciliation()) {
+        return false;
+    }
+        var result = confirm("This will finalize and submit your report.  You will no longer be able to edit this report.  Do you wish to continue?");
+            if (result) {
+                $("#submitted").val('1');
+                $("#FurthestStep").val('15');
+                $("#financial_report").submit();
+            } else {
+                $(this).prop('disabled', false);
+        }
+	});
+
+    // $(document).ready(function(){
+    //     $("#btn-step-1").click(function() {
+    //         if (!EnsureRoster()) {
+    //             return false;
+    //         }
+    //         else if (!EnsureMembers()) {
+    //             return false;
+    //         }
+    //         $("#FurthestStep").val('1');
+    //         $("#financial_report").submit();
+    //     });
+    //     $("#btn-step-2").click(function() {
+    //         $("#FurthestStep").val('2');
+    //         $("#financial_report").submit();
+    //     });
+    //     $("#btn-step-3").click(function() {
+    //         if (!EnsureServiceProject()) {
+    //             return false;
+    //         }
+    //         $("#FurthestStep").val('3');
+    //         $("#financial_report").submit();
+    //     });
+    //     $("#btn-step-4").click(function() {
+    //         $("#FurthestStep").val('4');
+    //         $("#financial_report").submit();
+    //     });
+    //     $("#btn-step-5").click(function() {
+    //         $("#FurthestStep").val('5');
+    //         $("#financial_report").submit();
+    //     });
+    //     $("#btn-step-6").click(function() {
+    //         if (!EnsureReRegistration()) {
+    //         return false;
+    //         }
+    //         $("#FurthestStep").val('6');
+    //         $("#financial_report").submit();
+    //     });
+    //     $("#btn-step-7").click(function() {
+    //         $("#FurthestStep").val('7');
+    //         $("#financial_report").submit();
+    //     });
+    //     $("#btn-step-8").click(function() {
+    //         $("#FurthestStep").val('8');
+    //         $("#financial_report").submit();
+    //     });
+    //     $("#btn-step-9").click(function() {
+    //         if (!EnsureStatement()) {
+    //             return false;
+    //         }
+    //         $("#FurthestStep").val('9');
+    //         $("#financial_report").submit();
+    //     });
+    //     $("#btn-step-11").click(function() {
+    //         if (!EnsureQuestions()) {
+    //         return false;
+    //         }
+    //         else if (!Ensure990()) {
+    //             return false;
+    //         }
+    //         $("#FurthestStep").val('11');
+    //         $("#financial_report").submit();
+    //     });
+    //     $("#btn-step-12").click(function() {
+    //         var agreeChk = $("#TotalAwardNominations").val();
+    //         if(agreeChk > 0){
+    //             if (($("input[name='AwardsAgree']:checked").length)<=0) {
+    //                 alert("Please select I understand and agree check box");
+    //                 return false;
+    //             }
+    //             else{
+    //                 $("#FurthestStep").val('12');
+    //                 $("#financial_report").submit();
+    //             }
+    //         }else{
+    //             $("#FurthestStep").val('12');
+    //             $("#financial_report").submit();
+    //         }
+    //     });
+    //         $("#btn-step-13").click(function() {
+    //         if (!EnsureSubmitInformation()) {
+    //             return false;
+    //         }
+    //         $("#FurthestStep").val('13');
+    //         $("#financial_report").submit();
+    //     });
+    //         $("#btn-save").click(function() {
+    //         $("#FurthestStep").val('14');
+    //         $("#financial_report").submit();
+    //     });
+    //         $("#final-submit").click(function() {
+    //         if (!EnsureRoster()) {
+    //             return false;
+    //         }
+    //         else if (!EnsureMembers()) {
+    //             return false;
+    //         }
+    //         else if (!EnsureServiceProject()) {
+    //             return false;
+    //         }
+    //         else if (!EnsureReRegistration()) {
+    //             return false;
+    //         }
+    //         else if (!EnsureQuestions()) {
+    //             return false;
+    //         }
+    //         else if (!EnsureStatement()) {
+    //             return false;
+    //         }
+    //         else if (!Ensure990()) {
+    //             return false;
+    //         }
+    //         else if (!EnsureReconciliation()) {
+    //             return false;
+    //         }
+    //         else if (!EnsureSubmitInformation()) {
+    //             return false;
+    //         }
+    //         var completedEmail = $("#CompletedEmail").val();
+    //         if (!isValidEmail(completedEmail)) {
+    //             alert("Please enter a valid email address.");
+    //             return false;
+    //         }
+    //         var result = confirm("This will finalize and submit your report.  You will no longer be able to edit this report.  Do you wish to continue?");
+    //         if (result) {
+    //             $("#submitted").val('1');
+    //             $("#FurthestStep").val('15');
+    //             $("#financial_report").submit();
+    //         } else {
+    //             console.log("User cancelled the submission");
+    //         }
+    //     });
+    // });
 
     function isValidEmail(email) {
         // Regular expression for email validation
@@ -3457,10 +3906,11 @@ $(document).ready(function(){
     }
 
     function EnsureMembers() {
-        var changeDues = document.getElementById('optChangeDues');
-        var newOldDifferent = document.getElementById('optNewOldDifferent');
-        var noFullDues = document.getElementById('optNoFullDues');
-        if (!changeDues || changeDues.value == "" || !newOldDifferent || newOldDifferent.value == "" || !noFullDues || noFullDues.value == "") {
+        var changeDues = document.querySelector('input[name="optChangeDues"]:checked');
+        var newOldDifferent = document.querySelector('input[name="optNewOldDifferent"]:checked');
+        var noFullDues = document.querySelector('input[name="optNoFullDues"]:checked');
+
+        if (!changeDues || !newOldDifferent || !noFullDues) {
             alert("Please answer required questions in the CHAPTER DUES section to Continue.");
             accordion.openAccordionItem('accordion-header-members');
             return false;
@@ -3502,28 +3952,51 @@ $(document).ready(function(){
     }
 
     function EnsureReconciliation() {
-        if (TotalFees != TreasuryBalanceNow) {
-            var proceedAnyway = confirm("Your report does not balance. Your Treasury Balance Now and Reconciled Bank Balance should match before submitting your report. \n\nClick OK to Submit Anyway. \nClick Cancel to Return to Report.");
-            if (!proceedAnyway) {
-                accordion.openAccordionItem('accordion-header-reconciliation');
-                return false;
-            }
-        }
-        return true;
+    var PaymentTotal = 0;
+    var DepositTotal = 0;
+
+    var table = document.getElementById("bank-rec");
+
+    for (var i = 1, row; row = table.rows[i]; i++) {
+        // Payment Amount
+        var paymentInput = row.querySelector('input[name^="BankRecPaymentAmount"]');
+        var paymentValue = paymentInput ? parseFloat(paymentInput.value.replace(/,/g, '')) || 0 : 0;
+        PaymentTotal += paymentValue;
+
+        // Deposit Amount
+        var depositInput = row.querySelector('input[name^="BankRecDepositAmount"]');
+        var depositValue = depositInput ? parseFloat(depositInput.value.replace(/,/g, '')) || 0 : 0;
+        DepositTotal += depositValue;
     }
+
+    var BankBalanceNow = parseFloat(document.getElementById("BankBalanceNow").value.replace(/,/g, '')) || 0;
+
+    var TotalFees = (BankBalanceNow - PaymentTotal + DepositTotal).toFixed(2);
+    var TreasuryBalanceNow = parseFloat(document.getElementById("TreasuryBalanceNow").value.replace(/,/g, '')) || 0;
+
+    if (TotalFees != TreasuryBalanceNow) {
+        var proceedAnyway = confirm("Your report does not balance. Your Treasury Balance Now and Reconciled Bank Balance should match before submitting your report. \n\nClick OK to Submit Anyway. \nClick Cancel to Return to Report.");
+        if (!proceedAnyway) {
+            accordion.openAccordionItem('accordion-header-reconciliation');
+            return false;
+        }
+    }
+    return true;
+}
 
     function EnsureQuestions() {
         var requiredQuestions = [
             'ReceiveCompensation', 'FinancialBenefit', 'InfluencePolitical', 'VoteAllActivities',
             'BoughtPins', 'BoughtMerch', 'OfferedMerch', 'ByLawsAvailable', 'ChildrensRoom',
             'Playgroups', 'ChildOutings', 'MotherOutings', 'MeetingSpeakers', 'SpeakerFrequency',
-            'ParkDays', 'ContributionsNotRegNP', 'PerformServiceProject', 'SisterChapter',
+            'ParkDays', 'ContributionsNotRegNP', 'Activity[]','PerformServiceProject', 'SisterChapter',
             'InternationalEvent', 'FileIRS', 'BankStatementIncluded'
         ];
 
         for (var i = 0; i < requiredQuestions.length; i++) {
-            var question = document.getElementById(requiredQuestions[i]);
-            if (!question || question.value == "") {
+            var questionName = requiredQuestions[i];
+            var isAnswered = document.querySelector('input[name="' + questionName + '"]:checked');
+            if (!isAnswered) {
                 alert("Please answer all questions in the CHAPTER QUESTIONS section to Continue.");
                 accordion.openAccordionItem('accordion-header-questions');
                 return false;
@@ -3557,127 +4030,41 @@ $(document).ready(function(){
         }
         return true;
     }
-
-
-//     function EnsureRoster(){
-//         if(document.getElementById('RosterPath').value==""){
-//             alert("Your chapter's roster was not uploaded in CHAPTER DUES section. \n\nPlease upload Roster to Continue.");
-//             accordion.openAccordionItem('accordion-header-members');
-//             return false;
-//         }
-//         return true; // All checks passed, allow submission
-//     }
-
-//     function EnsureMembers(){
-//         if(document.getElementById('optChangeDues').value=="" || document.getElementById('optNewOldDifferent').value=="" || document.getElementById('optNoFullDues').value==""){
-//             alert("Please answer required questions in the CHAPTER DUES section to Continue.");
-//             accordion.openAccordionItem('accordion-header-members');
-//             return false;
-//         }
-//         return true; // All checks passed, allow submission
-//     }
-
-//     function EnsureServiceProject(){
-//         if(document.getElementById('ServiceProjectDesc0').value==""){
-//             alert("At least one Service Project is required in SERVICE PROJECT section. \n\nPlease enter Service Project information to Continue.");
-//             accordion.openAccordionItem('accordion-header-service');
-//             $("#ServiceProjectDesc0").focus();
-//             return false;
-//         }
-//         return true; // All checks passed, allow submission
-//     }
-
-//     function EnsureReRegistration(){
-//         if(document.getElementById('AnnualRegistrationFee').value==""){
-//             alert("Chapter Re-registration is required in INTERNATIONAL EVENTS & RE-REGISTRATION section. \n\nPlease enter Annual Re-Registration Payment to Continue.");
-//             accordion.openAccordionItem('accordion-header-rereg');
-//             $("#AnnualRegistrationFee").focus();
-//             return false;
-//         }
-//         return true; // All checks passed, allow submission
-//     }
-
-//     function EnsureStatement(){
-//         if(document.getElementById('BankStatementIncluded').value=="1" && document.getElementById('StatementPath').value=="" ){
-//             accordion.openAccordionItem('accordion-header-reconciliation');
-//             alert("Your chapter's Bank Statement was not uploaded in the BANK RECONCILIATION section, but you indicated the file was attached. \n\nPlease upload Bank Statement to Continue.");
-//             return false;
-//         }
-//         return true; // All checks passed, allow submission
-//     }
-
-//     function EnsureReconciliation(){
-//         if (TotalFees != TreasuryBalanceNow) {
-//         var proceedAnyway = confirm("Your report does not balance. Your Treasury Balance Now and Reconciled Bank Balance should match before submitting your report. \n\nClick OK to Submit Anyway. \nClick Cancel to Return to Report.");
-//         if (!proceedAnyway) {
-//             accordion.openAccordionItem('accordion-header-reconciliation');
-//             return false;
-//         }
-//     }
-//     return true; // All checks passed or user chose to proceed, allow submission
-// }
-
-//     function EnsureQuestions(){
-//         if(document.getElementById('ReceiveCompensation').value=="" || document.getElementById('FinancialBenefit').value=="" || document.getElementById('InfluencePolitical').value==""
-//         || document.getElementById('VoteAllActivities').value=="" || document.getElementById('BoughtPins').value=="" || document.getElementById('BoughtMerch').value==""
-//         || document.getElementById('OfferedMerch').value=="" || document.getElementById('ByLawsAvailable').value=="" || document.getElementById('ChildrensRoom').value==""
-//         || document.getElementById('Playgroups').value=="" || document.getElementById('ChildOutings').value=="" || document.getElementById('MotherOutings').value==""
-//         || document.getElementById('MeetingSpeakers').value=="" || document.getElementById('SpeakerFrequency').value=="" || document.getElementById('ParkDays').value==""
-//         || document.getElementById('ContributionsNotRegNP').value=="" || document.getElementById('PerformServiceProject').value=="" || document.getElementById('SisterChapter').value==""
-//         || document.getElementById('InternationalEvent').value=="" || document.getElementById('FileIRS').value=="" || document.getElementById('BankStatementIncluded').value==""){
-//             alert("Please answer all questions in the CHAPTER QUESTIONS section to Continue.");
-//             accordion.openAccordionItem('accordion-header-questions');
-//             return false;
-//         }
-//         return true; // All checks passed, allow submission
-//     }
-
-//      function Ensure990() {
-//         var fileIRS = document.getElementById('FileIRS');
-//         var path990N = document.getElementById('990NPath');
-//         if (fileIRS && fileIRS.value == "1" && path990N && path990N.value == "") {
-//             alert("Your chapter's 990N filing confirmation was not uploaded in the CHAPTER QUESTIONS section, but you indicated the file was attached. \n\nPlease upload 990 Confirmation to Continue.");
-//             accordion.openAccordionItem('accordion-header-questions');
-//             return false;
-//         }
-//         return true;
-//     }
-
-//     function EnsureSubmitInformation(){
-//         if(document.getElementById('CompletedName').value==""){
-//             alert("Please enter the name of the person submitting the report to Continue.");
-//             $("#CompletedName").focus();
-//             return false;
-//         }
-//         else if(document.getElementById('CompletedEmail').value==""){
-//             alert("Please enter the eamil address of the person submitting the report to Continue.");
-//             $("#CompletedEmail").focus();
-//             return false;
-//         }
-//         return true; // All checks passed, allow submission
-//     }
 </script>
 
 <script>
-    function IsValidDate(element){
-        var strDate="";
+    document.addEventListener("DOMContentLoaded", function() {
+        ChapterDuesQuestionsChange();
+    });
 
-        strDate = element.value;
-
-        if(!Date.parse(strDate)>0){
-            element.validity.valid=false;
-            element.className += " has-error";
-        }
-    }
+    // Initial function calculation functions
+        ChangeChildrensRoomExpenses();
+        ChangeMemberCount();
+        ChapterDuesQuestionsChange();
+        ChangeMeetingFees();
+        ChangeServiceProjectExpenses();
+        ChangePartyExpenses();
+        ChangeOfficeExpenses();
+        ChangeInternationalEventExpense();
+        ChangeReRegistrationExpense();
+        ChangeDonationAmount();
+        ChangeOtherOfficeExpenses();
+        ChangeBankRec();
+        TreasuryBalanceChange();
 
     function ChapterDuesQuestionsChange(){
         var ChangedMeetingFees=false;
         var ChargedMembersDifferently=false;
         var MembersReducedDues=false;
 
-        ChangedMeetingFees = document.getElementById("optChangeDues").value === "1";
-        ChargedMembersDifferently = document.getElementById("optNewOldDifferent").value === "1";
-        MembersReducedDues = document.getElementById("optNoFullDues").value === "1";
+        var optChangeDuesValue = document.querySelector('input[name="optChangeDues"]:checked')?.value;
+        ChangedMeetingFees = optChangeDuesValue === "1";
+
+        var optNewOldDifferentValue = document.querySelector('input[name="optNewOldDifferent"]:checked')?.value;
+        ChargedMembersDifferently = optNewOldDifferentValue === "1";
+
+        var optNoFullDuesValue = document.querySelector('input[name="optNoFullDues"]:checked')?.value;
+        MembersReducedDues = optNoFullDuesValue === "1";
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////
         if(ChangedMeetingFees){
@@ -3711,13 +4098,11 @@ $(document).ready(function(){
             else{
                 document.getElementById("ifChangedDuesDifferentPerMemberType1").style.visibility = 'hidden';
             }
-
         }
         else{
             document.getElementById("ifChangedDuesDifferentPerMemberType").style.display = 'none';
             document.getElementById("lblMemberDues").innerHTML = "Dues collected per Member"
             document.getElementById("lblNewMemberDues").innerHTML = "Dues collected per Member (NEW Amount)"
-
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -3753,77 +4138,36 @@ $(document).ready(function(){
     }
 
     function ChangeMemberCount(){
-        var ChangedMeetingFees=false;
-        var ChargedMembersDifferently=false;
-        var MembersReducedDues=false;
-        var NewMembers=0;
-        var RenewedMembers=0;
-        var NewMembers2=0;
-        var RenewedMembers2=0;
-        var MemberDues=0;
-        var NewMemberDues=0;
-        var TotalMembers=0;
-        var TotalFees=0;
-        var MembersNoDues=0;
-        var PartialDuesMembers=0;
-        var PartalDuesCollected=0;
-        var AssociateMembers=0;
-        var AssociateMemberDuesCollected=0;
+        var ChangedMeetingFees = document.querySelector('input[name="optChangeDues"]:checked') && document.querySelector('input[name="optChangeDues"]:checked').value === "1";
+        var ChargedMembersDifferently = document.querySelector('input[name="optNewOldDifferent"]:checked') && document.querySelector('input[name="optNewOldDifferent"]:checked').value === "1";
+        var MembersReducedDues = document.querySelector('input[name="optNoFullDues"]:checked') && document.querySelector('input[name="optNoFullDues"]:checked').value === "1";
 
-        ChangedMeetingFees = document.getElementById("optChangeDues").value === "1";
-        ChargedMembersDifferently = document.getElementById("optNewOldDifferent").value === "1";
-        MembersReducedDues = document.getElementById("optNoFullDues").value === "1";
+        var NewMembers = Number(document.getElementById("TotalNewMembers") ? document.getElementById("TotalNewMembers").value : 0);
+        var RenewedMembers = Number(document.getElementById("TotalRenewedMembers") ? document.getElementById("TotalRenewedMembers").value : 0);
+        var NewMembers2 = Number(document.getElementById("TotalNewMembersNewFee") ? document.getElementById("TotalNewMembersNewFee").value : 0);
+        var RenewedMembers2 = Number(document.getElementById("TotalRenewedMembersNewFee") ? document.getElementById("TotalRenewedMembersNewFee").value : 0);
 
-        NewMembers = Number(document.getElementById("TotalNewMembers").value);
-        RenewedMembers = Number(document.getElementById("TotalRenewedMembers").value);
-        NewMembers2 = Number(document.getElementById("TotalNewMembersNewFee").value);
-        RenewedMembers2 = Number(document.getElementById("TotalRenewedMembersNewFee").value);
+        var MemberDues = Number(document.getElementById("MemberDues") ? document.getElementById("MemberDues").value.replace(/[^0-9.-]+/g,"") : 0);
+        var NewMemberDues = Number(document.getElementById("NewMemberDues") ? document.getElementById("NewMemberDues").value.replace(/[^0-9.-]+/g,"") : 0);
+        var MemberDuesRenewal = Number(document.getElementById("MemberDuesRenewal") ? document.getElementById("MemberDuesRenewal").value.replace(/[^0-9.-]+/g,"") : 0);
+        var NewMemberDuesRenewal = Number(document.getElementById("NewMemberDuesRenewal") ? document.getElementById("NewMemberDuesRenewal").value.replace(/[^0-9.-]+/g,"") : 0);
 
-        MemberDues = Number(document.getElementById("MemberDues").value);
-        NewMemberDues = Number(document.getElementById("NewMemberDues").value);
-        MemberDuesRenewal = Number(document.getElementById("MemberDuesRenewal").value);
-        NewMemberDuesRenewal = Number(document.getElementById("NewMemberDuesRenewal").value);
+        var MembersNoDues = Number(document.getElementById("MembersNoDues") ? document.getElementById("MembersNoDues").value : 0);
+        var PartialDuesMembers = Number(document.getElementById("TotalPartialDuesMembers") ? document.getElementById("TotalPartialDuesMembers").value : 0);
+        var AssociateMembers = Number(document.getElementById("TotalAssociateMembers") ? document.getElementById("TotalAssociateMembers").value : 0);
 
-        MembersNoDues = Number(document.getElementById("MembersNoDues").value);
-        PartialDuesMembers = Number(document.getElementById("TotalPartialDuesMembers").value);
-        AssociateMembers = Number(document.getElementById("TotalAssociateMembers").value);
+        var TotalMembers = NewMembers + RenewedMembers + MembersNoDues + AssociateMembers + PartialDuesMembers + NewMembers2 + RenewedMembers2;
 
-        // AssociateMemberDuesCollected = Number(document.getElementById("TotalAssociateMembers").value) * Number(document.getElementById("AssociateMemberDues").value);
-        // // PartalDuesCollected = Number(document.getElementById("PartialDuesMemberDues").value);
-        // PartalDuesCollected = Number(document.getElementById("TotalPartialDuesMembers").value) * Number(document.getElementById("PartialDuesMemberDues").value);
-
-        TotalMembers = NewMembers + RenewedMembers + MembersNoDues + AssociateMembers + PartialDuesMembers + NewMembers2 + RenewedMembers2;
         document.getElementById("TotalMembers").value = TotalMembers;
 
-        newMembersDues = Number(document.getElementById("TotalNewMembers").value) * Number(document.getElementById("MemberDues").value);
-        renewalMembersDues = Number(document.getElementById("TotalRenewedMembers").value) * Number(document.getElementById("MemberDues").value);
-        renewalMembersDuesDiff = Number(document.getElementById("TotalRenewedMembers").value) * Number(document.getElementById("MemberDuesRenewal").value);
-        newMembersDuesNew = Number(document.getElementById("TotalNewMembersNewFee").value) * Number(document.getElementById("NewMemberDues").value);
-        renewMembersDuesNew = Number(document.getElementById("TotalRenewedMembersNewFee").value) * Number(document.getElementById("NewMemberDues").value);
-        renewMembersNewDuesDiff = Number(document.getElementById("TotalRenewedMembersNewFee").value) * Number(document.getElementById("NewMemberDuesRenewal").value);
-        partialMembersDues = Number(document.getElementById("TotalPartialDuesMembers").value) * Number(document.getElementById("PartialDuesMemberDues").value);
-        associateMembersDues = Number(document.getElementById("TotalAssociateMembers").value) * Number(document.getElementById("AssociateMemberDues").value);
-
-        // if (ChangedMeetingFees && ChargedMembersDifferently) {
-        //     TotalFees = NewMembers * MemberDues // Normal dues
-        //         + RenewedMembers * MemberDuesRenewal  // Renewal dues
-        //         + NewMembers2 * NewMemberDues  // Changed dues
-        //         + RenewedMembers2 * NewMemberDuesRenewal  //Renewal Changed dues
-        //         + AssociateMemberDuesCollected + PartalDuesCollected;  // Associate members or partial dues
-        // } else if (ChargedMembersDifferently) {
-        //     TotalFees = NewMembers * MemberDues // Normal dues, no changes
-        //         + RenewedMembers * MemberDuesRenewal  //Renewal dues, no changes
-        //         + AssociateMemberDuesCollected + PartalDuesCollected;  // Associate members or partial dues
-        // } else if (ChangedMeetingFees) {
-        //     TotalFees = NewMembers * MemberDues // Normal dues
-        //         + RenewedMembers * MemberDues
-        //         + NewMembers2 * NewMemberDues  // Changed dues
-        //         + RenewedMembers2 *  NewMemberDues
-        //         + AssociateMemberDuesCollected + PartalDuesCollected;  // Associate members or partial dues
-        // } else {
-        //     TotalFees = (NewMembers + RenewedMembers) * MemberDues // Normal & Renewal dues, no changes
-        //         + AssociateMemberDuesCollected + PartalDuesCollected;  // Associate members or partial dues
-        // }
+        var newMembersDues = NewMembers * MemberDues;
+        var renewalMembersDues = RenewedMembers * MemberDues;
+        var renewalMembersDuesDiff = RenewedMembers * MemberDuesRenewal;
+        var newMembersDuesNew = NewMembers2 * NewMemberDues;
+        var renewMembersDuesNew = RenewedMembers2 * NewMemberDues;
+        var renewMembersNewDuesDiff = RenewedMembers2 * NewMemberDuesRenewal;
+        var partialMembersDues = PartialDuesMembers * Number(document.getElementById("PartialDuesMemberDues").value.replace(/[^0-9.-]+/g,""));
+        var associateMembersDues = AssociateMembers * Number(document.getElementById("AssociateMemberDues").value.replace(/[^0-9.-]+/g,""));
 
         if (ChangedMeetingFees && ChargedMembersDifferently) {
             TotalFees = newMembersDues + renewalMembersDuesDiff + newMembersDuesNew + renewMembersNewDuesDiff + associateMembersDues + partialMembersDues;
@@ -3844,146 +4188,136 @@ $(document).ready(function(){
     }
 
     function ChangeChildrensRoomExpenses(){
-        var SupplyTotal=0;
-        var OtherTotal=0;
-        var TotalOtherFees=0;
+        var SupplyTotal = 0;
+        var OtherTotal = 0;
 
-        var SumChildrensSuppliesExpense=0;
-        var SumPaidSittersExpense=0;
-        var SumChildrensOtherExpense=0;
+        var table = document.getElementById("childrens-room");
+        var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
-        var table=document.getElementById("childrens-room");
+        for (var i = 0; i < rows.length; i++) {
+            var supplyValue = Number(rows[i].cells[1].querySelector('input').value.replace(/,/g, '')) || 0;
+            SupplyTotal += supplyValue;
 
-        for (var i = 1, row; row = table.rows[i]; i++) {
-           //iterate through rows
-           //rows would be accessed using the "row" variable assigned in the for loop
-            value = Number(row.cells[1].children[0].children[0].children[1].value);
-            SupplyTotal += value;
-
-            value = Number(row.cells[2].children[0].children[0].children[1].value);
-            OtherTotal += value;
+            var otherValue = Number(rows[i].cells[2].querySelector('input').value.replace(/,/g, '')) || 0;
+            OtherTotal += otherValue;
         }
 
-        TotalOtherFees = (SupplyTotal + OtherTotal).toFixed(2);
+        var TotalMisc = (SupplyTotal + OtherTotal).toFixed(2);
         SupplyTotal = SupplyTotal.toFixed(2);
-        OtherTotal  = OtherTotal.toFixed(2);
+        OtherTotal = OtherTotal.toFixed(2);
 
-        document.getElementById("ChildrensRoomTotal").value = TotalOtherFees;
+        // Update totals in the footer
+        var footer = table.getElementsByTagName('tfoot')[0];
+        footer.getElementsByTagName('input')[0].value = SupplyTotal;
+        footer.getElementsByTagName('input')[1].value = OtherTotal;
+
+        // Update other totals
         document.getElementById("SumChildrensOtherExpense").value = OtherTotal;
-
         document.getElementById("SumChildrensSuppliesExpense").value = SupplyTotal;
 
-        SumPaidSittersExpense = (Number(document.getElementById("PaidBabySitters").value)).toFixed(2);
+        var SumPaidSittersExpense = Number(document.getElementById("PaidBabySitters").value.replace(/,/g, '')).toFixed(2);
         document.getElementById("SumPaidSittersExpense").value = SumPaidSittersExpense;
 
-        var TotalFees = (Number(TotalOtherFees) + Number(SumPaidSittersExpense)).toFixed(2);
-
-        document.getElementById("SumTotalChildrensRoomExpense").value = TotalFees;
+        var TotalChildrensFees = (Number(TotalMisc) + Number(SumPaidSittersExpense)).toFixed(2);
+        document.getElementById("SumTotalChildrensRoomExpense").value = TotalChildrensFees;
+        document.getElementById("ChildrensRoomTotal").value = TotalChildrensFees;
 
         ReCalculateSummaryTotal();
     }
 
-    function AddChildrenExpenseRow(){
-        var ExpenseCount = document.getElementById("ChildrensExpenseRowCount").value;
+    function AddChildrenExpenseRow() {
+        var ExpenseCount = parseInt(document.getElementById("ChildrensExpenseRowCount").value, 10);
 
-        var table=document.getElementById("childrens-room");
-        var row = table.insertRow(-1);
+        var table = document.getElementById("childrens-room");
+        var tbody = table.getElementsByTagName('tbody')[0];
+        var row = tbody.insertRow(-1);
 
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
         var cell3 = row.insertCell(2);
 
-        cell1.innerHTML = "<div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=ChildrensRoomDesc" + ExpenseCount + " id=ChildrensRoomDesc" + ExpenseCount + "></div>";
-        cell2.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" min=\"0\"  step=\"0.01\" class=\"form-control txt-num\" name=\"ChildrensRoomSupplies" + ExpenseCount + "\" id=\"ChildrensRoomSupplies" + ExpenseCount + "\"  oninput=\"ChangeChildrensRoomExpenses()\" onkeydown=\"return event.keyCode !== 69\"></div></div>";
-        cell3.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" min=\"0\"  step=\"0.01\" class=\"form-control txt-num\" name=\"ChildrensRoomOther" + ExpenseCount + "\" id=\"ChildrensRoomOther" + ExpenseCount + "\"  oninput=\"ChangeChildrensRoomExpenses()\" onkeydown=\"return event.keyCode !== 69\"></div></div>";
+        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="ChildrensRoomDesc${ExpenseCount}" id="ChildrensRoomDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ChildrensRoomSupplies${ExpenseCount}" id="ChildrensRoomSupplies${ExpenseCount}" oninput="ChangeChildrensRoomExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell3.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ChildrensRoomOther${ExpenseCount}" id="ChildrensRoomOther${ExpenseCount}" oninput="ChangeChildrensRoomExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('ChildrensExpenseRowCount').value = ExpenseCount;
 
-        $(".txt-num").keypress(function (e) {
-            var key = e.charCode || e.keyCode || 0;
-            // only numbers
-            if(key == 46){
-             return true;
-            }
-            if (key < 48 || key > 58) {
-                return false;
-            }
-        });
+        Inputmask().mask(document.querySelectorAll('#childrens-room .form-control'));
     }
 
     function DeleteChildrenExpenseRow() {
-        var ExpenseCount = document.getElementById("ChildrensExpenseRowCount").value;
+        var ExpenseCount = parseInt(document.getElementById("ChildrensExpenseRowCount").value, 10);
 
-        // Check if there's more than one row before deleting
         if (ExpenseCount > 1) {
             var table = document.getElementById("childrens-room");
-            var row = table.rows[ExpenseCount - 1]; // Get the correct row to delete
+            var tbody = table.getElementsByTagName('tbody')[0];
+            tbody.deleteRow(-1);
 
-            // Clear values (adjust based on your HTML structure)
-            row.cells[1].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
-            row.cells[2].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
+            ExpenseCount--;
+            document.getElementById('ChildrensExpenseRowCount').value = ExpenseCount;
 
-            table.deleteRow(ExpenseCount - 1);            // Delete the row
-            ExpenseCount--;            // Update the expense count
-            ChangeChildrensRoomExpenses();            // Update any other necessary logic
-            ReCalculateSummaryTotal(); // Example: Recalculate summary totals if needed
-            document.getElementById('ChildrensExpenseRowCount').value = ExpenseCount;            // Update the hidden field storing row count
-
-            // Disable the "Remove Row" button if only one row left
-            if (ExpenseCount === 1) {
-                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
-            }
+            ChangeChildrensRoomExpenses();
         }
     }
 
-    function ChangeServiceProjectExpenses(){
-        var SupplyTotal=0;
-        var IncomeTotal=0;
-        var CharityTotal=0;
-        var M2MTotal=0;
+    function ChangeServiceProjectExpenses() {
+        var ExpenseTotal = 0;
+        var IncomeTotal = 0;
+        var CharityTotal = 0;
+        var M2MTotal = 0;
 
-        var TotalFees=0;
+        var table = document.getElementById("service-projects");
+        var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
-        var table=document.getElementById("service-projects");
+        for (var i = 0; i < rows.length; i++) {
+            var incomeValue = Number(rows[i].cells[1].querySelector('input').value.replace(/,/g, '')) || 0;
+            IncomeTotal += incomeValue;
 
-        for (var i = 1, row; row = table.rows[i]; i++) {
-           //iterate through rows
-           //rows would be accessed using the "row" variable assigned in the for loop
-            value = Number(row.cells[1].children[0].children[0].children[1].value);
-            IncomeTotal += value;
+            var expenseValue = Number(rows[i].cells[2].querySelector('input').value.replace(/,/g, '')) || 0;
+            ExpenseTotal += expenseValue;
 
-            value = Number(row.cells[2].children[0].children[0].children[1].value);
-            SupplyTotal += value;
+            var charityValue = Number(rows[i].cells[3].querySelector('input').value.replace(/,/g, '')) || 0;
+            CharityTotal += charityValue;
 
-            value = Number(row.cells[3].children[0].children[0].children[1].value);
-            CharityTotal += value;
-
-            value = Number(row.cells[4].children[0].children[0].children[1].value);
-            M2MTotal += value;
+            var m2mValue = Number(rows[i].cells[4].querySelector('input').value.replace(/,/g, '')) || 0;
+            M2MTotal += m2mValue;
         }
 
-        document.getElementById("ServiceProjectIncomeTotal").value = IncomeTotal.toFixed(2);
-        document.getElementById("SumServiceProjectIncome").value = IncomeTotal.toFixed(2);
+        IncomeTotal = IncomeTotal.toFixed(2);
+        ExpenseTotal = ExpenseTotal.toFixed(2);
+        CharityTotal = CharityTotal.toFixed(2);
+        M2MTotal = M2MTotal.toFixed(2);
 
-        document.getElementById("ServiceProjectSuppliesTotal").value = SupplyTotal.toFixed(2);
-        document.getElementById("ServiceProjectDonationTotal").value = CharityTotal.toFixed(2);
-        document.getElementById("ServiceProjectM2MDonationTotal").value = M2MTotal.toFixed(2);
-        document.getElementById("SumServiceProjectExpense").value = SupplyTotal.toFixed(2);
-        document.getElementById("SumDonationExpense").value = CharityTotal.toFixed(2);
-        document.getElementById("SumM2MExpense").value = M2MTotal.toFixed(2);
+        var footer = table.getElementsByTagName('tfoot')[0];
+        footer.getElementsByTagName('input')[0].value = IncomeTotal;
+        footer.getElementsByTagName('input')[1].value = ExpenseTotal;
+        footer.getElementsByTagName('input')[2].value = CharityTotal;
+        footer.getElementsByTagName('input')[3].value = M2MTotal;
 
-        TotalFees = (SupplyTotal + CharityTotal + M2MTotal).toFixed(2);
-        document.getElementById("SumTotalServiceProjectExpense").value = TotalFees;
+        document.getElementById("ServiceProjectIncomeTotal").value = IncomeTotal;
+        document.getElementById("SumServiceProjectIncome").value = IncomeTotal;
+
+        // document.getElementById("ServiceProjectSuppliesTotal").value = ExpenseTotal;
+        // document.getElementById("ServiceProjectDonationTotal").value = CharityTotal;
+        // document.getElementById("ServiceProjectM2MDonationTotal").value = M2MTotal;
+        document.getElementById("SumServiceProjectExpense").value = ExpenseTotal;
+        document.getElementById("SumDonationExpense").value = CharityTotal;
+        document.getElementById("SumM2MExpense").value = M2MTotal;
+
+        var TotalServiceProjectFees = parseFloat(ExpenseTotal) + parseFloat(CharityTotal) + parseFloat(M2MTotal);
+        TotalServiceProjectFees = TotalServiceProjectFees.toFixed(2);
+        document.getElementById("ServiceProjectExpenseTotal").value = TotalServiceProjectFees;
+        document.getElementById("SumTotalServiceProjectExpense").value = TotalServiceProjectFees;
 
         ReCalculateSummaryTotal();
     }
 
-    function AddServiceProjectRow(){
-        var ExpenseCount = document.getElementById("ServiceProjectRowCount").value;
-
-        var table=document.getElementById("service-projects");
-        var row = table.insertRow(-1);
+    function AddServiceProjectRow() {
+        var ExpenseCount = parseInt(document.getElementById("ServiceProjectRowCount").value);
+        var table = document.getElementById("service-projects");
+        var tbody = table.getElementsByTagName('tbody')[0];
+        var row = tbody.insertRow(-1);
 
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
@@ -3991,415 +4325,166 @@ $(document).ready(function(){
         var cell4 = row.insertCell(3);
         var cell5 = row.insertCell(4);
 
-        cell1.innerHTML = "<div class=\"form-group\"><textarea class=\"form-control\" rows=\"4\" name=\"ServiceProjectDesc" + ExpenseCount + "\" id=\"ServiceProjectDesc" + ExpenseCount + "\"></textarea></div>";
-        cell2.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" class=\"form-control txt-num\"  min=\"0\"  step=\"0.01\" name=\"ServiceProjectIncome" + ExpenseCount + "\" id=\"ServiceProjectIncome" + ExpenseCount + "\" oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\" value=\"\"></div></div>";
-        cell3.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" min=\"0\"  step=\"0.01\" class=\"form-control txt-num\" name=\"ServiceProjectSupplies" + ExpenseCount + "\" id=\"ServiceProjectSupplies" + ExpenseCount + "\"  oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\"></div></div>";
-        cell4.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" min=\"0\"  step=\"0.01\" class=\"form-control txt-num\" name=\"ServiceProjectDonatedCharity" + ExpenseCount + "\" id=\"ServiceProjectDonatedCharity" + ExpenseCount + "\"  oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\"></div></div>";
-        cell5.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" min=\"0\"  step=\"0.01\" class=\"form-control txt-num\" name=\"ServiceProjectDonatedM2M" + ExpenseCount + "\" id=\"ServiceProjectDonatedM2M" + ExpenseCount + "\"  oninput=\"ChangeServiceProjectExpenses()\" onkeydown=\"return event.keyCode !== 69\"></div></div>";
+        cell1.innerHTML = `<div class="form-group"><textarea class="form-control" rows="4" name="ServiceProjectDesc${ExpenseCount}" id="ServiceProjectDesc${ExpenseCount}"></textarea></div>`;
+        cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectIncome${ExpenseCount}" id="ServiceProjectIncome${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell3.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectSupplies${ExpenseCount}" id="ServiceProjectSupplies${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell4.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectDonatedCharity${ExpenseCount}" id="ServiceProjectDonatedCharity${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell5.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="ServiceProjectDonatedM2M${ExpenseCount}" id="ServiceProjectDonatedM2M${ExpenseCount}" oninput="ChangeServiceProjectExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('ServiceProjectRowCount').value = ExpenseCount;
-        $(".txt-num").keypress(function (e) {
-            var key = e.charCode || e.keyCode || 0;
-            // only numbers
-            if(key == 46){
-             return true;
-            }
-            if (key < 48 || key > 58) {
-                return false;
-            }
-        });
+
+        Inputmask().mask(document.querySelectorAll('#service-projects .form-control'));
     }
 
     function DeleteServiceProjectRow() {
-        var ExpenseCount = document.getElementById("ServiceProjectRowCount").value;
+        var ExpenseCount = parseInt(document.getElementById("ServiceProjectRowCount").value, 10);
 
-        // Check if there's more than one row before deleting
         if (ExpenseCount > 1) {
             var table = document.getElementById("service-projects");
-            var row = table.rows[ExpenseCount - 1]; // Get the correct row to delete
+            var tbody = table.getElementsByTagName('tbody')[0];
+            tbody.deleteRow(-1);
 
-            // Clear values (adjust based on your HTML structure)
-            row.cells[1].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
-            row.cells[2].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
-            row.cells[3].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
-            row.cells[4].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
+            ExpenseCount--;
+            document.getElementById('ServiceProjectRowCount').value = ExpenseCount;
 
-            table.deleteRow(ExpenseCount - 1);        // Delete the row
-            ExpenseCount--;        // Update the expense count
-            ChangeServiceProjectExpenses();        // Update any other necessary logic
-            document.getElementById('ServiceProjectRowCount').value = ExpenseCount;        // Update the hidden field storing row count
-            // Disable the "Remove Row" button if only one row left
-            if (ExpenseCount === 1) {
-                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
-            }
+            ChangeServiceProjectExpenses();
         }
     }
 
-    function ChangePartyExpenses(){
-        var IncomeTotal=0;
-        var ExpenseTotal=0;
+    function ChangePartyExpenses() {
+        var IncomeTotal = 0;
+        var ExpenseTotal = 0;
 
-        var table=document.getElementById("party-expenses");
+        var table = document.getElementById("party-expenses");
+        var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
-        for (var i = 1, row; row = table.rows[i]; i++) {
-           //iterate through rows
-           //rows would be accessed using the "row" variable assigned in the for loop
-            value = Number(row.cells[1].children[0].children[0].children[1].value);
-            IncomeTotal += value;
+        for (var i = 0; i < rows.length; i++) {
+            var incomeValue = Number(rows[i].cells[1].querySelector('input').value.replace(/,/g, '')) || 0;
+            IncomeTotal += incomeValue;
 
-            value = Number(row.cells[2].children[0].children[0].children[1].value);
-            ExpenseTotal += value;
+            var expenseValue = Number(rows[i].cells[2].querySelector('input').value.replace(/,/g, '')) || 0;
+            ExpenseTotal += expenseValue;
         }
 
-        document.getElementById("PartyIncomeTotal").value = IncomeTotal.toFixed(2);
-        document.getElementById("PartyExpenseTotal").value = ExpenseTotal.toFixed(2);
-        document.getElementById("SumPartyIncome").value = IncomeTotal.toFixed(2);
-        document.getElementById("SumPartyExpense").value = ExpenseTotal.toFixed(2);
+        IncomeTotal = IncomeTotal.toFixed(2);
+        ExpenseTotal = ExpenseTotal.toFixed(2);
+
+        // Update totals in the footer
+        var footer = table.getElementsByTagName('tfoot')[0];
+        footer.getElementsByTagName('input')[0].value = IncomeTotal;
+        footer.getElementsByTagName('input')[1].value = ExpenseTotal;
+
+        // Update other totals
+        document.getElementById("PartyIncomeTotal").value = IncomeTotal;
+        document.getElementById("PartyExpenseTotal").value = ExpenseTotal;
+        document.getElementById("SumPartyIncome").value = IncomeTotal;
+        document.getElementById("SumPartyExpense").value = ExpenseTotal;
 
         ReCalculateSummaryTotal();
     }
 
-    function AddPartyExpenseRow(){
-        var ExpenseCount = document.getElementById("PartyExpenseRowCount").value;
-
-        var table=document.getElementById("party-expenses");
-        var row = table.insertRow(-1);
+    function AddPartyExpenseRow() {
+        var ExpenseCount = parseInt(document.getElementById("PartyExpenseRowCount").value);
+        var table = document.getElementById("party-expenses");
+        var tbody = table.getElementsByTagName('tbody')[0];
+        var row = tbody.insertRow(-1);
 
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
         var cell3 = row.insertCell(2);
 
-
-        cell1.innerHTML = "<div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=PartyDesc" + ExpenseCount + " id=PartyDesc" + ExpenseCount + "></div>";
-        cell2.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" min=\"0\"  step=\"0.01\" class=\"form-control txt-num\" name=\"PartyIncome" + ExpenseCount + "\" id=\"PartyIncome" + ExpenseCount + "\"  oninput=\"ChangePartyExpenses()\" onkeydown=\"return event.keyCode !== 69\"></div></div>";
-        cell3.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" min=\"0\"  step=\"0.01\" class=\"form-control txt-num\" name=\"PartyExpenses" + ExpenseCount + "\" id=\"PartyExpenses" + ExpenseCount + "\"  oninput=\"ChangePartyExpenses()\" onkeydown=\"return event.keyCode !== 69\"></div></div>";
+        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="PartyDesc${ExpenseCount}" id="PartyDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="PartyIncome${ExpenseCount}" id="PartyIncome${ExpenseCount}" oninput="ChangePartyExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell3.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="PartyExpenses${ExpenseCount}" id="PartyExpenses${ExpenseCount}" oninput="ChangePartyExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('PartyExpenseRowCount').value = ExpenseCount;
-        $(".txt-num").keypress(function (e) {
-            var key = e.charCode || e.keyCode || 0;
-            // only numbers
-            if(key == 46){
-             return true;
-            }
-            if (key < 48 || key > 58) {
-                return false;
-            }
-        });
+
+        Inputmask().mask(document.querySelectorAll('#party-expenses .form-control'));
     }
 
     function DeletePartyExpenseRow() {
-        var ExpenseCount = document.getElementById("PartyExpenseRowCount").value;
+        var ExpenseCount = parseInt(document.getElementById("PartyExpenseRowCount").value);
 
-        // Check if there's more than one row before deleting
         if (ExpenseCount > 1) {
             var table = document.getElementById("party-expenses");
-            var row = table.rows[ExpenseCount - 1]; // Get the correct row to delete
+            var tbody = table.getElementsByTagName('tbody')[0];
+            tbody.deleteRow(-1);
 
-            // Clear values (adjust based on your HTML structure)
-            row.cells[1].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
-            row.cells[2].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
+            ExpenseCount--;
+            document.getElementById('PartyExpenseRowCount').value = ExpenseCount;
 
-            table.deleteRow(ExpenseCount - 1);        // Delete the row
-            ExpenseCount--;        // Update the expense count
-            ChangePartyExpenses();        // Update any other necessary logic
-            document.getElementById('PartyExpenseRowCount').value = ExpenseCount;        // Update the hidden field storing row count
-
-            // Disable the "Remove Row" button if only one row left
-            if (ExpenseCount === 1) {
-                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
-            }
+            ChangePartyExpenses();
         }
     }
 
-    function ChangeOfficeExpenses(){
-        var ExpenseTotal=0;
-        var SumPrintingExpense=0;
-        var SumPostageExpense=0;
-        var SumPinsExpense=0;
+    function ChangeOfficeExpenses() {
+        var ExpenseTotal = 0;
+        var SumPrintingExpense = 0;
+        var SumPostageExpense = 0;
+        var SumPinsExpense = 0;
 
-        var table=document.getElementById("office-expenses");
+        var totalExpenses = 0;
+        var table = document.getElementById("office-expenses");
+        var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
-        for (var i = 1, row; row = table.rows[i]; i++) {
-           //iterate through rows
-           //rows would be accessed using the "row" variable assigned in the for loop
-            value = Number(row.cells[1].children[0].children[0].children[1].value);
-            ExpenseTotal += value;
+        for (var i = 0; i < rows.length; i++) {
+            var expenseValue = Number(rows[i].cells[1].querySelector('input').value.replace(/,/g, '')) || 0;
+            totalExpenses += expenseValue;
         }
-        document.getElementById("OfficeExpenseTotal").value = ExpenseTotal.toFixed(2);
 
-        SumPrintingExpense=Number(document.getElementById("PrintingCosts").value);
-        SumPostageExpense=Number(document.getElementById("PostageCosts").value);
-        SumPinsExpense=Number(document.getElementById("MembershipPins").value);
+        var footer = table.getElementsByTagName('tfoot')[0];
+        footer.getElementsByTagName('input')[0].value = totalExpenses.toFixed(2);
+
+        SumPrintingExpense = Number(document.getElementById("PrintingCosts").value.replace(/[^0-9.-]/g, ''));
+        SumPostageExpense = Number(document.getElementById("PostageCosts").value.replace(/[^0-9.-]/g, ''));
+        SumPinsExpense = Number(document.getElementById("MembershipPins").value.replace(/[^0-9.-]/g, ''));
 
         document.getElementById("SumPrintingExpense").value = SumPrintingExpense.toFixed(2);
         document.getElementById("SumPostageExpense").value = SumPostageExpense.toFixed(2);
         document.getElementById("SumPinsExpense").value = SumPinsExpense.toFixed(2);
-        document.getElementById("SumOtherOperatingExpense").value = ExpenseTotal.toFixed(2);
+        document.getElementById("SumOtherOperatingExpense").value = ExpenseTotal;
 
-        ExpenseTotal = ExpenseTotal + SumPrintingExpense + SumPostageExpense + SumPinsExpense
-        document.getElementById("SumOperatingExpense").value = ExpenseTotal.toFixed(2);
+        ExpenseTotal += SumPrintingExpense + SumPostageExpense + SumPinsExpense;
+        document.getElementById("SumOperatingExpense").value = ExpenseTotal;
+        var OperatingTotal = ExpenseTotal + SumPrintingExpense + SumPostageExpense + SumPinsExpense;
+        document.getElementById("TotalOperatingExpense").value = OperatingTotal;
 
         ReCalculateSummaryTotal();
     }
 
-    function AddOfficeExpenseRow(){
+    function AddOfficeExpenseRow() {
         var ExpenseCount = document.getElementById("OfficeExpenseRowCount").value;
-
-        var table=document.getElementById("office-expenses");
-        var row = table.insertRow(-1);
+        var table = document.getElementById("office-expenses");
+        var tbody = table.getElementsByTagName('tbody')[0];
+        var row = tbody.insertRow(-1);
 
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
 
-        cell1.innerHTML = "<div class=\"form-group\"><input maxlength=\"250\" type=\"text\" class=\"form-control\" name=OfficeDesc" + ExpenseCount + " id=OfficeDesc" + ExpenseCount + "></div>";
-        cell2.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" min=\"0\"  step=\"0.01\" class=\"form-control txt-num\" name=\"OfficeExpenses" + ExpenseCount + "\" id=\"OfficeExpenses" + ExpenseCount + "\"  oninput=\"ChangeOfficeExpenses()\" onkeydown=\"return event.keyCode !== 69\"></div></div>";
+        cell1.innerHTML = `<div class="form-group"><input maxlength="250" type="text" class="form-control" name="OfficeDesc${ExpenseCount}" id="OfficeDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OfficeExpenses${ExpenseCount}" id="OfficeExpenses${ExpenseCount}" oninput="ChangeOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('OfficeExpenseRowCount').value = ExpenseCount;
-        $(".txt-num").keypress(function (e) {
-            var key = e.charCode || e.keyCode || 0;
-            // only numbers
-            if(key == 46){
-             return true;
-            }
-            if (key < 48 || key > 58) {
-                return false;
-            }
-        });
+
+        Inputmask().mask(document.querySelectorAll('#office-expenses .form-control'));
     }
 
     function DeleteOfficeExpenseRow() {
         var ExpenseCount = document.getElementById("OfficeExpenseRowCount").value;
 
-        // Check if there's more than one row before deleting
         if (ExpenseCount > 1) {
             var table = document.getElementById("office-expenses");
-            var row = table.rows[ExpenseCount - 1]; // Get the correct row to delete
+            var tbody = table.getElementsByTagName('tbody')[0];
+            tbody.deleteRow(-1);
 
-            // Clear values (adjust based on your HTML structure)
-            row.cells[1].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
+            ExpenseCount--;
+            document.getElementById('OfficeExpenseRowCount').value = ExpenseCount;
 
-            table.deleteRow(ExpenseCount - 1);        // Delete the row
-            ExpenseCount--;        // Update the expense count
-            ChangeOfficeExpenses();        // Update any other necessary logic
-            document.getElementById('OfficeExpenseRowCount').value = ExpenseCount;        // Update the hidden field storing row count
-
-
-            // Disable the "Remove Row" button if only one row left
-            if (ExpenseCount === 1) {
-                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
-            }
+            ChangeOfficeExpenses();
         }
-    }
-
-    function ChangeDonationAmount(){
-        var IncomeTotal=0;
-
-        var table=document.getElementById("donation-income");
-
-        for (var i = 1, row; row = table.rows[i]; i++) {
-           //iterate through rows
-           //rows would be accessed using the "row" variable assigned in the for loop
-            value = Number(row.cells[3].children[0].children[0].children[1].value);
-            IncomeTotal += value;
-        }
-
-        document.getElementById("DonationTotal").value = IncomeTotal.toFixed(2);
-        document.getElementById("SumMonetaryDonationIncome").value = IncomeTotal.toFixed(2);
-    }
-
-    function AddMonDonationRow(){
-        var ExpenseCount = document.getElementById("MonDonationRowCount").value;
-
-        var table=document.getElementById("donation-income");
-        var row = table.insertRow(-1);
-
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(2);
-        var cell4 = row.insertCell(3);
-
-        cell1.innerHTML = "<div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=\"DonationDesc" + ExpenseCount + "\" id=\"DonationDesc" + ExpenseCount + "\"></div>";
-        cell2.innerHTML = "<div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=\"DonorInfo" + ExpenseCount + "\" id=\"DonorInfo" + ExpenseCount + "\"></div>";
-        cell3.innerHTML = "<div class=\"form-group\"><input type=\"date\" class=\"form-control\" min='2021-07-01' max='2022-06-30' name=\"MonDonationDate" + ExpenseCount + "\" id=\"MonDonationDate" + ExpenseCount + "\"  oninput=\"ChangeChildrensRoomExpenses()\" onchange=\"IsValidDate(this)\"></div>";
-        cell4.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" min=\"0\"  step=\"0.01\" class=\"form-control txt-num\" name=\"DonationAmount" + ExpenseCount + "\" id=\"DonationAmount" + ExpenseCount + "\" oninput=\"ChangeDonationAmount()\" onkeydown=\"return event.keyCode !== 69\"></div></div>";
-
-        ExpenseCount++;
-        document.getElementById('MonDonationRowCount').value = ExpenseCount;
-        $(".txt-num").keypress(function (e) {
-            var key = e.charCode || e.keyCode || 0;
-            // only numbers
-            if(key == 46){
-             return true;
-            }
-            if (key < 48 || key > 58) {
-                return false;
-            }
-        });
-    }
-
-    function DeleteMonDonationRow() {
-        var ExpenseCount = document.getElementById("MonDonationRowCount").value;
-
-        // Check if there's more than one row before deleting
-        if (ExpenseCount > 1) {
-            var table = document.getElementById("donation-income");
-            var row = table.rows[ExpenseCount - 1]; // Get the correct row to delete
-
-            // Clear values (adjust based on your HTML structure)
-            row.cells[3].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
-
-            table.deleteRow(ExpenseCount - 1);        // Delete the row
-            ExpenseCount--;        // Update the expense count
-            ChangeDonationAmount();        // Update any other necessary logic
-            document.getElementById('MonDonationRowCount').value = ExpenseCount;        // Update the hidden field storing row count
-
-            // Disable the "Remove Row" button if only one row left
-            if (ExpenseCount === 1) {
-                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
-            }
-        }
-    }
-
-    function AddNonMonDonationRow(){
-        var ExpenseCount = document.getElementById("NonMonDonationRowCount").value;
-
-        var table=document.getElementById("donation-goods");
-        var row = table.insertRow(-1);
-
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(2);
-
-
-        cell1.innerHTML = "<div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=NonMonDonationDesc" + ExpenseCount + " id=NonMonDonationDesc" + ExpenseCount + "></div>";
-        cell2.innerHTML = "<div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=\"NonMonDonorInfo" + ExpenseCount + "\" id=\"NonMonDonorInfo" + ExpenseCount + "\"></div>";
-        cell3.innerHTML = "<div class=\"form-group\"><input type=\"date\" min='2021-07-01' max='2022-06-30' class=\"form-control\" name=\"NonMonDonationDate" + ExpenseCount + "\" id=\"NonMonDonationDate" + ExpenseCount + "\" onchange=\"IsValidDate(this)\"></div>";
-
-        ExpenseCount++;
-        document.getElementById('NonMonDonationRowCount').value = ExpenseCount;
-    }
-
-    function DeleteNonMonDonationRow() {
-        var ExpenseCount = document.getElementById("NonMonDonationRowCount").value;
-
-        // Check if there's more than one row before deleting
-        if (ExpenseCount > 1) {
-            // Delete the row
-            document.getElementById("donation-goods").deleteRow(ExpenseCount - 1);
-            ExpenseCount--;        // Update the expense count
-            document.getElementById('NonMonDonationRowCount').value = ExpenseCount;        // Update the hidden field storing row count
-
-            //Disable the "Remove Row" button if only one row left
-            if (ExpenseCount === 1) {
-                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
-            }
-        }
-    }
-
-    function ChangeOtherOfficeExpenses(){
-        var ExpenseTotal=0;
-        var IncomeTotal=0;
-
-        var table=document.getElementById("other-office-expenses");
-
-        for (var i = 1, row; row = table.rows[i]; i++) {
-           //iterate through rows
-           //rows would be accessed using the "row" variable assigned in the for loop
-            value = Number(row.cells[1].children[0].children[0].children[1].value);
-            IncomeTotal += value;
-
-            value = Number(row.cells[2].children[0].children[0].children[1].value);
-            ExpenseTotal += value;
-        }
-
-        document.getElementById("OtherOfficeExpenseTotal").value = ExpenseTotal.toFixed(2);
-        document.getElementById("OtherOfficeIncomeTotal").value = IncomeTotal.toFixed(2);
-
-        document.getElementById("SumOtherIncome").value = IncomeTotal.toFixed(2);
-        document.getElementById("SumOtherExpense").value = ExpenseTotal.toFixed(2);
-
-        ReCalculateSummaryTotal();
-    }
-
-    function ChangeInternationalEventExpense(){
-        var ExpenseTotal=0;
-        var IncomeTotal=0;
-
-        var table=document.getElementById("international_events");
-
-        for (var i = 1, row; row = table.rows[i]; i++) {
-           //iterate through rows
-           //rows would be accessed using the "row" variable assigned in the for loop
-            value = Number(row.cells[1].children[0].children[0].children[1].value);
-            IncomeTotal += value;
-
-            value = Number(row.cells[2].children[0].children[0].children[1].value);
-            ExpenseTotal += value;
-        }
-
-        document.getElementById("InternationalEventIncomeTotal").value = IncomeTotal.toFixed(2);
-        document.getElementById("InternationalEventExpenseTotal").value = ExpenseTotal.toFixed(2);
-
-        document.getElementById("SumInternationalEventIncome").value = IncomeTotal.toFixed(2);
-        document.getElementById("SumInternationalEventExpense").value = ExpenseTotal.toFixed(2);
-
-        ReCalculateSummaryTotal();
-
-    }
-
-    function DeleteInternationalEventRow() {
-        var ExpenseCount = document.getElementById("InternationalEventRowCount").value;
-
-        // Check if there's more than one row before deleting
-        if (ExpenseCount > 1) {
-            // Clear values (assuming your structure is as described)
-            var table = document.getElementById("international_events");
-            var row = table.rows[ExpenseCount - 1]; // Subtract 1 to get the correct row index
-            row.cells[1].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
-            row.cells[2].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
-
-            table.deleteRow(ExpenseCount - 1);  // Delete the row
-            ExpenseCount--;  // Update the expense count
-            ChangeDonationAmount();  // Update any other necessary logic (like recalculating totals)
-            document.getElementById('InternationalEventRowCount').value = ExpenseCount;  // Update the hidden field storing row count
-
-            // Disable the "Remove Row" button if only one row left
-            if (ExpenseCount === 1) {
-                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
-            }
-        }
-    }
-
-    function AddInternationalEventRow(){
-        var ExpenseCount = document.getElementById("InternationalEventRowCount").value;
-
-        var table=document.getElementById("international_events");
-        var row = table.insertRow(-1);
-
-        var cell1 = row.insertCell(0);
-        var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(2);
-
-
-        cell1.innerHTML = "<div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=\"InternationalEventDesc" + ExpenseCount + "\" id=\"InternationalEventDesc" + ExpenseCount + "\"></div>";
-        cell2.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" min=\"0\"  step=\"0.01\" class=\"form-control txt-num\" name=\"InternationalEventIncome" + ExpenseCount + "\" id=\"InternationalEventIncome" + ExpenseCount + "\" oninput=\"ChangeInternationalEventExpense()\" onkeydown=\"return event.keyCode !== 69\"></div></div>";
-        cell3.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" min=\"0\"  step=\"0.01\" class=\"form-control txt-num\" name=\"InternationalEventExpense" + ExpenseCount + "\" id=\"InternationalEventExpense" + ExpenseCount + "\" oninput=\"ChangeInternationalEventExpense()\" onkeydown=\"return event.keyCode !== 69\"></div></div>";
-
-        ExpenseCount++;
-        document.getElementById('InternationalEventRowCount').value = ExpenseCount;
-        $(".txt-num").keypress(function (e) {
-            var key = e.charCode || e.keyCode || 0;
-            // only numbers
-            if(key == 46){
-             return true;
-            }
-            if (key < 48 || key > 58) {
-                return false;
-            }
-        });
     }
 
     function ChangeReRegistrationExpense(){
@@ -4412,103 +4497,205 @@ $(document).ready(function(){
         ReCalculateSummaryTotal();
     }
 
-    function ReCalculateSummaryTotal(){
-        var SumOtherIncome=0;
+    function ChangeInternationalEventExpense(){
+        var ExpenseTotal=0;
+        var IncomeTotal=0;
 
-        var SumMeetingRoomExpense=0;
-        var SumTotalChildrensRoomExpense=0;
-        var ServiceIncomeTotal=0;
-        var ServiceExpenseTotal=0;
+        var table=document.getElementById("international_events");
+        var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
-        var SumOtherExpense=0;
-        var SumOperatingExpense=0;
+        for (var i = 0; i < rows.length; i++) {
+            var incomeValue = Number(rows[i].cells[1].querySelector('input').value.replace(/,/g, '')) || 0;
+            IncomeTotal += incomeValue;
 
-        var SumTotalExpense=0;
-        var SumTotalIncome=0;
+            var expenseValue = Number(rows[i].cells[2].querySelector('input').value.replace(/,/g, '')) || 0;
+            ExpenseTotal += expenseValue;
+        }
 
-        var SumTotalNetIncome=0;
+        IncomeTotal = IncomeTotal.toFixed(2);
+        ExpenseTotal = ExpenseTotal.toFixed(2);
 
-        var SumPartyExpense=0;
-        var SumPartyIncome=0;
+        var footer = table.getElementsByTagName('tfoot')[0];
+        footer.getElementsByTagName('input')[0].value = IncomeTotal;
+        footer.getElementsByTagName('input')[1].value = ExpenseTotal;
 
-        var SumInternationalEventExpense=0;
-        var SumInternationalEventIncome=0;
+        document.getElementById("InternationalEventIncomeTotal").value = IncomeTotal;
+        document.getElementById("InternationalEventExpenseTotal").value = ExpenseTotal;
 
-        var SumMonetaryDonationIncome=0;
-        var SumChapterReRegistrationExpense=0;
+        document.getElementById("SumInternationalEventIncome").value = IncomeTotal;
+        document.getElementById("SumInternationalEventExpense").value = ExpenseTotal;
 
-        var TreasuryBalance=0;
-        var TreasuryBalanceNow=0;
-
-        SumMeetingRoomExpense = Number(document.getElementById("SumMeetingRoomExpense").value);
-        SumMembershipDuesIncome = Number(document.getElementById("SumMembershipDuesIncome").value);
-
-        SumTotalChildrensRoomExpense=Number(document.getElementById("SumTotalChildrensRoomExpense").value);
-
-        ServiceIncomeTotal = Number(document.getElementById("SumServiceProjectIncome").value);
-        ServiceExpenseTotal = Number(document.getElementById("SumTotalServiceProjectExpense").value);
-
-        SumPartyIncome = Number(document.getElementById("SumPartyIncome").value);
-        SumPartyExpense = Number(document.getElementById("SumPartyExpense").value);
-
-        SumOtherIncome = Number(document.getElementById("SumOtherIncome").value);
-        SumOtherExpense = Number(document.getElementById("SumOtherExpense").value);
-
-        SumOperatingExpense = Number(document.getElementById("SumOperatingExpense").value);
-
-        SumInternationalEventExpense = Number(document.getElementById("SumInternationalEventExpense").value);
-        SumInternationalEventIncome = Number(document.getElementById("SumInternationalEventIncome").value);
-
-        SumMonetaryDonationIncome = Number(document.getElementById("SumMonetaryDonationIncome").value);
-        SumChapterReRegistrationExpense = Number(document.getElementById("SumChapterReRegistrationExpense").value);
-
-        SumTotalExpense = SumTotalChildrensRoomExpense + SumMeetingRoomExpense + ServiceExpenseTotal + SumOtherExpense + SumPartyExpense + SumOperatingExpense + SumInternationalEventExpense + SumChapterReRegistrationExpense;
-        SumTotalIncome = ServiceIncomeTotal + SumOtherIncome + SumPartyIncome + SumMembershipDuesIncome + SumInternationalEventIncome + SumMonetaryDonationIncome ;
-
-        TreasuryBalance = Number(document.getElementById("SumAmountReservedFromPreviousYear").value);
-
-        document.getElementById("SumTotalExpense").value = SumTotalExpense.toFixed(2);
-        document.getElementById("SumTotalIncome").value = SumTotalIncome.toFixed(2);
-
-        SumTotalNetIncome = SumTotalIncome - SumTotalExpense;
-        TreasuryBalanceNow = TreasuryBalance - SumTotalExpense + SumTotalIncome;
-
-        document.getElementById("TotalNetIncome").value = SumTotalNetIncome.toFixed(2);
-        document.getElementById("SumTotalNetIncome").value = SumTotalNetIncome.toFixed(2);
-        document.getElementById("TreasuryBalanceNow").value = TreasuryBalanceNow.toFixed(2);
-        document.getElementById("TreasuryBalanceNowR").value = TreasuryBalanceNow.toFixed(2);
-        document.getElementById("SumTreasuryBalanceNow").value = TreasuryBalanceNow.toFixed(2);
-
-        ChangeBankRec();
+        ReCalculateSummaryTotal();
     }
 
-    function AddOtherOfficeExpenseRow(){
-        var ExpenseCount = document.getElementById("OtherOfficeExpenseRowCount").value;
+    function AddInternationalEventRow() {
+        var ExpenseCount = document.getElementById("InternationalEventRowCount").value;
+        var table = document.getElementById("international_events");
+        var tbody = table.getElementsByTagName('tbody')[0];
+        var row = tbody.insertRow(-1);
 
-        var table=document.getElementById("other-office-expenses");
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+
+        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="InternationalEventDesc${ExpenseCount}" id="InternationalEventDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="InternationalEventIncome${ExpenseCount}" id="InternationalEventIncome${ExpenseCount}" oninput="ChangeInternationalEventExpense()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell3.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="InternationalEventExpense${ExpenseCount}" id="InternationalEventExpense${ExpenseCount}" oninput="ChangeInternationalEventExpense()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+
+        ExpenseCount++;
+        document.getElementById('InternationalEventRowCount').value = ExpenseCount;
+
+        Inputmask().mask(document.querySelectorAll('#international_events .form-control'));
+    }
+
+    function DeleteInternationalEventRow() {
+        var ExpenseCount = document.getElementById("InternationalEventRowCount").value;
+
+        if (ExpenseCount > 1) {
+            var table = document.getElementById("international_events");
+            var tbody = table.getElementsByTagName('tbody')[0];
+            tbody.deleteRow(-1);
+
+            ExpenseCount--;
+            document.getElementById('InternationalEventRowCount').value = ExpenseCount;
+
+            ChangeInternationalEventExpense();
+        }
+    }
+
+    function ChangeDonationAmount() {
+    var IncomeTotal = 0;
+    var table = document.getElementById("donation-income");
+    var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+    for (var i = 0; i < rows.length; i++) {
+        var incomeValue = Number(rows[i].cells[3].querySelector('input').value.replace(/,/g, '')) || 0;
+        IncomeTotal += incomeValue;
+    }
+
+    var footer = table.getElementsByTagName('tfoot')[0];
+    footer.getElementsByTagName('input')[0].value = IncomeTotal.toFixed(2);
+
+    document.getElementById("DonationTotal").value = IncomeTotal;
+    document.getElementById("SumMonetaryDonationIncome").value = IncomeTotal;
+}
+
+    function AddMonDonationRow() {
+        var ExpenseCount = document.getElementById("MonDonationRowCount").value;
+        var table = document.getElementById("donation-income");
+        var tbody = table.getElementsByTagName('tbody')[0];
+        var row = tbody.insertRow(-1);
+
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
+
+        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="DonationDesc${ExpenseCount}" id="DonationDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="DonorInfo${ExpenseCount}" id="DonorInfo${ExpenseCount}"></div>`;
+        cell3.innerHTML = `<div class="form-group"><input type="date" class="form-control" name="MonDonationDate${ExpenseCount}" id="MonDonationDate${ExpenseCount}"></div>`;
+        cell4.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="DonationAmount${ExpenseCount}" id="DonationAmount${ExpenseCount}" oninput="ChangeDonationAmount()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+
+        ExpenseCount++;
+        document.getElementById('MonDonationRowCount').value = ExpenseCount;
+
+        Inputmask().mask(document.querySelectorAll('#donation-income .form-control'));
+    }
+
+    function DeleteMonDonationRow() {
+        var ExpenseCount = document.getElementById("MonDonationRowCount").value;
+
+        if (ExpenseCount > 1) {
+            var table = document.getElementById("donation-income");
+            var tbody = table.getElementsByTagName('tbody')[0];
+            tbody.deleteRow(-1);
+
+            ExpenseCount--;
+            document.getElementById('MonDonationRowCount').value = ExpenseCount;
+
+            ChangeDonationAmount();
+        }
+    }
+
+    function AddNonMonDonationRow() {
+        var ExpenseCount = document.getElementById("NonMonDonationRowCount").value;
+        var table = document.getElementById("donation-goods");
         var row = table.insertRow(-1);
 
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
-        var cell3 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
 
-        cell1.innerHTML = "<div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=\"OtherOfficeDesc" + ExpenseCount + "\" id=\"OtherOfficeDesc" + ExpenseCount + "\"></div>";
-        cell2.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" min=\"0\"  step=\"0.01\" class=\"form-control txt-num\" name=\"OtherOfficeExpenses" + ExpenseCount + "\"  id=\"OtherOfficeExpenses" + ExpenseCount + "\"  oninput=\"ChangeOtherOfficeExpenses()\" onkeydown=\"return event.keyCode !== 69\"></div></div>";
-        cell3.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" min=\"0\"  step=\"0.01\" class=\"form-control txt-num\" name=\"OtherOfficeIncome" + ExpenseCount + "\" id=\"OtherOfficeIncome" + ExpenseCount + "\"  oninput=\"ChangeOtherOfficeExpenses()\" onkeydown=\"return event.keyCode !== 69\"></div></div>";
+        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="NonMonDonationDesc${ExpenseCount}" id="NonMonDonationDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="NonMonDonorInfo${ExpenseCount}" id="NonMonDonorInfo${ExpenseCount}"></div>`;
+        cell3.innerHTML = `<div class="form-group"><input type="date" class="form-control" name="NonMonDonationDate${ExpenseCount}" id="NonMonDonationDate${ExpenseCount}"></div>`;
+
+        ExpenseCount++;
+        document.getElementById('NonMonDonationRowCount').value = ExpenseCount;
+    }
+
+    function DeleteNonMonDonationRow() {
+        var ExpenseCount = document.getElementById("NonMonDonationRowCount").value;
+
+        if (ExpenseCount > 1) {
+            document.getElementById("donation-goods").deleteRow(ExpenseCount - 1);
+            ExpenseCount--;        // Update the expense count
+            document.getElementById('NonMonDonationRowCount').value = ExpenseCount;
+
+            if (ExpenseCount === 1) {
+                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
+            }
+        }
+    }
+
+    function ChangeOtherOfficeExpenses() {
+        var ExpenseTotal = 0;
+        var IncomeTotal = 0;
+
+        var table = document.getElementById("other-office-expenses");
+        var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+        for (var i = 0; i < rows.length; i++) {
+            var incomeValue = Number(rows[i].cells[1].querySelector('input').value.replace(/,/g, '')) || 0;
+            IncomeTotal += incomeValue;
+
+            var expenseValue = Number(rows[i].cells[2].querySelector('input').value.replace(/,/g, '')) || 0;
+            ExpenseTotal += expenseValue;
+        }
+
+        IncomeTotal = IncomeTotal.toFixed(2);
+        ExpenseTotal = ExpenseTotal.toFixed(2);
+
+        var footer = table.getElementsByTagName('tfoot')[0];
+        footer.getElementsByTagName('input')[0].value = IncomeTotal;
+        footer.getElementsByTagName('input')[1].value = ExpenseTotal;
+
+        document.getElementById("OtherOfficeExpenseTotal").value = ExpenseTotal;
+        document.getElementById("OtherOfficeIncomeTotal").value = IncomeTotal;
+        document.getElementById("SumOtherIncome").value = IncomeTotal;
+        document.getElementById("SumOtherExpense").value = ExpenseTotal;
+
+        ReCalculateSummaryTotal();
+    }
+
+    function AddOtherOfficeExpenseRow() {
+        var ExpenseCount = document.getElementById("OtherOfficeExpenseRowCount").value;
+        var table = document.getElementById("other-office-expenses");
+        var tbody = table.getElementsByTagName('tbody')[0];
+        var row = tbody.insertRow(-1);
+
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+
+        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="OtherOfficeDesc${ExpenseCount}" id="OtherOfficeDesc${ExpenseCount}"></div>`;
+        cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OtherOfficeIncome${ExpenseCount}" id="OtherOfficeIncome${ExpenseCount}" oninput="ChangeOtherOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell3.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OtherOfficeExpenses${ExpenseCount}" id="OtherOfficeExpenses${ExpenseCount}" oninput="ChangeOtherOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('OtherOfficeExpenseRowCount').value = ExpenseCount;
 
-        $(".txt-num").keypress(function (e) {
-            var key = e.charCode || e.keyCode || 0;
-            // only numbers
-            if(key == 46){
-             return true;
-            }
-            if (key < 48 || key > 58) {
-                return false;
-            }
-        });
+        Inputmask().mask(document.querySelectorAll('#other-office-expenses .form-control'));
     }
 
     function DeleteOtherOfficeExpenseRow() {
@@ -4516,71 +4703,65 @@ $(document).ready(function(){
 
         if (ExpenseCount > 1) {
             var table = document.getElementById("other-office-expenses");
-            var row = table.rows[ExpenseCount - 1]; // Get the correct row to delete
+            var tbody = table.getElementsByTagName('tbody')[0];
+            tbody.deleteRow(-1);
 
-            // Clear values (adjust based on your HTML structure)
-            row.cells[1].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
-            row.cells[2].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
+            ExpenseCount--;
+            document.getElementById('OtherOfficeExpenseRowCount').value = ExpenseCount;
 
-            table.deleteRow(ExpenseCount - 1);  // Delete the row
-            ExpenseCount--;  // Update the expense count
-            ChangeOtherOfficeExpenses();  // Update any other necessary logic
-            document.getElementById('OtherOfficeExpenseRowCount').value = ExpenseCount;  // Update the hidden field storing row count
+            ChangeOtherOfficeExpenses();
 
-            // Disable the "Remove Row" button if only one row left
-            if (ExpenseCount === 1) {
-                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
-            }
         }
     }
 
-    function TreasuryBalanceChange(){
-        var TreasuryBalance = Number(document.getElementById("AmountReservedFromLastYear").value);
+    function TreasuryBalanceChange() {
+        var TreasuryBalance = parseFloat(document.getElementById("AmountReservedFromLastYear").value.replace(/,/g, '')) || 0;
         document.getElementById("SumAmountReservedFromPreviousYear").value = TreasuryBalance.toFixed(2);
 
         ReCalculateSummaryTotal();
     }
 
-    function ChangeBankRec(){
-        var PaymentTotal=0;
-        var DepositTotal=0;
-        var PettyCash=0;
+    function ChangeBankRec() {
+        var PaymentTotal = 0;
+        var DepositTotal = 0;
 
-        var table=document.getElementById("bank-rec");
+        var table = document.getElementById("bank-rec");
 
         for (var i = 1, row; row = table.rows[i]; i++) {
-           //iterate through rows
-           //rows would be accessed using the "row" variable assigned in the for loop
-            value = Number(row.cells[3].children[0].children[0].children[1].value);
-            PaymentTotal += value;
+            // Payment Amount
+            var paymentInput = row.querySelector('input[name^="BankRecPaymentAmount"]');
+            var paymentValue = paymentInput ? parseFloat(paymentInput.value.replace(/,/g, '')) || 0 : 0;
+            PaymentTotal += paymentValue;
 
-            value = Number(row.cells[4].children[0].children[0].children[1].value);
-            DepositTotal += value;
+            // Deposit Amount
+            var depositInput = row.querySelector('input[name^="BankRecDepositAmount"]');
+            var depositValue = depositInput ? parseFloat(depositInput.value.replace(/,/g, '')) || 0 : 0;
+            DepositTotal += depositValue;
         }
 
-        var BankBalanceNow = Number(document.getElementById("BankBalanceNow").value);
+        var BankBalanceNow = parseFloat(document.getElementById("BankBalanceNow").value.replace(/,/g, '')) || 0;
 
-        TotalFees = Number(BankBalanceNow - PaymentTotal + DepositTotal).toFixed(2);
+        var TotalFees = (BankBalanceNow - PaymentTotal + DepositTotal).toFixed(2);
         document.getElementById("ReconciledBankBalance").value = TotalFees;
-        TreasuryBalanceNow = Number(document.getElementById("TreasuryBalanceNow").value).toFixed(2);
 
+        var TreasuryBalanceNow = parseFloat(document.getElementById("TreasuryBalanceNow").value.replace(/,/g, '')) || 0;
 
-        if(TotalFees != TreasuryBalanceNow){
-            document.getElementById("ReconciledBankBalanceWarning").style.backgroundColor = "yellow";
-            document.getElementById("ReconciledBankBalanceWarning").value = "Reconciled Bank Balance does not match treasury balance now. These numbers must match for your report to be in balance"
-            document.getElementById("ReconciledBankBalanceWarning").style.borderStyle = "none";
-        }
-        else{
-            document.getElementById("ReconciledBankBalanceWarning").style.backgroundColor = "transparent";
-            document.getElementById("ReconciledBankBalanceWarning").value = ""
-            document.getElementById("ReconciledBankBalanceWarning").style.borderStyle = "none";
+        var alertDiv = document.getElementById("ReconciliationAlert");
+        var warningDiv = document.getElementById("ReconciledBankBalanceWarning");
+
+        if (TotalFees != TreasuryBalanceNow) {
+            alertDiv.style.display = "block";
+            warningDiv.innerText = "Reconciled Bank Balance does not match treasury balance now. These numbers must match for your report to be in balance";
+            warningDiv.style.borderStyle = "none";
+        } else {
+            alertDiv.style.display = "none";
         }
     }
 
     function AddBankRecRow(){
         var ExpenseCount = document.getElementById("BankRecRowCount").value;
 
-        var table=document.getElementById("bank-rec");
+        var table = document.getElementById("bank-rec");
         var row = table.insertRow(-1);
 
         var cell1 = row.insertCell(0);
@@ -4589,227 +4770,370 @@ $(document).ready(function(){
         var cell4 = row.insertCell(3);
         var cell5 = row.insertCell(4);
 
-        cell1.innerHTML = "<div class=\"form-group\"><input type=\"date\" class=\"form-control\" name=\"BankRecDate" + ExpenseCount + "\" id=\"BankRecDate" + ExpenseCount + "\" onchange=\"IsValidDate(this)\"></div>";
-        cell2.innerHTML = "<div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=\"BankRecCheckNo" + ExpenseCount + "\" id=\"BankRecCheckNo" + ExpenseCount + "\"  oninput=\"ChangeChildrensRoomExpenses()\"></div>";
-        cell3.innerHTML = "<div class=\"form-group\"><input type=\"text\" class=\"form-control\" name=\"BankRecDesc" + ExpenseCount + "\" id=\"BankRecDesc" + ExpenseCount + "\"></div>";
-        cell4.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" min=\"0\"  step=\"0.01\" class=\"form-control txt-num\" name=\"BankRecPaymentAmount" + ExpenseCount + "\" id=\"BankRecPaymentAmount" + ExpenseCount + "\" oninput=\"ChangeBankRec()\" onkeydown=\"return event.keyCode !== 69\"></div></div>";
-        cell5.innerHTML = "<div class=\"form-group\"><div class=\"input-group\"><span class = \"input-group-addon\">$</span><input type=\"number\" onKeyPress=\"if(this.value.length==9) return false;\" min=\"0\"  step=\"0.01\" class=\"form-control txt-num\" name=\"BankRecDepositAmount" + ExpenseCount + "\" id=\"BankRecDepositAmount" + ExpenseCount + "\" oninput=\"ChangeBankRec()\" onkeydown=\"return event.keyCode !== 69\"></div></div>";
+        cell1.innerHTML = `<div class="form-group"><input type="date" class="form-control" name="BankRecDate${ExpenseCount}" id="BankRecDate${ExpenseCount}" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $bank_rec_array[$row]['bank_rec_date'] ?? '' }}"></div>`;
+        cell2.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="BankRecCheckNo${ExpenseCount}" id="BankRecCheckNo${ExpenseCount}"  oninput="ChangeBankRec()"></div>`;
+        cell3.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="BankRecDesc${ExpenseCount}" id="BankRecDesc${ExpenseCount}"></div>`;
+        cell4.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="BankRecPaymentAmount${ExpenseCount}" id="BankRecPaymentAmount${ExpenseCount}" oninput="ChangeBankRec()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
+        cell5.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="BankRecDepositAmount${ExpenseCount}" id="BankRecDepositAmount${ExpenseCount}" oninput="ChangeBankRec()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;
         document.getElementById('BankRecRowCount').value = ExpenseCount;
-        $(".txt-num").keypress(function (e) {
-            var key = e.charCode || e.keyCode || 0;
-            // only numbers
-            if(key == 46){
-             return true;
-            }
-            if (key < 48 || key > 58) {
-                return false;
-            }
-        });
+
+        Inputmask().mask(document.querySelectorAll('[data-inputmask]'));
     }
 
     function DeleteBankRecRow() {
-    var ExpenseCount = document.getElementById("BankRecRowCount").value;
+        var ExpenseCount = document.getElementById("BankRecRowCount").value;
 
-    if (ExpenseCount > 1) {
-        var table = document.getElementById("bank-rec");
-        var row = table.rows[ExpenseCount - 1]; // Get the correct row to delete
+        if (ExpenseCount > 1) {
+            var table = document.getElementById("bank-rec");
+            table.deleteRow(ExpenseCount - 1);
+            ExpenseCount--;
+            document.getElementById('BankRecRowCount').value = ExpenseCount;
+            ChangeBankRec();
 
-        // Clear values (adjust based on your HTML structure)
-        row.cells[3].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
-        row.cells[4].getElementsByTagName('input')[0].value = 0; // Adjust as per your HTML structure
-
-        table.deleteRow(ExpenseCount - 1);        // Delete the row
-        ExpenseCount--;        // Update the expense count
-        ChangeBankRec();        // Update any other necessary logic
-        document.getElementById('BankRecRowCount').value = ExpenseCount;        // Update the hidden field storing row count
-
-        // Disable the "Remove Row" button if only one row left
-        if (ExpenseCount === 1) {
-            document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
+            if (ExpenseCount === 1) {
+                document.querySelector('.btn-danger').setAttribute('disabled', 'disabled');
+            }
         }
     }
-}
+
+    function ReCalculateSummaryTotal() {
+        // Helper function to remove commas and convert to number
+        function parseNumber(value) {
+            return Number(value.replace(/,/g, ''));
+        }
+
+        // Initialize summary items
+        var SumOtherIncome = 0;
+        var SumMeetingRoomExpense = 0;
+        var SumTotalChildrensRoomExpense = 0;
+        var ServiceIncomeTotal = 0;
+        var ServiceExpenseTotal = 0;
+        var SumOtherExpense = 0;
+        var SumOperatingExpense = 0;
+        var SumTotalExpense = 0;
+        var SumTotalIncome = 0;
+        var SumTotalNetIncome = 0;
+        var SumPartyExpense = 0;
+        var SumPartyIncome = 0;
+        var SumInternationalEventExpense = 0;
+        var SumInternationalEventIncome = 0;
+        var SumMonetaryDonationIncome = 0;
+        var SumChapterReRegistrationExpense = 0;
+        var TreasuryBalance = 0;
+        var TreasuryBalanceNow = 0;
+
+        // Retrieve and sanitize input values
+        SumMeetingRoomExpense = parseNumber(document.getElementById("SumMeetingRoomExpense").value);
+        SumMembershipDuesIncome = parseNumber(document.getElementById("SumMembershipDuesIncome").value);
+        SumTotalChildrensRoomExpense = parseNumber(document.getElementById("SumTotalChildrensRoomExpense").value);
+        ServiceIncomeTotal = parseNumber(document.getElementById("SumServiceProjectIncome").value);
+        ServiceExpenseTotal = parseNumber(document.getElementById("SumTotalServiceProjectExpense").value);
+        SumPartyIncome = parseNumber(document.getElementById("SumPartyIncome").value);
+        SumPartyExpense = parseNumber(document.getElementById("SumPartyExpense").value);
+        SumOtherIncome = parseNumber(document.getElementById("SumOtherIncome").value);
+        SumOtherExpense = parseNumber(document.getElementById("SumOtherExpense").value);
+        SumOperatingExpense = parseNumber(document.getElementById("SumOperatingExpense").value);
+        SumInternationalEventExpense = parseNumber(document.getElementById("SumInternationalEventExpense").value);
+        SumInternationalEventIncome = parseNumber(document.getElementById("SumInternationalEventIncome").value);
+        SumMonetaryDonationIncome = parseNumber(document.getElementById("SumMonetaryDonationIncome").value);
+        SumChapterReRegistrationExpense = parseNumber(document.getElementById("SumChapterReRegistrationExpense").value);
+        TreasuryBalance = parseNumber(document.getElementById("SumAmountReservedFromPreviousYear").value);
+
+        // Perform calculations
+        SumTotalExpense = SumTotalChildrensRoomExpense + SumMeetingRoomExpense + ServiceExpenseTotal + SumOtherExpense + SumPartyExpense + SumOperatingExpense + SumInternationalEventExpense + SumChapterReRegistrationExpense;
+        SumTotalIncome = ServiceIncomeTotal + SumOtherIncome + SumPartyIncome + SumMembershipDuesIncome + SumInternationalEventIncome + SumMonetaryDonationIncome;
+
+        TreasuryBalanceNow = TreasuryBalance - SumTotalExpense + SumTotalIncome;
+        SumTotalNetIncome = SumTotalIncome - SumTotalExpense;
+
+        // Update values in the DOM
+        document.getElementById("SumTotalExpense").value = SumTotalExpense.toFixed(2);
+        document.getElementById("SumTotalIncome").value = SumTotalIncome.toFixed(2);
+        document.getElementById("TotalNetIncome").value = SumTotalNetIncome.toFixed(2);
+        document.getElementById("SumTotalNetIncome").value = SumTotalNetIncome.toFixed(2);
+        document.getElementById("TreasuryBalanceNow").value = TreasuryBalanceNow.toFixed(2);
+        document.getElementById("TreasuryBalanceNowR").value = TreasuryBalanceNow.toFixed(2);
+        document.getElementById("SumTreasuryBalanceNow").value = TreasuryBalanceNow.toFixed(2);
+
+        // Call other functions if necessary
+        ChangeBankRec();
+    }
 
 // Sectiom 9 Questions - Explainations Rquired.
-    function ToggleReceiveCompensationExplanation(){
-        if (document.getElementById("ReceiveCompensation").value == "1"){   //Required if YES
+document.addEventListener("DOMContentLoaded", function() {
+    // Add event listeners for each radio button group
+    document.querySelectorAll('input[name="ReceiveCompensation"]').forEach(function(el) {
+        el.addEventListener("change", ToggleReceiveCompensationExplanation);
+    });
+    document.querySelectorAll('input[name="FinancialBenefit"]').forEach(function(el) {
+        el.addEventListener("change", ToggleFinancialBenefitExplanation);
+    });
+    document.querySelectorAll('input[name="InfluencePolitical"]').forEach(function(el) {
+        el.addEventListener("change", ToggleInfluencePoliticalExplanation);
+    });
+    document.querySelectorAll('input[name="VoteAllActivities"]').forEach(function(el) {
+        el.addEventListener("change", ToggleVoteAllActivitiesExplanation);
+    });
+    document.querySelectorAll('input[name="BoughtPins"]').forEach(function(el) {
+        el.addEventListener("change", ToggleBoughtPinsExplanation);
+    });
+    document.querySelectorAll('input[name="BoughtMerch"]').forEach(function(el) {
+        el.addEventListener("change", ToggleBoughtMerchExplanation);
+    });
+    document.querySelectorAll('input[name="OfferedMerch"]').forEach(function(el) {
+        el.addEventListener("change", ToggleOfferedMerchExplanation);
+    });
+    document.querySelectorAll('input[name="ByLawsAvailable"]').forEach(function(el) {
+        el.addEventListener("change", ToggleByLawsAvailableExplanation);
+    });
+    document.querySelectorAll('input[name="ChildOutings"]').forEach(function(el) {
+        el.addEventListener("change", ToggleChildOutingsExplanation);
+    });
+    document.querySelectorAll('input[name="MotherOutings"]').forEach(function(el) {
+        el.addEventListener("change", ToggleMotherOutingsExplanation);
+    });
+    document.querySelectorAll('input[name="MeetingSpeakers"]').forEach(function(el) {
+        el.addEventListener("change", ToggleMeetingSpeakersExplanation);
+    });
+    document.querySelectorAll('input[name="Activity[]"]').forEach(function(el) {
+        el.addEventListener("change", ToggleActivityOtherExplanation);
+    });
+    document.querySelectorAll('input[name="ContributionsNotRegNP"]').forEach(function(el) {
+        el.addEventListener("change", ToggleContributionsNotRegNPExplanation);
+    });
+    document.querySelectorAll('input[name="PerformServiceProject"]').forEach(function(el) {
+        el.addEventListener("change", TogglePerformServiceProjectExplanation);
+    });
+    document.querySelectorAll('input[name="FileIRS"]').forEach(function(el) {
+        el.addEventListener("change", ToggleFileIRSExplanation);
+    });
+    document.querySelectorAll('input[name="BankStatementIncluded"]').forEach(function(el) {
+        el.addEventListener("change", ToggleBankStatementIncludedExplanation);
+    });
+    document.querySelectorAll('input[name="BankStatementDiff"]').forEach(function(el) {
+        el.addEventListener("change", ToggleBankStatementDiffExplanation);
+    });
+
+        // Initial function calls to ensure the correct sections are displayed based on pre-selected values
+        ToggleReceiveCompensationExplanation();
+        ToggleFinancialBenefitExplanation();
+        ToggleInfluencePoliticalExplanation();
+        ToggleVoteAllActivitiesExplanation();
+        ToggleBoughtPinsExplanation();
+        ToggleBoughtMerchExplanation();
+        ToggleOfferedMerchExplanation();
+        ToggleByLawsAvailableExplanation();
+        ToggleChildOutingsExplanation();
+        ToggleMotherOutingsExplanation();
+        ToggleMeetingSpeakersExplanation();
+        ToggleActivityOtherExplanation();
+        ToggleContributionsNotRegNPExplanation();
+        TogglePerformServiceProjectExplanation();
+        ToggleFileIRSExplanation();
+        ToggleBankStatementIncludedExplanation();
+        ToggleBankStatementDiffExplanation();
+    });
+
+    function ToggleReceiveCompensationExplanation() {
+        var selectedValue = document.querySelector('input[name="ReceiveCompensation"]:checked').value;   /* Questions 1 */
+
+        if (selectedValue == "1") {
             $('#ReceiveCompensationExplanation').addClass('tx-cls');
-            document.getElementById("divReceiveCompensationExplanation").style.display = 'block';
-        }
-        else{
+            document.getElementById("divReceiveCompensationExplanation").style.display = 'block';  // If "Yes" is selected
+        } else {
             $('#ReceiveCompensationExplanation').removeClass('tx-cls');
-            document.getElementById("divReceiveCompensationExplanation").style.display = 'none';
+            document.getElementById("divReceiveCompensationExplanation").style.display = 'none';  // If "No" is selected
         }
     }
 
-    function ToggleFinancialBenefitExplanation(){
-        if (document.getElementById("FinancialBenefit").value == "1"){   //Required if YES
-            $('#FinancialBenefitExplanation').addClass('tx-cls');
-            document.getElementById("divFinancialBenefitExplanation").style.display = 'block';
-        }
-        else{
-            $('#FinancialBenefitExplanation').removeClass('tx-cls');
-            document.getElementById("divFinancialBenefitExplanation").style.display = 'none';
-        }
-    }
+    function ToggleFinancialBenefitExplanation() {
+        var selectedValue = document.querySelector('input[name="FinancialBenefit"]:checked').value;   /* Questions 2 */
 
-    function ToggleInfluencePoliticalExplanation(){
-        if (document.getElementById("InfluencePolitical").value == "1"){   //Required if YES
-            $('#InfluencePoliticalExplanation').addClass('tx-cls');
-            document.getElementById("divInfluencePoliticalExplanation").style.display = 'block';
+            if (selectedValue == "1") {
+                $('#FinancialBenefitExplanation').addClass('tx-cls');
+                document.getElementById("divFinancialBenefitExplanation").style.display = 'block';  // If "Yes" is selected
+            } else {
+                $('#FinancialBenefitExplanation').removeClass('tx-cls');
+                document.getElementById("divFinancialBenefitExplanation").style.display = 'none';  // If "No" is selected
+            }
         }
-        else{
-            $('#InfluencePoliticalExplanation').removeClass('tx-cls');
-            document.getElementById("divInfluencePoliticalExplanation").style.display = 'none';
-        }
-    }
 
-    function ToggleVoteAllActivitiesExplanation(){
-        if (document.getElementById("VoteAllActivities").value == "0"){   //Required if NO
-            $('#VoteAllActivitiesExplanation').addClass('tx-cls');
-            document.getElementById("divVoteAllActivitiesExplanation").style.display = 'block';
-        }
-        else{
-            $('#VoteAllActivitiesExplanation').removeClass('tx-cls');
-            document.getElementById("divVoteAllActivitiesExplanation").style.display = 'none';
-        }
-    }
+    function ToggleInfluencePoliticalExplanation() {
+            var selectedValue = document.querySelector('input[name="InfluencePolitical"]:checked').value;   /* Questions 3 */
 
-    function ToggleBoughtPinsExplanation(){
-        if (document.getElementById("BoughtPins").value == "0"){   //Required if NO
-            $('#BoughtPinsExplanation').addClass('tx-cls');
-            document.getElementById("divBoughtPinsExplanation").style.display = 'block';
+            if (selectedValue == "1") {
+                $('#InfluencePoliticalExplanation').addClass('tx-cls');
+                document.getElementById("divInfluencePoliticalExplanation").style.display = 'block';  // If "Yes" is selected
+            } else {
+                $('#InfluencePoliticalExplanation').removeClass('tx-cls');
+                document.getElementById("divInfluencePoliticalExplanation").style.display = 'none';  // If "No" is selected
+            }
         }
-        else{
-            $('#BoughtPinsExplanation').removeClass('tx-cls');
-            document.getElementById("divBoughtPinsExplanation").style.display = 'none';
-        }
-    }
 
-    function ToggleBoughtMerchExplanation(){
-        if (document.getElementById("BoughtMerch").value == "0"){   //Required if NO
-            $('#BoughtMerchExplanation').addClass('tx-cls');
-            document.getElementById("divBoughtMerchExplanation").style.display = 'block';
-        }
-        else{
-            $('#BoughtMerchExplanation').removeClass('tx-cls');
-            document.getElementById("divBoughtMerchExplanation").style.display = 'none';
-        }
-    }
+    function ToggleVoteAllActivitiesExplanation() {
+            var selectedValue = document.querySelector('input[name="VoteAllActivities"]:checked').value;    /* Questions 4 */
 
-    function ToggleOfferedMerchExplanation(){
-        if (document.getElementById("OfferedMerch").value == "0"){   //Required if NO
-            $('#OfferedMerchExplanation').addClass('tx-cls');
-            document.getElementById("divOfferedMerchExplanation").style.display = 'block';
+            if (selectedValue == "0") {
+                $('#VoteAllActivitiesExplanation').addClass('tx-cls');
+                document.getElementById("divVoteAllActivitiesExplanation").style.display = 'block';  // If "No" is selected
+            } else {
+                $('#VoteAllActivitiesExplanation').removeClass('tx-cls');
+                document.getElementById("divVoteAllActivitiesExplanation").style.display = 'none';  // If "Yes" is selected
+            }
         }
-        else{
-            $('#OfferedMerchExplanation').removeClass('tx-cls');
-            document.getElementById("divOfferedMerchExplanation").style.display = 'none';
-        }
-    }
 
-    function ToggleByLawsAvailableExplanation(){
-         if (document.getElementById("ByLawsAvailable").value == "0"){   //Required if NO
-            $('#ByLawsAvailableExplanation').addClass('tx-cls');
-            document.getElementById("divByLawsAvailableExplanation").style.display = 'block';
-        }
-        else{
-            $('#ByLawsAvailableExplanation').removeClass('tx-cls');
-            document.getElementById("divByLawsAvailableExplanation").style.display = 'none';
-        }
-    }
+    function ToggleBoughtPinsExplanation() {
+            var selectedValue = document.querySelector('input[name="BoughtPins"]:checked').value;    /* Questions 5 */
 
-    function ToggleChildOutingsExplanation(){
-        if (document.getElementById("ChildOutings").value == "0"){   //Required if NO
-            $('#ChildOutingsExplanation').addClass('tx-cls');
-            document.getElementById("divChildOutingsExplanation").style.display = 'block';
+            if (selectedValue == "0") {
+                $('#BoughtPinsExplanation').addClass('tx-cls');
+                document.getElementById("divBoughtPinsExplanation").style.display = 'block';  // If "No" is selected
+            } else {
+                $('#BoughtPinsExplanation').removeClass('tx-cls');
+                document.getElementById("divBoughtPinsExplanation").style.display = 'none';  // If "Yes" is selected
+            }
         }
-        else{
-            $('#ChildOutingsExplanation').removeClass('tx-cls');
-            document.getElementById("divChildOutingsExplanation").style.display = 'none';
-        }
-    }
 
-    function ToggleMotherOutingsExplanation(){
-        if (document.getElementById("MotherOutings").value == "0"){   //Required if NO
-            $('#MotherOutingsExplanation').addClass('tx-cls');
-            document.getElementById("divMotherOutingsExplanation").style.display = 'block';
-        }
-        else{
-            $('#MotherOutingsExplanation').removeClass('tx-cls');
-            document.getElementById("divMotherOutingsExplanation").style.display = 'none';
-        }
-    }
+    function ToggleBoughtMerchExplanation() {
+            var selectedValue = document.querySelector('input[name="BoughtMerch"]:checked').value;    /* Questions 6 */
 
-    function ToggleMeetingSpeakersExplanation(){
-        if (document.getElementById("MeetingSpeakers").value == "0"){   //Required if NO
-            $('#MeetingSpeakersExplanation').addClass('tx-cls');
-            document.getElementById("divMeetingSpeakersExplanation").style.display = 'block';
+            if (selectedValue == "0") {
+                $('#BoughtMerchExplanation').addClass('tx-cls');
+                document.getElementById("divBoughtMerchExplanation").style.display = 'block';  // If "No" is selected
+            } else {
+                $('#BoughtMerchExplanation').removeClass('tx-cls');
+                document.getElementById("divBoughtMerchExplanation").style.display = 'none';  // If "Yes" is selected
+            }
         }
-        else{
-            $('#MeetingSpeakersExplanation').removeClass('tx-cls');
-            document.getElementById("divMeetingSpeakersExplanation").style.display = 'none';
-        }
-    }
 
-    function ToggleActivityOtherExplanation(){
-        if (document.getElementById("ActivityOther").value == "5"){   //Required if Other
-            $('#ActivityOtherExplanation').addClass('tx-cls');
-            document.getElementById("divActivityOtherExplanation").style.display = 'block';
+    function ToggleOfferedMerchExplanation() {
+            var selectedValue = document.querySelector('input[name="OfferedMerch"]:checked').value;    /* Questions 7 */
+
+            if (selectedValue == "0") {
+                $('#OfferedMerchExplanation').addClass('tx-cls');
+                document.getElementById("divOfferedMerchExplanation").style.display = 'block';  // If "No" is selected
+            } else {
+                $('#OfferedMerchExplanation').removeClass('tx-cls');
+                document.getElementById("divOfferedMerchExplanation").style.display = 'none';  // If "Yes" is selected
+            }
         }
-        else{
-            $('#ActivityOtherExplanation').removeClass('tx-cls');
+
+    function ToggleByLawsAvailableExplanation() {
+            var selectedValue = document.querySelector('input[name="ByLawsAvailable"]:checked').value;    /* Questions 8 */
+
+            if (selectedValue == "0") {
+                $('#ByLawsAvailableExplanation').addClass('tx-cls');
+                document.getElementById("divByLawsAvailableExplanation").style.display = 'block';  // If "No" is selected
+            } else {
+                $('#ByLawsAvailableExplanation').removeClass('tx-cls');
+                document.getElementById("divByLawsAvailableExplanation").style.display = 'none';  // If "Yes" is selected
+            }
+        }
+
+    function ToggleChildOutingsExplanation() {
+            var selectedValue = document.querySelector('input[name="ChildOutings"]:checked').value;    /* Questions 11 */
+
+            if (selectedValue == "0") {
+                $('#ChildOutingsExplanation').addClass('tx-cls');
+                document.getElementById("divChildOutingsExplanation").style.display = 'block';  // If "No" is selected
+            } else {
+                $('#ChildOutingsExplanation').removeClass('tx-cls');
+                document.getElementById("divChildOutingsExplanation").style.display = 'none';  // If "Yes" is selected
+            }
+        }
+
+    function ToggleMotherOutingsExplanation() {
+            var selectedValue = document.querySelector('input[name="MotherOutings"]:checked').value;    /* Questions 12 */
+
+            if (selectedValue == "0") {
+                $('#MotherOutingsExplanation').addClass('tx-cls');
+                document.getElementById("divMotherOutingsExplanation").style.display = 'block';  // If "No" is selected
+            } else {
+                $('#MotherOutingsExplanation').removeClass('tx-cls');
+                document.getElementById("divMotherOutingsExplanation").style.display ='none';  // If "Yes" is selected
+            }
+        }
+
+    function ToggleMeetingSpeakersExplanation() {
+            var selectedValue = document.querySelector('input[name="MeetingSpeakers"]:checked').value;    /* Questions 13 */
+
+            if (selectedValue == "0") {
+                $('#MeetingSpeakersExplanation').addClass('tx-cls');
+                document.getElementById("divMeetingSpeakersExplanation").style.display = 'block';  // If "No" is selected
+                document.getElementById("divMeetingSpeakersTopics").style.display = 'none';  // If "No" is selected
+            } else {
+                $('#MeetingSpeakersExplanation').removeClass('tx-cls');
+                document.getElementById("divMeetingSpeakersExplanation").style.display = 'none';  // If "Yes" is selected
+                document.getElementById("divMeetingSpeakersTopics").style.display = 'block';  // If "Yes" is selected
+            }
+        }
+
+    function ToggleActivityOtherExplanation() {
+        var otherCheckbox = document.querySelector('input[name="Activity[]"][value="5"]');    /* Questions 16 */
+
+        if (otherCheckbox.checked) {
+            document.getElementById("divActivityOtherExplanation").style.display = 'block';  // If "Other" is selected
+        } else {
             document.getElementById("divActivityOtherExplanation").style.display = 'none';
         }
     }
 
-    function ToggleContributionsNotRegNPExplanation(){
-        if (document.getElementById("ContributionsNotRegNP").value == "1"){   //Required if YES
-            $('#ContributionsNotRegNPExplanation').addClass('tx-cls');
-            document.getElementById("divContributionsNotRegNPExplanation").style.display = 'block';
-        }
-        else{
-            $('#ContributionsNotRegNPExplanation').removeClass('tx-cls');
-            document.getElementById("divContributionsNotRegNPExplanation").style.display = 'none';
-        }
-    }
+    function ToggleContributionsNotRegNPExplanation() {
+            var selectedValue = document.querySelector('input[name="ContributionsNotRegNP"]:checked').value;    /* Questions 17 */
 
-    function TogglePerformServiceProjectExplanation(){
-        if (document.getElementById("PerformServiceProject").value == "0"){   //Required if NO
-            $('#PerformServiceProjectExplanation').addClass('tx-cls');
-            document.getElementById("divPerformServiceProjectExplanation").style.display = 'block';
+            if (selectedValue == "1") {
+                $('#ContributionsNotRegNPExplanation').addClass('tx-cls');
+                document.getElementById("divContributionsNotRegNPExplanation").style.display = 'block'  // If "Yes" is selected
+            } else {
+                $('#ContributionsNotRegNPExplanation').removeClass('tx-cls');
+                document.getElementById("divContributionsNotRegNPExplanation").style.display = 'none';  // If "No" is selected
+            }
         }
-        else{
-            $('#PerformServiceProjectExplanation').removeClass('tx-cls');
-            document.getElementById("divPerformServiceProjectExplanation").style.display = 'none';
-        }
-    }
 
-    function ToggleFileIRSExplanation(){
-        if (document.getElementById("FileIRS").value == "0"){   //Required if NO
-            $('#990NFile').hide();
-            $('#FileIRSExplanation').addClass('tx-cls');
-            document.getElementById("divFileIRSExplanation").style.display = 'block';
-        }
-        else{
-            $('#990NFile').hide();
-            $('#FileIRSExplanation').removeClass('tx-cls');
-            document.getElementById("divFileIRSExplanation").style.display = 'none';
-        }
-    }
+    function TogglePerformServiceProjectExplanation() {
+            var selectedValue = document.querySelector('input[name="PerformServiceProject"]:checked').value;    /* Questions 18 */
 
-    function ToggleBankStatementIncludedExplanation(){
-        if (document.getElementById("BankStatementIncluded").value == "0"){   //Required if NO
-            $('#BankStatementIncludedExplanation').addClass('tx-cls');
-            document.getElementById("divBankStatementIncludedExplanation").style.display = 'block';
+
+            if (selectedValue == "0") {
+                $('#PerformServiceProjectExplanation').addClass('tx-cls');
+                document.getElementById("divPerformServiceProjectExplanation").style.display = 'block'  // If "no" is selected
+            } else {
+                $('#PerformServiceProjectExplanation').removeClass('tx-cls');
+                document.getElementById("divPerformServiceProjectExplanation").style.display = 'none';  // If "Yes" is selected
+            }
         }
-        else{
-            $('#BankStatementIncludedExplanationn').removeClass('tx-cls');
-            document.getElementById("divBankStatementIncludedExplanation").style.display = 'none';
+
+    function ToggleFileIRSExplanation() {
+            var selectedValue = document.querySelector('input[name="FileIRS"]:checked').value;    /* Questions 21 */
+
+            if (selectedValue == "0") {
+                $('#FileIRSExplanation').addClass('tx-cls');
+                document.getElementById("divFileIRSExplanation").style.display = 'block';  // If "no" is selected
+                document.getElementById("FileIRSBlock").style.display = 'none';  // If "no" is selected
+
+            } else {
+                $('#FileIRSExplanation').removeClass('tx-cls');
+                document.getElementById("divFileIRSExplanation").style.display = 'none';  // If "Yes" is selected
+                document.getElementById("FileIRSBlock").style.display = 'block';  // If "Yes" is selected
+            }
         }
-    }
+
+    function ToggleBankStatementIncludedExplanation() {
+            var selectedValue = document.querySelector('input[name="BankStatementIncluded"]:checked').value;    /* Questions 21 */
+
+            if (selectedValue == "0") {
+                $('#BankStatementIncludedExplanation').addClass('tx-cls');
+                document.getElementById("divBankStatementIncludedExplanation").style.display = 'block';  // If "no" is selected
+                document.getElementById("WheresTheMoney").style.display = 'block';  // If "no" is selected
+            } else {
+                $('#WheresTheMoney').hide();
+                $('#BankStatementIncludedExplanationn').removeClass('tx-cls');
+                document.getElementById("divBankStatementIncludedExplanation").style.display = 'none';  // If "Yes" is selected
+                document.getElementById("WheresTheMoney").style.display = 'none';  // If "Yes" is selected
+            }
+        }
 
     function AddAwardNomination(){
         // Did they say no, if so, we need to mark the explanation field as required
@@ -4869,7 +5193,6 @@ $(document).ready(function(){
         document.getElementById("TotalAwardNominations").value = Number(document.getElementById("TotalAwardNominations").value) - 1;
     }
 
-
     window.addEventListener('load', function() {
             var awardNumbers = [1, 2, 3, 4, 5]; // Array of AwardNumbers
 
@@ -4891,93 +5214,93 @@ $(document).ready(function(){
             }
         }
 
-    // Initialize tooltip component
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip()
-    })
+    // // Initialize tooltip component
+    // $(function () {
+    //   $('[data-toggle="tooltip"]').tooltip()
+    // })
 
-    function UpdateCalculatedValues(){
-        ChangeChildrensRoomExpenses();
-        ChangeMemberCount();
-        ChapterDuesQuestionsChange();
-        ChangeMeetingFees();
-        ChangeServiceProjectExpenses();
-        ChangePartyExpenses();
-        ChangeOfficeExpenses();
-        ChangeInternationalEventExpense();
-        ChangeReRegistrationExpense();
-        ChangeDonationAmount();
-        ChangeOtherOfficeExpenses();
-        ChangeBankRec();
-        TreasuryBalanceChange();
-    }
+    // function UpdateCalculatedValues(){
+    //     ChangeChildrensRoomExpenses();
+    //     ChangeMemberCount();
+    //     ChapterDuesQuestionsChange();
+    //     ChangeMeetingFees();
+    //     ChangeServiceProjectExpenses();
+    //     ChangePartyExpenses();
+    //     ChangeOfficeExpenses();
+    //     ChangeInternationalEventExpense();
+    //     ChangeReRegistrationExpense();
+    //     ChangeDonationAmount();
+    //     ChangeOtherOfficeExpenses();
+    //     ChangeBankRec();
+    //     TreasuryBalanceChange();
+    // }
 
-    function RemoveRequired(){
-        var x = document.forms[0];
-        var i;
-        for (i = 0; i < x.length; i++) {
-            x.elements[i].required = false;
-        }
-    }
+    // function RemoveRequired(){
+    //     var x = document.forms[0];
+    //     var i;
+    //     for (i = 0; i < x.length; i++) {
+    //         x.elements[i].required = false;
+    //     }
+    // }
 
-    function SetReadOnly(){
-        var x = document.forms[1];
-        console.log(x);
-        var i;
-        for (i = 0; i < x.length; i++) {
-            if(x.elements[i].type!="button" && !hasClass(x.elements[i], "btn") && x.elements[i].type!="hidden"){
-                console.log(x.elements[i]);
-                x.elements[i].readOnly = true;
-                x.elements[i].disabled = true;
-            }
-        }
-    }
+    // function SetReadOnly(){
+    //     var x = document.forms[1];
+    //     console.log(x);
+    //     var i;
+    //     for (i = 0; i < x.length; i++) {
+    //         if(x.elements[i].type!="button" && !hasClass(x.elements[i], "btn") && x.elements[i].type!="hidden"){
+    //             console.log(x.elements[i]);
+    //             x.elements[i].readOnly = true;
+    //             x.elements[i].disabled = true;
+    //         }
+    //     }
+    // }
 
-    function hasClass(element, cls) {
-        return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
-    }
+    // function hasClass(element, cls) {
+    //     return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+    // }
 
-    function LoadSteps(){
-        UpdateCalculatedValues();
-        if(<?php if($submitted) echo "1"; else echo "0"; ?>){
-            SetReadOnly();
-        }
+    // function LoadSteps(){
+    //     UpdateCalculatedValues();
+    //     if(<?php if($submitted) echo "1"; else echo "0"; ?>){
+    //         SetReadOnly();
+    //     }
 
-        ToggleReceiveCompensationExplanation();
-        ToggleFinancialBenefitExplanation();
-        ToggleInfluencePoliticalExplanation();
-        ToggleVoteAllActivitiesExplanation();
-        ToggleBoughtPinsExplanation();
-        ToggleBoughtMerchExplanation();
-        ToggleOfferedMerchExplanation();
-        ToggleByLawsAvailableExplanation();
-        ToggleChildOutingsExplanation();
-        ToggleMotherOutingsExplanation();
-        ToggleMeetingSpeakersExplanation();
-        ToggleActivityOtherExplanation();
-        ToggleContributionsNotRegNPExplanation();
-        TogglePerformServiceProjectExplanation();
-        ToggleFileIRSExplanation();
-        ToggleBankStatementIncludedExplanation();
+    //     ToggleReceiveCompensationExplanation();
+    //     ToggleFinancialBenefitExplanation();
+    //     ToggleInfluencePoliticalExplanation();
+    //     ToggleVoteAllActivitiesExplanation();
+    //     ToggleBoughtPinsExplanation();
+    //     ToggleBoughtMerchExplanation();
+    //     ToggleOfferedMerchExplanation();
+    //     ToggleByLawsAvailableExplanation();
+    //     ToggleChildOutingsExplanation();
+    //     ToggleMotherOutingsExplanation();
+    //     ToggleMeetingSpeakersExplanation();
+    //     ToggleActivityOtherExplanation();
+    //     ToggleContributionsNotRegNPExplanation();
+    //     TogglePerformServiceProjectExplanation();
+    //     ToggleFileIRSExplanation();
+    //     ToggleBankStatementIncludedExplanation();
 
-        if(document.getElementById("NominationType1").value==5 || document.getElementById("NominationType1").value==6){
-            ShowOutstandingCriteria(1);
-        }
-        if(document.getElementById("NominationType2").value==5 || document.getElementById("NominationType2").value==6){
-            ShowOutstandingCriteria(2);
-        }
-        if(document.getElementById("NominationType3").value==5 || document.getElementById("NominationType3").value==6){
-            ShowOutstandingCriteria(3);
-        }
-        if(document.getElementById("NominationType4").value==5 || document.getElementById("NominationType4").value==6){
-            ShowOutstandingCriteria(4);
-        }
-        if(document.getElementById("NominationType5").value==5 || document.getElementById("NominationType5").value==6){
-            ShowOutstandingCriteria(5);
-        }
-    }
+    //     if(document.getElementById("NominationType1").value==5 || document.getElementById("NominationType1").value==6){
+    //         ShowOutstandingCriteria(1);
+    //     }
+    //     if(document.getElementById("NominationType2").value==5 || document.getElementById("NominationType2").value==6){
+    //         ShowOutstandingCriteria(2);
+    //     }
+    //     if(document.getElementById("NominationType3").value==5 || document.getElementById("NominationType3").value==6){
+    //         ShowOutstandingCriteria(3);
+    //     }
+    //     if(document.getElementById("NominationType4").value==5 || document.getElementById("NominationType4").value==6){
+    //         ShowOutstandingCriteria(4);
+    //     }
+    //     if(document.getElementById("NominationType5").value==5 || document.getElementById("NominationType5").value==6){
+    //         ShowOutstandingCriteria(5);
+    //     }
+    // }
 
-    function InputLoggedInPerson(){
-    }
+    // function InputLoggedInPerson(){
+    // }
 </script>
 @endsection

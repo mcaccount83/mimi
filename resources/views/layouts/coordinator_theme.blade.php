@@ -9,27 +9,27 @@
   <!-- Bootstrap CSS -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free/css/all.min.css">
   <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
   {{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/dist/css/AdminLTE.min.css"> --}}
 
 <!-- daterange picker -->
-<link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/daterangepicker/daterangepicker.css">
+<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/daterangepicker/daterangepicker.css">
 <!-- iCheck for checkboxes and radio inputs -->
-<link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
 <!-- Tempusdominus Bootstrap 4 -->
-<link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
 <!-- Select2 -->
-<link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/select2/css/select2.min.css">
-<link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/select2/css/select2.min.css">
+<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
 
 <!-- DataTables -->
-<link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-<link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-<link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+<link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 
   <!-- Custom CSS -->
   {{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/dist/css/custom.css"> --}}
@@ -688,39 +688,39 @@
 </div>
 
 <!-- jQuery -->
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/jquery/jquery.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- overlayScrollbars -->
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 {{-- <script src="{{ config('settings.base_url') }}coordinator_theme/dist/js/adminlte.min.js"></script> --}}
 
 
 <!-- Select2 -->
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/select2/js/select2.full.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/select2/js/select2.full.min.js"></script>
 <!-- InputMask -->
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/moment/moment.min.js"></script>
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/inputmask/jquery.inputmask.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/moment/moment.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/inputmask/jquery.inputmask.min.js"></script>
 <!-- date-range-picker -->
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/daterangepicker/daterangepicker.js"></script>
 <!-- Tempusdominus Bootstrap 4 -->
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 
 <!-- DataTables  & Plugins -->
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/jszip/jszip.min.js"></script>
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/pdfmake/pdfmake.min.js"></script>
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/pdfmake/vfs_fonts.js"></script>
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-buttons/js/buttons.print.min.js"></script>
-<script src="{{ config('settings.base_url') }}coordinator_theme/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/jszip/jszip.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/pdfmake/pdfmake.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/pdfmake/vfs_fonts.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+<script src="{{ config('settings.base_url') }}theme/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
 <script>
    $(function () {

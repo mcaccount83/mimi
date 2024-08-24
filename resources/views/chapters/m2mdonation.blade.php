@@ -51,28 +51,11 @@
                 <!-- /.form group -->
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label>M2M Donation Date</label> <span class="field-required">*</span>
-                        <div class="input-group date" name="ch_m2m_date" id="datepicker1" data-target-input="nearest">
-                            <input type="text" class="form-control datetimepicker-input" data-target="#datepicker1" placeholder="mm/dd/yyyy" required/>
-                            <div class="input-group-append" data-target="#datepicker1" data-toggle="datetimepicker">
-                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                            </div>
-                        </div>
+                        <label>M2M Donation Date</label>
+                        <input type="date" name="ch_m2m_date" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $chapterList[0]->m2m_date }}" >
                     </div>
                 </div>
 
-            {{-- <div class="col-sm-6">
-                <div class="form-group">
-                    <label>M2M Donation Date</label>
-                    <input type="date" name="ch_m2m_date" id="ch_m2m_date"
-                        class="form-control"
-                        value="{{ $chapterList[0]->m2m_date }}"
-                        min="<?php echo $minDateLimit; ?>"
-                        max="<?php echo $maxDateLimit; ?>">
-                </div>
-            </div> --}}
-
-              <!-- /.form group -->
               <div class="col-sm-6">
               <div class="form-group">
                 <label>M2M Donation Amount</label>
@@ -82,27 +65,11 @@
               <!-- /.form group -->
               <div class="col-sm-6">
                 <div class="form-group">
-                    <label>Sustaining Chapter Donation Date</label> <span class="field-required">*</span>
-                    <div class="input-group date" name="ch_sustaining_date" id="datepicker" data-target-input="nearest">
-                        <input type="text" class="form-control datetimepicker-input" data-target="#datepicker" placeholder="mm/dd/yyyy" required/>
-                        <div class="input-group-append" data-target="#datepicker" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
-                    </div>
+                    <label>Sustaining Chapter Donation Date</label>
+                    <input type="date" name="ch_sustaining_date" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $chapterList[0]->sustaining_date }}" >
                 </div>
             </div>
 
-            {{-- <div class="col-sm-6">
-                <div class="form-group">
-                    <label>Sustaining Chapter Donation Date</label>
-                    <input type="date" name="ch_sustaining_date" id="ch_sustaining_date"
-                        class="form-control"
-                        value="{{ $chapterList[0]->sustaining_date }}"
-                        min="<?php echo $minDateLimit; ?>"
-                        max="<?php echo $maxDateLimit; ?>" >
-                </div>
-            </div> --}}
-              <!-- /.form group -->
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Sustaining Chapter Donation Amount</label>
