@@ -3656,6 +3656,7 @@ class ChapterController extends Controller
             ->where('ch.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1');
 
+        // Apply the position-based filtering
         if ($positionId == 6 || $positionId == 25) {
             $baseQuery->where('ch.conference', '=', $corConfId);
         } elseif ($positionId == 5) {
@@ -3664,14 +3665,18 @@ class ChapterController extends Controller
             $baseQuery->whereIn('ch.primary_coordinator_id', $inQryArr);
         }
 
-        $baseQuery->where(function ($query) use ($currentYear, $currentMonth) {
-            $query->where('ch.next_renewal_year', '<', $currentYear)
-                ->orWhere(function ($query) use ($currentYear, $currentMonth) {
-                    $query->where('ch.next_renewal_year', '=', $currentYear)
-                        ->where('ch.start_month_id', '<=', $currentMonth);
-                });
-        });
+        // If checkbox is not checked, apply the additional year and month filtering
+        if (!isset($_GET['check']) || $_GET['check'] !== 'yes') {
+            $baseQuery->where(function ($query) use ($currentYear, $currentMonth) {
+                $query->where('ch.next_renewal_year', '<', $currentYear)
+                    ->orWhere(function ($query) use ($currentYear, $currentMonth) {
+                        $query->where('ch.next_renewal_year', '=', $currentYear)
+                            ->where('ch.start_month_id', '<=', $currentMonth);
+                    });
+            });
+        }
 
+        // Apply sorting based on checkbox status
         if (isset($_GET['check']) && $_GET['check'] == 'yes') {
             $checkBoxStatus = 'checked';
             $baseQuery->orderBy('st.state_short_name')
