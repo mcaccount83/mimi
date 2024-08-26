@@ -52,7 +52,7 @@
 			  <div class="col-sm-12">
                 <div class="form-group">
                     <label>Last Payment</label>
-                    <input type="text" name="ch_lastpay" class="form-control" maxlength="200" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $chapterList[0]->dues_last_paid }}" readonly>
+                    <input type="date" name="ch_lastpay" class="form-control" maxlength="200" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $chapterList[0]->dues_last_paid }}" readonly>
                 </div>
             </div>
 			                <!-- /.form group -->
@@ -66,12 +66,14 @@
               <div class="col-sm-6">
                 <div class="form-group">
                     <label>Date Payment Received</label> <span class="field-required">*</span>
+                    <input type="date" name="PaymentDate" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask>
+{{--
                     <div class="input-group date" name="PaymentDate" id="datepicker" data-target-input="nearest">
                         <input type="text" class="form-control datetimepicker-input" data-target="#datepicker" placeholder="mm/dd/yyyy" required/>
                         <div class="input-group-append" data-target="#datepicker" data-toggle="datetimepicker">
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             {{--<div class="col-sm-6">
@@ -125,15 +127,28 @@
 @endsection
 @section('customscript')
 <script>
-$(document).ready(function(){
-	$(".txt-num").keypress(function (e) {
-        var key = e.charCode || e.keyCode || 0;
-		// only numbers
-		if (key < 48 || key > 58) {
-			return false;
-		}
-	});
+// $(document).ready(function(){
+// 	$(".txt-num").keypress(function (e) {
+//         var key = e.charCode || e.keyCode || 0;
+// 		// only numbers
+// 		if (key < 48 || key > 58) {
+// 			return false;
+// 		}
+// 	});
+// });
+
+document.querySelector('form').addEventListener('submit', function(event) {
+    var dateField = document.querySelector('input[name="PaymentDate"]');
+    var dateValue = dateField.value;
+
+    if (dateValue) {
+        // Convert mm/dd/yyyy to yyyy-mm-dd
+        var parts = dateValue.split('/');
+        var formattedDate = parts[2] + '-' + parts[0] + '-' + parts[1];
+        dateField.value = formattedDate;
+    }
 });
+
 
 </script>
 @endsection

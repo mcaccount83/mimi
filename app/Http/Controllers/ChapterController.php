@@ -1568,7 +1568,7 @@ class ChapterController extends Controller
             }
 
             //EIN Coor Notification//
-            $to_email3 = 'melissa.baca@momsclub.org';
+            $to_email3 = 'jackie.mchenry@momsclub.org';
 
             if ($presInfoUpd[0]->name != $presInfoPre[0]->name) {
 
