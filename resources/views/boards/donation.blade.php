@@ -25,7 +25,7 @@
                     <div class="card-body">
                         <div class="author">
                                 <div class="border-gray avatar">
-                                    <img src="{{ asset('chapter_theme/img/logo.png') }}" alt="...">
+                                    <img src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC">
                                 </div>
                                <h2 class="moms-c"> MOMS Club of {{ $chapterList[0]->name }}, {{$chapterState}} </h2>
                         </div>

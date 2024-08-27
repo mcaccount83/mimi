@@ -47,7 +47,7 @@
   <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
     <div class="container">
         {{-- <a href="{{ route('home') }}" class="navbar-brand">
-            <img src="{{ asset('theme/dist/img/logo.png') }}" alt="MC" class="brand-image img-circle elevation-3" >
+            <img src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC" class="brand-image img-circle elevation-3" >
           </a> --}}
 
       <div class="collapse navbar-collapse order-3" id="navbarCollapse">

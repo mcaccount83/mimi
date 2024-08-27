@@ -14,7 +14,7 @@
             <!-- Add the bg color to the header using any of the bg-* classes -->
             <div class="widget-user-header bg-primary">
                 <div class="widget-user-image">
-                    <img class="img-circle elevation-2" src="{{ asset('theme/dist/img/logo.png') }}" alt="MC" style="width: 115px; height: 115px;">
+                    <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC" style="width: 115px; height: 115px;">
                   </div>
                         </div>
                         <div class="card-body">

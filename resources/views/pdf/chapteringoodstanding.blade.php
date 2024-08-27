@@ -10,7 +10,7 @@
 </head>
 <body>
     <center>
-        <img src="{{ asset('chapter_theme/img/logo-old.png') }}" alt="Logo" style="width: 125px;">
+        <img src="images\LOGO-W-MOMS-CLUB-old.jpg" alt="MC" style="width: 125px;">
     </center>
 <br>
 <div class="keep-together" style="page-break-inside: avoid;">

@@ -257,7 +257,7 @@
  <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="{{ route('home') }}" class="logo">
-        <span class="logo-lg logo-padding"><b><img src="{{ asset('coordinator_theme/dist/img/logo.png') }}" alt="MIMI"></b></span>
+        <span class="logo-lg logo-padding"><b><img src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC"></b></span>
     </a>
     <hr>
 <!-- Sidebar -->

@@ -7,7 +7,7 @@
         <div class="login-box">
             <div class="login-logo">
                 <a href="{{ route('home') }}" class="band-link">
-                    <img src="{{ asset('coordinator_theme/dist/img/logo.png') }}" alt="MC" width="120">
+                    <img src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC" width="120">
                 </a>
                 </div>
     <!-- /.login-logo -->

@@ -156,7 +156,7 @@
         <aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="{{ route('home') }}" class="band-link">
-                <img src="{{ asset('coordinator_theme/dist/img/logo.png') }}" alt="MC" class="brand-image img-circle elevation-3 custom-logo">
+                <img src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC" class="brand-image img-circle elevation-3 custom-logo">
             </a>
             <!-- Sidebar -->
             <div class="sidebar">

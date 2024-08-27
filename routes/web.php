@@ -51,7 +51,7 @@ Route::get('/getregion/{id}', [CoordinatorController::class, 'getRegionList'])->
 Route::get('/getreporting', [CoordinatorController::class, 'getReportingList'])->name('get.reporting');
 Route::get('/getdirectreport', [CoordinatorController::class, 'getDirectReportingList'])->name('get.directreport');
 Route::get('/getchapterprimary', [CoordinatorController::class, 'getChapterPrimaryFor'])->name('get.chapterprimary');
-Route::get('/chapterlinks', [ChapterController::class, 'chapterLinks'])->name('chapter.links');
+// Route::get('/chapterlinks', [ChapterController::class, 'chapterLinks'])->name('chapter.links');
 
 Route::get('/test-500', function () {
     abort(500);
