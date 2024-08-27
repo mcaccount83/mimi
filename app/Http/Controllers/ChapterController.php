@@ -4005,9 +4005,7 @@ class ChapterController extends Controller
                 foreach ($toBatches as $toBatch) {
                     Mail::to($toBatch)
                         ->cc($ccRecipients)
-                        ->send(new PaymentsReRegReminder($data));
-
-                    usleep(500000); // Delay for 0.5 seconds between each batch
+                        ->queue(new PaymentsReRegReminder($data));
                 }
             }
         }
@@ -4150,9 +4148,7 @@ class ChapterController extends Controller
                 foreach ($toBatches as $toBatch) {
                     Mail::to($toBatch)
                         ->cc($ccRecipients)
-                        ->send(new PaymentsReRegLate($data));
-
-                    usleep(500000); // Delay for 0.5 seconds between each batch
+                        ->queue(new PaymentsReRegLate($data));
                 }
             }
         }

@@ -852,7 +852,7 @@ class CoordinatorController extends Controller
 
                 Mail::to($to_email)
                     ->cc($cc_email)
-                    ->send(new BigSisterWelcome($mailData));
+                    ->queue(new BigSisterWelcome($mailData));
 
                 DB::commit();
 
