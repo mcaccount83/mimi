@@ -2825,14 +2825,17 @@
                     </div>
                 </div>
             </div>
-
             <div class="card-body text-center">
                 <a href="{{ route('home') }}" class="btn bg-gradient-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
-            <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn bg-gradient-primary" <?php if(!$submitted =='1') echo "disabled"; ?>><i class="fas fa-file-pdf" ></i>&nbsp; Download PDF</a>
-        </div>
+            @if ($submitted)
+                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn bg-gradient-primary" ><i class="fas fa-file-pdf" ></i>&nbsp; Download PDF</a>
+            @else
+                <a id="downloadPdfLink" href="#" class="btn bg-gradient-primary disabled"><i class="fas fa-file-pdf" ></i>&nbsp; Download PDF</a>
+            @endif
+            </div>
     </div>
 </div>
-</div>
+</sectiondiv>
 
 @endsection
 @section('customscript')
@@ -2988,7 +2991,7 @@
         var received =  {!! json_encode($chapterDetails[0]->financial_report_received) !!};
 
         if (received != '1') {
-            $('button').not('#btn-back, #btn-download-pdf, #review-clear').prop('disabled', true);
+            $('button').not('#btn-back').prop('disabled', true);
             $('input, select, textarea').not('#logout-form input, #logout-form select, #logout-form textarea').prop('disabled', true);
         } else if (submitted == '1') {
             $('button').not('#btn-back, #btn-download-pdf, #review-clear').prop('disabled', true);
