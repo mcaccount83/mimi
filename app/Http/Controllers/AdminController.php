@@ -118,7 +118,7 @@ class AdminController extends Controller
         ];
 
         $to_email = 'jackie.mchenry@momsclub.org';
-        Mail::to($to_email)->send(new AdminNewMIMIBugWish($mailData));
+        Mail::to($to_email)->queue(new AdminNewMIMIBugWish($mailData));
 
         $task->save();
     }

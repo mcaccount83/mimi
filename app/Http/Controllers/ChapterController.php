@@ -567,13 +567,13 @@ class ChapterController extends Controller
             $to_email = $cordInfo[0]->email;
 
             Mail::to($to_email)
-                ->send(new ChapterAddPrimaryCoor($mailData));
+                ->queue(new ChapterAddPrimaryCoor($mailData));
 
             //List Admin Notification//
             $to_email2 = 'listadmin@momsclub.org';
 
             Mail::to($to_email2)
-                ->send(new ChapterAddListAdmin($mailData));
+                ->queue(new ChapterAddListAdmin($mailData));
 
             DB::commit();
         } catch (\Exception $e) {
@@ -1287,12 +1287,12 @@ class ChapterController extends Controller
                 //Chapter Notification//
                 $to_email = $to_email3;
                 Mail::to($to_email)
-                    ->send(new ChaptersPrimaryCoordinatorChange($mailData));
+                    ->queue(new ChaptersPrimaryCoordinatorChange($mailData));
 
                 //Primary Coordinator Notification//
                 $to_email = $coremail;
                 Mail::to($to_email)
-                    ->send(new ChaptersPrimaryCoordinatorChangePCNotice($mailData));
+                    ->queue(new ChaptersPrimaryCoordinatorChangePCNotice($mailData));
             }
 
             //Website Notifications//
@@ -1336,12 +1336,12 @@ class ChapterController extends Controller
 
                 if ($request->input('ch_webstatus') == 1) {
                     Mail::to($to_email4)
-                        ->send(new WebsiteAddNoticeAdmin($mailData));
+                        ->queue(new WebsiteAddNoticeAdmin($mailData));
                 }
 
                 if ($request->input('ch_webstatus') == 2) {
                     Mail::to($to_email4)
-                        ->send(new WebsiteReviewNotice($mailData));
+                        ->queue(new WebsiteReviewNotice($mailData));
                 }
             }
 
@@ -1553,7 +1553,7 @@ class ChapterController extends Controller
                     $mailDataSecp['secfnamePre'] != $mailDataSec['secfnameUpd'] || $mailDataSecp['seclnamePre'] != $mailDataSec['seclnameUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
 
                 Mail::to($to_email)
-                    ->send(new ChapersUpdatePrimaryCoor($mailData));
+                    ->queue(new ChapersUpdatePrimaryCoor($mailData));
             }
 
             //List Admin Notification//
@@ -1564,7 +1564,7 @@ class ChapterController extends Controller
                         $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
 
                 Mail::to($to_email2)
-                    ->send(new ChapersUpdateListAdmin($mailData));
+                    ->queue(new ChapersUpdateListAdmin($mailData));
             }
 
             //EIN Coor Notification//
@@ -1573,7 +1573,7 @@ class ChapterController extends Controller
             if ($presInfoUpd[0]->name != $presInfoPre[0]->name) {
 
                 Mail::to($to_email3)
-                    ->send(new ChapersUpdateEINCoor($mailData));
+                    ->queue(new ChapersUpdateEINCoor($mailData));
             }
 
             DB::commit();
@@ -2543,12 +2543,12 @@ class ChapterController extends Controller
 
             if ($request->input('ch_webstatus') == 1) {
                 Mail::to($to_email4)
-                    ->send(new WebsiteAddNoticeAdmin($mailData));
+                    ->queue(new WebsiteAddNoticeAdmin($mailData));
             }
 
             if ($request->input('ch_webstatus') == 2) {
                 Mail::to($to_email4)
-                    ->send(new WebsiteReviewNotice($mailData));
+                    ->queue(new WebsiteReviewNotice($mailData));
             }
         }
 
@@ -2862,7 +2862,7 @@ class ChapterController extends Controller
             //Primary Coordinator Notification//
             $to_email = 'listadmin@momsclub.org';
             Mail::to($to_email)
-                ->send(new ChapterRemoveListAdmin($mailData));
+                ->queue(new ChapterRemoveListAdmin($mailData));
 
             // //Standard Disbanding Letter Send to Board & Coordinators//
             $to_email2 = explode(',', $emailListBorad);
@@ -2871,7 +2871,7 @@ class ChapterController extends Controller
                 $pdfPath = $this->generateAndSaveDisbandLetter($chapterid);   // Generate and save the PDF
                 Mail::to($to_email2)
                     ->cc($cc_email2)
-                    ->send(new ChapterDisbandLetter($mailData, $pdfPath));
+                    ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
             }
 
             // Commit the transaction
@@ -3265,7 +3265,7 @@ class ChapterController extends Controller
             $to_email = 'listadmin@momsclub.org';
 
             Mail::to($to_email)
-                ->send(new ChapterReAddListAdmin($mailData));
+                ->queue(new ChapterReAddListAdmin($mailData));
 
             DB::commit();
         } catch (\Exception $e) {
@@ -3555,7 +3555,7 @@ class ChapterController extends Controller
                 //M2M Donation Thank You Email//
                 Mail::to($to_email)
                     ->cc($cc_email)
-                    ->send(new PaymentsM2MChapterThankYou($mailData));
+                    ->queue(new PaymentsM2MChapterThankYou($mailData));
             }
 
             if ($request->input('ch_sustaining') == 'on') {
@@ -3574,7 +3574,7 @@ class ChapterController extends Controller
                 //Sustaining Chapter Thank You Email//
                 Mail::to($to_email)
                     ->cc($cc_email)
-                    ->send(new PaymentsSustainingChapterThankYou($mailData));
+                    ->queue(new PaymentsSustainingChapterThankYou($mailData));
             }
 
             DB::commit();
@@ -3886,7 +3886,7 @@ class ChapterController extends Controller
 
                 Mail::to($to_emails)
                     ->cc($cc_emails)
-                    ->send(new PaymentsReRegChapterThankYou($mailData));
+                    ->queue(new PaymentsReRegChapterThankYou($mailData));
             }
 
             DB::commit();
@@ -5139,7 +5139,7 @@ class ChapterController extends Controller
 
                 if ($report->isDirty('reviewer_id')) {
                     Mail::to($to_email)
-                        ->send(new EOYReviewrAssigned($mailData));
+                        ->queue(new EOYReviewrAssigned($mailData));
                 }
 
                 $report->save();

@@ -503,7 +503,7 @@ class BoardController extends Controller
 
                 if ($request->input('ch_webstatus') == 2) {
                     Mail::to($to_email4, 'MOMS Club')
-                        ->send(new WebsiteReviewNotice($mailData));
+                        ->queue(new WebsiteReviewNotice($mailData));
                 }
             }
 
@@ -715,8 +715,8 @@ class BoardController extends Controller
                     $mailDatatresp['tresfnamePre'] != $mailDatatres['tresfnameUpd'] || $mailDatatresp['treslnamePre'] != $mailDatatres['treslnameUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] ||
                     $mailDataSecp['secfnamePre'] != $mailDataSec['secfnameUpd'] || $mailDataSecp['seclnamePre'] != $mailDataSec['seclnameUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
 
-                Mail::to($to_email, 'MOMS Club')
-                    ->send(new ChapersUpdatePrimaryCoor($mailData));
+                Mail::to($to_email)
+                    ->queue(new ChapersUpdatePrimaryCoor($mailData));
 
             }
 
@@ -726,8 +726,8 @@ class BoardController extends Controller
             if ($presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email ||
             $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] ||
             $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
-                Mail::to($to_email2, 'MOMS Club')
-                    ->send(new ChapersUpdateListAdmin($mailData));
+                Mail::to($to_email2)
+                    ->queue(new ChapersUpdateListAdmin($mailData));
             }
 
             DB::commit();
@@ -821,8 +821,8 @@ class BoardController extends Controller
             if ($boardDetailsUpd[0]->bor_email != $boardDetails[0]->bor_email || $boardDetailsUpd[0]->bor_fname != $boardDetails[0]->bor_fname ||
             $boardDetailsUpd[0]->bor_lname != $boardDetails[0]->bor_lname) {
 
-                Mail::to($to_email, 'MOMS Club')
-                    ->send(new ChapersUpdatePrimaryCoorMember($mailData));
+                Mail::to($to_email)
+                    ->queue(new ChapersUpdatePrimaryCoorMember($mailData));
             }
 
             //List Admin Notification//
@@ -830,8 +830,8 @@ class BoardController extends Controller
 
             if ($boardDetailsUpd[0]->bor_email != $boardDetails[0]->bor_email) {
 
-                Mail::to($to_email2, 'MOMS Club')
-                    ->send(new ChapersUpdateListAdminMember($mailData));
+                Mail::to($to_email2, )
+                    ->queue(new ChapersUpdateListAdminMember($mailData));
             }
 
             DB::commit();
@@ -1500,10 +1500,10 @@ class BoardController extends Controller
             ];
 
             Mail::to($to_email)
-                ->send(new EOYElectionReportSubmitted($mailData));
+                ->queue(new EOYElectionReportSubmitted($mailData));
 
             Mail::to($to_email2)
-                ->send(new EOYElectionReportThankYou($mailData));
+                ->queue(new EOYElectionReportThankYou($mailData));
 
             DB::commit();
         } catch (\Exception $e) {
@@ -2176,17 +2176,17 @@ class BoardController extends Controller
                 if ($reportReceived == 1) {
                     $pdfPath = $this->generateAndSavePdf($chapter_id);   // Generate and save the PDF
                     Mail::to($to_email2)
-                        ->send(new EOYFinancialReportThankYou($mailData, $coordinator_array, $pdfPath));
+                        ->queue(new EOYFinancialReportThankYou($mailData, $coordinator_array, $pdfPath));
 
                     if ($reviewer_id == null) {
                         DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapter_id]);
                         Mail::to($to_email)
-                            ->send(new EOYFinancialSubmitted($mailData, $coordinator_array, $pdfPath));
+                            ->queue(new EOYFinancialSubmitted($mailData, $coordinator_array, $pdfPath));
                     }
 
                     if ($reviewer_id != null) {
                         Mail::to($to_email3)
-                            ->send(new EOYFinancialSubmitted($mailData, $coordinator_array, $pdfPath));
+                            ->queue(new EOYFinancialSubmitted($mailData, $coordinator_array, $pdfPath));
                     }
                 }
 

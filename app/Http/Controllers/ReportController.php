@@ -1748,7 +1748,7 @@ class ReportController extends Controller
                 foreach ($toBatches as $toBatch) {
                     Mail::to($toBatch)
                         ->cc($cc_email)
-                        ->send(new EOYElectionReportReminder($data));
+                        ->queue(new EOYElectionReportReminder($data));
 
                     // usleep(500000); // Delay for 0.5 seconds between each batch
                 }
@@ -1856,7 +1856,7 @@ class ReportController extends Controller
                 foreach ($toBatches as $toBatch) {
                     Mail::to($toBatch)
                         ->cc($cc_email)
-                        ->send(new EOYFinancialReportReminder($data));
+                        ->queue(new EOYFinancialReportReminder($data));
 
                     // usleep(500000); // Delay for 0.5 seconds between each batch
                 }
@@ -1974,7 +1974,7 @@ class ReportController extends Controller
                 foreach ($toBatches as $toBatch) {
                     Mail::to($toBatch)
                         ->cc($cc_email)
-                        ->send(new EOYLateReportReminder($data));
+                        ->queue(new EOYLateReportReminder($data));
 
                     // usleep(500000); // Delay for 0.5 seconds between each batch
                 }

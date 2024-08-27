@@ -748,7 +748,7 @@ class CoordinatorController extends Controller
                 $to_email = 'jackie.mchenry@momsclub.org';
 
                 Mail::to($to_email, 'MOMS Club')
-                    ->send(new CoordinatorRetireAdmin($mailData));
+                    ->queue(new CoordinatorRetireAdmin($mailData));
 
                 return redirect()->to('/coordinator/retired')->with('success', 'Coordinator retired successfully.');
                 exit;

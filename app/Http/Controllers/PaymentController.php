@@ -257,10 +257,10 @@ class PaymentController extends Controller
 
                     Mail::to([$to_email])
                         ->cc($to_email3)
-                        ->send(new PaymentsReRegChapterThankYou($mailData));
+                        ->queue(new PaymentsReRegChapterThankYou($mailData));
 
                     Mail::to([$to_email5, $to_email6])
-                        ->send(new PaymentsReRegOnline($mailData, $coordinator_array));
+                        ->queue(new PaymentsReRegOnline($mailData, $coordinator_array));
 
                     if ($sustaining > 0.00) {
                         $existingRecord->sustaining_donation = $sustaining;
@@ -268,7 +268,7 @@ class PaymentController extends Controller
 
                         Mail::to([$to_email])
                             ->cc($to_email3)
-                            ->send(new PaymentsSustainingChapterThankYou($mailData));
+                            ->queue(new PaymentsSustainingChapterThankYou($mailData));
                     }
                     $existingRecord->save();
 
@@ -531,7 +531,7 @@ class PaymentController extends Controller
                     $existingRecord = Chapter::where('id', $chapterId)->first();
 
                     Mail::to([$to_email5, $to_email6])
-                        ->send(new PaymentsM2MOnline($mailData, $coordinator_array));
+                        ->queue(new PaymentsM2MOnline($mailData, $coordinator_array));
 
                     if ($donation > 0.00) {
                         $existingRecord->m2m_payment = $donation;
@@ -539,7 +539,7 @@ class PaymentController extends Controller
 
                         Mail::to([$to_email])
                             ->cc($to_email3)
-                            ->send(new PaymentsM2MChapterThankYou($mailData));
+                            ->queue(new PaymentsM2MChapterThankYou($mailData));
                     }
                     $existingRecord->save();
 
