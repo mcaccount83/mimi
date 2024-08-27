@@ -127,7 +127,7 @@
                         </div>
                     </div>
                     <div class="col-sm-12">
-                        <p><strong>Financial Report Note:</strong>  Submitting Board Report HERE will only update the STATUS and will NOT assign a report reviewer.  A report reviewer will need to be aassigned before the review process can begin to avoid receiving an error code.</p>
+                        <p><strong>Financial Report Note:</strong>  Submitting Board Report HERE will only update the STATUS and will NOT assign a report reviewer.  A report reviewer will need to be assigned before the review process can begin to avoid receiving an error code.</p>
                         <p><strong>Report Extension Note:</strong>  Checking this box HERE will exempt chapter from receiving EOY Late Notice if batch notices are sent.</p>
                     </div>
                 </div>

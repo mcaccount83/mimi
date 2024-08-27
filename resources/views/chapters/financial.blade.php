@@ -223,7 +223,7 @@
                             <strong>Total Dues Collected:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalDues, 2) }}</strong></td><br>
 						<hr style="border-bottom: 2px solid #007bff">
 						<!-- start:report_review -->
-						<div class="form-row report_review" <?php if(!$submitted) echo "style=\"display:none\""; ?>>
+						<div class="form-row report_review" >
                             <div class="card-header col-md-12">
                                 <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
                             </div>
@@ -381,9 +381,9 @@
                                 </table>
                             <br>
                             <strong>Total Children's Room Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($financial_report_array['paid_baby_sitters'] + $totalChildrensRoomExpenses, 2) }}</strong><br>
-                            <hr>
+                            <hr style="border-bottom: 2px solid #007bff">
 							<!-- start:report_review -->
-								<div class="form-row report_review" <?php if(!$submitted) echo "style=\"display:none\""; ?>>
+								<div class="form-row report_review" >
 									<div class="card-header col-md-12">
                                         <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
                                     </div>
@@ -493,9 +493,9 @@
                         <br>
                         <strong>Total Service Project Income:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalServiceIncome, 2) }}</strong><br>
                         <strong>Total Service Project Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalServiceProjectExpenses, 2) }}</strong><br>
-					<hr>
+						<hr style="border-bottom: 2px solid #007bff">
 					<!-- start:report_review -->
-						<div class="form-row report_review" <?php if(!$submitted) echo "style=\"display:none\""; ?>>
+						<div class="form-row report_review" >
 							<div class="card-header col-md-12">
                                 <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
                             </div>
@@ -628,9 +628,9 @@
                     <strong>Total Member Benefit Income:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalPartyIncome, 2) }}</strong><br>
                     <strong>Total Member Benefit Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalPartyExpense, 2) }}</strong><br>
                     <strong>Member Benefit/Dues Income Percentage:&nbsp;&nbsp;&nbsp;{{ number_format($partyPercentage * 100, 2) }}%</strong><br>
-					<hr>
+                    <hr style="border-bottom: 2px solid #007bff">
 					<!-- start:report_review -->
-					<div class="form-row report_review" <?php if(!$submitted) echo "style=\"display:none\""; ?>>
+					<div class="form-row report_review" >
 						<div class="card-header col-md-12">
                             <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
                         </div>
@@ -748,9 +748,9 @@
                     <br>
                     <strong>Total Office/Operating Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($financial_report_array['office_printing_costs'] + $financial_report_array['office_postage_costs'] +
                             $financial_report_array['office_membership_pins_cost'] + $totalOfficeExpense, 2) }}</strong><br>
-			<hr>
-			<!-- start:report_review -->
-				<div <?php if(!$submitted) echo "style=\"display:none\""; ?> class="form-row report_review">
+						<hr style="border-bottom: 2px solid #007bff">
+                        <!-- start:report_review -->
+				<div  class="form-row report_review">
 					<div class="card-header col-md-12">
                         <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
                     </div>
@@ -857,9 +857,9 @@
                         <strong>Total Events Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalEventExpense, 2) }}</strong><br>
                         <br>
                         <strong>Chapter Re-Registration:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($financial_report_array['annual_registration_fee'], 2) }}</strong><br>
-                <hr>
+						<hr style="border-bottom: 2px solid #007bff">
                 <!-- start:report_review -->
-                    <div <?php if(!$submitted) echo "style=\"display:none\""; ?> class="form-row report_review">
+                    <div  class="form-row report_review">
                         <div class="card-header col-md-12">
                             <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
                         </div>
@@ -1010,9 +1010,9 @@
                         </tbody>
                     </table>
                     <br>
-					<hr>
+                    <hr style="border-bottom: 2px solid #007bff">
 					<!-- start:report_review -->
-						<div <?php if(!$submitted) echo "style=\"display:none\""; ?> class="form-row report_review">
+						<div  class="form-row report_review">
 							<div class="card-header col-md-12">
                                 <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
                             </div>
@@ -1110,10 +1110,9 @@
                         <br>
                         <strong>Total Other Income:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalOtherIncome, 2) }}</strong><br>
                         <strong>Total Other Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalOtherExpenses, 2) }}</strong><br>
-					<hr>
-
+						<hr style="border-bottom: 2px solid #007bff">
 					<!-- start:report_review -->
-					<div <?php if(!$submitted) echo "style=\"display:none\""; ?> class="form-row report_review">
+					<div  class="form-row report_review">
 						<div class="card-header col-md-12">
                             <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
                         </div>
@@ -1240,10 +1239,9 @@
                         </tbody>
                     </table>
                     <br>
-                <hr>
-
+                    <hr style="border-bottom: 2px solid #007bff">
          <!-- start:report_review -->
-		<div <?php if(!$submitted) echo "style=\"display:none\""; ?> class="form-row report_review">
+		<div  class="form-row report_review">
 			<div class="card-header col-md-12">
                 <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
             </div>
@@ -1289,7 +1287,6 @@
 						<textarea class="form-control" style="width:100%" rows="8" name="Step9_Log" id="Step9_Log" readonly><?php echo $financial_report_array['step_9_notes_log']; ?></textarea>
 					</div>
                                             <div class="col-12"><br></div>
-
 		    <!-- end:report_review -->
                     <div class="col-12 text-center">
                         <button type="submit" id="btn-step-9" class="btn bg-gradient-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
@@ -1404,10 +1401,9 @@
                         Reconciled Bank Statement:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array ['bank_balance_now'] + $totalReconciliation, 2) }}</strong><br>
                         Treasury Balance Now:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($treasuryBalance, 2)}}</strong><br>
 
-				    <hr>
-
+						<hr style="border-bottom: 2px solid #007bff">
 				<!-- start:report_review -->
-				<div <?php if(!$submitted) echo "style=\"display:none\""; ?> class="form-row report_review">
+				<div  class="form-row report_review">
                     <div class="card-header col-md-12">
                         <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
                     </div>
@@ -1717,9 +1713,9 @@
                                 : ( $financial_report_array ['bank_statement_included'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['bank_statement_included_explanation']}}{{ $financial_report_array ['wheres_the_money'] }}</strong></td></tr>
                            </tbody>
                    </table>
-                <hr>
-				 <!-- start:report_review -->
-				<div <?php if(!$submitted) echo "style=\"display:none\""; ?> class="form-row report_review">
+                   <hr style="border-bottom: 2px solid #007bff">
+                   <!-- start:report_review -->
+				<div  class="form-row report_review">
 					<div class="card-header col-md-12">
                         <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
                     </div>
@@ -2243,7 +2239,9 @@
                             </div>
 
                     </div>
-					<div <?php if(!$submitted) echo "style=\"display:none\""; ?> class="award_acc_con">
+                    <hr style="border-bottom: 2px solid #007bff">
+
+					<div  class="award_acc_con">
                             <!-- start:report_review -->
 							<div class="form-row report_review">
 								<div class="card-header col-md-12">
@@ -2547,10 +2545,37 @@
                                         <div class="flex-item2">
                                             Party Percentage:&nbsp;&nbsp;&nbsp;<strong>{{ number_format($partyPercentage * 100, 2) }}%</strong><br>
                                         </div>
-                                        <div class="flex-item2" style="background-color: {{ $financial_report_array['check_party_percentage'] == 0 ? '#FFC7CE' : ($financial_report_array['check_party_percentage'] == 1 ? '#FFEB9C' : '#FFFFFF') }}">
-                                            Party Percentage less than 15%:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_party_percentage']) ? 'Please Review' : ($financial_report_array['check_party_percentage'] == 0 ? 'They are over 20%'
-                                                : ($financial_report_array['check_party_percentage'] == 1 ? 'They are between 15-20%' : ($financial_report_array['check_party_percentage'] == 2 ? 'They are under 15%' : 'Please Review' ))) }}</strong><br>
+                                        <div class="flex-item2">
+                                            Party Percentage less than 15%:&nbsp;&nbsp;&nbsp;
+                                            <strong>
+                                                <span style="
+                                                    @if(is_null($financial_report_array['check_party_percentage']))
+                                                        background-color: #FFFFFF; color: #000000;
+                                                    @elseif($financial_report_array['check_party_percentage'] == 2)
+                                                        background-color: #28a745; color: #FFFFFF;
+                                                    @elseif($financial_report_array['check_party_percentage'] == 1)
+                                                        background-color: #ffc107; color: #000000;
+                                                    @elseif($financial_report_array['check_party_percentage'] == 0)
+                                                        background-color: #dc3545; color: #FFFFFF;
+                                                    @else
+                                                        background-color: #FFFFFF; color: #000000;
+                                                    @endif
+                                                    padding: 2px 5px; border-radius: 3px;">
+                                                    @if(is_null($financial_report_array['check_party_percentage']))
+                                                        Please Review
+                                                    @elseif($financial_report_array['check_party_percentage'] == 0)
+                                                        They are over 20%
+                                                    @elseif($financial_report_array['check_party_percentage'] == 1)
+                                                        They are between 15-20%
+                                                    @elseif($financial_report_array['check_party_percentage'] == 2)
+                                                        They are under 15%
+                                                    @else
+                                                        Please Review
+                                                    @endif
+                                                </span>
+                                            </strong><br>
                                         </div>
+
                                         <div class="flex-item2">
                                             Total income/revenue less than $50,000:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_total_income_less']) ? 'Please Review'
                                                 : ( $financial_report_array ['check_total_income_less'] == 0 ? 'NO' : ($financial_report_array ['check_total_income_less'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
@@ -2595,46 +2620,60 @@
                                     </div>
                                     </div>
                                     <div class="col-md-12"><br></div>
-                                    <div class="col-md-4" style="background-color: {{ $financial_report_array['check_award_1_approved'] == 1 ? '#C6EFCE' : '#FFFFFF' }}">
+                                    @php
+                                        $yesBackground = '#43A047';  // Green background for "YES"
+                                        $noBackground = '#E53935';   // Red background for "NO"
+                                    @endphp
+
+                                    <div class="col-md-4" >
                                         Award #1 Status:&nbsp;&nbsp;&nbsp;
-                                        <strong>{{ is_null($financial_report_array['check_award_1_approved']) ? 'N/A' : ($financial_report_array['check_award_1_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_1_approved'] == 1 ? 'YES' : 'N/A')) }}
+                                        <strong><span style="background-color: {{ is_null($financial_report_array['check_award_1_approved']) ? '#FFFFFF' : ($financial_report_array['check_award_1_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($financial_report_array['check_award_1_approved']) ? '#000000' : '#FFFFFF' }};
+                                            padding: 2px 5px; border-radius: 3px;">
+                                            {{ is_null($financial_report_array['check_award_1_approved']) ? 'N/A' : ($financial_report_array['check_award_1_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_1_approved'] == 1 ? 'YES' : 'N/A')) }}
                                             &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_1_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_1_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
                                                 : ($financial_report_array['award_1_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_1_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_1_nomination_type'] == 4 ? 'Outstanding Spirit'
                                                 : ($financial_report_array['award_1_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_1_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_1_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
-                                        </strong><br>
+                                        </span></strong><br>
                                     </div>
                                     <div class="clearfix"></div>
-                                    <div class="col-md-4" style="background-color: {{ $financial_report_array['check_award_2_approved'] == 1 ? '#C6EFCE' : '#FFFFFF' }}">
+                                    <div class="col-md-4" >
                                         Award #2 Status:&nbsp;&nbsp;&nbsp;
-                                        <strong>{{ is_null($financial_report_array['check_award_2_approved']) ? 'N/A' : ($financial_report_array['check_award_2_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_2_approved'] == 1 ? 'YES' : 'N/A')) }}
+                                        <strong><span style="background-color: {{ is_null($financial_report_array['check_award_2_approved']) ? '#FFFFFF' : ($financial_report_array['check_award_2_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($financial_report_array['check_award_2_approved']) ? '#000000' : '#FFFFFF' }};
+                                            padding: 2px 5px; border-radius: 3px;">                                            {{ is_null($financial_report_array['check_award_2_approved']) ? 'N/A' : ($financial_report_array['check_award_2_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_2_approved'] == 1 ? 'YES' : 'N/A')) }}
                                             &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_2_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_2_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
                                                 : ($financial_report_array['award_2_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_2_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_2_nomination_type'] == 4 ? 'Outstanding Spirit'
                                                 : ($financial_report_array['award_2_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_2_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_2_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
-                                        </strong><br>
+                                        </span></strong><br>
                                     </div>
                                     <div class="clearfix"></div>
-                                    <div class="col-md-4" style="background-color: {{ $financial_report_array['check_award_3_approved'] == 1 ? '#C6EFCE' : '#FFFFFF' }}">                                        Award #3 Status:&nbsp;&nbsp;&nbsp;
-                                        <strong>{{ is_null($financial_report_array['check_award_3_approved']) ? 'N/A' : ($financial_report_array['check_award_3_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_3_approved'] == 1 ? 'YES' : 'N/A')) }}
+                                    <div class="col-md-4" >
+                                        Award #3 Status:&nbsp;&nbsp;&nbsp;
+                                        <strong><span style="background-color: {{ is_null($financial_report_array['check_award_3_approved']) ? '#FFFFFF' : ($financial_report_array['check_award_3_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($financial_report_array['check_award_3_approved']) ? '#000000' : '#FFFFFF' }};
+                                            padding: 2px 5px; border-radius: 3px;">                                            {{ is_null($financial_report_array['check_award_3_approved']) ? 'N/A' : ($financial_report_array['check_award_3_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_3_approved'] == 1 ? 'YES' : 'N/A')) }}
                                             &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_3_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_3_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
                                                 : ($financial_report_array['award_3_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_3_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_3_nomination_type'] == 4 ? 'Outstanding Spirit'
                                                 : ($financial_report_array['award_3_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_3_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_3_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
-                                        </strong><br>
+                                        </span></strong><br>
                                     </div>
                                     <div class="clearfix"></div>
-                                    <div class="col-md-4" style="background-color: {{ $financial_report_array['check_award_4_approved'] == 1 ? '#C6EFCE' : '#FFFFFF' }}">                                        Award #4 Status:&nbsp;&nbsp;&nbsp;
-                                        <strong>{{ is_null($financial_report_array['check_award_4_approved']) ? 'N/A' : ($financial_report_array['check_award_4_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_4_approved'] == 1 ? 'YES' : 'N/A')) }}
+                                    <div class="col-md-4">
+                                        Award #4 Status:&nbsp;&nbsp;&nbsp;
+                                        <strong><span style="background-color: {{ is_null($financial_report_array['check_award_4_approved']) ? '#FFFFFF' : ($financial_report_array['check_award_4_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($financial_report_array['check_award_4_approved']) ? '#000000' : '#FFFFFF' }};
+                                            padding: 2px 5px; border-radius: 3px;">                                            {{ is_null($financial_report_array['check_award_4_approved']) ? 'N/A' : ($financial_report_array['check_award_4_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_4_approved'] == 1 ? 'YES' : 'N/A')) }}
                                             &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_4_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_4_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
                                                 : ($financial_report_array['award_4_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_4_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_4_nomination_type'] == 4 ? 'Outstanding Spirit'
                                                 : ($financial_report_array['award_4_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_4_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_4_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
-                                        </strong><br>
+                                        </span></strong><br>
                                     </div>
                                     <div class="clearfix"></div>
-                                    <div class="col-md-4" style="background-color: {{ $financial_report_array['check_award_5_approved'] == 1 ? '#C6EFCE' : '#FFFFFF' }}">                                        Award #5 Status:&nbsp;&nbsp;&nbsp;
-                                        <strong>{{ is_null($financial_report_array['check_award_5_approved']) ? 'N/A' : ($financial_report_array['check_award_5_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_5_approved'] == 1 ? 'YES' : 'N/A')) }}
+                                    <div class="col-md-4">
+                                        Award #5 Status:&nbsp;&nbsp;&nbsp;
+                                        <strong><span style="background-color: {{ is_null($financial_report_array['check_award_5_approved']) ? '#FFFFFF' : ($financial_report_array['check_award_5_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($financial_report_array['check_award_5_approved']) ? '#000000' : '#FFFFFF' }};
+                                            padding: 2px 5px; border-radius: 3px;">                                            {{ is_null($financial_report_array['check_award_5_approved']) ? 'N/A' : ($financial_report_array['check_award_5_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_5_approved'] == 1 ? 'YES' : 'N/A')) }}
                                             &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_5_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_5_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
                                                 : ($financial_report_array['award_5_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_5_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_5_nomination_type'] == 4 ? 'Outstanding Spirit'
                                                 : ($financial_report_array['award_5_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_5_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_5_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
-                                        </strong><br>
+                                        </span></strong><br>
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -2946,8 +2985,12 @@
     /* Disable fields and buttons  */
     $(document).ready(function () {
         var submitted = {!! json_encode($chapterDetails[0]->financial_report_complete) !!};
+        var received =  {!! json_encode($chapterDetails[0]->financial_report_received) !!};
 
-        if (submitted == '1') {
+        if (received != '1') {
+            $('button').not('#btn-back, #btn-download-pdf, #review-clear').prop('disabled', true);
+            $('input, select, textarea').not('#logout-form input, #logout-form select, #logout-form textarea').prop('disabled', true);
+        } else if (submitted == '1') {
             $('button').not('#btn-back, #btn-download-pdf, #review-clear').prop('disabled', true);
             $('input, select, textarea').not('#logout-form input, #logout-form select, #logout-form textarea').prop('disabled', true);
         } else {
