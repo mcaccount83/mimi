@@ -1,6 +1,6 @@
 @component('mail::message')
 <center>
-    <img src="images/LOGO-W-MOMS-CLUB-old.jpg" alt="MC" style="width: 125px;">
+    <img src="https://momsclub.org/mimi/images/LOGO-W-MOMS-CLUB-old.jpg" alt="MC" style="width: 125px;">
 </center>
 <br>
 <h1><center>{{ $mailData['conf_name'] }} Conference @if($mailData['reg_name'] != 'None')| {{ $mailData['reg_name'] }} Region @endif</center></h1>
