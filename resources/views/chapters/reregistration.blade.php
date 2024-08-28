@@ -136,7 +136,7 @@
                 </div>
                 <div class="card-body text-center">
                 <?php if(Session::get('positionid') ==6 || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>
-                    <p>**Known issue - will not send more than 10 messages.**</p>
+                    {{-- <p>**Known issue - will not send more than 10 messages.**</p> --}}
                 <a title="Re-registration reminders will be sent to all unpaid chapters in your conference with renewal dates this month." href="{{ route('chapter.reminder') }}"><button class="btn bg-gradient-primary"   <?php if($checkBoxStatus) echo "disabled";?>><i class="fas fa-envelope" ></i>&nbsp; Send Current Month Reminders</button></a>
                 <?php }?>
                 <?php if(Session::get('positionid') ==6 || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>

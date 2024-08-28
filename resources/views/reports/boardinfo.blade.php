@@ -131,7 +131,7 @@
                 </div>
                 <div class="card-body text-center">
 				<?php if (Session::get('positionid') >=5 && Session::get('positionid') <=7){ ?>
-                    <p>**Known issue - may not send more than 10 messages before returning 500 error.**</p>
+                    {{-- <p>**Known issue - may not send more than 10 messages before returning 500 error.**</p> --}}
                     <a href="{{ route('report.boardinforeminder') }}" onclick="return confirmSendReminder();">><button class="btn bg-gradient-primary"><i class="fas fa-envelope" ></i>&nbsp;&nbsp;&nbsp;Send Board Election Reminders</button></a>
 				    <button type="button" id="board-active" class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-play" ></i>&nbsp;&nbsp;&nbsp;Make Received Boards Active</button>
 				    <a href="{{ route('export.boardelection')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export UN-Activated Board List</button></a>

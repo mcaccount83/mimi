@@ -158,7 +158,7 @@
                     </div>
                 </div>
                 <div class="card-body text-center">
-                <p>**Known issue - may not send more than 10 messages before returning 500 error.**</p>
+                {{-- <p>**Known issue - may not send more than 10 messages before returning 500 error.**</p> --}}
                 <a href="{{ route('report.eoylatereminder') }}" onclick="return confirmSendReminder();"> <button class="btn bg-gradient-primary"><i class="fas fa-envelope"></i>&nbsp;&nbsp;&nbsp;Send EOY Late Notices </button> </a>
                 <a href="{{ route('export.eoystatus')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export EOY Status List</button></a>
            </div>

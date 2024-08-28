@@ -18,25 +18,6 @@
     </div><!-- /.container-fluid -->
   </section>
 
-    @if ($message = Session::get('success'))
-      <div class="alert alert-success">
-		<button type="button" class="close" data-dismiss="alert">×</button>
-         <p>{{ $message }}</p>
-      </div>
-    @endif
-	 @if ($message = Session::get('fail'))
-      <div class="alert alert-danger">
-		<button type="button" class="close" data-dismiss="alert">×</button>
-         <p>{{ $message }}</p>
-      </div>
-    @endif
-    @if ($message = Session::get('info'))
-    <div class="alert alert-warning">
-        <button type="button" class="close" data-dismiss="alert">×</button>
-        <p>{{ $message }}</p>
-    </div>
-@endif
-
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
@@ -77,9 +58,7 @@
                     <label class="custom-control-label" for="showPrimary">Only Show Outgoing Board Members with no User Account</label>
                 </div>
             </div>
-            <div class="card-body text-center">
-                    <button type="button" id="outgoing-active" class="btn bg-gradient-primary" onclick="return activateOutgoing()"><i class="fas fa-play " ></i>&nbsp;&nbsp;&nbsp;Update Outgoing Board Members</button>
-            </div>
+
         </div>
           <!-- /.box -->
         </div>
@@ -102,19 +81,6 @@ var base_url = '{{ url("/adminreports/outgoingboard") }}';
     }
 }
 
-function activateOutgoing(){
-        $.ajax({
-        url: '{{ route('report.outgoingactivate') }}',
-        type: 'POST',
-        data: { _token: '{{csrf_token()}}' },
-        success: function(response) {
-                window.location.href = "{{ route('report.outgoingboard') }}";
-
-        },
-        error: function (jqXHR, exception) {
-        }
-    });
-}
 
 </script>
 @endsection

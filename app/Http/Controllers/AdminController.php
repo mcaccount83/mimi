@@ -608,4 +608,148 @@ class AdminController extends Controller
             return redirect()->to('/admin/reregdate')->with('error', 'Failed to update Re-Reg Date.');
         }
     }
+
+    /**
+     * mail in queue
+     */
+    public function showMailQueue(): View
+    {
+        $Queue = DB::table('jobs')
+            ->get();
+
+        $data = ['Queue' => $Queue];
+
+        return view('admin.mailqueue')->with($data);
+    }
+
+      /**
+     * List of Duplicate Users
+     */
+    public function showDuplicate(): View
+    {
+
+        $userData = DB::table('users')
+            ->where('is_active', '=', '1')
+            ->groupBy('email')
+            ->having(DB::raw('count(email)'), '>', 1)
+            ->pluck('email');
+
+        $userList = DB::table('users')
+            ->where('is_active', '=', '1')
+            ->whereIn('email', $userData)
+            ->get();
+
+        $data = ['userList' => $userList];
+
+        return view('admin.duplicateuser')->with($data);
+    }
+
+    /**
+     *List of duplicate Board IDs
+     */
+    public function showDuplicateId(): View
+    {
+
+        $userData = DB::table('board_details')
+            ->where('is_active', '=', '1')
+            ->groupBy('board_id')
+            ->having(DB::raw('count(board_id)'), '>', 1)
+            ->pluck('board_id');
+
+        $userList = DB::table('board_details')
+            ->where('is_active', '=', '1')
+            ->whereIn('board_id', $userData)
+            ->orderBy('board_id')
+            ->get();
+
+        $data = ['userList' => $userList];
+
+        return view('admin.duplicateboardid')->with($data);
+    }
+
+    /**
+     * VList of users on multiple boards
+     */
+    public function showMultiple(): View
+    {
+
+        $userData = DB::table('board_details')
+            ->where('is_active', '=', '1')
+            ->groupBy('email')
+            ->having(DB::raw('count(email)'), '>', 1)
+            ->pluck('email');
+
+        $userList = DB::table('board_details')
+            ->where('is_active', '=', '1')
+            ->whereIn('email', $userData)
+            ->get();
+
+        $data = ['userList' => $userList];
+
+        return view('admin.multipleboard')->with($data);
+    }
+
+    /**
+     * boards with no president
+     */
+    public function showNoPresident(): View
+    {
+        $PresId = DB::table('board_details')
+            ->where('is_active', '=', '1')
+            ->where('board_position_id', '=', '1')
+            ->pluck('chapter_id');
+
+        $ChapterPres = DB::table('chapters')
+            ->where('is_active', '=', '1')
+            ->whereNotIn('id', $PresId)
+            ->get();
+
+        $data = ['ChapterPres' => $ChapterPres];
+
+        return view('admin.nopresident')->with($data);
+    }
+
+    /**
+     * Outgoing Board Members
+     */
+    public function showOutgoingBoard(): View
+    {
+        $OutgoingBoard = DB::table('outgoing_board_member')
+            ->leftJoin('users', 'outgoing_board_member.email', '=', 'users.email')
+            ->select(
+                'outgoing_board_member.chapter_id as chapter_id',
+                'outgoing_board_member.first_name as first_name',
+                'outgoing_board_member.last_name as last_name',
+                'outgoing_board_member.email as email',
+                'users.user_type as user_type'  // This column will be null if there's no match
+            )
+            ->orderBy('outgoing_board_member.chapter_id')
+            ->get();
+
+        if (isset($_GET['check'])) {
+            if ($_GET['check'] == 'yes') {
+                $checkBoxStatus = 'checked';
+                $OutgoingBoard = DB::table('outgoing_board_member')
+                    ->leftJoin('users', 'outgoing_board_member.email', '=', 'users.email')
+                    ->whereNull('users.user_type')  // Only select entries where user_type is null
+                    ->select(
+                        'outgoing_board_member.chapter_id as chapter_id',
+                        'outgoing_board_member.first_name as first_name',
+                        'outgoing_board_member.last_name as last_name',
+                        'outgoing_board_member.email as email',
+                        'users.user_type as user_type'  // This column will be null for unmatched entries
+                    )
+                    ->orderBy('outgoing_board_member.chapter_id')
+                    ->get();
+            }
+        } else {
+            $checkBoxStatus = '';
+        }
+
+        $data = ['OutgoingBoard' => $OutgoingBoard, 'checkBoxStatus' => $checkBoxStatus];
+
+        return view('admin.outgoingboard')->with($data);
+    }
+
+
 }

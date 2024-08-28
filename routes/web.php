@@ -84,6 +84,12 @@ Route::post('/admin/updateresources/{id}', [AdminController::class, 'updateResou
 Route::get('/admin/toolkit', [AdminController::class, 'showToolkit'])->name('admin.toolkit');
 Route::post('/admin/addtoolkit', [AdminController::class, 'addToolkit'])->name('admin.addtoolkit');
 Route::post('/admin/updatetoolkit/{id}', [AdminController::class, 'updateToolkit'])->name('admin.updatetoolkit');
+Route::get('/adminreports/mailqueue', [AdminController::class, 'showMailQueue'])->name('admin.mailqueue');
+Route::get('/adminreports/duplicateuser', [AdminController::class, 'showDuplicate'])->name('admin.duplicateuser');
+Route::get('/adminreports/duplicateboardid', [AdminController::class, 'showDuplicateId'])->name('admin.duplicateboardid');
+Route::get('/adminreports/multipleboard', [AdminController::class, 'showMultiple'])->name('admin.multipleboard');
+Route::get('/adminreports/nopresident', [AdminController::class, 'showNoPresident'])->name('admin.nopresident');
+Route::get('/adminreports/outgoingboard', [AdminController::class, 'showOutgoingBoard'])->name('admin.outgoingboard');
 
 /**
  * Routes for Payment Controller (Payment Processing)
@@ -248,12 +254,6 @@ Route::get('/yearreports/boundaryissue', [ReportController::class, 'showReportTo
 Route::get('/yearreports/chapterawards', [ReportController::class, 'showChapterAwards'])->name('report.chapterawards');
 Route::get('/yearreports/eoystatus', [ReportController::class, 'showEOYStatus'])->name('report.eoystatus');
 Route::get('/yearreports/addawards', [ReportController::class, 'showAddAwards'])->name('report.addawards');
-Route::get('/adminreports/duplicateuser', [ReportController::class, 'showDuplicate'])->name('report.duplicateuser');
-Route::get('/adminreports/duplicateboardid', [ReportController::class, 'showDuplicateId'])->name('report.duplicateboardid');
-Route::get('/adminreports/multipleboard', [ReportController::class, 'showMultiple'])->name('report.multipleboard');
-Route::get('/adminreports/nopresident', [ReportController::class, 'showNoPresident'])->name('report.nopresident');
-Route::get('/adminreports/outgoingboard', [ReportController::class, 'showOutgoingBoard'])->name('report.outgoingboard');
-Route::post('/adminreports/outgoingactivate', [ReportController::class, 'storeActivateOutgoingBoard'])->name('report.outgoingactivate');
 
 /**
  * Routes for PDF Controller

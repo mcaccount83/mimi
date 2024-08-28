@@ -531,11 +531,13 @@
                         <li class="nav-item {{ Request::is('admin/eoy') ? 'menu-open' : '' }} {{ Request::is('admin/reregdate') ? 'menu-open' : '' }}
                                             {{ Request::is('admin/reregdate/*') ? 'menu-open' : '' }} {{ Request::is('adminreports/duplicateuser') ? 'menu-open' : '' }}
                                             {{ Request::is('adminreports/duplicateboardid') ? 'menu-open' : '' }} {{ Request::is('adminreports/multipleboard') ? 'menu-open' : '' }}
-                                            {{ Request::is('adminreports/nopresident') ? 'menu-open' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'menu-open' : '' }}">
+                                            {{ Request::is('adminreports/nopresident') ? 'menu-open' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'menu-open' : '' }}
+                                             {{ Request::is('adminreports/mailqueue') ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link {{ Request::is('admin/eoy') ? 'active' : '' }} {{ Request::is('admin/reregdate') ? 'active' : '' }}
                                                         {{ Request::is('admin/reregdate/*') ? 'active' : '' }} {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }}
                                                         {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }} {{ Request::is('adminreports/multipleboard') ? 'active' : '' }}
-                                                        {{ Request::is('adminreports/nopresident') ? 'active' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
+                                                        {{ Request::is('adminreports/nopresident') ? 'active' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}
+                                                         {{ Request::is('adminreports/mailqueue') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-cogs"></i>
                                 <p>Admin Items<i class="fas fa-angle-left right"></i></p>
                             </a>
@@ -547,38 +549,38 @@
                                 </a>
                             </li>
                                 <li class="nav-item">
-                                <a href="{{ route('admin.reregdate') }}" class="nav-link {{ Request::is('admin/reregdate') ? 'active' : '' }} {{ Request::is('aadmin/reregdate/*') ? 'active' : '' }}">
+                                <a href="{{ route('admin.reregdate') }}" class="nav-link {{ Request::is('admin/reregdate') ? 'active' : '' }} {{ Request::is('admin/reregdate/*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-calendar-alt"></i>
                                     <p>Re-Reg Renewal Dates</p>
                                 </a>
                             </li>
                                 <li class="nav-item">
-                                <a href="{{ route('report.duplicateuser') }}" class="nav-link {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }}">
+                                <a href="{{ route('admin.duplicateuser') }}" class="nav-link {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-user-plus"></i>
                                     <p>Duplicate Users</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('report.duplicateboardid') }}" class="nav-link {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }}">
+                                <a href="{{ route('admin.duplicateboardid') }}" class="nav-link {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-exchange-alt"></i>
                                     <p>Duplicate Board IDs</p>
                                 </a>
                                 </li>
                                 <li class="nav-item">
-                                <a href="{{ route('report.multipleboard') }}" class="nav-link {{ Request::is('adminreports/multipleboard') ? 'active' : '' }}">
+                                <a href="{{ route('admin.multipleboard') }}" class="nav-link {{ Request::is('adminreports/multipleboard') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-random"></i>
                                     <p>Multiple Boards</p>
                                 </a>
                                 </li>
                                 <li class="nav-item">
-                                <a href="{{ route('report.nopresident') }}" class="nav-link {{ Request::is('adminreports/nopresident') ? 'active' : '' }}">
+                                <a href="{{ route('admin.nopresident') }}" class="nav-link {{ Request::is('adminreports/nopresident') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-minus-circle"></i>
                                     <p>No President</p>
                                 </a>
                                 </li>
                                 <li class="nav-item">
-                                <a href="{{ route('report.outgoingboard') }}" class="nav-link {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-share"></i>
+                                    <a href="{{ route('admin.outgoingboard') }}" class="nav-link {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}">
+                                        <i class="nav-icon fas fa-share"></i>
                                     <p>Outgoing Board</p>
                                 </a>
                             </li>
@@ -588,6 +590,12 @@
                                     <p>Error Logs</p>
                                 </a>
                                 </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.mailqueue') }}" class="nav-link {{ Request::is('adminreports/mailqueue') ? 'active' : '' }}">
+                                        <i class="nav-icon fas fa-envelope"></i>
+                                    <p>Mail Queue</p>
+                                </a>
+                            </li>
                                 <li class="nav-item">
                                 <a href="{{ url(config('sentemails.routepath')) }}" target="_blank" class="nav-link {{ Request::is('admin/sentemails') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-share-square"></i>
