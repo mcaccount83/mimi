@@ -2987,8 +2987,8 @@
 
     /* Disable fields and buttons  */
     $(document).ready(function () {
-        var submitted = {!! json_encode($chapterDetails[0]->financial_report_complete) !!};
-        var received =  {!! json_encode($chapterDetails[0]->financial_report_received) !!};
+        var submitted = @json($chapterDetails[0]->financial_report_complete);
+        var received =  @json($chapterDetails[0]->financial_report_received);
 
         if (received != '1') {
             $('button').not('#btn-back').prop('disabled', true);
