@@ -585,12 +585,6 @@
                                 </a>
                             </li>
                                 <li class="nav-item">
-                                <a href="{{ route('logs') }}" target="_blank" class="nav-link {{ Request::is('logs') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-exclamation-triangle"></i>
-                                    <p>Error Logs</p>
-                                </a>
-                                </li>
-                                <li class="nav-item">
                                     <a href="{{ route('admin.mailqueue') }}" class="nav-link {{ Request::is('adminreports/mailqueue') ? 'active' : '' }}">
                                         <i class="nav-icon fas fa-envelope"></i>
                                     <p>Mail Queue</p>
@@ -601,6 +595,12 @@
                                     <i class="nav-icon fas fa-share-square"></i>
                                     <p>Sent Email</p>
                                 </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('logs') }}" target="_blank" class="nav-link {{ Request::is('logs') ? 'active' : '' }}">
+                                        <i class="nav-icon fas fa-exclamation-triangle"></i>
+                                        <p>Error Logs</p>
+                                    </a>
                                 </li>
                             </ul>
                         </li>
