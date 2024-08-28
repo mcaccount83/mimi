@@ -3667,7 +3667,7 @@ class ChapterController extends Controller
         }
 
         // If checkbox is not checked, apply the additional year and month filtering
-        if (!isset($_GET['check']) || $_GET['check'] !== 'yes') {
+        if (! isset($_GET['check']) || $_GET['check'] !== 'yes') {
             $baseQuery->where(function ($query) use ($currentYear, $currentMonth) {
                 $query->where('ch.next_renewal_year', '<', $currentYear)
                     ->orWhere(function ($query) use ($currentYear, $currentMonth) {

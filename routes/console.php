@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
 
 // Run the queue worker every minute

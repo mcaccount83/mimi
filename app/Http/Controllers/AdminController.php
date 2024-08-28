@@ -622,7 +622,7 @@ class AdminController extends Controller
         return view('admin.mailqueue')->with($data);
     }
 
-      /**
+    /**
      * List of Duplicate Users
      */
     public function showDuplicate(): View
@@ -750,6 +750,4 @@ class AdminController extends Controller
 
         return view('admin.outgoingboard')->with($data);
     }
-
-
 }

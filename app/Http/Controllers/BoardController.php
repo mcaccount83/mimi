@@ -830,7 +830,7 @@ class BoardController extends Controller
 
             if ($boardDetailsUpd[0]->bor_email != $boardDetails[0]->bor_email) {
 
-                Mail::to($to_email2, )
+                Mail::to($to_email2)
                     ->queue(new ChapersUpdateListAdminMember($mailData));
             }
 
