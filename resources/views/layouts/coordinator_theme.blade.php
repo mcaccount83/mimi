@@ -230,7 +230,7 @@
                             </a>
                         </li>
                         @endif
-                        @if ($adminReportCondition || $listAdminCondition)
+                        @if ($regionalCoordinatorCondition || $inquiriesCondition)
                         <li class="nav-item">
                             <a href="{{ route('coordinator.list') }}" class="nav-link {{ Request::is('coordinatorlist') ? 'active' : '' }} {{ Request::is('coordinator/create') ? 'active' : '' }}
                                 {{ Request::is('coordinator/edit/*') ? 'active' : '' }} {{ Request::is('coordinator/role/*') ? 'active' : '' }}">
