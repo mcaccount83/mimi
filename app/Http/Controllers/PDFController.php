@@ -158,6 +158,8 @@ class PDFController extends Controller
         $cc_lname = $coordinatorData['cc_lname'];
         $cc_pos = $coordinatorData['cc_pos'];
 
+        $sanitizedChapterName = str_replace(['/', '\\'], '-', $chapterDetails[0]->chapter_name);
+
         $pdfData = [
             'chapter_name' => $chapterDetails[0]->chapter_name,
             'state' => $chapterDetails[0]->state,
@@ -169,11 +171,12 @@ class PDFController extends Controller
             'cc_fname' => $cc_fname,
             'cc_lname' => $cc_lname,
             'cc_pos' => $cc_pos,
+            'ch_name'=> $sanitizedChapterName,
         ];
 
         $pdf = Pdf::loadView('pdf.chapteringoodstanding', compact('pdfData'));
 
-        $filename = date('Y') - 1 .'-'.date('Y').'_'.$pdfData['state'].'_'.$pdfData['chapter_name'].'_ChapterInGoodStanding.pdf';
+        $filename = date('Y') - 1 .'-'.date('Y').'_'.$pdfData['state'].'_'.$pdfData['ch_name'].'_ChapterInGoodStanding.pdf';
 
         return $pdf->stream($filename, ['Attachment' => 0]); // Stream the PDF
 

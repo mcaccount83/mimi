@@ -17,7 +17,6 @@
       </div>
     </div><!-- /.container-fluid -->
   </section>
-
     @if ($message = Session::get('success'))
 		<div class="alert alert-success">
 			<button type="button" class="close" data-dismiss="alert">×</button>
@@ -30,7 +29,6 @@
          <p>{{ $message }}</p>
 		</div>
     @endif
-
 
     <!-- Main content -->
     <form method="POST" action='{{ route("coordinator.updatedashboard",$coordinatorDetails[0]->coordinator_id) }}' id="update-dashboard">
@@ -49,21 +47,25 @@
                 <div class="card-body">
 			<div class="todolist">
 				@php
-                  use Illuminate\Support\Carbon;
-                  $currentMonth = Carbon::now()->month;
+                    use Illuminate\Support\Carbon;
+                    $currentMonthName = Carbon::now()->format('F'); // Full month name (e.g., "August")
+                    $currentMonth = Carbon::now()->month; // Numeric month (e.g., 8)
                 @endphp
-				<div class="row">
-                      <div class="col-sm-6 col-xs-12">
-                        <div class="form-inline">
-                          <label for="todo_month" style="vertical-align: bottom;">Month:</label><span class="field-required" style="vertical-align: bottom;">*</span>
-                          <input type="text" id="todo_month" name="todo_month" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->todo_month }}" maxlength="50" required>
-                        </div>
+
+
+
+                      <div class="col-12">
+                          <label >Current Month:</label>&nbsp;&nbsp;{{ $currentMonthName }}
                       </div>
-                      <div class="col-sm-6 col-xs-12">
-                        <div class="form-group"><br><br>
-                        </div>
-                      </div>
+                      <div class="col-12">
+                        <label >Checklist Last Updated:</label>&nbsp;&nbsp;{{ $coordinatorDetails[0]->dashboard_updated }}
                     </div>
+
+
+                      <div class="col-12">
+                        <div class="col-12">
+
+
                     <label><input type="checkbox" name="todo_check_chapters" id="todo_check_chapters" {{ $coordinatorDetails[0]->todo_check_chapters ? 'checked' : '' }}>&nbsp;&nbsp;Check in with your Chapters</label><br/>
                     @if (($currentMonth == 2) || ($currentMonth == 3))
                       <label><input type="checkbox" name="todo_election_faq" id="todo_election_faq" {{ $coordinatorDetails[0]->todo_election_faq ? 'checked' : '' }}>&nbsp;&nbsp;Send Election FAQ to Chapters</label><br/>
@@ -90,10 +92,9 @@
                 <?php if ($positionid == 7 || $secpositionid == 13) {?>
                     <label><input type="checkbox" name="todo_export_int_reports" id="todo_export_int_reports" {{ $coordinatorDetails[0]->todo_export_int_reports ? 'checked' : '' }}>&nbsp;&nbsp;Download International Reports</label><br/>
                 <?php } ?>
-                    <div class="col-sm-12 col-xs-12">
-                        <div class="form-inline"> <br>
-                        </div>
-                      </div>
+                </div>
+            </div>
+
                     <a href="#" onclick="uncheckAll();"><i class="fa fa-times"></i> Uncheck All</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="#" id="save-btn"><i class="fa fa-save"></i> Save</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <?php if ($positionid == 6 || $secpositionid == 25) {?>
@@ -148,21 +149,17 @@
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">
-				    <p style="font-size:16px"><a href="https://momsclub.org/resources/" target="_blank">Chapter Resources</a>:&nbsp;&nbsp;daytime support</p>
-					<p style="font-size:16px"><a href="https://momsclub.org/coordinator-toolkit/" target="_blank">Cordinator Toolkit</a>:&nbsp;&nbsp;Toolkit2021</p>
-					<p style="font-size:16px"><a href="https://momsclub.org/elearning/" target="_blank">eLearning Library</a>:&nbsp;&nbsp;Toolkit2021</p>
-					<p style="font-size:16px"><a href="https://groups.google.com/u/1/a/momsclub.org/g/2022-23boardlist" target="_blank">Board List Group</a></p>
-					<p style="font-size:16px"><a href="https://www.facebook.com/InternationalMOMSClub" target="_blank">Facebook Page</a></p>
-		</div>
-		</div>
+				    <p><ul><li><a href="{{ url('/admin/resources') }}">Chapter Resources</a></li>
+                        <li><a href="{{ url('/admin/toolkit') }}" >Cordinator Toolkit</a></li>
+                        <li><a href="https://momsclub.org/elearning/" target="_blank">eLearning Library</a><small>&nbsp;(Toolkit2021)</small></li>
+                        <li><a href="https://groups.google.com/u/1/a/momsclub.org/g/2024-25boardlist" target="_blank">Board List Group</a></li>
+                        <li><a href="https://www.facebook.com/InternationalMOMSClub" target="_blank">Facebook Page</a></li>
+                    </ul></p>
+		    </div>
+		    </div>
 		</div>
 
-
-		<!--
-		<div class="box-body text-center">
-			<button type="submit" class="btn btn-themeBlue margin">Save</button>
-		</div> -->
-        </div>
+    </div>
     </section>
 </form>
 
@@ -176,7 +173,6 @@ function uncheckAll() {
             checkboxes[i].checked = false;
         }
     }
-
 
 document.getElementById("save-btn").addEventListener("click", function() {
   // Get the value of the todo_month input
@@ -192,9 +188,6 @@ document.getElementById("save-btn").addEventListener("click", function() {
   // Submit the form if the input is valid
   document.getElementById("update-dashboard").submit();
 });
-
-
-
 
 </script>
 @endsection

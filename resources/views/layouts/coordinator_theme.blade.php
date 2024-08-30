@@ -96,6 +96,7 @@
     <div class="wrapper">
 
         @php
+        $ITCondition = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
         $coordinatorCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
         $founderCondition = $positionid == 7;  //*Founder
         $conferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 7);  //*CC-Founder
@@ -189,7 +190,7 @@
                             </a>
                         </li>
                         @endif
-                        @if ($regionalCoordinatorCondition || $inquiriesCondition)
+                        @if ($regionalCoordinatorCondition)
                         <li class="nav-item">
                             <a href="{{ route('chapter.registration') }}" class="nav-link {{ Request::is('chapter/re-registration') ? 'active' : '' }} {{ Request::is('chapter/re-registration/payment/*') ? 'active' : '' }}
                                     {{ Request::is('chapter/re-registration/notes/*') ? 'active' : '' }}">
@@ -198,7 +199,7 @@
                             </a>
                         </li>
                         @endif
-                        @if ($regionalCoordinatorCondition || $inquiriesCondition)
+                        @if ($inquiriesCondition || $regionalCoordinatorCondition)
                         <li class="nav-item">
                             <a href="{{ route('chapter.inquiries') }}" class="nav-link {{ Request::is('chapter/inquiries') ? 'active' : '' }} {{ Request::is('chapter/inquiriesview/*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-map-marker-alt"></i>
@@ -214,7 +215,7 @@
                             </a>
                         </li>
                         @endif
-                        @if ($regionalCoordinatorCondition || $webReviewCondition)
+                        @if ($webReviewCondition || $regionalCoordinatorCondition)
                         <li class="nav-item">
                             <a href="{{ route('chapter.website') }}" class="nav-link {{ Request::is('chapter/website') ? 'active' : '' }} {{ Request::is('chapter/website/edit/*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-laptop"></i>
@@ -222,15 +223,15 @@
                             </a>
                         </li>
                         @endif
-                        @if ($adminReportCondition || $listAdminCondition)
+                        @if ($listAdminCondition || $ITCondition)
                         <li class="nav-item">
                             <a href="{{ route('report.boardlist') }}" class="nav-link {{ Request::is('reports/boardlist') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-bars"></i>
+                                <i class="nav-icon fas fa-paste"></i>
                                 <p>BoardList</p>
                             </a>
                         </li>
                         @endif
-                        @if ($regionalCoordinatorCondition || $inquiriesCondition)
+                        @if ($regionalCoordinatorCondition)
                         <li class="nav-item">
                             <a href="{{ route('coordinator.list') }}" class="nav-link {{ Request::is('coordinatorlist') ? 'active' : '' }} {{ Request::is('coordinator/create') ? 'active' : '' }}
                                 {{ Request::is('coordinator/edit/*') ? 'active' : '' }} {{ Request::is('coordinator/role/*') ? 'active' : '' }}">
@@ -239,7 +240,7 @@
                             </a>
                         </li>
                         @endif
-                        @if ($regionalCoordinatorCondition || $inquiriesCondition)
+                        @if ($regionalCoordinatorCondition)
                         <li class="nav-item">
                             <a href="{{ route('coordinator.retired') }}" class="nav-link {{ Request::is('coordinator/retired') ? 'active' : '' }} {{ Request::is('coordinator/retired/view/*') ? 'active' : '' }}">
                                 <span class="nav-icon fa-layers fa-fw">
@@ -250,7 +251,7 @@
                             </a>
                         </li>
                         @endif
-                        @if ($einCondition || $inquiriesCondition)
+                        @if ($einCondition)
                         <li class="nav-item">
                             <a href="{{ route('chapter.inter') }}" class="nav-link <?php if (($positionid == 12)){ ?> {{ Request::is('home') ? 'active' : '' }}<?php }?>  {{ Request::is('chapter/international') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-list"></i>
@@ -360,7 +361,7 @@
                                                         {{ Request::is('reports/chaptercoordinators') ? 'active' : '' }} {{ Request::is('reports/m2mdonation') ? 'active' : '' }}
                                                         {{ Request::is('chapter/m2mdonation/*') ? 'active' : '' }} {{ Request::is('reports/einstatus') ? 'active' : '' }}
                                                         {{ Request::is('reports/socialmedia') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-laptop-house"></i>
+                                <i class="nav-icon fas fa-tasks"></i>
                                 <p>Chapter Reports<i class="fas fa-angle-left right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
@@ -427,7 +428,7 @@
                                                         {{ Request::is('reports/intcoordinatortodo') ? 'active' : '' }} {{ Request::is('reports/appreciation') ? 'active' : '' }}
                                                         {{ Request::is('reports/birthday') ? 'active' : '' }} {{ Request::is('coordinator/appreciation/*') ? 'active' : '' }}
                                                         {{ Request::is('reports/reportingtree') ? 'active' : '' }} {{ Request::is('coordinator/birthday/*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-laptop-house"></i>
+                                <i class="nav-icon fas fa-user-check"></i>
                                 <p>Coordinator Reports<i class="fas fa-angle-left right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
@@ -538,7 +539,7 @@
                                                         {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }} {{ Request::is('adminreports/multipleboard') ? 'active' : '' }}
                                                         {{ Request::is('adminreports/nopresident') ? 'active' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}
                                                          {{ Request::is('adminreports/mailqueue') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-cogs"></i>
+                                <i class="nav-icon fas fa-unlock-alt"></i>
                                 <p>Admin Items<i class="fas fa-angle-left right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">

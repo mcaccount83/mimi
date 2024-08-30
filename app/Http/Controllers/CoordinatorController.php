@@ -1923,6 +1923,7 @@ class CoordinatorController extends Controller
                         'todo_financial_due' => $request->has('todo_financial_due') ? 1 : null,
                         'todo_990_due' => $request->has('todo_990_due') ? 1 : null,
                         'todo_welcome' => $request->has('todo_welcome') ? 1 : null,
+                        'dashboard_update' => date('mm/dd/YYYY'),
                         'last_updated_by' => $lastUpdatedBy,
                         'last_updated_date' => date('Y-m-d H:i:s')]);
                 DB::commit();
