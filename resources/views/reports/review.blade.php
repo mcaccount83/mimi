@@ -86,7 +86,7 @@
                             <a href="<?php echo url("/chapter/financial/{$list->chap_id}") ?>"><i class="fas fa-edit"></i></a>
                         </td>
                         <td class="text-center align-middle">
-                                @if($list->financial_report_received == '1')
+                                @if($list->financial_report_received == '1' && $list->financial_pdf_path != null )
                                     <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{$list->financial_pdf_path}}"><i class="far fa-file-pdf" ></i></a>
                                 @endif
                         </td>
