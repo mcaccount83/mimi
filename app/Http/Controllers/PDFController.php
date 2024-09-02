@@ -34,6 +34,8 @@ class PDFController extends Controller
             ->where('chapters.id', '=', $chapterId)
             ->get();
 
+        $sanitizedChapterName = str_replace(['/', '\\'], '-', $chapterDetails[0]->chapter_name);
+
         $pdfData = [
             'chapter_name' => $chapterDetails[0]->chapter_name,
             'state' => $chapterDetails[0]->state,
@@ -119,11 +121,12 @@ class PDFController extends Controller
             'completed_name' => $financial_report_array->completed_name,
             'completed_email' => $financial_report_array->completed_email,
             'submitted' => $financial_report_array->submitted,
+            'ch_name'=> $sanitizedChapterName,
         ];
 
         $pdf = Pdf::loadView('pdf.financialreport', compact('pdfData'));
 
-        $filename = date('Y') - 1 .'-'.date('Y').'_'.$pdfData['state'].'_'.$pdfData['chapter_name'].'_FinancialReport.pdf';
+        $filename = date('Y') - 1 .'-'.date('Y').'_'.$pdfData['state'].'_'.$pdfData['ch_name'].'_FinancialReport.pdf';
 
         return $pdf->stream($filename, ['Attachment' => 0]); // Stream the PDF
 
@@ -211,6 +214,8 @@ class PDFController extends Controller
         $cc_lname = $coordinatorData['cc_lname'];
         $cc_pos = $coordinatorData['cc_pos'];
 
+        $sanitizedChapterName = str_replace(['/', '\\'], '-', $chapterDetails[0]->chapter_name);
+
         $pdfData = [
             'chapter_name' => $chapterDetails[0]->chapter_name,
             'state' => $chapterDetails[0]->state,
@@ -226,11 +231,12 @@ class PDFController extends Controller
             'cc_fname' => $cc_fname,
             'cc_lname' => $cc_lname,
             'cc_pos' => $cc_pos,
+            'ch_name'=> $sanitizedChapterName,
         ];
 
         $pdf = Pdf::loadView('pdf.disbandletter', compact('pdfData'));
 
-        $filename = date('Y') - 1 .'-'.date('Y').'_'.$pdfData['state'].'_'.$pdfData['chapter_name'].'_Disband_Letter.pdf';
+        $filename = date('Y') - 1 .'-'.date('Y').'_'.$pdfData['state'].'_'.$pdfData['ch_name'].'_Disband_Letter.pdf';
 
         return $pdf->stream($filename, ['Attachment' => 0]); // Stream the PDF
 

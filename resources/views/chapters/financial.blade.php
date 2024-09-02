@@ -2862,27 +2862,27 @@
 
     $("#review-complete").click(function() {
         if (!CheckMembers()) {
-        console.log('CheckMembers failed');
         return false;
-    }
-    if (!CheckService()) {
-        return false;
-    }
-    if (!CheckParties()) {
-        return false;
-    }
-    if (!CheckFinancial()) {
-        return false;
-    }
-    if (!CheckReconciliation()) {
-        return false;
-    }
-    if (!CheckQuestions()) {
-        return false;
-    }
+        }
+        if (!CheckService()) {
+            return false;
+        }
+        if (!CheckParties()) {
+            return false;
+        }
+        if (!CheckFinancial()) {
+            return false;
+        }
+        if (!CheckReconciliation()) {
+            return false;
+        }
+        if (!CheckQuestions()) {
+            return false;
+        }
         var post_balance = $('#post_balance').val();
 		if(post_balance == null || post_balance == ''){
-			alert('Please enter Ending Balance in Section 12');
+			alert('Please enter Ending Balance in the Bank Reconciliation Section');
+            accordion.openAccordionItem('accordion-header-reconciliation');
 			$('#post_balance').focus();
 			return false;
 		}
@@ -2948,7 +2948,7 @@
             alert('Please enter Ending Balance');
             $('#post_balance').focus();
             return false;
-        } else if (!CheckReconciliation()) {
+        } if (!CheckReconciliation()) {
             return false;
         }
         submitFormWithStep(10);
@@ -2973,17 +2973,6 @@
 
 </script>
 <script>
-   	// document.getElementById('addAwardsLink').addEventListener('click', function(event) {
-    //     if (<?php echo ($financial_report_array['review_complete'] != "" || !$submitted) ? 'true' : 'false'; ?>) {
-    //         event.preventDefault(); // Prevent the default link behavior
-    //     }
-    // });
-
-    // document.getElementById('viewPdfLink').addEventListener('click', function(event) {
-    //     if (<?php echo (!$submitted == '1') ? 'true' : 'false'; ?>) {
-    //         event.preventDefault(); // Prevent the default link behavior
-    //     }
-    // });
 
     /* Disable fields and buttons  */
     $(document).ready(function () {
@@ -3063,25 +3052,6 @@
         }
         document.getElementById("Summary_Log").value = SummaryNote;
     }
-
-	// function RemoveRequired(){
-	// 	var x = document.forms[0];
-	// 	var i;
-	// 	for (i = 0; i < x.length; i++) {
-	// 		x.elements[i].required = false;
-	// 	}
-	// }
-
-	// function SetReadOnly(){
-	// 	var x = document.forms[0];
-	// 	var i;
-	// 	for (i = 0; i < x.length; i++) {
-	// 		if(x.elements[i].type!="button"){
-	// 			x.elements[i].readOnly = true;
-	// 			x.elements[i].disabled = true;
-	// 		}
-	// 	}
-	// }
 
     function CheckMembers() {
         var checkRosterAttached = document.querySelector('input[name="checkRosterAttached"]:checked');
