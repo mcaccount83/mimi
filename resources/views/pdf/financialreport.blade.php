@@ -508,7 +508,7 @@
                             echo "<tr>";
                             echo "<td>" . $row['mon_donation_desc'] . "</td>";
                             echo "<td>" . $row['mon_donation_info'] . "</td>";
-                            echo "<td>" . $row['mon_donation_date'] . "</td>";
+                            echo "<td>" . ($row['mon_donation_date'] ? date('m/d/Y', strtotime($row['mon_donation_date'])) : '') . "</td>";
                             echo "<td>" . ($row['mon_donation_amount'] ? "$" . number_format(floatval(str_replace(',', '', $row['mon_donation_amount'])), 2) : "$0.00") . "</td>";
                             echo "</tr>";
 
@@ -561,7 +561,7 @@
                             echo "<tr>";
                             echo "<td>" . $row['nonmon_donation_desc'] . "</td>";
                             echo "<td>" . $row['nonmon_donation_info'] . "</td>";
-                            echo "<td>" . $row['nonmon_donation_date'] . "</td>";
+                            echo "<td>" . ($row['nonmon_donation_date'] ? date('m/d/Y', strtotime($row['nonmon_donation_date'])) : '') . "</td>";
                             echo "</tr>";
                         }
                     }
@@ -765,7 +765,7 @@
                     } else {
                         foreach ($bank_rec_array as $row) {
                             echo "<tr>";
-                                echo "<td>" . $row['bank_rec_date'] . "</td>";
+                                echo "<td>" . ($row['bank_rec_date'] ? date('m/d/Y', strtotime($row['bank_rec_date'])) : '') . "</td>";
                                 echo "<td>" . $row['bank_rec_check_no'] . "</td>";
                                 echo "<td>" . $row['bank_rec_desc'] . "</td>";
                                 echo "<td>" . ($row['bank_rec_payment_amount'] ? "$" . number_format(floatval(str_replace(',', '', $row['bank_rec_payment_amount'])), 2) : "$0.00") . "</td>";

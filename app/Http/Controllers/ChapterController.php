@@ -4926,7 +4926,7 @@ class ChapterController extends Controller
         $financial_report_array = FinancialReport::find($chapterId);
         $chapterDetails = DB::table('chapters')
             ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'chapters.primary_coordinator_id as pcid', 'chapters.balance as balance', 'st.state_short_name as state',
-                'chapters.financial_report_complete as financial_report_complete')
+                'chapters.financial_report_complete as financial_report_complete', 'chapters.financial_pdf_path as financial_pdf_path')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('chapters.id', '=', $chapterId)

@@ -935,7 +935,7 @@
                                             echo "<tr>";
                                             echo "<td>" . $row['mon_donation_desc'] . "</td>";
                                             echo "<td>" . $row['mon_donation_info'] . "</td>";
-                                            echo "<td>" . $row['mon_donation_date'] . "</td>";
+                                            echo "<td>" . ($row['mon_donation_date'] ? date('m/d/Y', strtotime($row['mon_donation_date'])) : '') . "</td>";
                                             echo "<td>" . ($row['mon_donation_amount'] ? "$" . number_format($row['mon_donation_amount'], 2) : "$0.00") . "</td>";
                                             echo "</tr>";
 
@@ -991,7 +991,7 @@
                                                 echo "<tr style='border-top: 1px solid #333;'>";
                                                 echo "<td>" . $row['nonmon_donation_desc'] . "</td>";
                                                 echo "<td>" . $row['nonmon_donation_info'] . "</td>";
-                                                echo "<td>" . $row['nonmon_donation_date'] . "</td>";
+                                                echo "<td>" . ($row['nonmon_donation_date'] ? date('m/d/Y', strtotime($row['nonmon_donation_date'])) : '') . "</td>";
                                                 echo "</tr>";
                                             }
                                         } else {
@@ -1361,7 +1361,7 @@
                                             if (is_array($bank_rec_array) && count($bank_rec_array) > 0) {
                                                 foreach ($bank_rec_array as $row) {
                                                     echo "<tr>";
-                                                    echo "<td>" . $row['bank_rec_date'] . "</td>";
+                                                    echo "<td>" . ($row['bank_rec_date'] ? date('m/d/Y', strtotime($row['bank_rec_date'])) : '') . "</td>";
                                                     echo "<td>" . $row['bank_rec_check_no'] . "</td>";
                                                     echo "<td>" . $row['bank_rec_desc'] . "</td>";
                                                     echo "<td>" . ($row['bank_rec_payment_amount'] ? "$" . number_format($row['bank_rec_payment_amount'], 2) : "$0.00") . "</td>";
@@ -2449,9 +2449,10 @@
                             @if ($submitted)
                                 <div class="col-md-12">
                                     <div class="col-xs-12">
-                                        <label class="control-label" for="RosterLink">Financial Report PDF:</label>
-                                    <a id="viewPdfLink" href="{{ url("/chapter/financial/pdf/{$chapterid}?mode=download") }}">Download PDF</a>
-                                  </div>
+                                        <label class="control-label" for="DownloadPDF">Financial Report PDF:</label>
+                                    {{-- <a id="viewPdfLink" href="{{ url("/chapter/financial/pdf/{$chapterid}?mode=download") }}">Download PDF</a> --}}
+                                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>">Download PDF</a>
+                                </div>
 
                                     <?php if (!empty($financial_report_array['roster_path'])): ?>
                                         <div class="col-xs-12">
