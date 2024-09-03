@@ -3396,39 +3396,39 @@ class ChapterController extends Controller
     /**
      * Reset Password
      */
-    public function updateChapterResetPassword(Request $request): JsonResponse
-    {
-        $validator = Validator::make($request->all(), [
-            'pswd' => 'required|string|min:7',
-            'user_id' => 'required|exists:users,id',
-        ]);
+    // public function updateChapterResetPassword(Request $request): JsonResponse
+    // {
+    //     $validator = Validator::make($request->all(), [
+    //         'pswd' => 'required|string|min:7',
+    //         'user_id' => 'required|exists:users,id',
+    //     ]);
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()->first()], 400);
-        }
+    //     if ($validator->fails()) {
+    //         return response()->json(['error' => $validator->errors()->first()], 400);
+    //     }
 
-        $pswd = $request->input('pswd');
-        $userId = $request->input('user_id');
-        $newPswd = Hash::make($pswd);
+    //     $pswd = $request->input('pswd');
+    //     $userId = $request->input('user_id');
+    //     $newPswd = Hash::make($pswd);
 
-        try {
-            DB::transaction(function () use ($userId, $newPswd) {
-                // Update the password and nullify the remember token in the users table
-                DB::table('users')
-                    ->where('id', $userId)
-                    ->update(['password' => $newPswd, 'remember_token' => null]);
+    //     try {
+    //         DB::transaction(function () use ($userId, $newPswd) {
+    //             // Update the password and nullify the remember token in the users table
+    //             DB::table('users')
+    //                 ->where('id', $userId)
+    //                 ->update(['password' => $newPswd, 'remember_token' => null]);
 
-                // Update the password in the board_details table
-                DB::table('board_details')
-                    ->where('user_id', $userId)
-                    ->update(['password' => $newPswd]);
-            });
+    //             // Update the password in the board_details table
+    //             DB::table('board_details')
+    //                 ->where('user_id', $userId)
+    //                 ->update(['password' => $newPswd]);
+    //         });
 
-            return response()->json(['message' => 'Password has been reset successfully']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'An error occurred while resetting the password.'], 500);
-        }
-    }
+    //         return response()->json(['message' => 'Password has been reset successfully']);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => 'An error occurred while resetting the password.'], 500);
+    //     }
+    // }
 
     /**
      * Reset Password
@@ -3443,13 +3443,16 @@ class ChapterController extends Controller
                 ->where('id', $userId)
                 ->update([
                     'password' => Hash::make($pswd),
-                    'remember_token' => null,
+                    'remember_token' => '',
+                    'user_type' => 'board',
+                    'is_active' => '1',
                 ]);
 
             DB::table('board_details')
                 ->where('user_id', $userId)
                 ->update([
                     'password' => Hash::make($pswd),
+                    'is_active' => '1',
                 ]);
 
             return response()->json(['message' => 'Password has been reset successfully']);
