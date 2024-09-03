@@ -902,7 +902,7 @@
             <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='7') echo "active";?>">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
-                        <a class="d-block" data-toggle="collapse" href="#collapseSeven" style="width: 100%;">DONATIONS TO YOUR CHATPER</a>
+                        <a class="d-block" data-toggle="collapse" href="#collapseSeven" style="width: 100%;">DONATIONS TO YOUR CHAPTER</a>
                     </h4>
                 </div>
                 <div id="collapseSeven" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='7') echo 'show'; ?>" data-parent="#accordion">
@@ -1797,7 +1797,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label>Did they Sistered another chapter? (Question 20):<span class="field-required">*&nbsp;</span></label>
+                                            <label>Did they Sistered another chapter? (Question 19):<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
                                                     <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="1" {{ $financial_report_array['check_sistered_another_chapter'] === 1 ? 'checked' : '' }}>
@@ -1810,7 +1810,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label>Did they attended an in person or viurtual International Event? (Question 21):<span class="field-required">*&nbsp;</span></label>
+                                            <label>Did they attended an in person or virtual International Event? (Question 20):<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
                                                     <input class="form-check-input" type="radio" name="checkAttendedTraining" value="1" {{ $financial_report_array['check_attended_training'] === 1 ? 'checked' : '' }}>

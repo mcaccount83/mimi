@@ -3431,6 +3431,34 @@ class ChapterController extends Controller
     }
 
     /**
+     * Reset Password
+     */
+    public function updateResetPassword(Request $request): JsonResponse
+    {
+        $pswd = $request->input('pswd');
+        $userId = $request->input('user_id');
+
+        try {
+            DB::table('users')
+                ->where('id', $userId)
+                ->update([
+                    'password' => Hash::make($pswd),
+                    'remember_token' => null,
+                ]);
+
+            DB::table('board_details')
+                ->where('user_id', $userId)
+                ->update([
+                    'password' => Hash::make($pswd),
+                ]);
+
+            return response()->json(['message' => 'Password has been reset successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'An error occurred while resetting the password.'], 500);
+        }
+    }
+
+    /**
      * M2M Payments
      */
     public function showDonation(Request $request, $id)
@@ -5270,54 +5298,4 @@ class ChapterController extends Controller
         return redirect()->to('/yearreports/eoystatus')->with('success', 'Report status successfully updated');
     }
 
-    /**
-     * Chapter Links Page
-     */
-    // public function chapterLinks(): View
-    // {
-    //     $link_array_intl_q = DB::table('chapters')
-    //         ->select('id', 'intl_state', 'country', 'name', 'status', 'website_status', 'website_url')
-    //         ->where('state', '=', '52')
-    //         ->where('is_active', '=', '1')
-    //         ->orderBy('country')
-    //         ->orderBy('intl_state')
-    //         ->orderBy('name')
-    //         ->get();
-    //     $link_array_usa_q = DB::table('chapters')
-    //         ->select('chapters.id', 'chapters.state', 'chapters.intl_state', 'chapters.country', 'chapters.name', 'chapters.status', 'chapters.website_status', 'chapters.website_url', 'state.state_short_name', 'state.state_long_name')
-    //         ->join('state', 'chapters.state', '=', 'state.id')
-    //         ->where('chapters.state', '<>', 52)
-    //         ->where('is_active', '1')
-    //         ->orderBy('chapters.state')
-    //         ->orderBy('chapters.name')
-    //         ->get();
-
-    //     $link_array_intl = [];
-    //     foreach ($link_array_intl_q as $key => $value) {
-    //         $link_array_intl[$key]['id'] = $value->id;
-    //         $link_array_intl[$key]['state'] = $value->intl_state;
-    //         $link_array_intl[$key]['country'] = $value->country;
-    //         $link_array_intl[$key]['name'] = $value->name;
-    //         $link_array_intl[$key]['status'] = $value->status;
-    //         $link_array_intl[$key]['link_status'] = $value->website_status;
-    //         $link_array_intl[$key]['url'] = $value->website_url;
-    //     }
-    //     $link_array_usa = [];
-    //     foreach ($link_array_usa_q as $key => $value) {
-    //         $link_array_usa[$key]['id'] = $value->id;
-    //         $link_array_usa[$key]['state'] = $value->state;
-    //         $link_array_usa[$key]['state_abr'] = $value->state_short_name;
-    //         $link_array_usa[$key]['state_name'] = $value->state_long_name;
-    //         $link_array_usa[$key]['country'] = $value->country;
-    //         $link_array_usa[$key]['name'] = $value->name;
-    //         $link_array_usa[$key]['status'] = $value->status;
-    //         $link_array_usa[$key]['link_status'] = $value->website_status;
-    //         $link_array_usa[$key]['url'] = $value->website_url;
-    //     }
-
-    //     return view('chapter-links', [
-    //         'link_array_intl' => $link_array_intl,
-    //         'link_array_usa' => $link_array_usa,
-    //     ]);
-    // }
 }

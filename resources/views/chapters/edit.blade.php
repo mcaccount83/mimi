@@ -1154,63 +1154,6 @@ function updateWebsiteStatus() {
     }
 }
 
-//   $(document ).ready(function() {
-    // var phoneListArr = ["ch_pre_phone","ch_avp_phone","ch_mvp_phone","ch_trs_phone","ch_sec_phone"];
-    // for (var i = phoneListArr.length - 1; i >= 0; i--) {
-    //     var inputValue = $("#"+phoneListArr[i]).val();
-    //     if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
-    //     var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
-    //     $("#"+phoneListArr[i]).val(reInputValue);
-    // }
-
-    // $("#ch_pre_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
-    // $("#ch_avp_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
-    // $("#ch_mvp_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
-    // $("#ch_trs_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
-    // $("#ch_sec_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
-
-//     $(document ).ready(function() {
-
-//     var selectedCorId = $("select#ch_primarycor option").filter(":selected").val();
-//     if(selectedCorId !=""){
-//       $.ajax({
-//         url: '{{ url("/checkreportid/") }}' + '/' + selectedCorId,
-//             type: "GET",
-//             success: function(result) {
-//                $("#display_corlist").html(result);
-//             },
-//             error: function (jqXHR, exception) {
-
-//             }
-//         });
-//     }
-//      function checkReportId(val){
-//           $.ajax({
-//             url: '{{ url("/checkreportid/") }}' + '/' + val,
-//             type: "GET",
-//             success: function(result) {
-//                $("#display_corlist").html(result);
-//             },
-//             error: function (jqXHR, exception) {
-
-//             }
-//         });
-
-//       }
-
-//   });
-
-
 $(document).ready(function() {
 
 // Function to load the coordinator list based on the selected value
@@ -1241,8 +1184,6 @@ $("#ch_primarycor").change(function() {
 
 });
 
-
-
 // Function to handle show/hide logic for vacant checkboxes
 function handleVacantCheckbox(checkboxId, fieldClass) {
     var fields = $("." + fieldClass);
@@ -1270,13 +1211,14 @@ handleVacantCheckbox("SecVacant", "sec-field");
 handleVacantCheckbox("TreasVacant", "treas-field");
 
 
-      function ConfirmCancel(element){
+    function ConfirmCancel(element){
         var result=confirm("Any unsaved changes will be lost. Do you want to continue?");
         if(result)
             location.reload()
         else
             return false;
     }
+
   //submit validation function
   function PreSaveValidate(){
     var errMessage="";
@@ -1323,39 +1265,6 @@ handleVacantCheckbox("TreasVacant", "treas-field");
 
 
     function resetPassword(userid){
-        // var new_password="";
-        //         new_password = prompt("Please enter new password for this board member.", "TempPass4You");
-        //         if (new_password != null && userid !='') {
-        //             //Verify the password entered is of an allowable size
-        //             if(new_password.length < 7){
-        //                 alert("Password must be at least 7 characters.  The password has not been reset.");
-        //                 return false;
-        //             }
-        //             else{
-        //        $.ajax({
-        //           url: '/chapter/resetpswd',
-        //           type: "POST",
-        //           data: { pswd:new_password,user_id:userid, _token: '{{csrf_token()}}' },
-        //           success: function(result) {
-        //               alert('Password has been reset successfully');
-
-        //           },
-        //           error: function (jqXHR, exception) {
-
-        //           }
-        //       });
-
-        //         return true;
-        //             }
-        //         }
-        //         else{
-        //   //alert('Not Allowed');
-        //   return false;
-        // }
-
-        //     }
-
-
         var new_password = prompt("Please enter new password for this board member.", "TempPass4You");
         if (new_password != null && userid != '') {
             // Verify the password entered is of an allowable size
@@ -1364,7 +1273,7 @@ handleVacantCheckbox("TreasVacant", "treas-field");
                 return false;
             } else {
                 $.ajax({
-                    url: '{{ route('chapter.resetpswd') }}',
+                    url: '{{ route('chapter.resetpassword') }}',
                     type: "POST",
                     data: {
                         pswd: new_password,

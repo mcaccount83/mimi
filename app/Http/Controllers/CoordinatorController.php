@@ -1900,17 +1900,17 @@ class CoordinatorController extends Controller
             ->get();
         if (count($corDetails) != 0) {
             try {
-                $userId = $corDetails[0]->user_id;
-                $cordId = $corDetails[0]->coordinator_id;
+                // $userId = $corDetails[0]->user_id;
+                // $cordId = $corDetails[0]->coordinator_id;
 
-                $user = User::find($userId);
-                $user->updated_at = date('Y-m-d H:i:s');
-                $user->save();
+                // $user = User::find($userId);
+                // $user->updated_at = date('Y-m-d H:i:s');
+                // $user->save();
 
                 DB::table('coordinator_details')
-                    ->where('coordinator_id', $cordinatorId)
-                    ->update([
-                        'todo_month' => $request->input('todo_month'),
+                ->where('coordinator_id', $cordinatorId)
+                ->update([
+                        // 'todo_month' => $request->input('todo_month'),
                         'todo_check_chapters' => $request->has('todo_check_chapters') ? 1 : null,
                         'todo_send_rereg' => $request->has('todo_send_rereg') ? 1 : null,
                         'todo_send_late' => $request->has('todo_send_late') ? 1 : null,
