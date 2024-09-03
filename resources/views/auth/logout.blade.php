@@ -14,8 +14,15 @@
                 <div class="card">
                     <div class="card-body login-card-body">
 
-                        <button onclick="forceLogout()">Logout</button>
+                        @isset($url)
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit">Logout</button>
+                        </form>
 
+                        @endisset
+
+                        @csrf
 
                     </form>
 
