@@ -16,6 +16,9 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
   {{-- <link rel="stylesheet" href="{{ config('settings.base_url') }}coordinator_theme/dist/css/AdminLTE.min.css"> --}}
 
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
 <!-- daterange picker -->
 <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/daterangepicker/daterangepicker.css">
 <!-- iCheck for checkboxes and radio inputs -->
@@ -87,6 +90,24 @@
         align-items: center; /* Centers items vertically */
         margin-top: 10px; /* Adds top margin */
     }
+
+    /* Adjust spacing for SweetAlert2 buttons */
+    .swal2-confirm {
+        margin-right: 5px; /* Adjust the spacing between buttons */
+    }
+
+    .swal2-cancel {
+        margin-left: 5px; /* Optionally adjust left margin if needed */
+    }
+
+    .swal2-checkbox-container {
+        margin-top: 5px;
+    }
+
+    .swal2-checkbox {
+        margin-right: 5px;
+    }
+
 </style>
 
 </head>
@@ -706,6 +727,8 @@
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 {{-- <script src="{{ config('settings.base_url') }}coordinator_theme/dist/js/adminlte.min.js"></script> --}}
 
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- Select2 -->
 <script src="{{ config('settings.base_url') }}theme/plugins/select2/js/select2.full.min.js"></script>
@@ -797,6 +820,47 @@
 
 
   })
+
+  //Cusotmize AJAX Popups to Match Theme
+  function customSuccessAlert(message) {
+        Swal.fire({
+            title: 'Notification',
+            html: message,
+            icon: 'success',
+            confirmButtonText: 'OK',
+            customClass: {
+                confirmButton: 'btn-sm btn-success', // Match your theme button class
+            },
+            buttonsStyling: false // Disable default button styling
+        });
+    }
+
+function customWarningAlert(message) {
+    Swal.fire({
+        title: 'Notification',
+        html: message,
+        icon: 'warning',
+        confirmButtonText: 'OK',
+        customClass: {
+            confirmButton: 'btn-sm btn-success', // Match your theme button class
+        },
+        buttonsStyling: false // Disable default button styling
+    });
+}
+
+function customErrorAlert(message) {
+    Swal.fire({
+        title: 'Notification',
+        html: message,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        customClass: {
+            confirmButton: 'btn-sm btn-success', // Match your theme button class
+        },
+        buttonsStyling: false // Disable default button styling
+    });
+}
+
 
  </script>
 

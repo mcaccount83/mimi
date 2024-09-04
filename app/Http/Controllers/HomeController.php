@@ -145,7 +145,7 @@ class HomeController extends Controller
             if ($borPositionId == 1 && $isActive == 1) {
                 $chapterList = DB::table('chapters as ch')
                     ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip',
-                        'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id', 'bd.password as pswd')
+                        'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
                     ->leftJoin('board_details as bd', 'ch.id', '=', 'bd.chapter_id')
                     ->where('ch.is_active', '=', '1')
                     ->where('ch.id', '=', $chapterId)
@@ -202,13 +202,13 @@ class HomeController extends Controller
                 }
                 $data = ['financial_report_array' => $financial_report_array, 'chapterState' => $chapterState, 'stateArr' => $stateArr, 'boardPositionAbbreviation' => $boardPositionAbbreviation, 'currentMonthAbbreviation' => $currentMonthAbbreviation,
                     'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'chapterList' => $chapterList,
-                    'startMonth' => $start_monthInWords, 'thisMonth' => $month, 'due_date' => $due_date, 'late_date' => $late_date];
+                    'startMonth' => $start_monthInWords, 'thisMonth' => $month, 'due_date' => $due_date, 'late_date' => $late_date, 'user_type' => $user_type];
 
                 return view('boards.president')->with($data);
             } elseif ($borPositionId != 1 && $isActive == 1) {
                 $data = ['financial_report_array' => $financial_report_array, 'chapterState' => $chapterState, 'chapterDetails' => $chapterDetails, 'boardPositionAbbreviation' => $boardPositionAbbreviation, 'currentMonthAbbreviation' => $currentMonthAbbreviation,
                     'stateArr' => $stateArr, 'borPositionId' => $borPositionId, 'borDetails' => $borDetails,
-                    'startMonth' => $start_monthInWords, 'thisMonth' => $month, 'due_date' => $due_date, 'late_date' => $late_date];
+                    'startMonth' => $start_monthInWords, 'thisMonth' => $month, 'due_date' => $due_date, 'late_date' => $late_date, 'user_type' => $user_type];
 
                 return view('boards.members')->with($data);
             } else {

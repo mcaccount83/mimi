@@ -18,17 +18,29 @@
     </div><!-- /.container-fluid -->
   </section>
 
-    @if ($message = Session::get('success'))
-		<div class="alert alert-success">
-			<button type="button" class="close" data-dismiss="alert">×</button>
-         <p>{{ $message }}</p>
-		</div>
+  @if ($message = Session::get('success'))
+    <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <p>{{ $message }}</p>
+    </div>
     @endif
-	@if ($message = Session::get('fail'))
-		<div class="alert alert-danger">
-			<button type="button" class="close" data-dismiss="alert">×</button>
-         <p>{{ $message }}</p>
-		</div>
+
+    @if ($message = Session::get('fail'))
+    <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <p>{{ $message }}</p>
+    </div>
+    @endif
+
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
     @endif
 
     <!-- Main content -->
@@ -151,7 +163,7 @@
 						</div>
 					</div>
 
-                    <div class="col-sm-6">
+                    {{-- <div class="col-sm-6">
                         <div class="form-group">
                                 <label>Update Password</label>
                                 <input  type="password" class="form-control cls-pswd" placeholder="***********" name="cord_pswd" id="cord_pswd" value="" maxlength="30" >
@@ -163,7 +175,7 @@
                                 <input  type="password" class="form-control cls-pswd" placeholder="***********" name="cord_pswd_cnf" id="cord_pswd_cnf" value="" maxlength="30">
                                 <input  type="hidden" name="cord_pswd_chg" id="cord_pswd_chg" value="0" >
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
 
@@ -245,27 +257,82 @@
             </div>
         </div>
 
-        <div class="card-header">
+        {{-- <div class="card-header">
             <h3 class="card-title">&nbsp;</h3>
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-            <div class="row">
+            <div class="row"> --}}
            <!-- /.form group -->
 		<!-- /.box-body -->
 		<div class="card-body text-center">
 			<button type="submit" class="btn bg-gradient-primary" onclick="return PreSaveValidate();"><i class="fas fa-save" ></i>&nbsp;&nbsp;&nbsp;Save</button>
-			<button type="button" class="btn bg-gradient-primary" onclick="ConfirmCancel(this);"><i class="fas fa-undo" ></i>&nbsp;&nbsp;&nbsp;Reset</button>
+        </form>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changePasswordModal"><i class="fas fa-lock" ></i>&nbsp; Change Password</button>
+
+			{{-- <button type="button" class="btn bg-gradient-primary" onclick="ConfirmCancel(this);"><i class="fas fa-undo" ></i>&nbsp;&nbsp;&nbsp;Reset All Data</button> --}}
 			<a href="{{ route('home') }}" class="btn bg-gradient-primary"><i class="fa fa-reply" ></i>&nbsp;&nbsp;&nbsp;Back</a>
-		</div>
-		 <div class="card-body text-center">
+        </div>
+        <div class="card-body text-center">
 			<button type="button" class="btn bg-gradient-primary" onclick="window.open('https://momsclub.org/coordinator-toolkit/')"><i class="fas fa-toolbox" ></i>&nbsp;&nbsp;&nbsp;Coordinator Toolkit</button>
 			<button type="button" class="btn bg-gradient-primary" onclick="window.open('https://momsclub.org/elearning/')"><i class="fas fa-graduation-cap" ></i>&nbsp;&nbsp;&nbsp;eLearning Library</button>
 		</div>
         <!-- /.box-body -->
+
+        <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="modal-body">
+                        <form action="{{ route('coordinator.updatepassword') }}" method="POST">
+                            @csrf
+                            @method('PUT')
+
+                            <!-- Current Password -->
+                            <div class="form-group">
+                                <label for="current_password">Current Password</label>
+                                <input type="password" name="current_password" id="current_password" class="form-control" required>
+                                {{-- @error('current_password')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror --}}
+                            </div>
+
+                            <!-- New Password -->
+                            <div class="form-group">
+                                <label for="new_password">New Password</label>
+                                <input type="password" name="new_password" id="new_password" class="form-control" required>
+                                {{-- @error('new_password')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror --}}
+                            </div>
+
+                            <!-- Confirm New Password -->
+                            <div class="form-group">
+                                <label for="new_password_confirmation">Confirm New Password</label>
+                                <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="form-control" required>
+                                {{-- @error('new_password_confirmation')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror --}}
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-primary">Update Password</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         </div>
     </section>
-</form>
 
 @endsection
 @section('customscript')

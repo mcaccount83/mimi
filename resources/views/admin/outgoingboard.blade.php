@@ -6,7 +6,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Outgoing Board Report</h1>
+          <h1>Outgoing Board Report&nbsp;<small>(Access to Financial Report Only)</small></h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -32,7 +32,7 @@
             <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-                  <th>Chapter ID</th>
+                  <th>Chapter</th>
                   <th>Name</th>
                   <th>Email</th>
                 <th>User Type</th>
@@ -42,7 +42,7 @@
                 <tbody>
                 @foreach($OutgoingBoard as $list)
                   <tr>
-                    <td>{{ $list->chapter_id }}</td>
+                    <td>{{ $list->chapter_name }}</td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                         <td>{{ $list->email }}</td>
                         <td>{{ $list->user_type }}</td>
@@ -52,13 +52,18 @@
                 </table>
             </div>
             <!-- /.card-body -->
-            <div class="col-sm-12">
+            {{-- <div class="col-sm-12">
                 <div class="custom-control custom-switch">
                     <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
                     <label class="custom-control-label" for="showPrimary">Only Show Outgoing Board Members with no User Account</label>
                 </div>
-            </div>
-
+            </div> --}}
+            <div class="card-body text-center">
+                <p>Clearing the table will remove user access to Financial Reports<br>
+                <span style="color: red;">
+                    This CANNOT be undone!</span></p>
+				    <button type="button" id="update-outgoing" class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-user-times" ></i>&nbsp;&nbsp;&nbsp;Clear Outgoing Board Members Table</button>
+             </div>
         </div>
           <!-- /.box -->
         </div>
@@ -70,6 +75,29 @@
 @endsection
 @section('customscript')
 <script>
+$(document).ready(function(){
+    var base_url = '{{ url("/adminreports/updateoutgoingboard") }}';
+
+    $("#update-outgoing").click(function() {
+        $.ajax({
+            url: base_url,
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}', // Include CSRF token for security
+            },
+            success: function(response) {
+                // Handle success (e.g., show a message or refresh the page)
+                alert('Outgoing board members updated successfully.');
+                // Optionally, reload the page or redirect
+                location.reload();
+            },
+            error: function(xhr) {
+                // Handle errors
+                alert('An error occurred while updating the outgoing board members.');
+            }
+        });
+    });
+});
 
 function showPrimary() {
 var base_url = '{{ url("/adminreports/outgoingboard") }}';
@@ -80,7 +108,5 @@ var base_url = '{{ url("/adminreports/outgoingboard") }}';
         window.location.href = base_url;
     }
 }
-
-
 </script>
 @endsection

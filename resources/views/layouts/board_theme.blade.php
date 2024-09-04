@@ -18,6 +18,12 @@
     <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/fontawesome-free/css/all.min.css">
     <!-- Theme style -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+
+
+  <!-- SweetAlert2 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+
     <!-- daterange picker -->
     <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/daterangepicker/daterangepicker.css">
     <!-- iCheck for checkboxes and radio inputs -->
@@ -49,6 +55,7 @@
         {{-- <a href="{{ route('home') }}" class="navbar-brand">
             <img src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC" class="brand-image img-circle elevation-3" >
           </a> --}}
+    @if($user_type !== 'outgoing')
 
       <div class="collapse navbar-collapse order-3" id="navbarCollapse">
         <!-- Left navbar links -->
@@ -70,6 +77,8 @@
           </li>
         </ul>
       </div>
+      @endif
+
 
       <!-- Right navbar links -->
       <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
@@ -130,6 +139,9 @@
 <!-- AdminLTE App -->
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <!-- Select2 -->
 <script src="{{ config('settings.base_url') }}theme/plugins/select2/js/select2.full.min.js"></script>
 <!-- InputMask -->
@@ -165,6 +177,47 @@
         placeholder: '0'
     }).mask(".currency-mask");
     }
+
+      //Cusotmize AJAX Popups to Match Theme
+  function customSuccessAlert(message) {
+        Swal.fire({
+            title: 'Success',
+            html: message,
+            icon: 'success',
+            confirmButtonText: 'OK',
+            customClass: {
+                confirmButton: 'btn-sm btn-success', // Match your theme button class
+            },
+            buttonsStyling: false // Disable default button styling
+        });
+    }
+
+function customWarningAlert(message) {
+    Swal.fire({
+        title: 'Warning',
+        html: message,
+        icon: 'warning',
+        confirmButtonText: 'OK',
+        customClass: {
+            confirmButton: 'btn-sm btn-success', // Match your theme button class
+        },
+        buttonsStyling: false // Disable default button styling
+    });
+}
+
+function customErrorAlert(message) {
+    Swal.fire({
+        title: 'Error',
+        html: message,
+        icon: 'error',
+        confirmButtonText: 'OK',
+        customClass: {
+            confirmButton: 'btn-sm btn-success', // Match your theme button class
+        },
+        buttonsStyling: false // Disable default button styling
+    });
+}
+
 
   </script>
 

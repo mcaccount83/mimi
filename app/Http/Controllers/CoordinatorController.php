@@ -25,6 +25,27 @@ class CoordinatorController extends Controller
     }
 
     /**
+     * Reset Password
+     */
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        // Update the user's password
+        $user = $request->user();
+        $user->password = Hash::make($request->new_password);
+        $user->remember_token = null;
+        $user->save();
+
+        // Set success message
+        return redirect()->back()->with('success', 'Password updated successfully.');
+
+    }
+
+    /**
      * Coordiantor Listing
      */
     public function index(Request $request): View
@@ -2018,9 +2039,9 @@ class CoordinatorController extends Controller
                     $user->first_name = $request->input('cord_fname');
                     $user->last_name = $request->input('cord_lname');
                     $user->email = $request->input('cord_email');
-                    if ($request->input('cord_pswd_chg') == '1') {
-                        $user->password = Hash::make($request->input('cord_pswd_cnf'));
-                    }
+                    // if ($request->input('cord_pswd_chg') == '1') {
+                    //     $user->password = Hash::make($request->input('cord_pswd_cnf'));
+                    // }
                     $user->updated_at = date('Y-m-d H:i:s');
                     $user->save();
 

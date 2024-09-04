@@ -38,6 +38,27 @@ class BoardController extends Controller
     }
 
     /**
+     * Reset Password
+     */
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required', 'current_password'],
+            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        // Update the user's password
+        $user = $request->user();
+        $user->password = Hash::make($request->new_password);
+        $user->remember_token = null;
+        $user->save();
+
+        // Set success message
+        return redirect()->back()->with('success', 'Password updated successfully.');
+
+    }
+
+    /**
      * Update Board Details President Login
      */
     public function updatePresident(Request $request, $id): RedirectResponse
@@ -131,10 +152,9 @@ class BoardController extends Controller
                     $user->first_name = $request->input('ch_pre_fname');
                     $user->last_name = $request->input('ch_pre_lname');
                     $user->email = $request->input('ch_pre_email');
-                    if ($request->input('ch_pre_pswd_chg') == '1') {
-                        $user->password = Hash::make($request->input('ch_pre_pswd_cnf'));
-                    }
-
+                    // if ($request->input('ch_pre_pswd_chg') == '1') {
+                    //     $user->password = Hash::make($request->input('ch_pre_pswd_cnf'));
+                    // }
                     $user->updated_at = date('Y-m-d H:i:s');
                     $user->save();
 
@@ -775,10 +795,9 @@ class BoardController extends Controller
                 $user->first_name = $request->input('bor_fname');
                 $user->last_name = $request->input('bor_lname');
                 $user->email = $request->input('bor_email');
-                if ($request->input('bor_pswd_cng') == '1') {
-                    $user->password = Hash::make($request->input('bor_pswd_cnf'));
-                }
-
+                // if ($request->input('bor_pswd_cng') == '1') {
+                //     $user->password = Hash::make($request->input('bor_pswd_cnf'));
+                // }
                 $user->updated_at = date('Y-m-d H:i:s');
                 $user->save();
 
@@ -1727,9 +1746,12 @@ class BoardController extends Controller
         // BANK RECONCILLIATION
         $amount_reserved_from_previous_year = $input['AmountReservedFromLastYear'];
         $amount_reserved_from_previous_year = str_replace(',', '', $amount_reserved_from_previous_year);
+        $amount_reserved_from_previous_year = $amount_reserved_from_previous_year === '' ? null : $amount_reserved_from_previous_year;
 
         $bank_balance_now = $input['BankBalanceNow'];
         $bank_balance_now = str_replace(',', '', $bank_balance_now);
+        $bank_balance_now = $bank_balance_now === '' ? null : $bank_balance_now;
+
 
         $petty_cash = $input['PettyCash'];
 

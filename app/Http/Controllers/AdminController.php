@@ -716,12 +716,14 @@ class AdminController extends Controller
     {
         $OutgoingBoard = DB::table('outgoing_board_member')
             ->leftJoin('users', 'outgoing_board_member.email', '=', 'users.email')
+            ->leftJoin('chapters', 'outgoing_board_member.chapter_id', '=', 'chapters.id')
             ->select(
                 'outgoing_board_member.chapter_id as chapter_id',
                 'outgoing_board_member.first_name as first_name',
                 'outgoing_board_member.last_name as last_name',
                 'outgoing_board_member.email as email',
-                'users.user_type as user_type'  // This column will be null if there's no match
+                'users.user_type as user_type',  // This column will be null if there's no match
+                'chapters.name as chapter_name'
             )
             ->orderBy('outgoing_board_member.chapter_id')
             ->get();
@@ -731,13 +733,15 @@ class AdminController extends Controller
                 $checkBoxStatus = 'checked';
                 $OutgoingBoard = DB::table('outgoing_board_member')
                     ->leftJoin('users', 'outgoing_board_member.email', '=', 'users.email')
+                    ->leftJoin('chapters', 'outgoing_board_member.chapter_id', '=', 'chapters.id')
                     ->whereNull('users.user_type')  // Only select entries where user_type is null
                     ->select(
                         'outgoing_board_member.chapter_id as chapter_id',
                         'outgoing_board_member.first_name as first_name',
                         'outgoing_board_member.last_name as last_name',
                         'outgoing_board_member.email as email',
-                        'users.user_type as user_type'  // This column will be null for unmatched entries
+                        'users.user_type as user_type',  // This column will be null for unmatched entries
+                        'chapters.name as chapter_name'
                     )
                     ->orderBy('outgoing_board_member.chapter_id')
                     ->get();
@@ -746,8 +750,32 @@ class AdminController extends Controller
             $checkBoxStatus = '';
         }
 
-        $data = ['OutgoingBoard' => $OutgoingBoard, 'checkBoxStatus' => $checkBoxStatus];
+        $countList = count($OutgoingBoard);
+
+        $data = ['OutgoingBoard' => $OutgoingBoard, 'countList' => $countList, 'checkBoxStatus' => $checkBoxStatus];
 
         return view('admin.outgoingboard')->with($data);
     }
+
+    /**
+     * Remove Outgoing Board
+     */
+    public function updateOutgoingBoard()
+    {
+        // Fetch all outgoing board members
+        $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
+
+        // Update the `is_active` column in the `users` table
+        foreach ($outgoingBoardMembers as $outgoingMember) {
+            // Ensure to update the `is_active` column for users in the `users` table
+            DB::table('users')->where('id', $outgoingMember->user_id)->update([
+                'is_active' => 0,
+                'last_updated_date' => now(),
+            ]);
+        }
+
+        // Truncate the `outgoing_board_member` table
+        DB::table('outgoing_board_member')->truncate();
+    }
+
 }

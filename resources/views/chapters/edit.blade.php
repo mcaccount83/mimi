@@ -32,8 +32,8 @@
     @endif
 
     <!-- Main content -->
-    <form method="POST" action='{{ route("chapters.update",$chapterList[0]->id) }}'>
-    @csrf
+    <form id="myForm" method="POST" action="{{ route('chapters.update', $chapterList[0]->id) }}">
+        @csrf
      <section class="content">
         <div class="container-fluid">
 
@@ -217,10 +217,6 @@
                 </div>
             </div>
 
-
-
-                {{-- <input type="text" name="ch_pre_phone" id="ch_pre_phone" class="form-control " value="{{ $chapterList[0]->phone }}" maxlength="12" required onkeypress="return isPhone(event)"> --}}
-
               <!-- /.form group -->
               <div class="col-sm-12 ">
               <div class="form-group">
@@ -256,7 +252,8 @@
               </div>
 
               <div class="card-body text-center">
-                <button type="button" class="btn bg-gradient-primary" id="{{ $chapterList[0]->user_id }}" onclick="return resetPassword(this.id)"><i class="fas fa-redo-alt"></i>&nbsp;&nbsp;&nbsp;Reset Password</button>
+                <p>This will reset password to default "TempPass4You" for this user only.</p>
+                <button type="button" class="btn bg-gradient-primary" id="{{ $chapterList[0]->user_id }}" onclick="return updatePassword(this.id)"><i class="fas fa-redo-alt"></i>&nbsp;&nbsp;&nbsp;Reset Password</button>
               </div>
               </div>
             </div>
@@ -311,14 +308,14 @@
                 <input name="ch_avp_street" id="ch_avp_street" class="form-control " rows="4" maxlength="250" value="{{$AVPDetails[0]->avp_addr != ''  ? $AVPDetails[0]->avp_addr : ''}}">
               </div>
               </div>
-              <div class="col-sm-6 avp-field">
+              <div class="col-sm-4 avp-field">
               <div class="form-group">
                 <label>City</label>
                 <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control " value="{{$AVPDetails[0]->avp_city != ''  ? $AVPDetails[0]->avp_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6  avp-field">
+              <div class="col-sm-4  avp-field">
               <div class="form-group">
                 <label>State</label>
                 <select name="ch_avp_state" id="ch_avp_state" class="form-control select2-bs4" style="width: 100%;" >
@@ -330,25 +327,15 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6  avp-field">
+              <div class="col-sm-4 avp-field">
               <div class="form-group">
                 <label>Zip</label>
                 <input type="text" name="ch_avp_zip" id="ch_avp_zip" maxlength="10" class="form-control " value="{{$AVPDetails[0]->avp_zip != ''  ? $AVPDetails[0]->avp_zip : ''}}" onkeypress="return isNumber(event)">
               </div>
               </div>
-              <!-- /.form group -->
-              {{-- <div class="radio-chk">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label>Vacant</label>
-                        <label style="display: block;"><input type="checkbox" name="AVPVacant" id="AVPVacant" class="ios-switch green bigswitch" {{$AVPDetails[0]->avp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)"/><div><div></div></div>
-                        </label>
-                    </div>
-                </div>
-              </div> --}}
-              <div class="col-sm-6  avp-field">
-                <label>&nbsp;</label><br>
-                <button type="button" class="btn bg-gradient-primary" id="{{ $AVPDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$AVPDetails[0]->user_id == ''  ? 'disabled' : ''}} ><i class="fas fa-redo-alt"></i>&nbsp;&nbsp;&nbsp;Reset Password</button>
+              <div class="card-body text-center avp-field">
+                <p>This will reset password to default "TempPass4You" for this user only.</p>
+                <button type="button" class="btn bg-gradient-primary" id="{{ $AVPDetails[0]->user_id }}" onclick="return updatePassword(this.id)" {{$AVPDetails[0]->user_id == ''  ? 'disabled' : ''}} ><i class="fas fa-redo-alt"></i>&nbsp;&nbsp;&nbsp;Reset Password</button>
               </div>
               </div>
             </div>
@@ -403,14 +390,14 @@
                 <input name="ch_mvp_street" id="ch_mvp_street" class="form-control" rows="4" value="{{$MVPDetails[0]->mvp_addr != ''  ? $MVPDetails[0]->mvp_addr : ''}}" maxlength="250">
               </div>
               </div>
-              <div class="col-sm-6 mvp-field">
+              <div class="col-sm-4 mvp-field">
               <div class="form-group">
                 <label>City</label>
                 <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control" value="{{$MVPDetails[0]->mvp_city != ''  ? $MVPDetails[0]->mvp_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 mvp-field">
+              <div class="col-sm-4 mvp-field">
               <div class="form-group">
                 <label>State</label>
                 <select name="ch_mvp_state" id="ch_mvp_state" class="form-control select2-bs4" style="width: 100%;" >
@@ -422,25 +409,15 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 mvp-field">
+              <div class="col-sm-4 mvp-field">
               <div class="form-group">
                 <label>Zip</label>
                 <input type="text" name="ch_mvp_zip" id="ch_mvp_zip" maxlength="10" class="form-control" value="{{$MVPDetails[0]->mvp_zip != ''  ? $MVPDetails[0]->mvp_zip : ''}}" onkeypress="return isNumber(event)" >
               </div>
               </div>
-              <!-- /.form group -->
-               {{-- <div class="radio-chk">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label>Vacant</label>
-                        <label style="display: block;"><input type="checkbox" name="MVPVacant" id="MVPVacant" class="ios-switch green bigswitch" {{$MVPDetails[0]->mvp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" /><div><div></div></div>
-                        </label>
-                    </div>
-                </div>
-              </div> --}}
-              <div class="col-sm-6 mvp-field">
-                <label>&nbsp;</label><br>
-                <button type="button" class="btn bg-gradient-primary" id="{{ $MVPDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$MVPDetails[0]->user_id == ''  ? 'disabled' : ''}} ><i class="fas fa-redo-alt" aria-hidden="true" ></i>&nbsp; Reset Password</button>
+              <div class="card-body text-center mvp-field">
+                <p>This will reset password to default "TempPass4You" for this user only.</p>
+                <button type="button" class="btn bg-gradient-primary" id="{{ $MVPDetails[0]->user_id }}" onclick="return updatePassword(this.id)" {{$MVPDetails[0]->user_id == ''  ? 'disabled' : ''}} ><i class="fas fa-redo-alt" ></i>&nbsp; Reset Password</button>
               </div>
               </div>
             </div>
@@ -495,14 +472,14 @@
                 <input name="ch_trs_street" id="ch_trs_street" class="form-control" rows="4" value="{{$TRSDetails[0]->trs_addr != ''  ? $TRSDetails[0]->trs_addr : ''}}" maxlength="250" >
               </div>
               </div>
-              <div class="col-sm-6 treas-field">
+              <div class="col-sm-4 treas-field">
               <div class="form-group">
                 <label>City</label>
                 <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control" value="{{$TRSDetails[0]->trs_city != ''  ? $TRSDetails[0]->trs_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 treas-field">
+              <div class="col-sm-4 treas-field">
               <div class="form-group">
                 <label>State</label>
                 <select name="ch_trs_state" id="ch_trs_state" class="form-control select2-bs4" style="width: 100%;">
@@ -514,25 +491,15 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 treas-field">
+              <div class="col-sm-4 treas-field">
               <div class="form-group">
                 <label>Zip</label>
                 <input type="text" name="ch_trs_zip" id="ch_trs_zip" maxlength="10" class="form-control" value="{{$TRSDetails[0]->trs_zip != ''  ? $TRSDetails[0]->trs_zip : ''}}" onkeypress="return isNumber(event)">
               </div>
               </div>
-              <!-- /.form group -->
-               {{-- <div class="radio-chk">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label>Vacant</label>
-                        <label style="display: block;"><input type="checkbox" name="TreasVacant" id="TreasVacant" class="ios-switch green bigswitch" {{$TRSDetails[0]->trs_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)"/><div><div></div></div>
-                        </label>
-                    </div>
-                </div>
-              </div> --}}
-              <div class="col-sm-6 treas-field">
-                <label>&nbsp;</label><br>
-                <button type="button" class="btn bg-gradient-primary" id="{{ $TRSDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$TRSDetails[0]->user_id == ''  ? 'disabled' : ''}} ><i class="fas fa-redo-alt" aria-hidden="true" ></i>&nbsp; Reset Password</button>
+              <div class="card-body text-center treas-field">
+                <p>This will reset password to default "TempPass4You" for this user only.</p>
+                <button type="button" class="btn bg-gradient-primary" id="{{ $TRSDetails[0]->user_id }}" onclick="return updatePassword(this.id)" {{$TRSDetails[0]->user_id == ''  ? 'disabled' : ''}} ><i class="fas fa-redo-alt" ></i>&nbsp; Reset Password</button>
               </div>
               </div>
             </div>
@@ -587,14 +554,14 @@
                 <input name="ch_sec_street" id="ch_sec_street" class="form-control" rows="4" value="{{$SECDetails[0]->sec_addr != ''  ? $SECDetails[0]->sec_addr : ''}}" maxlength="250" >
               </div>
               </div>
-              <div class="col-sm-6 sec-field">
+              <div class="col-sm-4 sec-field">
               <div class="form-group">
                 <label>City</label>
                 <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control" value="{{$SECDetails[0]->sec_city != ''  ? $SECDetails[0]->sec_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)" >
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 sec-field">
+              <div class="col-sm-4 sec-field">
               <div class="form-group">
                 <label>State</label>
                 <select name="ch_sec_state" id="ch_sec_state" class="form-control select2-bs4" style="width: 100%;" >
@@ -606,24 +573,15 @@
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6 sec-field">
+              <div class="col-sm-4 sec-field">
               <div class="form-group">
                 <label>Zip</label>
                 <input type="text" name="ch_sec_zip" id="ch_sec_zip" maxlength="10" class="form-control" value="{{$SECDetails[0]->sec_zip != ''  ? $SECDetails[0]->sec_zip : ''}}" onkeypress="return isNumber(event)" >
               </div>
               </div>
-               {{-- <div class="radio-chk">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label>Vacant</label>
-                        <label style="display: block;"><input type="checkbox" name="SecVacant" id="SecVacant" class="ios-switch green bigswitch" {{$SECDetails[0]->sec_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" /><div><div></div></div>
-                        </label>
-                    </div>
-                </div>
-              </div> --}}
-              <div class="col-sm-6 sec-field">
-                <label>&nbsp;</label><br>
-                <button type="button" class="btn bg-gradient-primary" id="{{ $SECDetails[0]->user_id }}" onclick="return resetPassword(this.id)" {{$SECDetails[0]->user_id == ''  ? 'disabled' : ''}} ><i class="fas fa-redo-alt" aria-hidden="true" ></i>&nbsp; Reset Password</button>
+              <div class="card-body text-center sec-field">
+                <p>This will reset password to default "TempPass4You" for this user only.</p>
+                <button type="button" class="btn bg-gradient-primary" id="{{ $SECDetails[0]->user_id }}" onclick="return updatePassword(this.id)" {{$SECDetails[0]->user_id == ''  ? 'disabled' : ''}} ><i class="fas fa-redo-alt"></i>&nbsp; Reset Password</button>
             </div>
               </div>
             </div>
@@ -957,25 +915,31 @@
             <div class="card-body text-center">
             @if($bigSisterCondition)
               <button type="submit" class="btn bg-gradient-primary" onclick="return PreSaveValidate()" ><i class="fas fa-save"></i>&nbsp; Save</button>
+
               <a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=MOMS Club of {{ $chapterList[0]->name }}" class="btn bg-gradient-primary"><i class="fas fa-envelope"></i>&nbsp; E-mail Board</a>
-              <button type="button" class="btn bg-gradient-primary" onclick="ConfirmCancel(this);" ><i class="fas fa-undo"></i>&nbsp; Reset Data</button>
+            </form>
+
+            <button type="button" class="btn bg-gradient-primary" onclick="ConfirmCancel(this);" ><i class="fas fa-undo"></i>&nbsp; Reset Data</button>
             @endif
-              <a href="{{ route('chapter.list') }}" class="btn bg-gradient-primary"><i class="fa fa-reply fa-fw" aria-hidden="true" ></i>&nbsp; Back</a>
+              <a href="{{ route('chapter.list') }}" class="btn bg-gradient-primary"><i class="fa fa-reply fa-fw" ></i>&nbsp; Back</a>
 
                 <br><br>
-                    @if($assistConferenceCoordinatorCondition)
-                <button type="button" class="btn bg-gradient-primary" onclick="return UpdateEIN()"><i class="fas fa-university"  ></i>&nbsp; Update EIN</button>
-                @if(empty($chapterList[0]->ein_letter_path))
-                    <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-ein"><i class="fas fa-upload" ></i>&nbsp; Upload EIN Letter</button>
-                @else
-                    <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-ein"><i class="fas fa-upload" ></i>&nbsp; Replace EIN Letter</button>               @endif
-                @endif
+            @if($assistConferenceCoordinatorCondition)
+            <button type="button" class="btn bg-gradient-primary" onclick="return UpdateEIN()"><i class="fas fa-university"  ></i>&nbsp; Update EIN</button>
+            @if(empty($chapterList[0]->ein_letter_path))
+                {{-- <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-ein"><i class="fas fa-upload" ></i>&nbsp; Upload EIN Letter</button> --}}
+                <button type="button" class="btn bg-gradient-primary" onclick="showFileUploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload EIN Letter</button>
+            @else
+                {{-- <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-ein"><i class="fas fa-upload" ></i>&nbsp; Replace EIN Letter</button>                --}}
+                <button type="button" class="btn bg-gradient-primary" onclick="showFileUploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace EIN Letter</button>
+            @endif
+            @endif
             @if($regionalCoordinatorCondition)
-              <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-disband"><i class="fas fa-ban"  ></i>&nbsp; Disband Chapter</button>
+              {{-- <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-disband"><i class="fas fa-ban"  ></i>&nbsp; Disband Chapter</button> --}}
+              <button type="button" class="btn bg-gradient-primary" onclick="showDisbandChapterModal()"><i class="fas fa-ban"  ></i>&nbsp; Disband Chapter</button>
             @endif
               </div>
 
-            </form>
             <!-- /.box-body -->
 
           </div>
@@ -983,12 +947,12 @@
         </div>
       </div>
 
-      <div class="modal fade" id="modal-ein">
+      {{-- <div class="modal fade" id="modal-ein">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span></button>
+                        <span>&times;</span></button>
                     <h4 class="modal-title">Upload EIN Letter</h4>
                 </div>
                 <div class="modal-body">
@@ -1003,14 +967,14 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
-    <div class="modal fade" id="modal-disband">
+    {{-- <div class="modal fade" id="modal-disband">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span></button>
+                        <span>&times;</span></button>
                     <h4 class="modal-title">Chapter Disband Reason</h4>
                 </div>
                 <div class="modal-body">
@@ -1039,7 +1003,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     </section>
 
@@ -1056,69 +1020,205 @@
         }
     });
 
-// Disable Web Link Status option 0
+    // Disable Web Link Status option 0
     document.getElementById('option0').disabled = true;
 
-    function disbandChapter() {
-        var txt = $("#disband_reason").val();
-        var cid = $("#chapter_id").val();
-        var ltr = $("#disband_letter").is(":checked") ? '1' : '0';
+    //If Chapter Name Change Warning
+    function PreviousNameReminder(){
+        customWarningAlert("If you are changing the chapter name, please be sure to note the old name in the 'Previously Known As' field.");
+        $('#ch_preknown').focus();
+    }
 
-        if (txt == '') {
-            alert("Please enter reason for Disband");
-            $("#disband_reason").focus();
-            return false;
-        } else {
-            // Show loading spinner
-            $('#loading-spinner').show();
+    // function disbandChapter() {
+    //     var txt = $("#disband_reason").val();
+    //     var cid = $("#chapter_id").val();
+    //     var ltr = $("#disband_letter").is(":checked") ? '1' : '0';
 
-            $.ajax({
-                url: '{{ route('chapter.disband') }}',
-                type: 'POST',
-                data: { reason: txt, letter: ltr, chapterid: cid, _token: '{{ csrf_token() }}' },
-                success: function(response) {
-                    if (response.status === 'success') {
-                        alert(response.message);
-                        window.location.href = response.redirect;
-                    } else {
-                        alert(response.message);
+    //     if (txt == '') {
+    //         alert("Please enter reason for Disband");
+    //         $("#disband_reason").focus();
+    //         return false;
+    //     } else {
+    //         // Show loading spinner
+    //         $('#loading-spinner').show();
+
+    //         $.ajax({
+    //             url: '{{ route('chapter.disband') }}',
+    //             type: 'POST',
+    //             data: { reason: txt, letter: ltr, chapterid: cid, _token: '{{ csrf_token() }}' },
+    //             success: function(response) {
+    //                 if (response.status === 'success') {
+    //                     showCustomAlert(response.message);
+    //                     window.location.href = response.redirect;
+    //                 } else {
+    //                     showCustomAlert(response.message);
+    //                 }
+    //             },
+    //             error: function(jqXHR, exception) {
+    //                 showCustomAlert("Something went wrong, Please try again.");
+    //             },
+    //             complete: function() {
+    //                 // Hide loading spinner
+    //                 $('#loading-spinner').hide();
+    //             }
+    //         });
+    //     }
+    // }
+
+    function showFileUploadModal() {
+        Swal.fire({
+            title: 'Upload EIN Letter',
+            html: `
+                <form id="uploadEINForm" enctype="multipart/form-data">
+                    @csrf
+                    <input type="file" name='file' required>
+                </form>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Upload',
+            cancelButtonText: 'Close',
+            preConfirm: () => {
+                var formData = new FormData(document.getElementById('uploadEINForm'));
+                return fetch('{{ url('/files/storeEIN/'. $id) }}', {
+                    method: 'POST',
+                    body: formData
+                }).then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
                     }
-                },
-                error: function(jqXHR, exception) {
-                    alert("Something went wrong, Please try again.");
-                },
-                complete: function() {
-                    // Hide loading spinner
-                    $('#loading-spinner').hide();
+                    return response.json();
+                }).then(data => {
+                    Swal.fire('Success!', 'File uploaded successfully!', 'success');
+                }).catch(error => {
+                    Swal.fire('Error!', 'Something went wrong!', 'error');
+                });
+            },
+            customClass: {
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger'
+            }
+        });
+    }
+
+    function showDisbandChapterModal() {
+        Swal.fire({
+            title: 'Chapter Disband Reason',
+            html: `
+                <p>Marking a chapter as disbanded will remove the logins for all board members and remove the chapter. Please enter the reason for disbanding and press OK.</p>
+                <div style="display: flex; align-items: center; ">
+                    <input type="text" id="disband_reason" name="disband_reason" class="swal2-input" placeholder ="Enter Reason" required style="width: 100%;">
+                </div>
+                <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chapterList[0]->id }}">
+                <br>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" id="disband_letter" class="custom-control-input">
+                    <label class="custom-control-label" for="disband_letter">Send Standard Disband Letter to Chapter</label>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Close',
+            customClass: {
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger'
+            },
+            preConfirm: () => {
+                const disbandReason = Swal.getPopup().querySelector('#disband_reason').value;
+                const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+                const disbandLetter = Swal.getPopup().querySelector('#disband_letter').checked;
+
+                if (!disbandReason) {
+                    Swal.showValidationMessage('Please enter the reason for disbanding.');
+                    return false;
                 }
-            });
-        }
+
+                return {
+                    disband_reason: disbandReason,
+                    chapter_id: chapterId,
+                    disband_letter: disbandLetter
+                };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const data = result.value;
+
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Please wait while we process your request.',
+                    allowOutsideClick: false,
+                    customClass: {
+                        confirmButton: 'btn-sm btn-success',
+                        cancelButton: 'btn-sm btn-danger'
+                    },
+                    didOpen: () => {
+                        Swal.showLoading();
+
+                        // Perform the AJAX request
+                        $.ajax({
+                            url: '{{ route('chapter.disband') }}',
+                            type: 'POST',
+                            data: {
+                                reason: data.disband_reason,
+                                letter: data.disband_letter ? '1' : '0',
+                                chapterid: data.chapter_id,
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showConfirmButton: false,  // Automatically close without "OK" button
+                                    timer: 1500,
+                                    customClass: {
+                                        confirmButton: 'btn-sm btn-success'
+                                    }
+                                }).then(() => {
+                                    if (response.redirect) {
+                                        window.location.href = response.redirect;
+                                    }
+                                });
+                            },
+                            error: function(jqXHR, exception) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Something went wrong, Please try again.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'btn-sm btn-success'
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
     }
 
+//   function isNumber(evt) {
+//     evt = (evt) ? evt : window.event;
+//     var charCode = (evt.which) ? evt.which : evt.keyCode;
+//     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+//         return false;
+//     }
+//     return true;
+// }
+// function isAlphanumeric(e){
+//     var k;
+//     document.all ? k = e.keyCode : k = e.which;
+//     return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
+// }
+// function isPhone() {
+//     if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode != 8) {
+//         event.keyCode = 0;
+//         alert("Please Enter Number Only");
+//         return false;
+//     }
+// }
 
-
-  function isNumber(evt) {
-    evt = (evt) ? evt : window.event;
-    var charCode = (evt.which) ? evt.which : evt.keyCode;
-    if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-        return false;
-    }
-    return true;
-}
-function isAlphanumeric(e){
-    var k;
-    document.all ? k = e.keyCode : k = e.which;
-    return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
-}
-function isPhone() {
-    if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode != 8) {
-        event.keyCode = 0;
-        alert("Please Enter Number Only");
-        return false;
-    }
-}
-
-function is_url() {
+    function is_url() {
         var str = $("#validate_url").val().trim(); // Trim leading and trailing whitespace
         var chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
 
@@ -1211,13 +1311,29 @@ handleVacantCheckbox("SecVacant", "sec-field");
 handleVacantCheckbox("TreasVacant", "treas-field");
 
 
-    function ConfirmCancel(element){
-        var result=confirm("Any unsaved changes will be lost. Do you want to continue?");
-        if(result)
-            location.reload()
-        else
-            return false;
+    function ConfirmCancel(element) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Any unsaved changes will be lost. Do you want to continue?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, continue',
+            cancelButtonText: 'No, stay here',
+            customClass: {
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Reload the page
+                location.reload();
+            } else {
+                // Do nothing if the user cancels
+                return false;
+            }
+        });
     }
+
 
   //submit validation function
   function PreSaveValidate(){
@@ -1245,7 +1361,7 @@ handleVacantCheckbox("TreasVacant", "treas-field");
           }
 
           if(errMessage.length > 0){
-            alert (errMessage);
+            customErrorAlert(errMessage);
             return false;
           }
 
@@ -1264,68 +1380,160 @@ handleVacantCheckbox("TreasVacant", "treas-field");
             }
 
 
-    function resetPassword(userid){
-        var new_password = prompt("Please enter new password for this board member.", "TempPass4You");
-        if (new_password != null && userid != '') {
-            // Verify the password entered is of an allowable size
-            if (new_password.length < 7) {
-                alert("Password must be at least 7 characters. The password has not been reset.");
-                return false;
-            } else {
-                $.ajax({
-                    url: '{{ route('chapter.resetpassword') }}',
-                    type: "POST",
-                    data: {
-                        pswd: new_password,
-                        user_id: userid,
-                        _token: '{{ csrf_token() }}'
-                    },
-                    success: function(result) {
-                        alert(result.message);
-                    },
-                    error: function(jqXHR, exception) {
-                        if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
-                            alert(jqXHR.responseJSON.error);
-                        } else {
-                            alert('An error occurred while resetting the password.');
-                        }
-                    }
-                });
-                return true;
+    // function resetPassword(userid){
+    //     var new_password = prompt("Please enter new password for this board member.", "TempPass4You");
+    //     if (new_password != null && userid != '') {
+    //         // Verify the password entered is of an allowable size
+    //         if (new_password.length < 7) {
+    //             alert("Password must be at least 7 characters. The password has not been reset.");
+    //             return false;
+    //         } else {
+    //             $.ajax({
+    //                 url: '{{ route('chapter.resetpassword') }}',
+    //                 type: "POST",
+    //                 data: {
+    //                     pswd: new_password,
+    //                     user_id: userid,
+    //                     _token: '{{ csrf_token() }}'
+    //                 },
+    //                 success: function(result) {
+    //                     alert(result.message);
+    //                 },
+    //                 error: function(jqXHR, exception) {
+    //                     if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
+    //                         alert(jqXHR.responseJSON.error);
+    //                     } else {
+    //                         alert('An error occurred while resetting the password.');
+    //                     }
+    //                 }
+    //             });
+    //             return true;
+    //         }
+    //     } else {
+    //         return false;
+    //     }
+    // }
+
+    function updatePassword(userid){
+        var new_password = "TempPass4You";
+
+            $.ajax({
+            url: '{{ route('chapter.updatepassword') }}',
+            type: "POST",
+            data: {
+                user_id: userid,
+                new_password: new_password,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(result) {
+                customSuccessAlert(result.message.replace('<br>', '\n'));
+            },
+            error: function(jqXHR, exception) {
+                if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
+                    customErrorAlert(jqXHR.responseJSON.error);
+                } else {
+                    customErrorAlert('An error occurred while resetting the password.');
+                }
             }
+        });
+        return true;
+    }
+
+    // function UpdateEIN(){
+    //     var ein=document.getElementById("ch_ein").value;
+    //     var new_ein="";
+
+    //     if (ein==""){
+    //         new_ein = prompt("Please enter the EIN for the chapter");
+
+    //         if (new_ein != null) {
+    //             document.getElementById("ch_ein").value = new_ein;
+    //             return true;
+    //         }
+    //     }
+    //     else{
+    //         var result=confirm("This chapter already has an assigned EIN.  Once a chapter has been assigned an EIN it should not be changed.  Are you REALLY sure you want to do this?");
+    //         if(result){
+    //             new_ein = prompt("Please enter the EIN for the chapter");
+    //             if (new_ein != null) {
+    //                 document.getElementById("ch_ein").value = new_ein;
+    //                 return true;
+    //             }
+    //         }
+    //         else{
+    //             return false;
+    //         }
+    //     }
+    // }
+
+    function UpdateEIN() {
+        var ein = document.getElementById("ch_ein").value;
+        if (ein === "") {
+            // Prompt for EIN if not already filled
+            Swal.fire({
+                title: 'Enter EIN',
+                input: 'text',
+                inputLabel: 'Please enter the EIN for the chapter',
+                inputPlaceholder: 'Enter EIN',
+                showCancelButton: true,
+                confirmButtonText: 'Submit',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                // buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById("ch_ein").value = result.value;
+                    // Automatically submit the form after EIN is entered
+                    submitForm();
+                }
+            });
         } else {
-            return false;
+            // Confirm EIN change if already filled
+            Swal.fire({
+                title: 'Confirm EIN Change',
+                text: 'This chapter already has an assigned EIN. Are you REALLY sure you want to change it?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, Change EIN',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                // buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: 'Enter New EIN',
+                        input: 'text',
+                        inputLabel: 'Please enter the EIN for the chapter',
+                        inputPlaceholder: 'Enter EIN',
+                        showCancelButton: true,
+                        confirmButtonText: 'Submit',
+                        cancelButtonText: 'Cancel',
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success',
+                            cancelButton: 'btn-sm btn-danger'
+                        },
+                        // buttonsStyling: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            document.getElementById("ch_ein").value = result.value;
+                            // Automatically submit the form after EIN is entered
+                            submitForm();
+                        }
+                    });
+                }
+            });
         }
     }
 
-
-
-function UpdateEIN(){
-                var ein=document.getElementById("ch_ein").value;
-                var new_ein="";
-
-                if (ein==""){
-                    new_ein = prompt("Please enter the EIN for the chapter");
-
-                    if (new_ein != null) {
-                        document.getElementById("ch_ein").value = new_ein;
-                        return true;
-                    }
-                }
-                else{
-                    var result=confirm("This chapter already has an assigned EIN.  Once a chapter has been assigned an EIN it should not be changed.  Are you REALLY sure you want to do this?");
-                    if(result){
-                        new_ein = prompt("Please enter the EIN for the chapter");
-                        if (new_ein != null) {
-                            document.getElementById("ch_ein").value = new_ein;
-                            return true;
-                        }
-                    }
-                    else{
-                        return false;
-                    }
-                }
-            }
+    function submitForm() {
+        document.getElementById("myForm").submit(); // Trigger form submission
+    }
 
     // function EINLetter(){
     //             var ein=document.getElementById("ch_ein_letter_path").value;
@@ -1354,11 +1562,6 @@ function UpdateEIN(){
     //             }
     //         }
 
-    function PreviousNameReminder(){
 
-        alert("If you are changing the chapter name, please be sure to note the old name.");
-        $('#ch_preknown').focus();
-
-    }
 </script>
 @endsection

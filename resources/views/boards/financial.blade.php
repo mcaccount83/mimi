@@ -3650,386 +3650,17 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
     element.addEventListener('input', debounce(ChangeMemberCount, 300));
 });
 
-/* Last Step Visited */
-    // $(window).on("load", function() {
-    //     LoadSteps();
-    // });
 
 /* Save & Submit Cnnfirmation */
-    function getConfirmation() {
-        var retVal = confirm("Do you want to continue ?");
-        if( retVal == true ) {
-            document.getElementById("submitted").value='1';
-            return true;
-        } else {
-            return false;
-        }
-    }
-</script>
-
-<script>
-/* Save & Submit Verification */
-$(document).ready(function() {
-    function submitFormWithStep(step) {
-        $("#FurthestStep").val(step);
-        $("#financial_report").submit();
-    }
-
-    $("#btn-step-1").click(function() {
-        if (!EnsureRoster()) return false;
-        if (!EnsureMembers()) return false;
-        submitFormWithStep(1);
-    });
-    $("#btn-step-2").click(function() {
-        submitFormWithStep(2);
-    });
-    $("#btn-step-3").click(function() {
-        if (!EnsureServiceProject()) return false;
-        submitFormWithStep(3);
-    });
-    $("#btn-step-4").click(function() {
-        submitFormWithStep(4);
-    });
-    $("#btn-step-5").click(function() {
-        submitFormWithStep(5);
-    });
-    $("#btn-step-6").click(function() {
-        if (!EnsureReRegistration()) return false;
-        submitFormWithStep(6);
-    });
-    $("#btn-step-7").click(function() {
-        submitFormWithStep(7);
-    });
-    $("#btn-step-8").click(function() {
-        submitFormWithStep(8);
-    });
-    $("#btn-step-9").click(function() {
-        if (!EnsureStatement()) return false;
-        submitFormWithStep(9);
-    });
-
-    $("#btn-step-11").click(function() {
-        if (!EnsureQuestions()) return false;
-        submitFormWithStep(11);
-    });
-    $("#btn-step-12").click(function() {
-        submitFormWithStep(12);
-    });
-    $("#btn-step-13").click(function() {
-        if (!EnsureSubmitInformation()) return false;
-        submitFormWithStep(13);
-    });
-    $("#btn-save").click(function() {
-        submitFormWithStep(14);
-    });
-});
-
-$("#final-submit").click(function() {
-        if (!EnsureRoster()) {
-        return false;
-    }
-    if (!EnsureMembers()) {
-        return false;
-    }
-    if (!EnsureServiceProject()) {
-        return false;
-    }
-    if (!EnsureReRegistration()) {
-        return false;
-    }
-    if (!EnsureQuestions()) {
-        return false;
-    }
-    if (!EnsureSubmitInformation()) {
-        return false;
-    }
-    if (!EnsureReconciliation()) {
-        return false;
-    }
-        var result = confirm("This will finalize and submit your report.  You will no longer be able to edit this report.  Do you wish to continue?");
-            if (result) {
-                $("#submitted").val('1');
-                $("#FurthestStep").val('15');
-                $("#financial_report").submit();
-            } else {
-                $(this).prop('disabled', false);
-        }
-	});
-
-    // $(document).ready(function(){
-    //     $("#btn-step-1").click(function() {
-    //         if (!EnsureRoster()) {
-    //             return false;
-    //         }
-    //         else if (!EnsureMembers()) {
-    //             return false;
-    //         }
-    //         $("#FurthestStep").val('1');
-    //         $("#financial_report").submit();
-    //     });
-    //     $("#btn-step-2").click(function() {
-    //         $("#FurthestStep").val('2');
-    //         $("#financial_report").submit();
-    //     });
-    //     $("#btn-step-3").click(function() {
-    //         if (!EnsureServiceProject()) {
-    //             return false;
-    //         }
-    //         $("#FurthestStep").val('3');
-    //         $("#financial_report").submit();
-    //     });
-    //     $("#btn-step-4").click(function() {
-    //         $("#FurthestStep").val('4');
-    //         $("#financial_report").submit();
-    //     });
-    //     $("#btn-step-5").click(function() {
-    //         $("#FurthestStep").val('5');
-    //         $("#financial_report").submit();
-    //     });
-    //     $("#btn-step-6").click(function() {
-    //         if (!EnsureReRegistration()) {
+    // function getConfirmation() {
+    //     var retVal = confirm("Do you want to continue ?");
+    //     if( retVal == true ) {
+    //         document.getElementById("submitted").value='1';
+    //         return true;
+    //     } else {
     //         return false;
-    //         }
-    //         $("#FurthestStep").val('6');
-    //         $("#financial_report").submit();
-    //     });
-    //     $("#btn-step-7").click(function() {
-    //         $("#FurthestStep").val('7');
-    //         $("#financial_report").submit();
-    //     });
-    //     $("#btn-step-8").click(function() {
-    //         $("#FurthestStep").val('8');
-    //         $("#financial_report").submit();
-    //     });
-    //     $("#btn-step-9").click(function() {
-    //         if (!EnsureStatement()) {
-    //             return false;
-    //         }
-    //         $("#FurthestStep").val('9');
-    //         $("#financial_report").submit();
-    //     });
-    //     $("#btn-step-11").click(function() {
-    //         if (!EnsureQuestions()) {
-    //         return false;
-    //         }
-    //         else if (!Ensure990()) {
-    //             return false;
-    //         }
-    //         $("#FurthestStep").val('11');
-    //         $("#financial_report").submit();
-    //     });
-    //     $("#btn-step-12").click(function() {
-    //         var agreeChk = $("#TotalAwardNominations").val();
-    //         if(agreeChk > 0){
-    //             if (($("input[name='AwardsAgree']:checked").length)<=0) {
-    //                 alert("Please select I understand and agree check box");
-    //                 return false;
-    //             }
-    //             else{
-    //                 $("#FurthestStep").val('12');
-    //                 $("#financial_report").submit();
-    //             }
-    //         }else{
-    //             $("#FurthestStep").val('12');
-    //             $("#financial_report").submit();
-    //         }
-    //     });
-    //         $("#btn-step-13").click(function() {
-    //         if (!EnsureSubmitInformation()) {
-    //             return false;
-    //         }
-    //         $("#FurthestStep").val('13');
-    //         $("#financial_report").submit();
-    //     });
-    //         $("#btn-save").click(function() {
-    //         $("#FurthestStep").val('14');
-    //         $("#financial_report").submit();
-    //     });
-    //         $("#final-submit").click(function() {
-    //         if (!EnsureRoster()) {
-    //             return false;
-    //         }
-    //         else if (!EnsureMembers()) {
-    //             return false;
-    //         }
-    //         else if (!EnsureServiceProject()) {
-    //             return false;
-    //         }
-    //         else if (!EnsureReRegistration()) {
-    //             return false;
-    //         }
-    //         else if (!EnsureQuestions()) {
-    //             return false;
-    //         }
-    //         else if (!EnsureStatement()) {
-    //             return false;
-    //         }
-    //         else if (!Ensure990()) {
-    //             return false;
-    //         }
-    //         else if (!EnsureReconciliation()) {
-    //             return false;
-    //         }
-    //         else if (!EnsureSubmitInformation()) {
-    //             return false;
-    //         }
-    //         var completedEmail = $("#CompletedEmail").val();
-    //         if (!isValidEmail(completedEmail)) {
-    //             alert("Please enter a valid email address.");
-    //             return false;
-    //         }
-    //         var result = confirm("This will finalize and submit your report.  You will no longer be able to edit this report.  Do you wish to continue?");
-    //         if (result) {
-    //             $("#submitted").val('1');
-    //             $("#FurthestStep").val('15');
-    //             $("#financial_report").submit();
-    //         } else {
-    //             console.log("User cancelled the submission");
-    //         }
-    //     });
-    // });
-
-    function isValidEmail(email) {
-        // Regular expression for email validation
-        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-
-    function EnsureRoster() {
-        var rosterPath = document.getElementById('RosterPath');
-        if (!rosterPath || rosterPath.value == "") {
-            alert("Your chapter's roster was not uploaded in CHAPTER DUES section. \n\nPlease upload Roster to Continue.");
-            accordion.openAccordionItem('accordion-header-members');
-            return false;
-        }
-        return true;
-    }
-
-    function EnsureMembers() {
-        var changeDues = document.querySelector('input[name="optChangeDues"]:checked');
-        var newOldDifferent = document.querySelector('input[name="optNewOldDifferent"]:checked');
-        var noFullDues = document.querySelector('input[name="optNoFullDues"]:checked');
-
-        if (!changeDues || !newOldDifferent || !noFullDues) {
-            alert("Please answer required questions in the CHAPTER DUES section to Continue.");
-            accordion.openAccordionItem('accordion-header-members');
-            return false;
-        }
-        return true;
-    }
-
-    function EnsureServiceProject() {
-        var serviceProjectDesc0 = document.getElementById('ServiceProjectDesc0');
-        if (!serviceProjectDesc0 || serviceProjectDesc0.value == "") {
-            alert("At least one Service Project is required in SERVICE PROJECT section. \n\nPlease enter Service Project information to Continue.");
-            accordion.openAccordionItem('accordion-header-service');
-            $("#ServiceProjectDesc0").focus();
-            return false;
-        }
-        return true;
-    }
-
-    function EnsureReRegistration() {
-        var annualRegistrationFee = document.getElementById('AnnualRegistrationFee');
-        if (!annualRegistrationFee || annualRegistrationFee.value == "") {
-            alert("Chapter Re-registration is required in INTERNATIONAL EVENTS & RE-REGISTRATION section. \n\nPlease enter Annual Re-Registration Payment to Continue.");
-            accordion.openAccordionItem('accordion-header-rereg');
-            $("#AnnualRegistrationFee").focus();
-            return false;
-        }
-        return true;
-    }
-
-    function EnsureStatement() {
-        var bankStatementIncluded = document.getElementById('BankStatementIncluded');
-        var statementPath = document.getElementById('StatementPath');
-        if (bankStatementIncluded && bankStatementIncluded.value == "1" && (!statementPath || statementPath.value == "")) {
-            accordion.openAccordionItem('accordion-header-reconciliation');
-            alert("Your chapter's Bank Statement was not uploaded in the BANK RECONCILIATION section, but you indicated the file was attached. \n\nPlease upload Bank Statement to Continue.");
-            return false;
-        }
-        return true;
-    }
-
-    function EnsureReconciliation() {
-    var PaymentTotal = 0;
-    var DepositTotal = 0;
-
-    var table = document.getElementById("bank-rec");
-
-    for (var i = 1, row; row = table.rows[i]; i++) {
-        // Payment Amount
-        var paymentInput = row.querySelector('input[name^="BankRecPaymentAmount"]');
-        var paymentValue = paymentInput ? parseFloat(paymentInput.value.replace(/,/g, '')) || 0 : 0;
-        PaymentTotal += paymentValue;
-
-        // Deposit Amount
-        var depositInput = row.querySelector('input[name^="BankRecDepositAmount"]');
-        var depositValue = depositInput ? parseFloat(depositInput.value.replace(/,/g, '')) || 0 : 0;
-        DepositTotal += depositValue;
-    }
-
-    var BankBalanceNow = parseFloat(document.getElementById("BankBalanceNow").value.replace(/,/g, '')) || 0;
-
-    var TotalFees = (BankBalanceNow - PaymentTotal + DepositTotal).toFixed(2);
-    var TreasuryBalanceNow = parseFloat(document.getElementById("TreasuryBalanceNow").value.replace(/,/g, '')) || 0;
-
-    if (TotalFees != TreasuryBalanceNow) {
-        var proceedAnyway = confirm("Your report does not balance. Your Treasury Balance Now and Reconciled Bank Balance should match before submitting your report. \n\nClick OK to Submit Anyway. \nClick Cancel to Return to Report.");
-        if (!proceedAnyway) {
-            accordion.openAccordionItem('accordion-header-reconciliation');
-            return false;
-        }
-    }
-    return true;
-}
-
-    function EnsureQuestions() {
-        var requiredQuestions = [
-            'ReceiveCompensation', 'FinancialBenefit', 'InfluencePolitical', 'VoteAllActivities',
-            'BoughtPins', 'BoughtMerch', 'OfferedMerch', 'ByLawsAvailable', 'ChildrensRoom',
-            'Playgroups', 'ChildOutings', 'MotherOutings', 'MeetingSpeakers', 'SpeakerFrequency',
-            'ParkDays', 'ContributionsNotRegNP', 'Activity[]','PerformServiceProject', 'SisterChapter',
-            'InternationalEvent', 'FileIRS', 'BankStatementIncluded'
-        ];
-
-        for (var i = 0; i < requiredQuestions.length; i++) {
-            var questionName = requiredQuestions[i];
-            var isAnswered = document.querySelector('input[name="' + questionName + '"]:checked');
-            if (!isAnswered) {
-                alert("Please answer all questions in the CHAPTER QUESTIONS section to Continue.");
-                accordion.openAccordionItem('accordion-header-questions');
-                return false;
-            }
-        }
-        return true;
-    }
-
-    function Ensure990() {
-        var fileIRS = document.getElementById('FileIRS');
-        var path990N = document.getElementById('990NPath');
-        if (fileIRS && fileIRS.value == "1" && path990N && path990N.value == "") {
-            alert("Your chapter's 990N filing confirmation was not uploaded in the CHAPTER QUESTIONS section, but you indicated the file was attached. \n\nPlease upload 990 Confirmation to Continue.");
-            accordion.openAccordionItem('accordion-header-questions');
-            return false;
-        }
-        return true;
-    }
-
-    function EnsureSubmitInformation() {
-        var completedName = document.getElementById('CompletedName');
-        var completedEmail = document.getElementById('CompletedEmail');
-        if (!completedName || completedName.value == "") {
-            alert("Please enter the name of the person submitting the report to Continue.");
-            $("#CompletedName").focus();
-            return false;
-        } else if (!completedEmail || completedEmail.value == "") {
-            alert("Please enter the email address of the person submitting the report to Continue.");
-            $("#CompletedEmail").focus();
-            return false;
-        }
-        return true;
-    }
+    //     }
+    // }
 </script>
 
 <script>
@@ -4861,7 +4492,7 @@ $("#final-submit").click(function() {
         ChangeBankRec();
     }
 
-// Sectiom 9 Questions - Explainations Rquired.
+// Sectiom 10 Questions - Explainations Rquired.
 document.addEventListener("DOMContentLoaded", function() {
     // Add event listeners for each radio button group
     document.querySelectorAll('input[name="ReceiveCompensation"]').forEach(function(el) {
@@ -4937,203 +4568,214 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     function ToggleReceiveCompensationExplanation() {
-        var selectedValue = document.querySelector('input[name="ReceiveCompensation"]:checked').value;   /* Questions 1 */
+        var selectedRadio = document.querySelector('input[name="ReceiveCompensation"]:checked');
+        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 1 */
 
-        if (selectedValue == "1") {
+        if (selectedValue === "1") {
             $('#ReceiveCompensationExplanation').addClass('tx-cls');
-            document.getElementById("divReceiveCompensationExplanation").style.display = 'block';  // If "Yes" is selected
+            document.getElementById("divReceiveCompensationExplanation").style.display = 'block'; // If "Yes" is selected
         } else {
             $('#ReceiveCompensationExplanation').removeClass('tx-cls');
-            document.getElementById("divReceiveCompensationExplanation").style.display = 'none';  // If "No" is selected
+            document.getElementById("divReceiveCompensationExplanation").style.display = 'none'; // If "No" is selected
         }
     }
 
     function ToggleFinancialBenefitExplanation() {
-        var selectedValue = document.querySelector('input[name="FinancialBenefit"]:checked').value;   /* Questions 2 */
+        var selectedRadio = document.querySelector('input[name="FinancialBenefit"]:checked');
+        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 2 */
 
-            if (selectedValue == "1") {
-                $('#FinancialBenefitExplanation').addClass('tx-cls');
-                document.getElementById("divFinancialBenefitExplanation").style.display = 'block';  // If "Yes" is selected
-            } else {
-                $('#FinancialBenefitExplanation').removeClass('tx-cls');
-                document.getElementById("divFinancialBenefitExplanation").style.display = 'none';  // If "No" is selected
-            }
+        if (selectedValue === "1") {
+            $('#FinancialBenefitExplanation').addClass('tx-cls');
+            document.getElementById("divFinancialBenefitExplanation").style.display = 'block'; // If "Yes" is selected
+        } else {
+            $('#FinancialBenefitExplanation').removeClass('tx-cls');
+            document.getElementById("divFinancialBenefitExplanation").style.display = 'none'; // If "No" is selected
         }
+    }
 
     function ToggleInfluencePoliticalExplanation() {
-            var selectedValue = document.querySelector('input[name="InfluencePolitical"]:checked').value;   /* Questions 3 */
+        var selectedRadio = document.querySelector('input[name="InfluencePolitical"]:checked');
+        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 3 */
 
-            if (selectedValue == "1") {
-                $('#InfluencePoliticalExplanation').addClass('tx-cls');
-                document.getElementById("divInfluencePoliticalExplanation").style.display = 'block';  // If "Yes" is selected
-            } else {
-                $('#InfluencePoliticalExplanation').removeClass('tx-cls');
-                document.getElementById("divInfluencePoliticalExplanation").style.display = 'none';  // If "No" is selected
-            }
+        if (selectedValue === "1") {
+            $('#InfluencePoliticalExplanation').addClass('tx-cls');
+            document.getElementById("divInfluencePoliticalExplanation").style.display = 'block'; // If "Yes" is selected
+        } else {
+            $('#InfluencePoliticalExplanation').removeClass('tx-cls');
+            document.getElementById("divInfluencePoliticalExplanation").style.display = 'none'; // If "No" is selected
         }
+    }
 
     function ToggleVoteAllActivitiesExplanation() {
-            var selectedValue = document.querySelector('input[name="VoteAllActivities"]:checked').value;    /* Questions 4 */
+        var selectedRadio = document.querySelector('input[name="VoteAllActivities"]:checked');
+        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 4 */
 
-            if (selectedValue == "0") {
-                $('#VoteAllActivitiesExplanation').addClass('tx-cls');
-                document.getElementById("divVoteAllActivitiesExplanation").style.display = 'block';  // If "No" is selected
-            } else {
-                $('#VoteAllActivitiesExplanation').removeClass('tx-cls');
-                document.getElementById("divVoteAllActivitiesExplanation").style.display = 'none';  // If "Yes" is selected
-            }
+        if (selectedValue === "0") {
+            $('#VoteAllActivitiesExplanation').addClass('tx-cls');
+            document.getElementById("divVoteAllActivitiesExplanation").style.display = 'block'; // If "No" is selected
+        } else {
+            $('#VoteAllActivitiesExplanation').removeClass('tx-cls');
+            document.getElementById("divVoteAllActivitiesExplanation").style.display = 'none'; // If "Yes" is selected
         }
+    }
 
     function ToggleBoughtPinsExplanation() {
-            var selectedValue = document.querySelector('input[name="BoughtPins"]:checked').value;    /* Questions 5 */
+        var selectedRadio = document.querySelector('input[name="BoughtPins"]:checked');
+        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 5 */
 
-            if (selectedValue == "0") {
-                $('#BoughtPinsExplanation').addClass('tx-cls');
-                document.getElementById("divBoughtPinsExplanation").style.display = 'block';  // If "No" is selected
-            } else {
-                $('#BoughtPinsExplanation').removeClass('tx-cls');
-                document.getElementById("divBoughtPinsExplanation").style.display = 'none';  // If "Yes" is selected
-            }
+        if (selectedValue === "0") {
+            $('#BoughtPinsExplanation').addClass('tx-cls');
+            document.getElementById("divBoughtPinsExplanation").style.display = 'block'; // If "No" is selected
+        } else {
+            $('#BoughtPinsExplanation').removeClass('tx-cls');
+            document.getElementById("divBoughtPinsExplanation").style.display = 'none'; // If "Yes" is selected
         }
-
+    }
     function ToggleBoughtMerchExplanation() {
-            var selectedValue = document.querySelector('input[name="BoughtMerch"]:checked').value;    /* Questions 6 */
+        var selectedRadio = document.querySelector('input[name="BoughtMerch"]:checked');
+        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 6 */
 
-            if (selectedValue == "0") {
-                $('#BoughtMerchExplanation').addClass('tx-cls');
-                document.getElementById("divBoughtMerchExplanation").style.display = 'block';  // If "No" is selected
-            } else {
-                $('#BoughtMerchExplanation').removeClass('tx-cls');
-                document.getElementById("divBoughtMerchExplanation").style.display = 'none';  // If "Yes" is selected
-            }
+        if (selectedValue === "0") {
+            $('#BoughtMerchExplanation').addClass('tx-cls');
+            document.getElementById("divBoughtMerchExplanation").style.display = 'block'; // If "No" is selected
+        } else {
+            $('#BoughtMerchExplanation').removeClass('tx-cls');
+            document.getElementById("divBoughtMerchExplanation").style.display = 'none'; // If "Yes" is selected
         }
+    }
 
     function ToggleOfferedMerchExplanation() {
-            var selectedValue = document.querySelector('input[name="OfferedMerch"]:checked').value;    /* Questions 7 */
+        var selectedRadio = document.querySelector('input[name="OfferedMerch"]:checked');
+        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 7 */
 
-            if (selectedValue == "0") {
-                $('#OfferedMerchExplanation').addClass('tx-cls');
-                document.getElementById("divOfferedMerchExplanation").style.display = 'block';  // If "No" is selected
-            } else {
-                $('#OfferedMerchExplanation').removeClass('tx-cls');
-                document.getElementById("divOfferedMerchExplanation").style.display = 'none';  // If "Yes" is selected
-            }
+        if (selectedValue === "0") {
+            $('#OfferedMerchExplanation').addClass('tx-cls');
+            document.getElementById("divOfferedMerchExplanation").style.display = 'block'; // If "No" is selected
+        } else {
+            $('#OfferedMerchExplanation').removeClass('tx-cls');
+            document.getElementById("divOfferedMerchExplanation").style.display = 'none'; // If "Yes" is selected
         }
+    }
 
     function ToggleByLawsAvailableExplanation() {
-            var selectedValue = document.querySelector('input[name="ByLawsAvailable"]:checked').value;    /* Questions 8 */
+        var selectedRadio = document.querySelector('input[name="ByLawsAvailable"]:checked');
+        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 8 */
 
-            if (selectedValue == "0") {
-                $('#ByLawsAvailableExplanation').addClass('tx-cls');
-                document.getElementById("divByLawsAvailableExplanation").style.display = 'block';  // If "No" is selected
-            } else {
-                $('#ByLawsAvailableExplanation').removeClass('tx-cls');
-                document.getElementById("divByLawsAvailableExplanation").style.display = 'none';  // If "Yes" is selected
-            }
+        if (selectedValue === "0") {
+            $('#ByLawsAvailableExplanation').addClass('tx-cls');
+            document.getElementById("divByLawsAvailableExplanation").style.display = 'block'; // If "No" is selected
+        } else {
+            $('#ByLawsAvailableExplanation').removeClass('tx-cls');
+            document.getElementById("divByLawsAvailableExplanation").style.display = 'none'; // If "Yes" is selected
         }
+    }
 
     function ToggleChildOutingsExplanation() {
-            var selectedValue = document.querySelector('input[name="ChildOutings"]:checked').value;    /* Questions 11 */
+        var selectedRadio = document.querySelector('input[name="ChildOutings"]:checked');
+        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 11 */
 
-            if (selectedValue == "0") {
-                $('#ChildOutingsExplanation').addClass('tx-cls');
-                document.getElementById("divChildOutingsExplanation").style.display = 'block';  // If "No" is selected
-            } else {
-                $('#ChildOutingsExplanation').removeClass('tx-cls');
-                document.getElementById("divChildOutingsExplanation").style.display = 'none';  // If "Yes" is selected
-            }
+        if (selectedValue === "0") {
+            $('#ChildOutingsExplanation').addClass('tx-cls');
+            document.getElementById("divChildOutingsExplanation").style.display = 'block'; // If "No" is selected
+        } else {
+            $('#ChildOutingsExplanation').removeClass('tx-cls');
+            document.getElementById("divChildOutingsExplanation").style.display = 'none'; // If "Yes" is selected
         }
+    }
 
     function ToggleMotherOutingsExplanation() {
-            var selectedValue = document.querySelector('input[name="MotherOutings"]:checked').value;    /* Questions 12 */
+        var selectedRadio = document.querySelector('input[name="MotherOutings"]:checked');
+        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 12 */
 
-            if (selectedValue == "0") {
-                $('#MotherOutingsExplanation').addClass('tx-cls');
-                document.getElementById("divMotherOutingsExplanation").style.display = 'block';  // If "No" is selected
-            } else {
-                $('#MotherOutingsExplanation').removeClass('tx-cls');
-                document.getElementById("divMotherOutingsExplanation").style.display ='none';  // If "Yes" is selected
-            }
+        if (selectedValue === "0") {
+            $('#MotherOutingsExplanation').addClass('tx-cls');
+            document.getElementById("divMotherOutingsExplanation").style.display = 'block'; // If "No" is selected
+        } else {
+            $('#MotherOutingsExplanation').removeClass('tx-cls');
+            document.getElementById("divMotherOutingsExplanation").style.display = 'none'; // If "Yes" is selected
         }
+    }
 
     function ToggleMeetingSpeakersExplanation() {
-            var selectedValue = document.querySelector('input[name="MeetingSpeakers"]:checked').value;    /* Questions 13 */
+        var selectedRadio = document.querySelector('input[name="MeetingSpeakers"]:checked');
+        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 13 */
 
-            if (selectedValue == "0") {
-                $('#MeetingSpeakersExplanation').addClass('tx-cls');
-                document.getElementById("divMeetingSpeakersExplanation").style.display = 'block';  // If "No" is selected
-                document.getElementById("divMeetingSpeakersTopics").style.display = 'none';  // If "No" is selected
-            } else {
-                $('#MeetingSpeakersExplanation').removeClass('tx-cls');
-                document.getElementById("divMeetingSpeakersExplanation").style.display = 'none';  // If "Yes" is selected
-                document.getElementById("divMeetingSpeakersTopics").style.display = 'block';  // If "Yes" is selected
-            }
+        if (selectedValue === "0") {
+            $('#MeetingSpeakersExplanation').addClass('tx-cls');
+            document.getElementById("divMeetingSpeakersExplanation").style.display = 'block';
+            document.getElementById("divMeetingSpeakersTopics").style.display = 'none'; // If "No" is selected
+        } else {
+            $('#MeetingSpeakersExplanation').removeClass('tx-cls');
+            document.getElementById("divMeetingSpeakersExplanation").style.display = 'none';
+            document.getElementById("divMeetingSpeakersTopics").style.display = 'block'; // If "Yes" is selected
         }
+    }
 
     function ToggleActivityOtherExplanation() {
-        var otherCheckbox = document.querySelector('input[name="Activity[]"][value="5"]');    /* Questions 16 */
+        var otherCheckbox = document.querySelector('input[name="Activity[]"][value="5"]'); /* Questions 16 */
 
-        if (otherCheckbox.checked) {
-            document.getElementById("divActivityOtherExplanation").style.display = 'block';  // If "Other" is selected
+        if (otherCheckbox?.checked) {
+            document.getElementById("divActivityOtherExplanation").style.display = 'block'; // If "Other" is selected
         } else {
             document.getElementById("divActivityOtherExplanation").style.display = 'none';
         }
     }
 
     function ToggleContributionsNotRegNPExplanation() {
-            var selectedValue = document.querySelector('input[name="ContributionsNotRegNP"]:checked').value;    /* Questions 17 */
+        var selectedRadio = document.querySelector('input[name="ContributionsNotRegNP"]:checked');
+        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 17 */
 
-            if (selectedValue == "1") {
-                $('#ContributionsNotRegNPExplanation').addClass('tx-cls');
-                document.getElementById("divContributionsNotRegNPExplanation").style.display = 'block'  // If "Yes" is selected
-            } else {
-                $('#ContributionsNotRegNPExplanation').removeClass('tx-cls');
-                document.getElementById("divContributionsNotRegNPExplanation").style.display = 'none';  // If "No" is selected
-            }
+        if (selectedValue === "1") {
+            $('#ContributionsNotRegNPExplanation').addClass('tx-cls');
+            document.getElementById("divContributionsNotRegNPExplanation").style.display = 'block'; // If "Yes" is selected
+        } else {
+            $('#ContributionsNotRegNPExplanation').removeClass('tx-cls');
+            document.getElementById("divContributionsNotRegNPExplanation").style.display = 'none'; // If "No" is selected
         }
+    }
 
     function TogglePerformServiceProjectExplanation() {
-            var selectedValue = document.querySelector('input[name="PerformServiceProject"]:checked').value;    /* Questions 18 */
+        var selectedRadio = document.querySelector('input[name="PerformServiceProject"]:checked');
+        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 18 */
 
-
-            if (selectedValue == "0") {
-                $('#PerformServiceProjectExplanation').addClass('tx-cls');
-                document.getElementById("divPerformServiceProjectExplanation").style.display = 'block'  // If "no" is selected
-            } else {
-                $('#PerformServiceProjectExplanation').removeClass('tx-cls');
-                document.getElementById("divPerformServiceProjectExplanation").style.display = 'none';  // If "Yes" is selected
-            }
+        if (selectedValue === "0") {
+            $('#PerformServiceProjectExplanation').addClass('tx-cls');
+            document.getElementById("divPerformServiceProjectExplanation").style.display = 'block'; // If "No" is selected
+        } else {
+            $('#PerformServiceProjectExplanation').removeClass('tx-cls');
+            document.getElementById("divPerformServiceProjectExplanation").style.display = 'none'; // If "Yes" is selected
         }
+    }
 
     function ToggleFileIRSExplanation() {
-            var selectedValue = document.querySelector('input[name="FileIRS"]:checked').value;    /* Questions 21 */
+        var selectedRadio = document.querySelector('input[name="FileIRS"]:checked');
+        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 21 */
 
-            if (selectedValue == "0") {
-                $('#FileIRSExplanation').addClass('tx-cls');
-                document.getElementById("divFileIRSExplanation").style.display = 'block';  // If "no" is selected
-                document.getElementById("FileIRSBlock").style.display = 'none';  // If "no" is selected
-
-            } else {
-                $('#FileIRSExplanation').removeClass('tx-cls');
-                document.getElementById("divFileIRSExplanation").style.display = 'none';  // If "Yes" is selected
-                document.getElementById("FileIRSBlock").style.display = 'block';  // If "Yes" is selected
-            }
+        if (selectedValue === "0") {
+            $('#FileIRSExplanation').addClass('tx-cls');
+            document.getElementById("divFileIRSExplanation").style.display = 'block'; // If "No" is selected
+            document.getElementById("FileIRSBlock").style.display = 'none'; // If "No" is selected
+        } else {
+            $('#FileIRSExplanation').removeClass('tx-cls');
+            document.getElementById("divFileIRSExplanation").style.display = 'none'; // If "Yes" is selected
+            document.getElementById("FileIRSBlock").style.display = 'block'; // If "Yes" is selected
         }
+    }
 
     function ToggleBankStatementIncludedExplanation() {
-            var selectedValue = document.querySelector('input[name="BankStatementIncluded"]:checked').value;    /* Questions 21 */
+        var selectedRadio = document.querySelector('input[name="BankStatementIncluded"]:checked');
+        var selectedValue = selectedRadio ? selectedRadio.value : null; /* Questions 21 */
 
-            if (selectedValue == "0") {
-                $('#BankStatementIncludedExplanation').addClass('tx-cls');
-                document.getElementById("divBankStatementIncludedExplanation").style.display = 'block';  // If "no" is selected
-                document.getElementById("WheresTheMoney").style.display = 'block';  // If "no" is selected
-            } else {
-                $('#WheresTheMoney').hide();
-                $('#BankStatementIncludedExplanationn').removeClass('tx-cls');
-                document.getElementById("divBankStatementIncludedExplanation").style.display = 'none';  // If "Yes" is selected
-                document.getElementById("WheresTheMoney").style.display = 'none';  // If "Yes" is selected
-            }
+        if (selectedValue === "0") {
+            $('#BankStatementIncludedExplanation').addClass('tx-cls');
+            document.getElementById("divBankStatementIncludedExplanation").style.display = 'block'; // If "No" is selected
+            document.getElementById("WheresTheMoney").style.display = 'block'; // If "No" is selected
+        } else {
+            $('#BankStatementIncludedExplanation').removeClass('tx-cls');
+            document.getElementById("divBankStatementIncludedExplanation").style.display = 'none'; // If "Yes" is selected
+            document.getElementById("WheresTheMoney").style.display = 'none'; // If "Yes" is selected
         }
+    }
 
     function AddAwardNomination(){
         // Did they say no, if so, we need to mark the explanation field as required
@@ -5214,93 +4856,341 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
 
-    // // Initialize tooltip component
-    // $(function () {
-    //   $('[data-toggle="tooltip"]').tooltip()
-    // })
-
-    // function UpdateCalculatedValues(){
-    //     ChangeChildrensRoomExpenses();
-    //     ChangeMemberCount();
-    //     ChapterDuesQuestionsChange();
-    //     ChangeMeetingFees();
-    //     ChangeServiceProjectExpenses();
-    //     ChangePartyExpenses();
-    //     ChangeOfficeExpenses();
-    //     ChangeInternationalEventExpense();
-    //     ChangeReRegistrationExpense();
-    //     ChangeDonationAmount();
-    //     ChangeOtherOfficeExpenses();
-    //     ChangeBankRec();
-    //     TreasuryBalanceChange();
-    // }
-
-    // function RemoveRequired(){
-    //     var x = document.forms[0];
-    //     var i;
-    //     for (i = 0; i < x.length; i++) {
-    //         x.elements[i].required = false;
-    //     }
-    // }
-
-    // function SetReadOnly(){
-    //     var x = document.forms[1];
-    //     console.log(x);
-    //     var i;
-    //     for (i = 0; i < x.length; i++) {
-    //         if(x.elements[i].type!="button" && !hasClass(x.elements[i], "btn") && x.elements[i].type!="hidden"){
-    //             console.log(x.elements[i]);
-    //             x.elements[i].readOnly = true;
-    //             x.elements[i].disabled = true;
-    //         }
-    //     }
-    // }
-
-    // function hasClass(element, cls) {
-    //     return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
-    // }
-
-    // function LoadSteps(){
-    //     UpdateCalculatedValues();
-    //     if(<?php if($submitted) echo "1"; else echo "0"; ?>){
-    //         SetReadOnly();
-    //     }
-
-    //     ToggleReceiveCompensationExplanation();
-    //     ToggleFinancialBenefitExplanation();
-    //     ToggleInfluencePoliticalExplanation();
-    //     ToggleVoteAllActivitiesExplanation();
-    //     ToggleBoughtPinsExplanation();
-    //     ToggleBoughtMerchExplanation();
-    //     ToggleOfferedMerchExplanation();
-    //     ToggleByLawsAvailableExplanation();
-    //     ToggleChildOutingsExplanation();
-    //     ToggleMotherOutingsExplanation();
-    //     ToggleMeetingSpeakersExplanation();
-    //     ToggleActivityOtherExplanation();
-    //     ToggleContributionsNotRegNPExplanation();
-    //     TogglePerformServiceProjectExplanation();
-    //     ToggleFileIRSExplanation();
-    //     ToggleBankStatementIncludedExplanation();
-
-    //     if(document.getElementById("NominationType1").value==5 || document.getElementById("NominationType1").value==6){
-    //         ShowOutstandingCriteria(1);
-    //     }
-    //     if(document.getElementById("NominationType2").value==5 || document.getElementById("NominationType2").value==6){
-    //         ShowOutstandingCriteria(2);
-    //     }
-    //     if(document.getElementById("NominationType3").value==5 || document.getElementById("NominationType3").value==6){
-    //         ShowOutstandingCriteria(3);
-    //     }
-    //     if(document.getElementById("NominationType4").value==5 || document.getElementById("NominationType4").value==6){
-    //         ShowOutstandingCriteria(4);
-    //     }
-    //     if(document.getElementById("NominationType5").value==5 || document.getElementById("NominationType5").value==6){
-    //         ShowOutstandingCriteria(5);
-    //     }
-    // }
-
-    // function InputLoggedInPerson(){
-    // }
 </script>
+
+<script>
+    /* Save & Submit Verification */
+    $(document).ready(function() {
+        function submitFormWithStep(step) {
+            $("#FurthestStep").val(step);
+            $("#financial_report").submit();
+        }
+
+        $("#btn-step-1").click(function() {
+            if (!EnsureRoster()) return false;
+            if (!EnsureMembers()) return false;
+            submitFormWithStep(1);
+        });
+        $("#btn-step-2").click(function() {
+            submitFormWithStep(2);
+        });
+        $("#btn-step-3").click(function() {
+            if (!EnsureServiceProject()) return false;
+            submitFormWithStep(3);
+        });
+        $("#btn-step-4").click(function() {
+            submitFormWithStep(4);
+        });
+        $("#btn-step-5").click(function() {
+            submitFormWithStep(5);
+        });
+        $("#btn-step-6").click(function() {
+            if (!EnsureReRegistration()) return false;
+            submitFormWithStep(6);
+        });
+        $("#btn-step-7").click(function() {
+            submitFormWithStep(7);
+        });
+        $("#btn-step-8").click(function() {
+            submitFormWithStep(8);
+        });
+        $("#btn-step-9").click(function() {
+            if (!EnsureStatement()) return false;
+            if (!EnsureReconciliation()) return false;
+            submitFormWithStep(9);
+        });
+
+        $("#btn-step-11").click(function() {
+            if (!EnsureQuestions()) return false;
+            submitFormWithStep(11);
+        });
+        $("#btn-step-12").click(function() {
+            submitFormWithStep(12);
+        });
+        $("#btn-step-13").click(function() {
+            if (!EnsureSubmitInformation()) return false;
+            submitFormWithStep(13);
+        });
+        $("#btn-save").click(function() {
+            submitFormWithStep(14);
+        });
+    });
+
+    $("#final-submit").click(function() {
+        if (!EnsureRoster()) return false;
+        if (!EnsureMembers()) return false;
+        if (!EnsureServiceProject()) return false;
+        if (!EnsureReRegistration()) return false;
+        if (!EnsureQuestions()) return false;
+        if (!EnsureSubmitInformation()) return false;
+        if (!EnsureReconciliation()) return false;
+        if (!EnsureBalance()) return false;
+
+        customWarningAlert("This will finalize and submit your report. You will no longer be able to edit this report. Do you wish to continue?", function(result) {
+            if (result.isConfirmed) {
+                $("#submitted").val('1');
+                $("#FurthestStep").val('15');
+                $("#financial_report").submit();
+            } else {
+                $(this).prop('disabled', false);
+            }
+        });
+    });
+
+
+        function isValidEmail(email) {
+            // Regular expression for email validation
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function EnsureRoster() {
+            var rosterPath = document.getElementById('RosterPath');
+            var message = `<p>Your chapter's roster was not uploaded in CHAPTER DUES section.</p>
+                   <p>Please upload Roster to Continue.</p>`;
+            if (!rosterPath || rosterPath.value == "") {
+                customErrorAlert(message);
+                // accordion.openAccordionItem('accordion-header-members');
+                return false;
+            }
+            return true;
+        }
+
+        function EnsureMembers() {
+            var missingQuestions = [];
+
+            // Check each required question
+            if (!document.querySelector('input[name="optChangeDues"]:checked')) {
+                missingQuestions.push("Did you change dues this year?");
+            }
+            if (!document.querySelector('input[name="optNewOldDifferent"]:checked')) {
+                missingQuestions.push("Did you charge different dues for new and returning?");
+            }
+            if (!document.querySelector('input[name="optNoFullDues"]:checked')) {
+                missingQuestions.push("Did you have members who didn't pay full dues?");
+            }
+
+            // Display the missing questions if any
+            if (missingQuestions.length > 0) {
+                var missingQuestionsText = missingQuestions.map(question => `<li>${question}</li>`).join('');
+                var message = `<p>The following questions in the CHAPTER DUES section are required, please answer the required questions to continue.</p>
+                        <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
+                            ${missingQuestionsText}
+                        </ul>
+                        `;
+                customErrorAlert(message);
+                // accordion.openAccordionItem('accordion-header-members');
+                return false;
+            }
+
+            return true;
+        }
+
+
+        function EnsureServiceProject() {
+            var serviceProjectDesc0 = document.getElementById('ServiceProjectDesc0');
+            var message = `<p>At least one Service Project is required in the SERVICE PROJECT section, please enter the required information to continue.</p>`;
+            if (!serviceProjectDesc0 || serviceProjectDesc0.value == "") {
+                customErrorAlert(message);
+                // accordion.openAccordionItem('accordion-header-service');
+                // $("#ServiceProjectDesc0").focus();
+                return false;
+            }
+            return true;
+        }
+
+        function EnsureReRegistration() {
+            var annualRegistrationFee = document.getElementById('AnnualRegistrationFee');
+            var message = `<p>Chapter Re-registration is required in the INTERNATIONAL EVENTS & RE-REGISTRATION section, please enter the required information to continue.</p>`;
+            if (!annualRegistrationFee || annualRegistrationFee.value == "") {
+                customErrorAlert(message);
+                // accordion.openAccordionItem('accordion-header-rereg');
+                // $("#AnnualRegistrationFee").focus();
+                return false;
+            }
+            return true;
+        }
+
+        function EnsureStatement() {
+            var bankStatementIncluded = document.getElementById('BankStatementIncluded');
+            var statementPath = document.getElementById('StatementPath');
+            var message = `<p>Your chapter's Bank Statement was not uploaded in the BANK RECONCILIATION section, but you indicated the file was attached.</p>
+                <p>Please upload Bank Statement to Continue.</p>`;
+            if (bankStatementIncluded && bankStatementIncluded.value == "1" && (!statementPath || statementPath.value == "")) {
+                // accordion.openAccordionItem('accordion-header-reconciliation');
+                customErrorAlert(message);
+                return false;
+            }
+            return true;
+        }
+
+        function EnsureReconciliation() {
+            var amountReservedFromLastYear = document.getElementById('AmountReservedFromLastYear').value.trim();
+            var bankBalanceNow = document.getElementById('BankBalanceNow').value.trim();
+            var missingFields = [];
+
+            // Check for missing fields and add to the list
+            if (amountReservedFromLastYear === '' || amountReservedFromLastYear === null) {
+                missingFields.push("This Year's Beginning Balance");
+            }
+            if (bankBalanceNow === '' || bankBalanceNow === null) {
+                missingFields.push("Last Bank Statement Balance");
+            }
+
+            // Display the missing fields if any
+            if (missingFields.length > 0) {
+                var missingFieldsText = missingFields.map(field => `<li>${field}</li>`).join('');
+                var message = `<p>The following fields are required in the BANK RECONCILIATION Section, please answer the required questions to continue.</p>
+                   <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
+                     ${missingFieldsText}
+                   </ul>
+                   `;
+                customErrorAlert(message);
+                return false;
+            }
+
+            return true;
+        }
+
+        function EnsureBalance() {
+            var PaymentTotal = 0;
+            var DepositTotal = 0;
+
+            var table = document.getElementById("bank-rec");
+
+            for (var i = 1, row; row = table.rows[i]; i++) {
+                // Payment Amount
+                var paymentInput = row.querySelector('input[name^="BankRecPaymentAmount"]');
+                var paymentValue = paymentInput ? parseFloat(paymentInput.value.replace(/,/g, '')) || 0 : 0;
+                PaymentTotal += paymentValue;
+
+                // Deposit Amount
+                var depositInput = row.querySelector('input[name^="BankRecDepositAmount"]');
+                var depositValue = depositInput ? parseFloat(depositInput.value.replace(/,/g, '')) || 0 : 0;
+                DepositTotal += depositValue;
+            }
+
+            var BankBalanceNow = parseFloat(document.getElementById("BankBalanceNow").value.replace(/,/g, '')) || 0;
+
+            var TotalFees = (BankBalanceNow - PaymentTotal + DepositTotal).toFixed(2);
+            var TreasuryBalanceNow = parseFloat(document.getElementById("TreasuryBalanceNow").value.replace(/,/g, '')) || 0;
+
+            if (TotalFees != TreasuryBalanceNow) {
+                var proceedAnyway = confirm("Your report does not balance. Your Treasury Balance Now and Reconciled Bank Balance should match before submitting your report. \n\nClick OK to Submit Anyway. \nClick Cancel to Return to Report.");
+                if (!proceedAnyway) {
+                    accordion.openAccordionItem('accordion-header-reconciliation');
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function EnsureQuestions() {
+            var requiredQuestions = [
+                'ReceiveCompensation', 'FinancialBenefit', 'InfluencePolitical', 'VoteAllActivities',
+                'BoughtPins', 'BoughtMerch', 'OfferedMerch', 'ByLawsAvailable', 'ChildrensRoom',
+                'Playgroups', 'ChildOutings', 'MotherOutings', 'MeetingSpeakers', 'SpeakerFrequency',
+                'ParkDays', 'ContributionsNotRegNP', 'Activity[]', 'PerformServiceProject', 'SisterChapter',
+                'InternationalEvent', 'FileIRS', 'BankStatementIncluded'
+            ];
+
+            // Mapping of internal names to user-friendly labels
+            var questionLabels = {
+                'ReceiveCompensation': 'Member compensation received for work with chapter?',
+                'FinancialBenefit': 'Member benefit financially from position in chapter?',
+                'InfluencePolitical': 'Infuence or support political legislation or org?',
+                'VoteAllActivities': 'Did the chapter vote on all activites?',
+                'BoughtPins': 'Did the chapter purchase MOMS Club pins?',
+                'BoughtMerch': 'Did the chapter purchase MOMS Club merchandise?',
+                'OfferedMerch': 'Was MOMS Club merchandise offered to members?',
+                'ByLawsAvailable': 'Were By-Laws made available to members?',
+                'ChildrensRoom': 'Did the chapter have a children\'s room?',
+                'Playgroups': 'Did the chapter have playgroups?',
+                'ChildOutings': 'Did the chapter have child focused outings?',
+                'MotherOutings': 'Did the chapter have mother focused outings?',
+                'MeetingSpeakers': 'Did the chapter have meeting speakers?',
+                'SpeakerFrequency': 'Did the chapter have discussion topics at meetings?',
+                'ParkDays': 'Did the chapter have scheuled park days?',
+                'Activity[]': 'Did the chapter have any actifity groups?',
+                'ContributionsNotRegNP': 'Did the chapter make contributions to non-charities?',
+                'PerformServiceProject': 'Did the chapter perform at least one service project?',
+                'SisterChapter': 'Did the chapter Sister a New Chapter?',
+                'InternationalEvent': 'Did the chapter atend an International event?',
+                'FileIRS': 'Is the 990N filed with the IRS?',
+                'BankStatementIncluded': 'Is the most recent Bank Statment Attached?'
+            };
+
+            var missingQuestions = [];
+
+            // Check for unanswered questions
+            for (var i = 0; i < requiredQuestions.length; i++) {
+                var questionName = requiredQuestions[i];
+                var isAnswered = document.querySelector('input[name="' + questionName + '"]:checked');
+                if (!isAnswered) {
+                    missingQuestions.push(questionLabels[questionName] || questionName);
+                }
+            }
+
+            // Display the missing questions if any
+            if (missingQuestions.length > 0) {
+                var missingQuestionsText = missingQuestions.map(question => `<li>${question}</li>`).join('');
+                var message = `<p>The following questions in the CHAPTER QUESTIONS section are required, please answer the required questions to continue.</p>
+                                <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
+                                    ${missingQuestionsText}
+                                </ul>
+                                `;
+                customErrorAlert(message);
+                accordion.openAccordionItem('accordion-header-questions');
+                return false;
+            }
+
+            return true;
+        }
+
+        function Ensure990() {
+            var fileIRS = document.getElementById('FileIRS');
+            var path990N = document.getElementById('990NPath');
+            var message = `<p>Your chapter's 990N filing confirmation was not uploaded in the CHAPTER QUESTIONS section, but you indicated the file was attached.</p>
+                <p>Please upload 990 Confirmation to Continue.</p>`;
+            if (fileIRS && fileIRS.value == "1" && path990N && path990N.value == "") {
+                customErrorAlert(message);
+                // accordion.openAccordionItem('accordion-header-questions');
+                return false;
+            }
+            return true;
+        }
+
+        function EnsureSubmitInformation() {
+            var completedName = document.getElementById('CompletedName');
+            var completedEmail = document.getElementById('CompletedEmail');
+            var missingFields = [];
+
+            // Define user-friendly labels for the fields
+            var fieldLabels = {
+                'CompletedName': 'Name of the person submitting the report',
+                'CompletedEmail': 'Email address of the person submitting the report'
+            };
+
+            // Check for missing fields
+            if (!completedName || completedName.value.trim() === "") {
+                missingFields.push(fieldLabels['CompletedName']);
+            }
+            if (!completedEmail || completedEmail.value.trim() === "") {
+                missingFields.push(fieldLabels['CompletedEmail']);
+            }
+
+            // Display the missing fields if any
+            if (missingFields.length > 0) {
+                var missingFieldsText = missingFields.map(field => `<li>${field}</li>`).join('');
+                var message = `<p>The following information is required to submit the report, please provide the required information to continue.</p>
+                                <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
+                                    ${missingFieldsText}
+                                </ul>
+                                `;
+                customErrorAlert(message);
+                return false;
+            }
+            return true;
+        }
+    </script>
 @endsection

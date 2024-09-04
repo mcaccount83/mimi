@@ -47,6 +47,29 @@ class ChapterController extends Controller
         $this->middleware('auth')->except('logout');
     }
 
+     /**
+     * Reset Password
+     */
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'new_password' => 'required',
+        ]);
+
+        $userId = $request->input('user_id');
+        $newPassword = $request->input('new_password');
+
+        $user = User::find($userId);
+        if ($user) {
+            $user->password = Hash::make($newPassword);
+            $user->remember_token = null;
+            $user->save();
+
+            return response()->json(['message' => 'Password reset successfully.<br>Password is reset to default "TempPass4You" for this user.']);
+        }
+        return response()->json(['error' => 'User not found.'], 404);
+    }
+
     /**
      * Display the Active chapter list mapped with login coordinator
      */
@@ -3433,33 +3456,33 @@ class ChapterController extends Controller
     /**
      * Reset Password
      */
-    public function updateResetPassword(Request $request): JsonResponse
-    {
-        $pswd = $request->input('pswd');
-        $userId = $request->input('user_id');
+    // public function updateResetPassword(Request $request): JsonResponse
+    // {
+    //     $pswd = $request->input('pswd');
+    //     $userId = $request->input('user_id');
 
-        try {
-            DB::table('users')
-                ->where('id', $userId)
-                ->update([
-                    'password' => Hash::make($pswd),
-                    'remember_token' => '',
-                    'user_type' => 'board',
-                    'is_active' => '1',
-                ]);
+    //     try {
+    //         DB::table('users')
+    //             ->where('id', $userId)
+    //             ->update([
+    //                 'password' => Hash::make($pswd),
+    //                 'remember_token' => '',
+    //                 'user_type' => 'board',
+    //                 'is_active' => '1',
+    //             ]);
 
-            DB::table('board_details')
-                ->where('user_id', $userId)
-                ->update([
-                    'password' => Hash::make($pswd),
-                    'is_active' => '1',
-                ]);
+    //         DB::table('board_details')
+    //             ->where('user_id', $userId)
+    //             ->update([
+    //                 'password' => Hash::make($pswd),
+    //                 'is_active' => '1',
+    //             ]);
 
-            return response()->json(['message' => 'Password has been reset successfully']);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'An error occurred while resetting the password.'], 500);
-        }
-    }
+    //         return response()->json(['message' => 'Password has been reset successfully']);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => 'An error occurred while resetting the password.'], 500);
+    //     }
+    // }
 
     /**
      * M2M Payments
