@@ -714,45 +714,41 @@ class AdminController extends Controller
      */
     public function showOutgoingBoard(): View
     {
-        $OutgoingBoard = DB::table('outgoing_board_member')
-            ->leftJoin('users', 'outgoing_board_member.email', '=', 'users.email')
-            ->leftJoin('chapters', 'outgoing_board_member.chapter_id', '=', 'chapters.id')
-            ->select(
-                'outgoing_board_member.chapter_id as chapter_id',
-                'outgoing_board_member.first_name as first_name',
-                'outgoing_board_member.last_name as last_name',
-                'outgoing_board_member.email as email',
-                'users.user_type as user_type',  // This column will be null if there's no match
-                'chapters.name as chapter_name'
-            )
-            ->orderBy('outgoing_board_member.chapter_id')
+        $OutgoingBoard = DB::table('outgoing_board_member as ob')
+            ->select('ob.chapter_id', 'ob.first_name', 'ob.last_name', 'ob.email', 'users.user_type', 'chapters.name as chapter_name', 'state.state_short_name as chapter_state')
+            ->leftJoin('users', 'ob.email', '=', 'users.email')
+            ->leftJoin('chapters', 'ob.chapter_id', '=', 'chapters.id')
+            ->leftJoin('state', 'chapters.state', '=', 'state.id')
+            ->where('users.user_type', 'outgoing')
+            ->orderBy('chapters.name')
             ->get();
 
-        if (isset($_GET['check'])) {
-            if ($_GET['check'] == 'yes') {
-                $checkBoxStatus = 'checked';
-                $OutgoingBoard = DB::table('outgoing_board_member')
-                    ->leftJoin('users', 'outgoing_board_member.email', '=', 'users.email')
-                    ->leftJoin('chapters', 'outgoing_board_member.chapter_id', '=', 'chapters.id')
-                    ->whereNull('users.user_type')  // Only select entries where user_type is null
-                    ->select(
-                        'outgoing_board_member.chapter_id as chapter_id',
-                        'outgoing_board_member.first_name as first_name',
-                        'outgoing_board_member.last_name as last_name',
-                        'outgoing_board_member.email as email',
-                        'users.user_type as user_type',  // This column will be null for unmatched entries
-                        'chapters.name as chapter_name'
-                    )
-                    ->orderBy('outgoing_board_member.chapter_id')
-                    ->get();
-            }
-        } else {
-            $checkBoxStatus = '';
-        }
+        // if (isset($_GET['check'])) {
+        //     if ($_GET['check'] == 'yes') {
+        //         $checkBoxStatus = 'checked';
+        //         $OutgoingBoard = DB::table('outgoing_board_member')
+        //             ->leftJoin('users', 'outgoing_board_member.email', '=', 'users.email')
+        //             ->leftJoin('chapters', 'outgoing_board_member.chapter_id', '=', 'chapters.id')
+        //             ->whereNull('users.user_type')  // Only select entries where user_type is null
+        //             ->select(
+        //                 'outgoing_board_member.chapter_id as chapter_id',
+        //                 'outgoing_board_member.first_name as first_name',
+        //                 'outgoing_board_member.last_name as last_name',
+        //                 'outgoing_board_member.email as email',
+        //                 'users.user_type as user_type',  // This column will be null for unmatched entries
+        //                 'chapters.name as chapter_name'
+        //             )
+        //             ->orderBy('outgoing_board_member.chapter_id')
+        //             ->get();
+        //     }
+        // } else {
+        //     $checkBoxStatus = '';
+        // }
 
         $countList = count($OutgoingBoard);
 
-        $data = ['OutgoingBoard' => $OutgoingBoard, 'countList' => $countList, 'checkBoxStatus' => $checkBoxStatus];
+        $data = ['OutgoingBoard' => $OutgoingBoard, 'countList' => $countList];
+        // $data = ['OutgoingBoard' => $OutgoingBoard, 'countList' => $countList, 'checkBoxStatus' => $checkBoxStatus];
 
         return view('admin.outgoingboard')->with($data);
     }

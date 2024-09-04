@@ -42,7 +42,7 @@
                 <tbody>
                 @foreach($OutgoingBoard as $list)
                   <tr>
-                    <td>{{ $list->chapter_name }}</td>
+                    <td>{{ $list->chapter_name }}, {{ $list->chapter_state }}</td>
                         <td>{{ $list->first_name }} {{ $list->last_name }}</td>
                         <td>{{ $list->email }}</td>
                         <td>{{ $list->user_type }}</td>
