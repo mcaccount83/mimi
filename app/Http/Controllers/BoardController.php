@@ -1551,6 +1551,9 @@ class BoardController extends Controller
             $request->session()->put('chapterid', $chapterId);
 
             $user = $request->user();
+            $userName = $user['first_name'].' '.$user['last_name'];
+            $userEmail = $user['email'];
+
             $borDetails = $user->BoardDetails;
             $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
             $isActive = $borDetails['is_active'];
@@ -1568,7 +1571,8 @@ class BoardController extends Controller
                 ->get();
 
             $submitted = $chapterDetails[0]->financial_report_received;
-            $data = ['financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails, 'user_type' => $user_type];
+            $data = ['financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails, 'user_type' => $user_type,
+                'userName' => $userName, 'userEmail' => $userEmail];
 
             DB::commit();
 
@@ -1594,6 +1598,11 @@ class BoardController extends Controller
             return redirect()->to('/login')->with('error', 'Your session has expired, Please log in again');
 
         }
+
+        $user = $request->user();
+        $user_id = $user['id'];
+        $userName = $user['first_name'].' '.$user['last_name'];
+        $userEmail = $user['email'];
 
         $borDetails = User::find($request->user()->id)->BoardDetails;
         //   $isActive = $borDetails['is_active'];
@@ -1911,8 +1920,8 @@ class BoardController extends Controller
         }
 
         // SUBMISSION INFORMATION
-        $completed_name = $input['CompletedName'];
-        $completed_email = $input['CompletedEmail'];
+        // $completed_name = $input['CompletedName'];
+        // $completed_email = $input['CompletedEmail'];
 
         if ($reportReceived == 1) {
             DB::update('UPDATE chapters SET financial_report_received = ? where id = ?', [1, $chapter_id]);
@@ -1940,7 +1949,7 @@ class BoardController extends Controller
         // Send email to Assigned Reviewer//
         $to_email = $cc_email;
         $to_email3 = $reviewer_email;
-        $to_email2 = $completed_email;
+        $to_email2 = $userEmail;
 
         DB::beginTransaction();
         try {
@@ -2027,8 +2036,10 @@ class BoardController extends Controller
                     'award_nominations' => $award_nominations,
                     'farthest_step_visited' => $farthest_step_visited,
                     'award_1_nomination_type' => $award_1_nomination_type,
-                    'completed_name' => $completed_name,
-                    'completed_email' => $completed_email,
+                    // 'completed_name' => $completed_name,
+                    // 'completed_email' => $completed_email,
+                    'completed_name' => $userName,
+                    'completed_email' => $userEmail,
                     'award_1_outstanding_follow_bylaws' => $award_1_outstanding_follow_bylaws,
                     'award_1_outstanding_well_rounded' => $award_1_outstanding_well_rounded,
                     'award_1_outstanding_communicated' => $award_1_outstanding_communicated,
@@ -2177,8 +2188,10 @@ class BoardController extends Controller
                 $report->award_5_outstanding_project_desc = $award_5_outstanding_project_desc;
                 $report->award_agree = $award_agree;
                 $report->farthest_step_visited = $farthest_step_visited;
-                $report->completed_name = $completed_name;
-                $report->completed_email = $completed_email;
+                // $report->completed_name = $completed_name;
+                // $report->completed_email = $completed_email;
+                $report->completed_name = $userName;
+                $report->completed_email = $userEmail;
                 $report->reviewer_id = $reviewer_id;
                 $report->submitted = date('Y-m-d H:i:s');
 
@@ -2186,8 +2199,8 @@ class BoardController extends Controller
                     'chapterid' => $chapter_id,
                     'chapter_name' => $chapter_name,
                     'chapter_state' => $chapter_state,
-                    'completed_name' => $completed_name,
-                    'completed_email' => $completed_email,
+                    'completed_name' => $userName,
+                    'completed_email' => $userEmail,
                     'roster_path' => $roster_path,
                     'file_irs_path' => $file_irs_path,
                     'bank_statement_included_path' => $bank_statement_included_path,
@@ -2196,7 +2209,7 @@ class BoardController extends Controller
                 ];
 
                 if ($reportReceived == 1) {
-                    $pdfPath = $this->generateAndSavePdf($chapter_id);   // Generate and save the PDF
+                    $pdfPath = $this->generateAndSavePdf($chapter_id, $user_id);   // Generate and save the PDF
                     Mail::to($to_email2)
                         ->queue(new EOYFinancialReportThankYou($mailData, $coordinator_array, $pdfPath));
 

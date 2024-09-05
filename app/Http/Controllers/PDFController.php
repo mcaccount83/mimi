@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Chapter;
 use App\Models\FinancialReport;
+use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 
@@ -20,10 +21,14 @@ class PDFController extends Controller
     /**
      * Show Financial Report PDF All Board Members
      */
-    public function generatePdf($chapterId)
+    public function generatePdf($chapterId, $user_id)
     {
         // Load financial report data, chapter details, and any other data you need
         $financial_report_array = FinancialReport::find($chapterId);
+
+        $user = User::find($user_id);
+        $userName = $user['first_name'].' '.$user['last_name'];
+        $userEmail = $user['email'];
 
         $chapterDetails = DB::table('chapters')
             ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'chapters.territory as boundaries',
@@ -118,8 +123,10 @@ class PDFController extends Controller
             'bank_statement_included' => $financial_report_array->bank_statement_included,
             'bank_statement_included_explanation' => $financial_report_array->bank_statement_included_explanation,
             'wheres_the_money' => $financial_report_array->wheres_the_money,
-            'completed_name' => $financial_report_array->completed_name,
-            'completed_email' => $financial_report_array->completed_email,
+            // 'completed_name' => $financial_report_array->completed_name,
+            // 'completed_email' => $financial_report_array->completed_email,
+            'completed_name' => $userName,
+            'completed_email' => $userEmail,
             'submitted' => $financial_report_array->submitted,
             'ch_name'=> $sanitizedChapterName,
         ];

@@ -48,6 +48,12 @@
 
 <body class="hold-transition layout-top-nav">
     <div class="wrapper">
+        @php
+            $user = Auth::user();
+            $userName = $user->first_name.' '.$user->last_name;
+            $userEmail = $user->email;
+            $user_type = $user->user_type;
+        @endphp
 
           <!-- Navbar -->
   <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">

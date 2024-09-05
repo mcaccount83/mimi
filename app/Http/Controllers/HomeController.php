@@ -226,6 +226,8 @@ class HomeController extends Controller
             //  $borDetails = User::find($request->user()->id)->OutgoingBoardMember;
 
             $user = User::with('OutgoingDetails')->find($request->user()->id);
+            $userName = $user['first_name'].' '.$user['last_name'];
+            $userEmail = $user['email'];
             $borDetails = $user->OutgoingDetails;
 
             $isActive = $borDetails['is_active'];
@@ -245,7 +247,8 @@ class HomeController extends Controller
 
             $submitted = $chapterDetails[0]->financial_report_received;
 
-            $data = ['financial_report_array' => $financial_report_array, 'submitted' => $submitted, 'loggedInName' => $loggedInName, 'chapterDetails' => $chapterDetails, 'user_type' => $user_type];
+            $data = ['financial_report_array' => $financial_report_array, 'submitted' => $submitted, 'loggedInName' => $loggedInName, 'chapterDetails' => $chapterDetails, 'user_type' => $user_type,
+                'userName' => $userName, 'userEmail' => $userEmail];
 
             return view('boards.financial')->with($data);
 

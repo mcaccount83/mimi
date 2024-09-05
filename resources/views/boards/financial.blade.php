@@ -3379,18 +3379,25 @@
                             <div class="form-row form-group">
                                 <div class="col-sm-12">
                                     <strong>Contact information for the person who completed the report.</strong></div>
-                                <div class="col-md-6 float-left">
+                                    <div class="col-md-12 float-left">
+                                    <strong>Name: </strong>{{ $userName }}
+                                    </div>
+                                    <div class="col-md-12 float-left">
+                                    <strong>Email: </strong><a href="mailto:{{ $userEmail }}">{{ $userEmail }}</a>
+                                    </div>
+
+                                {{-- <div class="col-md-6 float-left">
                                     <label for="CompletedName">
                                         Name (First & Last)
                                     </label><span class="field-required">*</span>
                                 <input type="text" name="CompletedName" id="CompletedName" class="form-control" value="<?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_name'];}?>" required >
-                                </div>
-                                <div class="col-md-6 float-left">
+                                </div> --}}
+                                {{-- <div class="col-md-6 float-left">
                                     <label for="CompletedEmail">
                                         Email Address
                                     </label><span class="field-required">*</span>
                                  <input type="text" name="CompletedEmail" id="CompletedEmail" class="form-control" value="<?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_email'];}?>" required >
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="card-body text-center">
                                 <button type="button" class="btn btn-primary" id="btn-step-13" ><i class="fas fa-save" ></i>&nbsp; Save</button>
@@ -4908,7 +4915,7 @@ document.addEventListener("DOMContentLoaded", function() {
             submitFormWithStep(12);
         });
         $("#btn-step-13").click(function() {
-            if (!EnsureSubmitInformation()) return false;
+            // if (!EnsureSubmitInformation()) return false;
             submitFormWithStep(13);
         });
         $("#btn-save").click(function() {
@@ -4916,27 +4923,52 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    $("#final-submit").click(function() {
+    $("#final-submit").click(async function() {
         if (!EnsureRoster()) return false;
         if (!EnsureMembers()) return false;
         if (!EnsureServiceProject()) return false;
         if (!EnsureReRegistration()) return false;
         if (!EnsureQuestions()) return false;
-        if (!EnsureSubmitInformation()) return false;
         if (!EnsureReconciliation()) return false;
-        if (!EnsureBalance()) return false;
 
-        customWarningAlert("This will finalize and submit your report. You will no longer be able to edit this report. Do you wish to continue?", function(result) {
+        // Await EnsureBalance if it is an async function
+        if (!await EnsureBalance()) return false;
+
+        // Use SweetAlert2 for the final confirmation
+        Swal.fire({
+            title: 'Final Confirmation',
+            text: "This will finalize and submit your report. You will no longer be able to edit this report. Do you wish to continue?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Submit Report',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger'
+            }
+        }).then((result) => {
             if (result.isConfirmed) {
+                // Show processing spinner
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Please wait while we process your request.',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading(),
+                    customClass: {
+                        confirmButton: 'btn-sm btn-success'
+                    }
+                });
+
+                // Proceed with form submission
                 $("#submitted").val('1');
                 $("#FurthestStep").val('15');
                 $("#financial_report").submit();
             } else {
+                // Optionally handle the case where the user cancels
                 $(this).prop('disabled', false);
             }
         });
     });
-
 
         function isValidEmail(email) {
             // Regular expression for email validation
@@ -5052,7 +5084,7 @@ document.addEventListener("DOMContentLoaded", function() {
             return true;
         }
 
-        function EnsureBalance() {
+        async function EnsureBalance() {
             var PaymentTotal = 0;
             var DepositTotal = 0;
 
@@ -5071,17 +5103,34 @@ document.addEventListener("DOMContentLoaded", function() {
             }
 
             var BankBalanceNow = parseFloat(document.getElementById("BankBalanceNow").value.replace(/,/g, '')) || 0;
-
             var TotalFees = (BankBalanceNow - PaymentTotal + DepositTotal).toFixed(2);
             var TreasuryBalanceNow = parseFloat(document.getElementById("TreasuryBalanceNow").value.replace(/,/g, '')) || 0;
 
             if (TotalFees != TreasuryBalanceNow) {
-                var proceedAnyway = confirm("Your report does not balance. Your Treasury Balance Now and Reconciled Bank Balance should match before submitting your report. \n\nClick OK to Submit Anyway. \nClick Cancel to Return to Report.");
-                if (!proceedAnyway) {
-                    accordion.openAccordionItem('accordion-header-reconciliation');
-                    return false;
+                // Use await to wait for the SweetAlert result
+                const result = await Swal.fire({
+                    title: 'Report Does Not Balance',
+                    text: "Your report does not balance. Your Treasury Balance Now and Reconciled Bank Balance should match before submitting your report.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Submit Anyway',
+                    cancelButtonText: 'Return to Report',
+                    customClass: {
+                        confirmButton: 'btn-sm btn-success',
+                        cancelButton: 'btn-sm btn-danger'
+                    }
+                });
+
+                if (result.isConfirmed) {
+                    return true; // User wants to submit anyway
+                } else {
+                    // Optionally open the accordion or perform other actions
+                    // accordion.openAccordionItem('accordion-header-reconciliation');
+                    return false; // User does not want to submit
                 }
             }
+
+            // If balanced, allow form submission
             return true;
         }
 
@@ -5160,37 +5209,37 @@ document.addEventListener("DOMContentLoaded", function() {
             return true;
         }
 
-        function EnsureSubmitInformation() {
-            var completedName = document.getElementById('CompletedName');
-            var completedEmail = document.getElementById('CompletedEmail');
-            var missingFields = [];
+        // function EnsureSubmitInformation() {
+        //     var completedName = document.getElementById('CompletedName');
+        //     var completedEmail = document.getElementById('CompletedEmail');
+        //     var missingFields = [];
 
-            // Define user-friendly labels for the fields
-            var fieldLabels = {
-                'CompletedName': 'Name of the person submitting the report',
-                'CompletedEmail': 'Email address of the person submitting the report'
-            };
+        //     // Define user-friendly labels for the fields
+        //     var fieldLabels = {
+        //         'CompletedName': 'Name of the person submitting the report',
+        //         'CompletedEmail': 'Email address of the person submitting the report'
+        //     };
 
-            // Check for missing fields
-            if (!completedName || completedName.value.trim() === "") {
-                missingFields.push(fieldLabels['CompletedName']);
-            }
-            if (!completedEmail || completedEmail.value.trim() === "") {
-                missingFields.push(fieldLabels['CompletedEmail']);
-            }
+        //     // Check for missing fields
+        //     if (!completedName || completedName.value.trim() === "") {
+        //         missingFields.push(fieldLabels['CompletedName']);
+        //     }
+        //     if (!completedEmail || completedEmail.value.trim() === "") {
+        //         missingFields.push(fieldLabels['CompletedEmail']);
+        //     }
 
-            // Display the missing fields if any
-            if (missingFields.length > 0) {
-                var missingFieldsText = missingFields.map(field => `<li>${field}</li>`).join('');
-                var message = `<p>The following information is required to submit the report, please provide the required information to continue.</p>
-                                <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
-                                    ${missingFieldsText}
-                                </ul>
-                                `;
-                customErrorAlert(message);
-                return false;
-            }
-            return true;
-        }
+        //     // Display the missing fields if any
+        //     if (missingFields.length > 0) {
+        //         var missingFieldsText = missingFields.map(field => `<li>${field}</li>`).join('');
+        //         var message = `<p>The following information is required to submit the report, please provide the required information to continue.</p>
+        //                         <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
+        //                             ${missingFieldsText}
+        //                         </ul>
+        //                         `;
+        //         customErrorAlert(message);
+        //         return false;
+        //     }
+        //     return true;
+        // }
     </script>
 @endsection
