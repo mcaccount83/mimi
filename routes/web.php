@@ -45,6 +45,7 @@ Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('
 Route::put('/board/password', [BoardController::class, 'updatePassword'])->name('board.updatepassword');
 Route::post('/board/check-password', [BoardController::class, 'checkCurrentPassword'])->name('board.checkpassword');
 Route::put('/coordinator/password', [CoordinatorController::class, 'updatePassword'])->name('coordinator.updatepassword');
+Route::post('/coordinator/check-password', [CoordinatorController::class, 'checkCurrentPassword'])->name('coordinator.checkpassword');
 Route::post('/chapter/password', [ChapterController::class, 'updatePassword'])->name('chapter.updatepassword');
 
 

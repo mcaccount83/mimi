@@ -117,15 +117,12 @@
 
                                 @if($financial_report_array->financial_pdf_path!=null)
                                     <a id="btn-download-pdf" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn btn-primary" ><i class="fas fa-download" ></i>&nbsp; Financial Report PDF</a>
-
-                                    {{-- <button id="downloadPdfLink" type="button" class="btn btn-primary" onclick="window.location.href='https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>'">
-                                        <i class="fas fa-file-pdf"></i>&nbsp; Financial Report PDF</a>
-                                    </button> --}}
                                 @else
                                     <button id="ReportPDF" type="button" class="btn btn-primary" onclick="">
                                         <i class="fas fa-file-pdf"></i>&nbsp; No Financial Report on File
                                     </button>
                                 @endif
+
                         </div>
                         <div class="col-md-12"><br></div>
 
@@ -155,6 +152,14 @@
                                 @else
                                     <a class="btn btn-primary disabled" href="#">
                                         <i class="fas fa-file-invoice-dollar"></i>&nbsp; Financial Report Not Available
+                                    </a>
+                                @endif
+                                @if($thisDate->month >= 7 && $thisDate->month <= 12)
+                                    <a href="https://sa.www4.irs.gov/sso/ial1?resumePath=%2Fas%2F5Ad0mGlkzW%2Fresume%2Fas%2Fauthorization.ping&allowInteraction=true&reauth=false&connectionId=SADIPACLIENT&REF=3C53421849B7D5B806E50960DF0AC7530889D9ADE9238D5D3B8B00000069&vnd_pi_requested_resource=https%3A%2F%2Fsa.www4.irs.gov%2Fepostcard%2F&vnd_pi_application_name=EPOSTCARD"
+                                        class="btn btn-primary" target="_blank" ><i class="fas fa-globe" ></i>&nbsp; {{ date('Y')-1 }} 990N IRS Online Filing</a>
+                                @else
+                                    <a class="btn btn-primary disabled" href="#" >
+                                        <i class="fas fa-globe"></i>&nbsp; 990N Not Available Until July 1st
                                     </a>
                                 @endif
                         </div>
@@ -722,7 +727,7 @@
                 </div>
                 </div>
 
-                <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+                {{-- <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <!-- Modal Header -->
@@ -763,7 +768,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
             </div>
 @endsection
@@ -929,20 +934,20 @@ function is_url() {
         }
     }
 
-function isNumber(evt) {
-    evt = (evt) ? evt : window.event;
-    var charCode = (evt.which) ? evt.which : evt.keyCode;
-        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-            return false;
-        }
-        return true;
-    }
+// function isNumber(evt) {
+//     evt = (evt) ? evt : window.event;
+//     var charCode = (evt.which) ? evt.which : evt.keyCode;
+//         if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+//             return false;
+//         }
+//         return true;
+//     }
 
-function isAlphanumeric(e){
-	var k;
-        document.all ? k = e.keyCode : k = e.which;
-        return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
-    }
+// function isAlphanumeric(e){
+// 	var k;
+//         document.all ? k = e.keyCode : k = e.which;
+//         return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
+//     }
 
 function PreSaveValidate(){
     var errMessage="";
@@ -1028,16 +1033,15 @@ function showChangePasswordAlert() {
         cancelButtonText: 'Cancel',
         showCancelButton: true,
         customClass: {
-            confirmButton: 'btn-sm btn-success',  // Custom class for confirm button
-            cancelButton: 'btn-sm btn-danger'    // Custom class for cancel button
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
         },
         preConfirm: () => {
-            // Fetch values from the form
             const currentPassword = Swal.getPopup().querySelector('#current_password').value;
             const newPassword = Swal.getPopup().querySelector('#new_password').value;
             const confirmNewPassword = Swal.getPopup().querySelector('#new_password_confirmation').value;
 
-            // Validate fields
+            // Validate input fields
             if (!currentPassword || !newPassword || !confirmNewPassword) {
                 Swal.showValidationMessage('Please fill out all fields');
                 return false;
@@ -1048,12 +1052,28 @@ function showChangePasswordAlert() {
                 return false;
             }
 
-            // Return data for AJAX request
-            return {
-                current_password: currentPassword,
-                new_password: newPassword,
-                new_password_confirmation: confirmNewPassword
-            };
+            // Return the AJAX call as a promise to let Swal wait for it
+            return $.ajax({
+                url: '{{ route("board.checkpassword") }}',  // Check current password route
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    current_password: currentPassword
+                }
+            }).then(response => {
+                if (!response.isValid) {
+                    Swal.showValidationMessage('Current password is incorrect');
+                    return false;
+                }
+                return {
+                    current_password: currentPassword,
+                    new_password: newPassword,
+                    new_password_confirmation: confirmNewPassword
+                };
+            }).catch(() => {
+                Swal.showValidationMessage('Error verifying current password');
+                return false;
+            });
         }
     }).then((result) => {
         if (result.isConfirmed) {
@@ -1067,7 +1087,7 @@ function showChangePasswordAlert() {
                 didOpen: () => Swal.showLoading()
             });
 
-            // Send the form data via AJAX
+            // Send the form data via AJAX to update the password
             $.ajax({
                 url: '{{ route("board.updatepassword") }}',
                 type: 'PUT',
@@ -1084,7 +1104,7 @@ function showChangePasswordAlert() {
                         icon: 'success',
                         confirmButtonText: 'OK',
                         customClass: {
-                            confirmButton: 'btn-sm btn-success'  // Custom class for success alert
+                            confirmButton: 'btn-sm btn-success'
                         }
                     });
                 },
@@ -1095,7 +1115,7 @@ function showChangePasswordAlert() {
                         icon: 'error',
                         confirmButtonText: 'OK',
                         customClass: {
-                            confirmButton: 'btn-sm btn-danger'  // Custom class for error alert
+                            confirmButton: 'btn-sm btn-danger'
                         }
                     });
                 }
@@ -1103,12 +1123,6 @@ function showChangePasswordAlert() {
         }
     });
 }
-
-
-
-
-
-
 
 </script>
 @endsection

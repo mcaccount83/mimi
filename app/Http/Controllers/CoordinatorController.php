@@ -30,19 +30,38 @@ class CoordinatorController extends Controller
     public function updatePassword(Request $request)
     {
         $request->validate([
-            'current_password' => ['required', 'current_password'],
+            'current_password' => ['required'],
             'new_password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        // Update the user's password
         $user = $request->user();
+
+        // Ensure the current password is correct
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json(['error' => 'Current password is incorrect'], 400);
+        }
+
+        // Update the user's password
         $user->password = Hash::make($request->new_password);
-        $user->remember_token = null;
+        $user->remember_token = null; // Reset the remember token
         $user->save();
 
-        // Set success message
-        return redirect()->back()->with('success', 'Password updated successfully.');
+        return response()->json(['message' => 'Password updated successfully']);
+    }
 
+    /**
+     * Verify Current Passwor for Reset
+     */
+    public function checkCurrentPassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+        ]);
+
+        $user = $request->user();
+        $isValid = Hash::check($request->current_password, $user->password);
+
+        return response()->json(['isValid' => $isValid]);
     }
 
     /**

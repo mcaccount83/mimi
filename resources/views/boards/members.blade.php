@@ -156,6 +156,14 @@
                                         <i class="fas fa-file-invoice-dollar"></i>&nbsp; Financial Report Not Available
                                     </a>
                                 @endif
+                                @if($thisDate->month >= 7 && $thisDate->month <= 12)
+                                    <a href="https://sa.www4.irs.gov/sso/ial1?resumePath=%2Fas%2F5Ad0mGlkzW%2Fresume%2Fas%2Fauthorization.ping&allowInteraction=true&reauth=false&connectionId=SADIPACLIENT&REF=3C53421849B7D5B806E50960DF0AC7530889D9ADE9238D5D3B8B00000069&vnd_pi_requested_resource=https%3A%2F%2Fsa.www4.irs.gov%2Fepostcard%2F&vnd_pi_application_name=EPOSTCARD"
+                                        class="btn btn-primary" target="_blank" ><i class="fas fa-globe" ></i>&nbsp; {{ date('Y')-1 }} 990N IRS Online Filing</a>
+                                @else
+                                    <a class="btn btn-primary disabled" href="#" >
+                                        <i class="fas fa-globe"></i>&nbsp; 990N Not Available Until July 1st
+                                    </a>
+                                @endif
                         </div>
 
                 </div>
@@ -412,7 +420,7 @@
                 <div class="box-body text-center">
                  <button id="Save" type="submit" class="btn btn-primary" onclick="return PreSaveValidate()"><i class="fas fa-save" ></i>&nbsp; Save</button>
              </form>
-             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changePasswordModal"><i class="fas fa-lock" ></i>&nbsp; Change Password</button>
+             <button type="button" class="btn btn-primary" onclick="showChangePasswordAlert()"><i class="fas fa-lock" ></i>&nbsp; Change Password</button>
              <a href="{{ route('logout') }}" class="btn btn-primary"
              onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
               <span><i class="fas fa-undo" ></i>&nbsp; {{ __('Logout') }}</span>
@@ -427,7 +435,7 @@
                  <a href="{{ route('board.resources') }}" class="btn btn-primary"><i class="fa fa-briefcase fa-fw" aria-hidden="true" ></i>&nbsp; Chapter Resources</a>
              </div>
 
-             <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+             {{-- <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <!-- Modal Header -->
@@ -448,27 +456,18 @@
                                 <div class="form-group">
                                     <label for="current_password">Current Password</label>
                                     <input type="password" name="current_password" id="current_password" class="form-control" required>
-                                    {{-- @error('current_password')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror --}}
                                 </div>
 
                                 <!-- New Password -->
                                 <div class="form-group">
                                     <label for="new_password">New Password</label>
                                     <input type="password" name="new_password" id="new_password" class="form-control" required>
-                                    {{-- @error('new_password')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror --}}
                                 </div>
 
                                 <!-- Confirm New Password -->
                                 <div class="form-group">
                                     <label for="new_password_confirmation">Confirm New Password</label>
                                     <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="form-control" required>
-                                    {{-- @error('new_password_confirmation')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror --}}
                                 </div>
 
                                 <!-- Submit Button -->
@@ -477,7 +476,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
              </div>
          </div>
@@ -614,20 +613,20 @@ function is_url() {
         }
     }
 
-function isNumber(evt) {
-    evt = (evt) ? evt : window.event;
-    var charCode = (evt.which) ? evt.which : evt.keyCode;
-        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-            return false;
-        }
-        return true;
-    }
+// function isNumber(evt) {
+//     evt = (evt) ? evt : window.event;
+//     var charCode = (evt.which) ? evt.which : evt.keyCode;
+//         if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+//             return false;
+//         }
+//         return true;
+//     }
 
-function isAlphanumeric(e){
-	var k;
-        document.all ? k = e.keyCode : k = e.which;
-        return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
-    }
+// function isAlphanumeric(e){
+// 	var k;
+//         document.all ? k = e.keyCode : k = e.which;
+//         return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
+//     }
 
 function PreSaveValidate(){
     // var errMessage="";
@@ -667,27 +666,141 @@ function PreSaveValidate(){
     //         inputField.value = inputValue; // Update the input field with the cleaned value
     //     }
 
-    var NewPassword=document.getElementById("ch_pre_pswd").value;
-        //They changed their password
-        if(document.getElementById("ch_pre_pswd").value != document.getElementById("ch_pre_pswd").getAttribute("value")){
-            if(document.getElementById("ch_pre_pswd").value != document.getElementById("ch_pre_pswd_cnf").value){  //Make sure the password and confirmation match
-                alert ("The provided passwords do not match, please re-enter your password.");
-                document.getElementById("ch_pre_pswd_cnf").focus();
-                return false;
-            }
-            // Make sure the password is the right length
-            else if(NewPassword.length < 7){
-                alert("Password must be at least 7 characters.");
-                document.getElementById("ch_pre_pswd").focus();
-                return false;
-            }
-            else{
-                document.getElementById("ch_pre_pswd_chg").value="1";
-            }
-        }
+    // var NewPassword=document.getElementById("ch_pre_pswd").value;
+    //     //They changed their password
+    //     if(document.getElementById("ch_pre_pswd").value != document.getElementById("ch_pre_pswd").getAttribute("value")){
+    //         if(document.getElementById("ch_pre_pswd").value != document.getElementById("ch_pre_pswd_cnf").value){  //Make sure the password and confirmation match
+    //             alert ("The provided passwords do not match, please re-enter your password.");
+    //             document.getElementById("ch_pre_pswd_cnf").focus();
+    //             return false;
+    //         }
+    //         // Make sure the password is the right length
+    //         else if(NewPassword.length < 7){
+    //             alert("Password must be at least 7 characters.");
+    //             document.getElementById("ch_pre_pswd").focus();
+    //             return false;
+    //         }
+    //         else{
+    //             document.getElementById("ch_pre_pswd_chg").value="1";
+    //         }
+    //     }
 
     //Okay, all validation passed, save the records to the database
     return true;
+}
+
+function showChangePasswordAlert() {
+    Swal.fire({
+        title: 'Change Password',
+        html: `
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label for="current_password">Current Password</label>
+                    <input type="password" name="current_password" id="current_password" class="swal2-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="new_password">New Password</label>
+                    <input type="password" name="new_password" id="new_password" class="swal2-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="new_password_confirmation">Confirm New Password</label>
+                    <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="swal2-input" required>
+                </div>
+            </form>
+        `,
+        confirmButtonText: 'Update Password',
+        cancelButtonText: 'Cancel',
+        showCancelButton: true,
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const currentPassword = Swal.getPopup().querySelector('#current_password').value;
+            const newPassword = Swal.getPopup().querySelector('#new_password').value;
+            const confirmNewPassword = Swal.getPopup().querySelector('#new_password_confirmation').value;
+
+            // Validate input fields
+            if (!currentPassword || !newPassword || !confirmNewPassword) {
+                Swal.showValidationMessage('Please fill out all fields');
+                return false;
+            }
+
+            if (newPassword !== confirmNewPassword) {
+                Swal.showValidationMessage('New passwords do not match');
+                return false;
+            }
+
+            // Return the AJAX call as a promise to let Swal wait for it
+            return $.ajax({
+                url: '{{ route("board.checkpassword") }}',  // Check current password route
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    current_password: currentPassword
+                }
+            }).then(response => {
+                if (!response.isValid) {
+                    Swal.showValidationMessage('Current password is incorrect');
+                    return false;
+                }
+                return {
+                    current_password: currentPassword,
+                    new_password: newPassword,
+                    new_password_confirmation: confirmNewPassword
+                };
+            }).catch(() => {
+                Swal.showValidationMessage('Error verifying current password');
+                return false;
+            });
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success'
+                },
+                didOpen: () => Swal.showLoading()
+            });
+
+            // Send the form data via AJAX to update the password
+            $.ajax({
+                url: '{{ route("board.updatepassword") }}',
+                type: 'PUT',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    current_password: result.value.current_password,
+                    new_password: result.value.new_password,
+                    new_password_confirmation: result.value.new_password_confirmation
+                },
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Your password has been updated.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    });
+                },
+                error: function(jqXHR) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: `Something went wrong: ${jqXHR.responseText}`,
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn-sm btn-danger'
+                        }
+                    });
+                }
+            });
+        }
+    });
 }
 
 </script>
