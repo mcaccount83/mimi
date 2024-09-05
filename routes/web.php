@@ -43,9 +43,9 @@ Route::get('password/reset/{token}', [ResetPasswordController::class, 'showReset
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
 Route::put('/board/password', [BoardController::class, 'updatePassword'])->name('board.updatepassword');
+Route::post('/board/check-password', [BoardController::class, 'checkCurrentPassword'])->name('board.checkpassword');
 Route::put('/coordinator/password', [CoordinatorController::class, 'updatePassword'])->name('coordinator.updatepassword');
 Route::post('/chapter/password', [ChapterController::class, 'updatePassword'])->name('chapter.updatepassword');
-
 
 
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');

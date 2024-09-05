@@ -41,21 +41,40 @@ class BoardController extends Controller
      * Reset Password
      */
     public function updatePassword(Request $request)
+{
+    $request->validate([
+        'current_password' => ['required'],
+        'new_password' => ['required', 'string', 'min:8', 'confirmed'],
+    ]);
+
+    $user = $request->user();
+
+    // Ensure the current password is correct
+    if (!Hash::check($request->current_password, $user->password)) {
+        return response()->json(['error' => 'Current password is incorrect'], 400);
+    }
+
+    // Update the user's password
+    $user->password = Hash::make($request->new_password);
+    $user->remember_token = null; // Reset the remember token
+    $user->save();
+
+    return response()->json(['message' => 'Password updated successfully']);
+}
+
+    /**
+     * Verify Current Passwor for Reset
+     */
+    public function checkCurrentPassword(Request $request)
     {
         $request->validate([
-            'current_password' => ['required', 'current_password'],
-            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
+            'current_password' => 'required',
         ]);
 
-        // Update the user's password
         $user = $request->user();
-        $user->password = Hash::make($request->new_password);
-        $user->remember_token = null;
-        $user->save();
+        $isValid = Hash::check($request->current_password, $user->password);
 
-        // Set success message
-        return redirect()->back()->with('success', 'Password updated successfully.');
-
+        return response()->json(['isValid' => $isValid]);
     }
 
     /**

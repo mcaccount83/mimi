@@ -4,9 +4,6 @@
 
 <div class="container" id="test">
     <div class="container">
-        <div>
-
-        </div>
         <div class="row">
             <div class="col-md-12">
          <!-- Widget: user widget style 1 -->

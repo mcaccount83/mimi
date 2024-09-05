@@ -18,19 +18,6 @@
     </div><!-- /.container-fluid -->
   </section>
 
-    @if ($message = Session::get('success'))
-      <div class="alert alert-success">
-		<button type="button" class="close" data-dismiss="alert">×</button>
-         <p>{{ $message }}</p>
-      </div>
-    @endif
-	 @if ($message = Session::get('fail'))
-      <div class="alert alert-danger">
-		<button type="button" class="close" data-dismiss="alert">×</button>
-         <p>{{ $message }}</p>
-      </div>
-    @endif
-
     <!-- Main content -->
     <form method="POST" id="create_form" action="{{ route('coordinator.store') }}" autocomplete="off">
     @csrf

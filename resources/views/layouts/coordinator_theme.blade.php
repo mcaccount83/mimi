@@ -703,6 +703,63 @@
                     <div class="col-12">
                         <!-- Default box -->
                         <div class="content-wrapper">
+
+                            @if ($message = Session::get('success'))
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: @json($message),
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                });
+                            </script>
+                        @endif
+
+                        @if ($message = Session::get('info'))
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'info',
+                                        title: @json($message),
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                });
+                            </script>
+                        @endif
+
+                        @if ($message = Session::get('fail'))
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'error',
+                                        title: @json($message),
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                });
+                            </script>
+                        @endif
+
+                        @if ($errors->any())
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'error',
+                                        title: 'There were some errors!',
+                                        html: '<ul>@foreach ($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>',
+                                        showConfirmButton: true,
+                                    });
+                                });
+                            </script>
+                        @endif
+
                             @yield('content')
                         </div>
                     </div>
@@ -824,7 +881,7 @@
   //Cusotmize AJAX Popups to Match Theme
   function customSuccessAlert(message) {
         Swal.fire({
-            title: 'Notification',
+            title: 'Success',
             html: message,
             icon: 'success',
             confirmButtonText: 'OK',
@@ -837,7 +894,7 @@
 
 function customWarningAlert(message) {
     Swal.fire({
-        title: 'Notification',
+        title: 'Warning',
         html: message,
         icon: 'warning',
         confirmButtonText: 'OK',
@@ -848,9 +905,22 @@ function customWarningAlert(message) {
     });
 }
 
+function customInfoAlert(message) {
+    Swal.fire({
+        title: 'Info',
+        html: message,
+        icon: 'info',
+        confirmButtonText: 'OK',
+        customClass: {
+            confirmButton: 'btn-sm btn-success', // Match your theme button class
+        },
+        buttonsStyling: false // Disable default button styling
+    });
+}
+
 function customErrorAlert(message) {
     Swal.fire({
-        title: 'Notification',
+        title: 'Error',
         html: message,
         icon: 'error',
         confirmButtonText: 'OK',
@@ -860,7 +930,6 @@ function customErrorAlert(message) {
         buttonsStyling: false // Disable default button styling
     });
 }
-
 
  </script>
 

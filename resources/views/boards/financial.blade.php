@@ -4,20 +4,6 @@
 
 <div class="container" id="test">
     <div class="container">
-        <div>
-            @if ($message = Session::get('success'))
-                <div class="alert alert-success">
-                    <button type="button" class="close" data-dismiss="alert">×</button>
-                 <p>{{ $message }}</p>
-                </div>
-            @endif
-            @if ($message = Session::get('fail'))
-                <div class="alert alert-danger">
-                    <button type="button" class="close" data-dismiss="alert">×</button>
-                 <p>{{ $message }}</p>
-                </div>
-            @endif
-        </div>
         <div class="row">
             <div class="col-md-12">
          <!-- Widget: user widget style 1 -->

@@ -18,33 +18,6 @@
 @section('content')
 
 <div class="container">
-<div>
-	@if ($message = Session::get('success'))
-        <div class="alert alert-success">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <p>{{ $message }}</p>
-        </div>
-    @endif
-
-    @if ($message = Session::get('fail'))
-        <div class="alert alert-danger">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <p>{{ $message }}</p>
-        </div>
-    @endif
-
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-</div>
 <div class="row">
     <div class="col-md-12">
  <!-- Widget: user widget style 1 -->
@@ -733,7 +706,7 @@
                    <div class="box-body text-center">
                     <button id="Save" type="submit" class="btn btn-primary" onclick="return PreSaveValidate()"><i class="fas fa-save" ></i>&nbsp; Save</button>
                 </form>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changePasswordModal"><i class="fas fa-lock" ></i>&nbsp; Change Password</button>
+                    <button type="button" class="btn btn-primary" onclick="showChangePasswordAlert()"><i class="fas fa-lock" ></i>&nbsp; Change Password</button>
                 <a href="{{ route('logout') }}" class="btn btn-primary"
                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                  <span><i class="fas fa-undo" ></i>&nbsp; {{ __('Logout') }}</span>
@@ -770,27 +743,18 @@
                                     <div class="form-group">
                                         <label for="current_password">Current Password</label>
                                         <input type="password" name="current_password" id="current_password" class="form-control" required>
-                                        {{-- @error('current_password')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror --}}
                                     </div>
 
                                     <!-- New Password -->
                                     <div class="form-group">
                                         <label for="new_password">New Password</label>
                                         <input type="password" name="new_password" id="new_password" class="form-control" required>
-                                        {{-- @error('new_password')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror --}}
-                                    </div>
+                                     </div>
 
                                     <!-- Confirm New Password -->
                                     <div class="form-group">
                                         <label for="new_password_confirmation">Confirm New Password</label>
                                         <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="form-control" required>
-                                        {{-- @error('new_password_confirmation')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror --}}
                                     </div>
 
                                     <!-- Submit Button -->
@@ -1018,28 +982,133 @@ function PreSaveValidate(){
     //         inputField.value = inputValue; // Update the input field with the cleaned value
     //     }
 
-    var NewPassword=document.getElementById("ch_pre_pswd").value;
-        //They changed their password
-        if(document.getElementById("ch_pre_pswd").value != document.getElementById("ch_pre_pswd").getAttribute("value")){
-            if(document.getElementById("ch_pre_pswd").value != document.getElementById("ch_pre_pswd_cnf").value){  //Make sure the password and confirmation match
-                alert ("The provided passwords do not match, please re-enter your password.");
-                document.getElementById("ch_pre_pswd_cnf").focus();
-                return false;
-            }
-            // Make sure the password is the right length
-            else if(NewPassword.length < 7){
-                alert("Password must be at least 7 characters.");
-                document.getElementById("ch_pre_pswd").focus();
-                return false;
-            }
-            else{
-                document.getElementById("ch_pre_pswd_chg").value="1";
-            }
-        }
+//     var NewPassword=document.getElementById("ch_pre_pswd").value;
+//         //They changed their password
+//         if(document.getElementById("ch_pre_pswd").value != document.getElementById("ch_pre_pswd").getAttribute("value")){
+//             if(document.getElementById("ch_pre_pswd").value != document.getElementById("ch_pre_pswd_cnf").value){  //Make sure the password and confirmation match
+//                 alert ("The provided passwords do not match, please re-enter your password.");
+//                 document.getElementById("ch_pre_pswd_cnf").focus();
+//                 return false;
+//             }
+//             // Make sure the password is the right length
+//             else if(NewPassword.length < 7){
+//                 alert("Password must be at least 7 characters.");
+//                 document.getElementById("ch_pre_pswd").focus();
+//                 return false;
+//             }
+//             else{
+//                 document.getElementById("ch_pre_pswd_chg").value="1";
+//             }
+//         }
 
     //Okay, all validation passed, save the records to the database
     return true;
 }
+
+function showChangePasswordAlert() {
+    Swal.fire({
+        title: 'Change Password',
+        html: `
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label for="current_password">Current Password</label>
+                    <input type="password" name="current_password" id="current_password" class="swal2-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="new_password">New Password</label>
+                    <input type="password" name="new_password" id="new_password" class="swal2-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="new_password_confirmation">Confirm New Password</label>
+                    <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="swal2-input" required>
+                </div>
+            </form>
+        `,
+        confirmButtonText: 'Update Password',
+        cancelButtonText: 'Cancel',
+        showCancelButton: true,
+        customClass: {
+            confirmButton: 'btn-sm btn-success',  // Custom class for confirm button
+            cancelButton: 'btn-sm btn-danger'    // Custom class for cancel button
+        },
+        preConfirm: () => {
+            // Fetch values from the form
+            const currentPassword = Swal.getPopup().querySelector('#current_password').value;
+            const newPassword = Swal.getPopup().querySelector('#new_password').value;
+            const confirmNewPassword = Swal.getPopup().querySelector('#new_password_confirmation').value;
+
+            // Validate fields
+            if (!currentPassword || !newPassword || !confirmNewPassword) {
+                Swal.showValidationMessage('Please fill out all fields');
+                return false;
+            }
+
+            if (newPassword !== confirmNewPassword) {
+                Swal.showValidationMessage('New passwords do not match');
+                return false;
+            }
+
+            // Return data for AJAX request
+            return {
+                current_password: currentPassword,
+                new_password: newPassword,
+                new_password_confirmation: confirmNewPassword
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success'
+                },
+                didOpen: () => Swal.showLoading()
+            });
+
+            // Send the form data via AJAX
+            $.ajax({
+                url: '{{ route("board.updatepassword") }}',
+                type: 'PUT',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    current_password: result.value.current_password,
+                    new_password: result.value.new_password,
+                    new_password_confirmation: result.value.new_password_confirmation
+                },
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Your password has been updated.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'  // Custom class for success alert
+                        }
+                    });
+                },
+                error: function(jqXHR) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: `Something went wrong: ${jqXHR.responseText}`,
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn-sm btn-danger'  // Custom class for error alert
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+
+
+
+
+
 
 </script>
 @endsection

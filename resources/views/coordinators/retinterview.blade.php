@@ -11,18 +11,6 @@
         <li class="active">Retired Coordinator List</li>
       </ol>
     </section>
-    @if ($message = Session::get('success'))
-      <div class="alert alert-success">
-		<button type="button" class="close" data-dismiss="alert">×</button>
-         <p>{{ $message }}</p>
-      </div>
-    @endif
-	 @if ($message = Session::get('fail'))
-      <div class="alert alert-danger">
-		<button type="button" class="close" data-dismiss="alert">×</button>
-         <p>{{ $message }}</p>
-      </div>
-    @endif
 
     <!-- Main content -->
      <form method="POST" action='{{ route("coordinator.update2",$coordinatorDetails[0]->coordinator_id) }}'">
