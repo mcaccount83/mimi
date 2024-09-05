@@ -951,13 +951,28 @@ $(document).ready(function() {
 
   }
 
-	function ConfirmCancel(element){
-		var result=confirm("Any unsaved changes will be lost. Do you want to continue?");
-		if(result)
-			location.reload()
-		else
-			return false;
-	}
+  function ConfirmCancel(element) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Any unsaved changes will be lost. Do you want to continue?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, continue',
+            cancelButtonText: 'No, stay here',
+            customClass: {
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Reload the page
+                location.reload();
+            } else {
+                // Do nothing if the user cancels
+                return false;
+            }
+        });
+    }
 
   //submit validation function
   function PreSaveValidate(){

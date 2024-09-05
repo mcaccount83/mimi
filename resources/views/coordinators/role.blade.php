@@ -406,11 +406,13 @@
 		</div>
 		<div class="card-body text-center">
 			<?php if ($coordinatorDetails[0]->on_leave) {?>
-			<button type="button" class="btn bg-gradient-primary" id="remove-leave"><i class="fas fa-user-plus" ></i>&nbsp; Remove Volunteer on Leave</button> <?php }
+			<button type="button" class="btn bg-gradient-primary" id="remove-leave"><i class="fas fa-user-plus" ></i>&nbsp; Remove Volunteer from Leave</button> <?php }
 			else { ?>
-			<button type="submit" class="btn bg-gradient-primary" onclick="return PreRetireValidate(true)"><i class="fas fa-user-times" ></i>&nbsp; Put Volunteer on Leave</button>
+            <button type="button" class="btn bg-gradient-primary" id="leave" onclick="ConfirmLeave()"><i class="fas fa-user-minus" ></i>&nbsp; Put Volunteer on Leave</button>
+			{{-- <button type="submit" class="btn bg-gradient-primary" onclick="return PreRetireValidate(true)"><i class="fas fa-user-minus" ></i>&nbsp; Put Volunteer on Leave</button> --}}
 			<?php } ?>
-			<button type="submit" class="btn bg-gradient-primary" onclick="return PreRetireValidate()"><i class="fas fa-user-times" ></i>&nbsp; Retire Volunteer</button>
+            <button type="button" class="btn bg-gradient-primary" id="retire" onclick="ConfirmRetire()"><i class="fas fa-user-times" ></i>&nbsp; Retire Volunteer</button>
+			{{-- <button type="submit" class="btn bg-gradient-primary" onclick="return PreRetireValidate()"><i class="fas fa-user-times" ></i>&nbsp; Retire Volunteer</button> --}}
         </div>
 
             <?php if ($bigSisterCondition) { ?>
@@ -532,7 +534,7 @@
             }
         });
 
-	$("#remove-leave").click(function() {
+   $("#remove-leave").click(function() {
 		$("#submit_type").val('RemoveLeave');
 		$("#role").submit();
 	});
@@ -544,13 +546,29 @@
 
 });
 
-function ConfirmCancel(element){
-		var result=confirm("Any unsaved changes will be lost. Do you want to continue?");
-		if(result)
-			location.reload()
-		else
-			return false;
-	}
+    function ConfirmCancel(element) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Any unsaved changes will be lost. Do you want to continue?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, continue',
+            cancelButtonText: 'No, stay here',
+            customClass: {
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Reload the page
+                location.reload();
+            } else {
+                // Do nothing if the user cancels
+                return false;
+            }
+        });
+    }
+
 var iChapterCount = <?php echo $chapter_count; ?>;
 var iCoordinatorCount = <?php echo $row_count; ?>;
 
@@ -716,132 +734,304 @@ var iCoordinatorCount = <?php echo $row_count; ?>;
 				}
 			}
 
-	function CheckPromotion(element){
-		var promotionDate = prompt("If this position change is a promotion, please enter the promotion date in the format YYYY-MM-DD.  If this position change is not a promotion, press cancel and the promotion date will not be updated.","<?php echo date("Y-m-d"); ?>");
+	// function CheckPromotion(element){
+	// 	var promotionDate = prompt("If this position change is a promotion, please enter the promotion date in the format YYYY-MM-DD.  If this position change is not a promotion, press cancel and the promotion date will not be updated.","<?php echo date("Y-m-d"); ?>");
 
-		if (promotionDate == null) {
-			return true;
-		}
-		else{
+	// 	if (promotionDate == null) {
+	// 		return true;
+	// 	}
+	// 	else{
 
-			var allowBlank = false;
-			var minYear = 1980;
-			var maxYear = (new Date()).getFullYear();
+	// 		var allowBlank = false;
+	// 		var minYear = 1980;
+	// 		var maxYear = (new Date()).getFullYear();
 
-			var errorMsg = "";
+	// 		var errorMsg = "";
 
-			// regular expression to match required date format
-			re = /^(\d{4})-(\d{1,2})-(\d{1,2})/;
+	// 		// regular expression to match required date format
+	// 		re = /^(\d{4})-(\d{1,2})-(\d{1,2})/;
 
-			if(promotionDate != '') {
-			  if(regs = promotionDate.match(re)) {
-				if(regs[13] < 1 || regs[3] > 31) {
-				  errorMsg = "Invalid value for day: " + regs[1];
-				} else if(regs[2] < 1 || regs[2] > 12) {
-				  errorMsg = "Invalid value for month: " + regs[2];
-				} else if(regs[1] < minYear || regs[1] > maxYear) {
-				  errorMsg = "Invalid value for year: " + regs[1] + " - must be between " + minYear + " and " + maxYear;
-				}
-			  } else {
-				errorMsg = "Invalid date format: " + promotionDate;
-			  }
-			} else if(!allowBlank) {
-			  errorMsg = "Empty date not allowed!";
-			}
+	// 		if(promotionDate != '') {
+	// 		  if(regs = promotionDate.match(re)) {
+	// 			if(regs[13] < 1 || regs[3] > 31) {
+	// 			  errorMsg = "Invalid value for day: " + regs[1];
+	// 			} else if(regs[2] < 1 || regs[2] > 12) {
+	// 			  errorMsg = "Invalid value for month: " + regs[2];
+	// 			} else if(regs[1] < minYear || regs[1] > maxYear) {
+	// 			  errorMsg = "Invalid value for year: " + regs[1] + " - must be between " + minYear + " and " + maxYear;
+	// 			}
+	// 		  } else {
+	// 			errorMsg = "Invalid date format: " + promotionDate;
+	// 		  }
+	// 		} else if(!allowBlank) {
+	// 		  errorMsg = "Empty date not allowed!";
+	// 		}
 
-			var defaultReset = false;
+	// 		var defaultReset = false;
 
-			if(errorMsg != "") {
-				alert(errorMsg);
+	// 		if(errorMsg != "") {
+	// 			alert(errorMsg);
 
-				for (var i = 0 ; i<element.length ; i++)
-				{
-					if (element[i].defaultSelected){
-						element.value = element[i].value;
-						defaultReset = true;
-					}
-				}
+	// 			for (var i = 0 ; i<element.length ; i++)
+	// 			{
+	// 				if (element[i].defaultSelected){
+	// 					element.value = element[i].value;
+	// 					defaultReset = true;
+	// 				}
+	// 			}
 
-				if (!defaultReset)
-					element.value = 0;
+	// 			if (!defaultReset)
+	// 				element.value = 0;
 
-				element.focus();
-				return false;
-			}
+	// 			element.focus();
+	// 			return false;
+	// 		}
 
-			var lastPromotionHidden=document.getElementById("CoordinatorPromoteDateNew");
-			lastPromotionHidden.value = promotionDate;
+	// 		var lastPromotionHidden=document.getElementById("CoordinatorPromoteDateNew");
+	// 		lastPromotionHidden.value = promotionDate;
 
-			var lastPromotion=document.getElementById("CoordinatorPromoteDate");
-			lastPromotion.value = promotionDate;
+	// 		var lastPromotion=document.getElementById("CoordinatorPromoteDate");
+	// 		lastPromotion.value = promotionDate;
 
-			return true;
-		}
-	}
-    function PreRetireValidate(LoA=false){
-		//Ensure all their chapters and coordinators have been reassigned before we allow them to be retired.
-		//First, check the coordinators
-		var table=document.getElementById("coordinator-list");
-		var tablerowcountCord = table.rows.length;
-		var i;
-		var selectbox;
-		var value;
+	// 		return true;
+	// 	}
+	// }
 
-		for(i=0; i<tablerowcountCord; i++){
-			selectid = "Report" + i;
+    function CheckPromotion(element) {
+        const minYear = 1980;
+        const maxYear = (new Date()).getFullYear();
+        const allowBlank = false;
 
-			value = getSelectedValue(selectid);
-			if(value == <?php echo $coordinatorDetails[0]->coordinator_id; ?>){
-				if (LoA)
-					alert ("All direct reports must be assigned to a new supervising coordinator before this coordinator can be put on a leave of absence.");
-				else
-					alert ("All direct reports must be assigned to a new supervising coordinator before this coordinator can be retired.");
-				return false;
-			}
+        Swal.fire({
+            title: 'Position Change',
+                icon: 'question',
+                html: '</p>If this position change is a promotion, please enter the promotion date in the format YYYY-MM-DD. If this position change is not a promotion, press Cancel and the promotion date will not be updated.</p>',
+                input: 'text',
+                inputLabel: 'Promoation Date',
+                inputValue: "<?php echo date('Y-m-d'); ?>",
+                showCancelButton: true,
+                confirmButtonText: 'Submit',
+                cancelButtonText: 'Cancel',
+            inputValidator: (value) => {
+                if (!value && !allowBlank) {
+                    return 'Empty date not allowed!';
+                }
+                if (value) {
+                    // Regular expression to match required date format
+                    const re = /^(\d{4})-(\d{2})-(\d{2})$/;
+                    const match = value.match(re);
 
-		}
+                    if (!match) {
+                        return 'Invalid date format! Use YYYY-MM-DD.';
+                    }
 
-		table=document.getElementById("chapter-list");
-		tablerowcountChap = table.rows.length;
+                    const year = parseInt(match[1], 10);
+                    const month = parseInt(match[2], 10);
+                    const day = parseInt(match[3], 10);
 
-		for(i=0; i<tablerowcountChap; i++){
-			selectid = "PCID" + i;
+                    if (month < 1 || month > 12) {
+                        return 'Invalid month: ' + month;
+                    }
 
-			value = getSelectedValue(selectid);
-			if(value == <?php echo $coordinatorDetails[0]->coordinator_id; ?>){
-				if (LoA)
-					alert ("All assigned chapters must be assigned to a new supervising coordinator before this coordinator can be put on a leave of absence.");
-				else
-					alert ("All assigned chapters must be assigned to a new supervising coordinator before this coordinator can be retired.");
-				return false;
-			}
-		}
+                    if (day < 1 || day > 31) {
+                        return 'Invalid day: ' + day;
+                    }
 
-		if(tablerowcountChap <= 1 && tablerowcountCord <= 1){
-			if (LoA){
-				$("#submit_type").val('Leave');
-				return true;
-			}else{
-				var reason = prompt("Retiring a volunteer will remove their login to MIMI.  If you wish to continue, please enter their reason for retiring and press OK.", "");
+                    if (year < minYear || year > maxYear) {
+                        return 'Invalid year: ' + year + '. Must be between ' + minYear + ' and ' + maxYear;
+                    }
+                }
+                return null;
+            },
+            customClass: {
+                container: 'swal-container',
+                popup: 'swal-popup',
+                title: 'swal-title',
+                input: 'swal-input',
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const promotionDate = result.value;
 
-				if (reason != null) {
-						$("#submit_type").val('Retire');
-						document.getElementById("RetireReason").value = reason;
-						return true;
-				}
-				else
-					return false;
-			}
+                // Set the hidden input values
+                const lastPromotionHidden = document.getElementById("CoordinatorPromoteDateNew");
+                const lastPromotion = document.getElementById("CoordinatorPromoteDate");
 
-		}else{
-			if (LoA)
-					alert ("All direct reports must be assigned to a new supervising coordinator before this coordinator can be put on a leave of absence.");
-				else
-					alert ("All direct reports must be assigned to a new supervising coordinator before this coordinator can be retired.");
-				return false;
-		}
+                if (lastPromotionHidden && lastPromotion) {
+                    lastPromotionHidden.value = promotionDate;
+                    lastPromotion.value = promotionDate;
+                }
+                console.log('Promotion Date:', promotionDate);
+            } else {
+                console.log('Promotion date update was canceled.');
+            }
+        });
+    }
 
-	}
+    function checkCoordinators() {
+        var table = document.getElementById("coordinator-list");
+        var tablerowcountCord = table.rows.length;
+        var i, value, selectid;
+
+        for (i = 0; i < tablerowcountCord; i++) {
+            selectid = "Report" + i;
+            value = getSelectedValue(selectid);
+            if (value == <?php echo $coordinatorDetails[0]->coordinator_id; ?>) {
+                Swal.fire({
+                    title: 'Oops!',
+                    text: 'All direct reports must be assigned to a new supervising coordinator before continuing.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'btn-sm btn-success',
+                    },
+                    buttonsStyling: false
+                });
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function checkChapters() {
+        var table = document.getElementById("chapter-list");
+        var tablerowcountChap = table.rows.length;
+        var i, value, selectid;
+
+        for (i = 0; i < tablerowcountChap; i++) {
+            selectid = "PCID" + i;
+            value = getSelectedValue(selectid);
+            if (value == <?php echo $coordinatorDetails[0]->coordinator_id; ?>) {
+                Swal.fire({
+                    title: 'Oops!',
+                    text: 'All assigned chapters must be assigned to a new supervising coordinator before continuing.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'btn-sm btn-success',
+                    },
+                    buttonsStyling: false
+                });
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function ConfirmLeave() {
+        if (checkCoordinators() && checkChapters()) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This will put the coordinator on a leave of absence.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, continue',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger',
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $("#submit_type").val('Leave');
+                    $("#role").submit();
+                }
+            });
+        }
+    }
+
+    function ConfirmRetire() {
+        if (checkCoordinators() && checkChapters()) {
+            Swal.fire({
+                title: 'Retire Coordinator',
+                text: "Retiring a volunteer will remove their login to MIMI. Please enter their reason for retiring:",
+                input: 'text',
+                inputPlaceholder: 'Enter reason...',
+                showCancelButton: true,
+                confirmButtonText: 'Submit',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger',
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.isConfirmed && result.value) {
+                    $("#submit_type").val('Retire');
+                    $("#RetireReason").val(result.value);
+                    $("#role").submit();
+                }
+            });
+        }
+    }
+
+    // function PreRetireValidate(LoA=false){
+	// 	//Ensure all their chapters and coordinators have been reassigned before we allow them to be retired.
+	// 	//First, check the coordinators
+	// 	var table=document.getElementById("coordinator-list");
+	// 	var tablerowcountCord = table.rows.length;
+	// 	var i;
+	// 	var selectbox;
+	// 	var value;
+
+	// 	for(i=0; i<tablerowcountCord; i++){
+	// 		selectid = "Report" + i;
+
+	// 		value = getSelectedValue(selectid);
+	// 		if(value == <?php echo $coordinatorDetails[0]->coordinator_id; ?>){
+	// 			if (LoA)
+	// 				alert ("All direct reports must be assigned to a new supervising coordinator before this coordinator can be put on a leave of absence.");
+	// 			else
+	// 				alert ("All direct reports must be assigned to a new supervising coordinator before this coordinator can be retired.");
+	// 			return false;
+	// 		}
+
+	// 	}
+
+	// 	table=document.getElementById("chapter-list");
+	// 	tablerowcountChap = table.rows.length;
+
+	// 	for(i=0; i<tablerowcountChap; i++){
+	// 		selectid = "PCID" + i;
+
+	// 		value = getSelectedValue(selectid);
+	// 		if(value == <?php echo $coordinatorDetails[0]->coordinator_id; ?>){
+	// 			if (LoA)
+	// 				alert ("All assigned chapters must be assigned to a new supervising coordinator before this coordinator can be put on a leave of absence.");
+	// 			else
+	// 				alert ("All assigned chapters must be assigned to a new supervising coordinator before this coordinator can be retired.");
+	// 			return false;
+	// 		}
+	// 	}
+
+	// 	if(tablerowcountChap <= 1 && tablerowcountCord <= 1){
+	// 		if (LoA){
+	// 			$("#submit_type").val('Leave');
+	// 			return true;
+	// 		}else{
+	// 			var reason = prompt("Retiring a volunteer will remove their login to MIMI.  If you wish to continue, please enter their reason for retiring and press OK.", "");
+
+	// 			if (reason != null) {
+	// 					$("#submit_type").val('Retire');
+	// 					document.getElementById("RetireReason").value = reason;
+	// 					return true;
+	// 			}
+	// 			else
+	// 				return false;
+	// 		}
+
+	// 	}else{
+	// 		if (LoA)
+	// 				alert ("All direct reports must be assigned to a new supervising coordinator before this coordinator can be put on a leave of absence.");
+	// 			else
+	// 				alert ("All direct reports must be assigned to a new supervising coordinator before this coordinator can be retired.");
+	// 			return false;
+	// 	}
+
+	// }
 </script>
 @endsection
 

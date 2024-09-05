@@ -344,13 +344,13 @@
         }
     }
 
-   function ConfirmCancel(element){
-		var result=confirm("Any unsaved changes will be lost. Do you want to continue?");
-		if(result)
-			location.reload()
-		else
-			return false;
-	}
+//    function ConfirmCancel(element){
+// 		var result=confirm("Any unsaved changes will be lost. Do you want to continue?");
+// 		if(result)
+// 			location.reload()
+// 		else
+// 			return false;
+// 	}
 
 	function checkDuplicateEmail(email,id){
 		var chkid = id+"_chk";
