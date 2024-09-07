@@ -47,7 +47,7 @@ class ChapterController extends Controller
         $this->middleware('auth')->except('logout');
     }
 
-     /**
+    /**
      * Reset Password
      */
     public function updatePassword(Request $request)
@@ -67,6 +67,7 @@ class ChapterController extends Controller
 
             return response()->json(['message' => 'Password reset successfully.<br>Password is reset to default "TempPass4You" for this user.']);
         }
+
         return response()->json(['error' => 'User not found.'], 404);
     }
 
@@ -5323,5 +5324,4 @@ class ChapterController extends Controller
 
         return redirect()->to('/yearreports/eoystatus')->with('success', 'Report status successfully updated');
     }
-
 }

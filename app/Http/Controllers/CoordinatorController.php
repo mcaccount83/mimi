@@ -37,7 +37,7 @@ class CoordinatorController extends Controller
         $user = $request->user();
 
         // Ensure the current password is correct
-        if (!Hash::check($request->current_password, $user->password)) {
+        if (! Hash::check($request->current_password, $user->password)) {
             return response()->json(['error' => 'Current password is incorrect'], 400);
         }
 
@@ -1948,8 +1948,8 @@ class CoordinatorController extends Controller
                 // $user->save();
 
                 DB::table('coordinator_details')
-                ->where('coordinator_id', $cordinatorId)
-                ->update([
+                    ->where('coordinator_id', $cordinatorId)
+                    ->update([
                         // 'todo_month' => $request->input('todo_month'),
                         'todo_check_chapters' => $request->has('todo_check_chapters') ? 1 : null,
                         'todo_send_rereg' => $request->has('todo_send_rereg') ? 1 : null,

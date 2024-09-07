@@ -128,7 +128,7 @@ class PDFController extends Controller
             'completed_name' => $userName,
             'completed_email' => $userEmail,
             'submitted' => $financial_report_array->submitted,
-            'ch_name'=> $sanitizedChapterName,
+            'ch_name' => $sanitizedChapterName,
         ];
 
         $pdf = Pdf::loadView('pdf.financialreport', compact('pdfData'));
@@ -181,7 +181,7 @@ class PDFController extends Controller
             'cc_fname' => $cc_fname,
             'cc_lname' => $cc_lname,
             'cc_pos' => $cc_pos,
-            'ch_name'=> $sanitizedChapterName,
+            'ch_name' => $sanitizedChapterName,
         ];
 
         $pdf = Pdf::loadView('pdf.chapteringoodstanding', compact('pdfData'));
@@ -238,7 +238,7 @@ class PDFController extends Controller
             'cc_fname' => $cc_fname,
             'cc_lname' => $cc_lname,
             'cc_pos' => $cc_pos,
-            'ch_name'=> $sanitizedChapterName,
+            'ch_name' => $sanitizedChapterName,
         ];
 
         $pdf = Pdf::loadView('pdf.disbandletter', compact('pdfData'));
