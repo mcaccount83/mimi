@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use App\Http\Requests\CheckCurrentPasswordBoardRequest;
 use App\Http\Requests\UpdatePasswordBoardRequest;
 use App\Mail\ChapersUpdateListAdmin;
@@ -20,6 +19,7 @@ use App\Models\FolderRecord;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;

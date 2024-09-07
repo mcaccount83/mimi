@@ -12,7 +12,7 @@ class CheckCurrentPasswordCoordinatorRequest extends FormRequest
     public function rules(): array
     {
         return ['current_password' => [
-                'required',
-            ],];
+            'required',
+        ], ];
     }
 }
