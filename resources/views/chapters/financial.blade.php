@@ -2772,6 +2772,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                             <?php
                             if ($financial_report_array['review_complete'] != "" && $submitted && (Session::get('positionid') == 5 || Session::get('positionid') == 6 || Session::get('positionid') == 7)) { ?>
                                 <button type="button" class="btn bg-gradient-success" id="review-clear"><i class="fas fa-minus"></i>&nbsp; Clear Review Complete</button>
+                                {{-- <a href="<?php echo url("/chapter/clearreview/{$chapterDetails[0]->id}") ?>" class="btn bg-gradient-success"><i class="fas fa-minus"></i>&nbsp; Clear Review Complete</a> --}}
                             <?php
                             } elseif ($financial_report_array['review_complete'] != "" && $submitted && (Session::get('positionid') != 5 && Session::get('positionid') != 6 && Session::get('positionid') != 7)) { ?>
                                 <button type="button" class="btn bg-gradient-success disabled"><i class="fas fa-minus"></i>&nbsp; Clear Review Complete</button>
@@ -2780,6 +2781,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                 <button type="button" class="btn bg-gradient-success" id="review-complete"><i class="fas fa-check"></i>&nbsp; Mark as Review Complete</button>
                             <?php } ?>
                             <button type="button" class="btn bg-gradient-danger" id="unsubmit"><i class="fas fa-times"></i>&nbsp; UnSubmit Report</button>
+                            {{-- <a href="<?php echo url("/chapter/unsubmit/{$chapterDetails[0]->id}") ?>" class="btn bg-gradient-danger"><i class="fas fa-times"></i>&nbsp; UnSubmit Report</a> --}}
                             <p style="color:red;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></p>
 
 					</div>
@@ -2889,23 +2891,17 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 @endsection
 @section('customscript')
 <script>
-    $("#unsubmit").click(function() {
-		var result=confirm("Unsubmitting this report will make it editable by the chapter again and will disable coordinator editing until the chapter has resubmitted - any unsaved changes will be lost.  Do you wish to continue?");
-		if(result){
-			$("#submitted").val('');
-			$("#submit_type").val('UnSubmit');
-			$("#FurthestStep").val('13');
-			$("#financial_report").submit();
-		}
-	});
+    document.getElementById('unsubmit').addEventListener('click', function() {
+        var result = confirm("Unsubmitting this report will make it editable by the chapter again and will disable coordinator editing until the chapter has resubmitted - any unsaved changes will be lost. Do you wish to continue?");
+        if (result) {
+            window.location.href = "{{ url('/chapter/unsubmit/' . $chapterDetails[0]->id) }}";
+        }
+    });
 
     $("#review-clear").click(function() {
 		var result=confirm("This will clear the 'review complete' flag and coordinators will be able to edit the report again.  Do you wish to continue?");
 		if(result){
-            $("#submitted").val('');
-			$("#submit_type").val('review_clear');
-			$("#FurthestStep").val('13');
-			$("#financial_report").submit();
+            window.location.href = "{{ url('/chapter/clearreview/' . $chapterDetails[0]->id) }}";
 		}
 	});
 

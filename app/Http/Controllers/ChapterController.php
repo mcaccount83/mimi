@@ -5023,6 +5023,82 @@ class ChapterController extends Controller
         return view('chapters.financial')->with($data);
     }
 
+    /**
+     * Unsubmit Report
+     */
+    public function updateUnsubmit(Request $request, $chapter_id): RedirectResponse
+    {
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $userId = $corDetails['user_id'];
+        $corId = $corDetails['coordinator_id'];
+        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+
+        $chapter = Chapter::find($chapter_id);
+        DB::beginTransaction();
+        try {
+            $chapter->financial_report_received = null;
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->save();
+
+            $report = FinancialReport::find($chapter_id);
+            $report->farthest_step_visited_coord = '13';
+            $report->submitted = null;
+            $report->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            DB::rollback();
+
+            // Log the error
+            Log::error($e);
+
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        }
+            return redirect()->back()->with('success', 'Report has been successfully Updated');
+    }
+
+    /**
+     * Clear Report Review
+     */
+    public function updateClearReview(Request $request, $chapter_id): RedirectResponse
+    {
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $userId = $corDetails['user_id'];
+        $corId = $corDetails['coordinator_id'];
+        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+
+        $chapter = Chapter::find($chapter_id);
+        DB::beginTransaction();
+        try {
+            $chapter->financial_report_received = '1';
+            $chapter->financial_report_complete = null;
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->save();
+
+            $report = FinancialReport::find($chapter_id);
+            $report->farthest_step_visited_coord = '13';
+            $report->review_complete = null;
+            $report->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            DB::rollback();
+
+            // Log the error
+            Log::error($e);
+
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
+        }
+            return redirect()->back()->with('success', 'Report has been successfully Updated');
+    }
+
+    /**
+     * Save Financial Report Review
+     */
     public function storeFinancialReport(Request $request, $chapter_id): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
@@ -5034,23 +5110,23 @@ class ChapterController extends Controller
         //$reviewer_id = $input['AssignedReviewer'];
         $reportReceived = $input['submitted'];
         $submitType = $input['submit_type'];
-        if (! $reportReceived && $submitType == 'UnSubmit') {
-            DB::update('UPDATE chapters SET financial_report_received = ? where id = ?', [null, $chapter_id]);
-            DB::update('UPDATE financial_report SET farthest_step_visited_coord = ? where chapter_id = ?', [13, $chapter_id]);
-            // DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [null, $chapter_id]);
-            DB::update('UPDATE financial_report SET submitted = ? where chapter_id = ?', [null, $chapter_id]);
+        // if (! $reportReceived && $submitType == 'UnSubmit') {
+        //     DB::update('UPDATE chapters SET financial_report_received = ? where id = ?', [null, $chapter_id]);
+        //     DB::update('UPDATE financial_report SET farthest_step_visited_coord = ? where chapter_id = ?', [13, $chapter_id]);
+        //     // DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [null, $chapter_id]);
+        //     DB::update('UPDATE financial_report SET submitted = ? where chapter_id = ?', [null, $chapter_id]);
 
-            return redirect()->back()->with('success', 'Report has been successfully Unsubmitted');
-            exit;
-        } elseif (! $reportReceived && $submitType == 'review_clear') {
-            DB::update('UPDATE chapters SET financial_report_received = ? where id = ?', [1, $chapter_id]);
-            DB::update('UPDATE chapters SET financial_report_complete = ? where id = ?', [null, $chapter_id]);
-            DB::update('UPDATE financial_report SET farthest_step_visited_coord = ? where chapter_id = ?', [13, $chapter_id]);
-            DB::update('UPDATE financial_report SET review_complete = ? where chapter_id = ?', [null, $chapter_id]);
+        //     return redirect()->back()->with('success', 'Report has been successfully Unsubmitted');
+        //     exit;
+        // } elseif (! $reportReceived && $submitType == 'review_clear') {
+        //     DB::update('UPDATE chapters SET financial_report_received = ? where id = ?', [1, $chapter_id]);
+        //     DB::update('UPDATE chapters SET financial_report_complete = ? where id = ?', [null, $chapter_id]);
+        //     DB::update('UPDATE financial_report SET farthest_step_visited_coord = ? where chapter_id = ?', [13, $chapter_id]);
+        //     DB::update('UPDATE financial_report SET review_complete = ? where chapter_id = ?', [null, $chapter_id]);
 
-            return redirect()->back()->with('success', 'Review Complete has been successfully cleared');
-            exit;
-        } else {
+        //     return redirect()->back()->with('success', 'Review Complete has been successfully cleared');
+        //     exit;
+        // } else {
 
             $step_1_notes_log = $input['Step1_Log'];
             $step_2_notes_log = $input['Step2_Log'];
@@ -5222,7 +5298,7 @@ class ChapterController extends Controller
             }
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
-        }
+        // }
 
     }
 

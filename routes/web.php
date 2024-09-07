@@ -151,6 +151,10 @@ Route::post('/chapter/resetpswd', [ChapterController::class, 'updateChapterReset
 Route::post('/chapter/resetpassword', [ChapterController::class, 'updateResetPassword'])->name('chapter.resetpassword');
 Route::get('/chapter/financial/{id}', [ChapterController::class, 'showFinancialReport'])->name('chapter.showfinancial');
 Route::post('/chapter/financial/{id}', [ChapterController::class, 'storeFinancialReport'])->name('chapter.storefinancial');
+Route::get('/chapter/clearreview/{id}', [ChapterController::class, 'updateClearReview']);
+Route::get('/chapter/unsubmit/{id}', [ChapterController::class, 'updateUnsubmit']);
+
+
 Route::get('chapter/boardinfo/{id}', [ChapterController::class, 'showBoardInfo'])->name('chapter.showboardinfo');
 Route::post('chapter/boardinfo/{id}', [ChapterController::class, 'createBoardInfo'])->name('chapter.createboardinfo');
 Route::get('/chapter/re-registration', [ChapterController::class, 'showReRegistration'])->name('chapter.registration');
