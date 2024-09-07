@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdatePasswordChapterRequest;
 use App\Mail\ChapersUpdateEINCoor;
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdatePrimaryCoor;
@@ -47,14 +48,11 @@ class ChapterController extends Controller
         $this->middleware('auth')->except('logout');
     }
 
-     /**
+    /**
      * Reset Password
      */
-    public function updatePassword(Request $request)
+    public function updatePassword(UpdatePasswordChapterRequest $request): JsonResponse
     {
-        $request->validate([
-            'new_password' => 'required',
-        ]);
 
         $userId = $request->input('user_id');
         $newPassword = $request->input('new_password');
@@ -67,6 +65,7 @@ class ChapterController extends Controller
 
             return response()->json(['message' => 'Password reset successfully.<br>Password is reset to default "TempPass4You" for this user.']);
         }
+
         return response()->json(['error' => 'User not found.'], 404);
     }
 
@@ -5399,5 +5398,4 @@ class ChapterController extends Controller
 
         return redirect()->to('/yearreports/eoystatus')->with('success', 'Report status successfully updated');
     }
-
 }

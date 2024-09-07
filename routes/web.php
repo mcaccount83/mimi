@@ -35,7 +35,6 @@ Route::post('login', [LoginController::class, 'login']);
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('logout', [LoginController::class, 'logout']);
 
-
 // Password Reset Routes...
 Route::get('password/request', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
@@ -47,7 +46,6 @@ Route::post('/board/check-password', [BoardController::class, 'checkCurrentPassw
 Route::put('/coordinator/password', [CoordinatorController::class, 'updatePassword'])->name('coordinator.updatepassword');
 Route::post('/coordinator/check-password', [CoordinatorController::class, 'checkCurrentPassword'])->name('coordinator.checkpassword');
 Route::post('/chapter/password', [ChapterController::class, 'updatePassword'])->name('chapter.updatepassword');
-
 
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
 

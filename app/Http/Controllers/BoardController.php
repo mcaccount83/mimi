@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CheckCurrentPasswordBoardRequest;
+use App\Http\Requests\UpdatePasswordBoardRequest;
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdateListAdminMember;
 use App\Mail\ChapersUpdatePrimaryCoor;
@@ -17,6 +19,7 @@ use App\Models\FolderRecord;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -40,36 +43,29 @@ class BoardController extends Controller
     /**
      * Reset Password
      */
-    public function updatePassword(Request $request)
-{
-    $request->validate([
-        'current_password' => ['required'],
-        'new_password' => ['required', 'string', 'min:8', 'confirmed'],
-    ]);
+    public function updatePassword(UpdatePasswordBoardRequest $request): JsonResponse
+    {
 
-    $user = $request->user();
+        $user = $request->user();
 
-    // Ensure the current password is correct
-    if (!Hash::check($request->current_password, $user->password)) {
-        return response()->json(['error' => 'Current password is incorrect'], 400);
+        // Ensure the current password is correct
+        if (! Hash::check($request->current_password, $user->password)) {
+            return response()->json(['error' => 'Current password is incorrect'], 400);
+        }
+
+        // Update the user's password
+        $user->password = Hash::make($request->new_password);
+        $user->remember_token = null; // Reset the remember token
+        $user->save();
+
+        return response()->json(['message' => 'Password updated successfully']);
     }
-
-    // Update the user's password
-    $user->password = Hash::make($request->new_password);
-    $user->remember_token = null; // Reset the remember token
-    $user->save();
-
-    return response()->json(['message' => 'Password updated successfully']);
-}
 
     /**
      * Verify Current Passwor for Reset
      */
-    public function checkCurrentPassword(Request $request)
+    public function checkCurrentPassword(CheckCurrentPasswordBoardRequest $request): JsonResponse
     {
-        $request->validate([
-            'current_password' => 'required',
-        ]);
 
         $user = $request->user();
         $isValid = Hash::check($request->current_password, $user->password);
@@ -1779,7 +1775,6 @@ class BoardController extends Controller
         $bank_balance_now = $input['BankBalanceNow'];
         $bank_balance_now = str_replace(',', '', $bank_balance_now);
         $bank_balance_now = $bank_balance_now === '' ? null : $bank_balance_now;
-
 
         $petty_cash = $input['PettyCash'];
 

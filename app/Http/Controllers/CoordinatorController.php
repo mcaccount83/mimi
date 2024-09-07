@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CheckCurrentPasswordCoordinatorRequest;
+use App\Http\Requests\UpdatePasswordCoordinatorRequest;
 use App\Mail\BigSisterWelcome;
 use App\Mail\CoordinatorRetireAdmin;
 use App\Models\CoordinatorPosition;
@@ -27,17 +29,13 @@ class CoordinatorController extends Controller
     /**
      * Reset Password
      */
-    public function updatePassword(Request $request)
+    public function updatePassword(UpdatePasswordCoordinatorRequest $request): JsonResponse
     {
-        $request->validate([
-            'current_password' => ['required'],
-            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
 
         $user = $request->user();
 
         // Ensure the current password is correct
-        if (!Hash::check($request->current_password, $user->password)) {
+        if (! Hash::check($request->current_password, $user->password)) {
             return response()->json(['error' => 'Current password is incorrect'], 400);
         }
 
@@ -52,11 +50,8 @@ class CoordinatorController extends Controller
     /**
      * Verify Current Passwor for Reset
      */
-    public function checkCurrentPassword(Request $request)
+    public function checkCurrentPassword(CheckCurrentPasswordCoordinatorRequest $request): JsonResponse
     {
-        $request->validate([
-            'current_password' => 'required',
-        ]);
 
         $user = $request->user();
         $isValid = Hash::check($request->current_password, $user->password);
@@ -1948,8 +1943,8 @@ class CoordinatorController extends Controller
                 // $user->save();
 
                 DB::table('coordinator_details')
-                ->where('coordinator_id', $cordinatorId)
-                ->update([
+                    ->where('coordinator_id', $cordinatorId)
+                    ->update([
                         // 'todo_month' => $request->input('todo_month'),
                         'todo_check_chapters' => $request->has('todo_check_chapters') ? 1 : null,
                         'todo_send_rereg' => $request->has('todo_send_rereg') ? 1 : null,

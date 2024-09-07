@@ -773,5 +773,4 @@ class AdminController extends Controller
         // Truncate the `outgoing_board_member` table
         DB::table('outgoing_board_member')->truncate();
     }
-
 }
