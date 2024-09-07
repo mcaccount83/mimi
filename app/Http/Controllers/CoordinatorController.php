@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CheckCurrentPasswordCoordinatorRequest;
+use App\Http\Requests\UpdatePasswordCoordinatorRequest;
 use App\Mail\BigSisterWelcome;
 use App\Mail\CoordinatorRetireAdmin;
 use App\Models\CoordinatorPosition;
@@ -27,12 +29,8 @@ class CoordinatorController extends Controller
     /**
      * Reset Password
      */
-    public function updatePassword(Request $request)
+    public function updatePassword(UpdatePasswordCoordinatorRequest $request)
     {
-        $request->validate([
-            'current_password' => ['required'],
-            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
 
         $user = $request->user();
 
@@ -52,11 +50,8 @@ class CoordinatorController extends Controller
     /**
      * Verify Current Passwor for Reset
      */
-    public function checkCurrentPassword(Request $request)
+    public function checkCurrentPassword(CheckCurrentPasswordCoordinatorRequest $request)
     {
-        $request->validate([
-            'current_password' => 'required',
-        ]);
 
         $user = $request->user();
         $isValid = Hash::check($request->current_password, $user->password);

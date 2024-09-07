@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdatePasswordChapterRequest;
 use App\Mail\ChapersUpdateEINCoor;
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdatePrimaryCoor;
@@ -50,11 +51,8 @@ class ChapterController extends Controller
     /**
      * Reset Password
      */
-    public function updatePassword(Request $request)
+    public function updatePassword(UpdatePasswordChapterRequest $request)
     {
-        $request->validate([
-            'new_password' => 'required',
-        ]);
 
         $userId = $request->input('user_id');
         $newPassword = $request->input('new_password');
