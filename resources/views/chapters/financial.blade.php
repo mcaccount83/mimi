@@ -2749,20 +2749,21 @@
 
                         <div class="card-body text-center">
                             <br>
-                            <button type="submit" id="btn-step-13" class="btn bg-gradient-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+                            <button type="submit" id="btn-step-13" class="btn bg-gradient-primary"><i class="fas fa-save"></i>&nbsp; Save</button>
 
                             <?php
-                            if ($financial_report_array['review_complete']!="" && $submitted && (Session::get('positionid') ==5 ||Session::get('positionid') ==6 || Session::get('positionid') ==7)){ ?>
-                                <button type="button" class="btn bg-gradient-success" id="review-clear" <?php if(!$submitted) echo "disabled"; ?>><i class="fas fa-minus" ></i>&nbsp; Clear Review Complete</button>
-
-                            <?php }
-                            else{
-                                ?>
-                                <button type="button" class="btn bg-gradient-success" id="review-complete" ><i class="fas fa-check" ></i>&nbsp; Mark as Review Complete</button>
+                            if ($financial_report_array['review_complete'] != "" && $submitted && (Session::get('positionid') == 5 || Session::get('positionid') == 6 || Session::get('positionid') == 7)) { ?>
+                                <button type="button" class="btn bg-gradient-success" id="review-clear"><i class="fas fa-minus"></i>&nbsp; Clear Review Complete</button>
+                            <?php
+                            } elseif ($financial_report_array['review_complete'] != "" && $submitted && (Session::get('positionid') != 5 && Session::get('positionid') != 6 && Session::get('positionid') != 7)) { ?>
+                                <button type="button" class="btn bg-gradient-success disabled"><i class="fas fa-minus"></i>&nbsp; Clear Review Complete</button>
+                            <?php
+                            } else { ?>
+                                <button type="button" class="btn bg-gradient-success" id="review-complete"><i class="fas fa-check"></i>&nbsp; Mark as Review Complete</button>
                             <?php } ?>
-                            <button type="button" class="btn bg-gradient-danger" id="unsubmit" ><i class="fas fa-times " ></i>&nbsp; UnSubmit Report</button>
-                                <p style="color:red;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></p>
-                        </div>
+                            <button type="button" class="btn bg-gradient-danger" id="unsubmit"><i class="fas fa-times"></i>&nbsp; UnSubmit Report</button>
+                            <p style="color:red;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></p>
+
 					</div>
                 </section>
 				</div>

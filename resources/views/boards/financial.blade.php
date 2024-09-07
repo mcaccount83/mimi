@@ -4043,40 +4043,77 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
         }
     }
 
-    function ChangeOfficeExpenses() {
-        var ExpenseTotal = 0;
-        var SumPrintingExpense = 0;
-        var SumPostageExpense = 0;
-        var SumPinsExpense = 0;
+    function ChangeOfficeExpenses(){
+    var totalExpenses = 0;  // Initialize totalExpenses
+    var table = document.getElementById("office-expenses");
+    var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
-        var totalExpenses = 0;
-        var table = document.getElementById("office-expenses");
-        var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-        for (var i = 0; i < rows.length; i++) {
-            var expenseValue = Number(rows[i].cells[1].querySelector('input').value.replace(/,/g, '')) || 0;
-            totalExpenses += expenseValue;
-        }
-
-        var footer = table.getElementsByTagName('tfoot')[0];
-        footer.getElementsByTagName('input')[0].value = totalExpenses.toFixed(2);
-
-        SumPrintingExpense = Number(document.getElementById("PrintingCosts").value.replace(/[^0-9.-]/g, ''));
-        SumPostageExpense = Number(document.getElementById("PostageCosts").value.replace(/[^0-9.-]/g, ''));
-        SumPinsExpense = Number(document.getElementById("MembershipPins").value.replace(/[^0-9.-]/g, ''));
-
-        document.getElementById("SumPrintingExpense").value = SumPrintingExpense.toFixed(2);
-        document.getElementById("SumPostageExpense").value = SumPostageExpense.toFixed(2);
-        document.getElementById("SumPinsExpense").value = SumPinsExpense.toFixed(2);
-        document.getElementById("SumOtherOperatingExpense").value = ExpenseTotal;
-
-        ExpenseTotal += SumPrintingExpense + SumPostageExpense + SumPinsExpense;
-        document.getElementById("SumOperatingExpense").value = ExpenseTotal;
-        var OperatingTotal = ExpenseTotal + SumPrintingExpense + SumPostageExpense + SumPinsExpense;
-        document.getElementById("TotalOperatingExpense").value = OperatingTotal;
-
-        ReCalculateSummaryTotal();
+    // Sum up all the expenses
+    for (var i = 0; i < rows.length; i++) {
+        var expenseValue = Number(rows[i].cells[1].querySelector('input').value.replace(/,/g, '')) || 0;
+        totalExpenses += expenseValue;
     }
+
+    // Update totals in the footer
+    var footer = table.getElementsByTagName('tfoot')[0];
+    footer.getElementsByTagName('input')[0].value = totalExpenses.toFixed(2);
+
+    // Get other expenses and format them correctly
+    var SumPrintingExpense = Number(document.getElementById("PrintingCosts").value.replace(/,/g, '')) || 0;
+    var SumPostageExpense = Number(document.getElementById("PostageCosts").value.replace(/,/g, '')) || 0;
+    var SumPinsExpense = Number(document.getElementById("MembershipPins").value.replace(/,/g, '')) || 0;
+
+    // Calculate OperatingTotal (before formatting)
+    var OperatingTotal = totalExpenses + SumPrintingExpense + SumPostageExpense + SumPinsExpense;
+
+    // Update the fields with formatted values
+    document.getElementById("SumOtherOperatingExpense").value = totalExpenses.toFixed(2);
+    document.getElementById("SumPrintingExpense").value = SumPrintingExpense.toFixed(2);
+    document.getElementById("SumPostageExpense").value = SumPostageExpense.toFixed(2);
+    document.getElementById("SumPinsExpense").value = SumPinsExpense.toFixed(2);
+
+    // Set the OperatingTotal
+    document.getElementById("SumTotalChildrensRoomExpense").value = OperatingTotal.toFixed(2);
+    document.getElementById("TotalOperatingExpense").value = OperatingTotal.toFixed(2);
+
+    // Call summary recalculation
+    ReCalculateSummaryTotal();
+}
+
+    // function ChangeOfficeExpenses() {
+    //     var ExpenseTotal = 0;
+    //     var SumPrintingExpense = 0;
+    //     var SumPostageExpense = 0;
+    //     var SumPinsExpense = 0;
+
+    //     var totalExpenses = 0;
+    //     var table = document.getElementById("office-expenses");
+    //     var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+    //     for (var i = 0; i < rows.length; i++) {
+    //         var expenseValue = Number(rows[i].cells[1].querySelector('input').value.replace(/,/g, '')) || 0;
+    //         totalExpenses += expenseValue;
+    //     }
+
+    //     var footer = table.getElementsByTagName('tfoot')[0];
+    //     footer.getElementsByTagName('input')[0].value = totalExpenses.toFixed(2);
+
+    //     SumPrintingExpense = Number(document.getElementById("PrintingCosts").value.replace(/[^0-9.-]/g, ''));
+    //     SumPostageExpense = Number(document.getElementById("PostageCosts").value.replace(/[^0-9.-]/g, ''));
+    //     SumPinsExpense = Number(document.getElementById("MembershipPins").value.replace(/[^0-9.-]/g, ''));
+
+    //     document.getElementById("SumPrintingExpense").value = SumPrintingExpense.toFixed(2);
+    //     document.getElementById("SumPostageExpense").value = SumPostageExpense.toFixed(2);
+    //     document.getElementById("SumPinsExpense").value = SumPinsExpense.toFixed(2);
+    //     document.getElementById("SumOtherOperatingExpense").value = ExpenseTotal;
+
+    //     ExpenseTotal += SumPrintingExpense + SumPostageExpense + SumPinsExpense;
+    //     document.getElementById("SumOperatingExpense").value = ExpenseTotal;
+    //     var OperatingTotal = ExpenseTotal + SumPrintingExpense + SumPostageExpense + SumPinsExpense;
+    //     document.getElementById("TotalOperatingExpense").value = OperatingTotal;
+
+    //     ReCalculateSummaryTotal();
+    // }
 
     function AddOfficeExpenseRow() {
         var ExpenseCount = document.getElementById("OfficeExpenseRowCount").value;

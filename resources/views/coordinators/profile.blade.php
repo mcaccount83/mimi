@@ -249,8 +249,8 @@
 			<a href="{{ route('home') }}" class="btn bg-gradient-primary"><i class="fa fa-reply" ></i>&nbsp;&nbsp;&nbsp;Back</a>
         </div>
         <div class="card-body text-center">
-			<button type="button" class="btn bg-gradient-primary" onclick="window.open('https://momsclub.org/coordinator-toolkit/')"><i class="fas fa-toolbox" ></i>&nbsp;&nbsp;&nbsp;Coordinator Toolkit</button>
-			<button type="button" class="btn bg-gradient-primary" onclick="window.open('https://momsclub.org/elearning/')"><i class="fas fa-graduation-cap" ></i>&nbsp;&nbsp;&nbsp;eLearning Library</button>
+			{{-- <button type="button" class="btn bg-gradient-primary" onclick="window.open('https://momsclub.org/coordinator-toolkit/')"><i class="fas fa-toolbox" ></i>&nbsp;&nbsp;&nbsp;Coordinator Toolkit</button> --}}
+			{{-- <button type="button" class="btn bg-gradient-primary" onclick="window.open('https://momsclub.org/elearning/')"><i class="fas fa-graduation-cap" ></i>&nbsp;&nbsp;&nbsp;eLearning Library</button> --}}
 		</div>
         <!-- /.box-body -->
 
