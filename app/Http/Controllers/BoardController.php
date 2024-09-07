@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Requests\CheckCurrentPasswordBoardRequest;
 use App\Http\Requests\UpdatePasswordBoardRequest;
 use App\Mail\ChapersUpdateListAdmin;
@@ -42,7 +43,7 @@ class BoardController extends Controller
     /**
      * Reset Password
      */
-    public function updatePassword(UpdatePasswordBoardRequest $request)
+    public function updatePassword(UpdatePasswordBoardRequest $request): JsonResponse
     {
 
         $user = $request->user();
@@ -63,7 +64,7 @@ class BoardController extends Controller
     /**
      * Verify Current Passwor for Reset
      */
-    public function checkCurrentPassword(CheckCurrentPasswordBoardRequest $request)
+    public function checkCurrentPassword(CheckCurrentPasswordBoardRequest $request): JsonResponse
     {
 
         $user = $request->user();

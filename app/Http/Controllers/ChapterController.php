@@ -51,7 +51,7 @@ class ChapterController extends Controller
     /**
      * Reset Password
      */
-    public function updatePassword(UpdatePasswordChapterRequest $request)
+    public function updatePassword(UpdatePasswordChapterRequest $request): JsonResponse
     {
 
         $userId = $request->input('user_id');

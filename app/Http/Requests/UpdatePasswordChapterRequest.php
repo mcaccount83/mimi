@@ -11,7 +11,7 @@ class UpdatePasswordChapterRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return ['new_password' => [
                 'required',

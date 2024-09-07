@@ -11,7 +11,7 @@ class CheckCurrentPasswordBoardRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return ['current_password' => [
                 'required',

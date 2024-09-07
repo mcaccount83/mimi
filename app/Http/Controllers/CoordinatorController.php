@@ -29,7 +29,7 @@ class CoordinatorController extends Controller
     /**
      * Reset Password
      */
-    public function updatePassword(UpdatePasswordCoordinatorRequest $request)
+    public function updatePassword(UpdatePasswordCoordinatorRequest $request): JsonResponse
     {
 
         $user = $request->user();
@@ -50,7 +50,7 @@ class CoordinatorController extends Controller
     /**
      * Verify Current Passwor for Reset
      */
-    public function checkCurrentPassword(CheckCurrentPasswordCoordinatorRequest $request)
+    public function checkCurrentPassword(CheckCurrentPasswordCoordinatorRequest $request): JsonResponse
     {
 
         $user = $request->user();
