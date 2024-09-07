@@ -587,8 +587,12 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                 } else {
                                     foreach ($party_expenses as $row) {
                                         // Sanitize inputs
-                                        $income = is_numeric($row['party_expense_income']) ? floatval($row['party_expense_income']) : 0;
-                                        $expense = is_numeric($row['party_expense_expenses']) ? floatval($row['party_expense_expenses']) : 0;
+                                        $income = is_numeric(str_replace(',', '', $row['party_expense_income'])) ? floatval(str_replace(',', '', $row['party_expense_income'])) : 0;
+                                        $expense = is_numeric(str_replace(',', '', $row['party_expense_expenses'])) ? floatval(str_replace(',', '', $row['party_expense_expenses'])) : 0;
+
+
+                                        // $income = is_numeric($row['party_expense_income']) ? floatval($row['party_expense_income']) : 0;
+                                        // $expense = is_numeric($row['party_expense_expenses']) ? floatval($row['party_expense_expenses']) : 0;
 
                                         echo "<tr>";
                                         echo "<td>" . htmlspecialchars($row['party_expense_desc']) . "</td>";
@@ -719,7 +723,9 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                     if (is_array($other_office_expenses) && count($other_office_expenses) > 0) {
                                         foreach ($other_office_expenses as $row) {
                                             // Sanitize inputs
-                                            $expense = is_numeric($row['office_other_expense']) ? floatval($row['office_other_expense']) : 0;
+                                            $expense = is_numeric(str_replace(',', '', $row['office_other_expense'])) ? floatval(str_replace(',', '', $row['office_other_expense'])) : 0;
+
+                                            // $expense = is_numeric($row['office_other_expense']) ? floatval($row['office_other_expense']) : 0;
 
                                             echo "<tr>";
                                             echo "<td>" . htmlspecialchars($row['office_other_desc']) . "</td>";
@@ -826,8 +832,11 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                         if (is_array($international_event_array) && count($international_event_array) > 0) {
                                             foreach ($international_event_array as $row) {
                                                 // Sanitize and validate inputs
-                                                $income = is_numeric($row['intl_event_income']) ? floatval($row['intl_event_income']) : 0;
-                                                $expense = is_numeric($row['intl_event_expenses']) ? floatval($row['intl_event_expenses']) : 0;
+                                                $income = is_numeric(str_replace(',', '', $row['intl_event_income'])) ? floatval(str_replace(',', '', $row['intl_event_income'])) : 0;
+                                                $expense = is_numeric(str_replace(',', '', $row['intl_event_expenses'])) ? floatval(str_replace(',', '', $row['intl_event_expenses'])) : 0;
+
+                                                // $income = is_numeric($row['intl_event_income']) ? floatval($row['intl_event_income']) : 0;
+                                                // $expense = is_numeric($row['intl_event_expenses']) ? floatval($row['intl_event_expenses']) : 0;
 
                                                 echo "<tr>";
                                                 echo "<td>" . htmlspecialchars($row['intl_event_desc']) . "</td>";
@@ -941,7 +950,10 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                         foreach ($monetary_donations_to_chapter as $row) {
                                             // Sanitize and validate inputs
                                             $donationDate = $row['mon_donation_date'] ? date('m/d/Y', strtotime($row['mon_donation_date'])) : '';
-                                            $donationAmount = is_numeric($row['mon_donation_amount']) ? floatval($row['mon_donation_amount']) : 0;
+
+                                            $donationAmount = is_numeric(str_replace(',', '', $row['mon_donation_amount'])) ? floatval(str_replace(',', '', $row['mon_donation_amount'])) : 0;
+
+                                            // $donationAmount = is_numeric($row['mon_donation_amount']) ? floatval($row['mon_donation_amount']) : 0;
 
                                             echo "<tr>";
                                             echo "<td>" . htmlspecialchars($row['mon_donation_desc']) . "</td>";
@@ -1096,8 +1108,11 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                         if (is_array($other_income_and_expenses_array) && count($other_income_and_expenses_array) > 0) {
                                             foreach ($other_income_and_expenses_array as $row) {
                                                 // Sanitize and validate inputs
-                                                $otherIncome = is_numeric($row['other_income']) ? floatval($row['other_income']) : 0;
-                                                $otherExpenses = is_numeric($row['other_expenses']) ? floatval($row['other_expenses']) : 0;
+                                                $otherIncome = is_numeric(str_replace(',', '', $row['other_income'])) ? floatval(str_replace(',', '', $row['other_income'])) : 0;
+                                                $otherExpenses = is_numeric(str_replace(',', '', $row['other_expenses'])) ? floatval(str_replace(',', '', $row['other_expenses'])) : 0;
+
+                                                // $otherIncome = is_numeric($row['other_income']) ? floatval($row['other_income']) : 0;
+                                                // $otherExpenses = is_numeric($row['other_expenses']) ? floatval($row['other_expenses']) : 0;
 
                                                 echo "<tr>";
                                                 echo "<td>" . htmlspecialchars($row['other_desc']) . "</td>";
@@ -1383,8 +1398,11 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                         if (is_array($bank_rec_array) && count($bank_rec_array) > 0) {
                                             foreach ($bank_rec_array as $row) {
                                                 // Sanitize and validate inputs
-                                                $paymentAmount = is_numeric($row['bank_rec_payment_amount']) ? floatval($row['bank_rec_payment_amount']) : 0;
-                                                $depositAmount = is_numeric($row['bank_rec_desposit_amount']) ? floatval($row['bank_rec_desposit_amount']) : 0;
+                                                $paymentAmount = is_numeric(str_replace(',', '', $row['bank_rec_payment_amount'])) ? floatval(str_replace(',', '', $row['bank_rec_payment_amount'])) : 0;
+                                                $depositAmount = is_numeric(str_replace(',', '', $row['bank_rec_desposit_amount'])) ? floatval(str_replace(',', '', $row['bank_rec_desposit_amount'])) : 0;
+
+                                                // $paymentAmount = is_numeric($row['bank_rec_payment_amount']) ? floatval($row['bank_rec_payment_amount']) : 0;
+                                                // $depositAmount = is_numeric($row['bank_rec_desposit_amount']) ? floatval($row['bank_rec_desposit_amount']) : 0;
                                                 $checkNo = htmlspecialchars($row['bank_rec_check_no']);
                                                 $desc = htmlspecialchars($row['bank_rec_desc']);
                                                 $date = $row['bank_rec_date'] ? date('m/d/Y', strtotime($row['bank_rec_date'])) : '';
