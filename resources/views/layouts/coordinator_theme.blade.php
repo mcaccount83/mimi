@@ -881,7 +881,7 @@
   //Cusotmize AJAX Popups to Match Theme
   function customSuccessAlert(message) {
         Swal.fire({
-            title: 'Success',
+            title: 'Success!',
             html: message,
             icon: 'success',
             confirmButtonText: 'OK',
@@ -894,7 +894,7 @@
 
 function customWarningAlert(message) {
     Swal.fire({
-        title: 'Warning',
+        title: 'Oops!',
         html: message,
         icon: 'warning',
         confirmButtonText: 'OK',
@@ -907,7 +907,7 @@ function customWarningAlert(message) {
 
 function customInfoAlert(message) {
     Swal.fire({
-        title: 'Info',
+        title: 'Did You Know?',
         html: message,
         icon: 'info',
         confirmButtonText: 'OK',
@@ -920,7 +920,7 @@ function customInfoAlert(message) {
 
 function customErrorAlert(message) {
     Swal.fire({
-        title: 'Error',
+        title: 'Oops!',
         html: message,
         icon: 'error',
         confirmButtonText: 'OK',

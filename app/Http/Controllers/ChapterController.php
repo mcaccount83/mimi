@@ -2509,7 +2509,6 @@ class ChapterController extends Controller
         $corConfId = $corDetails['conference_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
         $positionId = $corDetails['position_id'];
-        $coordinatorId = $id;
 
         $ch_webstatus = $request->input('ch_webstatus');
         if (empty(trim($ch_webstatus))) {
@@ -2517,7 +2516,7 @@ class ChapterController extends Controller
         }
 
         DB::table('chapters')
-            ->where('id', $coordinatorId)
+            ->where('id', $id)
             ->update(['website_url' => $request->input('ch_website'),
                 'website_status' => $ch_webstatus,
                 'egroup' => $request->input('ch_onlinediss'),

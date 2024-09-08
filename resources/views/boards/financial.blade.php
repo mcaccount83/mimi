@@ -5004,7 +5004,7 @@ document.addEventListener("DOMContentLoaded", function() {
             var message = `<p>Your chapter's roster was not uploaded in CHAPTER DUES section.</p>
                    <p>Please upload Roster to Continue.</p>`;
             if (!rosterPath || rosterPath.value == "") {
-                customErrorAlert(message);
+                customWarningAlert(message);
                 // accordion.openAccordionItem('accordion-header-members');
                 return false;
             }
@@ -5033,7 +5033,7 @@ document.addEventListener("DOMContentLoaded", function() {
                             ${missingQuestionsText}
                         </ul>
                         `;
-                customErrorAlert(message);
+                        customWarningAlert(message);
                 // accordion.openAccordionItem('accordion-header-members');
                 return false;
             }
@@ -5046,7 +5046,7 @@ document.addEventListener("DOMContentLoaded", function() {
             var serviceProjectDesc0 = document.getElementById('ServiceProjectDesc0');
             var message = `<p>At least one Service Project is required in the SERVICE PROJECT section, please enter the required information to continue.</p>`;
             if (!serviceProjectDesc0 || serviceProjectDesc0.value == "") {
-                customErrorAlert(message);
+                customWarningAlert(message);
                 // accordion.openAccordionItem('accordion-header-service');
                 // $("#ServiceProjectDesc0").focus();
                 return false;
@@ -5058,7 +5058,7 @@ document.addEventListener("DOMContentLoaded", function() {
             var annualRegistrationFee = document.getElementById('AnnualRegistrationFee');
             var message = `<p>Chapter Re-registration is required in the INTERNATIONAL EVENTS & RE-REGISTRATION section, please enter the required information to continue.</p>`;
             if (!annualRegistrationFee || annualRegistrationFee.value == "") {
-                customErrorAlert(message);
+                customWarningAlert(message);
                 // accordion.openAccordionItem('accordion-header-rereg');
                 // $("#AnnualRegistrationFee").focus();
                 return false;
@@ -5073,7 +5073,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <p>Please upload Bank Statement to Continue.</p>`;
             if (bankStatementIncluded && bankStatementIncluded.value == "1" && (!statementPath || statementPath.value == "")) {
                 // accordion.openAccordionItem('accordion-header-reconciliation');
-                customErrorAlert(message);
+                customWarningAlert(message);
                 return false;
             }
             return true;
@@ -5100,7 +5100,7 @@ document.addEventListener("DOMContentLoaded", function() {
                      ${missingFieldsText}
                    </ul>
                    `;
-                customErrorAlert(message);
+                   customWarningAlert(message);
                 return false;
             }
 
@@ -5211,7 +5211,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                     ${missingQuestionsText}
                                 </ul>
                                 `;
-                customErrorAlert(message);
+                                customWarningAlert(message);
                 accordion.openAccordionItem('accordion-header-questions');
                 return false;
             }
@@ -5225,7 +5225,7 @@ document.addEventListener("DOMContentLoaded", function() {
             var message = `<p>Your chapter's 990N filing confirmation was not uploaded in the CHAPTER QUESTIONS section, but you indicated the file was attached.</p>
                 <p>Please upload 990 Confirmation to Continue.</p>`;
             if (fileIRS && fileIRS.value == "1" && path990N && path990N.value == "") {
-                customErrorAlert(message);
+                customWarningAlert(message);
                 // accordion.openAccordionItem('accordion-header-questions');
                 return false;
             }

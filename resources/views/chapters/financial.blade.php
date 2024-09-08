@@ -2891,19 +2891,65 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 @endsection
 @section('customscript')
 <script>
+    // document.getElementById('unsubmit').addEventListener('click', function() {
+    //     var result = confirm("Unsubmitting this report will make it editable by the chapter again and will disable coordinator editing until the chapter has resubmitted - any unsaved changes will be lost. Do you wish to continue?");
+    //     if (result) {
+    //         window.location.href = "{{ url('/chapter/unsubmit/' . $chapterDetails[0]->id) }}";
+    //     }
+    // });
+
+    // $("#review-clear").click(function() {
+	// 	var result=confirm("This will clear the 'review complete' flag and coordinators will be able to edit the report again.  Do you wish to continue?");
+	// 	if(result){
+    //         window.location.href = "{{ url('/chapter/clearreview/' . $chapterDetails[0]->id) }}";
+	// 	}
+	// });
+
+    document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('unsubmit').addEventListener('click', function() {
-        var result = confirm("Unsubmitting this report will make it editable by the chapter again and will disable coordinator editing until the chapter has resubmitted - any unsaved changes will be lost. Do you wish to continue?");
-        if (result) {
-            window.location.href = "{{ url('/chapter/unsubmit/' . $chapterDetails[0]->id) }}";
-        }
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Unsubmitting this report will make it editable by the chapter again and will disable coordinator editing until the chapter has resubmitted - any unsaved changes will be lost.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, Unsubmit',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "{{ url('/chapter/unsubmit/' . $chapterDetails[0]->id) }}";
+            }
+        });
     });
 
-    $("#review-clear").click(function() {
-		var result=confirm("This will clear the 'review complete' flag and coordinators will be able to edit the report again.  Do you wish to continue?");
-		if(result){
-            window.location.href = "{{ url('/chapter/clearreview/' . $chapterDetails[0]->id) }}";
-		}
-	});
+    document.getElementById('review-clear').addEventListener('click', function() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This will clear the 'review complete' flag and coordinators will be able to edit the report again. Do you wish to continue?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, Clear Review',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "{{ url('/chapter/clearreview/' . $chapterDetails[0]->id) }}";
+            }
+        });
+    });
+});
 
     $("#review-complete").click(function() {
         if (!CheckMembers()) {
@@ -2926,7 +2972,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
         }
         var post_balance = $('#post_balance').val();
 		if(post_balance == null || post_balance == ''){
-			alert('Please enter Ending Balance in the Bank Reconciliation Section');
+			customWarningAlert('Please enter Ending Balance in the Bank Reconciliation Section');
             accordion.openAccordionItem('accordion-header-reconciliation');
 			$('#post_balance').focus();
 			return false;
@@ -2990,7 +3036,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
     $("#btn-step-10").click(function() {
         var post_balance = $('#post_balance').val();
         if (post_balance == null || post_balance == '') {
-            alert('Please enter Ending Balance');
+            customWarningAlert('Please enter Ending Balance');
             $('#post_balance').focus();
             return false;
         } if (!CheckReconciliation()) {
@@ -3008,7 +3054,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
     $("#btn-step-13").click(function() {
         var assignedReviewer = $('#AssignedReviewer').val();
         if (assignedReviewer == null || assignedReviewer == '') {
-            alert('Please select a Reviewer');
+            customWarningAlert('Please select a Reviewer');
             $('#AssignedReviewer').focus();
             return false;
         }
@@ -3103,7 +3149,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
         var checkRenewalSeemsRight = document.querySelector('input[name="checkRenewalSeemsRight"]:checked');
 
         if (!checkRosterAttached || !checkRenewalSeemsRight) {
-            alert("Answer Review Questions in CHAPTER DUES section to Continue.");
+            customWarningAlert("Answer Review Questions in CHAPTER DUES section to Continue.");
             accordion.openAccordionItem('accordion-header-members');
             return false;
         }
@@ -3115,7 +3161,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
         var checkM2MDonation = document.querySelector('input[name="checkM2MDonation"]:checked');
 
         if (!checkServiceProject || !checkM2MDonation) {
-            alert("Answer Review Questions in SERVICE PROJECTS section to Continue.");
+            customWarningAlert("Answer Review Questions in SERVICE PROJECTS section to Continue.");
             accordion.openAccordionItem('accordion-header-service');
             return false;
         }
@@ -3126,7 +3172,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
         var check_party_percentage = document.querySelector('input[name="check_party_percentage"]:checked');
 
         if (!check_party_percentage) {
-            alert("Answer Review Questions in PARTIES & MEMBER BENEFITS section to Continue.");
+            customWarningAlert("Answer Review Questions in PARTIES & MEMBER BENEFITS section to Continue.");
             accordion.openAccordionItem('accordion-header-parties');
             return false;
         }
@@ -3137,7 +3183,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
         var checkTotalIncome = document.querySelector('input[name="checkTotalIncome"]:checked');
 
         if (!checkTotalIncome) {
-            alert("Answer Review Questions in FINANCIAL SUMMARY section to Continue.");
+            customWarningAlert("Answer Review Questions in FINANCIAL SUMMARY section to Continue.");
             accordion.openAccordionItem('accordion-header-financial');
             return false;
         }
@@ -3151,7 +3197,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
         var post_balance = document.getElementById('post_balance');
 
         if (!check_beginning_balance || !checkBankStatementIncluded || !checkBankStatementMatches || !post_balance) {
-            alert("Answer Review Questions in RECONCILIATION section to Continue.");
+            customWarningAlert("Answer Review Questions in RECONCILIATION section to Continue.");
             accordion.openAccordionItem('accordion-header-reconciliation');
             return false;
         }
@@ -3169,7 +3215,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
         if (!checkPurchasedPins || !checkPurchasedMCMerch || !checkOfferedMerch || !checkBylawsMadeAvailable
             || !checkSisteredAnotherChapter || !checkAttendedTraining || !checkCurrent990NAttached) {
-            alert("Answer Review Questions in CHAPTER QUESTIONS section to Continue.");
+                customWarningAlert("Answer Review Questions in CHAPTER QUESTIONS section to Continue.");
             accordion.openAccordionItem('accordion-header-questions');
             return false;
         }
