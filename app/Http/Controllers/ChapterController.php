@@ -5055,7 +5055,7 @@ class ChapterController extends Controller
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
-            return redirect()->back()->with('success', 'Report has been successfully Updated');
+            return redirect()->back()->with('success', 'Report has been successfully Unsubmitted.');
     }
 
     /**
@@ -5092,7 +5092,7 @@ class ChapterController extends Controller
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
-            return redirect()->back()->with('success', 'Report has been successfully Updated');
+            return redirect()->back()->with('success', 'Review Complete has been successfully Cleared.');
     }
 
     /**

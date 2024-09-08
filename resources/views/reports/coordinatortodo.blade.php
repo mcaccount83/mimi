@@ -3,9 +3,16 @@
 @section('content')
 <section class="content-header">
     <div class="container-fluid">
+
+        @php
+use Illuminate\Support\Carbon;
+  $currentMonthName = Carbon::now()->format('F'); // Full month name (e.g., "August")
+  $currentMonth = Carbon::now()->month; // Numeric month (e.g., 8)
+@endphp
+
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Coordinatr ToDo List Report</h1>
+          <h1>Coordinatr ToDo List Report<small>&nbsp;({{ $currentMonthName }})</small></h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -30,17 +37,18 @@
         <div class="card-body">
             <table id="coordinatorlist" class="table table-sm table-hover" >
 				<thead>
-				@php
+				{{-- @php
                   use Illuminate\Support\Carbon;
-
-                  $currentMonth = Carbon::now()->month;
-                @endphp
+                    $currentMonthName = Carbon::now()->format('F'); // Full month name (e.g., "August")
+                    $currentMonth = Carbon::now()->month; // Numeric month (e.g., 8)
+                @endphp --}}
 			    <tr>
 					<th>Region</th>
 					<th>First Name</th>
 					<th>Last Name</th>
 					<th>Position</th>
-					<th>Month</th>
+					{{-- <th>Current Month</th> --}}
+                    <th>Checklist Last Saved</th>
 					<th>Check with Chapters</th>
                     @if (($currentMonth == 2) || ($currentMonth == 3))
                       <th>Election FAQ Sent</th>
@@ -70,7 +78,9 @@
                     <td>{{ $list->cor_fname }}</td>
                     <td>{{ $list->cor_lname }}</td>
 					<td>{{ $list->position }}</td>
-                    <td>{{ $list->todo_month }}</td>
+                    {{-- <td>{{ $list->todo_month }}</td> --}}
+                    {{-- <td>{{ $currentMonthName }}</td> --}}
+					<td><span class="date-mask">{{ $list->dashboard_updated }}</span></td>
                     <td  @if($list->todo_check_chapters == '1')style="background-color: transparent;"
                         @else style="background-color:#dc3545; color: #ffffff;" @endif>
                         @if($list->todo_check_chapters == '1')

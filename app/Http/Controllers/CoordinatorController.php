@@ -1933,33 +1933,37 @@ class CoordinatorController extends Controller
         $corId = $corDetails['coordinator_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
-        $corDetails = DB::table('coordinator_details')
-            ->select('coordinator_id', 'user_id')
-            ->where('coordinator_id', '=', $corId)
-            ->get();
+    $corDetails = DB::table('coordinator_details')
+    ->where('coordinator_id', '=', $id)
+    ->first();  // Use first() instead of get() to get a single record
 
-                if (count($corDetails) != 0) {
-                    try {
+    $input = $request->all();
 
-                DB::table('coordinator_details')
-                ->where('coordinator_id', $corId)
-                ->update([
-                        // 'todo_month' => $request->input('todo_month'),
-                        'todo_check_chapters' => $request->has('todo_check_chapters') ? 1 : null,
-                        'todo_send_rereg' => $request->has('todo_send_rereg') ? 1 : null,
-                        'todo_send_late' => $request->has('todo_send_late') ? 1 : null,
-                        'todo_record_rereg' => $request->has('todo_record_rereg') ? 1 : null,
-                        'todo_record_m2m' => $request->has('todo_record_m2m') ? 1 : null,
-                        'todo_export_reports' => $request->has('todo_export_reports') ? 1 : null,
-                        'todo_export_int_reports' => $request->has('todo_export_int_reports') ? 1 : null,
-                        'todo_election_faq' => $request->has('todo_election_faq') ? 1 : null,
-                        'todo_election_due' => $request->has('todo_election_due') ? 1 : null,
-                        'todo_financial_due' => $request->has('todo_financial_due') ? 1 : null,
-                        'todo_990_due' => $request->has('todo_990_due') ? 1 : null,
-                        'todo_welcome' => $request->has('todo_welcome') ? 1 : null,
-                        'dashboard_update' => date('mm/dd/YYYY'),
-                        'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => date('Y-m-d H:i:s')]);
+    // Convert checkboxes to 1 if checked, 0 if not
+    $updateData = [
+        'todo_check_chapters' => $request->has('todo_check_chapters') ? 1 : 0,
+        'todo_send_rereg' => $request->has('todo_send_rereg') ? 1 : 0,
+        'todo_send_late' => $request->has('todo_send_late') ? 1 : 0,
+        'todo_record_rereg' => $request->has('todo_record_rereg') ? 1 : 0,
+        'todo_record_m2m' => $request->has('todo_record_m2m') ? 1 : 0,
+        'todo_export_reports' => $request->has('todo_export_reports') ? 1 : 0,
+        'todo_export_int_reports' => $request->has('todo_export_int_reports') ? 1 : 0,
+        'todo_election_faq' => $request->has('todo_election_faq') ? 1 : 0,
+        'todo_election_due' => $request->has('todo_election_due') ? 1 : 0,
+        'todo_financial_due' => $request->has('todo_financial_due') ? 1 : 0,
+        'todo_990_due' => $request->has('todo_990_due') ? 1 : 0,
+        'todo_welcome' => $request->has('todo_welcome') ? 1 : 0,
+        'dashboard_updated' => now(),
+        'last_updated_by' => $lastUpdatedBy,
+        'last_updated_date' => now(),
+    ];
+
+    DB::beginTransaction();
+    try {
+        // Update using the DB facade
+        DB::table('coordinator_details')
+            ->where('coordinator_id', $id)
+            ->update($updateData);
 
                 DB::commit();
 
@@ -1969,9 +1973,7 @@ class CoordinatorController extends Controller
                 // Log the error
                 Log::error($e);
                 return redirect()->to('/coordinator/dashboard')->with('fail', 'Something went wrong, Please try again.');
-            }
         }
-
         return redirect()->to('/coordinator/dashboard')->with('success', 'Coordinator dashboard updated successfully');
     }
 

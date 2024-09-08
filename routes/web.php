@@ -48,9 +48,6 @@ Route::put('/coordinator/password', [CoordinatorController::class, 'updatePasswo
 Route::post('/coordinator/check-password', [CoordinatorController::class, 'checkCurrentPassword'])->name('coordinator.checkpassword');
 Route::post('/chapter/password', [ChapterController::class, 'updatePassword'])->name('chapter.updatepassword');
 
-
-Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
-
 /**
  * Routes for Custom Links
  */
@@ -62,12 +59,14 @@ Route::get('/getdirectreport', [CoordinatorController::class, 'getDirectReportin
 Route::get('/getchapterprimary', [CoordinatorController::class, 'getChapterPrimaryFor'])->name('get.chapterprimary');
 // Route::get('/chapterlinks', [ChapterController::class, 'chapterLinks'])->name('chapter.links');
 
-Route::get('/test-500', function () {
-    abort(500);
-});
-Route::get('/test-404', function () {
-    abort(404);
-});
+Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
+
+Route::get('/test-500', function () { abort(500); });
+Route::get('/test-404', function () { abort(404); });
+Route::get('/test-403', function () { abort(403); });
+Route::get('/test-401', function () { abort(401); });
+Route::get('/test-419', function () { abort(419); });
+Route::get('/test-429', function () { abort(429); });
 
 /**
  * Routes for Public Pages

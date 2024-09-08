@@ -19,8 +19,8 @@
   </section>
 
     <!-- Main content -->
-    <form method="POST" action='{{ route("coordinator.updatedashboard",$coordinatorDetails[0]->coordinator_id) }}' id="update-dashboard">
-    @csrf
+    <form method="POST" action="{{ route('coordinator.updatedashboard', $coordinatorDetails[0]->coordinator_id) }}" id="update-dashboard">
+        @csrf
 
     <section class="content">
         <div class="container-fluid">
@@ -40,20 +40,14 @@
                     $currentMonth = Carbon::now()->month; // Numeric month (e.g., 8)
                 @endphp
 
-
-
                       <div class="col-12">
                           <label >Current Month:</label>&nbsp;&nbsp;{{ $currentMonthName }}
                       </div>
                       <div class="col-12">
-                        <label >Checklist Last Updated:</label>&nbsp;&nbsp;{{ $coordinatorDetails[0]->dashboard_updated }}
+                        <label >Checklist Last Updated:</label>&nbsp;&nbsp;<span class="date-mask">{{ $coordinatorDetails[0]->dashboard_updated }}</span>
                     </div>
-
-
                       <div class="col-12">
                         <div class="col-12">
-
-
                     <label><input type="checkbox" name="todo_check_chapters" id="todo_check_chapters" {{ $coordinatorDetails[0]->todo_check_chapters ? 'checked' : '' }}>&nbsp;&nbsp;Check in with your Chapters</label><br/>
                     @if (($currentMonth == 2) || ($currentMonth == 3))
                       <label><input type="checkbox" name="todo_election_faq" id="todo_election_faq" {{ $coordinatorDetails[0]->todo_election_faq ? 'checked' : '' }}>&nbsp;&nbsp;Send Election FAQ to Chapters</label><br/>
@@ -83,13 +77,13 @@
                 </div>
             </div>
 
-                    <a href="#" onclick="uncheckAll();"><i class="fa fa-times"></i> Uncheck All</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a href="#" id="save-btn"><i class="fa fa-save"></i> Save</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#" onclick="uncheckAll(event)"><i class="fas fa-times"></i> Uncheck All</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="javascript:void(0);" onclick="document.getElementById('update-dashboard').submit();"><i class="fas fa-save"></i> Save</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <?php if ($positionid == 6 || $secpositionid == 25) {?>
-                        <a href="{{ url('/reports/coordinatortodo') }}"><i class="fa fa-check-square-o"></i> View To Do List Report</a>
+                        <a href="{{ url('/reports/coordinatortodo') }}"><i class="fas fa-check-square"></i> View To Do List Report</a>
                     <?php } ?>
                     <?php if ($positionid == 7) {?>
-                        <a href="{{ url('/reports/intcoordinatortodo') }}"><i class="fa fa-check-square-o"></i> View To Do List Report</a>
+                        <a href="{{ url('/reports/intcoordinatortodo') }}"><i class="fas fa-check-square"></i> View To Do List Report</a>
                     <?php } ?>
                 </div>
 				</div>
@@ -155,23 +149,24 @@
 @section('customscript')
 <script>
 
-function uncheckAll() {
-        var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        for (var i = 0; i < checkboxes.length; i++) {
-            checkboxes[i].checked = false;
-        }
-    }
+function uncheckAll(event) {
+    event.preventDefault(); // Prevent form submission if necessary
 
+    var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(function(checkbox) {
+        checkbox.checked = false;
+    });
+}
 document.getElementById("save-btn").addEventListener("click", function() {
   // Get the value of the todo_month input
-  var todoMonth = document.getElementById("todo_month").value;
+//   var todoMonth = document.getElementById("todo_month").value;
 
-  // Check if the todo_month input is empty
-  if (todoMonth.trim() === "") {
-    // Show an error message to the user
-    alert("The Month field is required.");
-    return false;
-  }
+//   // Check if the todo_month input is empty
+//   if (todoMonth.trim() === "") {
+//     // Show an error message to the user
+//     alert("The Month field is required.");
+//     return false;
+//   }
 
   // Submit the form if the input is valid
   document.getElementById("update-dashboard").submit();
