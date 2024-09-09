@@ -897,15 +897,17 @@ class BoardController extends Controller
             return redirect()->route('home');
         }
 
-        $borDetails = $user->BoardDetails;
+        // $borDetails = $user->BoardDetails;
+        $borDetails = $request->user()->BoardDetails;
+
         // Check if BoardDetails is not found for the user
         if (! $borDetails) {
             return redirect()->route('home');
         }
 
-        $borPositionId = $borDetails['board_position_id'];
-        $chapterId = $borDetails['chapter_id'];
-        $isActive = $borDetails['is_active'];
+        $borPositionId = $borDetails->board_position_id;
+        $chapterId = $borDetails->chapter_id;
+        $isActive = $borDetails->is_active;
 
         $chapterDetails = Chapter::find($chapterId);
         $stateArr = DB::table('state')
@@ -931,8 +933,8 @@ class BoardController extends Controller
         $year = date('Y');
         $month = date('m');
 
-        $next_renewal_year = $chapterDetails['next_renewal_year'];
-        $start_month = $chapterDetails['start_month_id'];
+        $next_renewal_year = $chapterDetails->next_renewal_year;
+        $start_month = $chapterDetails->start_month_id;
         $late_month = $start_month + 1;
 
         $due_date = Carbon::create($next_renewal_year, $start_month, 1);
@@ -1039,15 +1041,17 @@ class BoardController extends Controller
             return redirect()->route('home');
         }
 
-        $borDetails = $user->BoardDetails;
+        // $borDetails = $user->BoardDetails;
+        $borDetails = $request->user()->BoardDetails;
+
         // Check if BoardDetails is not found for the user
         if (! $borDetails) {
             return redirect()->route('home');
         }
 
-        $borPositionId = $borDetails['board_position_id'];
-        $chapterId = $borDetails['chapter_id'];
-        $isActive = $borDetails['is_active'];
+        $borPositionId = $borDetails->board_position_id;
+        $chapterId = $borDetails->chapter_id;
+        $isActive = $borDetails->is_active;
 
         $chapterDetails = Chapter::find($chapterId);
         $stateArr = DB::table('state')
@@ -1104,15 +1108,17 @@ class BoardController extends Controller
             return redirect()->route('home');
         }
 
-        $borDetails = $user->BoardDetails;
+        // $borDetails = $user->BoardDetails;
+        $borDetails = $request->user()->BoardDetails;
+
         // Check if BoardDetails is not found for the user
         if (! $borDetails) {
             return redirect()->route('home');
         }
 
-        $borPositionId = $borDetails['board_position_id'];
-        $chapterId = $borDetails['chapter_id'];
-        $isActive = $borDetails['is_active'];
+        $borPositionId = $borDetails->board_position_id;
+        $chapterId = $borDetails->chapter_id;
+        $isActive = $borDetails->is_active;
 
         $chapterDetails = Chapter::find($chapterId);
         $stateArr = DB::table('state')
@@ -1573,9 +1579,9 @@ class BoardController extends Controller
             $userName = $user['first_name'].' '.$user['last_name'];
             $userEmail = $user['email'];
 
-            $borDetails = $user->BoardDetails;
-            $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
-            $isActive = $borDetails['is_active'];
+            $borDetails = $request->user()->BoardDetails;
+            $loggedInName = $borDetails->first_name . ' ' . $borDetails->last_name;
+            $isActive = $borDetails->is_active;
             $user_type = $user->user_type;
 
             DB::beginTransaction();

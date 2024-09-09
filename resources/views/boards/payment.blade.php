@@ -20,7 +20,7 @@
                     @endphp
                     <div class="col-md-12"><br><br></div>
                         <h2 class="text-center"> MOMS Club of {{ $chapterList[0]->name }}, {{ $chapterState }} </h2>
-                        <h4 class="text-center"> General Chapter Resources</h4>
+                        <h4 class="text-center"> Re-Registration Payment</h4>
 
                         </div>
                         <div class="col-md-12"><br></div>

@@ -1877,16 +1877,16 @@ class CoordinatorController extends Controller
      */
     public function showDashboard(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $id = $corId = $corDetails['coordinator_id'];
-        $corConfId = $corDetails['conference_id'];
-        $corReportId = $corDetails['report_id'];
-        $positionid = $corDetails['position_id'];
-        $secpositionid = $corDetails['sec_position_id'];
+        $corDetails = $request->user()->CoordinatorDetails;
+        $corId = $corDetails->coordinator_id;
+        $corConfId = $corDetails->conference_id;
+        $corReportId = $corDetails->report_id;
+        $positionid = $corDetails->position_id;
+        $secpositionid = $corDetails->sec_position_id;
         $coordinatorDetails = DB::table('coordinator_details as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $id)
+            ->where('cd.coordinator_id', '=', $corId)
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
@@ -1927,43 +1927,43 @@ class CoordinatorController extends Controller
         return view('coordinators.dashboard')->with($data);
     }
 
-    public function updateDashboard(Request $request, $id): RedirectResponse
+    /**
+     * Update Coordiantor Dashboard - Login Main Screen
+     */
+    public function updateDashboard(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
-        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+        $corDetails = $request->user()->CoordinatorDetails;
+        $corId = $corDetails->coordinator_id;
+        $lastUpdatedBy = $corDetails->first_name . ' ' . $corDetails->last_name;
 
-    $corDetails = DB::table('coordinator_details')
-    ->where('coordinator_id', '=', $id)
-    ->first();  // Use first() instead of get() to get a single record
+        $corDetails = DB::table('coordinator_details')
+        ->where('coordinator_id', '=', $corId)
+        ->first();  // Use first() instead of get() to get a single record
 
-    $input = $request->all();
+        // Convert checkboxes to 1 if checked, 0 if not
+        $updateData = [
+            'todo_check_chapters' => $request->has('todo_check_chapters') ? 1 : 0,
+            'todo_send_rereg' => $request->has('todo_send_rereg') ? 1 : 0,
+            'todo_send_late' => $request->has('todo_send_late') ? 1 : 0,
+            'todo_record_rereg' => $request->has('todo_record_rereg') ? 1 : 0,
+            'todo_record_m2m' => $request->has('todo_record_m2m') ? 1 : 0,
+            'todo_export_reports' => $request->has('todo_export_reports') ? 1 : 0,
+            'todo_export_int_reports' => $request->has('todo_export_int_reports') ? 1 : 0,
+            'todo_election_faq' => $request->has('todo_election_faq') ? 1 : 0,
+            'todo_election_due' => $request->has('todo_election_due') ? 1 : 0,
+            'todo_financial_due' => $request->has('todo_financial_due') ? 1 : 0,
+            'todo_990_due' => $request->has('todo_990_due') ? 1 : 0,
+            'todo_welcome' => $request->has('todo_welcome') ? 1 : 0,
+            'dashboard_updated' => now(),
+            'last_updated_by' => $lastUpdatedBy,
+            'last_updated_date' => now(),
+        ];
 
-    // Convert checkboxes to 1 if checked, 0 if not
-    $updateData = [
-        'todo_check_chapters' => $request->has('todo_check_chapters') ? 1 : 0,
-        'todo_send_rereg' => $request->has('todo_send_rereg') ? 1 : 0,
-        'todo_send_late' => $request->has('todo_send_late') ? 1 : 0,
-        'todo_record_rereg' => $request->has('todo_record_rereg') ? 1 : 0,
-        'todo_record_m2m' => $request->has('todo_record_m2m') ? 1 : 0,
-        'todo_export_reports' => $request->has('todo_export_reports') ? 1 : 0,
-        'todo_export_int_reports' => $request->has('todo_export_int_reports') ? 1 : 0,
-        'todo_election_faq' => $request->has('todo_election_faq') ? 1 : 0,
-        'todo_election_due' => $request->has('todo_election_due') ? 1 : 0,
-        'todo_financial_due' => $request->has('todo_financial_due') ? 1 : 0,
-        'todo_990_due' => $request->has('todo_990_due') ? 1 : 0,
-        'todo_welcome' => $request->has('todo_welcome') ? 1 : 0,
-        'dashboard_updated' => now(),
-        'last_updated_by' => $lastUpdatedBy,
-        'last_updated_date' => now(),
-    ];
-
-    DB::beginTransaction();
-    try {
-        // Update using the DB facade
-        DB::table('coordinator_details')
-            ->where('coordinator_id', $id)
-            ->update($updateData);
+        DB::beginTransaction();
+        try {
+            DB::table('coordinator_details')
+                ->where('coordinator_id', $corId)
+                ->update($updateData);
 
                 DB::commit();
 
@@ -1982,14 +1982,14 @@ class CoordinatorController extends Controller
      */
     public function showProfile(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $id = $corId = $corDetails['coordinator_id'];
+        $corDetails = $request->user()->CoordinatorDetails;
+        $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corReportId = $corDetails['report_id'];
         $coordinatorDetails = DB::table('coordinator_details as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $id)
+            ->where('cd.coordinator_id', '=', $corId)
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
@@ -2033,35 +2033,32 @@ class CoordinatorController extends Controller
     /**
      * CUpdate Profile (Store)
      */
-    public function updateProfile(Request $request, $id): RedirectResponse
+    public function updateProfile(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
-        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+        $corDetails = $request->user()->CoordinatorDetails;
+        $corId = $corDetails->coordinator_id;
+        $lastUpdatedBy = $corDetails->first_name . ' ' . $corDetails->last_name;
 
         if ($request->input('cord_fname') != '' && $request->input('cord_lname') != '' && $request->input('cord_email') != '') {
-            $corDetails = DB::table('coordinator_details')
+            $corDetail = DB::table('coordinator_details')
                 ->select('coordinator_id', 'user_id')
                 ->where('coordinator_id', '=', $corId)
-                ->get();
-            if (count($corDetails) != 0) {
+                ->first(); // Use first() to get a single result
+
                 try {
-                    $userId = $corDetails[0]->user_id;
-                    $cordId = $corDetails[0]->coordinator_id;
+                    $userId = $corDetail->user_id;
 
                     $user = User::find($userId);
-                    $user->first_name = $request->input('cord_fname');
-                    $user->last_name = $request->input('cord_lname');
-                    $user->email = $request->input('cord_email');
-                    // if ($request->input('cord_pswd_chg') == '1') {
-                    //     $user->password = Hash::make($request->input('cord_pswd_cnf'));
-                    // }
-                    $user->updated_at = date('Y-m-d H:i:s');
-                    $user->save();
+                        $user->first_name = $request->input('cord_fname');
+                        $user->last_name = $request->input('cord_lname');
+                        $user->email = $request->input('cord_email');
+                        $user->updated_at = now();
+                        $user->save();
 
                     DB::table('coordinator_details')
                         ->where('coordinator_id', $corId)
-                        ->update(['first_name' => $request->input('cord_fname'),
+                        ->update([
+                            'first_name' => $request->input('cord_fname'),
                             'last_name' => $request->input('cord_lname'),
                             'email' => $request->input('cord_email'),
                             'sec_email' => $request->input('cord_sec_email'),
@@ -2076,7 +2073,10 @@ class CoordinatorController extends Controller
                             'birthday_day' => $request->input('cord_day'),
                             'home_chapter' => $request->input('cord_chapter'),
                             'last_updated_by' => $lastUpdatedBy,
-                            'last_updated_date' => date('Y-m-d H:i:s')]);
+                            'last_updated_date' => now()
+                        ]);
+
+                    // Commit transaction
                     DB::commit();
                 } catch (\Exception $e) {
                     // Rollback Transaction
@@ -2086,9 +2086,8 @@ class CoordinatorController extends Controller
 
                     return redirect()->to('/coordinator/profile')->with('fail', 'Something went wrong, Please try again.');
                 }
-            }
         }
-
         return redirect()->to('/coordinator/profile')->with('success', 'Coordinator profile updated successfully');
     }
+
 }

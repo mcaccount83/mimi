@@ -41,9 +41,9 @@ class HomeController extends Controller
          */
         if ($user_type == 'coordinator') {
             //Get Coordinators Details
-            $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-            $corId = $corDetails['coordinator_id'];
-            $corConfId = $corDetails['conference_id'];
+            $corDetails = $request->user()->CoordinatorDetails;
+            $corId = $corDetails->coordinator_id;
+            $corConfId = $corDetails->conference_id;
 
             $corlayerId = $corDetails['layer_id'];
             $sqlLayerId = 'crt.layer'.$corlayerId;
@@ -82,7 +82,7 @@ class HomeController extends Controller
          * Board Login with Chapter profile Screen
          */
         if ($user_type == 'board') {
-            $borDetails = User::find($request->user()->id)->BoardDetails;
+            $borDetails = $request->user()->BoardDetails;
             $borPositionId = $borDetails['board_position_id'];
             $isActive = $borDetails['is_active'];
             $chapterId = $borDetails['chapter_id'];
