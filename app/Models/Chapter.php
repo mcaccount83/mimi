@@ -19,4 +19,10 @@ class Chapter extends Model
         'ein_letter',
 
     ];
+
+    // Define the relationship to the FinancialReport model
+    public function financialReport()
+    {
+        return $this->hasOne(FinancialReport::class, 'chapter_id', 'id'); // 'chapter_id' in financial_report references 'id' in chapters
+    }
 }

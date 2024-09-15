@@ -14,6 +14,7 @@ use App\Models\Admin;
 use App\Models\Bugs;
 use App\Models\Chapter;
 use App\Models\Resources;
+use App\Models\FinancialReport;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -508,11 +509,13 @@ class AdminController extends Controller
             return redirect()->to('/admin')->with('success', 'Fiscal year reset successfully.');
         } catch (Exception $e) {
             // Log the error message
-            Log::error('Failed to reset fiscal year: '.$e->getMessage());
+            Log::error('An error occurred when restting the fiscal year: '.$e->getMessage());
 
-            return redirect()->to('/admin')->with('error', 'Failed to reset fiscal year.');
+            return redirect()->to('/admin')->with('fail', 'An error occurred when restting the fiscal year.');
         }
     }
+
+
 
     public function showReRegDate(Request $request)
     {
@@ -754,7 +757,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Remove Outgoing Board
+     * Clear Outgoing Board Member Table (Truncate)
      */
     public function updateOutgoingBoard()
     {
@@ -772,6 +775,244 @@ class AdminController extends Controller
 
         // Truncate the `outgoing_board_member` table
         DB::table('outgoing_board_member')->truncate();
+    }
+
+    /**
+     * Udate EOY Database Tables
+     */
+    public function updateEOYDatabase(Request $request)
+    {
+        try{
+            $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+            $corId = $corDetails['coordinator_id'];
+
+            // Fetch all outgoing board members
+            $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
+
+            // Update the `is_active` column in the `users` table
+            foreach ($outgoingBoardMembers as $outgoingMember) {
+                DB::table('users')->where('id', $outgoingMember->user_id)->update([
+                    'is_active' => 0,
+                    'last_updated_date' => now(),
+                ]);
+            }
+
+            // Truncate the `outgoing_board_member` and `incoming_board_member` tables
+            DB::table('outgoing_board_member')->truncate();
+            DB::table('incoming_board_member')->truncate();
+
+            // Fetch all chapters with their financial reports and update the balance
+            $chapters = Chapter::with('financialReport')->get();
+            foreach ($chapters as $chapter) {
+                if ($chapter->financialReport) {
+                    $chapter->balance = $chapter->financialReport->post_balance;
+                    $chapter->save();
+                }
+            }
+
+            // Get the current year for table renaming
+            $currentYear = Carbon::now()->year;
+
+            // Copy and rename the `financial_report` table
+            DB::statement("CREATE TABLE financial_report_12_$currentYear LIKE financial_report");
+            DB::statement("INSERT INTO financial_report_12_$currentYear SELECT * FROM financial_report");
+
+            // Truncate the `financial_report` table
+            DB::table('financial_report')->truncate();
+
+            // Fetch all active chapters
+            $activeChapters = Chapter::where('is_active', 1)->get();
+
+            // Insert each chapter's balance into financial_report
+            foreach ($activeChapters as $chapter) {
+                FinancialReport::create([
+                    'chapter_id' => $chapter->id,  // Ensure chapter_id is provided
+                    'pre_balance' => $chapter->balance,
+                    'amount_reserved_from_previous_year' => $chapter->balance,
+                ]);
+            }
+
+            // Update chapters table: Set specified columns to NULL
+            DB::table('chapters')->update([
+                'new_board_submitted' => null,
+                'new_board_active' => null,
+                'financial_report_received' => null,
+                'financial_report_complete' => null,
+                'boundary_issues' => null,
+                'boundary_issue_notes' => null,
+            ]);
+
+            // Update admin table: Set specified columns to 1
+            DB::table('admin')->update([
+                'truncate_incoming' => '1',
+                'truncate_outgoing' => '1',
+                'copy_FRtoCH' => '1',
+                'copy_financial' => '1',
+                'copy_CHtoFR' => '1',
+                'updated_id' => $corId,
+                'updated_at' => Carbon::today()
+            ]);
+
+       // Return success message
+         return redirect()->to('/admin')->with('success', 'Financial data tables successfully updated, copied, and renamed.');
+        } catch (Exception $e) {
+            // Log the error message
+            Log::error('An error occurred while updating the financial data tables: ' . $e->getMessage());
+
+            // Return error message, this is where the error should be flashed
+            return redirect()->to('/admin')->with('fail', 'An error occurred while updating the financial data tables.');
+        }
+    }
+
+     /**
+     * Udate User Database Tables
+     */
+    public function updateDataDatabase(Request $request)
+    {
+        try{
+            $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+            $corId = $corDetails['coordinator_id'];
+
+            // Get the current month and year for table renaming
+            $currentYear = Carbon::now()->year;
+            $currentMonth = Carbon::now()->month;
+
+            // Update invalid date values before copying the data
+            DB::table('chapters')
+                ->where(function ($query) {
+                    $query->where('disbend_date', '0000-00-00')
+                        ->orWhere('dues_last_paid', '0000-00-00');
+                })
+                ->update([
+                    'disbend_date' => null,
+                    'dues_last_paid' => null
+                ]);
+
+            // Update invalid date values before copying the data
+            DB::table('chapters')
+            ->where(function ($query) {
+                $query->where('created_at', '0000-00-00');
+            })
+            ->update([
+                'created_at' => null
+            ]);
+
+            // Update invalid date values before copying the data
+            DB::table('coordinator_details')
+            ->where(function ($query) {
+                $query->where('last_promoted', '0000-00-00')
+                    ->orWhere('leave_date', '0000-00-00')
+                    ->orWhere('last_updated_date', '0000-00-00');
+            })
+            ->update([
+                'last_promoted' => null,
+                'leave_date' => null,
+                'last_updated_date' => null
+            ]);
+
+            // Update invalid date values before copying the data
+            DB::table('users')
+            ->where(function ($query) {
+                $query->where('created_at', '0000-00-00')
+                ;
+            })
+            ->update([
+                'created_at' => null,
+
+            ]);
+
+        // Copy and rename the `chapters` table
+            DB::statement("CREATE TABLE chapters_{$currentMonth}_{$currentYear} LIKE chapters");
+            DB::statement("INSERT INTO chapters_{$currentMonth}_{$currentYear} SELECT * FROM chapters");
+
+            // Copy and rename the `board_details` table
+            DB::statement("CREATE TABLE board_details_{$currentMonth}_{$currentYear} LIKE board_details");
+            DB::statement("INSERT INTO board_details_{$currentMonth}_{$currentYear} SELECT * FROM board_details");
+
+            // Copy and rename the `coordinator_details` table
+            DB::statement("CREATE TABLE coordinator_details_{$currentMonth}_{$currentYear} LIKE coordinator_details");
+            DB::statement("INSERT INTO coordinator_details_{$currentMonth}_{$currentYear} SELECT * FROM coordinator_details");
+
+            // Copy and rename the `users` table
+            DB::statement("CREATE TABLE users_{$currentMonth}_{$currentYear} LIKE users");
+            DB::statement("INSERT INTO users_{$currentMonth}_{$currentYear} SELECT * FROM users");
+
+            // Update admin table: Set specified columns to 1
+            DB::table('admin')->update([
+                'copy_chapters' => '1',
+                'copy_users' => '1',
+                'copy_boarddetails' => '1',
+                'copy_coordinatordetails' => '1',
+                'updated_id' => $corId,
+                'updated_at' => Carbon::today()
+            ]);
+
+            // Return success message
+        return redirect()->to('/admin')->with('success', 'User data tables successfully updated, copied, and renamed..');
+        } catch (Exception $e) {
+            // Log the error message
+            Log::error('An error occurred while updating the user data tables: ' . $e->getMessage());
+
+            // Return error message, this is where the error should be flashed
+            return redirect()->to('/admin')->with('fail', 'An error occurred while updating the user data tables.');
+        }
+    }
+
+
+    /**
+     * Udate Coordinator EOY Menu Items
+     */
+    public function updateEOYCoordinator(Request $request)
+    {
+    try{
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corId = $corDetails['coordinator_id'];
+
+        // Update admin table: Set specified columns to 1
+        DB::table('admin')->update([
+            'eoy_testers' => '1',
+            'eoy_coordinators' => '1',
+            'updated_id' => $corId,
+            'updated_at' => Carbon::today()
+        ]);
+
+          // Return success message
+          return redirect()->to('/admin')->with('success', 'Coordinator Menus have been activated.');
+        } catch (Exception $e) {
+            // Log the error message
+            Log::error('An error occurred while activating coordinator menus: ' . $e->getMessage());
+
+            // Return error message, this is where the error should be flashed
+            return redirect()->to('/admin')->with('fail', 'An error occurred while activating coordinator menus.');
+        }
+    }
+
+     /**
+     * Udate Chapter EOY Buttons
+     */
+    public function updateEOYChapter(Request $request)
+    {
+    try{
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corId = $corDetails['coordinator_id'];
+
+        // Update admin table: Set specified columns to 1
+        DB::table('admin')->update([
+            'eoy_boardreport' => '1',
+            'eoy_financialreport' => '1',
+            'updated_id' => $corId,
+            'updated_at' => Carbon::today()
+        ]);
+
+         // Return success message
+         return redirect()->to('/admin')->with('success', 'Chapter Buttons have been activated.');
+        } catch (Exception $e) {
+            // Log the error message
+            Log::error('An error occurred while activating chapter buttons: ' . $e->getMessage());
+
+            // Return error message, this is where the error should be flashed
+            return redirect()->to('/admin')->with('fail', 'An error occurred while activating chapter buttons.');
+        }
     }
 
 }

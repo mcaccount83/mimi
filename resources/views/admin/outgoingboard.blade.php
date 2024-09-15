@@ -58,12 +58,12 @@
                     <label class="custom-control-label" for="showPrimary">Only Show Outgoing Board Members with no User Account</label>
                 </div>
             </div> --}}
-            <div class="card-body text-center">
+            {{-- <div class="card-body text-center">
                 <p>Clearing the table will remove user access to Financial Reports<br>
                 <span style="color: red;">
                     This CANNOT be undone!</span></p>
 				    <button type="button" id="update-outgoing" class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-user-times" ></i>&nbsp;&nbsp;&nbsp;Clear Outgoing Board Members Table</button>
-             </div>
+             </div> --}}
         </div>
           <!-- /.box -->
         </div>
@@ -75,38 +75,38 @@
 @endsection
 @section('customscript')
 <script>
-$(document).ready(function(){
-    var base_url = '{{ url("/adminreports/updateoutgoingboard") }}';
+// $(document).ready(function(){
+//     var base_url = '{{ url("/adminreports/updateoutgoingboard") }}';
 
-    $("#update-outgoing").click(function() {
-        $.ajax({
-            url: base_url,
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}', // Include CSRF token for security
-            },
-            success: function(response) {
-                // Handle success (e.g., show a message or refresh the page)
-                alert('Outgoing board members updated successfully.');
-                // Optionally, reload the page or redirect
-                location.reload();
-            },
-            error: function(xhr) {
-                // Handle errors
-                alert('An error occurred while updating the outgoing board members.');
-            }
-        });
-    });
-});
+//     $("#update-outgoing").click(function() {
+//         $.ajax({
+//             url: base_url,
+//             type: 'POST',
+//             data: {
+//                 _token: '{{ csrf_token() }}', // Include CSRF token for security
+//             },
+//             success: function(response) {
+//                 // Handle success (e.g., show a message or refresh the page)
+//                 alert('Outgoing board members updated successfully.');
+//                 // Optionally, reload the page or redirect
+//                 location.reload();
+//             },
+//             error: function(xhr) {
+//                 // Handle errors
+//                 alert('An error occurred while updating the outgoing board members.');
+//             }
+//         });
+//     });
+// });
 
-function showPrimary() {
-var base_url = '{{ url("/adminreports/outgoingboard") }}';
+// function showPrimary() {
+// var base_url = '{{ url("/adminreports/outgoingboard") }}';
 
-    if ($("#showPrimary").prop("checked") == true) {
-        window.location.href = base_url + '?check=yes';
-    } else {
-        window.location.href = base_url;
-    }
-}
+//     if ($("#showPrimary").prop("checked") == true) {
+//         window.location.href = base_url + '?check=yes';
+//     } else {
+//         window.location.href = base_url;
+//     }
+// }
 </script>
 @endsection

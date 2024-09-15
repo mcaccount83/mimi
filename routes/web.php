@@ -78,8 +78,12 @@ Route::get('/chapter-resources', [PublicController::class, 'chapterResources'])-
  * Routes for Admin Controller
  */
 Route::get('/admin/eoy', [AdminController::class, 'showEOY'])->name('admin.eoy');
-Route::post('/admin/eoy/update/{id}', [AdminController::class, 'updateEOY'])->name('admin.eoyupdate');
-Route::post('/admin/reset-year', [AdminController::class, 'resetYear'])->name('resetYear');
+Route::post('/admin/resetyear', [AdminController::class, 'resetYear'])->name('resetyear');
+Route::post('/admin/updateeoydatabase', [AdminController::class, 'updateEOYDatabase'])->name('admin.updateeoydatabase');
+Route::post('/admin/updatedatadatabase', [AdminController::class, 'updateDataDatabase'])->name('admin.updatedatadatabase');
+Route::post('/admin/updateeoycoordinator', [AdminController::class, 'updateEOYCoordinator'])->name('admin.updateeoycoordinator');
+Route::post('/admin/updateeoychapter', [AdminController::class, 'updateEOYChapter'])->name('admin.updateeoychapter');
+// Route::post('/admin/eoy/update/{id}', [AdminController::class, 'updateEOY'])->name('admin.eoyupdate');
 Route::get('/admin/reregdate', [AdminController::class, 'showReRegDate'])->name('admin.reregdate');
 Route::get('/admin/reregdate/{id}', [AdminController::class, 'EditReRegDate'])->name('admin.editreregdate');
 Route::post('/admin/updatereregdate/{id}', [AdminController::class, 'UpdateReRegDate'])->name('admin.updatereregdate');
@@ -98,7 +102,7 @@ Route::get('/adminreports/duplicateboardid', [AdminController::class, 'showDupli
 Route::get('/adminreports/multipleboard', [AdminController::class, 'showMultiple'])->name('admin.multipleboard');
 Route::get('/adminreports/nopresident', [AdminController::class, 'showNoPresident'])->name('admin.nopresident');
 Route::get('/adminreports/outgoingboard', [AdminController::class, 'showOutgoingBoard'])->name('admin.outgoingboard');
-Route::post('/adminreports/updateoutgoingboard', [AdminController::class, 'updateOutgoingBoard'])->name('admin.updateoutgoingboard');
+// Route::post('/adminreports/updateoutgoingboard', [AdminController::class, 'updateOutgoingBoard'])->name('admin.updateoutgoingboard');
 
 /**
  * Routes for Payment Controller (Payment Processing)
