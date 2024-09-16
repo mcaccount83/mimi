@@ -6,12 +6,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Duplicate Board Id Report</h1>
+          <h1>Duplicate Board Details Report<small>&nbsp;(Active)</small></h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">Duplicate Board Id Report</li>
+            <li class="breadcrumb-item active">Duplicate Board Details Report</li>
           </ol>
         </div>
       </div>
@@ -25,7 +25,7 @@
                 <div class="col-12">
                     <div class="card card-outline card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">Report of Users wtih Duplicate Board Ids</h3>
+                        <h3 class="card-title">Report of Users wtih Duplicate Board Details</h3>
                     </div>
                      <!-- /.card-header -->
         <div class="card-body">
@@ -33,7 +33,7 @@
               <thead>
 			    <tr>
                   <th>Email Address</th>
-                  <th>Board ID</th>
+                  <th>ID</th>
                   <th>Chapter ID</th>
                   <th>Position ID</th>
 			        <th>First Name</th>
@@ -45,7 +45,7 @@
                 @foreach($userList as $list)
                   <tr>
                         <td>{{ $list->email }}</td>
-                          <td>{{ $list->board_id }}</td>
+                          <td>{{ $list->id }}</td>
                         <td>{{ $list->chapter_id }}</td>
                         <td>{{ $list->board_position_id }}</td>
 					<td>{{ $list->first_name }}</td>

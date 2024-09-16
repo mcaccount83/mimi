@@ -36,7 +36,6 @@
                   <th>Name</th>
                   <th>Email</th>
                 <th>User Type</th>
-
                 </tr>
                 </thead>
                 <tbody>

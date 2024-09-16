@@ -47,7 +47,7 @@
                   <tr>
                         <td>{{ $list->email }}</td>
                         <td>{{ $list->chapter_id }}</td>
-                        <td>{{ $list->board_id }}</td>
+                        <td>{{ $list->id }}</td>
                         <td>{{ $list->board_position_id }}</td>
 					<td>{{ $list->first_name }}</td>
 						<td>{{ $list->last_name }}</td>

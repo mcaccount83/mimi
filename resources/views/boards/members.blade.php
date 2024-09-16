@@ -59,9 +59,6 @@
                 </div>
                 </div>
 
-            {{-- </div>
-        </div> --}}
-
         @php
             $admin = DB::table('admin')
                 ->select('admin.*',
@@ -76,8 +73,6 @@
             $financialreport_yes = ($eoy_financialreport == 1);
         @endphp
 
-        {{-- <div class="col-md-12">
-            <div class="card card-primary card-outline"> --}}
                     <div class="card-body">
 	                    <div class="row">
                         @if ($thisDate->gte($due_date))
@@ -116,10 +111,6 @@
 
                                 @if($financial_report_array->financial_pdf_path!=null)
                                     <a id="btn-download-pdf" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn btn-primary" ><i class="fas fa-download" ></i>&nbsp; Financial Report PDF</a>
-
-                                    {{-- <button id="downloadPdfLink" type="button" class="btn btn-primary" onclick="window.location.href='https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>'">
-                                        <i class="fas fa-file-pdf"></i>&nbsp; Financial Report PDF</a>
-                                    </button> --}}
                                 @else
                                     <button id="ReportPDF" type="button" class="btn btn-primary" onclick="">
                                         <i class="fas fa-file-pdf"></i>&nbsp; No Financial Report on File
@@ -221,8 +212,8 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Email</label> <span class="field-required">*</span>
-                            <input  type="email" name="bor_email" id="bor_email" class="form-control" placeholder="Email ID" value="{{ $borDetails->bd_email }}" maxlength="50" required >
-                            <input  type="hidden" id="bor_email_chk" value="{{ $borDetails->bd_email }}">
+                            <input  type="email" name="bor_email" id="bor_email" class="form-control" placeholder="Email ID" value="{{ $borDetails->email }}" maxlength="50" required >
+                            <input  type="hidden" id="bor_email_chk" value="{{ $borDetails->email }}">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -265,22 +256,6 @@
                         </div>
                     </div>
                 </div>
-                {{-- <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Update Password</label>
-                            <input  type="password" class="form-control cls-pswd" placeholder="***********" name="bor_pswd" id="bor_pswd" value="" maxlength="30" >
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Confirm Updated Password</label>
-                            <input  type="password" class="form-control cls-pswd" placeholder="***********" name="bor_pswd_cnf" id="bor_pswd_cnf" value="" maxlength="30">
-                            <input  type="hidden" name="bor_pswd_chg" id="bor_pswd_chg" value="0" >
-                        </div>
-                    </div>
-                </div>
-                 <div class="clearfix"></div> --}}
 
                 </div>
                 <div class="card-header">
@@ -418,7 +393,7 @@
 
                 <div class="card-body card-b"><hr></div>
                 <div class="box-body text-center">
-                 <button id="Save" type="submit" class="btn btn-primary" onclick="return PreSaveValidate()"><i class="fas fa-save" ></i>&nbsp; Save</button>
+                 <button id="Save" type="submit" class="btn btn-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
              </form>
              <button type="button" class="btn btn-primary" onclick="showChangePasswordAlert()"><i class="fas fa-lock" ></i>&nbsp; Change Password</button>
              <a href="{{ route('logout') }}" class="btn btn-primary"
@@ -434,49 +409,6 @@
                  <button type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-primary"><i class="fa fa-graduation-cap fa-fw" aria-hidden="true" ></i>&nbsp; eLearning Library</button>
                  <a href="{{ route('board.resources') }}" class="btn btn-primary"><i class="fa fa-briefcase fa-fw" aria-hidden="true" ></i>&nbsp; Chapter Resources</a>
              </div>
-
-             {{-- <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <!-- Modal Header -->
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-
-                        <!-- Modal Body -->
-                        <div class="modal-body">
-                            <form action="{{ route('board.updatepassword') }}" method="POST">
-                                @csrf
-                                @method('PUT')
-
-                                <!-- Current Password -->
-                                <div class="form-group">
-                                    <label for="current_password">Current Password</label>
-                                    <input type="password" name="current_password" id="current_password" class="form-control" required>
-                                </div>
-
-                                <!-- New Password -->
-                                <div class="form-group">
-                                    <label for="new_password">New Password</label>
-                                    <input type="password" name="new_password" id="new_password" class="form-control" required>
-                                </div>
-
-                                <!-- Confirm New Password -->
-                                <div class="form-group">
-                                    <label for="new_password_confirmation">Confirm New Password</label>
-                                    <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="form-control" required>
-                                </div>
-
-                                <!-- Submit Button -->
-                                <button type="submit" class="btn btn-primary">Update Password</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
 
              </div>
          </div>
@@ -536,59 +468,26 @@ document.getElementById('ch_webstatus').addEventListener('change', function() {
 
 
     $( document ).ready(function() {
-	// var phoneListArr = ["ch_pre_phone", "ch_avp_phone", "ch_mvp_phone", "ch_trs_phone", "ch_sec_phone"];
-    // for (var i = phoneListArr.length - 1; i >= 0; i--) {
-    //     var inputValue = $("#"+phoneListArr[i]).val();
-    //     if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
-    //     var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
-    //     $("#"+phoneListArr[i]).val(reInputValue);
-    // }
-	// $("ch_pre_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
-	// $("ch_avp_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
-    // $("ch_mvp_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
-    // $("ch_trs_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
-    // $("ch_sec_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
+        var pcid = $("#pcid").val();
+        if (pcid != "") {
+            $.ajax({
+                url: '{{ url("/checkreportid/") }}' + '/' + pcid,
+                type: "GET",
+                success: function (result) {
+                    console.log("AJAX result:", result);
+                    $("#display_corlist").html(result);
+                },
+                error: function (jqXHR, exception) {
+                    console.log("AJAX error:", exception);
+                }
+            });
+        }
 
-    var pcid = $("#pcid").val();
-    if (pcid != "") {
-        $.ajax({
-            url: '{{ url("/checkreportid/") }}' + '/' + pcid,
-            type: "GET",
-            success: function (result) {
-                console.log("AJAX result:", result);
-                $("#display_corlist").html(result);
-            },
-            error: function (jqXHR, exception) {
-                console.log("AJAX error:", exception);
-            }
+        $('.cls-pswd').on('keypress', function(e) {
+        if (e.which == 32)
+            return false;
         });
-    }
-
-    $('.cls-pswd').on('keypress', function(e) {
-    if (e.which == 32)
-        return false;
-	});
-
-
     });
-
- // function isPhone() {
-//     if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode != 8) {
-//         event.keyCode = 0;
-//         alert("Please Enter Number Only");
-//         return false;
-//     }
-// }
 
 function is_url() {
         var str = $("#validate_url").val().trim(); // Trim leading and trailing whitespace
@@ -612,82 +511,6 @@ function is_url() {
             return false;
         }
     }
-
-// function isNumber(evt) {
-//     evt = (evt) ? evt : window.event;
-//     var charCode = (evt.which) ? evt.which : evt.keyCode;
-//         if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-//             return false;
-//         }
-//         return true;
-//     }
-
-// function isAlphanumeric(e){
-// 	var k;
-//         document.all ? k = e.keyCode : k = e.which;
-//         return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
-//     }
-
-function PreSaveValidate(){
-    // var errMessage="";
-    //       if($("#ch_pre_email").val() != ""){
-    //         if($("#ch_pre_email").val() == $("#ch_avp_email").val() || $("#ch_pre_email").val() == $("#ch_mvp_email").val() || $("#ch_pre_email").val() == $("#ch_trs_email").val() || $("#ch_pre_email").val() == $("#ch_sec_email").val()) {
-    //           errMessage = "The e-mail address provided for the Chapter President was also provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
-    //         }
-    //       }
-    //       if($("#ch_avp_email").val() != ""){
-    //         if($("#ch_avp_email").val() == $("#ch_mvp_email").val() || $("#ch_avp_email").val() == $("#ch_trs_email").val() || $("#ch_avp_email").val() == $("#ch_sec_email").val()) {
-    //           errMessage = "The e-mail address provided for the Chapter AVP was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
-    //         }
-    //       }
-    //       if($("#ch_mvp_email").val() != ""){
-    //         if($("#ch_mvp_email").val() == $("#ch_trs_email").val() || $("#ch_mvp_email").val() == $("#ch_sec_email").val()) {
-    //           errMessage = "The e-mail address provided for the Chapter MVP was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
-    //         }
-    //       }
-    //       if($("#ch_trs_email").val() != ""){
-    //         if($("#ch_trs_email").val() == $("#ch_sec_email").val()) {
-    //           errMessage = "The e-mail address provided for the Chapter Treasurer was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
-    //         }
-    //       }
-
-    //       if(errMessage.length > 0){
-    //         alert (errMessage);
-    //         return false;
-    //       }
-
-    // var phoneListArr = ["ch_pre_phone", "ch_avp_phone", "ch_mvp_phone", "ch_trs_phone", "ch_sec_phone"];
-
-    //     for (var i = 0; i < phoneListArr.length; i++) {
-    //         var inputField = document.getElementById(phoneListArr[i]);
-    //         var inputValue = inputField.value;
-    //         inputValue = inputValue.replace(/-/g, ''); // Remove hyphens
-    //         inputValue = inputValue.replace(/\D/g, '').substring(0, 10); // Remove non-digits and limit to 10 digits
-    //         inputField.value = inputValue; // Update the input field with the cleaned value
-    //     }
-
-    // var NewPassword=document.getElementById("ch_pre_pswd").value;
-    //     //They changed their password
-    //     if(document.getElementById("ch_pre_pswd").value != document.getElementById("ch_pre_pswd").getAttribute("value")){
-    //         if(document.getElementById("ch_pre_pswd").value != document.getElementById("ch_pre_pswd_cnf").value){  //Make sure the password and confirmation match
-    //             alert ("The provided passwords do not match, please re-enter your password.");
-    //             document.getElementById("ch_pre_pswd_cnf").focus();
-    //             return false;
-    //         }
-    //         // Make sure the password is the right length
-    //         else if(NewPassword.length < 7){
-    //             alert("Password must be at least 7 characters.");
-    //             document.getElementById("ch_pre_pswd").focus();
-    //             return false;
-    //         }
-    //         else{
-    //             document.getElementById("ch_pre_pswd_chg").value="1";
-    //         }
-    //     }
-
-    //Okay, all validation passed, save the records to the database
-    return true;
-}
 
 function showChangePasswordAlert() {
     Swal.fire({

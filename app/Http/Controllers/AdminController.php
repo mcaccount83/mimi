@@ -12,6 +12,8 @@ use App\Http\Requests\UpdateToolkitAdminRequest;
 use App\Mail\AdminNewMIMIBugWish;
 use App\Models\Admin;
 use App\Models\Bugs;
+use App\Models\BoardDetails;
+use App\Models\OutgoingBoardMember;
 use App\Models\Chapter;
 use App\Models\Resources;
 use App\Models\FinancialReport;
@@ -407,117 +409,7 @@ class AdminController extends Controller
         $file->save();
     }
 
-    public function showEOY(Request $request): View
-    {
-        $user = User::find($request->user()->id);
-        // Check if user is not found
-        if (! $user) {
-            return redirect()->route('home');
-        }
-
-        $corDetails = $user->CoordinatorDetails;
-        // Check if CordDetails is not found for the user
-        if (! $corDetails) {
-            return redirect()->route('home');
-        }
-
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
-        $coordinatorDetails = DB::table('coordinator_details as cd')
-            ->select('cd.*')
-            ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $corId)
-            ->get();
-
-        $admin = DB::table('admin')
-            ->select('admin.*',
-                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'), )
-            ->leftJoin('coordinator_details as cd', 'admin.updated_id', '=', 'cd.coordinator_id')
-            ->orderByDesc('admin.id') // Assuming 'id' represents the order of insertion
-            ->first();
-
-        // Fetch distinct fiscal years
-        $fiscalYears = DB::table('admin')->distinct()->pluck('fiscal_year');
-
-        // Determine if the user is allowed to edit notes and status
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-        $canEditFiles = ($positionId == 13 || $secPositionId == 13);  //IT Coordinator
-
-        $data = ['admin' => $admin, 'canEditFiles' => $canEditFiles, 'coordinatorDetails' => $coordinatorDetails, 'fiscalYears' => $fiscalYears];
-
-        return view('admin.eoy')->with($data);
-    }
-
-    public function updateEOY(UpdateEOYRequest $request, $id): RedirectResponse
-    {
-        try {
-            $admin = Admin::findOrFail($id);
-            $validatedData = $request->validated();
-
-            $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-            $corId = $corDetails['coordinator_id'];
-
-            // Convert checkbox values to 1 or null
-            $admin->eoy_testers = isset($validatedData['eoy_testers']) ? 1 : null;
-            $admin->eoy_coordinators = isset($validatedData['eoy_coordinators']) ? 1 : null;
-            $admin->eoy_boardreport = isset($validatedData['eoy_boardreport']) ? 1 : null;
-            $admin->eoy_financialreport = isset($validatedData['eoy_financialreport']) ? 1 : null;
-            $admin->truncate_incoming = isset($validatedData['truncate_incoming']) ? 1 : null;
-            $admin->truncate_outgoing = isset($validatedData['truncate_outgoing']) ? 1 : null;
-            $admin->copy_FRtoCH = isset($validatedData['copy_FRtoCH']) ? 1 : null;
-            $admin->copy_CHtoFR = isset($validatedData['copy_CHtoFR']) ? 1 : null;
-            $admin->copy_financial = isset($validatedData['copy_financial']) ? 1 : null;
-            $admin->copy_chapters = isset($validatedData['copy_chapters']) ? 1 : null;
-            $admin->copy_users = isset($validatedData['copy_users']) ? 1 : null;
-            $admin->copy_boarddetails = isset($validatedData['copy_boarddetails']) ? 1 : null;
-            $admin->copy_coordinatordetails = isset($validatedData['copy_coordinatordetails']) ? 1 : null;
-            $admin->updated_id = $corId;
-            $admin->updated_at = Carbon::today();
-
-            $admin->save();
-
-            // Return a success response to the client
-            return redirect()->to('/admin/eoy')->with('success', 'Admin data updated successfully.');
-
-        } catch (Exception $e) {
-            // Log the error message
-            Log::error('Failed to update admin data: '.$e->getMessage());
-
-            return redirect()->to('/admin/eoy')->with('success', 'Admin data failed to update.');
-        }
-    }
-
-    public function resetYear(Request $request): RedirectResponse
-    {
-        try {
-            // Create a new Admin instance
-            $admin = new Admin;
-
-            // Calculate the fiscal year (current year - next year)
-            $currentYear = Carbon::now()->year;
-            $nextYear = $currentYear + 1;
-            $fiscalYear = $currentYear.'-'.$nextYear;
-
-            // Set the fiscal year field
-            $admin->fiscal_year = $fiscalYear;
-
-            // Save the new entry
-            $admin->save();
-
-            // Return a success response to the client
-            return redirect()->to('/admin')->with('success', 'Fiscal year reset successfully.');
-        } catch (Exception $e) {
-            // Log the error message
-            Log::error('An error occurred when restting the fiscal year: '.$e->getMessage());
-
-            return redirect()->to('/admin')->with('fail', 'An error occurred when restting the fiscal year.');
-        }
-    }
-
-
-
-    public function showReRegDate(Request $request)
+     public function showReRegDate(Request $request)
     {
         $user = User::find($request->user()->id);
         // Check if user is not found
@@ -655,23 +547,21 @@ class AdminController extends Controller
 
         $userData = DB::table('board_details')
             ->where('is_active', '=', '1')
-            ->groupBy('board_id')
-            ->having(DB::raw('count(board_id)'), '>', 1)
-            ->pluck('board_id');
+            ->groupBy('email')
+            ->having(DB::raw('count(email)'), '>', 1)
+            ->pluck('email');
 
         $userList = DB::table('board_details')
             ->where('is_active', '=', '1')
-            ->whereIn('board_id', $userData)
-            ->orderBy('board_id')
+            ->whereIn('email', $userData)
             ->get();
-
         $data = ['userList' => $userList];
 
         return view('admin.duplicateboardid')->with($data);
     }
 
     /**
-     * VList of users on multiple boards
+     * List of users on multiple boards
      */
     public function showMultiple(): View
     {
@@ -723,30 +613,9 @@ class AdminController extends Controller
             ->leftJoin('chapters', 'ob.chapter_id', '=', 'chapters.id')
             ->leftJoin('state', 'chapters.state', '=', 'state.id')
             ->where('users.user_type', 'outgoing')
+            ->where('users.is_active', '1')
             ->orderBy('chapters.name')
             ->get();
-
-        // if (isset($_GET['check'])) {
-        //     if ($_GET['check'] == 'yes') {
-        //         $checkBoxStatus = 'checked';
-        //         $OutgoingBoard = DB::table('outgoing_board_member')
-        //             ->leftJoin('users', 'outgoing_board_member.email', '=', 'users.email')
-        //             ->leftJoin('chapters', 'outgoing_board_member.chapter_id', '=', 'chapters.id')
-        //             ->whereNull('users.user_type')  // Only select entries where user_type is null
-        //             ->select(
-        //                 'outgoing_board_member.chapter_id as chapter_id',
-        //                 'outgoing_board_member.first_name as first_name',
-        //                 'outgoing_board_member.last_name as last_name',
-        //                 'outgoing_board_member.email as email',
-        //                 'users.user_type as user_type',  // This column will be null for unmatched entries
-        //                 'chapters.name as chapter_name'
-        //             )
-        //             ->orderBy('outgoing_board_member.chapter_id')
-        //             ->get();
-        //     }
-        // } else {
-        //     $checkBoxStatus = '';
-        // }
 
         $countList = count($OutgoingBoard);
 
@@ -756,25 +625,139 @@ class AdminController extends Controller
         return view('admin.outgoingboard')->with($data);
     }
 
-    /**
+     /**
      * Clear Outgoing Board Member Table (Truncate)
      */
-    public function updateOutgoingBoard()
-    {
-        // Fetch all outgoing board members
-        $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
+    // public function updateOutgoingBoard()
+    // {
+    //     // Fetch all outgoing board members
+    //     $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
 
-        // Update the `is_active` column in the `users` table
-        foreach ($outgoingBoardMembers as $outgoingMember) {
-            // Ensure to update the `is_active` column for users in the `users` table
-            DB::table('users')->where('id', $outgoingMember->user_id)->update([
-                'is_active' => 0,
-                'last_updated_date' => now(),
-            ]);
+    //     // Update the `is_active` column in the `users` table
+    //     foreach ($outgoingBoardMembers as $outgoingMember) {
+    //         // Ensure to update the `is_active` column for users in the `users` table
+    //         DB::table('users')->where('id', $outgoingMember->user_id)->update([
+    //             'is_active' => 0,
+    //             'last_updated_date' => now(),
+    //         ]);
+    //     }
+
+    //     // Truncate the `outgoing_board_member` table
+    //     DB::table('outgoing_board_member')->truncate();
+    // }
+
+    /**
+     * Show EOY Procedures
+     */
+    public function showEOY(Request $request): View
+    {
+        $user = User::find($request->user()->id);
+        // Check if user is not found
+        if (! $user) {
+            return redirect()->route('home');
         }
 
-        // Truncate the `outgoing_board_member` table
-        DB::table('outgoing_board_member')->truncate();
+        $corDetails = $user->CoordinatorDetails;
+        // Check if CordDetails is not found for the user
+        if (! $corDetails) {
+            return redirect()->route('home');
+        }
+
+        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corId = $corDetails['coordinator_id'];
+        $coordinatorDetails = DB::table('coordinator_details as cd')
+            ->select('cd.*')
+            ->where('cd.is_active', '=', '1')
+            ->where('cd.coordinator_id', '=', $corId)
+            ->get();
+
+        $admin = DB::table('admin')
+            ->select('admin.*',
+                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'), )
+            ->leftJoin('coordinator_details as cd', 'admin.updated_id', '=', 'cd.coordinator_id')
+            ->orderByDesc('admin.id') // Assuming 'id' represents the order of insertion
+            ->first();
+
+        // Fetch distinct fiscal years
+        $fiscalYears = DB::table('admin')->distinct()->pluck('fiscal_year');
+
+        // Determine if the user is allowed to edit notes and status
+        $positionId = $corDetails['position_id'];
+        $secPositionId = $corDetails['sec_position_id'];
+        $canEditFiles = ($positionId == 13 || $secPositionId == 13);  //IT Coordinator
+
+        $data = ['admin' => $admin, 'canEditFiles' => $canEditFiles, 'coordinatorDetails' => $coordinatorDetails, 'fiscalYears' => $fiscalYears];
+
+        return view('admin.eoy')->with($data);
+    }
+
+    // public function updateEOY(UpdateEOYRequest $request, $id): RedirectResponse
+    // {
+    //     try {
+    //         $admin = Admin::findOrFail($id);
+    //         $validatedData = $request->validated();
+
+    //         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+    //         $corId = $corDetails['coordinator_id'];
+
+    //         // Convert checkbox values to 1 or null
+    //         $admin->eoy_testers = isset($validatedData['eoy_testers']) ? 1 : null;
+    //         $admin->eoy_coordinators = isset($validatedData['eoy_coordinators']) ? 1 : null;
+    //         $admin->eoy_boardreport = isset($validatedData['eoy_boardreport']) ? 1 : null;
+    //         $admin->eoy_financialreport = isset($validatedData['eoy_financialreport']) ? 1 : null;
+    //         $admin->truncate_incoming = isset($validatedData['truncate_incoming']) ? 1 : null;
+    //         $admin->truncate_outgoing = isset($validatedData['truncate_outgoing']) ? 1 : null;
+    //         $admin->copy_FRtoCH = isset($validatedData['copy_FRtoCH']) ? 1 : null;
+    //         $admin->copy_CHtoFR = isset($validatedData['copy_CHtoFR']) ? 1 : null;
+    //         $admin->copy_financial = isset($validatedData['copy_financial']) ? 1 : null;
+    //         $admin->copy_chapters = isset($validatedData['copy_chapters']) ? 1 : null;
+    //         $admin->copy_users = isset($validatedData['copy_users']) ? 1 : null;
+    //         $admin->copy_boarddetails = isset($validatedData['copy_boarddetails']) ? 1 : null;
+    //         $admin->copy_coordinatordetails = isset($validatedData['copy_coordinatordetails']) ? 1 : null;
+    //         $admin->updated_id = $corId;
+    //         $admin->updated_at = Carbon::today();
+
+    //         $admin->save();
+
+    //         // Return a success response to the client
+    //         return redirect()->to('/admin/eoy')->with('success', 'Admin data updated successfully.');
+
+    //     } catch (Exception $e) {
+    //         // Log the error message
+    //         Log::error('Failed to update admin data: '.$e->getMessage());
+
+    //         return redirect()->to('/admin/eoy')->with('success', 'Admin data failed to update.');
+    //     }
+    // }
+
+    /**
+     * Reset EOY Procedurles for New year
+     */
+    public function resetYear()
+    {
+        try {
+            // Create a new Admin instance
+            $admin = new Admin;
+
+            // Calculate the fiscal year (current year - next year)
+            $currentYear = Carbon::now()->year;
+            $nextYear = $currentYear + 1;
+            $fiscalYear = $currentYear.'-'.$nextYear;
+
+            // Set the fiscal year field
+            $admin->fiscal_year = $fiscalYear;
+
+            // Save the new entry
+            $admin->save();
+
+            // Return a success response to the client
+            return redirect()->to('/admin')->with('success', 'Fiscal year reset successfully.');
+        } catch (Exception $e) {
+            // Log the error message
+            Log::error('An error occurred when restting the fiscal year: '.$e->getMessage());
+
+            return redirect()->to('/admin')->with('fail', 'An error occurred when restting the fiscal year.');
+        }
     }
 
     /**
@@ -842,6 +825,22 @@ class AdminController extends Controller
                 'boundary_issue_notes' => null,
             ]);
 
+            // Get board details where board members are active
+            $boardDetails = BoardDetails::where('is_active', 1)->get();
+
+            // Loop through each board detail and insert into outgoing_board_details
+            foreach ($boardDetails as $boardDetail) {
+                OutgoingBoardMember::create([
+                    'board_id' => $boardDetail->id,
+                    'user_id' => $boardDetail->user_id,
+                    'chapter_id' => $boardDetail->chapter_id,
+                    'board_position_id' => $boardDetail->board_position_id,
+                    'first_name' => $boardDetail->first_name,
+                    'last_name' => $boardDetail->last_name,
+                    'email' => $boardDetail->email,
+                      ]);
+            }
+
             // Update admin table: Set specified columns to 1
             DB::table('admin')->update([
                 'truncate_incoming' => '1',
@@ -849,6 +848,7 @@ class AdminController extends Controller
                 'copy_FRtoCH' => '1',
                 'copy_financial' => '1',
                 'copy_CHtoFR' => '1',
+                'copy_BDtoOUT' => '1',
                 'updated_id' => $corId,
                 'updated_at' => Carbon::today()
             ]);
@@ -877,51 +877,7 @@ class AdminController extends Controller
             $currentYear = Carbon::now()->year;
             $currentMonth = Carbon::now()->month;
 
-            // Update invalid date values before copying the data
-            DB::table('chapters')
-                ->where(function ($query) {
-                    $query->where('disbend_date', '0000-00-00')
-                        ->orWhere('dues_last_paid', '0000-00-00');
-                })
-                ->update([
-                    'disbend_date' => null,
-                    'dues_last_paid' => null
-                ]);
-
-            // Update invalid date values before copying the data
-            DB::table('chapters')
-            ->where(function ($query) {
-                $query->where('created_at', '0000-00-00');
-            })
-            ->update([
-                'created_at' => null
-            ]);
-
-            // Update invalid date values before copying the data
-            DB::table('coordinator_details')
-            ->where(function ($query) {
-                $query->where('last_promoted', '0000-00-00')
-                    ->orWhere('leave_date', '0000-00-00')
-                    ->orWhere('last_updated_date', '0000-00-00');
-            })
-            ->update([
-                'last_promoted' => null,
-                'leave_date' => null,
-                'last_updated_date' => null
-            ]);
-
-            // Update invalid date values before copying the data
-            DB::table('users')
-            ->where(function ($query) {
-                $query->where('created_at', '0000-00-00')
-                ;
-            })
-            ->update([
-                'created_at' => null,
-
-            ]);
-
-        // Copy and rename the `chapters` table
+            // Copy and rename the `chapters` table
             DB::statement("CREATE TABLE chapters_{$currentMonth}_{$currentYear} LIKE chapters");
             DB::statement("INSERT INTO chapters_{$currentMonth}_{$currentYear} SELECT * FROM chapters");
 
@@ -937,12 +893,27 @@ class AdminController extends Controller
             DB::statement("CREATE TABLE users_{$currentMonth}_{$currentYear} LIKE users");
             DB::statement("INSERT INTO users_{$currentMonth}_{$currentYear} SELECT * FROM users");
 
+            // Delete all board members from 'outgoing_board_details' table
+            DB::table('board_details')
+                ->truncate();
+
+            // Update all outgoing board members in 'users' table to be inactive
+            DB::table('users')
+                ->where(function ($query) {
+                    $query->where('user_type', 'outgoing');
+                })
+                ->update([
+                    'is_active' => '0',
+                ]);
+
             // Update admin table: Set specified columns to 1
             DB::table('admin')->update([
                 'copy_chapters' => '1',
                 'copy_users' => '1',
                 'copy_boarddetails' => '1',
                 'copy_coordinatordetails' => '1',
+                'delete_outgoing' => '1',
+                'outgoing_inactive' => '1',
                 'updated_id' => $corId,
                 'updated_at' => Carbon::today()
             ]);

@@ -10,6 +10,16 @@ class OutgoingBoardMember extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'board_id',
+        'first_name',
+        'last_name' ,
+        'email',
+        'board_position_id' ,
+        'chapter_id'
+    ];
+
     protected $table = 'outgoing_board_member';
 
     public function user(): BelongsTo

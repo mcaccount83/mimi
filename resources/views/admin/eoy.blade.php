@@ -95,6 +95,12 @@
                                 <label class="custom-control-label" for="copy_CHtoFR">Insert chapter list and starting balance from chapters table to financial_repot table</label>
                                 </div>
                             </div>
+                            <div class="col-sm-12">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" name="copy_BDtoOUT" id="copy_BDtoOUT" class="custom-control-input" {{$admin->copy_BDtoOUT ? 'checked' : '' }} disabled />
+                                    <label class="custom-control-label" for="copy_BDtoOUT">Copy Active Board Details to Outgoing Board Member Table</label>
+                                    </div>
+                                </div>
                     </div>
                 </div>
             </div>
@@ -193,7 +199,19 @@
                                 <label class="custom-control-label" for="copy_coordinatordetails">Copy/Rename Coordinator Details Table</label>
                                 </div>
                             </div>
-                    </div>
+                        <div class="col-sm-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="delete_outgoing" id="delete_outgoing" class="custom-control-input" {{$admin->delete_outgoing ? 'checked' : '' }} disabled />
+                                <label class="custom-control-label" for="delete_outgoing">Delete Outgoing Board Member Table</label>
+                                </div>
+                            </div>
+                        <div class="col-sm-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" name="outgoing_inactive" id="outgoing_inactive" class="custom-control-input" {{$admin->outgoing_inactive ? 'checked' : '' }} disabled />
+                                <label class="custom-control-label" for="outgoing_inactive">Make Outgoing Users Inactive</label>
+                                </div>
+                            </div>
+                </div>
                 </div>
             </div>
 
