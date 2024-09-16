@@ -19,7 +19,7 @@
   </section>
 
     <!-- Main content -->
-    <form id="role" method="POST" action='{{ route("coordinator.updaterole",$coordinatorDetails[0]->coordinator_id) }}'>
+    <form id="role" method="POST" action='{{ route("coordinator.updaterole",$coordinatorDetails[0]->id) }}'>
     @csrf
     <section class="content">
         <div class="container-fluid">
@@ -76,7 +76,7 @@
 						<input type="hidden" name="OldPrimaryPosition" value="{{$coordinatorDetails[0]->position_id}}">
 						<input type="hidden" name="submit_type" id="submit_type" value="" />
 						<input type="hidden" name="userid" id="userid" value="{{$coordinatorDetails[0]->user_id}}" />
-                        <input type="hidden" name="coordinator_id" id="coordinator_id" value="{{$coordinatorDetails[0]->coordinator_id}}" />
+                        <input type="hidden" name="coordinator_id" id="coordinator_id" value="{{$coordinatorDetails[0]->id}}" />
 						<input type="hidden" name="coordName" value="{{$coordinatorDetails[0]->first_name }} {{$coordinatorDetails[0]->last_name}}" />
 						<input type="hidden" name="coordConf" value="{{$coordinatorDetails[0]->conference_id}}" />
 						<input type="hidden" name="email" value="{{$coordinatorDetails[0]->email}}" />
@@ -174,16 +174,16 @@
                         </thead>
                         <tbody>
                             @php
-                                $coordinator_list = DB::table('coordinator_details as cd')
-                                    ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+                                $coordinator_list = DB::table('coordinators as cd')
+                                    ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
                                     ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
                                     ->join('region', 'cd.region_id', '=', 'region.id')
-                                    ->where('cd.report_id', $coordinatorDetails[0]->coordinator_id)
+                                    ->where('cd.report_id', $coordinatorDetails[0]->id)
                                     ->where('cd.is_active', 1)
                                     ->get();
 
-                                $coordinator_options = DB::table('coordinator_details as cd')
-                                    ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+                                $coordinator_options = DB::table('coordinators as cd')
+                                    ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
                                     ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
                                     ->where(function ($query) use ($coordinatorDetails) {
                                         $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
@@ -211,7 +211,7 @@
                                         <select name="Report{{ $index }}" id="Report{{ $index }}" required>
                                             @foreach ($coordinator_options as $option)
                                                 <option value="{{ $option->cid }}"
-                                                    {{ $option->cid == $coordinatorDetails[0]->coordinator_id ? 'selected' : '' }}>
+                                                    {{ $option->cid == $coordinatorDetails[0]->id ? 'selected' : '' }}>
                                                     {{ $option->cor_f_name }} {{ $option->cor_l_name }} ({{ $option->pos }})
                                                 </option>
                                             @endforeach
@@ -274,15 +274,15 @@
 									$chapter_list = DB::table('chapters')
                                         ->select('chapters.id', 'state.state_short_name as state', 'chapters.name as name')
                                         ->join('state', 'chapters.state', '=', 'state.id')
-                                        ->where('primary_coordinator_id', $coordinatorDetails[0]->coordinator_id)
+                                        ->where('primary_coordinator_id', $coordinatorDetails[0]->id)
                                         ->where('chapters.is_active', 1)
                                         ->orderBy('state.state_short_name')
                                         ->orderBy('chapters.name')
                                         ->get();
 
                                     if($coordinatorDetails[0]->region_id ==0){
-                                        $coordinator_options = DB::table('coordinator_details as cd')
-                                        ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+                                        $coordinator_options = DB::table('coordinators as cd')
+                                        ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
                                         ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
                                         ->where(function ($query) use ($coordinatorDetails) {
                                             $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
@@ -300,8 +300,8 @@
                                         ->get();
 
                                         }else{
-                                    $coordinator_options = DB::table('coordinator_details as cd')
-                                        ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+                                    $coordinator_options = DB::table('coordinators as cd')
+                                        ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
                                         ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
                                         ->where(function ($query) use ($coordinatorDetails) {
                                             $query->where('cd.region_id', $coordinatorDetails[0]->region_id)
@@ -336,7 +336,7 @@
 										echo "<td><select name=\"PCID" . $row . "\" id=\"PCID" . $row . "\" required>";
 										for ($row1 = 0; $row1 < $row_countCO; $row1++){
 												$sel ='';
-												if($coordinator_options[$row1]->cid == $coordinatorDetails[0]->coordinator_id)
+												if($coordinator_options[$row1]->cid == $coordinatorDetails[0]->id)
 													$sel ='selected';
 												echo "<option value='".$coordinator_options[$row1]->cid."' $sel >".$coordinator_options[$row1]->cor_f_name.' '.$coordinator_options[$row1]->cor_l_name.' ('.$coordinator_options[$row1]->pos.')'."</option>";
 											}
@@ -401,7 +401,7 @@
 			<button type="submit" class="btn bg-gradient-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
 			<button type="button" class="btn bg-gradient-primary" onclick="ConfirmCancel(this);"><i class="fas fa-undo" ></i>&nbsp; Reset</button>
 
-			<a href='{{ route("coordinator.edit",$coordinatorDetails[0]->coordinator_id) }}' class="btn bg-gradient-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
+			<a href='{{ route("coordinator.edit",$coordinatorDetails[0]->id) }}' class="btn bg-gradient-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
 
 		</div>
 		<div class="card-body text-center">
@@ -591,11 +591,11 @@ var iCoordinatorCount = <?php echo $row_count; ?>;
 		var confid = $('#cord_conf').val();
 
 		<?php
-		$conid = $coordinatorDetails[0]->coordinator_id;
+		$conid = $coordinatorDetails[0]->id;
 		$confid = $coordinatorDetails[0]->conference_id;
 
-			$coordinator_options = DB::table('coordinator_details as cd')
-                    ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as posi')
+			$coordinator_options = DB::table('coordinators as cd')
+                    ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as posi')
                     ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
                     ->where(function ($query) use ($confid) {
                     $query->where('cd.conference_id', $confid)
@@ -653,11 +653,11 @@ var iCoordinatorCount = <?php echo $row_count; ?>;
 		cell2.innerHTML = strChapter.substring(strChapter.indexOf(" - ")+3);
 
 		<?php
-			$conid = $coordinatorDetails[0]->coordinator_id;
+			$conid = $coordinatorDetails[0]->id;
 			$confid = $coordinatorDetails[0]->conference_id;
 
-                $coordinator_options = DB::table('coordinator_details as cd')
-                    ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as posi')
+                $coordinator_options = DB::table('coordinators as cd')
+                    ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as posi')
                     ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
                     ->where(function ($query) use ($confid) {
                         $query->where('cd.conference_id', $confid)
@@ -878,7 +878,7 @@ var iCoordinatorCount = <?php echo $row_count; ?>;
         for (i = 0; i < tablerowcountCord; i++) {
             selectid = "Report" + i;
             value = getSelectedValue(selectid);
-            if (value == <?php echo $coordinatorDetails[0]->coordinator_id; ?>) {
+            if (value == <?php echo $coordinatorDetails[0]->id; ?>) {
                 Swal.fire({
                     title: 'Oops!',
                     text: 'All direct reports must be assigned to a new supervising coordinator before continuing.',
@@ -903,7 +903,7 @@ var iCoordinatorCount = <?php echo $row_count; ?>;
         for (i = 0; i < tablerowcountChap; i++) {
             selectid = "PCID" + i;
             value = getSelectedValue(selectid);
-            if (value == <?php echo $coordinatorDetails[0]->coordinator_id; ?>) {
+            if (value == <?php echo $coordinatorDetails[0]->id; ?>) {
                 Swal.fire({
                     title: 'Oops!',
                     text: 'All assigned chapters must be assigned to a new supervising coordinator before continuing.',
@@ -981,7 +981,7 @@ var iCoordinatorCount = <?php echo $row_count; ?>;
 	// 		selectid = "Report" + i;
 
 	// 		value = getSelectedValue(selectid);
-	// 		if(value == <?php echo $coordinatorDetails[0]->coordinator_id; ?>){
+	// 		if(value == <?php echo $coordinatorDetails[0]->id; ?>){
 	// 			if (LoA)
 	// 				alert ("All direct reports must be assigned to a new supervising coordinator before this coordinator can be put on a leave of absence.");
 	// 			else
@@ -998,7 +998,7 @@ var iCoordinatorCount = <?php echo $row_count; ?>;
 	// 		selectid = "PCID" + i;
 
 	// 		value = getSelectedValue(selectid);
-	// 		if(value == <?php echo $coordinatorDetails[0]->coordinator_id; ?>){
+	// 		if(value == <?php echo $coordinatorDetails[0]->id; ?>){
 	// 			if (LoA)
 	// 				alert ("All assigned chapters must be assigned to a new supervising coordinator before this coordinator can be put on a leave of absence.");
 	// 			else

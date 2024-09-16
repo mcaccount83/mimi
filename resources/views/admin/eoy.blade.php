@@ -195,8 +195,8 @@
                             </div>
                         <div class="col-sm-12">
                             <div class="custom-control custom-switch">
-                                <input type="checkbox" name="copy_coordinatordetails" id="copy_coordinatordetails" class="custom-control-input" {{$admin->copy_coordinatordetails ? 'checked' : '' }} disabled />
-                                <label class="custom-control-label" for="copy_coordinatordetails">Copy/Rename Coordinator Details Table</label>
+                                <input type="checkbox" name="copy_coordinators" id="copy_coordinators" class="custom-control-input" {{$admin->copy_coordinators ? 'checked' : '' }} disabled />
+                                <label class="custom-control-label" for="copy_coordinators">Copy/Rename Coordinator Details Table</label>
                                 </div>
                             </div>
                         <div class="col-sm-12">

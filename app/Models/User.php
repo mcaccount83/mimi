@@ -24,9 +24,9 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function CoordinatorDetails(): HasOne
+    public function Coordinators(): HasOne
     {
-        return $this->hasOne(\App\Models\CoordinatorDetails::class, 'user_id');
+        return $this->hasOne(\App\Models\Coordinators::class, 'user_id');
     }
 
     public function BoardDetails(): HasOne

@@ -87,7 +87,7 @@ class BoardController extends Controller
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name',
                 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city', 'bd.zip as zip',
                 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_Active', '=', '1')
@@ -479,7 +479,7 @@ class BoardController extends Controller
             $ConfId = $presInfoPre[0]->conference;
             $corId = $presInfoPre[0]->primary_coordinator_id;
             $chapterState = $presInfoPre[0]->state;
-            $cor_details = db::table('coordinator_details')
+            $cor_details = db::table('coordinators')
                 ->select('email')
                 ->where('conference_id', $ConfId)
                 ->where('position_id', 9)
@@ -487,7 +487,7 @@ class BoardController extends Controller
                 ->get();
             $row_count = count($cor_details);
             if ($row_count == 0) {
-                $cc_details = db::table('coordinator_details')
+                $cc_details = db::table('coordinators')
                     ->select('email')
                     ->where('conference_id', $ConfId)
                     ->where('position_id', 6)
@@ -516,7 +516,7 @@ class BoardController extends Controller
                 ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name',
                     'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city',
                     'bd.zip as zip', 'st.state_short_name as state')
-                ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                 ->where('chapters.is_Active', '=', '1')
@@ -771,7 +771,7 @@ class BoardController extends Controller
             // Fetch Chapter Info
             $chapterInfo = DB::table('chapters')
                 ->select('chapters.id as chapter_id', 'chapters.name', 'chapters.state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'st.state_short_name as state')
-                ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                 ->where('chapters.id', '=', $chapterId)
                 ->get();
@@ -1056,7 +1056,7 @@ class BoardController extends Controller
                     WHEN category = 7 THEN "END OF YEAR"
                     ELSE "Unknown"
                 END as priority_word'))
-            ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
+            ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
             ->orderBy('name')
             ->get();
 
@@ -1210,10 +1210,10 @@ class BoardController extends Controller
         $chPcid = $chapterDetails[0]->primary_coordinator_id;
         $chConf = $chapter_conf;
 
-        $coremail = DB::table('coordinator_details')
+        $coremail = DB::table('coordinators')
             ->select('email')
             ->where('is_active', '=', '1')
-            ->where('coordinator_id', $chPcid)
+            ->where('id', $chPcid)
             ->get();
         $coremail = $coremail[0]->email;
 
@@ -1621,9 +1621,9 @@ class BoardController extends Controller
         $chapter_country = $chapterDetails[0]->country;
 
         $reviewer_id = $chapterDetails[0]->reviewer_id;
-        $coorDetails = DB::table('coordinator_details as cd')
+        $coorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
-            ->where('cd.coordinator_id', '=', $reviewer_id)
+            ->where('cd.id', '=', $reviewer_id)
             ->get();
 
         // Check if $coorDetails is not empty
@@ -2565,10 +2565,10 @@ class BoardController extends Controller
         $i = 0;
         $coordinator_array = [];
         foreach ($filterReportingList as $key => $val) {
-            $corList = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cd.email as email', 'cp.short_title as pos')
+            $corList = DB::table('coordinators as cd')
+                ->select('cd.id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cd.email as email', 'cp.short_title as pos')
                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                ->where('cd.coordinator_id', '=', $val)
+                ->where('cd.id', '=', $val)
                 ->get();
             $coordinator_array[$i] = ['id' => $corList[0]->cid,
                 'first_name' => $corList[0]->fname,

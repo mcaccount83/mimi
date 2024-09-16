@@ -19,7 +19,7 @@
   </section>
 
     <!-- Main content -->
-    <form method="POST" action="{{ route('coordinator.updatedashboard', $coordinatorDetails[0]->coordinator_id) }}" id="update-dashboard">
+    <form method="POST" action="{{ route('coordinator.updatedashboard', $coordinatorDetails[0]->id) }}" id="update-dashboard">
         @csrf
 
     <section class="content">

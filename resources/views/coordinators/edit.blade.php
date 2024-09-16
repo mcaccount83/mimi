@@ -19,7 +19,7 @@
   </section>
 
     <!-- Main content -->
-    <form method="POST" action='{{ route("coordinator.update",$coordinatorDetails[0]->coordinator_id) }}'">
+    <form method="POST" action='{{ route("coordinator.update",$coordinatorDetails[0]->id) }}'>
     @csrf
     <section class="content">
         <div class="container-fluid">
@@ -344,7 +344,7 @@
 			<a href="{{ route('coordinator.list') }}" class="btn bg-gradient-primary"><i class="fas fa-reply" ></i>&nbsp;&nbsp;&nbsp;Back</a>
         </div>
         <div class="card-body text-center">
-            <a href="{{ route('coordinator.role',$coordinatorDetails[0]->coordinator_id) }}" class="btn bg-gradient-primary"><i class="fas fa-share" ></i>&nbsp;&nbsp;&nbsp;Update Coordinator Role</a>
+            <a href="{{ route('coordinator.role',$coordinatorDetails[0]->id) }}" class="btn bg-gradient-primary"><i class="fas fa-share" ></i>&nbsp;&nbsp;&nbsp;Update Coordinator Role</a>
                 </div>
 		</div>
     </div>

@@ -46,18 +46,18 @@ class AdminController extends Controller
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if CordDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
-        $coordinatorDetails = DB::table('coordinator_details as cd')
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
+        $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $corId)
+            ->where('cd.id', '=', $corId)
             ->get();
 
         $admin = DB::table('bugs')
@@ -69,7 +69,7 @@ class AdminController extends Controller
                     WHEN priority = 3 THEN "HIGH"
                     ELSE "Unknown"
                 END as priority_word'))
-            ->leftJoin('coordinator_details as cd', 'bugs.reported_id', '=', 'cd.coordinator_id')
+            ->leftJoin('coordinators as cd', 'bugs.reported_id', '=', 'cd.id')
             ->orderByDesc('priority')
             ->get();
 
@@ -88,19 +88,19 @@ class AdminController extends Controller
      */
     public function addBugs(AddBugsAdminRequest $request)
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         // Fetch coordinator details
-        $coordinatorDetails = DB::table('coordinator_details as cd')
+        $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $corId)
+            ->where('cd.id', '=', $corId)
             ->first(); // Fetch only one record
 
         // Fetch admin details
         $admin = DB::table('bugs')
             ->select('bugs.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS reported_by'))
-            ->leftJoin('coordinator_details as cd', 'bugs.reported_id', '=', 'cd.coordinator_id')
+            ->leftJoin('coordinators as cd', 'bugs.reported_id', '=', 'cd.id')
             ->orderByDesc('priority')
             ->first(); // Fetch only one record
 
@@ -157,18 +157,18 @@ class AdminController extends Controller
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if CordDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
-        $coordinatorDetails = DB::table('coordinator_details as cd')
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
+        $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $corId)
+            ->where('cd.id', '=', $corId)
             ->get();
 
         $resources = DB::table('resources')
@@ -184,7 +184,7 @@ class AdminController extends Controller
                     WHEN category = 7 THEN "END OF YEAR"
                     ELSE "Unknown"
                 END as priority_word'))
-            ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
+            ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
             ->orderBy('name')
             ->get();
 
@@ -209,13 +209,13 @@ class AdminController extends Controller
      */
     public function addResources(AddResourcesAdminRequest $request): JsonResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         // Fetch coordinator details
-        $coordinatorDetails = DB::table('coordinator_details as cd')
+        $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $corId)
+            ->where('cd.id', '=', $corId)
             ->first(); // Fetch only one record
 
         $validatedData = $request->validated();
@@ -246,19 +246,19 @@ class AdminController extends Controller
      */
     public function updateResources(UpdateResourcesAdminRequest $request, $id)
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         // Fetch coordinator details
-        $coordinatorDetails = DB::table('coordinator_details as cd')
+        $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $corId)
+            ->where('cd.id', '=', $corId)
             ->first(); // Fetch only one record
 
         // Fetch admin details
         $file = DB::table('resources')
             ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
-            ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
+            ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
             ->first(); // Fetch only one record
         $validatedData = $request->validated();
 
@@ -293,18 +293,18 @@ class AdminController extends Controller
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if CordDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
-        $coordinatorDetails = DB::table('coordinator_details as cd')
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
+        $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $corId)
+            ->where('cd.id', '=', $corId)
             ->get();
 
         $resources = DB::table('resources')
@@ -317,7 +317,7 @@ class AdminController extends Controller
                     WHEN category = 11 THEN "RESOURCE FOR CHAPTERS"
                     ELSE "Unknown"
                 END as priority_word'))
-            ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
+            ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
             ->orderBy('name')
             ->get();
 
@@ -336,13 +336,13 @@ class AdminController extends Controller
      */
     public function addToolkit(AddToolkitAdminRequest $request): JsonResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         // Fetch coordinator details
-        $coordinatorDetails = DB::table('coordinator_details as cd')
+        $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $corId)
+            ->where('cd.id', '=', $corId)
             ->first(); // Fetch only one record
 
         $validatedData = $request->validated();
@@ -373,19 +373,19 @@ class AdminController extends Controller
      */
     public function updateToolkit(UpdateToolkitAdminRequest $request, $id)
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         // Fetch coordinator details
-        $coordinatorDetails = DB::table('coordinator_details as cd')
+        $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $corId)
+            ->where('cd.id', '=', $corId)
             ->first(); // Fetch only one record
 
         // Fetch admin details
         $file = DB::table('resources')
             ->select('resources.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
-            ->leftJoin('coordinator_details as cd', 'resources.updated_id', '=', 'cd.coordinator_id')
+            ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
             ->first(); // Fetch only one record
         $validatedData = $request->validated();
 
@@ -417,7 +417,7 @@ class AdminController extends Controller
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if CordDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
@@ -427,7 +427,7 @@ class AdminController extends Controller
             ->select('ch.id', 'ch.notes', 'ch.name', 'ch.state', 'ch.reg_notes', 'ch.next_renewal_year', 'ch.dues_last_paid', 'ch.start_month_id',
                 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
             ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->leftJoin('db_month as db', 'ch.start_month_id', '=', 'db.id')
@@ -444,14 +444,14 @@ class AdminController extends Controller
 
     public function editReRegDate(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
@@ -478,7 +478,7 @@ class AdminController extends Controller
 
     public function updateReRegDate(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->Coordinators;
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         $chapter = Chapter::find($id);
@@ -657,24 +657,24 @@ class AdminController extends Controller
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if CordDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
-        $coordinatorDetails = DB::table('coordinator_details as cd')
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
+        $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $corId)
+            ->where('cd.id', '=', $corId)
             ->get();
 
         $admin = DB::table('admin')
             ->select('admin.*',
                 DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'), )
-            ->leftJoin('coordinator_details as cd', 'admin.updated_id', '=', 'cd.coordinator_id')
+            ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
             ->orderByDesc('admin.id') // Assuming 'id' represents the order of insertion
             ->first();
 
@@ -697,8 +697,8 @@ class AdminController extends Controller
     //         $admin = Admin::findOrFail($id);
     //         $validatedData = $request->validated();
 
-    //         $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-    //         $corId = $corDetails['coordinator_id'];
+    //         $corDetails = User::find($request->user()->id)->Coordinators;
+    //         $corId = $corDetails['id'];
 
     //         // Convert checkbox values to 1 or null
     //         $admin->eoy_testers = isset($validatedData['eoy_testers']) ? 1 : null;
@@ -713,7 +713,7 @@ class AdminController extends Controller
     //         $admin->copy_chapters = isset($validatedData['copy_chapters']) ? 1 : null;
     //         $admin->copy_users = isset($validatedData['copy_users']) ? 1 : null;
     //         $admin->copy_boarddetails = isset($validatedData['copy_boarddetails']) ? 1 : null;
-    //         $admin->copy_coordinatordetails = isset($validatedData['copy_coordinatordetails']) ? 1 : null;
+    //         $admin->copy_Coordinators = isset($validatedData['copy_Coordinators']) ? 1 : null;
     //         $admin->updated_id = $corId;
     //         $admin->updated_at = Carbon::today();
 
@@ -766,8 +766,8 @@ class AdminController extends Controller
     public function updateEOYDatabase(Request $request)
     {
         try{
-            $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-            $corId = $corDetails['coordinator_id'];
+            $corDetails = User::find($request->user()->id)->Coordinators;
+            $corId = $corDetails['id'];
 
             // Fetch all outgoing board members
             $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
@@ -870,8 +870,8 @@ class AdminController extends Controller
     public function updateDataDatabase(Request $request)
     {
         try{
-            $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-            $corId = $corDetails['coordinator_id'];
+            $corDetails = User::find($request->user()->id)->Coordinators;
+            $corId = $corDetails['id'];
 
             // Get the current month and year for table renaming
             $currentYear = Carbon::now()->year;
@@ -885,9 +885,9 @@ class AdminController extends Controller
             DB::statement("CREATE TABLE board_details_{$currentMonth}_{$currentYear} LIKE board_details");
             DB::statement("INSERT INTO board_details_{$currentMonth}_{$currentYear} SELECT * FROM board_details");
 
-            // Copy and rename the `coordinator_details` table
-            DB::statement("CREATE TABLE coordinator_details_{$currentMonth}_{$currentYear} LIKE coordinator_details");
-            DB::statement("INSERT INTO coordinator_details_{$currentMonth}_{$currentYear} SELECT * FROM coordinator_details");
+            // Copy and rename the `coordinators` table
+            DB::statement("CREATE TABLE coordinators_{$currentMonth}_{$currentYear} LIKE coordinators");
+            DB::statement("INSERT INTO coordinators_{$currentMonth}_{$currentYear} SELECT * FROM coordinators");
 
             // Copy and rename the `users` table
             DB::statement("CREATE TABLE users_{$currentMonth}_{$currentYear} LIKE users");
@@ -911,7 +911,7 @@ class AdminController extends Controller
                 'copy_chapters' => '1',
                 'copy_users' => '1',
                 'copy_boarddetails' => '1',
-                'copy_coordinatordetails' => '1',
+                'copy_Coordinators' => '1',
                 'delete_outgoing' => '1',
                 'outgoing_inactive' => '1',
                 'updated_id' => $corId,
@@ -936,8 +936,8 @@ class AdminController extends Controller
     public function updateEOYCoordinator(Request $request)
     {
     try{
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
 
         // Update admin table: Set specified columns to 1
         DB::table('admin')->update([
@@ -964,8 +964,8 @@ class AdminController extends Controller
     public function updateEOYChapter(Request $request)
     {
     try{
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
 
         // Update admin table: Set specified columns to 1
         DB::table('admin')->update([

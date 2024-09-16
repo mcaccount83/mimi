@@ -148,7 +148,7 @@ class PDFController extends Controller
             ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name',
                 'st.state_short_name as state', 'bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'chapters.conference as conf',
                 'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -201,7 +201,7 @@ class PDFController extends Controller
             ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name',
                 'st.state_short_name as state', 'bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'bd.street_address as pres_addr', 'bd.city as pres_city', 'bd.state as pres_state',
                 'bd.zip as pres_zip', 'chapters.conference as conf', 'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -271,10 +271,10 @@ class PDFController extends Controller
         $i = 0;
         $coordinator_array = [];
         foreach ($filterReportingList as $key => $val) {
-            $corList = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.long_title as pos')
+            $corList = DB::table('coordinators as cd')
+                ->select('cd.id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.long_title as pos')
                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                ->where('cd.coordinator_id', '=', $val)
+                ->where('cd.id', '=', $val)
                 ->get();
             $coordinator_array[$i] = ['id' => $corList[0]->cid,
                 'first_name' => $corList[0]->fname,

@@ -52,7 +52,7 @@ class UpdateEOYRequest extends FormRequest
             'copy_boarddetails' => [
                 'nullable',
             ],
-            'copy_coordinatordetails' => [
+            'copy_coordinators' => [
                 'nullable',
             ],
             // Add validation rules for other fields here

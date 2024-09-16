@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\CoordinatorDetails;
+use App\Models\Coordinators;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,8 +32,8 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -62,7 +62,7 @@ class ExportController extends Controller
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city', 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
@@ -263,8 +263,8 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -274,7 +274,7 @@ class ExportController extends Controller
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city', 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
@@ -466,8 +466,8 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -482,7 +482,7 @@ class ExportController extends Controller
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
                 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
                 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
@@ -570,8 +570,8 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
@@ -583,7 +583,7 @@ class ExportController extends Controller
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
                 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
                 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
@@ -661,15 +661,15 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $activeChapterList = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
                 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
                 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
@@ -835,15 +835,15 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $activeChapterList = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
                 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
                 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
@@ -1010,8 +1010,8 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1047,7 +1047,7 @@ class ExportController extends Controller
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
                 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
                 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
@@ -1131,15 +1131,15 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $activeChapterList = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
                 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
                 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
@@ -1213,8 +1213,8 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1246,7 +1246,7 @@ class ExportController extends Controller
                 'chapters.new_board_active as new_board_active', 'chapters.financial_report_received as financial_report_received',
                 'chapters.financial_report_complete as financial_report_complete', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
                 'st.state_short_name as state', 'fr.reviewer_id as reviewer_id')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftjoin('financial_report as fr', 'chapters.id', '=', 'fr.chapter_id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
@@ -1337,15 +1337,15 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $activeChapterList = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'chapters.new_board_submitted as new_board_submitted',
                 'chapters.new_board_active as new_board_active', 'chapters.financial_report_received as financial_report_received',
                 'chapters.financial_report_complete as financial_report_complete', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
@@ -1423,8 +1423,8 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1451,10 +1451,10 @@ class ExportController extends Controller
         $inQryStr = rtrim($inQryStr, ',');
         $inQryArr = explode(',', $inQryStr);
 
-        $baseQuery = DB::table('coordinator_details as cd')
+        $baseQuery = DB::table('coordinators as cd')
             ->select('cd.*', 'cp.long_title as position', 'cd.first_name as reporting_fname', 'cd.last_name as reporting_lname', 'rg.short_name as reg_name')
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
-            ->join('coordinator_details as cds', 'cds.coordinator_id', '=', 'cd.report_id')
+            ->join('coordinators as cds', 'cds.id', '=', 'cd.report_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.first_name');
@@ -1479,7 +1479,7 @@ class ExportController extends Controller
                 fputcsv($file, $columns);
 
                 foreach ($exportCoordinatorList as $list) {
-                    fputcsv($file, [$list->coordinator_id,
+                    fputcsv($file, [$list->id,
                         $list->conference_id,
                         $list->reg_name,
                         $list->first_name,
@@ -1527,8 +1527,8 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
@@ -1545,10 +1545,10 @@ class ExportController extends Controller
         $inQryArr = explode(',', $inQryStr);
 
         //Get Coordinator List mapped with login coordinator
-        $exportCoordinatorList = DB::table('coordinator_details as cd')
+        $exportCoordinatorList = DB::table('coordinators as cd')
             ->select('cd.*', 'cp.long_title as position', 'cd.first_name as reporting_fname', 'cd.last_name as reporting_lname', 'rg.short_name as reg_name')
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
-            ->join('coordinator_details as cds', 'cds.coordinator_id', '=', 'cd.report_id')
+            ->join('coordinators as cds', 'cds.id', '=', 'cd.report_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.conference_id')
@@ -1610,8 +1610,8 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
@@ -1629,10 +1629,10 @@ class ExportController extends Controller
 
         //Get Coordinator List mapped with login coordinator
 
-        $exportCoordinatorList = DB::table('coordinator_details as cd')
+        $exportCoordinatorList = DB::table('coordinators as cd')
             ->select('cd.*', 'cp.long_title as position', 'cd.first_name as reporting_fname', 'cd.last_name as reporting_lname', 'rg.short_name as reg_name')
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
-            ->join('coordinator_details as cds', 'cds.coordinator_id', '=', 'cd.report_id')
+            ->join('coordinators as cds', 'cds.id', '=', 'cd.report_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->where('cd.is_active', '=', '0')
             ->orderByDesc('cd.zapped_date')
@@ -1688,15 +1688,15 @@ class ExportController extends Controller
     {
 
         $fileName = 'coordinator_retire_'.date('Y-m-d').'.csv';
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
-        $tasks = CoordinatorDetails::select('*')
+        $tasks = Coordinators::select('*')
             ->where([
                 ['is_active', '=', 0],
                 ['conference_id', '=', $corConfId],
             ])
-            ->orderByDesc('coordinator_details.zapped_date')
+            ->orderByDesc('coordinators.zapped_date')
             ->get();
 
         $headers = [
@@ -1773,7 +1773,7 @@ class ExportController extends Controller
     public function get_reporting_coordinator($id)
     {
         if ($id != '0' && $id != '') {
-            $data = DB::table('coordinator_details')->select('*')->where('coordinator_id', $id)->first();
+            $data = DB::table('coordinators')->select('*')->where('id', $id)->first();
 
             return $data->first_name.' '.$data->last_name;
         } else {
@@ -1787,15 +1787,15 @@ class ExportController extends Controller
     public function indexAppreciation(Request $request): StreamedResponse
     {
         $fileName = 'coordinator_appreciation_'.date('Y-m-d').'.csv';
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
-        $exportCoordinatorList = CoordinatorDetails::select('*')
+        $exportCoordinatorList = Coordinators::select('*')
             ->where([
                 ['is_active', '=', 1],
                 ['conference_id', '=', $corConfId],
             ])
-            ->orderBy('coordinator_details.coordinator_start_date')
+            ->orderBy('coordinators.coordinator_start_date')
             ->get();
 
         $headers = [
@@ -1869,8 +1869,8 @@ class ExportController extends Controller
 
         $chapter_array = null;
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1900,7 +1900,7 @@ class ExportController extends Controller
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as region')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
@@ -1938,10 +1938,10 @@ class ExportController extends Controller
                 unset($filterReportingList['layer0']);
                 $filterReportingList = array_reverse($filterReportingList);
                 foreach ($filterReportingList as $key => $val) {
-                    $coordinatorDetails = DB::table('coordinator_details as cd')
+                    $coordinatorDetails = DB::table('coordinators as cd')
                         ->select('cd.first_name as first_name', 'cd.last_name as last_name', 'cp.short_title as position')
                         ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                        ->where('cd.coordinator_id', $val)
+                        ->where('cd.id', $val)
                         ->get();
 
                     $coordinator_array[] = $coordinatorDetails->toArray();
@@ -2042,8 +2042,8 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $positionid = $corDetails['position_id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -2076,7 +2076,7 @@ class ExportController extends Controller
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
                 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
                 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('incoming_board_member as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
@@ -2300,9 +2300,9 @@ class ExportController extends Controller
         fputcsv($output, ['State', 'Chapter', 'Award', 'Approved']);
         $award_array = null;
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->Coordinators;
 
-        $coordinator_id = $corDetails['coordinator_id'];
+        $coordinator_id = $corDetails['id'];
         $conference_id = $corDetails['conference_id'];
         $layer_id = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$layer_id;
@@ -2317,10 +2317,10 @@ class ExportController extends Controller
         }
         $inQryStr = rtrim($inQryStr, ',');
         $chapterList = DB::table('chapters as ch')
-            ->select('ch.id as id', 'ch.name as name', 'ch.primary_coordinator_id as pc_id', 'fr.reviewer_id as reviewer_id', 'cd.coordinator_id as cord_id', 'cd.first_name as reviewer_first_name', 'cd.last_name as reviewer_last_name', 'st.state_short_name as state', 'fr.award_1_nomination_type as award_1_type', 'fr.award_2_nomination_type as award_2_type', 'fr.award_3_nomination_type as award_3_type', 'fr.award_4_nomination_type as award_4_type', 'fr.award_5_nomination_type as award_5_type', 'fr.check_award_1_approved as award_1_approved', 'fr.check_award_2_approved as award_2_approved', 'fr.check_award_3_approved as award_3_approved', 'fr.check_award_4_approved as award_4_approved', 'fr.check_award_5_approved as award_5_approved')
+            ->select('ch.id as id', 'ch.name as name', 'ch.primary_coordinator_id as pc_id', 'fr.reviewer_id as reviewer_id', 'cd.id as cord_id', 'cd.first_name as reviewer_first_name', 'cd.last_name as reviewer_last_name', 'st.state_short_name as state', 'fr.award_1_nomination_type as award_1_type', 'fr.award_2_nomination_type as award_2_type', 'fr.award_3_nomination_type as award_3_type', 'fr.award_4_nomination_type as award_4_type', 'fr.award_5_nomination_type as award_5_type', 'fr.check_award_1_approved as award_1_approved', 'fr.check_award_2_approved as award_2_approved', 'fr.check_award_3_approved as award_3_approved', 'fr.check_award_4_approved as award_4_approved', 'fr.check_award_5_approved as award_5_approved')
             ->join('state as st', 'ch.state', '=', 'st.id')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'fr.reviewer_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'fr.reviewer_id')
             ->where('ch.is_active', 1)
             ->whereIn('ch.primary_coordinator_id', explode(',', $inQryStr))
             ->orderBy('ch.state')
@@ -2390,14 +2390,14 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
 
         $activeChapterList = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'bd.email as pre_email', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')

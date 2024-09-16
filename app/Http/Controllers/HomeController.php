@@ -41,8 +41,8 @@ class HomeController extends Controller
          */
         if ($user_type == 'coordinator') {
             //Get Coordinators Details
-            $corDetails = $request->user()->CoordinatorDetails;
-            $corId = $corDetails->coordinator_id;
+            $corDetails = $request->user()->Coordinators;
+            $corId = $corDetails->id;
             $corConfId = $corDetails->conference_id;
 
             $corlayerId = $corDetails['layer_id'];

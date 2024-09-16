@@ -18,7 +18,7 @@
   </section>
 
     <!-- Main content -->
-    <form method="POST" action='{{ route("coordinator.updatebirthday",$coordinatorDetails[0]->coordinator_id) }}'>
+    <form method="POST" action='{{ route("coordinator.updatebirthday",$coordinatorDetails[0]->id) }}'>
     @csrf
     <div class="container-fluid">
         <div class="row">

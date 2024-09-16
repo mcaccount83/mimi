@@ -30,7 +30,7 @@ class ReportController extends Controller
     public function showChapterStatus(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['coordinator_id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -64,7 +64,7 @@ class ReportController extends Controller
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
@@ -102,8 +102,8 @@ class ReportController extends Controller
     public function showDownloads(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
@@ -133,7 +133,7 @@ class ReportController extends Controller
         //Get Chapter List mapped with login coordinator
         $chapterList = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
@@ -155,8 +155,8 @@ class ReportController extends Controller
     public function showEINstatus(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -185,7 +185,7 @@ class ReportController extends Controller
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
@@ -215,8 +215,8 @@ class ReportController extends Controller
     public function showIntEINstatus(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
@@ -239,7 +239,7 @@ class ReportController extends Controller
         //Get Chapter List mapped with login coordinator
         $chapterList = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
@@ -259,8 +259,8 @@ class ReportController extends Controller
      */
     public function showChapterStatusView(Request $request, $id): View
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
         $request->session()->put('positionid', $positionId);
@@ -288,8 +288,8 @@ class ReportController extends Controller
             ->orderBy('long_name')
             ->get();
 
-        $primaryCoordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        $primaryCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.conference_id', '=', '5')
             ->where('cd.position_id', '<=', '6')
@@ -309,8 +309,8 @@ class ReportController extends Controller
     public function showChapterNew(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
@@ -361,7 +361,7 @@ class ReportController extends Controller
             ->select('chapters.*', 'chapters.id as ch_id', 'chapters.name as ch_name', 'db.month_short_name as month_name', 'db.month_long_name as start_month', 'start_year as year', 'cd.first_name as cor_f_name',
                 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
                 'st.state_short_name as ch_state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
@@ -380,7 +380,7 @@ class ReportController extends Controller
                     ->select('chapters.*', 'chapters.id as ch_id', 'chapters.name as ch_name', 'db.month_short_name as month_name', 'db.month_long_name as start_month', 'start_year as year', 'cd.first_name as cor_f_name',
                         'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
                         'st.state_short_name as ch_state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname')
-                    ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+                    ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                     ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                     ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
@@ -407,8 +407,8 @@ class ReportController extends Controller
     public function showChapterLarge(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -442,7 +442,7 @@ class ReportController extends Controller
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
@@ -481,8 +481,8 @@ class ReportController extends Controller
     public function showChapterProbation(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -515,7 +515,7 @@ class ReportController extends Controller
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
@@ -554,8 +554,8 @@ class ReportController extends Controller
     public function showSocialMedia(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -585,7 +585,7 @@ class ReportController extends Controller
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
@@ -615,8 +615,8 @@ class ReportController extends Controller
     public function showM2Mdonation(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -648,7 +648,7 @@ class ReportController extends Controller
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
@@ -686,8 +686,8 @@ class ReportController extends Controller
     public function showIntM2Mdonation(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
@@ -713,7 +713,7 @@ class ReportController extends Controller
         $chapterList = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
@@ -728,7 +728,7 @@ class ReportController extends Controller
                 $chapterList = DB::table('chapters')
                     ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                         'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
-                    ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+                    ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                     ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                     ->where('chapters.is_active', '=', '1')
@@ -755,8 +755,8 @@ class ReportController extends Controller
     {
         try {
             //Get Coordinators Details
-            $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-            $corId = $corDetails['coordinator_id'];
+            $corDetails = User::find($request->user()->id)->Coordinators;
+            $corId = $corDetails['id'];
             $corConfId = $corDetails['conference_id'];
             $corRegId = $corDetails['region_id'];
             $corlayerId = $corDetails['layer_id'];
@@ -788,7 +788,7 @@ class ReportController extends Controller
             $baseQuery = DB::table('chapters')
                 ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                     'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
-                ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                 ->where('chapters.is_active', '=', '1')
@@ -830,8 +830,8 @@ class ReportController extends Controller
     public function showChapterVolunteer(Request $request): View
     {
         //Get Coordinator Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -857,8 +857,8 @@ class ReportController extends Controller
         $inQryStr = rtrim($inQryStr, ',');
         $inQryArr = explode(',', $inQryStr);
 
-        $baseQuery = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
+        $baseQuery = DB::table('coordinators as cd')
+            ->select('cd.id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
                 'cd.report_id as report_id', 'cp.long_title as position',
                 DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
                 'rg.short_name as reg', 'cd.conference_id as cor_conf')
@@ -873,7 +873,7 @@ class ReportController extends Controller
         } elseif ($positionId == 5) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
-            $baseQuery->whereIn('cd.coordinator_id', $inQryArr);
+            $baseQuery->whereIn('cd.id', $inQryArr);
         }
 
         $coordinatorList = $baseQuery->get();
@@ -920,7 +920,7 @@ class ReportController extends Controller
 
         $indirectChapterReport = DB::table('chapters')
             ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.inquiries_contact as inq_con', 'chapters.territory as terry', 'chapters.status as status', 'chapters.inquiries_note as inq_note')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
@@ -943,8 +943,8 @@ class ReportController extends Controller
     public function showCoordinatorToDo(Request $request): View
     {
         //Get Coordinator Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -972,8 +972,8 @@ class ReportController extends Controller
         $inQryStr = rtrim($inQryStr, ',');
         $inQryArr = explode(',', $inQryStr);
 
-        $baseQuery = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.report_id as report_id', 'cd.sec_position_id as sec_position_id', 'cp.long_title as position', 'rg.short_name as reg', 'cd.conference_id as cor_conf',
+        $baseQuery = DB::table('coordinators as cd')
+            ->select('cd.id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.report_id as report_id', 'cd.sec_position_id as sec_position_id', 'cp.long_title as position', 'rg.short_name as reg', 'cd.conference_id as cor_conf',
                 'cd.todo_month as todo_month', 'cd.todo_check_chapters as todo_check_chapters', 'cd.todo_election_faq as todo_election_faq', 'cd.dashboard_updated as dashboard_updated')
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
@@ -986,7 +986,7 @@ class ReportController extends Controller
         } elseif ($positionId == 5) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
-            $baseQuery->whereIn('cd.coordinator_id', $inQryArr);
+            $baseQuery->whereIn('cd.id', $inQryArr);
         }
 
         $coordinatorList = $baseQuery->get();
@@ -1003,8 +1003,8 @@ class ReportController extends Controller
     public function showIntCoordinatorToDo(Request $request): View
     {
         //Get Coordinator Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
@@ -1033,14 +1033,14 @@ class ReportController extends Controller
         $inQryArr = explode(',', $inQryStr);
 
         //Get Coordinator List mapped with login coordinator
-        $coordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.report_id as report_id', 'cd.sec_position_id as sec_position_id', 'cp.long_title as position', 'rg.short_name as reg', 'cd.conference_id as cor_conf',
+        $coordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.report_id as report_id', 'cd.sec_position_id as sec_position_id', 'cp.long_title as position', 'rg.short_name as reg', 'cd.conference_id as cor_conf',
                 'cd.todo_month as todo_month', 'cd.todo_send_rereg as todo_send_rereg', 'cd.todo_send_late as todo_send_late', 'cd.todo_record_rereg as todo_record_rereg', 'cd.todo_record_m2m as todo_record_m2m', 'cd.todo_export_reports as todo_export_reports', 'cd.dashboard_updated as dashboard_updated')
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->where('cd.is_active', '=', '1')
             ->whereIn('cd.position_id', ['6', '25'])
-            ->whereIn('cd.coordinator_id', $inQryArr)
+            ->whereIn('cd.id', $inQryArr)
             ->orderBy('rg.short_name')
             ->orderByDesc('cp.id')
             ->get();
@@ -1056,8 +1056,8 @@ class ReportController extends Controller
      */
     public function showBoardlist(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
@@ -1193,8 +1193,8 @@ class ReportController extends Controller
     public function showAppreciation(Request $request): View
     {
         //Get Coordinator Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1222,8 +1222,8 @@ class ReportController extends Controller
         $inQryStr = rtrim($inQryStr, ',');
         $inQryArr = explode(',', $inQryStr);
 
-        $baseQuery = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
+        $baseQuery = DB::table('coordinators as cd')
+            ->select('cd.id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
                 'cd.report_id as report_id', 'cd.sec_position_id as sec_position_id', 'cp.long_title as position', 'rg.short_name as reg', 'cd.conference_id as cor_conf',
                 'cd.recognition_year0 as yr_0', 'cd.recognition_year1 as yr_1', 'cd.recognition_year2 as yr_2', 'cd.recognition_year3 as yr_3', 'cd.recognition_year4 as yr_4',
                 'cd.recognition_year5 as yr_5', 'cd.recognition_year6 as yr_6', 'cd.recognition_year7 as yr_7', 'cd.recognition_year8 as yr_8', 'cd.recognition_year9 as yr_9',
@@ -1238,7 +1238,7 @@ class ReportController extends Controller
         } elseif ($positionId == 5) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
-            $baseQuery->whereIn('cd.coordinator_id', $inQryArr);
+            $baseQuery->whereIn('cd.id', $inQryArr);
         }
 
         $coordinatorList = $baseQuery->get();
@@ -1254,8 +1254,8 @@ class ReportController extends Controller
     public function showBirthday(Request $request): View
     {
         //Get Coordinator Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1284,8 +1284,8 @@ class ReportController extends Controller
         $inQryStr = rtrim($inQryStr, ',');
         $inQryArr = explode(',', $inQryStr);
 
-        $baseQuery = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.report_id as report_id', 'cd.sec_position_id as sec_position_id', 'cd.card_sent as card_sent', 'cp.long_title as position', 'rg.short_name as reg', 'cd.conference_id as cor_conf', 'cd.birthday_month_id as b_month', 'cd.birthday_day as b_day', 'db.month_long_name as month')
+        $baseQuery = DB::table('coordinators as cd')
+            ->select('cd.id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.report_id as report_id', 'cd.sec_position_id as sec_position_id', 'cd.card_sent as card_sent', 'cp.long_title as position', 'rg.short_name as reg', 'cd.conference_id as cor_conf', 'cd.birthday_month_id as b_month', 'cd.birthday_day as b_day', 'db.month_long_name as month')
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->join('db_month as db', 'cd.birthday_month_id', '=', 'db.id')
@@ -1298,7 +1298,7 @@ class ReportController extends Controller
         } elseif ($positionId == 5) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
-            $baseQuery->whereIn('cd.coordinator_id', $inQryArr);
+            $baseQuery->whereIn('cd.id', $inQryArr);
         }
 
         $coordinatorList = $baseQuery->get();
@@ -1314,41 +1314,41 @@ class ReportController extends Controller
     public function showReportingTree(Request $request): View
     {
         $coordinator_array = [];
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->Coordinators;
         $corConfId = $corDetails['conference_id'];
         $positionId = $corDetails['position_id'];
         $request->session()->put('positionid', $positionId);
         $cord_pos_id = $request->session()->get('positionid');
 
         if ($positionId != 7) {
-            $CoordinatorDetails = DB::table('coordinator_details')
-                ->select('coordinator_details.coordinator_id AS id', 'coordinator_details.first_name', 'coordinator_details.last_name', 'pos1.short_title AS position_title',
-                    'pos2.short_title AS sec_position_title', 'coordinator_details.layer_id', 'coordinator_details.report_id', 'coordinator_details.report_id AS tree_id',
+            $coordinatorDetails = DB::table('coordinators')
+                ->select('coordinators.id AS id', 'coordinators.first_name', 'coordinators.last_name', 'pos1.short_title AS position_title',
+                    'pos2.short_title AS sec_position_title', 'coordinators.layer_id', 'coordinators.report_id', 'coordinators.report_id AS tree_id',
                     'region.short_name AS region')
-                ->join('coordinator_position as pos1', 'pos1.id', '=', 'coordinator_details.position_id')
-                ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'coordinator_details.sec_position_id')
-                ->join('region', 'coordinator_details.region_id', '=', 'region.id')
-                ->where('coordinator_details.on_leave', 0)
-                ->where('coordinator_details.conference_id', $corConfId)
-                ->where('coordinator_details.is_active', 1)
-                ->orderBy('coordinator_details.region_id')
-                ->orderByDesc('coordinator_details.position_id')
+                ->join('coordinator_position as pos1', 'pos1.id', '=', 'coordinators.position_id')
+                ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'coordinators.sec_position_id')
+                ->join('region', 'coordinators.region_id', '=', 'region.id')
+                ->where('coordinators.on_leave', 0)
+                ->where('coordinators.conference_id', $corConfId)
+                ->where('coordinators.is_active', 1)
+                ->orderBy('coordinators.region_id')
+                ->orderByDesc('coordinators.position_id')
                 ->get();
         } else {
-            $CoordinatorDetails = DB::table('coordinator_details')
-                ->select('coordinator_details.coordinator_id AS id', 'coordinator_details.first_name', 'coordinator_details.last_name', 'pos1.short_title AS position_title',
-                    'pos2.short_title AS sec_position_title', 'coordinator_details.layer_id', 'coordinator_details.report_id', 'coordinator_details.report_id AS tree_id',
+            $coordinatorDetails = DB::table('coordinators')
+                ->select('coordinators.coordinator_id AS id', 'coordinators.first_name', 'coordinators.last_name', 'pos1.short_title AS position_title',
+                    'pos2.short_title AS sec_position_title', 'coordinators.layer_id', 'coordinators.report_id', 'coordinators.report_id AS tree_id',
                     'region.short_name AS region')
-                ->join('coordinator_position as pos1', 'pos1.id', '=', 'coordinator_details.position_id')
-                ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'coordinator_details.sec_position_id')
-                ->join('region', 'coordinator_details.region_id', '=', 'region.id')
-                ->where('coordinator_details.on_leave', 0)
-                ->where('coordinator_details.is_active', 1)
-                ->orderBy('coordinator_details.region_id')
-                ->orderByDesc('coordinator_details.position_id')
+                ->join('coordinator_position as pos1', 'pos1.id', '=', 'coordinators.position_id')
+                ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'coordinators.sec_position_id')
+                ->join('region', 'coordinators.region_id', '=', 'region.id')
+                ->where('coordinators.on_leave', 0)
+                ->where('coordinators.is_active', 1)
+                ->orderBy('coordinators.region_id')
+                ->orderByDesc('coordinators.position_id')
                 ->get();
         }
-        foreach ($CoordinatorDetails as $key => $value) {
+        foreach ($coordinatorDetails as $key => $value) {
             $coordinator_array[$key] = (array) $value;
         }
 
@@ -1380,9 +1380,9 @@ class ReportController extends Controller
         foreach ($filterReportingList as $key => $val) {
             //if($corId != $val && $val >1){
             if ($val > 1) {
-                $corList = DB::table('coordinator_details as cd')
+                $corList = DB::table('coordinators as cd')
                     ->select('cd.email as cord_email')
-                    ->where('cd.coordinator_id', '=', $val)
+                    ->where('cd.id', '=', $val)
                     ->where('cd.is_active', '=', 1)
                     ->get();
                 if (count($corList) > 0) {
@@ -1406,8 +1406,8 @@ class ReportController extends Controller
         $user = $request->user();
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1441,7 +1441,7 @@ class ReportController extends Controller
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'rg.short_name as region', 'st.state_short_name as state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -1487,8 +1487,8 @@ class ReportController extends Controller
     public function showReportToReview(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1523,12 +1523,12 @@ class ReportController extends Controller
 
         $baseQuery = DB::table('chapters as ch')
             ->select('ch.id as chap_id', 'ch.primary_coordinator_id as primary_coordinator_id', 'ch.name as name', 'ch.financial_report_received as financial_report_received',
-                'ch.financial_report_complete as report_complete', 'ch.report_extension as report_extension', 'ch.extension_notes as extension_notes', 'cd.coordinator_id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state',
+                'ch.financial_report_complete as report_complete', 'ch.report_extension as report_extension', 'ch.extension_notes as extension_notes', 'cd.id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state',
                 'fr.submitted as report_received', 'fr.review_complete as review_complete', 'fr.post_balance as post_balance', 'fr.financial_pdf_path as financial_pdf_path', 'cd_reviewer.first_name as pcfname', 'cd_reviewer.last_name as pclname')
             ->join('state as st', 'ch.state', '=', 'st.id')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
-            ->leftJoin('coordinator_details as cd_reviewer', 'cd_reviewer.coordinator_id', '=', 'fr.reviewer_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
+            ->leftJoin('coordinators as cd_reviewer', 'cd_reviewer.coordinator_id', '=', 'fr.reviewer_id')
             ->where(function ($query) {
                 $query->where('created_at', '<=', date('Y-06-30'))
                       ->orWhereNull('created_at');
@@ -1580,8 +1580,8 @@ class ReportController extends Controller
         $user = $request->user();
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1614,7 +1614,7 @@ class ReportController extends Controller
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'rg.short_name as region', 'st.state_short_name as state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -1683,8 +1683,8 @@ class ReportController extends Controller
      */
     public function showReminderBoardInfo(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
 
@@ -1788,8 +1788,8 @@ class ReportController extends Controller
      */
     public function showReminderFinancialReport(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
 
@@ -1899,8 +1899,8 @@ class ReportController extends Controller
      */
     public function showReminderEOYReportsLate(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
 
@@ -2233,8 +2233,8 @@ class ReportController extends Controller
     public function showReportToIssues(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -2267,7 +2267,7 @@ class ReportController extends Controller
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
@@ -2307,8 +2307,8 @@ class ReportController extends Controller
     public function showChapterAwards(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -2336,7 +2336,7 @@ class ReportController extends Controller
 
         $baseQuery = DB::table('chapters as ch')
             ->select('ch.id as id', 'ch.name as name', 'ch.primary_coordinator_id as pc_id', 'fr.reviewer_id as reviewer_id',
-                'cd.coordinator_id as cord_id', 'cd.first_name as reviewer_first_name', 'cd.last_name as reviewer_last_name', 'st.state_short_name as state',
+                'cd.id as cord_id', 'cd.first_name as reviewer_first_name', 'cd.last_name as reviewer_last_name', 'st.state_short_name as state',
                 'fr.award_1_nomination_type', 'fr.award_2_nomination_type', 'fr.award_3_nomination_type',
                 'fr.award_4_nomination_type', 'fr.award_5_nomination_type', 'fr.check_award_1_approved as award_1_approved',
                 'fr.check_award_2_approved as award_2_approved', 'fr.check_award_3_approved as award_3_approved',
@@ -2345,8 +2345,8 @@ class ReportController extends Controller
             ->leftJoin('financial_report as fr', function ($join) {
                 $join->on('fr.chapter_id', '=', 'ch.id');
             })
-            ->leftJoin('coordinator_details as cd', function ($join) {
-                $join->on('cd.coordinator_id', '=', 'fr.reviewer_id');
+            ->leftJoin('coordinators as cd', function ($join) {
+                $join->on('cd.id', '=', 'fr.reviewer_id');
             })
             ->where('ch.is_active', 1)
             ->where(function ($query) {
@@ -2395,8 +2395,8 @@ class ReportController extends Controller
         $user = $request->user();
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -2435,7 +2435,7 @@ class ReportController extends Controller
                 'fr.check_award_1_approved as award_1_approved',
                 'fr.check_award_2_approved as award_2_approved', 'fr.check_award_3_approved as award_3_approved',
                 'fr.check_award_4_approved as award_4_approved', 'fr.check_award_5_approved as award_5_approved')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')

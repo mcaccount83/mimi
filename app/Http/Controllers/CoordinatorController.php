@@ -70,8 +70,8 @@ class CoordinatorController extends Controller
     public function index(Request $request): View
     {
         //Get Coordinator Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
@@ -99,43 +99,43 @@ class CoordinatorController extends Controller
 
         //Get Coordinator List mapped with login coordinator
         if ($positionId == 7) {
-            $coordinatorList = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cor_id', 'cd.home_chapter as cor_chapter', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
+            $coordinatorList = DB::table('coordinators as cd')
+                ->select('cd.id as cor_id', 'cd.home_chapter as cor_chapter', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
                     'cd.phone as cor_phone', 'cd.report_id as report_id', 'cp.long_title as position',
                     DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
                     'cd.conference_id as conf', 'cd.coordinator_start_date as coordinator_start_date', 'rg.short_name as reg', 'report.first_name as report_fname',
                     'report.last_name as report_lname')
                 ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
                 ->join('region as rg', 'rg.id', '=', 'cd.region_id')
-                ->leftJoin('coordinator_details as report', 'report.coordinator_id', '=', 'cd.report_id')
+                ->leftJoin('coordinators as report', 'report.id', '=', 'cd.report_id')
                 ->where('cd.is_active', '=', '1')
                 ->whereIn('cd.report_id', $inQryArr)
                 ->orderBy('cd.first_name')
                 ->get();
         } elseif ($corId == 38) {
-            $coordinatorList = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cor_id', 'cd.home_chapter as cor_chapter', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
+            $coordinatorList = DB::table('coordinators as cd')
+                ->select('cd.id as cor_id', 'cd.home_chapter as cor_chapter', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
                     'cd.phone as cor_phone', 'cd.report_id as report_id', 'cp.long_title as position',
                     DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
                     'cd.conference_id as conf', 'cd.coordinator_start_date as coordinator_start_date', 'rg.short_name as reg', 'report.first_name as report_fname',
                     'report.last_name as report_lname')
                 ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
                 ->join('region as rg', 'rg.id', '=', 'cd.region_id')
-                ->leftJoin('coordinator_details as report', 'report.coordinator_id', '=', 'cd.report_id')
+                ->leftJoin('coordinators as report', 'report.id', '=', 'cd.report_id')
                 ->where('cd.is_active', '=', '1')
                 ->where('cd.region_id', '=', '15')
                 ->orderBy('cd.first_name')
                 ->get();
         } else {
-            $coordinatorList = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cor_id', 'cd.home_chapter as cor_chapter', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
+            $coordinatorList = DB::table('coordinators as cd')
+                ->select('cd.id as cor_id', 'cd.home_chapter as cor_chapter', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
                     'cd.phone as cor_phone', 'cd.report_id as report_id', 'cp.long_title as position',
                     DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
                     'cd.conference_id as conf', 'cd.coordinator_start_date as coordinator_start_date', 'rg.short_name as reg', 'report.first_name as report_fname',
                     'report.last_name as report_lname')
                 ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
                 ->join('region as rg', 'rg.id', '=', 'cd.region_id')
-                ->leftJoin('coordinator_details as report', 'report.coordinator_id', '=', 'cd.report_id')
+                ->leftJoin('coordinators as report', 'report.id', '=', 'cd.report_id')
                 ->where('cd.is_active', '=', '1')
                 ->where('cd.conference_id', '=', $corConfId)
                 ->whereIn('cd.report_id', $inQryArr)
@@ -161,15 +161,15 @@ class CoordinatorController extends Controller
             if ($_GET['check'] == 'yes') {
                 $checkBoxStatus = 'checked';
                 //Get Coordinator List mapped with login coordinator
-                $coordinatorList = DB::table('coordinator_details as cd')
-                    ->select('cd.coordinator_id as cor_id', 'cd.home_chapter as cor_chapter', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
+                $coordinatorList = DB::table('coordinators as cd')
+                    ->select('cd.id as cor_id', 'cd.home_chapter as cor_chapter', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
                         'cd.phone as cor_phone', 'cd.report_id as report_id', 'cp.long_title as position',
                         DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
                         'cd.conference_id as conf', 'cd.coordinator_start_date as coordinator_start_date', 'rg.short_name as reg', 'report.first_name as report_fname',
                         'report.last_name as report_lname')
                     ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
                     ->join('region as rg', 'rg.id', '=', 'cd.region_id')
-                    ->leftJoin('coordinator_details as report', 'report.coordinator_id', '=', 'cd.report_id')
+                    ->leftJoin('coordinators as report', 'report.id', '=', 'cd.report_id')
                     ->where('cd.is_active', '=', '1')
                     ->where('cd.report_id', $corId)
                     ->orderBy('cd.first_name')
@@ -202,8 +202,8 @@ class CoordinatorController extends Controller
      */
     public function create(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
 
         $stateArr = DB::table('state')
@@ -232,8 +232,8 @@ class CoordinatorController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $corRegId = $corDetails['region_id'];
@@ -252,16 +252,8 @@ class CoordinatorController extends Controller
                     'is_active' => 1]
             );
 
-            $cordIdArr = DB::table('coordinator_details')
-                ->select('coordinator_details.coordinator_id')
-                ->orderByDesc('coordinator_details.coordinator_id')
-                ->limit(1)
-                ->get();
-            $cordId = $cordIdArr[0]->coordinator_id + 1;
-
-            $coord = DB::table('coordinator_details')->insert(
+            $cordId = DB::table('coordinators')->insertGetId(
                 ['user_id' => $userId,
-                    'coordinator_id' => $cordId,
                     'conference_id' => $corConfId,
                     'region_id' => $corRegId,
                     'layer_id' => $new_layer_id,
@@ -282,7 +274,6 @@ class CoordinatorController extends Controller
                     'birthday_day' => $input['cord_day'],
                     'home_chapter' => $input['cord_chapter'],
                     'coordinator_start_date' => date('Y-m-d H:i:s'),
-                    'password' => Hash::make('TempPass4You'),
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => date('Y-m-d H:i:s'),
                     'is_active' => 1]
@@ -401,13 +392,13 @@ class CoordinatorController extends Controller
      */
     public function edit(Request $request, $id): View
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
-        $coordinatorDetails = DB::table('coordinator_details as cd')
+        $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $id)
+            ->where('cd.id', '=', $id)
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
@@ -430,14 +421,14 @@ class CoordinatorController extends Controller
             ->orderBy('long_title')
             ->get();
 
-        $primaryCoordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        $primaryCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.first_name')
             ->get();
-        $directReportTo = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        $directReportTo = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.report_id', '=', $id)
             ->where('cd.is_active', '=', '1')
@@ -465,85 +456,85 @@ class CoordinatorController extends Controller
      */
     // public function update2(Request $request, $id): RedirectResponse
     // {
-    //     $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-    //     $corId = $corDetails['coordinator_id'];
+    //     $corDetails = User::find($request->user()->id)->Coordinators;
+    //     $corId = $corDetails['id'];
     //     $name = $corDetails['first_name'];
     //     $cordinatorId = $id;
     //     if ($request->input('cord_email') != $request->input('cord_email_chk')) {
-    //         DB::table('coordinator_details')
-    //             ->where('coordinator_id', $cordinatorId)
+    //         DB::table('coordinators')
+    //             ->where('id', $cordinatorId)
     //             ->update(['email' => $request->input('cord_email')]);
     //     }
 
     //     return redirect()->to('/coordinatorlist')->with('success', 'Coordinator email updated successfully.');
     // }
 
-    // /**
-    //  * Update Coordinator (store)
-    //  */
-    // public function update(Request $request, $id): RedirectResponse
-    // {
-    //     $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-    //     $corId = $corDetails['coordinator_id'];
-    //     $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
-    //     $cordinatorId = $id;
+    /**
+     * Update Coordinator (store)
+     */
+    public function update(Request $request, $id): RedirectResponse
+    {
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
+        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+        $cordinatorId = $id;
 
-    //     if ($request->input('cord_fname') != '' && $request->input('cord_lname') != '' && $request->input('cord_email') != '') {
-    //         $corDetails = DB::table('coordinator_details')
-    //             ->select('coordinator_id', 'user_id')
-    //             ->where('coordinator_id', '=', $cordinatorId)
-    //             ->get();
-    //         if (count($corDetails) != 0) {
-    //             $userId = $corDetails[0]->user_id;
-    //             $cordId = $corDetails[0]->coordinator_id;
+        if ($request->input('cord_fname') != '' && $request->input('cord_lname') != '' && $request->input('cord_email') != '') {
+            $corDetails = DB::table('coordinators')
+                ->select('id', 'user_id')
+                ->where('id', '=', $cordinatorId)
+                ->get();
+            if (count($corDetails) != 0) {
+                $userId = $corDetails[0]->user_id;
+                $cordId = $corDetails[0]->id;
 
-    //             $user = User::find($userId);
-    //             $user->first_name = $request->input('cord_fname');
-    //             $user->last_name = $request->input('cord_lname');
-    //             $user->email = $request->input('cord_email');
-    //             if ($request->input('cord_pswd_chg') == '1') {
-    //                 $user->password = Hash::make($request->input('cord_pswd_cnf'));
-    //             }
-    //             $user->updated_at = date('Y-m-d H:i:s');
-    //             $user->save();
+                $user = User::find($userId);
+                $user->first_name = $request->input('cord_fname');
+                $user->last_name = $request->input('cord_lname');
+                $user->email = $request->input('cord_email');
+                if ($request->input('cord_pswd_chg') == '1') {
+                    $user->password = Hash::make($request->input('cord_pswd_cnf'));
+                }
+                $user->updated_at = date('Y-m-d H:i:s');
+                $user->save();
 
-    //             DB::table('coordinator_details')
-    //                 ->where('coordinator_id', $cordinatorId)
-    //                 ->update(['first_name' => $request->input('cord_fname'),
-    //                     'last_name' => $request->input('cord_lname'),
-    //                     'email' => $request->input('cord_email'),
-    //                     'sec_email' => $request->input('cord_sec_email'),
-    //                     'address' => $request->input('cord_addr'),
-    //                     'city' => $request->input('cord_city'),
-    //                     'state' => $request->input('cord_state'),
-    //                     'zip' => $request->input('cord_zip'),
-    //                     'country' => 'USA',
-    //                     'phone' => $request->input('cord_phone'),
-    //                     'alt_phone' => $request->input('cord_altphone'),
-    //                     'birthday_month_id' => $request->input('cord_month'),
-    //                     'birthday_day' => $request->input('cord_day'),
-    //                     'last_updated_by' => $lastUpdatedBy,
-    //                     'last_updated_date' => date('Y-m-d H:i:s')]);
-    //         }
-    //     }
+                DB::table('coordinators')
+                    ->where('id', $cordinatorId)
+                    ->update(['first_name' => $request->input('cord_fname'),
+                        'last_name' => $request->input('cord_lname'),
+                        'email' => $request->input('cord_email'),
+                        'sec_email' => $request->input('cord_sec_email'),
+                        'address' => $request->input('cord_addr'),
+                        'city' => $request->input('cord_city'),
+                        'state' => $request->input('cord_state'),
+                        'zip' => $request->input('cord_zip'),
+                        'country' => 'USA',
+                        'phone' => $request->input('cord_phone'),
+                        'alt_phone' => $request->input('cord_altphone'),
+                        'birthday_month_id' => $request->input('cord_month'),
+                        'birthday_day' => $request->input('cord_day'),
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => date('Y-m-d H:i:s')]);
+            }
+        }
 
-    //     return redirect()->to('/coordinatorlist')->with('success', 'Coordinator updated successfully.');
-    // }
+        return redirect()->to('/coordinatorlist')->with('success', 'Coordinator updated successfully.');
+    }
 
     /**
      * Change Coordinator Role
      */
     public function showChangeRole(Request $request, $id): View
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corPosId = $corDetails['position_id'];
         $corRegId = $corDetails['region_id'];
-        $coordinatorDetails = DB::table('coordinator_details as cd')
+        $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $id)
+            ->where('cd.id', '=', $id)
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
@@ -574,8 +565,8 @@ class CoordinatorController extends Controller
 
         /***Query For Report To in Frst Section */
         if ($region_id > 0 && $position_id < 6) {
-            $primaryCoordinatorList = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+            $primaryCoordinatorList = DB::table('coordinators as cd')
+                ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
                 ->where(function ($query) use ($conference_id, $position_id, $region_id) {
                     $query->where('cd.conference_id', $conference_id)
@@ -600,8 +591,8 @@ class CoordinatorController extends Controller
                 ->get();
 
         } elseif ($conference_id > 0) {
-            $primaryCoordinatorList = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+            $primaryCoordinatorList = DB::table('coordinators as cd')
+                ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
                 ->where('cd.position_id', '>', 1)
                 ->where('cd.conference_id', $conference_id)
@@ -612,8 +603,8 @@ class CoordinatorController extends Controller
                 ->get();
 
         } else {
-            $primaryCoordinatorList = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+            $primaryCoordinatorList = DB::table('coordinators as cd')
+                ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
                 ->where('cd.is_active', 1)
                 ->orderBy('cd.position_id')
@@ -624,8 +615,8 @@ class CoordinatorController extends Controller
         }
 
         if ($region_id > 0) {
-            $directReportTo = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+            $directReportTo = DB::table('coordinators as cd')
+                ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
                 ->where('cd.region_id', $region_id)
                 ->where('cd.position_id', '<', $position_id)
@@ -635,8 +626,8 @@ class CoordinatorController extends Controller
                 ->get();
 
         } elseif ($conference_id > 0) {
-            $directReportTo = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+            $directReportTo = DB::table('coordinators as cd')
+                ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
                 ->where('cd.conference_id', $conference_id)
                 ->where('cd.is_active', 1)
@@ -646,8 +637,8 @@ class CoordinatorController extends Controller
                 ->get();
 
         } else {
-            $directReportTo = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+            $directReportTo = DB::table('coordinators as cd')
+                ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
                 ->where('cd.is_active', 1)
                 ->orderBy('cd.position_id')
@@ -676,8 +667,8 @@ class CoordinatorController extends Controller
                 ->get();
         }
 
-        $directReportToHTML = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        $directReportToHTML = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->join('region as rg', 'cd.region_id', '=', 'rg.id')
             ->where('cd.report_id', '=', $id)
@@ -702,13 +693,13 @@ class CoordinatorController extends Controller
      */
     public function showUnretiredCoordinator($id): RedirectResponse
     {
-        $coordinatorDetails = DB::table('coordinator_details as cd')
+        $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
-            ->where('cd.coordinator_id', '=', $id)
+            ->where('cd.id', '=', $id)
             ->get();
         if (! empty($coordinatorDetails[0]->user_id)) {
-            DB::table('coordinator_details')
-                ->where('coordinator_id', $id)
+            DB::table('coordinators')
+                ->where('id', $id)
                 ->update(['reason_retired' => '',
                     'zapped_date' => date('Y-m-d'),
                     'is_active' => 1,
@@ -729,27 +720,21 @@ class CoordinatorController extends Controller
     public function updateRole(Request $request, $id)
     {
         // Find the coordinator details for the current user
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->Coordinators;
 
         // Get the necessary details from the coordinator details
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $userName = $corDetails['first_name'].' '.$corDetails['last_name'];
         $userEmail = $corDetails['email'];
         $positionId = $corDetails['position_id'];
-
-        // Fetch the coordinator position using the position_id
         $position = CoordinatorPosition::find($positionId);
-
-        // Get the position title
         $positionTitle = $position['long_title'];
 
-        // Last updated by user's full name
         $lastUpdatedBy = $userName;
-
         $cordinatorId = $id;
         $onleave = false;
         $leavedate = null;
-        // $stat = $corDetails['state'];
+
         $submit_type = $_POST['submit_type'];
 
         if ($submit_type == 'Leave') {
@@ -764,8 +749,8 @@ class CoordinatorController extends Controller
             $email = $_POST['email'];
             DB::beginTransaction();
             try {
-                DB::table('coordinator_details')
-                    ->where('coordinator_id', $cordinatorId)
+                DB::table('coordinators')
+                    ->where('id', $cordinatorId)
                     ->update(['reason_retired' => $reason,
                         'zapped_date' => date('Y-m-d'),
                         'is_active' => 0,
@@ -773,7 +758,7 @@ class CoordinatorController extends Controller
                         'last_updated_date' => date('Y-m-d H:i:s')]);
                 DB::update('UPDATE users SET is_active = ? where id = ?', [0, $userid]);
                 DB::commit();
-                $webmstremail = DB::table('coordinator_details')
+                $webmstremail = DB::table('coordinators')
                     ->select('email')
                     ->where('conference_id', $coordConf)
                     ->where('position_id', 13)
@@ -805,8 +790,8 @@ class CoordinatorController extends Controller
         if ($submit_type == 'Leave' || $submit_type == 'RemoveLeave') {
             DB::beginTransaction();
             try {
-                DB::table('coordinator_details')
-                    ->where('coordinator_id', $cordinatorId)
+                DB::table('coordinators')
+                    ->where('id', $cordinatorId)
                     ->update(['on_leave' => $onleave,
                         'leave_date' => $leavedate,
                         'last_updated_by' => $lastUpdatedBy,
@@ -831,18 +816,18 @@ class CoordinatorController extends Controller
         if ($submit_type == 'Letter') {
             DB::beginTransaction();
             try {
-                $coordinatorDetails = DB::table('coordinator_details as cd')
+                $coordinatorDetails = DB::table('coordinators as cd')
                     ->select('cd.*', 'cf.conference_description as conf_name', 'rg.long_name as reg_name', 'cd2.first_name as cor_fname', 'cd2.last_name as cor_lname', 'cd2.email as cor_email',
-                        'cd2.phone as cor_phone', 'cd2.conference_id as conf', 'cd2.coordinator_id as pcid')
-                    ->leftJoin('coordinator_details as cd2', 'cd.report_id', '=', 'cd2.coordinator_id')
+                        'cd2.phone as cor_phone', 'cd2.conference_id as conf', 'cd2.id as pcid')
+                    ->leftJoin('coordinators as cd2', 'cd.report_id', '=', 'cd2.id')
                     ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
                     ->leftJoin('region as rg', 'cd.region_id', '=', 'rg.id')
-                    ->where('cd.coordinator_id', $cordinatorId)
+                    ->where('cd.id', $cordinatorId)
                     ->get();
 
                 $chapters = DB::table('chapters as ch')
                     ->select('ch.name as chapter', 'st.state_short_name as state')
-                    ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+                    ->leftJoin('coordinators as cd', 'cd._id', '=', 'ch.primary_coordinator_id')
                     ->leftJoin('state as st', 'ch.state', '=', 'st.id')
                     ->where('ch.is_Active', '=', '1')
                     ->where('primary_coordinator_id', $cordinatorId)
@@ -954,8 +939,8 @@ class CoordinatorController extends Controller
 
         DB::beginTransaction();
         try {
-            DB::table('coordinator_details')
-                ->where('coordinator_id', $cordinatorId)
+            DB::table('coordinators')
+                ->where('id', $cordinatorId)
                 ->update([
                     'position_id' => $request->input('cord_pri_pos'),
                     'sec_position_id' => $request->input('cord_sec_pos'),
@@ -985,8 +970,8 @@ class CoordinatorController extends Controller
      */
     public function ReassignChapter(Request $request, $chapter_id, $coordinator_id, $check_changed = false)
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
         if ($check_changed) {
@@ -1008,11 +993,6 @@ class CoordinatorController extends Controller
                     'last_updated_by' => $lastUpdatedBy,
                     'last_updated_date' => date('Y-m-d H:i:s')]);
 
-            // $financial_report_array = FinancialReport::find($chapter_id);
-            // if (! empty($financial_report_array)) {
-            //     DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [null, $chapter_id]);
-            // }
-
             DB::commit();
 
             return true;
@@ -1030,14 +1010,14 @@ class CoordinatorController extends Controller
      */
     public function ReassignCoordinator(Request $request, $coordinator_id, $new_coordinator_id, $check_changed = false)
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'] = $coordinator_id;
         $corConfId = $corDetails['conference_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
         if ($check_changed) {
-            $checkReportIdArr = DB::table('coordinator_details as cd')
+                $checkReportIdArr = DB::table('coordinators as cd')
                 ->select('cd.report_id as repid')
-                ->where('cd.coordinator_id', '=', $coordinator_id)
+                ->where('cd.id', '=', $coordinator_id)
                 ->where('cd.is_active', '=', '1')
                 ->get();
             $current_report = $checkReportIdArr[0]->repid;
@@ -1045,19 +1025,20 @@ class CoordinatorController extends Controller
                 return true;
             }
         }
+
         DB::beginTransaction();
         try {
             //Find new layer
-            $query = $layerId = DB::table('coordinator_details')
+            $query = $layerId = DB::table('coordinators')
                 ->select('layer_id')
-                ->where('coordinator_id', $new_coordinator_id)
+                ->where('id', $new_coordinator_id)
                 ->limit(1)
                 ->get();
             $new_layer_id = $query[0]->layer_id + 1;
 
             //Update their main report ID & layer
-            DB::table('coordinator_details')
-                ->where('coordinator_id', $coordinator_id)
+            DB::table('coordinators')
+                ->where('id', $coordinator_id)
                 ->update(['report_id' => $new_coordinator_id,
                     'layer_id' => $new_layer_id,
                     'last_updated_by' => $lastUpdatedBy,
@@ -1196,22 +1177,22 @@ class CoordinatorController extends Controller
         $region_id = $_GET['reg_id'];
 
         if ($region_id > 0 && $position_id < 6) {
-            $reportCoordinatorList = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
-                                        FROM coordinator_details as cd
+            $reportCoordinatorList = DB::select(DB::raw("SELECT cd.id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
+                                        FROM coordinators as cd
                                         INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
                                         WHERE (cd.conference_id = $conference_id AND cd.position_id > $position_id AND cd.position_id > 1 AND cd.region_id = $region_id AND cd.is_active=1)
                                         OR (cd.position_id = 6 AND cd.conference_id = $conference_id AND cd.is_active=1)
                                         OR (cd.position_id = 25 AND cd.conference_id = $conference_id AND cd.is_active=1)
                                         ORDER BY cd.position_id,cd.first_name, cd.last_name"));
         } elseif ($conference_id > 0) {
-            $reportCoordinatorList = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
-                                        FROM coordinator_details as cd
+            $reportCoordinatorList = DB::select(DB::raw("SELECT cd.id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
+                                        FROM coordinators as cd
                                         INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
                                         WHERE (cd.position_id > 1 AND cd.conference_id = $conference_id AND cd.is_active=1)
                                         ORDER BY cd.position_id,cd.first_name, cd.last_name"));
         } else {
-            $reportCoordinatorList = DB::select(DB::raw('SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
-                                        FROM coordinator_details as cd
+            $reportCoordinatorList = DB::select(DB::raw('SELECT cd.id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
+                                        FROM coordinators as cd
                                         INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
                                         WHERE cd.is_active=1
                                         ORDER BY cd.position_id,cd.first_name, cd.last_name'));
@@ -1234,20 +1215,20 @@ class CoordinatorController extends Controller
         $region_id = $_GET['reg_id'];
 
         if ($region_id > 0) {
-            $directReportTo = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
-                                FROM coordinator_details as cd
+            $directReportTo = DB::select(DB::raw("SELECT cd.id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
+                                FROM coordinators as cd
                                 INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
                                 WHERE (cd.region_id = $region_id AND cd.position_id < $position_id AND cd.is_active=1)
                                 ORDER BY cd.first_name, cd.last_name"));
         } elseif ($conference_id > 0) {
-            $directReportTo = DB::select(DB::raw("SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
-                                FROM coordinator_details as cd
+            $directReportTo = DB::select(DB::raw("SELECT cd.id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
+                                FROM coordinators as cd
                                 INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
                                 WHERE (cd.conference_id = $conference_id AND cd.is_active=1)
                                 ORDER BY cd.position_id,cd.first_name, cd.last_name"));
         } else {
-            $directReportTo = DB::select(DB::raw('SELECT cd.coordinator_id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
-                                FROM coordinator_details as cd
+            $directReportTo = DB::select(DB::raw('SELECT cd.id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
+                                FROM coordinators as cd
                                 INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
                                 WHERE cd.is_active=1
                                 ORDER BY cd.position_id,cd.first_name, cd.last_name'));
@@ -1318,10 +1299,10 @@ class CoordinatorController extends Controller
         $i = 0;
         $coordinator_array = [];
         foreach ($filterReportingList as $key => $val) {
-            $corList = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.long_title as pos')
+            $corList = DB::table('coordinators as cd')
+                ->select('cd.id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.long_title as pos')
                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                ->where('cd.coordinator_id', '=', $val)
+                ->where('cd.id', '=', $val)
                 ->get();
             $coordinator_array[$i] = ['id' => $corList[0]->cid,
                 'first_name' => $corList[0]->fname,
@@ -1397,9 +1378,9 @@ class CoordinatorController extends Controller
         foreach ($filterReportingList as $key => $val) {
             //if($corId != $val && $val >1){
             if ($val > 1) {
-                $corList = DB::table('coordinator_details as cd')
+                $corList = DB::table('coordinators as cd')
                     ->select('cd.email as cord_email')
-                    ->where('cd.coordinator_id', '=', $val)
+                    ->where('cd.id', '=', $val)
                     ->where('cd.is_active', '=', 1)
                     ->get();
                 if (count($corList) > 0) {
@@ -1421,21 +1402,21 @@ class CoordinatorController extends Controller
     public function showRetiredCoordinator(Request $request): View
     {
         //Get Coordinator Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $positionId = $corDetails['position_id'];
 
         if ($positionId == 7 || $positionId == 13) {
-            $retiredCoordinatorList = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.reason_retired as cor_reason', 'cd.zapped_date as cor_zapdate', 'cp.long_title as position')
+            $retiredCoordinatorList = DB::table('coordinators as cd')
+                ->select('cd.id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.reason_retired as cor_reason', 'cd.zapped_date as cor_zapdate', 'cp.long_title as position')
                 ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
                 ->where('cd.is_active', '=', '0')
                 ->orderByDesc('cd.zapped_date')
                 ->get();
         } else {
-            $retiredCoordinatorList = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.reason_retired as cor_reason', 'cd.zapped_date as cor_zapdate', 'cp.long_title as position')
+            $retiredCoordinatorList = DB::table('coordinators as cd')
+                ->select('cd.id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.reason_retired as cor_reason', 'cd.zapped_date as cor_zapdate', 'cp.long_title as position')
                 ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
                 ->where('cd.is_active', '=', '0')
                 ->where('cd.conference_id', $corConfId)
@@ -1453,12 +1434,12 @@ class CoordinatorController extends Controller
      */
     public function showRetiredCoordinatorView(Request $request, $id): View
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
-        $coordinatorDetails = DB::table('coordinator_details as cd')
+        $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
-            ->where('cd.coordinator_id', '=', $id)
+            ->where('cd.id', '=', $id)
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
@@ -1481,8 +1462,8 @@ class CoordinatorController extends Controller
             ->orderBy('long_title')
             ->get();
 
-        $primaryCoordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        $primaryCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.first_name')
@@ -1501,8 +1482,8 @@ class CoordinatorController extends Controller
     public function showIntCoordinator(): View
     {
         //Get International Coordinator List
-        $intCoordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.conference_id as cor_cid',
+        $intCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.conference_id as cor_cid',
                 'rg.short_name as reg_name', 'cp.long_title as position',
                 DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
             )
@@ -1521,13 +1502,13 @@ class CoordinatorController extends Controller
      */
     public function showIntCoordinatorView(Request $request, $id): View
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
-        $coordinatorDetails = DB::table('coordinator_details as cd')
+        $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $id)
+            ->where('cd.id', '=', $id)
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
@@ -1550,14 +1531,14 @@ class CoordinatorController extends Controller
             ->orderBy('long_title')
             ->get();
 
-        $primaryCoordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        $primaryCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.first_name')
             ->get();
-        $directReportTo = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        $directReportTo = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.report_id', '=', $id)
             ->where('cd.is_active', '=', '1')
@@ -1586,8 +1567,8 @@ class CoordinatorController extends Controller
     public function showIntRetCoordinator(): View
     {
         //Get International Coordinator List
-        $intCoordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.conference_id as cor_cid', 'rg.short_name as reg_name', 'cp.long_title as position', 'cd.sec_position_id as sec_position_id', 'cd.zapped_date as zapdate', 'cd.reason_retired as reason')
+        $intCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.conference_id as cor_cid', 'rg.short_name as reg_name', 'cp.long_title as position', 'cd.sec_position_id as sec_position_id', 'cd.zapped_date as zapdate', 'cd.reason_retired as reason')
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->where('cd.is_active', '=', '0')
@@ -1604,12 +1585,12 @@ class CoordinatorController extends Controller
      */
     public function showIntRetCoordinatorView(Request $request, $id): View
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
-        $coordinatorDetails = DB::table('coordinator_details as cd')
+        $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
-            ->where('cd.coordinator_id', '=', $id)
+            ->where('cd.id', '=', $id)
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
@@ -1632,8 +1613,8 @@ class CoordinatorController extends Controller
             ->orderBy('long_title')
             ->get();
 
-        $primaryCoordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        $primaryCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.first_name')
@@ -1651,13 +1632,13 @@ class CoordinatorController extends Controller
      */
     public function showAppreciation(Request $request, $id): View
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
-        $coordinatorDetails = DB::table('coordinator_details as cd')
+        $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $id)
+            ->where('cd.id', '=', $id)
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
@@ -1680,14 +1661,14 @@ class CoordinatorController extends Controller
             ->orderBy('long_title')
             ->get();
 
-        $primaryCoordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        $primaryCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.first_name')
             ->get();
-        $directReportTo = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        $directReportTo = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.report_id', '=', $id)
             ->where('cd.is_active', '=', '1')
@@ -1713,20 +1694,20 @@ class CoordinatorController extends Controller
      */
     public function updateAppreciation(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
         $cordinatorId = $id;
 
         if ($request->input('cord_fname') != '' && $request->input('cord_lname') != '') {
-            $corDetails = DB::table('coordinator_details')
-                ->select('coordinator_id', 'user_id')
-                ->where('coordinator_id', '=', $cordinatorId)
+            $corDetails = DB::table('coordinators')
+                ->select('id', 'user_id')
+                ->where('id', '=', $cordinatorId)
                 ->get();
             if (count($corDetails) != 0) {
                 try {
                     $userId = $corDetails[0]->user_id;
-                    $cordId = $corDetails[0]->coordinator_id;
+                    $cordId = $corDetails[0]->id;
 
                     $user = User::find($userId);
                     $user->first_name = $request->input('cord_fname');
@@ -1734,8 +1715,8 @@ class CoordinatorController extends Controller
                     $user->updated_at = date('Y-m-d H:i:s');
                     $user->save();
 
-                    DB::table('coordinator_details')
-                        ->where('coordinator_id', $cordinatorId)
+                    DB::table('coordinators')
+                        ->where('id', $cordinatorId)
                         ->update(['recognition_toptier' => $request->input('cord_toptier'),
                             'recognition_year0' => $request->input('cord_year0'),
                             'recognition_year1' => $request->input('cord_year1'),
@@ -1771,13 +1752,13 @@ class CoordinatorController extends Controller
      */
     public function showBirthday(Request $request, $id): View
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
-        $coordinatorDetails = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id', 'cd.position_id', 'cd.birthday_month_id', 'cd.birthday_day', 'cd.card_sent', 'cd.first_name', 'cd.last_name', 'cd.address', 'cd.city', 'cd.state', 'cd.zip')
+        $coordinatorDetails = DB::table('coordinators as cd')
+            ->select('cd.id', 'cd.position_id', 'cd.birthday_month_id', 'cd.birthday_day', 'cd.card_sent', 'cd.first_name', 'cd.last_name', 'cd.address', 'cd.city', 'cd.state', 'cd.zip')
             ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $id)
+            ->where('cd.id', '=', $id)
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
@@ -1800,14 +1781,14 @@ class CoordinatorController extends Controller
             ->orderBy('long_title')
             ->get();
 
-        $primaryCoordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        $primaryCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.first_name')
             ->get();
-        $directReportTo = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        $directReportTo = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.report_id', '=', $id)
             ->where('cd.is_active', '=', '1')
@@ -1830,20 +1811,20 @@ class CoordinatorController extends Controller
      */
     public function updateBirthday(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
         $cordinatorId = $id;
 
         if ($request->input('cord_fname') != '' && $request->input('cord_lname') != '') {
-            $corDetails = DB::table('coordinator_details')
-                ->select('coordinator_id', 'user_id')
-                ->where('coordinator_id', '=', $cordinatorId)
+            $corDetails = DB::table('coordinators')
+                ->select('id', 'user_id')
+                ->where('id', '=', $cordinatorId)
                 ->get();
             if (count($corDetails) != 0) {
                 try {
                     $userId = $corDetails[0]->user_id;
-                    $cordId = $corDetails[0]->coordinator_id;
+                    $cordId = $corDetails[0]->id;
 
                     $user = User::find($userId);
                     $user->first_name = $request->input('cord_fname');
@@ -1851,8 +1832,8 @@ class CoordinatorController extends Controller
                     $user->updated_at = date('Y-m-d H:i:s');
                     $user->save();
 
-                    DB::table('coordinator_details')
-                        ->where('coordinator_id', $cordinatorId)
+                    DB::table('coordinators')
+                        ->where('id', $cordinatorId)
                         ->update(['card_sent' => $request->input('card_sent'),
                             'last_updated_by' => $lastUpdatedBy,
                             'last_updated_date' => date('Y-m-d H:i:s')]);
@@ -1877,16 +1858,16 @@ class CoordinatorController extends Controller
      */
     public function showDashboard(Request $request): View
     {
-        $corDetails = $request->user()->CoordinatorDetails;
-        $corId = $corDetails->coordinator_id;
+        $corDetails = $request->user()->Coordinators;
+        $corId = $corDetails->id;
         $corConfId = $corDetails->conference_id;
         $corReportId = $corDetails->report_id;
         $positionid = $corDetails->position_id;
         $secpositionid = $corDetails->sec_position_id;
-        $coordinatorDetails = DB::table('coordinator_details as cd')
+        $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $corId)
+            ->where('cd.id', '=', $corId)
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
@@ -1910,9 +1891,9 @@ class CoordinatorController extends Controller
             ->orderBy('long_title')
             ->get();
 
-        $primaryCoordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'cd.phone as cor_phone', 'cd.alt_phone as cor_altphone')
-            ->where('cd.coordinator_id', '=', $corReportId)
+        $primaryCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'cd.phone as cor_phone', 'cd.alt_phone as cor_altphone')
+            ->where('cd.id', '=', $corReportId)
             ->where('cd.is_active', '=', '1')
             ->get();
         if (count($primaryCoordinatorList) == 0) {
@@ -1932,12 +1913,12 @@ class CoordinatorController extends Controller
      */
     public function updateDashboard(Request $request): RedirectResponse
     {
-        $corDetails = $request->user()->CoordinatorDetails;
-        $corId = $corDetails->coordinator_id;
+        $corDetails = $request->user()->Coordinators;
+        $corId = $corDetails->id;
         $lastUpdatedBy = $corDetails->first_name . ' ' . $corDetails->last_name;
 
-        $corDetails = DB::table('coordinator_details')
-        ->where('coordinator_id', '=', $corId)
+        $corDetails = DB::table('coordinators')
+        ->where('id', '=', $corId)
         ->first();  // Use first() instead of get() to get a single record
 
         // Convert checkboxes to 1 if checked, 0 if not
@@ -1961,8 +1942,8 @@ class CoordinatorController extends Controller
 
         DB::beginTransaction();
         try {
-            DB::table('coordinator_details')
-                ->where('coordinator_id', $corId)
+            DB::table('coordinators')
+                ->where('id', $corId)
                 ->update($updateData);
 
                 DB::commit();
@@ -1982,14 +1963,14 @@ class CoordinatorController extends Controller
      */
     public function showProfile(Request $request): View
     {
-        $corDetails = $request->user()->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = $request->user()->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corReportId = $corDetails['report_id'];
-        $coordinatorDetails = DB::table('coordinator_details as cd')
+        $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
-            ->where('cd.coordinator_id', '=', $corId)
+            ->where('cd.id', '=', $corId)
             ->get();
         $stateArr = DB::table('state')
             ->select('state.*')
@@ -2013,9 +1994,9 @@ class CoordinatorController extends Controller
             ->orderBy('long_title')
             ->get();
 
-        $primaryCoordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'cd.phone as cor_phone', 'cd.alt_phone as cor_altphone')
-            ->where('cd.coordinator_id', '=', $corReportId)
+        $primaryCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'cd.phone as cor_phone', 'cd.alt_phone as cor_altphone')
+            ->where('cd.id', '=', $corReportId)
             ->where('cd.is_active', '=', '1')
             ->get();
         if (count($primaryCoordinatorList) == 0) {
@@ -2035,14 +2016,14 @@ class CoordinatorController extends Controller
      */
     public function updateProfile(Request $request): RedirectResponse
     {
-        $corDetails = $request->user()->CoordinatorDetails;
-        $corId = $corDetails->coordinator_id;
+        $corDetails = $request->user()->Coordinators;
+        $corId = $corDetails->id;
         $lastUpdatedBy = $corDetails->first_name . ' ' . $corDetails->last_name;
 
         if ($request->input('cord_fname') != '' && $request->input('cord_lname') != '' && $request->input('cord_email') != '') {
-            $corDetail = DB::table('coordinator_details')
-                ->select('coordinator_id', 'user_id')
-                ->where('coordinator_id', '=', $corId)
+            $corDetail = DB::table('coordinators')
+                ->select('id', 'user_id')
+                ->where('id', '=', $corId)
                 ->first(); // Use first() to get a single result
 
                 try {
@@ -2055,8 +2036,8 @@ class CoordinatorController extends Controller
                         $user->updated_at = now();
                         $user->save();
 
-                    DB::table('coordinator_details')
-                        ->where('coordinator_id', $corId)
+                    DB::table('coordinators')
+                        ->where('id', $corId)
                         ->update([
                             'first_name' => $request->input('cord_fname'),
                             'last_name' => $request->input('cord_lname'),

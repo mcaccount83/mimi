@@ -39,7 +39,7 @@
             $admin = DB::table('admin')
                 ->select('admin.*',
                     DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),)
-                ->leftJoin('coordinator_details as cd', 'admin.updated_id', '=', 'cd.coordinator_id')
+                ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
                 ->orderBy('admin.id', 'desc') // Assuming 'id' represents the order of insertion
                 ->first();
 

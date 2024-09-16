@@ -18,7 +18,7 @@
   </section>
 
     <!-- Main content -->
-     <form method="POST" action='{{ route("coordinator.update2",$coordinatorDetails[0]->coordinator_id) }}'">
+     <form method="POST" action='{{ route("coordinator.update2",$coordinatorDetails[0]->id) }}'>
     @csrf
     <section class="content">
         <div class="container-fluid">
@@ -248,7 +248,7 @@
 		<!-- /.box-body -->
 		<div class="card-body text-center">
 		<a href="{{ route('coordinator.retired') }}" class="btn bg-gradient-primary"><i class="fas fa-reply" ></i>&nbsp;&nbsp;&nbsp;Back</a>
-			<a href='{{ route('coordinator.unretired', $coordinatorDetails[0]->coordinator_id) }}' class="btn bg-gradient-primary"><i class="fas fa-user-plus" ></i>&nbsp;&nbsp;&nbsp;UnRetire</a>
+			<a href='{{ route('coordinator.unretired', $coordinatorDetails[0]->id) }}' class="btn bg-gradient-primary"><i class="fas fa-user-plus" ></i>&nbsp;&nbsp;&nbsp;UnRetire</a>
 		<button type="submit" class="btn bg-gradient-primary"><i class="fas fa-save" ></i>&nbsp;&nbsp;&nbsp;save</button>
 		</div>
         <!-- /.box-body -->

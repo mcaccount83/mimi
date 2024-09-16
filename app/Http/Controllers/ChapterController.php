@@ -76,8 +76,8 @@ class ChapterController extends Controller
     public function index(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -114,7 +114,7 @@ class ChapterController extends Controller
             $chapterList = DB::table('chapters as ch')
                 ->select('ch.id', 'ch.name', 'ch.state', 'ch.ein', 'ch.primary_coordinator_id', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
                     'st.state_short_name as state', 'cd.region_id', 'ch.region')
-                ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+                ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
                 ->leftJoin('state as st', 'ch.state', '=', 'st.id')
                 ->where('ch.is_active', '=', '1')
@@ -127,7 +127,7 @@ class ChapterController extends Controller
             $chapterList = DB::table('chapters as ch')
                 ->select('ch.id', 'ch.name', 'ch.state', 'ch.ein', 'ch.primary_coordinator_id', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
                     'st.state_short_name as state', 'cd.region_id', 'ch.region')
-                ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+                ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
                 ->leftJoin('state as st', 'ch.state', '=', 'st.id')
                 ->where('ch.is_active', '=', '1')
@@ -139,7 +139,7 @@ class ChapterController extends Controller
         } else {
             $chapterList = DB::table('chapters as ch')
                 ->select('ch.id', 'ch.name', 'ch.state', 'ch.ein', 'ch.primary_coordinator_id', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
-                ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+                ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
                 ->leftJoin('state as st', 'ch.state', '=', 'st.id')
                 ->where('ch.is_active', '=', '1')
@@ -155,7 +155,7 @@ class ChapterController extends Controller
                 $checkBoxStatus = 'checked';
                 $chapterList = DB::table('chapters as ch')
                     ->select('ch.id', 'ch.name', 'ch.state', 'ch.ein', 'ch.primary_coordinator_id', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
-                    ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+                    ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
                     ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
                     ->leftJoin('state as st', 'ch.state', '=', 'st.id')
                     ->where('ch.is_active', '=', '1')
@@ -220,9 +220,9 @@ class ChapterController extends Controller
         foreach ($filterReportingList as $key => $val) {
             //if($corId != $val && $val >1){
             if ($val > 1) {
-                $corList = DB::table('coordinator_details as cd')
+                $corList = DB::table('coordinators as cd')
                     ->select('cd.email as cord_email')
-                    ->where('cd.coordinator_id', '=', $val)
+                    ->where('cd.id', '=', $val)
                     ->where('cd.is_active', '=', 1)
                     ->get();
                 if ($down_line_email == '') {
@@ -256,20 +256,20 @@ class ChapterController extends Controller
      */
     public function create(Request $request)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
 
         $stateArr = DB::table('state')
@@ -285,8 +285,8 @@ class ChapterController extends Controller
             ->where('conference_id', '=', $corConfId)
             ->orderBy('long_name')
             ->get();
-        $primaryCoordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        $primaryCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.conference_id', '=', $corConfId)
             ->where('cd.position_id', '<=', '6')
@@ -315,8 +315,8 @@ class ChapterController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
@@ -502,10 +502,10 @@ class ChapterController extends Controller
 
             }
 
-            $cordInfo = DB::table('coordinator_details')
+            $cordInfo = DB::table('coordinators')
                 ->select('first_name', 'last_name', 'email')
                 ->where('is_active', '=', '1')
-                ->where('coordinator_id', $input['ch_primarycor'])
+                ->where('id', $input['ch_primarycor'])
                 ->get();
             $state = DB::table('state')
                 ->select('state_short_name')
@@ -567,21 +567,21 @@ class ChapterController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
         $corConfId = $corDetails['conference_id'];
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $positionid = $corDetails['position_id'];
         $financial_report_array = FinancialReport::find($id);
         if ($financial_report_array) {
@@ -689,9 +689,9 @@ class ChapterController extends Controller
         foreach ($filterReportingList as $key => $val) {
             // if($corId != $val && $val >1){
             if ($val > 1) {
-                $corList = DB::table('coordinator_details as cd')
+                $corList = DB::table('coordinators as cd')
                     ->select('cd.email as cord_email')
-                    ->where('cd.coordinator_id', '=', $val)
+                    ->where('cd.id', '=', $val)
                     ->where('cd.is_active', '=', 1)
                     ->get();
                 if (count($corList) > 0) {
@@ -705,8 +705,8 @@ class ChapterController extends Controller
         }
         $cc_string = '?cc='.$down_line_email;
 
-        $primaryCoordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        $primaryCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.conference_id', '=', $corConfId)
             ->where('cd.position_id', '<=', '6')
@@ -732,7 +732,7 @@ class ChapterController extends Controller
     {
         $presInfoPre = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city', 'bd.zip as zip', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_Active', '=', '1')
@@ -774,8 +774,8 @@ class ChapterController extends Controller
             ->get();
 
         $chapterId = $id;
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $positionid = $corDetails['position_id'];
         if ($positionid < 5) {
@@ -1158,10 +1158,10 @@ class ChapterController extends Controller
             }
 
             //Change Primary Coordinator Notifications//
-            $coremail = DB::table('coordinator_details')
+            $coremail = DB::table('coordinators')
                 ->select('email')
                 ->where('is_active', '=', '1')
-                ->where('coordinator_id', $request->input('ch_primarycor'))
+                ->where('id', $request->input('ch_primarycor'))
                 ->get();
             $coremail = $coremail[0]->email;
 
@@ -1174,24 +1174,24 @@ class ChapterController extends Controller
             $to_email3 = [$PREemail[0]->email];
 
             if ($request->input('ch_primarycor') != $request->input('ch_hid_primarycor')) {
-                $corename = DB::table('coordinator_details')
+                $corename = DB::table('coordinators')
                     ->select('first_name')
                     ->where('is_active', '=', '1')
-                    ->where('coordinator_id', $request->input('ch_primarycor'))
+                    ->where('id', $request->input('ch_primarycor'))
                     ->get();
                 $corename = $corename[0]->first_name;
 
-                $corename1 = DB::table('coordinator_details')
+                $corename1 = DB::table('coordinators')
                     ->select('last_name')
                     ->where('is_active', '=', '1')
-                    ->where('coordinator_id', $request->input('ch_primarycor'))
+                    ->where('id', $request->input('ch_primarycor'))
                     ->get();
                 $corename1 = $corename1[0]->last_name;
 
-                $coreemail1 = DB::table('coordinator_details')
+                $coreemail1 = DB::table('coordinators')
                     ->select('email')
                     ->where('is_active', '=', '1')
-                    ->where('coordinator_id', $request->input('ch_primarycor'))
+                    ->where('id', $request->input('ch_primarycor'))
                     ->get();
                 $coreemail1 = $coreemail1[0]->email;
 
@@ -1230,7 +1230,7 @@ class ChapterController extends Controller
             }
 
             //Website Notifications//
-            $cor_details = db::table('coordinator_details')
+            $cor_details = db::table('coordinators')
                 ->select('email')
                 ->where('conference_id', $corConfId)
                 ->where('position_id', 9)
@@ -1238,7 +1238,7 @@ class ChapterController extends Controller
                 ->get();
             $row_count = count($cor_details);
             if ($row_count == 0) {
-                $cc_details = db::table('coordinator_details')
+                $cc_details = db::table('coordinators')
                     ->select('email')
                     ->where('conference_id', $corConfId)
                     ->where('position_id', 6)
@@ -1282,7 +1282,7 @@ class ChapterController extends Controller
             //Update Chapter MailData//
             $presInfoUpd = DB::table('chapters')
                 ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city', 'bd.zip as zip', 'st.state_short_name as state')
-                ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                 ->where('chapters.is_Active', '=', '1')
@@ -1530,20 +1530,20 @@ class ChapterController extends Controller
      */
     public function showBoundary(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if CorDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
 
         $chapterList = DB::table('chapters as ch')
@@ -1575,8 +1575,8 @@ class ChapterController extends Controller
      */
     public function updateBoundary(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         $chapter = Chapter::find($id);
@@ -1606,26 +1606,26 @@ class ChapterController extends Controller
      */
     public function showIntChapter(Request $request)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $intChapterList = DB::table('chapters as ch')
             ->select('ch.id', 'ch.name', 'ch.state', 'ch.ein', 'ch.primary_coordinator_id', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name',
                 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.phone as pre_phone', 'rg.short_name as reg_name', 'st.state_short_name as state',
                 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'cd.conference_id as cor_cid', )
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
             ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->leftjoin('region as rg', 'ch.region', '=', 'rg.id')
@@ -1645,21 +1645,21 @@ class ChapterController extends Controller
      */
     public function showIntChapterView(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
         $corConfId = $corDetails['conference_id'];
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $positionid = $corDetails['position_id'];
         $financial_report_array = FinancialReport::find($id);
         if ($financial_report_array) {
@@ -1767,9 +1767,9 @@ class ChapterController extends Controller
         foreach ($filterReportingList as $key => $val) {
             // if($corId != $val && $val >1){
             if ($val > 1) {
-                $corList = DB::table('coordinator_details as cd')
+                $corList = DB::table('coordinators as cd')
                     ->select('cd.email as cord_email')
-                    ->where('cd.coordinator_id', '=', $val)
+                    ->where('cd.id', '=', $val)
                     ->where('cd.is_active', '=', 1)
                     ->get();
                 if (count($corList) > 0) {
@@ -1783,8 +1783,8 @@ class ChapterController extends Controller
         }
         $cc_string = '?cc='.$down_line_email;
 
-        $primaryCoordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        $primaryCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.conference_id', '=', $corConfId)
             ->where('cd.position_id', '<=', '6')
@@ -1808,20 +1808,20 @@ class ChapterController extends Controller
      */
     public function showInquiriesChapter(Request $request)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1843,7 +1843,7 @@ class ChapterController extends Controller
         if ($positionId == 7 || ($corId == 423 && $positionId == 8)) {
             $inquiriesList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.inquiries_contact as inq_con', 'chapters.territory as terry', 'chapters.status as status', 'chapters.inquiries_note as inq_note', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'cd.email as cd_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'st.state_short_name as state')
-                ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                 ->where('chapters.is_active', '=', '1')
@@ -1854,7 +1854,7 @@ class ChapterController extends Controller
         } elseif ($positionId == 6 || $positionId == 25 || $positionId == 8 || $secPositionId == 8) {
             $inquiriesList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.inquiries_contact as inq_con', 'chapters.territory as terry', 'chapters.status as status', 'chapters.inquiries_note as inq_note', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'cd.email as cd_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'st.state_short_name as state')
-                ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                 ->where('chapters.is_active', '=', '1')
@@ -1865,7 +1865,7 @@ class ChapterController extends Controller
         } else {
             $inquiriesList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.inquiries_contact as inq_con', 'chapters.territory as terry', 'chapters.status as status', 'chapters.inquiries_note as inq_note', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'cd.email as cd_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'st.state_short_name as state')
-                ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                 ->where('chapters.is_active', '=', '1')
@@ -1885,20 +1885,20 @@ class ChapterController extends Controller
      */
     public function showZappedInquiries(Request $request)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -1920,7 +1920,7 @@ class ChapterController extends Controller
 
         $inquiriesList = DB::table('chapters')
             ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.territory as terry', 'chapters.zap_date as zap_date', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '0')
@@ -1939,20 +1939,20 @@ class ChapterController extends Controller
      */
     public function showInquiries(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
 
         $chapterList = DB::table('chapters as ch')
@@ -1987,20 +1987,20 @@ class ChapterController extends Controller
      */
     public function showWebsiteChapter(Request $request)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $positionId = $corDetails['position_id'];
@@ -2041,20 +2041,20 @@ class ChapterController extends Controller
      */
     public function showZappedChapter(Request $request)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $positionId = $corDetails['position_id'];
@@ -2062,7 +2062,7 @@ class ChapterController extends Controller
         if ($positionId == 6 || $positionId == 25 || $secPositionId == 25) {
             $chapterList = DB::table('chapters as ch')
                 ->select('ch.id', 'ch.state', 'ch.name', 'ch.ein', 'ch.zap_date', 'ch.disband_reason', 'st.state_short_name as state')
-                ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+                ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
                 ->leftJoin('state as st', 'ch.state', '=', 'st.id')
                 ->leftjoin('region as rg', 'ch.region', '=', 'rg.id')
@@ -2075,7 +2075,7 @@ class ChapterController extends Controller
             if ($positionId == 7) {
                 $chapterList = DB::table('chapters as ch')
                     ->select('ch.id', 'ch.state', 'ch.name', 'ch.ein', 'ch.zap_date', 'ch.disband_reason', 'st.state_short_name as state')
-                    ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+                    ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
                     ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
                     ->leftJoin('state as st', 'ch.state', '=', 'st.id')
                     ->leftjoin('region as rg', 'ch.region', '=', 'rg.id')
@@ -2086,7 +2086,7 @@ class ChapterController extends Controller
             } else {
                 $chapterList = DB::table('chapters as ch')
                     ->select('ch.id', 'ch.state', 'ch.name', 'ch.ein', 'ch.zap_date', 'ch.disband_reason', 'st.state_short_name as state')
-                    ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+                    ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
                     ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
                     ->leftJoin('state as st', 'ch.state', '=', 'st.id')
                     ->leftjoin('region as rg', 'ch.region', '=', 'rg.id')
@@ -2109,24 +2109,24 @@ class ChapterController extends Controller
      */
     public function showIntZappedChapter(Request $request)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $chapterList = DB::table('chapters as ch')
             ->select('ch.id', 'ch.conference', 'ch.state', 'ch.name', 'ch.ein', 'ch.zap_date', 'ch.disband_reason', 'st.state_short_name as state')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
             ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->leftjoin('region as rg', 'ch.region', '=', 'rg.id')
@@ -2146,20 +2146,20 @@ class ChapterController extends Controller
      */
     public function showZappedChapterView(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $financial_report_array = FinancialReport::find($id);
         //$reviewComplete = $financial_report_array['review_complete'];
@@ -2225,8 +2225,8 @@ class ChapterController extends Controller
             ->orderBy('long_name')
             ->get();
 
-        $primaryCoordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        $primaryCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.conference_id', '=', $corConfId)
             ->where('cd.position_id', '<=', '6')
@@ -2249,20 +2249,20 @@ class ChapterController extends Controller
      */
     public function showIntZappedChapterView(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
@@ -2330,8 +2330,8 @@ class ChapterController extends Controller
             ->orderBy('long_name')
             ->get();
 
-        $primaryCoordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        $primaryCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.conference_id', '=', $corConfId)
             ->where('cd.position_id', '<=', '6')
@@ -2354,20 +2354,20 @@ class ChapterController extends Controller
      */
     public function editWebsite(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
 
         $chapterList = DB::table('chapters as ch')
@@ -2392,8 +2392,8 @@ class ChapterController extends Controller
             ->orderBy('long_name')
             ->get();
 
-        $primaryCoordinatorList = DB::table('coordinator_details as cd')
-            ->select('cd.coordinator_id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        $primaryCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
             ->where('cd.conference_id', '=', $corConfId)
             ->where('cd.position_id', '<=', '6')
@@ -2414,8 +2414,8 @@ class ChapterController extends Controller
      */
     public function updateWebsite(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
         $positionId = $corDetails['position_id'];
@@ -2436,7 +2436,7 @@ class ChapterController extends Controller
                 'website_notes' => $request->input('ch_notes')]);
 
         //Website Notifications//
-        $cor_details = db::table('coordinator_details')
+        $cor_details = db::table('coordinators')
             ->select('email')
             ->where('conference_id', $corConfId)
             ->where('position_id', 9)
@@ -2444,7 +2444,7 @@ class ChapterController extends Controller
             ->get();
         $row_count = count($cor_details);
         if ($row_count == 0) {
-            $cc_details = db::table('coordinator_details')
+            $cc_details = db::table('coordinators')
                 ->select('email')
                 ->where('conference_id', $corConfId)
                 ->where('position_id', 6)
@@ -2519,10 +2519,10 @@ class ChapterController extends Controller
             $str = '<table>';
             $i = 0;
             foreach ($filterReportingList as $key => $val) {
-                $corList = DB::table('coordinator_details as cd')
+                $corList = DB::table('coordinators as cd')
                     ->select('cd.first_name as fname', 'cd.last_name as lname', 'cd.email as email', 'cp.short_title as pos')
                     ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                    ->where('cd.coordinator_id', '=', $val)
+                    ->where('cd.id', '=', $val)
                     ->where('cd.is_active', '=', 1)
                     ->get();
 
@@ -2604,7 +2604,7 @@ class ChapterController extends Controller
             $chapterList = DB::table('chapters')
                 ->select('chapters.*', 'chapters.primary_coordinator_id as pcid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                     'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'chapters.conference as conf')
-                ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                 ->where('chapters.is_Active', '=', '0')
@@ -2737,9 +2737,9 @@ class ChapterController extends Controller
             $emailListCoor = '';
             foreach ($filterCoordinatorList as $key => $val) {
                 if ($val > 1) {
-                    $corList = DB::table('coordinator_details as cd')
+                    $corList = DB::table('coordinators as cd')
                         ->select('cd.email as cord_email')
-                        ->where('cd.coordinator_id', '=', $val)
+                        ->where('cd.id', '=', $val)
                         ->where('cd.is_active', '=', 1)
                         ->get();
                     if (count($corList) > 0) {
@@ -2848,7 +2848,7 @@ class ChapterController extends Controller
             ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name',
                 'st.state_short_name as state', 'bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'bd.street_address as pres_addr', 'bd.city as pres_city', 'bd.state as pres_state',
                 'bd.zip as pres_zip', 'chapters.conference as conf', 'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -2962,12 +2962,12 @@ class ChapterController extends Controller
         $i = 0;
         $coordinator_array = [];
         foreach ($filterReportingList as $key => $val) {
-            $corList = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.long_title as pos', 'cd.email as email',
+            $corList = DB::table('coordinators as cd')
+                ->select('cd.id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.long_title as pos', 'cd.email as email',
                     'cd.conference_id as conf', 'cf.conference_description as conf_desc', )
                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
                 ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
-                ->where('cd.coordinator_id', '=', $val)
+                ->where('cd.id', '=', $val)
                 ->get();
             $coordinator_array[$i] = ['id' => $corList[0]->cid,
                 'first_name' => $corList[0]->fname,
@@ -3075,7 +3075,7 @@ class ChapterController extends Controller
 
             $chapterList = DB::table('chapters')
                 ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
-                ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'chapters.primary_coordinator_id')
+                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                 ->where('chapters.is_Active', '=', '1')
@@ -3257,25 +3257,25 @@ class ChapterController extends Controller
      */
     public function showEinNotes(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $chapterList = DB::table('chapters as ch')
             ->select('ch.id', 'ch.name', 'ch.ein', 'ch.ein_notes',
                 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.conference_id as cor_confid', 'cd.email as cor_email', 'bd.email as bor_email', 'st.state_short_name as statename')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
             ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->where('ch.is_active', '=', '1')
@@ -3295,8 +3295,8 @@ class ChapterController extends Controller
      */
     public function createEinNotes(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         $nextRenewalYear = $request->input('ch_nxt_renewalyear');
@@ -3398,25 +3398,25 @@ class ChapterController extends Controller
      */
     public function showDonation(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $chapterList = DB::table('chapters as ch')
             ->select('ch.id', 'ch.state', 'ch.name', 'ch.sustaining_donation', 'ch.m2m_payment', 'ch.m2m_date', 'cd.conference_id as cor_confid', 'ch.sustaining_date',
                 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.conference_id as cor_confid', 'cd.email as cor_email', 'bd.email as bor_email', 'st.state_short_name as statename')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
             ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->where('ch.is_active', '=', '1')
@@ -3436,8 +3436,8 @@ class ChapterController extends Controller
      */
     public function createDonation(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         $primaryCordEmail = $request->input('ch_pc_email');
@@ -3479,9 +3479,9 @@ class ChapterController extends Controller
         $emailListCoor = '';
         foreach ($filterCoordinatorList as $key => $val) {
             if ($val > 1) {
-                $corList = DB::table('coordinator_details as cd')
+                $corList = DB::table('coordinators as cd')
                     ->select('cd.email as cord_email')
-                    ->where('cd.coordinator_id', '=', $val)
+                    ->where('cd.id', '=', $val)
                     ->where('cd.is_active', '=', 1)
                     ->get();
                 if (count($corList) > 0) {
@@ -3559,20 +3559,20 @@ class ChapterController extends Controller
      */
     public function showReRegistration(Request $request)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $currentYear = date('Y');
@@ -3613,7 +3613,7 @@ class ChapterController extends Controller
                 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name'
             )
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
             ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->leftJoin('db_month as db', 'ch.start_month_id', '=', 'db.id')
@@ -3665,25 +3665,25 @@ class ChapterController extends Controller
      */
     public function showReRegNotes(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $chapterList = DB::table('chapters as ch')
             ->select('ch.id', 'ch.name', 'ch.dues_last_paid', 'ch.reg_notes', 'ch.next_renewal_year',
                 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.conference_id as cor_confid', 'cd.email as cor_email', 'bd.email as bor_email', 'st.state_short_name as statename')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
             ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->where('ch.is_active', '=', '1')
@@ -3703,8 +3703,8 @@ class ChapterController extends Controller
      */
     public function createReRegNotes(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         $nextRenewalYear = $request->input('ch_nxt_renewalyear');
@@ -3741,7 +3741,7 @@ class ChapterController extends Controller
         $chapterList = DB::table('chapters as ch')
             ->select('ch.id', 'ch.next_renewal_year', 'ch.name', 'ch.dues_last_paid', 'ch.reg_notes',
                 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.conference_id as cor_confid', 'cd.email as cor_email', 'bd.email as bor_email', 'st.state_short_name as statename')
-            ->leftJoin('coordinator_details as cd', 'cd.coordinator_id', '=', 'ch.primary_coordinator_id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
             ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->where('ch.is_active', '=', '1')
@@ -3761,8 +3761,8 @@ class ChapterController extends Controller
      */
     public function createPayment(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         $nextRenewalYear = $request->input('ch_nxt_renewalyear');
@@ -3807,9 +3807,9 @@ class ChapterController extends Controller
         $emailListCoor = '';
         foreach ($filterCoordinatorList as $key => $val) {
             if ($val > 1) {
-                $corList = DB::table('coordinator_details as cd')
+                $corList = DB::table('coordinators as cd')
                     ->select('cd.email as cord_email')
-                    ->where('cd.coordinator_id', '=', $val)
+                    ->where('cd.id', '=', $val)
                     ->where('cd.is_active', '=', 1)
                     ->get();
                 if (count($corList) > 0) {
@@ -3871,8 +3871,8 @@ class ChapterController extends Controller
      */
     public function createReminderReRegistration(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
 
@@ -3994,8 +3994,8 @@ class ChapterController extends Controller
      */
     public function createLateReRegistration(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
 
@@ -4154,9 +4154,9 @@ class ChapterController extends Controller
         foreach ($filterReportingList as $key => $val) {
             //if($corId != $val && $val >1){
             if ($val > 1) {
-                $corList = DB::table('coordinator_details as cd')
+                $corList = DB::table('coordinators as cd')
                     ->select('cd.email as cord_email')
-                    ->where('cd.coordinator_id', '=', $val)
+                    ->where('cd.id', '=', $val)
                     ->where('cd.is_active', '=', 1)
                     ->get();
                 if (count($corList) > 0) {
@@ -4177,20 +4177,20 @@ class ChapterController extends Controller
      */
     public function showAwardsView(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $financial_report_array = FinancialReport::find($id);
 
@@ -4223,8 +4223,8 @@ class ChapterController extends Controller
      */
     public function updateAwards(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
-        $corId = $corDetails['coordinator_id'];
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         $award_1_nomination_type = $request->input('checkNominationType1', null);
@@ -4281,20 +4281,20 @@ class ChapterController extends Controller
      */
     public function showBoardInfo(Request $request, $chapterId)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $chapterDetails = Chapter::find($chapterId);
         $stateArr = DB::table('state')
@@ -4985,14 +4985,14 @@ class ChapterController extends Controller
      */
     public function showFinancialReport(Request $request, $chapterId)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
@@ -5032,10 +5032,10 @@ class ChapterController extends Controller
         $array_rows = count($filterReportingList);
 
         foreach ($filterReportingList as $key => $val) {
-            $corList = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.short_title as pos')
+            $corList = DB::table('coordinators as cd')
+                ->select('cd.id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.short_title as pos')
                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                ->where('cd.coordinator_id', '=', $val)
+                ->where('cd.id', '=', $val)
                 ->where('cd.is_active', '=', 1)
                 ->get();
             if (count($corList) != 0) {
@@ -5053,9 +5053,9 @@ class ChapterController extends Controller
      */
     public function updateUnsubmit(Request $request, $chapter_id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->Coordinators;
         $userId = $corDetails['user_id'];
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         $chapter = Chapter::find($chapter_id);
@@ -5089,9 +5089,9 @@ class ChapterController extends Controller
      */
     public function updateClearReview(Request $request, $chapter_id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->Coordinators;
         $userId = $corDetails['user_id'];
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         $chapter = Chapter::find($chapter_id);
@@ -5126,7 +5126,7 @@ class ChapterController extends Controller
      */
     public function storeFinancialReport(Request $request, $chapter_id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->Coordinators;
         $userName = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         $input = $request->all();
@@ -5227,9 +5227,9 @@ class ChapterController extends Controller
             $completed_name = $files[0]->completed_name;
             $completed_email = $files[0]->completed_email;
 
-            $Reviewer = DB::table('coordinator_details')
-                ->select('coordinator_details.*')
-                ->where('coordinator_details.coordinator_id', '=', $reviewer_id)
+            $Reviewer = DB::table('coordinators')
+                ->select('coordinators.*')
+                ->where('coordinators.id', '=', $reviewer_id)
                 ->get();
 
             $ReviewerEmail = $Reviewer[0]->email;
@@ -5332,20 +5332,20 @@ class ChapterController extends Controller
      */
     public function showStatusView(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
         // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
-        $corDetails = $user->CoordinatorDetails;
+        $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
 
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
 
         $chapterList = DB::table('chapters as ch')
@@ -5376,9 +5376,9 @@ class ChapterController extends Controller
 
     public function updateStatus(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->CoordinatorDetails;
+        $corDetails = User::find($request->user()->id)->Coordinators;
         $userId = $corDetails['user_id'];
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         $chapter = Chapter::find($id);

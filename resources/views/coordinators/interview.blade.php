@@ -12,7 +12,7 @@
       </ol>
     </section>
     <!-- Main content -->
-    <form method="POST" action='{{ route("coordinator.update",$coordinatorDetails[0]->coordinator_id) }}'">
+    <form method="POST" action='{{ route("coordinator.update",$coordinatorDetails[0]->id) }}'>
     @csrf
     <section class="content">
 		<div class="row">

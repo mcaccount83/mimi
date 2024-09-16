@@ -64,9 +64,9 @@ class PaymentController extends Controller
             }
         }
 
-        $corDetails = DB::table('coordinator_details')
+        $corDetails = DB::table('coordinators')
             ->select('email')
-            ->where('coordinator_id', $chapterDetails->primary_coordinator_id)
+            ->where('id', $chapterDetails->primary_coordinator_id)
             ->first();
         $cor_pcemail = $corDetails->email;
 
@@ -89,9 +89,9 @@ class PaymentController extends Controller
         $emailListCoor = '';
         foreach ($filterCoordinatorList as $key => $val) {
             if ($val > 1) {
-                $corList = DB::table('coordinator_details as cd')
+                $corList = DB::table('coordinators as cd')
                     ->select('cd.email as cord_email')
-                    ->where('cd.coordinator_id', '=', $val)
+                    ->where('cd.id', '=', $val)
                     ->where('cd.is_active', '=', 1)
                     ->get();
                 if (count($corList) > 0) {
@@ -351,9 +351,9 @@ class PaymentController extends Controller
             }
         }
 
-        $corDetails = DB::table('coordinator_details')
+        $corDetails = DB::table('coordinators')
             ->select('email')
-            ->where('coordinator_id', $chapterDetails->primary_coordinator_id)
+            ->where('id', $chapterDetails->primary_coordinator_id)
             ->first();
         $cor_pcemail = $corDetails->email;
 
@@ -376,9 +376,9 @@ class PaymentController extends Controller
         $emailListCoor = '';
         foreach ($filterCoordinatorList as $key => $val) {
             if ($val > 1) {
-                $corList = DB::table('coordinator_details as cd')
+                $corList = DB::table('coordinators as cd')
                     ->select('cd.email as cord_email')
-                    ->where('cd.coordinator_id', '=', $val)
+                    ->where('cd.id', '=', $val)
                     ->where('cd.is_active', '=', 1)
                     ->get();
                 if (count($corList) > 0) {
@@ -608,10 +608,10 @@ class PaymentController extends Controller
         $i = 0;
         $coordinator_array = [];
         foreach ($filterReportingList as $key => $val) {
-            $corList = DB::table('coordinator_details as cd')
-                ->select('cd.coordinator_id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cd.email as email', 'cp.short_title as pos')
+            $corList = DB::table('coordinators as cd')
+                ->select('cd.id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cd.email as email', 'cp.short_title as pos')
                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                ->where('cd.coordinator_id', '=', $val)
+                ->where('cd.id', '=', $val)
                 ->get();
             $coordinator_array[$i] = ['id' => $corList[0]->cid,
                 'first_name' => $corList[0]->fname,

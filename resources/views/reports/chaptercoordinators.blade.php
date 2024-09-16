@@ -62,10 +62,10 @@
                         $coordinator_array = [];
 
                         foreach ($filterReportingList as $val) {
-                            $coordinator_data = DB::table('coordinator_details as cd')
+                            $coordinator_data = DB::table('coordinators as cd')
                                 ->select('cd.first_name as first_name', 'cd.last_name as last_name', 'cp.short_title as position')
                                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                                ->where('cd.coordinator_id', $val)
+                                ->where('cd.id', $val)
                                 ->get();
 
                             $coordinator_array[] = $coordinator_data;
