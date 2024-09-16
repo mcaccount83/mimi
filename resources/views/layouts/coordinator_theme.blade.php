@@ -732,6 +732,20 @@
                             </script>
                         @endif
 
+                        @if ($message = Session::get('warning'))
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function() {
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'warning',
+                                        title: @json($message),
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                });
+                            </script>
+                        @endif
+
                         @if ($message = Session::get('fail'))
                             <script>
                                 document.addEventListener("DOMContentLoaded", function() {
