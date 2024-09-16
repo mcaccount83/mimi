@@ -1016,42 +1016,6 @@
         $('#ch_preknown').focus();
     }
 
-    // function disbandChapter() {
-    //     var txt = $("#disband_reason").val();
-    //     var cid = $("#chapter_id").val();
-    //     var ltr = $("#disband_letter").is(":checked") ? '1' : '0';
-
-    //     if (txt == '') {
-    //         alert("Please enter reason for Disband");
-    //         $("#disband_reason").focus();
-    //         return false;
-    //     } else {
-    //         // Show loading spinner
-    //         $('#loading-spinner').show();
-
-    //         $.ajax({
-    //             url: '{{ route('chapter.disband') }}',
-    //             type: 'POST',
-    //             data: { reason: txt, letter: ltr, chapterid: cid, _token: '{{ csrf_token() }}' },
-    //             success: function(response) {
-    //                 if (response.status === 'success') {
-    //                     showCustomAlert(response.message);
-    //                     window.location.href = response.redirect;
-    //                 } else {
-    //                     showCustomAlert(response.message);
-    //                 }
-    //             },
-    //             error: function(jqXHR, exception) {
-    //                 showCustomAlert("Something went wrong, Please try again.");
-    //             },
-    //             complete: function() {
-    //                 // Hide loading spinner
-    //                 $('#loading-spinner').hide();
-    //             }
-    //         });
-    //     }
-    // }
-
     function showFileUploadModal() {
         Swal.fire({
             title: 'Upload EIN Letter',
@@ -1183,27 +1147,6 @@
             }
         });
     }
-
-//   function isNumber(evt) {
-//     evt = (evt) ? evt : window.event;
-//     var charCode = (evt.which) ? evt.which : evt.keyCode;
-//     if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-//         return false;
-//     }
-//     return true;
-// }
-// function isAlphanumeric(e){
-//     var k;
-//     document.all ? k = e.keyCode : k = e.which;
-//     return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
-// }
-// function isPhone() {
-//     if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode != 8) {
-//         event.keyCode = 0;
-//         alert("Please Enter Number Only");
-//         return false;
-//     }
-// }
 
     function is_url() {
         var str = $("#validate_url").val().trim(); // Trim leading and trailing whitespace
@@ -1366,41 +1309,6 @@ handleVacantCheckbox("TreasVacant", "treas-field");
                 return true;
             }
 
-
-    // function resetPassword(userid){
-    //     var new_password = prompt("Please enter new password for this board member.", "TempPass4You");
-    //     if (new_password != null && userid != '') {
-    //         // Verify the password entered is of an allowable size
-    //         if (new_password.length < 7) {
-    //             alert("Password must be at least 7 characters. The password has not been reset.");
-    //             return false;
-    //         } else {
-    //             $.ajax({
-    //                 url: '{{ route('chapter.resetpassword') }}',
-    //                 type: "POST",
-    //                 data: {
-    //                     pswd: new_password,
-    //                     user_id: userid,
-    //                     _token: '{{ csrf_token() }}'
-    //                 },
-    //                 success: function(result) {
-    //                     alert(result.message);
-    //                 },
-    //                 error: function(jqXHR, exception) {
-    //                     if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
-    //                         alert(jqXHR.responseJSON.error);
-    //                     } else {
-    //                         alert('An error occurred while resetting the password.');
-    //                     }
-    //                 }
-    //             });
-    //             return true;
-    //         }
-    //     } else {
-    //         return false;
-    //     }
-    // }
-
     function updatePassword(userid){
         var new_password = "TempPass4You";
 
@@ -1425,33 +1333,6 @@ handleVacantCheckbox("TreasVacant", "treas-field");
         });
         return true;
     }
-
-    // function UpdateEIN(){
-    //     var ein=document.getElementById("ch_ein").value;
-    //     var new_ein="";
-
-    //     if (ein==""){
-    //         new_ein = prompt("Please enter the EIN for the chapter");
-
-    //         if (new_ein != null) {
-    //             document.getElementById("ch_ein").value = new_ein;
-    //             return true;
-    //         }
-    //     }
-    //     else{
-    //         var result=confirm("This chapter already has an assigned EIN.  Once a chapter has been assigned an EIN it should not be changed.  Are you REALLY sure you want to do this?");
-    //         if(result){
-    //             new_ein = prompt("Please enter the EIN for the chapter");
-    //             if (new_ein != null) {
-    //                 document.getElementById("ch_ein").value = new_ein;
-    //                 return true;
-    //             }
-    //         }
-    //         else{
-    //             return false;
-    //         }
-    //     }
-    // }
 
     function UpdateEIN() {
         var ein = document.getElementById("ch_ein").value;
@@ -1522,32 +1403,6 @@ handleVacantCheckbox("TreasVacant", "treas-field");
         document.getElementById("myForm").submit(); // Trigger form submission
     }
 
-    // function EINLetter(){
-    //             var ein=document.getElementById("ch_ein_letter_path").value;
-    //             var new_ein="";
-
-    //             if (ein==""){
-    //                 new_ein = prompt("Please enter url path for the chapter's EIN Letter");
-
-    //                 if (new_ein != null) {
-    //                     document.getElementById("ch_ein_letter_path").value = new_ein;
-    //                     return true;
-    //                 }
-    //             }
-    //             else{
-    //                 var result=confirm("This chapter already has an EIN Letter.  Are you REALLY sure you want to do this?");
-    //                 if(result){
-    //                     new_ein = prompt("Please enter url path for the chapter's EIN Letter");
-    //                     if (new_ein != null) {
-    //                         document.getElementById("ch_ein_letter_path").value = new_ein;
-    //                         return true;
-    //                     }
-    //                 }
-    //                 else{
-    //                     return false;
-    //                 }
-    //             }
-    //         }
 
 
 </script>

@@ -137,19 +137,13 @@
 						<input type="number" name="cord_day" class="form-control" min="1" max="31" value="{{ $coordinatorDetails[0]->birthday_day }}" required>
 						</div>
 					</div>
-                <div class="col-sm-6">
-                    <div class="form-group">
-                            <label>Update Password</label>
-                            <input  type="password" class="form-control cls-pswd" placeholder="***********" name="cord_pswd" id="cord_pswd" value="" maxlength="30" >
-                        </div>
-					</div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Confirm Updated Password</label>
-                            <input  type="password" class="form-control cls-pswd" placeholder="***********" name="cord_pswd_cnf" id="cord_pswd_cnf" value="" maxlength="30">
-                            <input  type="hidden" name="cord_pswd_chg" id="cord_pswd_chg" value="0" >
-                        </div>
-					</div>
+
+                    <div class="card-body text-center">
+                        <p>This will reset password to default "TempPass4You" for this user only.</p>
+                        <button type="button" class="btn bg-gradient-primary" id="{{ $coordinatorDetails[0]->user_id }}" onclick="return updatePassword(this.id)"><i class="fas fa-redo-alt"></i>&nbsp;&nbsp;&nbsp;Reset Password</button>
+                      </div>
+
+
 				</div>
             </div>
 
@@ -425,25 +419,30 @@ function ConfirmCancel(element) {
 		}
     }
 
+    function updatePassword(userid){
+        var new_password = "TempPass4You";
 
-
-//   $( document ).ready(function() {
-// 	var phoneListArr = ["cord_phone","cord_altphone"];
-//     for (var i = phoneListArr.length - 1; i >= 0; i--) {
-//         var inputValue = $("#"+phoneListArr[i]).val();
-//         if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
-//         var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
-//         $("#"+phoneListArr[i]).val(reInputValue);
-//     }
-// 	$("#cord_phone").keyup(function() {
-//         this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-//     });
-// 	$("#cord_altphone").keyup(function() {
-//         this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-//     });
-
-//   });
-
+            $.ajax({
+            url: '{{ route('chapter.updatepassword') }}',
+            type: "POST",
+            data: {
+                user_id: userid,
+                new_password: new_password,
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(result) {
+                customSuccessAlert(result.message.replace('<br>', '\n'));
+            },
+            error: function(jqXHR, exception) {
+                if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
+                    customErrorAlert(jqXHR.responseJSON.error);
+                } else {
+                    customErrorAlert('An error occurred while resetting the password.');
+                }
+            }
+        });
+        return true;
+    }
 
    //submit validation function
    function PreSaveValidate(){
