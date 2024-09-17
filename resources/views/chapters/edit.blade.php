@@ -1030,19 +1030,47 @@
             cancelButtonText: 'Close',
             preConfirm: () => {
                 var formData = new FormData(document.getElementById('uploadEINForm'));
-                return fetch('{{ url('/files/storeEIN/'. $id) }}', {
-                    method: 'POST',
-                    body: formData
-                }).then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
+
+                // Show the processing Swal before starting the upload
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Please wait while we upload your file.',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+
+                        // Perform the AJAX request
+                        $.ajax({
+                            url: '{{ url('/files/storeEIN/'. $id) }}',
+                            type: 'POST',
+                            data: formData,
+                            contentType: false,  // Required for file uploads
+                            processData: false,  // Required for file uploads
+                            success: function(response) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: 'File uploaded successfully!',
+                                    icon: 'success',
+                                    showConfirmButton: false,  // Automatically close without "OK" button
+                                    timer: 1500
+                                }).then(() => {
+                                    location.reload(); // Reload the page to reflect changes
+                                });
+                            },
+                            error: function(jqXHR, exception) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Something went wrong, please try again.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        });
                     }
-                    return response.json();
-                }).then(data => {
-                    Swal.fire('Success!', 'File uploaded successfully!', 'success');
-                }).catch(error => {
-                    Swal.fire('Error!', 'Something went wrong!', 'error');
                 });
+
+                // Prevent further action until the request finishes
+                return false;
             },
             customClass: {
                 confirmButton: 'btn-sm btn-success',

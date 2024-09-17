@@ -22,6 +22,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 const client_id = 'YOUR_CLIENT_ID';
@@ -53,65 +54,71 @@ class GoogleController extends Controller
         return $accessToken;
     }
 
-    public function storeEIN(StoreEINGoogleRequest $request, $id): RedirectResponse
+    public function storeEIN(StoreEINGoogleRequest $request, $id)
     {
-        $chapter = DB::table('chapters as ch')
-            ->select('ch.conference', 'ch.state', 'ch.ein', 'ch.name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('ch.id', '=', $id)
-            ->first();
+        try{
+            $chapter = DB::table('chapters as ch')
+                ->select('ch.conference', 'ch.state', 'ch.ein', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->where('ch.is_active', '=', '1')
+                ->where('ch.id', '=', $id)
+                ->first();
 
-        $name = $chapter->ein.'_'.$chapter->name.'_'.$chapter->state;
-        $accessToken = $this->token();
+            $name = $chapter->ein.'_'.$chapter->name.'_'.$chapter->state;
+            $accessToken = $this->token();
 
-        $googleDrive = DB::table('google_drive')
-            ->select('google_drive.ein_letter_uploads as ein_letter_uploads')
-            ->get();
-        $einDrive = $googleDrive[0]->ein_letter_uploads;
+            $googleDrive = DB::table('google_drive')
+                ->select('google_drive.ein_letter_uploads as ein_letter_uploads')
+                ->get();
+            $einDrive = $googleDrive[0]->ein_letter_uploads;
 
-        $file = $request->file('file');
-        // $sharedDriveId = '1JAYKfJoo4USrEwkBkRKqIV-2PwouPv-m';
-        $sharedDriveId = $einDrive;   //Shared Drive -> CC Resources->IRS/EIN -> EIN Letters
+            $file = $request->file('file');
+            // $sharedDriveId = '1JAYKfJoo4USrEwkBkRKqIV-2PwouPv-m';
+            $sharedDriveId = $einDrive;   //Shared Drive -> CC Resources->IRS/EIN -> EIN Letters
 
-        $fileMetadata = [
-            'name' => Str::ascii($name.'.'.$file->getClientOriginalExtension()),
-            'parents' => [$sharedDriveId],
-            'mimeType' => $file->getMimeType(),
-        ];
+            $fileMetadata = [
+                'name' => Str::ascii($name.'.'.$file->getClientOriginalExtension()),
+                'parents' => [$sharedDriveId],
+                'mimeType' => $file->getMimeType(),
+            ];
 
-        $metadataJson = json_encode($fileMetadata);
-        // $fileContent = file_get_contents($file->getRealPath());
-        $fileContent = file_get_contents($file->getPathname());
+            $metadataJson = json_encode($fileMetadata);
+            // $fileContent = file_get_contents($file->getRealPath());
+            $fileContent = file_get_contents($file->getPathname());
 
-        $fileContentBase64 = base64_encode($fileContent);
+            $fileContentBase64 = base64_encode($fileContent);
 
-        $client = new Client;
+            $client = new Client;
 
-        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-            'headers' => [
-                'Authorization' => 'Bearer '.$accessToken,
-                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-            ],
-            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-        ]);
-
-        $bodyContents = $response->getBody()->getContents();
-        $jsonResponse = json_decode($bodyContents, true);
-
-        if ($response->getStatusCode() === 200) { // Check for a successful status code
-            $file_id = $jsonResponse['id'];
-            $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
-            $existingRecord = Chapter::where('id', $id)->first();
-
-            $existingRecord->update([
-                'ein_letter_path' => $path,
-                'ein_letter' => '1',
+            $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$accessToken,
+                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+                ],
+                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
             ]);
 
-            return redirect()->back()->with('success', 'File uploaded successfully!');
-        } else {
-            return redirect()->back()->with('error', 'File failed to upload');
+            $bodyContents = $response->getBody()->getContents();
+            $jsonResponse = json_decode($bodyContents, true);
+
+            if ($response->getStatusCode() === 200) { // Check for a successful status code
+                $file_id = $jsonResponse['id'];
+                $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
+                $existingRecord = Chapter::where('id', $id)->first();
+
+                $existingRecord->update([
+                    'ein_letter_path' => $path,
+                    'ein_letter' => '1',
+                ]);
+
+                return response()->json(['message' => 'File uploaded successfully!'], 200);
+            } else {
+                return response()->json(['message' => 'File failed to upload'], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            // Log the exception message
+            Log::error('File upload error: '.$e->getMessage());
+            return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
 
