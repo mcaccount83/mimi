@@ -1528,7 +1528,7 @@ class ReportController extends Controller
             ->join('state as st', 'ch.state', '=', 'st.id')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
-            ->leftJoin('coordinators as cd_reviewer', 'cd_reviewer.coordinator_id', '=', 'fr.reviewer_id')
+            ->leftJoin('coordinators as cd_reviewer', 'cd_reviewer.id', '=', 'fr.reviewer_id')
             ->where(function ($query) {
                 $query->where('created_at', '<=', date('Y-06-30'))
                       ->orWhereNull('created_at');
