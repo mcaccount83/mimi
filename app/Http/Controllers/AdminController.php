@@ -17,6 +17,7 @@ use App\Models\OutgoingBoardMember;
 use App\Models\Chapter;
 use App\Models\Resources;
 use App\Models\FinancialReport;
+use App\Models\GoogleDrive;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -985,5 +986,41 @@ class AdminController extends Controller
             return redirect()->to('/admin')->with('fail', 'An error occurred while activating chapter buttons.');
         }
     }
+
+     /**
+     * view Google Drive Shared Folder Ids
+     */
+    public function showGoogleDrive()
+    {
+        $googleDrive = DB::table('google_drive')
+        ->select('google_drive.*')
+        ->get();
+
+        $data = ['googleDrive' => $googleDrive];
+
+        return view('admin.googledrive')->with($data);
+    }
+
+     /**
+     * Update Google Drive Shared Folder Ids
+     */
+    public function updateGoogleDrive(Request $request)
+    {
+        $einLetterDrive = $request->input('einLetterDrive');
+        $eoyDrive = $request->input('eoyDrive');
+        $eoyDriveYear = $request->input('eoyDriveYear');
+        $resourcesDrive = $request->input('resourcesDrive');
+
+        $drive = GoogleDrive::firstOrFail();
+        $drive->ein_letter_uploads = $einLetterDrive;
+        $drive->eoy_uploads = $eoyDrive;
+        $drive->eoy_uploads_year = $eoyDriveYear;
+        $drive->resources_uploads = $resourcesDrive;
+
+        $drive->save();
+
+        return response()->json(['success' => true]);
+    }
+
 
 }

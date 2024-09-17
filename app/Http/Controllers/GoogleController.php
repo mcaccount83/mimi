@@ -65,8 +65,14 @@ class GoogleController extends Controller
         $name = $chapter->ein.'_'.$chapter->name.'_'.$chapter->state;
         $accessToken = $this->token();
 
+        $googleDrive = DB::table('google_drive')
+            ->select('google_drive.ein_letter_uploads as ein_letter_uploads')
+            ->get();
+        $einDrive = $googleDrive[0]->ein_letter_uploads;
+
         $file = $request->file('file');
-        $sharedDriveId = '1JAYKfJoo4USrEwkBkRKqIV-2PwouPv-m';   //Shared Drive -> CC Resources->IRS/EIN -> EIN Letters
+        // $sharedDriveId = '1JAYKfJoo4USrEwkBkRKqIV-2PwouPv-m';
+        $sharedDriveId = $einDrive;   //Shared Drive -> CC Resources->IRS/EIN -> EIN Letters
 
         $fileMetadata = [
             'name' => Str::ascii($name.'.'.$file->getClientOriginalExtension()),
@@ -249,7 +255,13 @@ class GoogleController extends Controller
         $name = $state.'_'.$chapterName.'_Roster';
         $accessToken = $this->token();
 
-        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+        $googleDrive = DB::table('google_drive')
+            ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
+            ->get();
+        $eoyDrive = $googleDrive[0]->eoy_uploads;
+
+        // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
+        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
         // Create conference folder if it doesn't exist in the shared drive
         $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
@@ -309,7 +321,13 @@ class GoogleController extends Controller
         $name = $chapter->state.'_'.$chapter->name.'_990N';
         $accessToken = $this->token();
 
-        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+        $googleDrive = DB::table('google_drive')
+            ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
+            ->get();
+        $eoyDrive = $googleDrive[0]->eoy_uploads;
+
+        // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
+        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
         // Create conference folder if it doesn't exist in the shared drive
         $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
@@ -369,7 +387,13 @@ class GoogleController extends Controller
         $name = $chapter->state.'_'.$chapter->name.'_Statement';
         $accessToken = $this->token();
 
-        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+        $googleDrive = DB::table('google_drive')
+            ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
+            ->get();
+        $eoyDrive = $googleDrive[0]->eoy_uploads;
+
+        // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
+        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
         // Create conference folder if it doesn't exist in the shared drive
         $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
@@ -429,7 +453,13 @@ class GoogleController extends Controller
         $name = $chapter->state.'_'.$chapter->name.'_Statement2';
         $accessToken = $this->token();
 
-        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+        $googleDrive = DB::table('google_drive')
+            ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
+            ->get();
+        $eoyDrive = $googleDrive[0]->eoy_uploads;
+
+        // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
+        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
         // Create conference folder if it doesn't exist in the shared drive
         $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
@@ -489,7 +519,13 @@ class GoogleController extends Controller
         $name = $chapter->state.'_'.$chapter->name.'_Award1';
         $accessToken = $this->token();
 
-        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+        $googleDrive = DB::table('google_drive')
+            ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
+            ->get();
+        $eoyDrive = $googleDrive[0]->eoy_uploads;
+
+        // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
+        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
         // Create conference folder if it doesn't exist in the shared drive
         $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
@@ -549,7 +585,13 @@ class GoogleController extends Controller
         $name = $chapter->state.'_'.$chapter->name.'_Award2';
         $accessToken = $this->token();
 
-        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+        $googleDrive = DB::table('google_drive')
+            ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
+            ->get();
+        $eoyDrive = $googleDrive[0]->eoy_uploads;
+
+        // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
+        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
         // Create conference folder if it doesn't exist in the shared drive
         $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
@@ -609,7 +651,13 @@ class GoogleController extends Controller
         $name = $chapter->state.'_'.$chapter->name.'_Award3';
         $accessToken = $this->token();
 
-        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+        $googleDrive = DB::table('google_drive')
+            ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
+            ->get();
+        $eoyDrive = $googleDrive[0]->eoy_uploads;
+
+        // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
+        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
         // Create conference folder if it doesn't exist in the shared drive
         $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
@@ -669,7 +717,13 @@ class GoogleController extends Controller
         $name = $chapter->state.'_'.$chapter->name.'_Award4';
         $accessToken = $this->token();
 
-        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+        $googleDrive = DB::table('google_drive')
+            ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
+            ->get();
+        $eoyDrive = $googleDrive[0]->eoy_uploads;
+
+        // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
+        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
         // Create conference folder if it doesn't exist in the shared drive
         $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
@@ -729,7 +783,13 @@ class GoogleController extends Controller
         $name = $chapter->state.'_'.$chapter->name.'_Award5';
         $accessToken = $this->token();
 
-        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+        $googleDrive = DB::table('google_drive')
+            ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
+            ->get();
+        $eoyDrive = $googleDrive[0]->eoy_uploads;
+
+        // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
+        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
         // Create conference folder if it doesn't exist in the shared drive
         $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
@@ -780,8 +840,14 @@ class GoogleController extends Controller
 
         $accessToken = $this->token();
 
+        $googleDrive = DB::table('google_drive')
+            ->select('google_drive.resources_uploads as resources_uploads')
+            ->get();
+        $resourcesDrive = $googleDrive[0]->resources_uploads;
+
         $file = $request->file('file');
-        $sharedDriveId = '17YQBX5T67g0azczV844XyUJH1TM5RAcA';   //Shared Drive -> CC Resources -> Resources - Uploaded Online
+        // $sharedDriveId = '17YQBX5T67g0azczV844XyUJH1TM5RAcA';
+        $sharedDriveId = $resourcesDrive;   //Shared Drive -> CC Resources -> Resources - Uploaded Online
 
         $fileMetadata = [
             'name' => Str::ascii($file->getClientOriginalName()), // Use getClientOriginalName() to get the file name
@@ -822,11 +888,16 @@ class GoogleController extends Controller
     public function storeToolkit(StoreToolkitGoogleRequest $request, $id): RedirectResponse
     {
         $resource = Resources::findOrFail($id);
-
         $accessToken = $this->token();
 
+        $googleDrive = DB::table('google_drive')
+            ->select('google_drive.resources_uploads as resources_uploads')
+            ->get();
+        $resourcesDrive = $googleDrive[0]->resources_uploads;
+
         $file = $request->file('file');
-        $sharedDriveId = '17YQBX5T67g0azczV844XyUJH1TM5RAcA';   //Shared Drive -> CC Resources -> Resources - Uploaded Online
+        // $sharedDriveId = '17YQBX5T67g0azczV844XyUJH1TM5RAcA';
+        $sharedDriveId = $resourcesDrive;   //Shared Drive -> CC Resources -> Resources - Uploaded Online
 
         $fileMetadata = [
             'name' => Str::ascii($file->getClientOriginalName()), // Use getClientOriginalName() to get the file name

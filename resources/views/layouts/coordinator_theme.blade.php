@@ -554,12 +554,12 @@
                                             {{ Request::is('admin/reregdate/*') ? 'menu-open' : '' }} {{ Request::is('adminreports/duplicateuser') ? 'menu-open' : '' }}
                                             {{ Request::is('adminreports/duplicateboardid') ? 'menu-open' : '' }} {{ Request::is('adminreports/multipleboard') ? 'menu-open' : '' }}
                                             {{ Request::is('adminreports/nopresident') ? 'menu-open' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'menu-open' : '' }}
-                                             {{ Request::is('adminreports/mailqueue') ? 'menu-open' : '' }}">
+                                             {{ Request::is('adminreports/mailqueue') ? 'menu-open' : '' }}  {{ Request::is('admin/googledrive') ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link {{ Request::is('admin/eoy') ? 'active' : '' }} {{ Request::is('admin/reregdate') ? 'active' : '' }}
                                                         {{ Request::is('admin/reregdate/*') ? 'active' : '' }} {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }}
                                                         {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }} {{ Request::is('adminreports/multipleboard') ? 'active' : '' }}
                                                         {{ Request::is('adminreports/nopresident') ? 'active' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}
-                                                         {{ Request::is('adminreports/mailqueue') ? 'active' : '' }}">
+                                                         {{ Request::is('adminreports/mailqueue') ? 'active' : '' }} {{ Request::is('admin/googledrive') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-unlock-alt"></i>
                                 <p>Admin Items<i class="fas fa-angle-left right"></i></p>
                             </a>
@@ -568,6 +568,12 @@
                                 <a href="{{ route('admin.eoy') }}" class="nav-link {{ Request::is('admin/eoy') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-bullseye"></i>
                                     <p>EOY Procedures</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('admin.googledrive') }}" class="nav-link {{ Request::is('admin/googledrive') ? 'active' : '' }}">
+                                    <i class="nav-icon fab fa-google"></i>
+                                    <p>Google Drive</p>
                                 </a>
                             </li>
                                 <li class="nav-item">

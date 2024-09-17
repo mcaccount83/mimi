@@ -96,6 +96,8 @@ Route::post('/admin/updateresources/{id}', [AdminController::class, 'updateResou
 Route::get('/admin/toolkit', [AdminController::class, 'showToolkit'])->name('admin.toolkit');
 Route::post('/admin/addtoolkit', [AdminController::class, 'addToolkit'])->name('admin.addtoolkit');
 Route::post('/admin/updatetoolkit/{id}', [AdminController::class, 'updateToolkit'])->name('admin.updatetoolkit');
+Route::get('/admin/googledrive', [AdminController::class, 'showGoogleDrive'])->name('admin.googledrive');
+Route::post('/admin/updategoogledrive', [AdminController::class, 'updateGoogleDrive'])->name('admin.updategoogledrive');
 Route::get('/adminreports/mailqueue', [AdminController::class, 'showMailQueue'])->name('admin.mailqueue');
 Route::get('/adminreports/duplicateuser', [AdminController::class, 'showDuplicate'])->name('admin.duplicateuser');
 Route::get('/adminreports/duplicateboardid', [AdminController::class, 'showDuplicateId'])->name('admin.duplicateboardid');
