@@ -66,8 +66,6 @@
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span></button>
                                                                 <h3 class="modal-title" id="editTaskModal{{ $adminItem->id }}Label">{{ $adminItem->task }}</h3>
                                                             </div>
                                                         <div class="modal-body">
@@ -163,8 +161,6 @@
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span></button>
                                                                 <h3 class="modal-title" id="editTaskModal{{ $adminItem->id }}Label">{{ $adminItem->task }}</h3>
                                                             </div>
                                                         <div class="modal-body">
@@ -256,66 +252,65 @@
                                                 </p>
                                                 </div>
                                             </div>
-                                                <!-- Modal for editing task -->
-                                                <div class="modal fade" id="editTaskModal{{ $adminItem->id }}" tabindex="-1" role="dialog" aria-labelledby="editTaskModal{{ $adminItem->id }}Label" aria-hidden="true">
-                                                    <div class="modal-dialog" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span></button>
-                                                                    <h3 class="modal-title" id="editTaskModal{{ $adminItem->id }}Label">{{ $adminItem->task }}</h3>
+
+                                            <!-- Modal for editing task -->
+                                            <div class="modal fade" id="editTaskModal{{ $adminItem->id }}" tabindex="-1" role="dialog" aria-labelledby="editTaskModal{{ $adminItem->id }}Label" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                                <h3 class="modal-title" id="editTaskModal{{ $adminItem->id }}Label">{{ $adminItem->task }}</h3>
+                                                            </div>
+                                                        <div class="modal-body">
+                                                            <form>
+                                                                <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label for="taskDetails">Description</label>
+                                                                    <textarea class="form-control" id="taskDetails{{ $adminItem->id }}" disabled>{{ $adminItem->details }}</textarea>
                                                                 </div>
-                                                            <div class="modal-body">
-                                                                <form>
-                                                                    <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        <label for="taskDetails">Description</label>
-                                                                        <textarea class="form-control" id="taskDetails{{ $adminItem->id }}" disabled>{{ $adminItem->details }}</textarea>
-                                                                    </div>
-                                                                    </div>
-                                                                    <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        <label for="taskNotes">IT Dept Notes</label>
-                                                                        <textarea class="form-control" id="taskNotes{{ $adminItem->id }}" rows="5" disabled>{{ $adminItem->notes }}</textarea>
-                                                                    </div>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                    <label>Status</label>
-                                                                    <select name="taskStatus" class="form-control select2-bs4" style="width: 100%;" id="taskStatus{{ $adminItem->id }}" {{ $canEditDetails ? '' : 'disabled' }}>
-                                                                        <option value="1" {{$adminItem->status == 1 ? 'selected' : ''}}>ToDo</option>
-                                                                        <option value="2" {{$adminItem->status == 2 ? 'selected' : ''}}>In Progress</option>
-                                                                        <option value="3" {{$adminItem->status == 3 ? 'selected' : ''}}>Done</option>
-                                                                    </select>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                    <label>Priority</label>
-                                                                    <select name="taskPriority" class="form-control select2-bs4" style="width: 100%;" id="taskPriority{{ $adminItem->id }}" disabled>
-                                                                        <option value="1" {{$adminItem->priority == 1 ? 'selected' : ''}}>Low</option>
-                                                                        <option value="2" {{$adminItem->priority == 2 ? 'selected' : ''}}>Normal</option>
-                                                                        <option value="3" {{$adminItem->priority == 3 ? 'selected' : ''}}>High</option>
-                                                                    </select>
-                                                                    </div>
-                                                                    <div class="col-md-6"><br></div>
-                                                                    <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        Reported by <strong>{{ $adminItem->reported_by }}</strong> on <strong>{{ \Carbon\Carbon::parse($adminItem->reported_date)->format('m-d-Y') }}</strong>
-                                                                    </div>
-                                                                    </div>
-                                                                    <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        Completed on <strong>{{ \Carbon\Carbon::parse($adminItem->completed_date)->format('m-d-Y') }}</strong>
-                                                                    </div>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                            <div class="col-md-6"><br></div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp; Close</button>
-                                                                <button type="button" class="btn btn-success" onclick="updateTask({{ $adminItem->id }})"><i class="fas fa-save" ></i>&nbsp; Save changes</button>
-                                                            </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    <label for="taskNotes">IT Dept Notes</label>
+                                                                    <textarea class="form-control" id="taskNotes{{ $adminItem->id }}" rows="5" disabled>{{ $adminItem->notes }}</textarea>
+                                                                </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                <label>Status</label>
+                                                                <select name="taskStatus" class="form-control select2-bs4" style="width: 100%;" id="taskStatus{{ $adminItem->id }}" {{ $canEditDetails ? '' : 'disabled' }}>
+                                                                    <option value="1" {{$adminItem->status == 1 ? 'selected' : ''}}>ToDo</option>
+                                                                    <option value="2" {{$adminItem->status == 2 ? 'selected' : ''}}>In Progress</option>
+                                                                    <option value="3" {{$adminItem->status == 3 ? 'selected' : ''}}>Done</option>
+                                                                </select>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                <label>Priority</label>
+                                                                <select name="taskPriority" class="form-control select2-bs4" style="width: 100%;" id="taskPriority{{ $adminItem->id }}" disabled>
+                                                                    <option value="1" {{$adminItem->priority == 1 ? 'selected' : ''}}>Low</option>
+                                                                    <option value="2" {{$adminItem->priority == 2 ? 'selected' : ''}}>Normal</option>
+                                                                    <option value="3" {{$adminItem->priority == 3 ? 'selected' : ''}}>High</option>
+                                                                </select>
+                                                                </div>
+                                                                <div class="col-md-6"><br></div>
+                                                                <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    Reported by <strong>{{ $adminItem->reported_by }}</strong> on <strong>{{ \Carbon\Carbon::parse($adminItem->reported_date)->format('m-d-Y') }}</strong>
+                                                                </div>
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                <div class="form-group">
+                                                                    Completed on <strong>{{ \Carbon\Carbon::parse($adminItem->completed_date)->format('m-d-Y') }}</strong>
+                                                                </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div class="col-md-6"><br></div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times"></i>&nbsp; Close</button>
+                                                            <button type="button" class="btn btn-success" onclick="updateTask({{ $adminItem->id }})"><i class="fas fa-save" ></i>&nbsp; Save changes</button>
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
                                             @endforeach
                                         @endif
                                     </div>
@@ -330,8 +325,6 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">Add a New Task</h4>
                 </div>
                 <div class="modal-body">
@@ -371,49 +364,72 @@
     var taskDetailsNew = document.getElementById('taskDetailsNew').value;
     var taskPriorityNew = document.getElementById('taskPriorityNew').value;
 
-    if (taskNameNew == '') {
-        alert('Task Name is Required.');
-        return false; // Prevent form submission
-    }
-    if (taskNameNew.length > 50) {
-        alert('Name cannot exceed 50 characters.');
-        return false; // Prevent form submission
-    }
-    if (taskDetailsNew == '') {
-        alert('Task Description is Required.');
-        return false; // Prevent form submission
-    }
-    if (taskDetailsNew.length > 255) {
-        alert('Description cannot exceed 255 characters.');
-        return false; // Prevent form submission
-    }
+     // Initialize an array to collect validation errors
+     let validationErrors = [];
+
+      // Collect validation errors
+        if (taskNameNew === '') {
+            validationErrors.push('Name is Required.');
+        }
+        if (taskNameNew.length > 50) {
+            validationErrors.push('Name cannot exceed 50 characters.');
+        }
+        if (taskDetailsNew === '') {
+            validationErrors.push('Details are Required.');
+        }
+        if (taskDetailsNew.length > 255) {
+            validationErrors.push('Details cannot exceed 255 characters.');
+        }
+
+     // Check if there are any validation errors
+     if (validationErrors.length > 0) {
+            Swal.fire({
+                title: 'Error!',
+                html: validationErrors.join('<br>'),
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
+            return false; // Prevent form submission
+        }
 
     // Get the CSRF token value from the meta tag
     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // Initialize the FormData object
+        var formData = new FormData();
+        formData.append('taskNameNew', taskNameNew);
+        formData.append('taskDetailsNew', taskDetailsNew);
+        formData.append('taskPriorityNew', taskPriorityNew);
 
     // Send an AJAX request to Laravel backend to create a new task
     $.ajax({
         url: '{{ route('admin.addbugs') }}',
         method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': csrfToken
-        },
-        data: {
-            taskNameNew: taskNameNew,
-            taskDetailsNew: taskDetailsNew,
-            taskPriorityNew: taskPriorityNew
-        },
-        success: function(response) {
-            // Display success message
-            alert('Task added successfully');
-            // Reload the page to reflect the new data
-            location.reload();
-        },
-        error: function(xhr, status, error) {
-            // Handle error
-            console.error(xhr.responseText);
-        }
-    });
+            data: formData,
+            processData: false, // Required for FormData
+            contentType: false, // Required for FormData
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            },
+            success: function(response) {
+                Swal.fire({
+                                title: 'Success!',
+                                text: 'Bug added successfully.',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error!', 'Bug add failed. Please try again.', 'error');
+                            console.error(xhr.responseText);
+                        }
+                    });
 
     // Close the modal
     $('#modal-task').modal('hide');
@@ -428,6 +444,12 @@
     var taskStatus = document.getElementById('taskStatus' + id).value;
     var taskPriority = document.getElementById('taskPriority' + id).value;
 
+    var formData = new FormData();
+    formData.append('taskDetails', taskDetails);
+    formData.append('taskNotes', taskNotes);
+    formData.append('taskStatus', taskStatus);
+    formData.append('taskPriority', taskPriority);
+
     // Get the CSRF token value from the meta tag
     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
@@ -435,26 +457,28 @@
     $.ajax({
         url: '{{ route('admin.updatebugs', '') }}' + '/' + id,
         method: 'POST',
-        data: {
-            taskDetails: taskDetails,
-            taskNotes: taskNotes,
-            taskStatus: taskStatus,
-            taskPriority: taskPriority
-        },
-        headers: {
-            'X-CSRF-TOKEN': csrfToken
-        },
-        success: function(response) {
-            // Display success message
-            alert('Task updated successfully');
-            // Reload the page to reflect the new data
-            location.reload();
-        },
-        error: function(xhr, status, error) {
-            // Handle error
-            console.error(xhr.responseText);
-        }
-    });
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Task updated successfully.',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            location.reload(); // Reload the page to reflect changes
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire('Error!', 'Task update failed. Please try again.', 'error');
+                        console.error(xhr.responseText);
+                    }
+                });
 
     // Close the modal
     $('#editTaskModal' + id).modal('hide');

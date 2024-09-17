@@ -339,34 +339,39 @@ class AdminController extends Controller
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
+
         // Fetch coordinator details
         $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
             ->where('cd.id', '=', $corId)
-            ->first(); // Fetch only one record
+            ->first();
 
         $validatedData = $request->validated();
 
+        // Create new file resource
         $file = new Resources;
-        $file->category = $validatedData['fileCategoryNew'];
-        $file->name = $validatedData['fileNameNew'];
-        $file->description = $validatedData['fileDescriptionNew'];
-        $file->file_type = $validatedData['fileTypeNew'];
-        $file->version = $validatedData['fileVersionNew'] ?? null;
-        $file->link = $validatedData['LinkNew'] ?? null;
-        $file->file_path = $validatedData['filePathNew'] ?? null;
+        $file->category = $request->fileCategoryNew;
+        $file->name = $request->fileNameNew;
+        $file->description = $request->fileDescriptionNew;
+        $file->file_type = $request->fileTypeNew;
+
+        if ($request->fileTypeNew == 1) {
+            $file->link = null;
+            $file->version = $request->fileVersionNew ?? null;
+        } elseif ($request->fileTypeNew == 2) {
+            $file->version = null;
+            $file->file_path = null;
+            $file->link = $request->linkNew ?? null;
+        }
+
         $file->updated_id = $corId;
         $file->updated_date = Carbon::today();
 
         $file->save();
 
-        // After adding the resource, retrieve its id
-        $id = $file->id;
-        $fileType = $file->file_type;
-
-        // Return the id and file_type in the response
-        return response()->json(['id' => $id, 'file_type' => $fileType]);
+        // Return response
+        return response()->json(['id' => $file->id, 'file_type' => $file->file_type]);
     }
 
     /**

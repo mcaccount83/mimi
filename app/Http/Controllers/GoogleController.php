@@ -247,698 +247,762 @@ class GoogleController extends Controller
         }
     }
 
-    public function storeRoster(StoreRosterGoogleRequest $request, $id): RedirectResponse
+    public function storeRoster(StoreRosterGoogleRequest $request, $id)
     {
-        $chapter = DB::table('chapters as ch')
-            ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('ch.id', '=', $id)
-            ->first();
+        try{
+            $chapter = DB::table('chapters as ch')
+                ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->where('ch.is_active', '=', '1')
+                ->where('ch.id', '=', $id)
+                ->first();
 
-        $conf = $chapter->conference;
-        $state = $chapter->state;
-        $chapterName = $chapter->name;
-        $name = $state.'_'.$chapterName.'_Roster';
-        $accessToken = $this->token();
+            $conf = $chapter->conference;
+            $state = $chapter->state;
+            $chapterName = $chapter->name;
+            $name = $state.'_'.$chapterName.'_Roster';
+            $accessToken = $this->token();
 
-        $googleDrive = DB::table('google_drive')
-            ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
-            ->get();
-        $eoyDrive = $googleDrive[0]->eoy_uploads;
+            $googleDrive = DB::table('google_drive')
+                ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
+                ->get();
+            $eoyDrive = $googleDrive[0]->eoy_uploads;
 
-        // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
-        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
+            // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
+            $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
-        // Create conference folder if it doesn't exist in the shared drive
-        $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
+            // Create conference folder if it doesn't exist in the shared drive
+            $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
 
-        // Set parent IDs for the file
-        $fileMetadata = [
-            'name' => Str::ascii($name.'.'.$request->file('file')->getClientOriginalExtension()),
-            'mimeType' => $request->file('file')->getMimeType(),
-            'parents' => [$chapterFolderId],
-            'driveId' => $sharedDriveId, // Specify the Shared Drive ID
-        ];
+            // Set parent IDs for the file
+            $fileMetadata = [
+                'name' => Str::ascii($name.'.'.$request->file('file')->getClientOriginalExtension()),
+                'mimeType' => $request->file('file')->getMimeType(),
+                'parents' => [$chapterFolderId],
+                'driveId' => $sharedDriveId, // Specify the Shared Drive ID
+            ];
 
-        // Upload the file
-        $fileContent = file_get_contents($request->file('file')->getPathname());
-        $fileContentBase64 = base64_encode($fileContent);
-        $metadataJson = json_encode($fileMetadata);
+            // Upload the file
+            $fileContent = file_get_contents($request->file('file')->getPathname());
+            $fileContentBase64 = base64_encode($fileContent);
+            $metadataJson = json_encode($fileMetadata);
 
-        $client = new Client;
+            $client = new Client;
 
-        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-            'headers' => [
-                'Authorization' => 'Bearer '.$accessToken,
-                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-            ],
-            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-        ]);
-
-        $bodyContents = $response->getBody()->getContents();
-        $jsonResponse = json_decode($bodyContents, true);
-
-        if ($response->getStatusCode() === 200) { // Check for a successful status code
-            $file_id = $jsonResponse['id'];
-            $existingRecord = FinancialReport::where('chapter_id', $id)->first();
-
-            $existingRecord->update([
-                'roster_path' => $file_id,
+            $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$accessToken,
+                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+                ],
+                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
             ]);
 
-            return redirect()->back()->with('success', 'File uploaded successfully!');
-        } else {
-            return redirect()->back()->with('error', 'File failed to upload');
+            $bodyContents = $response->getBody()->getContents();
+            $jsonResponse = json_decode($bodyContents, true);
+
+            if ($response->getStatusCode() === 200) { // Check for a successful status code
+                $file_id = $jsonResponse['id'];
+                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+
+                $existingRecord->update([
+                    'roster_path' => $file_id,
+                ]);
+
+                return response()->json(['message' => 'File uploaded successfully!'], 200);
+            } else {
+                return response()->json(['message' => 'File failed to upload'], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            // Log the exception message
+            Log::error('File upload error: '.$e->getMessage());
+            return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
 
-    public function store990N(Store990NGoogleRequest $request, $id): RedirectResponse
+    public function store990N(Store990NGoogleRequest $request, $id)
     {
-        $chapter = DB::table('chapters as ch')
-            ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('ch.id', '=', $id)
-            ->first();
+        try{
+            $chapter = DB::table('chapters as ch')
+                ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->where('ch.is_active', '=', '1')
+                ->where('ch.id', '=', $id)
+                ->first();
 
-        $conf = $chapter->conference;
-        $state = $chapter->state;
-        $chapterName = $chapter->name;
-        $name = $chapter->state.'_'.$chapter->name.'_990N';
-        $accessToken = $this->token();
+            $conf = $chapter->conference;
+            $state = $chapter->state;
+            $chapterName = $chapter->name;
+            $name = $chapter->state.'_'.$chapter->name.'_990N';
+            $accessToken = $this->token();
 
-        $googleDrive = DB::table('google_drive')
-            ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
-            ->get();
-        $eoyDrive = $googleDrive[0]->eoy_uploads;
+            $googleDrive = DB::table('google_drive')
+                ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
+                ->get();
+            $eoyDrive = $googleDrive[0]->eoy_uploads;
 
-        // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
-        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
+            // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
+            $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
-        // Create conference folder if it doesn't exist in the shared drive
-        $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
+            // Create conference folder if it doesn't exist in the shared drive
+            $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
 
-        // Set parent IDs for the file
-        $fileMetadata = [
-            'name' => Str::ascii($name.'.'.$request->file('file')->getClientOriginalExtension()),
-            'mimeType' => $request->file('file')->getMimeType(),
-            'parents' => [$chapterFolderId],
-            'driveId' => $sharedDriveId, // Specify the Shared Drive ID
-        ];
+            // Set parent IDs for the file
+            $fileMetadata = [
+                'name' => Str::ascii($name.'.'.$request->file('file')->getClientOriginalExtension()),
+                'mimeType' => $request->file('file')->getMimeType(),
+                'parents' => [$chapterFolderId],
+                'driveId' => $sharedDriveId, // Specify the Shared Drive ID
+            ];
 
-        // Upload the file
-        $fileContent = file_get_contents($request->file('file')->getPathname());
-        $fileContentBase64 = base64_encode($fileContent);
-        $metadataJson = json_encode($fileMetadata);
+            // Upload the file
+            $fileContent = file_get_contents($request->file('file')->getPathname());
+            $fileContentBase64 = base64_encode($fileContent);
+            $metadataJson = json_encode($fileMetadata);
 
-        $client = new Client;
+            $client = new Client;
 
-        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-            'headers' => [
-                'Authorization' => 'Bearer '.$accessToken,
-                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-            ],
-            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-        ]);
-
-        $bodyContents = $response->getBody()->getContents();
-        $jsonResponse = json_decode($bodyContents, true);
-
-        if ($response->getStatusCode() === 200) { // Check for a successful status code
-            $file_id = $jsonResponse['id'];
-            $existingRecord = FinancialReport::where('chapter_id', $id)->first();
-
-            $existingRecord->update([
-                'file_irs_path' => $file_id,
+            $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$accessToken,
+                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+                ],
+                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
             ]);
 
-            return redirect()->back()->with('success', 'File uploaded successfully!');
-        } else {
-            return redirect()->back()->with('error', 'File failed to upload');
+            $bodyContents = $response->getBody()->getContents();
+            $jsonResponse = json_decode($bodyContents, true);
+
+            if ($response->getStatusCode() === 200) { // Check for a successful status code
+                $file_id = $jsonResponse['id'];
+                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+
+                $existingRecord->update([
+                    'file_irs_path' => $file_id,
+                ]);
+
+                return response()->json(['message' => 'File uploaded successfully!'], 200);
+            } else {
+                return response()->json(['message' => 'File failed to upload'], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            // Log the exception message
+            Log::error('File upload error: '.$e->getMessage());
+            return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
 
-    public function storeStatement1(StoreStatement1GoogleRequest $request, $id): RedirectResponse
+    public function storeStatement1(StoreStatement1GoogleRequest $request, $id)
     {
-        $chapter = DB::table('chapters as ch')
-            ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('ch.id', '=', $id)
-            ->first();
+        try{
+            $chapter = DB::table('chapters as ch')
+                ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->where('ch.is_active', '=', '1')
+                ->where('ch.id', '=', $id)
+                ->first();
 
-        $conf = $chapter->conference;
-        $state = $chapter->state;
-        $chapterName = $chapter->name;
-        $name = $chapter->state.'_'.$chapter->name.'_Statement';
-        $accessToken = $this->token();
+            $conf = $chapter->conference;
+            $state = $chapter->state;
+            $chapterName = $chapter->name;
+            $name = $chapter->state.'_'.$chapter->name.'_Statement';
+            $accessToken = $this->token();
 
-        $googleDrive = DB::table('google_drive')
-            ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
-            ->get();
-        $eoyDrive = $googleDrive[0]->eoy_uploads;
+            $googleDrive = DB::table('google_drive')
+                ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
+                ->get();
+            $eoyDrive = $googleDrive[0]->eoy_uploads;
 
-        // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
-        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
+            // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
+            $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
-        // Create conference folder if it doesn't exist in the shared drive
-        $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
+            // Create conference folder if it doesn't exist in the shared drive
+            $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
 
-        // Set parent IDs for the file
-        $fileMetadata = [
-            'name' => Str::ascii($name.'.'.$request->file('file')->getClientOriginalExtension()),
-            'mimeType' => $request->file('file')->getMimeType(),
-            'parents' => [$chapterFolderId],
-            'driveId' => $sharedDriveId, // Specify the Shared Drive ID
-        ];
+            // Set parent IDs for the file
+            $fileMetadata = [
+                'name' => Str::ascii($name.'.'.$request->file('file')->getClientOriginalExtension()),
+                'mimeType' => $request->file('file')->getMimeType(),
+                'parents' => [$chapterFolderId],
+                'driveId' => $sharedDriveId, // Specify the Shared Drive ID
+            ];
 
-        // Upload the file
-        $fileContent = file_get_contents($request->file('file')->getPathname());
-        $fileContentBase64 = base64_encode($fileContent);
-        $metadataJson = json_encode($fileMetadata);
+            // Upload the file
+            $fileContent = file_get_contents($request->file('file')->getPathname());
+            $fileContentBase64 = base64_encode($fileContent);
+            $metadataJson = json_encode($fileMetadata);
 
-        $client = new Client;
+            $client = new Client;
 
-        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-            'headers' => [
-                'Authorization' => 'Bearer '.$accessToken,
-                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-            ],
-            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-        ]);
-
-        $bodyContents = $response->getBody()->getContents();
-        $jsonResponse = json_decode($bodyContents, true);
-
-        if ($response->getStatusCode() === 200) { // Check for a successful status code
-            $file_id = $jsonResponse['id'];
-            $existingRecord = FinancialReport::where('chapter_id', $id)->first();
-
-            $existingRecord->update([
-                'bank_statement_included_path' => $file_id,
+            $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$accessToken,
+                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+                ],
+                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
             ]);
 
-            return redirect()->back()->with('success', 'File uploaded successfully!');
-        } else {
-            return redirect()->back()->with('error', 'File failed to upload');
+            $bodyContents = $response->getBody()->getContents();
+            $jsonResponse = json_decode($bodyContents, true);
+
+            if ($response->getStatusCode() === 200) { // Check for a successful status code
+                $file_id = $jsonResponse['id'];
+                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+
+                $existingRecord->update([
+                    'bank_statement_included_path' => $file_id,
+                ]);
+
+                return response()->json(['message' => 'File uploaded successfully!'], 200);
+            } else {
+                return response()->json(['message' => 'File failed to upload'], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            // Log the exception message
+            Log::error('File upload error: '.$e->getMessage());
+            return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
 
-    public function storeStatement2(StoreStatement2GoogleRequest $request, $id): RedirectResponse
+    public function storeStatement2(StoreStatement2GoogleRequest $request, $id)
     {
-        $chapter = DB::table('chapters as ch')
-            ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('ch.id', '=', $id)
-            ->first();
+        try{
+            $chapter = DB::table('chapters as ch')
+                ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->where('ch.is_active', '=', '1')
+                ->where('ch.id', '=', $id)
+                ->first();
 
-        $conf = $chapter->conference;
-        $state = $chapter->state;
-        $chapterName = $chapter->name;
-        $name = $chapter->state.'_'.$chapter->name.'_Statement2';
-        $accessToken = $this->token();
+            $conf = $chapter->conference;
+            $state = $chapter->state;
+            $chapterName = $chapter->name;
+            $name = $chapter->state.'_'.$chapter->name.'_Statement2';
+            $accessToken = $this->token();
 
-        $googleDrive = DB::table('google_drive')
-            ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
-            ->get();
-        $eoyDrive = $googleDrive[0]->eoy_uploads;
+            $googleDrive = DB::table('google_drive')
+                ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
+                ->get();
+            $eoyDrive = $googleDrive[0]->eoy_uploads;
 
-        // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
-        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
+            // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
+            $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
-        // Create conference folder if it doesn't exist in the shared drive
-        $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
+            // Create conference folder if it doesn't exist in the shared drive
+            $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
 
-        // Set parent IDs for the file
-        $fileMetadata = [
-            'name' => Str::ascii($name.'.'.$request->file('file')->getClientOriginalExtension()),
-            'mimeType' => $request->file('file')->getMimeType(),
-            'parents' => [$chapterFolderId],
-            'driveId' => $sharedDriveId, // Specify the Shared Drive ID
-        ];
+            // Set parent IDs for the file
+            $fileMetadata = [
+                'name' => Str::ascii($name.'.'.$request->file('file')->getClientOriginalExtension()),
+                'mimeType' => $request->file('file')->getMimeType(),
+                'parents' => [$chapterFolderId],
+                'driveId' => $sharedDriveId, // Specify the Shared Drive ID
+            ];
 
-        // Upload the file
-        $fileContent = file_get_contents($request->file('file')->getPathname());
-        $fileContentBase64 = base64_encode($fileContent);
-        $metadataJson = json_encode($fileMetadata);
+            // Upload the file
+            $fileContent = file_get_contents($request->file('file')->getPathname());
+            $fileContentBase64 = base64_encode($fileContent);
+            $metadataJson = json_encode($fileMetadata);
 
-        $client = new Client;
+            $client = new Client;
 
-        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-            'headers' => [
-                'Authorization' => 'Bearer '.$accessToken,
-                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-            ],
-            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-        ]);
-
-        $bodyContents = $response->getBody()->getContents();
-        $jsonResponse = json_decode($bodyContents, true);
-
-        if ($response->getStatusCode() === 200) { // Check for a successful status code
-            $file_id = $jsonResponse['id'];
-            $existingRecord = FinancialReport::where('chapter_id', $id)->first();
-
-            $existingRecord->update([
-                'bank_statement_2_included_path' => $file_id,
+            $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$accessToken,
+                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+                ],
+                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
             ]);
 
-            return redirect()->back()->with('success', 'File uploaded successfully!');
-        } else {
-            return redirect()->back()->with('error', 'File failed to upload');
+            $bodyContents = $response->getBody()->getContents();
+            $jsonResponse = json_decode($bodyContents, true);
+
+            if ($response->getStatusCode() === 200) { // Check for a successful status code
+                $file_id = $jsonResponse['id'];
+                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+
+                $existingRecord->update([
+                    'bank_statement_2_included_path' => $file_id,
+                ]);
+
+                return response()->json(['message' => 'File uploaded successfully!'], 200);
+            } else {
+                return response()->json(['message' => 'File failed to upload'], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            // Log the exception message
+            Log::error('File upload error: '.$e->getMessage());
+            return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
 
-    public function storeAward1(StoreAward1GoogleRequest $request, $id): RedirectResponse
+    public function storeAward1(StoreAward1GoogleRequest $request, $id)
     {
-        $chapter = DB::table('chapters as ch')
-            ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('ch.id', '=', $id)
-            ->first();
+        try{
+            $chapter = DB::table('chapters as ch')
+                ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->where('ch.is_active', '=', '1')
+                ->where('ch.id', '=', $id)
+                ->first();
 
-        $conf = $chapter->conference;
-        $state = $chapter->state;
-        $chapterName = $chapter->name;
-        $name = $chapter->state.'_'.$chapter->name.'_Award1';
-        $accessToken = $this->token();
+            $conf = $chapter->conference;
+            $state = $chapter->state;
+            $chapterName = $chapter->name;
+            $name = $chapter->state.'_'.$chapter->name.'_Award1';
+            $accessToken = $this->token();
 
-        $googleDrive = DB::table('google_drive')
-            ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
-            ->get();
-        $eoyDrive = $googleDrive[0]->eoy_uploads;
+            $googleDrive = DB::table('google_drive')
+                ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
+                ->get();
+            $eoyDrive = $googleDrive[0]->eoy_uploads;
 
-        // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
-        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
+            // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
+            $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
-        // Create conference folder if it doesn't exist in the shared drive
-        $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
+            // Create conference folder if it doesn't exist in the shared drive
+            $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
 
-        // Set parent IDs for the file
-        $fileMetadata = [
-            'name' => Str::ascii($name.'.'.$request->file('file')->getClientOriginalExtension()),
-            'mimeType' => $request->file('file')->getMimeType(),
-            'parents' => [$chapterFolderId],
-            'driveId' => $sharedDriveId, // Specify the Shared Drive ID
-        ];
+            // Set parent IDs for the file
+            $fileMetadata = [
+                'name' => Str::ascii($name.'.'.$request->file('file')->getClientOriginalExtension()),
+                'mimeType' => $request->file('file')->getMimeType(),
+                'parents' => [$chapterFolderId],
+                'driveId' => $sharedDriveId, // Specify the Shared Drive ID
+            ];
 
-        // Upload the file
-        $fileContent = file_get_contents($request->file('file')->getPathname());
-        $fileContentBase64 = base64_encode($fileContent);
-        $metadataJson = json_encode($fileMetadata);
+            // Upload the file
+            $fileContent = file_get_contents($request->file('file')->getPathname());
+            $fileContentBase64 = base64_encode($fileContent);
+            $metadataJson = json_encode($fileMetadata);
 
-        $client = new Client;
+            $client = new Client;
 
-        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-            'headers' => [
-                'Authorization' => 'Bearer '.$accessToken,
-                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-            ],
-            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-        ]);
-
-        $bodyContents = $response->getBody()->getContents();
-        $jsonResponse = json_decode($bodyContents, true);
-
-        if ($response->getStatusCode() === 200) { // Check for a successful status code
-            $file_id = $jsonResponse['id'];
-            $existingRecord = FinancialReport::where('chapter_id', $id)->first();
-
-            $existingRecord->update([
-                'award_1_files' => $file_id,
+            $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$accessToken,
+                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+                ],
+                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
             ]);
 
-            return redirect()->back()->with('success', 'File uploaded successfully!');
-        } else {
-            return redirect()->back()->with('error', 'File failed to upload');
+            $bodyContents = $response->getBody()->getContents();
+            $jsonResponse = json_decode($bodyContents, true);
+
+            if ($response->getStatusCode() === 200) { // Check for a successful status code
+                $file_id = $jsonResponse['id'];
+                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+
+                $existingRecord->update([
+                    'award_1_files' => $file_id,
+                ]);
+
+                return response()->json(['message' => 'File uploaded successfully!'], 200);
+            } else {
+                return response()->json(['message' => 'File failed to upload'], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            // Log the exception message
+            Log::error('File upload error: '.$e->getMessage());
+            return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
 
-    public function storeAward2(StoreAward2GoogleRequest $request, $id): RedirectResponse
+    public function storeAward2(StoreAward2GoogleRequest $request, $id)
     {
-        $chapter = DB::table('chapters as ch')
-            ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('ch.id', '=', $id)
-            ->first();
+        try{
+            $chapter = DB::table('chapters as ch')
+                ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->where('ch.is_active', '=', '1')
+                ->where('ch.id', '=', $id)
+                ->first();
 
-        $conf = $chapter->conference;
-        $state = $chapter->state;
-        $chapterName = $chapter->name;
-        $name = $chapter->state.'_'.$chapter->name.'_Award2';
-        $accessToken = $this->token();
+            $conf = $chapter->conference;
+            $state = $chapter->state;
+            $chapterName = $chapter->name;
+            $name = $chapter->state.'_'.$chapter->name.'_Award2';
+            $accessToken = $this->token();
 
-        $googleDrive = DB::table('google_drive')
-            ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
-            ->get();
-        $eoyDrive = $googleDrive[0]->eoy_uploads;
+            $googleDrive = DB::table('google_drive')
+                ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
+                ->get();
+            $eoyDrive = $googleDrive[0]->eoy_uploads;
 
-        // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
-        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
+            // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
+            $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
-        // Create conference folder if it doesn't exist in the shared drive
-        $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
+            // Create conference folder if it doesn't exist in the shared drive
+            $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
 
-        // Set parent IDs for the file
-        $fileMetadata = [
-            'name' => Str::ascii($name.'.'.$request->file('file')->getClientOriginalExtension()),
-            'mimeType' => $request->file('file')->getMimeType(),
-            'parents' => [$chapterFolderId],
-            'driveId' => $sharedDriveId, // Specify the Shared Drive ID
-        ];
+            // Set parent IDs for the file
+            $fileMetadata = [
+                'name' => Str::ascii($name.'.'.$request->file('file')->getClientOriginalExtension()),
+                'mimeType' => $request->file('file')->getMimeType(),
+                'parents' => [$chapterFolderId],
+                'driveId' => $sharedDriveId, // Specify the Shared Drive ID
+            ];
 
-        // Upload the file
-        $fileContent = file_get_contents($request->file('file')->getPathname());
-        $fileContentBase64 = base64_encode($fileContent);
-        $metadataJson = json_encode($fileMetadata);
+            // Upload the file
+            $fileContent = file_get_contents($request->file('file')->getPathname());
+            $fileContentBase64 = base64_encode($fileContent);
+            $metadataJson = json_encode($fileMetadata);
 
-        $client = new Client;
+            $client = new Client;
 
-        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-            'headers' => [
-                'Authorization' => 'Bearer '.$accessToken,
-                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-            ],
-            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-        ]);
-
-        $bodyContents = $response->getBody()->getContents();
-        $jsonResponse = json_decode($bodyContents, true);
-
-        if ($response->getStatusCode() === 200) { // Check for a successful status code
-            $file_id = $jsonResponse['id'];
-            $existingRecord = FinancialReport::where('chapter_id', $id)->first();
-
-            $existingRecord->update([
-                'award_2_files' => $file_id,
+            $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$accessToken,
+                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+                ],
+                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
             ]);
 
-            return redirect()->back()->with('success', 'File uploaded successfully!');
-        } else {
-            return redirect()->back()->with('error', 'File failed to upload');
+            $bodyContents = $response->getBody()->getContents();
+            $jsonResponse = json_decode($bodyContents, true);
+
+            if ($response->getStatusCode() === 200) { // Check for a successful status code
+                $file_id = $jsonResponse['id'];
+                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+
+                $existingRecord->update([
+                    'award_2_files' => $file_id,
+                ]);
+
+                return response()->json(['message' => 'File uploaded successfully!'], 200);
+            } else {
+                return response()->json(['message' => 'File failed to upload'], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            // Log the exception message
+            Log::error('File upload error: '.$e->getMessage());
+            return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
 
-    public function storeAward3(StoreAward3GoogleRequest $request, $id): RedirectResponse
+    public function storeAward3(StoreAward3GoogleRequest $request, $id)
     {
-        $chapter = DB::table('chapters as ch')
-            ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('ch.id', '=', $id)
-            ->first();
+        try{
+            $chapter = DB::table('chapters as ch')
+                ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->where('ch.is_active', '=', '1')
+                ->where('ch.id', '=', $id)
+                ->first();
 
-        $conf = $chapter->conference;
-        $state = $chapter->state;
-        $chapterName = $chapter->name;
-        $name = $chapter->state.'_'.$chapter->name.'_Award3';
-        $accessToken = $this->token();
+            $conf = $chapter->conference;
+            $state = $chapter->state;
+            $chapterName = $chapter->name;
+            $name = $chapter->state.'_'.$chapter->name.'_Award3';
+            $accessToken = $this->token();
 
-        $googleDrive = DB::table('google_drive')
-            ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
-            ->get();
-        $eoyDrive = $googleDrive[0]->eoy_uploads;
+            $googleDrive = DB::table('google_drive')
+                ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
+                ->get();
+            $eoyDrive = $googleDrive[0]->eoy_uploads;
 
-        // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
-        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
+            // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
+            $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
-        // Create conference folder if it doesn't exist in the shared drive
-        $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
+            // Create conference folder if it doesn't exist in the shared drive
+            $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
 
-        // Set parent IDs for the file
-        $fileMetadata = [
-            'name' => Str::ascii($name.'.'.$request->file('file')->getClientOriginalExtension()),
-            'mimeType' => $request->file('file')->getMimeType(),
-            'parents' => [$chapterFolderId],
-            'driveId' => $sharedDriveId, // Specify the Shared Drive ID
-        ];
+            // Set parent IDs for the file
+            $fileMetadata = [
+                'name' => Str::ascii($name.'.'.$request->file('file')->getClientOriginalExtension()),
+                'mimeType' => $request->file('file')->getMimeType(),
+                'parents' => [$chapterFolderId],
+                'driveId' => $sharedDriveId, // Specify the Shared Drive ID
+            ];
 
-        // Upload the file
-        $fileContent = file_get_contents($request->file('file')->getPathname());
-        $fileContentBase64 = base64_encode($fileContent);
-        $metadataJson = json_encode($fileMetadata);
+            // Upload the file
+            $fileContent = file_get_contents($request->file('file')->getPathname());
+            $fileContentBase64 = base64_encode($fileContent);
+            $metadataJson = json_encode($fileMetadata);
 
-        $client = new Client;
+            $client = new Client;
 
-        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-            'headers' => [
-                'Authorization' => 'Bearer '.$accessToken,
-                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-            ],
-            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-        ]);
-
-        $bodyContents = $response->getBody()->getContents();
-        $jsonResponse = json_decode($bodyContents, true);
-
-        if ($response->getStatusCode() === 200) { // Check for a successful status code
-            $file_id = $jsonResponse['id'];
-            $existingRecord = FinancialReport::where('chapter_id', $id)->first();
-
-            $existingRecord->update([
-                'award_3_files' => $file_id,
+            $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$accessToken,
+                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+                ],
+                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
             ]);
 
-            return redirect()->back()->with('success', 'File uploaded successfully!');
-        } else {
-            return redirect()->back()->with('error', 'File failed to upload');
+            $bodyContents = $response->getBody()->getContents();
+            $jsonResponse = json_decode($bodyContents, true);
+
+            if ($response->getStatusCode() === 200) { // Check for a successful status code
+                $file_id = $jsonResponse['id'];
+                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+
+                $existingRecord->update([
+                    'award_3_files' => $file_id,
+                ]);
+
+                return response()->json(['message' => 'File uploaded successfully!'], 200);
+            } else {
+                return response()->json(['message' => 'File failed to upload'], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            // Log the exception message
+            Log::error('File upload error: '.$e->getMessage());
+            return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
 
-    public function storeAward4(StoreAward4GoogleRequest $request, $id): RedirectResponse
+    public function storeAward4(StoreAward4GoogleRequest $request, $id)
     {
-        $chapter = DB::table('chapters as ch')
-            ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('ch.id', '=', $id)
-            ->first();
+        try{
+            $chapter = DB::table('chapters as ch')
+                ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->where('ch.is_active', '=', '1')
+                ->where('ch.id', '=', $id)
+                ->first();
 
-        $conf = $chapter->conference;
-        $state = $chapter->state;
-        $chapterName = $chapter->name;
-        $name = $chapter->state.'_'.$chapter->name.'_Award4';
-        $accessToken = $this->token();
+            $conf = $chapter->conference;
+            $state = $chapter->state;
+            $chapterName = $chapter->name;
+            $name = $chapter->state.'_'.$chapter->name.'_Award4';
+            $accessToken = $this->token();
 
-        $googleDrive = DB::table('google_drive')
-            ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
-            ->get();
-        $eoyDrive = $googleDrive[0]->eoy_uploads;
+            $googleDrive = DB::table('google_drive')
+                ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
+                ->get();
+            $eoyDrive = $googleDrive[0]->eoy_uploads;
 
-        // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
-        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
+            // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
+            $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
-        // Create conference folder if it doesn't exist in the shared drive
-        $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
+            // Create conference folder if it doesn't exist in the shared drive
+            $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
 
-        // Set parent IDs for the file
-        $fileMetadata = [
-            'name' => Str::ascii($name.'.'.$request->file('file')->getClientOriginalExtension()),
-            'mimeType' => $request->file('file')->getMimeType(),
-            'parents' => [$chapterFolderId],
-            'driveId' => $sharedDriveId, // Specify the Shared Drive ID
-        ];
+            // Set parent IDs for the file
+            $fileMetadata = [
+                'name' => Str::ascii($name.'.'.$request->file('file')->getClientOriginalExtension()),
+                'mimeType' => $request->file('file')->getMimeType(),
+                'parents' => [$chapterFolderId],
+                'driveId' => $sharedDriveId, // Specify the Shared Drive ID
+            ];
 
-        // Upload the file
-        $fileContent = file_get_contents($request->file('file')->getPathname());
-        $fileContentBase64 = base64_encode($fileContent);
-        $metadataJson = json_encode($fileMetadata);
+            // Upload the file
+            $fileContent = file_get_contents($request->file('file')->getPathname());
+            $fileContentBase64 = base64_encode($fileContent);
+            $metadataJson = json_encode($fileMetadata);
 
-        $client = new Client;
+            $client = new Client;
 
-        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-            'headers' => [
-                'Authorization' => 'Bearer '.$accessToken,
-                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-            ],
-            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-        ]);
-
-        $bodyContents = $response->getBody()->getContents();
-        $jsonResponse = json_decode($bodyContents, true);
-
-        if ($response->getStatusCode() === 200) { // Check for a successful status code
-            $file_id = $jsonResponse['id'];
-            $existingRecord = FinancialReport::where('chapter_id', $id)->first();
-
-            $existingRecord->update([
-                'award_4_files' => $file_id,
+            $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$accessToken,
+                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+                ],
+                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
             ]);
 
-            return redirect()->back()->with('success', 'File uploaded successfully!');
-        } else {
-            return redirect()->back()->with('error', 'File failed to upload');
+            $bodyContents = $response->getBody()->getContents();
+            $jsonResponse = json_decode($bodyContents, true);
+
+            if ($response->getStatusCode() === 200) { // Check for a successful status code
+                $file_id = $jsonResponse['id'];
+                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+
+                $existingRecord->update([
+                    'award_4_files' => $file_id,
+                ]);
+
+                return response()->json(['message' => 'File uploaded successfully!'], 200);
+            } else {
+                return response()->json(['message' => 'File failed to upload'], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            // Log the exception message
+            Log::error('File upload error: '.$e->getMessage());
+            return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
 
-    public function storeAward5(StoreAward5GoogleRequest $request, $id): RedirectResponse
+    public function storeAward5(StoreAward5GoogleRequest $request, $id)
     {
-        $chapter = DB::table('chapters as ch')
-            ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('ch.id', '=', $id)
-            ->first();
+        try{
+            $chapter = DB::table('chapters as ch')
+                ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->where('ch.is_active', '=', '1')
+                ->where('ch.id', '=', $id)
+                ->first();
 
-        $conf = $chapter->conference;
-        $state = $chapter->state;
-        $chapterName = $chapter->name;
-        $name = $chapter->state.'_'.$chapter->name.'_Award5';
-        $accessToken = $this->token();
+            $conf = $chapter->conference;
+            $state = $chapter->state;
+            $chapterName = $chapter->name;
+            $name = $chapter->state.'_'.$chapter->name.'_Award5';
+            $accessToken = $this->token();
 
-        $googleDrive = DB::table('google_drive')
-            ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
-            ->get();
-        $eoyDrive = $googleDrive[0]->eoy_uploads;
+            $googleDrive = DB::table('google_drive')
+                ->select('google_drive.eoy_uploads as eoy_uploads, google_drive.eoy_year as eoy_year, ')
+                ->get();
+            $eoyDrive = $googleDrive[0]->eoy_uploads;
 
-        // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
-        $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
+            // $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';
+            $sharedDriveId = $eoyDrive;  //Shared Drive -> EOY Uploads
 
-        // Create conference folder if it doesn't exist in the shared drive
-        $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
+            // Create conference folder if it doesn't exist in the shared drive
+            $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
 
-        // Set parent IDs for the file
-        $fileMetadata = [
-            'name' => Str::ascii($name.'.'.$request->file('file')->getClientOriginalExtension()),
-            'mimeType' => $request->file('file')->getMimeType(),
-            'parents' => [$chapterFolderId],
-            'driveId' => $sharedDriveId, // Specify the Shared Drive ID
-        ];
+            // Set parent IDs for the file
+            $fileMetadata = [
+                'name' => Str::ascii($name.'.'.$request->file('file')->getClientOriginalExtension()),
+                'mimeType' => $request->file('file')->getMimeType(),
+                'parents' => [$chapterFolderId],
+                'driveId' => $sharedDriveId, // Specify the Shared Drive ID
+            ];
 
-        // Upload the file
-        $fileContent = file_get_contents($request->file('file')->getPathname());
-        $fileContentBase64 = base64_encode($fileContent);
-        $metadataJson = json_encode($fileMetadata);
+            // Upload the file
+            $fileContent = file_get_contents($request->file('file')->getPathname());
+            $fileContentBase64 = base64_encode($fileContent);
+            $metadataJson = json_encode($fileMetadata);
 
-        $client = new Client;
+            $client = new Client;
 
-        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-            'headers' => [
-                'Authorization' => 'Bearer '.$accessToken,
-                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-            ],
-            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-        ]);
-
-        $bodyContents = $response->getBody()->getContents();
-        $jsonResponse = json_decode($bodyContents, true);
-
-        if ($response->getStatusCode() === 200) { // Check for a successful status code
-            $file_id = $jsonResponse['id'];
-            $existingRecord = FinancialReport::where('chapter_id', $id)->first();
-
-            $existingRecord->update([
-                'award_5_files' => $file_id,
+            $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$accessToken,
+                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+                ],
+                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
             ]);
 
-            return redirect()->back()->with('success', 'File uploaded successfully!');
-        } else {
-            return redirect()->back()->with('error', 'File failed to upload');
+            $bodyContents = $response->getBody()->getContents();
+            $jsonResponse = json_decode($bodyContents, true);
+
+            if ($response->getStatusCode() === 200) { // Check for a successful status code
+                $file_id = $jsonResponse['id'];
+                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+
+                $existingRecord->update([
+                    'award_5_files' => $file_id,
+                ]);
+
+                return response()->json(['message' => 'File uploaded successfully!'], 200);
+            } else {
+                return response()->json(['message' => 'File failed to upload'], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            // Log the exception message
+            Log::error('File upload error: '.$e->getMessage());
+            return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
 
-    public function storeResources(StoreResourcesGoogleRequest $request, $id): RedirectResponse
+    public function storeResources(StoreResourcesGoogleRequest $request, $id)
     {
-        $resource = Resources::findOrFail($id);
+        try{
+            $resource = Resources::findOrFail($id);
 
-        $accessToken = $this->token();
+            $accessToken = $this->token();
 
-        $googleDrive = DB::table('google_drive')
-            ->select('google_drive.resources_uploads as resources_uploads')
-            ->get();
-        $resourcesDrive = $googleDrive[0]->resources_uploads;
+            $googleDrive = DB::table('google_drive')
+                ->select('google_drive.resources_uploads as resources_uploads')
+                ->get();
+            $resourcesDrive = $googleDrive[0]->resources_uploads;
 
-        $file = $request->file('file');
-        // $sharedDriveId = '17YQBX5T67g0azczV844XyUJH1TM5RAcA';
-        $sharedDriveId = $resourcesDrive;   //Shared Drive -> CC Resources -> Resources - Uploaded Online
+            $file = $request->file('file');
+            // $sharedDriveId = '17YQBX5T67g0azczV844XyUJH1TM5RAcA';
+            $sharedDriveId = $resourcesDrive;   //Shared Drive -> CC Resources -> Resources - Uploaded Online
 
-        $fileMetadata = [
-            'name' => Str::ascii($file->getClientOriginalName()), // Use getClientOriginalName() to get the file name
-            'parents' => [$sharedDriveId],
-            'mimeType' => $file->getMimeType(),
-        ];
+            $fileMetadata = [
+                'name' => Str::ascii($file->getClientOriginalName()), // Use getClientOriginalName() to get the file name
+                'parents' => [$sharedDriveId],
+                'mimeType' => $file->getMimeType(),
+            ];
 
-        $metadataJson = json_encode($fileMetadata);
-        $fileContent = file_get_contents($file->getPathname());
-        $fileContentBase64 = base64_encode($fileContent);
+            $metadataJson = json_encode($fileMetadata);
+            $fileContent = file_get_contents($file->getPathname());
+            $fileContentBase64 = base64_encode($fileContent);
 
-        $client = new Client;
+            $client = new Client;
 
-        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-            'headers' => [
-                'Authorization' => 'Bearer '.$accessToken,
-                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-            ],
-            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-        ]);
+            $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$accessToken,
+                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+                ],
+                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
+            ]);
 
-        $bodyContents = $response->getBody()->getContents();
-        $jsonResponse = json_decode($bodyContents, true);
+            $bodyContents = $response->getBody()->getContents();
+            $jsonResponse = json_decode($bodyContents, true);
 
-        if ($response->getStatusCode() === 200) { // Check for a successful status code
-            $file_id = $jsonResponse['id'];
+            if ($response->getStatusCode() === 200) { // Check for a successful status code
+                $file_id = $jsonResponse['id'];
 
-            $resource->file_path = "https://drive.google.com/uc?export=download&id=$file_id";
-            $resource->save();
+                $resource->file_path = "https://drive.google.com/uc?export=download&id=$file_id";
+                $resource->save();
 
-            return redirect()->back()->with('success', 'File uploaded successfully!');
-        } else {
-            return redirect()->back()->with('error', 'File failed to upload');
+                return response()->json(['message' => 'File uploaded successfully!'], 200);
+            } else {
+                return response()->json(['message' => 'File failed to upload'], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            // Log the exception message
+            Log::error('File upload error: '.$e->getMessage());
+            return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
-
     }
 
-    public function storeToolkit(StoreToolkitGoogleRequest $request, $id): RedirectResponse
+    public function storeToolkit(StoreToolkitGoogleRequest $request, $id)
     {
-        $resource = Resources::findOrFail($id);
-        $accessToken = $this->token();
+        try{
+            $resource = Resources::findOrFail($id);
+            $accessToken = $this->token();
 
-        $googleDrive = DB::table('google_drive')
-            ->select('google_drive.resources_uploads as resources_uploads')
-            ->get();
-        $resourcesDrive = $googleDrive[0]->resources_uploads;
+            $googleDrive = DB::table('google_drive')
+                ->select('google_drive.resources_uploads as resources_uploads')
+                ->get();
+            $resourcesDrive = $googleDrive[0]->resources_uploads;
 
-        $file = $request->file('file');
-        // $sharedDriveId = '17YQBX5T67g0azczV844XyUJH1TM5RAcA';
-        $sharedDriveId = $resourcesDrive;   //Shared Drive -> CC Resources -> Resources - Uploaded Online
+            $file = $request->file('file');
+            // $sharedDriveId = '17YQBX5T67g0azczV844XyUJH1TM5RAcA';
+            $sharedDriveId = $resourcesDrive;   //Shared Drive -> CC Resources -> Resources - Uploaded Online
 
-        $fileMetadata = [
-            'name' => Str::ascii($file->getClientOriginalName()), // Use getClientOriginalName() to get the file name
-            'parents' => [$sharedDriveId],
-            'mimeType' => $file->getMimeType(),
-        ];
+            $fileMetadata = [
+                'name' => Str::ascii($file->getClientOriginalName()), // Use getClientOriginalName() to get the file name
+                'parents' => [$sharedDriveId],
+                'mimeType' => $file->getMimeType(),
+            ];
 
-        $metadataJson = json_encode($fileMetadata);
-        $fileContent = file_get_contents($file->getPathname());
-        $fileContentBase64 = base64_encode($fileContent);
+            $metadataJson = json_encode($fileMetadata);
+            $fileContent = file_get_contents($file->getPathname());
+            $fileContentBase64 = base64_encode($fileContent);
 
-        $client = new Client;
+            $client = new Client;
 
-        $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-            'headers' => [
-                'Authorization' => 'Bearer '.$accessToken,
-                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-            ],
-            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-        ]);
+            $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$accessToken,
+                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+                ],
+                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
+            ]);
 
-        $bodyContents = $response->getBody()->getContents();
-        $jsonResponse = json_decode($bodyContents, true);
+            $bodyContents = $response->getBody()->getContents();
+            $jsonResponse = json_decode($bodyContents, true);
 
-        if ($response->getStatusCode() === 200) { // Check for a successful status code
-            $file_id = $jsonResponse['id'];
+            if ($response->getStatusCode() === 200) { // Check for a successful status code
+                $file_id = $jsonResponse['id'];
 
-            $resource->file_path = "https://drive.google.com/uc?export=download&id=$file_id";
-            $resource->save();
+                $resource->file_path = "https://drive.google.com/uc?export=download&id=$file_id";
+                $resource->save();
 
-            return redirect()->back()->with('success', 'File uploaded successfully!');
-        } else {
-            return redirect()->back()->with('error', 'File failed to upload');
+                return response()->json(['message' => 'File uploaded successfully!'], 200);
+            } else {
+                return response()->json(['message' => 'File failed to upload'], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            // Log the exception message
+            Log::error('File upload error: '.$e->getMessage());
+            return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
-
     }
 }

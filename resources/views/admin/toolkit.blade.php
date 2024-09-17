@@ -263,8 +263,6 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span></button>
                                 <h3 class="modal-title" id="#editResourceModal{{ $resourceItem->id }}Label">{{ $resourceItem->name }}</h3>
                             </div>
                         <div class="modal-body">
@@ -333,8 +331,6 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span></button>
                                 <h4 class="modal-title">Add a New Resource</h4>
                             </div>
                             <div class="modal-body">
@@ -446,117 +442,150 @@ $(document).ready(function() {
     });
 
     function addFile() {
-    var fileCategoryNew = document.getElementById('fileCategoryNew').value;
-    var fileNameNew = document.getElementById('fileNameNew').value;
-    var fileDescriptionNew = document.getElementById('fileDescriptionNew').value;
-    var fileTypeNew = document.getElementById('fileTypeNew').value;
-    var fileVersionNew = document.getElementById('fileVersionNew').value;
-    var linkNew = document.getElementById('linkNew').value;
+        var fileCategoryNew = document.getElementById('fileCategoryNew').value;
+        var fileNameNew = document.getElementById('fileNameNew').value;
+        var fileDescriptionNew = document.getElementById('fileDescriptionNew').value;
+        var fileTypeNew = document.getElementById('fileTypeNew').value;
+        var fileVersionNew = document.getElementById('fileVersionNew').value;
+        var linkNew = document.getElementById('linkNew').value;
 
-    if (fileCategoryNew == '') {
-        alert('Category is Required.');
-        return false; // Prevent form submission
-    }
-    if (fileTypeNew == '') {
-        alert('File Type is Required.');
-        return false; // Prevent form submission
-    }
-    if (fileNameNew == '') {
-        alert('Toolkit Name is Required.');
-        return false; // Prevent form submission
-    }
-    if (fileNameNew.length > 50) {
-        alert('Name cannot exceed 50 characters.');
-        return false; // Prevent form submission
-    }
-    if (fileDescriptionNew == '') {
-        alert('Toolkit Description is Required.');
-        return false; // Prevent form submission
-    }
-    if (fileDescriptionNew.length > 500) {
-        alert('Description cannot exceed 500 characters.');
-        return false; // Prevent form submission
-    }
-    if (fileTypeNew === '2') {
-            if (linkNew == '') {
-            alert('Toolkit Link is Required.');
+        // Initialize an array to collect validation errors
+        let validationErrors = [];
+
+        // Collect validation errors
+        if (fileCategoryNew === '') {
+            validationErrors.push('Category is Required.');
+        }
+        if (fileNameNew === '') {
+            validationErrors.push('Name is Required.');
+        }
+        if (fileNameNew.length > 50) {
+            validationErrors.push('Name cannot exceed 50 characters.');
+        }
+        if (fileDescriptionNew === '') {
+            validationErrors.push('Description is Required.');
+        }
+        if (fileDescriptionNew.length > 500) {
+            validationErrors.push('Description cannot exceed 500 characters.');
+        }
+        if (fileTypeNew === '') {
+            validationErrors.push('File Type is Required.');
+        }
+        if (fileTypeNew === '1' && fileVersionNew === '') {
+            validationErrors.push('File Version is Required.');
+        }
+        if (fileTypeNew === '2' && linkNew === '') {
+            validationErrors.push('Link is Required.');
+        }
+
+        // Check if there are any validation errors
+        if (validationErrors.length > 0) {
+            Swal.fire({
+                title: 'Error!',
+                html: validationErrors.join('<br>'),
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    confirmButton: 'btn btn-danger'
+                }
+            });
             return false; // Prevent form submission
         }
-    }
 
-    // Get the CSRF token value from the meta tag
-    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        // Get the CSRF token value from the meta tag
+        var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    // Prepare the data to send
-    var data = {
-        fileCategoryNew: fileCategoryNew,
-        fileNameNew: fileNameNew,
-        fileDescriptionNew: fileDescriptionNew,
-        fileTypeNew: fileTypeNew
-    };
-
-    if (fileTypeNew === '1') { // Add version and link fields if file type is 1 (Document to Download)
-        data.fileVersionNew = fileVersionNew;
-    } else if (fileTypeNew === '2') { // Add file path if file type is 2 (Link to Webpage)
-        data.LinkNew = linkNew;
-    }
-
-    // Send an AJAX request to Laravel backend to create a new toolkit
-    $.ajax({
-    url: '{{ route('admin.addtoolkit') }}',
-    method: 'POST',
-    headers: {
-        'X-CSRF-TOKEN': csrfToken
-    },
-    data: data,
-    success: function(response) {
-        // Extract the newly created id from the response
-        var id = response.id;
-        var fileType = response.file_type;
-
-        // Now, you have the id, you can proceed to upload the file to Google Drive
-        // Construct the FormData object to send
-        if (fileType === '1') {
+        // Initialize the FormData object
         var formData = new FormData();
-        formData.append('file', document.getElementById('fileUploadNew').files[0]);
+        formData.append('fileCategoryNew', fileCategoryNew);
+        formData.append('fileNameNew', fileNameNew);
+        formData.append('fileDescriptionNew', fileDescriptionNew);
+        formData.append('fileTypeNew', fileTypeNew);
 
-        // Send an AJAX request to upload the file to Google Drive
+        if (fileTypeNew === '1') {
+            formData.append('fileVersionNew', fileVersionNew);
+        } else if (fileTypeNew === '2') {
+            formData.append('linkNew', linkNew); // Include the link
+        }
+
+        // Send an AJAX request to Laravel backend to create a new toolkit
         $.ajax({
-            url: '{{ route('store.toolkit', '') }}' + '/' + id,
+            url: '{{ route('admin.addtoolkit') }}',
             method: 'POST',
             data: formData,
-            processData: false,
-            contentType: false,
+            processData: false, // Required for FormData
+            contentType: false, // Required for FormData
             headers: {
                 'X-CSRF-TOKEN': csrfToken
             },
             success: function(response) {
-                alert('Toolkit & File added successfully');
-                location.reload();
+                var id = response.id;
+                var fileType = response.file_type;
+
+                // Check if file type requires further processing
+                if (fileType === '1') {
+                    Swal.fire({
+                        title: 'Processing...',
+                        text: 'Please wait while we update the toolkit.',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    var formData = new FormData();
+                    formData.append('file', document.getElementById('fileUploadNew').files[0]);
+
+                    // Send an AJAX request to upload the file to Google Drive
+                    $.ajax({
+                        url: '{{ route('store.toolkit', '') }}' + '/' + id,
+                        method: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Toolkit & File added successfully.',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire('Error!', 'File upload failed. Please try again.', 'error');
+                            console.error(xhr.responseText);
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Toolkit added successfully.',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        location.reload(); // Reload the page to reflect changes
+                    });
+                }
             },
             error: function(xhr, status, error) {
-                // Handle error if needed
+                Swal.fire('Error!', 'Toolkit add failed. Please try again.', 'error');
                 console.error(xhr.responseText);
             }
         });
-    } else {
-            alert('Toolkit added successfully');
-            location.reload();
-        }
-    },
-    error: function(xhr, status, error) {
-        // Handle error
-        console.error(xhr.responseText);
+
+        // Close the modal
+        $('#modal-task').modal('hide');
+
+        // Prevent form submission
+        return false;
     }
-});
-
-    // Close the modal
-    $('#modal-task').modal('hide');
-
-    // Prevent form submission
-    return false;
-}
-
 
 function updateFile(id) {
     var file = document.getElementById('fileUpload' + id).files[0];
@@ -572,21 +601,35 @@ function updateFile(id) {
     formData.append('fileVersion', fileVersion);
     formData.append('link', link);
 
-    if (fileDescription == '') {
-        alert('Toolkit Description is Required.');
-        return false; // Prevent form submission
+    // Initialize an array to collect validation errors
+    let validationErrors = [];
+
+    // Collect validation errors
+    if (fileDescription === '') {
+        validationErrors.push('Description is Required.');
     }
     if (fileDescription.length > 500) {
-        alert('Description cannot exceed 500 characters.');
-        return false; // Prevent form submission
+        validationErrors.push('Description cannot exceed 500 characters.');
     }
-    if (fileType === '2') {
-            if (link == '') {
-            alert('Toolkit Link is Required.');
-            return false; // Prevent form submission
-        }
+    if (fileType === '2' && link === '') {
+        validationErrors.push('Link is Required.');
     }
 
+    // Check if there are any validation errors
+    if (validationErrors.length > 0) {
+        Swal.fire({
+            title: 'Error!',
+            html: validationErrors.join('<br>'), // Combine all errors into a single string with line breaks
+            icon: 'error',
+            confirmButtonText: 'OK',
+            customClass: {
+                confirmButton: 'btn btn-danger' // Add your custom button class here
+            }
+        });
+        return false; // Prevent form submission
+    }
+
+    // Continue with the form submission process if no errors
     // Get the CSRF token value from the meta tag
     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
@@ -601,37 +644,60 @@ function updateFile(id) {
             'X-CSRF-TOKEN': csrfToken
         },
         success: function(response) {
-
-    // Send an AJAX request to upload the file to Google Drive
-    if (fileType === '1') {
-        $.ajax({
-            url: '{{ route('store.toolkit', '') }}' + '/' + id,
-            method: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            headers: {
-                'X-CSRF-TOKEN': csrfToken
-            },
-            success: function(response) {
-                alert('Toolkit & File updated successfully');
-                location.reload();
-            },
-            error: function(xhr, status, error) {
-                // Handle error if needed
-                console.error(xhr.responseText);
+            // Check if file type requires further processing
+            if (fileType === '1') {
+                 // Show the processing Swal
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Please wait while we update the toolkit.',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                // Send an AJAX request to upload the file to Google Drive
+                $.ajax({
+                    url: '{{ route('store.toolkit', '') }}' + '/' + id,
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    success: function(response) {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Toolkit & File updated successfully.',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            location.reload(); // Reload the page to reflect changes
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire('Error!', 'File upload failed. Please try again.', 'error');
+                        console.error(xhr.responseText);
+                    }
+                });
+            } else {
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Toolkit updated successfully.',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    location.reload(); // Reload the page to reflect changes
+                });
             }
-        });
-    } else {
-            alert('Toolkit updated successfully');
-            location.reload();
+        },
+        error: function(xhr, status, error) {
+            Swal.fire('Error!', 'Toolkit update failed. Please try again.', 'error');
+            console.error(xhr.responseText);
         }
-    },
-    error: function(xhr, status, error) {
-        // Handle error
-        console.error(xhr.responseText);
-    }
-});
+    });
 
     // Close the modal
     $('#editResourceModal' + id).modal('hide');
