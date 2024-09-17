@@ -281,7 +281,7 @@ class CoordinatorController extends Controller
 
             $cordReportingTree = DB::table('coordinator_reporting_tree')
                 ->select('layer0', 'layer1', 'layer2', 'layer3', 'layer4', 'layer5', 'layer6', 'layer7', 'layer8')
-                ->where('id', '=', $corId)
+                ->where('id', '=', $cordId)
                 ->limit(1)
                 ->get();
             $layer0 = $cordReportingTree[0]->layer0;
