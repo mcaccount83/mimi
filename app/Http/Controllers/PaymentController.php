@@ -39,7 +39,7 @@ class PaymentController extends Controller
         $chConf = $chapterDetails['conference'];
         $chPcid = $chapterDetails['primary_coordinator_id'];
 
-        $presDetails = DB::table('board_details as bd')
+        $presDetails = DB::table('boards as bd')
             ->select('bd.chapter_id as chapter_id', 'bd.board_position_id as board_position_id', 'bd.first_name as first_name', 'bd.last_name as last_name',
                 'bd.street_address as street_address', 'bd.city as city', 'bd.state as state', 'bd.zip as zip')
             ->where('bd.chapter_id', '=', $chapterId)
@@ -49,7 +49,7 @@ class PaymentController extends Controller
         $company = $chapterName.', '.$chapterState;
         $next_renewal_year = $chapterDetails['next_renewal_year'];
 
-        $chapterEmailList = DB::table('board_details as bd')
+        $chapterEmailList = DB::table('boards as bd')
             ->select('bd.email as bor_email')
             ->where('bd.chapter_id', '=', $chapterId)
             ->get();
@@ -326,7 +326,7 @@ class PaymentController extends Controller
         $chConf = $chapterDetails['conference'];
         $chPcid = $chapterDetails['primary_coordinator_id'];
 
-        $presDetails = DB::table('board_details as bd')
+        $presDetails = DB::table('boards as bd')
             ->select('bd.chapter_id as chapter_id', 'bd.board_position_id as board_position_id', 'bd.first_name as first_name', 'bd.last_name as last_name',
                 'bd.street_address as street_address', 'bd.city as city', 'bd.state as state', 'bd.zip as zip')
             ->where('bd.chapter_id', '=', $chapterId)
@@ -336,7 +336,7 @@ class PaymentController extends Controller
         $company = $chapterName.', '.$chapterState;
         $next_renewal_year = $chapterDetails['next_renewal_year'];
 
-        $chapterEmailList = DB::table('board_details as bd')
+        $chapterEmailList = DB::table('boards as bd')
             ->select('bd.email as bor_email')
             ->where('bd.chapter_id', '=', $chapterId)
             ->get();

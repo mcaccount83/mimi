@@ -146,14 +146,14 @@ class HomeController extends Controller
                 $chapterList = DB::table('chapters as ch')
                     ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip',
                         'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
-                    ->leftJoin('board_details as bd', 'ch.id', '=', 'bd.chapter_id')
+                    ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
                     ->where('ch.is_active', '=', '1')
                     ->where('ch.id', '=', $chapterId)
                     ->where('bd.board_position_id', '=', '1')
                             //->orderBy('bd.board_position_id','ASC')
                     ->get();
 
-                $AVPDetails = DB::table('board_details as bd')
+                $AVPDetails = DB::table('boards as bd')
                     ->select('bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.board_position_id', 'bd.street_address as avp_addr',
                         'bd.city as avp_city', 'bd.zip as avp_zip', 'bd.phone as avp_phone', 'bd.state as avp_state', 'bd.user_id as user_id')
                     ->where('bd.chapter_id', '=', $chapterId)
@@ -165,7 +165,7 @@ class HomeController extends Controller
                     $AVPDetails = json_decode(json_encode($AVPDetails));
                 }
 
-                $MVPDetails = DB::table('board_details as bd')
+                $MVPDetails = DB::table('boards as bd')
                     ->select('bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.board_position_id', 'bd.street_address as mvp_addr',
                         'bd.city as mvp_city', 'bd.zip as mvp_zip', 'bd.phone as mvp_phone', 'bd.state as mvp_state', 'bd.user_id as user_id')
                     ->where('bd.chapter_id', '=', $chapterId)
@@ -177,7 +177,7 @@ class HomeController extends Controller
                     $MVPDetails = json_decode(json_encode($MVPDetails));
                 }
 
-                $TRSDetails = DB::table('board_details as bd')
+                $TRSDetails = DB::table('boards as bd')
                     ->select('bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.board_position_id', 'bd.street_address as trs_addr',
                         'bd.city as trs_city', 'bd.zip as trs_zip', 'bd.phone as trs_phone', 'bd.state as trs_state', 'bd.user_id as user_id')
                     ->where('bd.chapter_id', '=', $chapterId)
@@ -189,7 +189,7 @@ class HomeController extends Controller
                     $TRSDetails = json_decode(json_encode($TRSDetails));
                 }
 
-                $SECDetails = DB::table('board_details as bd')
+                $SECDetails = DB::table('boards as bd')
                     ->select('bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.board_position_id', 'bd.street_address as sec_addr',
                         'bd.city as sec_city', 'bd.zip as sec_zip', 'bd.phone as sec_phone', 'bd.state as sec_state', 'bd.user_id as user_id')
                     ->where('bd.chapter_id', '=', $chapterId)

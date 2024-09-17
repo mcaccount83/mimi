@@ -63,7 +63,7 @@ class ExportController extends Controller
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city', 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
@@ -101,7 +101,7 @@ class ExportController extends Controller
                 //For AVP Details
                 $avpDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.phone as avp_phone', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '2')
                     ->where('chapters.id', '=', $chapterId)
@@ -120,7 +120,7 @@ class ExportController extends Controller
                 //For MVP Details
                 $mvpDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.phone as mvp_phone', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '3')
                     ->where('chapters.id', '=', $chapterId)
@@ -139,7 +139,7 @@ class ExportController extends Controller
                 //For TREASURER Details
                 $trsDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.phone as trs_phone', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '4')
                     ->where('chapters.id', '=', $chapterId)
@@ -158,7 +158,7 @@ class ExportController extends Controller
                 //For SECRETARY Details
                 $secDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.phone as sec_phone', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '5')
                     ->where('chapters.id', '=', $chapterId)
@@ -275,7 +275,7 @@ class ExportController extends Controller
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city', 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '0')
@@ -315,7 +315,7 @@ class ExportController extends Controller
                 //For AVP Details
                 $avpDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '0')
                     ->where('bd.board_position_id', '=', '2')
                     ->where('chapters.id', '=', $chapterId)
@@ -332,7 +332,7 @@ class ExportController extends Controller
                 //For MVP Details
                 $mvpDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '0')
                     ->where('bd.board_position_id', '=', '3')
                     ->where('chapters.id', '=', $chapterId)
@@ -349,7 +349,7 @@ class ExportController extends Controller
                 //For TREASURER Details
                 $trsDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '0')
                     ->where('bd.board_position_id', '=', '4')
                     ->where('chapters.id', '=', $chapterId)
@@ -366,7 +366,7 @@ class ExportController extends Controller
                 //For SECRETARY Details
                 $secDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '0')
                     ->where('bd.board_position_id', '=', '5')
                     ->where('chapters.id', '=', $chapterId)
@@ -483,7 +483,7 @@ class ExportController extends Controller
                 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
                 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
@@ -584,7 +584,7 @@ class ExportController extends Controller
                 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
                 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
@@ -670,7 +670,7 @@ class ExportController extends Controller
                 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
                 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
@@ -686,7 +686,7 @@ class ExportController extends Controller
                 //For AVP Details
                 $avpDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '2')
                     ->where('chapters.id', '=', $chapterId)
@@ -703,7 +703,7 @@ class ExportController extends Controller
                 //For MVP Details
                 $mvpDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '3')
                     ->where('chapters.id', '=', $chapterId)
@@ -720,7 +720,7 @@ class ExportController extends Controller
                 //For TREASURER Details
                 $trsDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '4')
                     ->where('chapters.id', '=', $chapterId)
@@ -737,7 +737,7 @@ class ExportController extends Controller
                 //For SECRETARY Details
                 $secDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '5')
                     ->where('chapters.id', '=', $chapterId)
@@ -844,7 +844,7 @@ class ExportController extends Controller
                 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
                 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '0')
@@ -859,7 +859,7 @@ class ExportController extends Controller
                 //For AVP Details
                 $avpDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '0')
                     ->where('bd.board_position_id', '=', '2')
                     ->where('chapters.id', '=', $chapterId)
@@ -876,7 +876,7 @@ class ExportController extends Controller
                 //For MVP Details
                 $mvpDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '0')
                     ->where('bd.board_position_id', '=', '3')
                     ->where('chapters.id', '=', $chapterId)
@@ -893,7 +893,7 @@ class ExportController extends Controller
                 //For TREASURER Details
                 $trsDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '0')
                     ->where('bd.board_position_id', '=', '4')
                     ->where('chapters.id', '=', $chapterId)
@@ -910,7 +910,7 @@ class ExportController extends Controller
                 //For SECRETARY Details
                 $secDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '0')
                     ->where('bd.board_position_id', '=', '5')
                     ->where('chapters.id', '=', $chapterId)
@@ -1048,7 +1048,7 @@ class ExportController extends Controller
                 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
                 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
@@ -1140,7 +1140,7 @@ class ExportController extends Controller
                 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
                 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
@@ -1901,7 +1901,7 @@ class ExportController extends Controller
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as region')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
@@ -2398,7 +2398,7 @@ class ExportController extends Controller
         $activeChapterList = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'bd.email as pre_email', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
@@ -2414,7 +2414,7 @@ class ExportController extends Controller
                 //For AVP Details
                 $avpDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.email as avp_email', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '2')
                     ->where('chapters.id', '=', $chapterId)
@@ -2427,7 +2427,7 @@ class ExportController extends Controller
                 //For MVP Details
                 $mvpDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.email as mvp_email', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '3')
                     ->where('chapters.id', '=', $chapterId)
@@ -2440,7 +2440,7 @@ class ExportController extends Controller
                 //For TREASURER Details
                 $trsDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.email as trs_email', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '4')
                     ->where('chapters.id', '=', $chapterId)
@@ -2453,7 +2453,7 @@ class ExportController extends Controller
                 //For SECRETARY Details
                 $secDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.email as sec_email', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '5')
                     ->where('chapters.id', '=', $chapterId)

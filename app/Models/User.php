@@ -31,7 +31,7 @@ class User extends Authenticatable
 
     public function BoardDetails(): HasOne
     {
-        return $this->hasOne(\App\Models\BoardDetails::class, 'user_id');
+        return $this->hasOne(\App\Models\Boards::class, 'user_id');
     }
 
     public function OutgoingDetails(): HasOne

@@ -149,7 +149,7 @@ class PDFController extends Controller
                 'st.state_short_name as state', 'bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'chapters.conference as conf',
                 'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
@@ -202,7 +202,7 @@ class PDFController extends Controller
                 'st.state_short_name as state', 'bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'bd.street_address as pres_addr', 'bd.city as pres_city', 'bd.state as pres_state',
                 'bd.zip as pres_zip', 'chapters.conference as conf', 'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             // ->where('chapters.is_active', '=', '1')

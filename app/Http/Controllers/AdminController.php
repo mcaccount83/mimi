@@ -12,7 +12,7 @@ use App\Http\Requests\UpdateToolkitAdminRequest;
 use App\Mail\AdminNewMIMIBugWish;
 use App\Models\Admin;
 use App\Models\Bugs;
-use App\Models\BoardDetails;
+use App\Models\Boards;
 use App\Models\OutgoingBoardMember;
 use App\Models\Chapter;
 use App\Models\Resources;
@@ -428,7 +428,7 @@ class AdminController extends Controller
                 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'ch.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
             ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->leftJoin('db_month as db', 'ch.start_month_id', '=', 'db.id')
             ->where('ch.is_active', '=', '1')
@@ -545,13 +545,13 @@ class AdminController extends Controller
     public function showDuplicateId(): View
     {
 
-        $userData = DB::table('board_details')
+        $userData = DB::table('boards')
             ->where('is_active', '=', '1')
             ->groupBy('email')
             ->having(DB::raw('count(email)'), '>', 1)
             ->pluck('email');
 
-        $userList = DB::table('board_details')
+        $userList = DB::table('boards')
             ->where('is_active', '=', '1')
             ->whereIn('email', $userData)
             ->get();
@@ -566,13 +566,13 @@ class AdminController extends Controller
     public function showMultiple(): View
     {
 
-        $userData = DB::table('board_details')
+        $userData = DB::table('boards')
             ->where('is_active', '=', '1')
             ->groupBy('email')
             ->having(DB::raw('count(email)'), '>', 1)
             ->pluck('email');
 
-        $userList = DB::table('board_details')
+        $userList = DB::table('boards')
             ->where('is_active', '=', '1')
             ->whereIn('email', $userData)
             ->get();
@@ -587,7 +587,7 @@ class AdminController extends Controller
      */
     public function showNoPresident(): View
     {
-        $PresId = DB::table('board_details')
+        $PresId = DB::table('boards')
             ->where('is_active', '=', '1')
             ->where('board_position_id', '=', '1')
             ->pluck('chapter_id');
@@ -826,9 +826,9 @@ class AdminController extends Controller
             ]);
 
             // Get board details where board members are active
-            $boardDetails = BoardDetails::where('is_active', 1)->get();
+            $boardDetails = Boards::where('is_active', 1)->get();
 
-            // Loop through each board detail and insert into outgoing_board_details
+            // Loop through each board detail and insert into outgoing_boards
             foreach ($boardDetails as $boardDetail) {
                 OutgoingBoardMember::create([
                     'board_id' => $boardDetail->id,
@@ -881,9 +881,9 @@ class AdminController extends Controller
             DB::statement("CREATE TABLE chapters_{$currentMonth}_{$currentYear} LIKE chapters");
             DB::statement("INSERT INTO chapters_{$currentMonth}_{$currentYear} SELECT * FROM chapters");
 
-            // Copy and rename the `board_details` table
-            DB::statement("CREATE TABLE board_details_{$currentMonth}_{$currentYear} LIKE board_details");
-            DB::statement("INSERT INTO board_details_{$currentMonth}_{$currentYear} SELECT * FROM board_details");
+            // Copy and rename the `boards` table
+            DB::statement("CREATE TABLE boards_{$currentMonth}_{$currentYear} LIKE boards");
+            DB::statement("INSERT INTO boards_{$currentMonth}_{$currentYear} SELECT * FROM boards");
 
             // Copy and rename the `coordinators` table
             DB::statement("CREATE TABLE coordinators_{$currentMonth}_{$currentYear} LIKE coordinators");
@@ -893,8 +893,8 @@ class AdminController extends Controller
             DB::statement("CREATE TABLE users_{$currentMonth}_{$currentYear} LIKE users");
             DB::statement("INSERT INTO users_{$currentMonth}_{$currentYear} SELECT * FROM users");
 
-            // Delete all board members from 'outgoing_board_details' table
-            DB::table('board_details')
+            // Delete all board members from 'outgoing_boards' table
+            DB::table('boards')
                 ->truncate();
 
             // Update all outgoing board members in 'users' table to be inactive

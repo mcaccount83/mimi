@@ -11,7 +11,7 @@ use App\Mail\EOYElectionReportThankYou;
 use App\Mail\EOYFinancialReportThankYou;
 use App\Mail\EOYFinancialSubmitted;
 use App\Mail\WebsiteReviewNotice;
-use App\Models\BoardDetails;
+use App\Models\Boards;
 use App\Models\Chapter;
 use App\Models\FinancialReport;
 use App\Models\FolderRecord;
@@ -88,7 +88,7 @@ class BoardController extends Controller
                 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city', 'bd.zip as zip',
                 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_Active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
@@ -98,7 +98,7 @@ class BoardController extends Controller
 
         $AVPInfoPre = DB::table('chapters')
             ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->where('chapters.is_Active', '=', '1')
             ->where('bd.board_position_id', '=', '2')
             ->where('chapters.id', $id)
@@ -106,7 +106,7 @@ class BoardController extends Controller
 
         $MVPInfoPre = DB::table('chapters')
             ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->where('chapters.is_Active', '=', '1')
             ->where('bd.board_position_id', '=', '3')
             ->where('chapters.id', $id)
@@ -114,7 +114,7 @@ class BoardController extends Controller
 
         $tresInfoPre = DB::table('chapters')
             ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->where('chapters.is_Active', '=', '1')
             ->where('bd.board_position_id', '=', '4')
             ->where('chapters.id', $id)
@@ -122,7 +122,7 @@ class BoardController extends Controller
 
         $secInfoPre = DB::table('chapters')
             ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->where('chapters.is_Active', '=', '1')
             ->where('bd.board_position_id', '=', '5')
             ->where('chapters.id', $id)
@@ -159,7 +159,7 @@ class BoardController extends Controller
             $chapter->save();
             //President Info
             if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
-                $PREDetails = DB::table('board_details')
+                $PREDetails = DB::table('boards')
                     ->select('id as board_id', 'user_id')
                     ->where('chapter_id', '=', $chapterId)
                     ->where('board_position_id', '=', '1')
@@ -175,7 +175,7 @@ class BoardController extends Controller
                     $user->updated_at = now();
                     $user->save();
 
-                    $board = BoardDetails::find($boardId);
+                    $board = Boards::find($boardId);
                     $board->first_name = $request->input('ch_pre_fname');
                     $board->last_name = $request->input('ch_pre_lname');
                     $board->email = $request->input('ch_pre_email');
@@ -191,7 +191,7 @@ class BoardController extends Controller
                 }
             }
             //AVP Info
-            $AVPDetails = DB::table('board_details')
+            $AVPDetails = DB::table('boards')
                 ->select('id as board_id', 'user_id')
                 ->where('chapter_id', '=', $chapterId)
                 ->where('board_position_id', '=', '2')
@@ -201,7 +201,7 @@ class BoardController extends Controller
                 $boardId = $AVPDetails[0]->board_id;
                 if ($request->input('AVPVacant') == 'on') {
                     //Delete Details of Board memebers
-                    DB::table('board_details')
+                    DB::table('boards')
                         ->where('id', $boardId)
                         ->delete();
                     //Delete Details of Board memebers from users table
@@ -216,7 +216,7 @@ class BoardController extends Controller
                     $user->updated_at = now();
                     $user->save();
 
-                    $board = BoardDetails::find($boardId);
+                    $board = Boards::find($boardId);
                     $board->first_name = $request->input('ch_avp_fname');
                     $board->last_name = $request->input('ch_avp_lname');
                     $board->email = $request->input('ch_avp_email');
@@ -241,7 +241,7 @@ class BoardController extends Controller
                             'is_active' => 1]
                     );
 
-                    $boardId = DB::table('board_details')->insertGetId(
+                    $boardId = DB::table('boards')->insertGetId(
                         ['user_id' => $userId,
                             'first_name' => $request->input('ch_avp_fname'),
                             'last_name' => $request->input('ch_avp_lname'),
@@ -261,7 +261,7 @@ class BoardController extends Controller
                 }
             }
             //MVP Info
-            $MVPDetails = DB::table('board_details')
+            $MVPDetails = DB::table('boards')
                 ->select('id as board_id', 'user_id')
                 ->where('chapter_id', '=', $chapterId)
                 ->where('board_position_id', '=', '3')
@@ -271,7 +271,7 @@ class BoardController extends Controller
                 $boardId = $MVPDetails[0]->board_id;
                 if ($request->input('MVPVacant') == 'on') {
                     //Delete Details of Board memebers
-                    DB::table('board_details')
+                    DB::table('boards')
                         ->where('id', $boardId)
                         ->delete();
                     //Delete Details of Board memebers from users table
@@ -286,7 +286,7 @@ class BoardController extends Controller
                     $user->updated_at = date('Y-m-d H:i:s');
                     $user->save();
 
-                    $board = BoardDetails::find($boardId);
+                    $board = Boards::find($boardId);
                     $board->first_name = $request->input('ch_mvp_fname');
                     $board->last_name = $request->input('ch_mvp_lname');
                     $board->email = $request->input('ch_mvp_email');
@@ -311,7 +311,7 @@ class BoardController extends Controller
                             'is_active' => 1]
                     );
 
-                    $boardId = DB::table('board_details')->insertGetId(
+                    $boardId = DB::table('boards')->insertGetId(
                         ['user_id' => $userId,
                             'first_name' => $request->input('ch_mvp_fname'),
                             'last_name' => $request->input('ch_mvp_lname'),
@@ -331,7 +331,7 @@ class BoardController extends Controller
                 }
             }
             //TRS Info
-            $TRSDetails = DB::table('board_details')
+            $TRSDetails = DB::table('boards')
                 ->select('id as board_id', 'user_id')
                 ->where('chapter_id', '=', $chapterId)
                 ->where('board_position_id', '=', '4')
@@ -341,7 +341,7 @@ class BoardController extends Controller
                 $boardId = $TRSDetails[0]->board_id;
                 if ($request->input('TreasVacant') == 'on') {
                     //Delete Details of Board memebers
-                    DB::table('board_details')
+                    DB::table('boards')
                         ->where('id', $boardId)
                         ->delete();
                     //Delete Details of Board memebers from users table
@@ -356,7 +356,7 @@ class BoardController extends Controller
                     $user->updated_at = date('Y-m-d H:i:s');
                     $user->save();
 
-                    $board = BoardDetails::find($boardId);
+                    $board = Boards::find($boardId);
                     $board->first_name = $request->input('ch_trs_fname');
                     $board->last_name = $request->input('ch_trs_lname');
                     $board->email = $request->input('ch_trs_email');
@@ -381,7 +381,7 @@ class BoardController extends Controller
                             'is_active' => 1]
                     );
 
-                    $boardId = DB::table('board_details')->insertGetId(
+                    $boardId = DB::table('boards')->insertGetId(
                         ['user_id' => $userId,
                             'first_name' => $request->input('ch_trs_fname'),
                             'last_name' => $request->input('ch_trs_lname'),
@@ -401,7 +401,7 @@ class BoardController extends Controller
                 }
             }
             //SEC Info
-            $SECDetails = DB::table('board_details')
+            $SECDetails = DB::table('boards')
                 ->select('id as board_id', 'user_id')
                 ->where('chapter_id', '=', $chapterId)
                 ->where('board_position_id', '=', '5')
@@ -411,7 +411,7 @@ class BoardController extends Controller
                 $boardId = $SECDetails[0]->board_id;
                 if ($request->input('SecVacant') == 'on') {
                     //Delete Details of Board memebers
-                    DB::table('board_details')
+                    DB::table('boards')
                         ->where('id', $boardId)
                         ->delete();
                     //Delete Details of Board memebers from users table
@@ -426,7 +426,7 @@ class BoardController extends Controller
                     $user->updated_at = date('Y-m-d H:i:s');
                     $user->save();
 
-                    $board = BoardDetails::find($boardId);
+                    $board = Boards::find($boardId);
                     $board->first_name = $request->input('ch_sec_fname');
                     $board->last_name = $request->input('ch_sec_lname');
                     $board->email = $request->input('ch_sec_email');
@@ -451,7 +451,7 @@ class BoardController extends Controller
                             'is_active' => 1]
                     );
 
-                    $boardId = DB::table('board_details')->insertGetId(
+                    $boardId = DB::table('boards')->insertGetId(
                         ['user_id' => $userId,
                             'first_name' => $request->input('ch_sec_fname'),
                             'last_name' => $request->input('ch_sec_lname'),
@@ -513,7 +513,7 @@ class BoardController extends Controller
                     'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city',
                     'bd.zip as zip', 'st.state_short_name as state')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                 ->where('chapters.is_Active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
@@ -523,7 +523,7 @@ class BoardController extends Controller
 
             $AVPInfoUpd = DB::table('chapters')
                 ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
-                ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->where('chapters.is_Active', '=', '1')
                 ->where('bd.board_position_id', '=', '2')
                 ->where('chapters.id', $chapterId)
@@ -531,7 +531,7 @@ class BoardController extends Controller
 
             $MVPInfoUpd = DB::table('chapters')
                 ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
-                ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->where('chapters.is_Active', '=', '1')
                 ->where('bd.board_position_id', '=', '3')
                 ->where('chapters.id', $chapterId)
@@ -539,7 +539,7 @@ class BoardController extends Controller
 
             $tresInfoUpd = DB::table('chapters')
                 ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
-                ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->where('chapters.is_Active', '=', '1')
                 ->where('bd.board_position_id', '=', '4')
                 ->where('chapters.id', $chapterId)
@@ -547,7 +547,7 @@ class BoardController extends Controller
 
             $secInfoUpd = DB::table('chapters')
                 ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email')
-                ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->where('chapters.is_Active', '=', '1')
                 ->where('bd.board_position_id', '=', '5')
                 ->where('chapters.id', $chapterId)
@@ -757,11 +757,11 @@ class BoardController extends Controller
             $lastUpdatedBy = $user->first_name.' '.$user->last_name;
 
             // Fetch Board Details
-            $boardDetails = DB::table('board_details')
-                ->select('board_details.id as board_id', 'board_details.user_id', 'board_details.first_name as bor_fname', 'board_details.last_name as bor_lname', 'board_details.email as bor_email', 'bp.position as bor_position')
-                ->leftJoin('board_position as bp', 'board_details.board_position_id', '=', 'bp.id')
-                ->where('board_details.chapter_id', '=', $chapterId)
-                ->where('board_details.board_position_id', '=', $posId)
+            $boardDetails = DB::table('boards')
+                ->select('boards.id as board_id', 'boards.user_id', 'boards.first_name as bor_fname', 'boards.last_name as bor_lname', 'boards.email as bor_email', 'bp.position as bor_position')
+                ->leftJoin('board_position as bp', 'boards.board_position_id', '=', 'bp.id')
+                ->where('boards.chapter_id', '=', $chapterId)
+                ->where('boards.board_position_id', '=', $posId)
                 ->get();
 
             // Fetch Chapter Info
@@ -785,7 +785,7 @@ class BoardController extends Controller
                 $user->save();
 
                 // Update Board Details
-                $board = BoardDetails::find($boardId);
+                $board = Boards::find($boardId);
                 $board->first_name = $request->input('bor_fname');
                 $board->last_name = $request->input('bor_lname');
                 $board->email = $request->input('bor_email');
@@ -801,10 +801,10 @@ class BoardController extends Controller
             }
 
             // Fetch Updated Board Details
-            $boardDetailsUpd = DB::table('board_details')
-                ->select('board_details.id as board_id', 'board_details.user_id', 'board_details.first_name as bor_fname', 'board_details.last_name as bor_lname', 'board_details.email as bor_email')
-                ->where('board_details.chapter_id', '=', $chapterId)
-                ->where('board_details.board_position_id', '=', $posId)
+            $boardDetailsUpd = DB::table('boards')
+                ->select('boards.id as board_id', 'boards.user_id', 'boards.first_name as bor_fname', 'boards.last_name as bor_lname', 'boards.email as bor_email')
+                ->where('boards.chapter_id', '=', $chapterId)
+                ->where('boards.board_position_id', '=', $posId)
                 ->get();
 
             $mailData = [
@@ -929,7 +929,7 @@ class BoardController extends Controller
         $chapterList = DB::table('chapters as ch')
             ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address',
                 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
-            ->leftJoin('board_details as bd', 'ch.id', '=', 'bd.chapter_id')
+            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $chapterId)
             ->where('bd.board_position_id', '=', '1')
@@ -983,7 +983,7 @@ class BoardController extends Controller
         $chapterList = DB::table('chapters as ch')
             ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address',
                 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
-            ->leftJoin('board_details as bd', 'ch.id', '=', 'bd.chapter_id')
+            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $chapterId)
             ->where('bd.board_position_id', '=', '1')
@@ -1033,7 +1033,7 @@ class BoardController extends Controller
         $chapterList = DB::table('chapters as ch')
             ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address',
                 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
-            ->leftJoin('board_details as bd', 'ch.id', '=', 'bd.chapter_id')
+            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $chapterId)
             ->where('bd.board_position_id', '=', '1')
@@ -1103,7 +1103,7 @@ class BoardController extends Controller
         $chapterList = DB::table('chapters as ch')
             ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address',
                 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
-            ->leftJoin('board_details as bd', 'ch.id', '=', 'bd.chapter_id')
+            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $chapterId)
             ->where('bd.board_position_id', '=', '1')
@@ -1213,7 +1213,7 @@ class BoardController extends Controller
             ->get();
         $coremail = $coremail[0]->email;
 
-        $PREemail = DB::table('board_details')
+        $PREemail = DB::table('boards')
             ->select('email')
             ->where('board_position_id', 1)
             ->where('chapter_id', $chapter_id)

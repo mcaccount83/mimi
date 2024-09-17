@@ -65,7 +65,7 @@ class ReportController extends Controller
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1');
@@ -134,7 +134,7 @@ class ReportController extends Controller
         $chapterList = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
             ->where('chapters.is_active', '=', '1')
@@ -186,7 +186,7 @@ class ReportController extends Controller
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
             ->where('chapters.is_active', '=', '1')
@@ -240,7 +240,7 @@ class ReportController extends Controller
         $chapterList = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
             ->where('chapters.is_active', '=', '1')
@@ -269,7 +269,7 @@ class ReportController extends Controller
         $chapterList = DB::table('chapters as ch')
             ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone',
                 'bd.state as bd_state')
-            ->leftJoin('board_details as bd', 'ch.id', '=', 'bd.chapter_id')
+            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $id)
             ->get();
@@ -362,7 +362,7 @@ class ReportController extends Controller
                 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
                 'st.state_short_name as ch_state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
             ->where('chapters.is_active', '=', '1')
@@ -381,7 +381,7 @@ class ReportController extends Controller
                         'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
                         'st.state_short_name as ch_state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname')
                     ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                     ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
                     ->where('chapters.is_active', '=', '1')
@@ -443,7 +443,7 @@ class ReportController extends Controller
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
@@ -516,7 +516,7 @@ class ReportController extends Controller
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
@@ -586,7 +586,7 @@ class ReportController extends Controller
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
             ->where('chapters.is_active', '=', '1')
@@ -649,7 +649,7 @@ class ReportController extends Controller
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1');
@@ -714,7 +714,7 @@ class ReportController extends Controller
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
@@ -729,7 +729,7 @@ class ReportController extends Controller
                     ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                         'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
                     ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('chapters.status', '<>', '1')
@@ -789,7 +789,7 @@ class ReportController extends Controller
                 ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                     'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                 ->where('chapters.is_active', '=', '1')
                 ->where('bd.board_position_id', '=', '1');
@@ -921,7 +921,7 @@ class ReportController extends Controller
         $indirectChapterReport = DB::table('chapters')
             ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.inquiries_contact as inq_con', 'chapters.territory as terry', 'chapters.status as status', 'chapters.inquiries_note as inq_note')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->whereIn('chapters.primary_coordinator_id', $inQryArr)
@@ -1076,7 +1076,7 @@ class ReportController extends Controller
         //Get Chapter List mapped with login coordinator
         $activeChapterList = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'chapters.email as chapter_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city', 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
@@ -1103,7 +1103,7 @@ class ReportController extends Controller
                 //For AVP Details
                 $avpDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.phone as avp_phone', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '2')
                     ->where('chapters.id', '=', $chapterId)
@@ -1122,7 +1122,7 @@ class ReportController extends Controller
                 //For MVP Details
                 $mvpDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.phone as mvp_phone', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '3')
                     ->where('chapters.id', '=', $chapterId)
@@ -1141,7 +1141,7 @@ class ReportController extends Controller
                 //For TREASURER Details
                 $trsDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.phone as trs_phone', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '4')
                     ->where('chapters.id', '=', $chapterId)
@@ -1160,7 +1160,7 @@ class ReportController extends Controller
                 //For SECRETARY Details
                 $secDeatils = DB::table('chapters')
                     ->select('chapters.id', 'bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.phone as sec_phone', 'bd.board_position_id as positionid')
-                    ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                     ->where('chapters.is_active', '=', '1')
                     ->where('bd.board_position_id', '=', '5')
                     ->where('chapters.id', '=', $chapterId)
@@ -1442,7 +1442,7 @@ class ReportController extends Controller
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'rg.short_name as region', 'st.state_short_name as state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
@@ -1615,7 +1615,7 @@ class ReportController extends Controller
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'rg.short_name as region', 'st.state_short_name as state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
@@ -1685,12 +1685,12 @@ class ReportController extends Controller
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         //Get Chapter List mapped with login coordinator
-        $chapters = Chapter::select('chapters.name as name', 'state.state_short_name as state', 'board_details.email as bor_email',
+        $chapters = Chapter::select('chapters.name as name', 'state.state_short_name as state', 'boards.email as bor_email',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
-            'board_details.board_position_id')
+            'boards.board_position_id')
             ->join('state', 'chapters.state', '=', 'state.id')
-            ->join('board_details', 'chapters.id', '=', 'board_details.chapter_id')
-            ->whereIn('board_details.board_position_id', [1, 2, 3, 4, 5])
+            ->join('boards', 'chapters.id', '=', 'boards.chapter_id')
+            ->whereIn('boards.board_position_id', [1, 2, 3, 4, 5])
             ->where('chapters.conference', $corConfId)
             ->where(function ($query) {
                 $query->where('chapters.new_board_submitted', '=', '0')
@@ -1790,13 +1790,13 @@ class ReportController extends Controller
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         //Get Chapter List mapped with login coordinator
-        $chapters = Chapter::select('chapters.*', 'chapters.name as name', 'state.state_short_name as state', 'board_details.email as bor_email',
+        $chapters = Chapter::select('chapters.*', 'chapters.name as name', 'state.state_short_name as state', 'boards.email as bor_email',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
-            'board_details.board_position_id')
+            'boards.board_position_id')
             ->join('state', 'chapters.state', '=', 'state.id')
-            ->join('board_details', 'chapters.id', '=', 'board_details.chapter_id')
+            ->join('boards', 'chapters.id', '=', 'boards.chapter_id')
             ->join('financial_report', 'chapters.id', '=', 'financial_report.chapter_id')
-            ->whereIn('board_details.board_position_id', [1, 2, 3, 4, 5])
+            ->whereIn('boards.board_position_id', [1, 2, 3, 4, 5])
             ->where('financial_report.reviewer_id', null)
             ->where(function ($query) {
                 $query->where('chapters.report_extension', '=', '0')
@@ -1901,13 +1901,13 @@ class ReportController extends Controller
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         //Get Chapter List mapped with login coordinator
-        $chapters = Chapter::select('chapters.*', 'chapters.name as name', 'state.state_short_name as state', 'board_details.email as bor_email',
+        $chapters = Chapter::select('chapters.*', 'chapters.name as name', 'state.state_short_name as state', 'boards.email as bor_email',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
-            'board_details.board_position_id')
+            'boards.board_position_id')
             ->join('state', 'chapters.state', '=', 'state.id')
-            ->join('board_details', 'chapters.id', '=', 'board_details.chapter_id')
+            ->join('boards', 'chapters.id', '=', 'boards.chapter_id')
             ->join('financial_report', 'chapters.id', '=', 'financial_report.chapter_id')
-            ->whereIn('board_details.board_position_id', [1, 2, 3, 4, 5])
+            ->whereIn('boards.board_position_id', [1, 2, 3, 4, 5])
             ->where('financial_report.reviewer_id', null)
             ->where(function ($query) {
                 $query->where('chapters.report_extension', '=', '0')
@@ -2030,7 +2030,7 @@ class ReportController extends Controller
     //         DB::beginTransaction();
     //         try {
     //             //Fetching Existing Board Members from Board Details
-    //             $boardDetails = DB::table('board_details')
+    //             $boardDetails = DB::table('boards')
     //                 ->select('*')
     //                 ->where('chapter_id', '=', $chapter_id)
     //                 ->get();
@@ -2075,10 +2075,10 @@ class ReportController extends Controller
     //                 }
 
     //                 //Delete Details of Board members from Board Details table
-    //                 DB::table('board_details')->where('chapter_id', $chapter_id)->delete();
+    //                 DB::table('boards')->where('chapter_id', $chapter_id)->delete();
 
     //                 // Fetch the latest board_id and increment it for each new board member
-    //                 $latestBoardId = DB::table('board_details')
+    //                 $latestBoardId = DB::table('boards')
     //                     ->select('board_id')
     //                     ->orderByDesc('board_id')
     //                     ->value('board_id');
@@ -2108,7 +2108,7 @@ class ReportController extends Controller
     //                     }
 
     //                     // Fetch the latest board_id for each new board member
-    //                     $latestBoardId = DB::table('board_details')
+    //                     $latestBoardId = DB::table('boards')
     //                         ->select('board_id')
     //                         ->orderByDesc('board_id')
     //                         ->value('board_id');
@@ -2139,7 +2139,7 @@ class ReportController extends Controller
     //                     ];
 
     //                     // Upsert board details
-    //                     DB::table('board_details')->upsert(
+    //                     DB::table('boards')->upsert(
     //                         [$boardDetailsData], // The values to insert or update
     //                         ['user_id', 'chapter_id'], // The unique constraints for upsert
     //                         array_keys($boardDetailsData) // The columns to update if a conflict occurs
@@ -2195,7 +2195,7 @@ class ReportController extends Controller
     //             }
 
     //             // Only update for board members who exist in the users table
-    //             $boardMembers = DB::table('board_details')->get();
+    //             $boardMembers = DB::table('boards')->get();
     //             foreach ($boardMembers as $member) {
     //                 $user = DB::table('users')->where('email', $member->email)->first();
 
@@ -2237,7 +2237,7 @@ class ReportController extends Controller
             DB::beginTransaction();
             try {
                 // Fetching Existing Board Members from Board Details
-                $boardDetails = DB::table('board_details')
+                $boardDetails = DB::table('boards')
                     ->select('*')
                     ->where('chapter_id', '=', $chapter_id)
                     ->get();
@@ -2254,8 +2254,8 @@ class ReportController extends Controller
                             ]);
                     }
 
-                    // Delete all board members associated with the chapter from board_details table
-                    DB::table('board_details')
+                    // Delete all board members associated with the chapter from boards table
+                    DB::table('boards')
                         ->where('chapter_id', $chapter_id)
                         ->delete();
                 }
@@ -2312,7 +2312,7 @@ class ReportController extends Controller
                     ];
 
                     // Upsert board details (update if the user and chapter already exist)
-                    DB::table('board_details')->upsert(
+                    DB::table('boards')->upsert(
                         [$boardId], // The values to insert or update
                         ['user_id', 'chapter_id'], // The unique constraints for upsert
                         array_keys($boardId) // The columns to update if a conflict occurs
@@ -2323,7 +2323,7 @@ class ReportController extends Controller
                 // Update Chapter after Board Active
                 DB::update('UPDATE chapters SET new_board_active = ? WHERE id = ?', [1, $chapter_id]);
 
-                // Delete all board members associated with the chapter from incoming_board_details table
+                // Delete all board members associated with the chapter from incoming_boards table
                 DB::table('incoming_board_member')
                     ->where('chapter_id', $chapter_id)
                     ->delete();
@@ -2382,7 +2382,7 @@ class ReportController extends Controller
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('chapters.boundary_issues', '=', '1')
@@ -2550,7 +2550,7 @@ class ReportController extends Controller
                 'fr.check_award_2_approved as award_2_approved', 'fr.check_award_3_approved as award_3_approved',
                 'fr.check_award_4_approved as award_4_approved', 'fr.check_award_5_approved as award_5_approved')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('board_details as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('financial_report as fr', 'chapters.id', '=', 'fr.chapter_id')
