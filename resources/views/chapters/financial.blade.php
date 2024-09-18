@@ -2800,7 +2800,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 		<!------End Step 13 ------>
 			</div><!-- end of accordion -->
 			</form>
-            <div class="modal fade" id="modal-roster">
+            {{-- <div class="modal fade" id="modal-roster">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -2883,7 +2883,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
             <div class="card-body text-center">
                 <a href="{{ route('home') }}" class="btn bg-gradient-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
             @if ($submitted)

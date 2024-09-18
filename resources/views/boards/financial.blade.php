@@ -2898,7 +2898,8 @@
                                     <div class="col-md-12">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload Award 1 Files.<br>
-                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award1" ><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 1 Files</button>
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="showAward1UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Award 1 Attachments</button>
+                                        {{-- <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award1" ><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 1 Files</button> --}}
                                     </div>
                                 </div>
                                 <input type="hidden" name="Award1Path" id="Award1Path" value="<?php echo $financial_report_array['award_1_files']; ?>">
@@ -2906,10 +2907,11 @@
                                     <div class="col-md-12" >
                                         <div>
                                             <label class="control-label" for="Award1Link">Award 1 Files:</label>
-                                           <a href="<?php echo $financial_report_array['award_1_files']; ?>" target="_blank">View Award 1 Files</a><br>
+                                           <a href="<?php echo $financial_report_array['award_1_files']; ?>" target="_blank">View Award 1 Attachments</a><br>
                                             <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace Award 1 Files.<br>
-                                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-award1" ><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 1 Files</button>
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="showAward1UploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Award 1 Attachments</button>
+                                        {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-award1" ><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 1 Files</button> --}}
                                     </div>
                                     </div>
                                 </div>
@@ -5111,6 +5113,315 @@ function show990NUploadModal() {
     });
 }
 
+function showAward1UploadModal() {
+    var chapter_id = document.getElementById('chapter_id').value;
+
+    Swal.fire({
+        title: 'Upload Award Attachments',
+        html: `
+            <form id="uploadAward1Form" enctype="multipart/form-data">
+                @csrf
+                <input type="file" name='file' required>
+            </form>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Upload',
+        cancelButtonText: 'Close',
+        preConfirm: () => {
+            var formData = new FormData(document.getElementById('uploadAward1Form'));
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we upload your file.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    $.ajax({
+                        url: '{{ url('/files/storeAward1', '') }}' + '/' + chapter_id,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Award attachments uploaded successfully!',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+
+            return false;
+        },
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        }
+    });
+}
+
+function showAward2UploadModal() {
+    var chapter_id = document.getElementById('chapter_id').value;
+
+    Swal.fire({
+        title: 'Upload Award Attachments',
+        html: `
+            <form id="uploadAward2Form" enctype="multipart/form-data">
+                @csrf
+                <input type="file" name='file' required>
+            </form>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Upload',
+        cancelButtonText: 'Close',
+        preConfirm: () => {
+            var formData = new FormData(document.getElementById('uploadAward2Form'));
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we upload your file.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    $.ajax({
+                        url: '{{ url('/files/storeAward2', '') }}' + '/' + chapter_id,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Award attachments uploaded successfully!',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+
+            return false;
+        },
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        }
+    });
+}
+
+function showAward1Up3oadModal() {
+    var chapter_id = document.getElementById('chapter_id').value;
+
+    Swal.fire({
+        title: 'Upload Award Attachments',
+        html: `
+            <form id="uploadAward3Form" enctype="multipart/form-data">
+                @csrf
+                <input type="file" name='file' required>
+            </form>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Upload',
+        cancelButtonText: 'Close',
+        preConfirm: () => {
+            var formData = new FormData(document.getElementById('uploadAward3Form'));
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we upload your file.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    $.ajax({
+                        url: '{{ url('/files/storeAward3', '') }}' + '/' + chapter_id,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Award attachments uploaded successfully!',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+
+            return false;
+        },
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        }
+    });
+}
+
+function showAward4UploadModal() {
+    var chapter_id = document.getElementById('chapter_id').value;
+
+    Swal.fire({
+        title: 'Upload Award Attachments',
+        html: `
+            <form id="uploadAward4Form" enctype="multipart/form-data">
+                @csrf
+                <input type="file" name='file' required>
+            </form>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Upload',
+        cancelButtonText: 'Close',
+        preConfirm: () => {
+            var formData = new FormData(document.getElementById('uploadAward4Form'));
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we upload your file.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    $.ajax({
+                        url: '{{ url('/files/storeAward4', '') }}' + '/' + chapter_id,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Award attachments uploaded successfully!',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+
+            return false;
+        },
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        }
+    });
+}
+
+function showAward5UploadModal() {
+    var chapter_id = document.getElementById('chapter_id').value;
+
+    Swal.fire({
+        title: 'Upload Award Attachments',
+        html: `
+            <form id="uploadAward5Form" enctype="multipart/form-data">
+                @csrf
+                <input type="file" name='file' required>
+            </form>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Upload',
+        cancelButtonText: 'Close',
+        preConfirm: () => {
+            var formData = new FormData(document.getElementById('uploadAward5Form'));
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we upload your file.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    $.ajax({
+                        url: '{{ url('/files/storeAward5', '') }}' + '/' + chapter_id,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Award attachments uploaded successfully!',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+
+            return false;
+        },
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        }
+    });
+}
 
 
 

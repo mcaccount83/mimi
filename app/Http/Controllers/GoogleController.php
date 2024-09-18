@@ -54,6 +54,9 @@ class GoogleController extends Controller
         return $accessToken;
     }
 
+    /**
+     *  Save Chapter EIN Letter
+     */
     public function storeEIN(StoreEINGoogleRequest $request, $id)
     {
         try{
@@ -122,6 +125,123 @@ class GoogleController extends Controller
         }
     }
 
+    /**
+     *  Save Chapter Resource Items
+     */
+    public function storeResources(StoreResourcesGoogleRequest $request, $id)
+    {
+        try{
+            $resource = Resources::findOrFail($id);
+
+            $accessToken = $this->token();
+
+            $googleDrive = DB::table('google_drive')
+                ->select('google_drive.resources_uploads as resources_uploads')
+                ->get();
+            $resourcesDrive = $googleDrive[0]->resources_uploads;
+
+            $file = $request->file('file');
+            // $sharedDriveId = '17YQBX5T67g0azczV844XyUJH1TM5RAcA';
+            $sharedDriveId = $resourcesDrive;   //Shared Drive -> CC Resources -> Resources - Uploaded Online
+
+            $fileMetadata = [
+                'name' => Str::ascii($file->getClientOriginalName()), // Use getClientOriginalName() to get the file name
+                'parents' => [$sharedDriveId],
+                'mimeType' => $file->getMimeType(),
+            ];
+
+            $metadataJson = json_encode($fileMetadata);
+            $fileContent = file_get_contents($file->getPathname());
+            $fileContentBase64 = base64_encode($fileContent);
+
+            $client = new Client;
+
+            $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$accessToken,
+                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+                ],
+                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
+            ]);
+
+            $bodyContents = $response->getBody()->getContents();
+            $jsonResponse = json_decode($bodyContents, true);
+
+            if ($response->getStatusCode() === 200) { // Check for a successful status code
+                $file_id = $jsonResponse['id'];
+
+                $resource->file_path = "https://drive.google.com/uc?export=download&id=$file_id";
+                $resource->save();
+
+                return response()->json(['message' => 'File uploaded successfully!'], 200);
+            } else {
+                return response()->json(['message' => 'File failed to upload'], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            // Log the exception message
+            Log::error('File upload error: '.$e->getMessage());
+            return response()->json(['message' => 'An error occurred during the upload'], 500);
+        }
+    }
+
+    /**
+     *  Save Coordinator Toolkit Itesm
+     */
+    public function storeToolkit(StoreToolkitGoogleRequest $request, $id)
+    {
+        try{
+            $resource = Resources::findOrFail($id);
+            $accessToken = $this->token();
+
+            $googleDrive = DB::table('google_drive')
+                ->select('google_drive.resources_uploads as resources_uploads')
+                ->get();
+            $resourcesDrive = $googleDrive[0]->resources_uploads;
+
+            $file = $request->file('file');
+            // $sharedDriveId = '17YQBX5T67g0azczV844XyUJH1TM5RAcA';
+            $sharedDriveId = $resourcesDrive;   //Shared Drive -> CC Resources -> Resources - Uploaded Online
+
+            $fileMetadata = [
+                'name' => Str::ascii($file->getClientOriginalName()), // Use getClientOriginalName() to get the file name
+                'parents' => [$sharedDriveId],
+                'mimeType' => $file->getMimeType(),
+            ];
+
+            $metadataJson = json_encode($fileMetadata);
+            $fileContent = file_get_contents($file->getPathname());
+            $fileContentBase64 = base64_encode($fileContent);
+
+            $client = new Client;
+
+            $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+                'headers' => [
+                    'Authorization' => 'Bearer '.$accessToken,
+                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+                ],
+                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
+            ]);
+
+            $bodyContents = $response->getBody()->getContents();
+            $jsonResponse = json_decode($bodyContents, true);
+
+            if ($response->getStatusCode() === 200) { // Check for a successful status code
+                $file_id = $jsonResponse['id'];
+
+                $resource->file_path = "https://drive.google.com/uc?export=download&id=$file_id";
+                $resource->save();
+
+                return response()->json(['message' => 'File uploaded successfully!'], 200);
+            } else {
+                return response()->json(['message' => 'File failed to upload'], $response->getStatusCode());
+            }
+        } catch (\Exception $e) {
+            // Log the exception message
+            Log::error('File upload error: '.$e->getMessage());
+            return response()->json(['message' => 'An error occurred during the upload'], 500);
+        }
+    }
+
     private function createFolderIfNotExists($year, $conf, $state, $chapterName, $accessToken, $sharedDriveId)
     {
          // Check if the year folder exists, create it if not
@@ -176,6 +296,9 @@ class GoogleController extends Controller
     }
 
 
+    /**
+     *  Create Folder Structure for EOY Report Attachments
+     */
     private function getOrCreateConfFolder($year, $conf, $yearFolderId, $accessToken, $sharedDriveId)
     {
         // Check if the conference folder exists in the records
@@ -257,7 +380,6 @@ class GoogleController extends Controller
         }
     }
 
-
     private function getOrCreateChapterFolder($year, $conf, $state, $chapterName, $stateFolderId, $accessToken, $sharedDriveId)
     {
         // Check if the chapter folder exists for the given year, conference, and state
@@ -301,7 +423,9 @@ class GoogleController extends Controller
         }
     }
 
-
+    /**
+     *  Save Roster for EOY Report Attachments
+     */
     public function storeRoster(StoreRosterGoogleRequest $request, $id)
     {
         try{
@@ -376,6 +500,9 @@ class GoogleController extends Controller
         }
     }
 
+    /**
+     *  Save 990N Confirmation for EOY Report Attachments
+     */
     public function store990N(Store990NGoogleRequest $request, $id)
     {
         try{
@@ -450,6 +577,9 @@ class GoogleController extends Controller
         }
     }
 
+    /**
+     *  Save BankStatement for EOY Report Attachments
+     */
     public function storeStatement1(StoreStatement1GoogleRequest $request, $id)
     {
         try{
@@ -524,6 +654,9 @@ class GoogleController extends Controller
         }
     }
 
+    /**
+     *  Save Additional Bank Statement for EOY Report Attachments
+     */
     public function storeStatement2(StoreStatement2GoogleRequest $request, $id)
     {
         try{
@@ -968,114 +1101,5 @@ class GoogleController extends Controller
         }
     }
 
-    public function storeResources(StoreResourcesGoogleRequest $request, $id)
-    {
-        try{
-            $resource = Resources::findOrFail($id);
 
-            $accessToken = $this->token();
-
-            $googleDrive = DB::table('google_drive')
-                ->select('google_drive.resources_uploads as resources_uploads')
-                ->get();
-            $resourcesDrive = $googleDrive[0]->resources_uploads;
-
-            $file = $request->file('file');
-            // $sharedDriveId = '17YQBX5T67g0azczV844XyUJH1TM5RAcA';
-            $sharedDriveId = $resourcesDrive;   //Shared Drive -> CC Resources -> Resources - Uploaded Online
-
-            $fileMetadata = [
-                'name' => Str::ascii($file->getClientOriginalName()), // Use getClientOriginalName() to get the file name
-                'parents' => [$sharedDriveId],
-                'mimeType' => $file->getMimeType(),
-            ];
-
-            $metadataJson = json_encode($fileMetadata);
-            $fileContent = file_get_contents($file->getPathname());
-            $fileContentBase64 = base64_encode($fileContent);
-
-            $client = new Client;
-
-            $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-                'headers' => [
-                    'Authorization' => 'Bearer '.$accessToken,
-                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-                ],
-                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-            ]);
-
-            $bodyContents = $response->getBody()->getContents();
-            $jsonResponse = json_decode($bodyContents, true);
-
-            if ($response->getStatusCode() === 200) { // Check for a successful status code
-                $file_id = $jsonResponse['id'];
-
-                $resource->file_path = "https://drive.google.com/uc?export=download&id=$file_id";
-                $resource->save();
-
-                return response()->json(['message' => 'File uploaded successfully!'], 200);
-            } else {
-                return response()->json(['message' => 'File failed to upload'], $response->getStatusCode());
-            }
-        } catch (\Exception $e) {
-            // Log the exception message
-            Log::error('File upload error: '.$e->getMessage());
-            return response()->json(['message' => 'An error occurred during the upload'], 500);
-        }
-    }
-
-    public function storeToolkit(StoreToolkitGoogleRequest $request, $id)
-    {
-        try{
-            $resource = Resources::findOrFail($id);
-            $accessToken = $this->token();
-
-            $googleDrive = DB::table('google_drive')
-                ->select('google_drive.resources_uploads as resources_uploads')
-                ->get();
-            $resourcesDrive = $googleDrive[0]->resources_uploads;
-
-            $file = $request->file('file');
-            // $sharedDriveId = '17YQBX5T67g0azczV844XyUJH1TM5RAcA';
-            $sharedDriveId = $resourcesDrive;   //Shared Drive -> CC Resources -> Resources - Uploaded Online
-
-            $fileMetadata = [
-                'name' => Str::ascii($file->getClientOriginalName()), // Use getClientOriginalName() to get the file name
-                'parents' => [$sharedDriveId],
-                'mimeType' => $file->getMimeType(),
-            ];
-
-            $metadataJson = json_encode($fileMetadata);
-            $fileContent = file_get_contents($file->getPathname());
-            $fileContentBase64 = base64_encode($fileContent);
-
-            $client = new Client;
-
-            $response = $client->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-                'headers' => [
-                    'Authorization' => 'Bearer '.$accessToken,
-                    'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-                ],
-                'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-            ]);
-
-            $bodyContents = $response->getBody()->getContents();
-            $jsonResponse = json_decode($bodyContents, true);
-
-            if ($response->getStatusCode() === 200) { // Check for a successful status code
-                $file_id = $jsonResponse['id'];
-
-                $resource->file_path = "https://drive.google.com/uc?export=download&id=$file_id";
-                $resource->save();
-
-                return response()->json(['message' => 'File uploaded successfully!'], 200);
-            } else {
-                return response()->json(['message' => 'File failed to upload'], $response->getStatusCode());
-            }
-        } catch (\Exception $e) {
-            // Log the exception message
-            Log::error('File upload error: '.$e->getMessage());
-            return response()->json(['message' => 'An error occurred during the upload'], 500);
-        }
-    }
 }
