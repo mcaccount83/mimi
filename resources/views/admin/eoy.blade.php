@@ -47,10 +47,8 @@
                             <h5>This CANNOT be undone!</h5>
                             <button type="button" id="reset-year" class="btn bg-gradient-danger"><i class="fas fa-undo" ></i>&nbsp;&nbsp;&nbsp;Reset for New Year</button>
                     </div>
-                    <div class="col-md-2"><br></div>
-                    <div class="col-sm-10"><br>
-                        <h5><span style="background-color: #ffc107; padding: 0px 4px;">NOTE: Don't forget to also change the Google Drive Folder for the new Year's Reports!</span></h5><br>
-                    </div>
+                    <div class="col-md-12"><br></div>
+
 
             <div class="col-md-3">
                 <div class="card card-outline card-primary">
@@ -104,7 +102,7 @@
                             <div class="col-sm-12">
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" name="update_googleID" id="update_googleID" class="custom-control-input" {{$admin->update_googleID ? 'checked' : '' }} disabled />
-                                    <label class="custom-control-label" for="update_googleID">Update Google Shared Drive for Attachmnet Uploads</label>
+                                    <label class="custom-control-label" for="update_googleID">Update Google Shared Drive to new year for Attachmnet Uploads</label>
                                     </div>
                                 </div>
                     </div>

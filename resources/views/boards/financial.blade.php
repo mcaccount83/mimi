@@ -5012,7 +5012,7 @@ function showStatement2UploadModal() {
                     Swal.showLoading();
 
                     $.ajax({
-                        url: '{{ url('/files/storeStatement1', '') }}' + '/' + chapter_id,
+                        url: '{{ url('/files/storeStatement2', '') }}' + '/' + chapter_id,
                         type: 'POST',
                         data: formData,
                         contentType: false,
