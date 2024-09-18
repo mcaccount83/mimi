@@ -42,7 +42,7 @@
                     </div>
 
                     <div class="card-body text-center">
-                        <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#editDrive"><i class="fas fa-redo"  ></i>&nbsp; Update Shared ID</button>
+                        <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#editDrive"><i class="fas fa-redo"  ></i>&nbsp; Update Shared Drive ID</button>
                     </div>
 
                 </div>

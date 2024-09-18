@@ -39,7 +39,7 @@
                 @auth
                     <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("board.storefinancial", ["id" => Session::get("chapterid")]) }}' novalidate>
                     @csrf
-                    <input type="hidden" name="id" value="{{ Session::get('chapterid') }}">
+                    <input type="hidden" id="chapter_id" name="id" value="{{ Session::get('chapterid') }}">
                     <input type="hidden" name="ch_name" value="<?php echo $chapterDetails[0]->chapter_name; ?>" />
                     <input type="hidden" name="ch_state" value="<?php echo $chapterDetails[0]->state; ?>" />
                     <input type="hidden" name="ch_pcid" value="<?php echo $chapterDetails[0]->pcid; ?>" />
@@ -64,15 +64,18 @@
                                         <label>Chapter Roster Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $financial_report_array['roster_path'] }}">&nbsp; View Chapter Roster</a><br>
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
-                                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-roster" ><i class="fas fa-undo" ></i>&nbsp; Replace Roster File</button>
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Roster File</button>
+                                        {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-roster" ><i class="fas fa-undo" ></i>&nbsp; Replace Roster File</button> --}}
                                 </div>
                             @else
                                 <div class="col-md-12" id="RosterBlock">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload Roster File.<br>
-                                        <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-roster" ><i class="fas fa-upload" ></i>&nbsp; Upload Roster File</button>
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Roster File</button>
+                                        {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-roster" ><i class="fas fa-upload" ></i>&nbsp; Upload Roster File</button> --}}
                                 </div>
                             @endif
+
                                 <input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $financial_report_array['roster_path']; ?>">
                                 <div class="clearfix"></div>
                             <div class="col-md-12"><br></div>
@@ -1531,9 +1534,11 @@
                             <strong style="color:red">Please Note</strong><br>
                                 This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
                             @if (!is_null($financial_report_array['bank_statement_included_path']))
-                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement1" ><i class="fas fa-undo" ></i>&nbsp; Replace Bank Statement</button>
+                                <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Bank Statement</button>
+                                {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement1" ><i class="fas fa-undo" ></i>&nbsp; Replace Bank Statement</button> --}}
                             @else
-                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement1" ><i class="fas fa-upload" ></i>&nbsp; Upload Bank Statement</button>
+                            <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Bank Statement</button>
+                            {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement1" ><i class="fas fa-upload" ></i>&nbsp; Upload Bank Statement</button> --}}
                             @endif
                         </div>
                             <input type="hidden" name="StatementFile" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
@@ -1541,9 +1546,11 @@
                         <div class="col-md-12"><br></div>
                         <div class="col-md-12" id="Statement2Block">
                             @if (!is_null($financial_report_array['bank_statement_2_included_path']))
-                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement2" ><i class="fas fa-undo" ></i>&nbsp; Replace Additional Bank Statement</button>
+                                <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Additional Bank Statement</button>
+                                {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement2" ><i class="fas fa-undo" ></i>&nbsp; Replace Additional Bank Statement</button> --}}
                             @else
-                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement2" ><i class="fas fa-upload" ></i>&nbsp; Upload Additional Bank Statement</button>
+                                <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Additional Bank Statement</button>
+                                {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement2" ><i class="fas fa-upload" ></i>&nbsp; Upload Additional Bank Statement</button> --}}
                             @endif
                         </div>
                         <input type="hidden" name="Statement2File" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
@@ -2674,7 +2681,8 @@
                             <div class="col-md-12">
                                 <strong style="color:red">Please Note</strong><br>
                                     This will refresh the screen - be sure to save all work before clicking button to Upload 990N Confirmation.<br>
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-990N" ><i class="fas fa-upload" ></i>&nbsp; Upload 990N Confirmation</button>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload 990N Confirmation</button>
+                                    {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-990N" ><i class="fas fa-upload" ></i>&nbsp; Upload 990N Confirmation</button> --}}
                             </div>
                         </div>
                         <input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $financial_report_array['file_irs_path']; ?>">
@@ -2685,7 +2693,8 @@
                                 <br> --}}
                                     <strong style="color:red">Please Note</strong><br>
                                     This will refresh the screen - be sure to save all work before clicking button to Replace 990N Confirmation.<br>
-                                <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-990N" ><i class="fas fa-undo" ></i>&nbsp; Replace 990N Confirmation</button>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace 990N Confirmation</button>
+                                    {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-990N" ><i class="fas fa-undo" ></i>&nbsp; Replace 990N Confirmation</button> --}}
                             </div>
                             </div>
                         </div>
@@ -3416,7 +3425,7 @@
             </div>
 
         <!-- Modal Popups for Uploading Files -->
-        <div class="modal fade" id="modal-roster">
+        {{-- <div class="modal fade" id="modal-roster">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -3434,8 +3443,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="modal fade" id="modal-statement1">
+        </div> --}}
+        {{-- <div class="modal fade" id="modal-statement1">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -3491,7 +3500,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="modal fade" id="modal-award1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -4079,41 +4088,6 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
     // Call summary recalculation
     ReCalculateSummaryTotal();
 }
-
-    // function ChangeOfficeExpenses() {
-    //     var ExpenseTotal = 0;
-    //     var SumPrintingExpense = 0;
-    //     var SumPostageExpense = 0;
-    //     var SumPinsExpense = 0;
-
-    //     var totalExpenses = 0;
-    //     var table = document.getElementById("office-expenses");
-    //     var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
-
-    //     for (var i = 0; i < rows.length; i++) {
-    //         var expenseValue = Number(rows[i].cells[1].querySelector('input').value.replace(/,/g, '')) || 0;
-    //         totalExpenses += expenseValue;
-    //     }
-
-    //     var footer = table.getElementsByTagName('tfoot')[0];
-    //     footer.getElementsByTagName('input')[0].value = totalExpenses.toFixed(2);
-
-    //     SumPrintingExpense = Number(document.getElementById("PrintingCosts").value.replace(/[^0-9.-]/g, ''));
-    //     SumPostageExpense = Number(document.getElementById("PostageCosts").value.replace(/[^0-9.-]/g, ''));
-    //     SumPinsExpense = Number(document.getElementById("MembershipPins").value.replace(/[^0-9.-]/g, ''));
-
-    //     document.getElementById("SumPrintingExpense").value = SumPrintingExpense.toFixed(2);
-    //     document.getElementById("SumPostageExpense").value = SumPostageExpense.toFixed(2);
-    //     document.getElementById("SumPinsExpense").value = SumPinsExpense.toFixed(2);
-    //     document.getElementById("SumOtherOperatingExpense").value = ExpenseTotal;
-
-    //     ExpenseTotal += SumPrintingExpense + SumPostageExpense + SumPinsExpense;
-    //     document.getElementById("SumOperatingExpense").value = ExpenseTotal;
-    //     var OperatingTotal = ExpenseTotal + SumPrintingExpense + SumPostageExpense + SumPinsExpense;
-    //     document.getElementById("TotalOperatingExpense").value = OperatingTotal;
-
-    //     ReCalculateSummaryTotal();
-    // }
 
     function AddOfficeExpenseRow() {
         var ExpenseCount = document.getElementById("OfficeExpenseRowCount").value;
@@ -4889,6 +4863,259 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 
 <script>
+function showRosterUploadModal() {
+    var chapter_id = document.getElementById('chapter_id').value;
+
+    Swal.fire({
+        title: 'Upload Chapter Roster',
+        html: `
+            <form id="uploadRosterForm" enctype="multipart/form-data">
+                @csrf
+                <input type="file" name='file' required>
+            </form>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Upload',
+        cancelButtonText: 'Close',
+        preConfirm: () => {
+            var formData = new FormData(document.getElementById('uploadRosterForm'));
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we upload your file.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    $.ajax({
+                        url: '{{ url('/files/storeRoster', '') }}' + '/' + chapter_id,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Roster uploaded successfully!',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+
+            return false;
+        },
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        }
+    });
+}
+
+function showStatement1UploadModal() {
+    var chapter_id = document.getElementById('chapter_id').value;
+
+    Swal.fire({
+        title: 'Upload Statement',
+        html: `
+            <form id="uploadStatement1Form" enctype="multipart/form-data">
+                @csrf
+                <input type="file" name='file' required>
+            </form>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Upload',
+        cancelButtonText: 'Close',
+        preConfirm: () => {
+            var formData = new FormData(document.getElementById('uploadStatement1Form'));
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we upload your file.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    $.ajax({
+                        url: '{{ url('/files/storeStatement1', '') }}' + '/' + chapter_id,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Statement uploaded successfully!',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+
+            return false;
+        },
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        }
+    });
+}
+
+function showStatement2UploadModal() {
+    var chapter_id = document.getElementById('chapter_id').value;
+
+    Swal.fire({
+        title: 'Upload Additional Statement',
+        html: `
+            <form id="uploadStatement2Form" enctype="multipart/form-data">
+                @csrf
+                <input type="file" name='file' required>
+            </form>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Upload',
+        cancelButtonText: 'Close',
+        preConfirm: () => {
+            var formData = new FormData(document.getElementById('uploadStatement2Form'));
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we upload your file.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    $.ajax({
+                        url: '{{ url('/files/storeStatement1', '') }}' + '/' + chapter_id,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Additional Statement uploaded successfully!',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+
+            return false;
+        },
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        }
+    });
+}
+
+function show990NUploadModal() {
+    var chapter_id = document.getElementById('chapter_id').value;
+
+    Swal.fire({
+        title: 'Upload 990N',
+        html: `
+            <form id="upload990NForm" enctype="multipart/form-data">
+                @csrf
+                <input type="file" name='file' required>
+            </form>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Upload',
+        cancelButtonText: 'Close',
+        preConfirm: () => {
+            var formData = new FormData(document.getElementById('upload990NForm'));
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we upload your file.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    $.ajax({
+                        url: '{{ url('/files/store990n', '') }}' + '/' + chapter_id,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: '990N uploaded successfully!',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                location.reload(); // Reload the page to reflect changes
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    });
+                }
+            });
+
+            return false;
+        },
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        }
+    });
+}
+
+
+
+
+
+
     /* Save & Submit Verification */
     $(document).ready(function() {
         function submitFormWithStep(step) {
@@ -5232,37 +5459,5 @@ document.addEventListener("DOMContentLoaded", function() {
             return true;
         }
 
-        // function EnsureSubmitInformation() {
-        //     var completedName = document.getElementById('CompletedName');
-        //     var completedEmail = document.getElementById('CompletedEmail');
-        //     var missingFields = [];
-
-        //     // Define user-friendly labels for the fields
-        //     var fieldLabels = {
-        //         'CompletedName': 'Name of the person submitting the report',
-        //         'CompletedEmail': 'Email address of the person submitting the report'
-        //     };
-
-        //     // Check for missing fields
-        //     if (!completedName || completedName.value.trim() === "") {
-        //         missingFields.push(fieldLabels['CompletedName']);
-        //     }
-        //     if (!completedEmail || completedEmail.value.trim() === "") {
-        //         missingFields.push(fieldLabels['CompletedEmail']);
-        //     }
-
-        //     // Display the missing fields if any
-        //     if (missingFields.length > 0) {
-        //         var missingFieldsText = missingFields.map(field => `<li>${field}</li>`).join('');
-        //         var message = `<p>The following information is required to submit the report, please provide the required information to continue.</p>
-        //                         <ul style="list-style-position: inside; padding-left: 0; margin-left: 0;">
-        //                             ${missingFieldsText}
-        //                         </ul>
-        //                         `;
-        //         customErrorAlert(message);
-        //         return false;
-        //     }
-        //     return true;
-        // }
     </script>
 @endsection

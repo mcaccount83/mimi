@@ -10,6 +10,7 @@ class FolderRecord extends Model
     use HasFactory;
 
     protected $fillable = [
+        'year',
         'conf',
         'state',
         'chapter_name',

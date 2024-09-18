@@ -772,6 +772,9 @@ class AdminController extends Controller
     public function updateEOYDatabase(Request $request)
     {
         try{
+            $currentYear = Carbon::now()->year;
+            $nextYear = $currentYear + 1;
+
             $corDetails = User::find($request->user()->id)->Coordinators;
             $corId = $corDetails['id'];
 
@@ -847,6 +850,11 @@ class AdminController extends Controller
                       ]);
             }
 
+            // Change Year for Google Drive Financial Report Attachmnets
+            DB::table('google_drive')->update([
+                'eoy_uploads_year' => $nextYear
+            ]);
+
             // Update admin table: Set specified columns to 1
             DB::table('admin')->update([
                 'truncate_incoming' => '1',
@@ -855,6 +863,7 @@ class AdminController extends Controller
                 'copy_financial' => '1',
                 'copy_CHtoFR' => '1',
                 'copy_BDtoOUT' => '1',
+                'update_googleID' => '1',
                 'updated_id' => $corId,
                 'updated_at' => Carbon::today()
             ]);

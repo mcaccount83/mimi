@@ -101,6 +101,12 @@
                                     <label class="custom-control-label" for="copy_BDtoOUT">Copy Active Board Details to Outgoing Board Member Table</label>
                                     </div>
                                 </div>
+                            <div class="col-sm-12">
+                                <div class="custom-control custom-switch">
+                                    <input type="checkbox" name="update_googleID" id="update_googleID" class="custom-control-input" {{$admin->update_googleID ? 'checked' : '' }} disabled />
+                                    <label class="custom-control-label" for="update_googleID">Update Google Shared Drive for Attachmnet Uploads</label>
+                                    </div>
+                                </div>
                     </div>
                 </div>
             </div>
