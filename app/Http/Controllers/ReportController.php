@@ -1332,7 +1332,7 @@ class ReportController extends Controller
                 ->where('coordinators.conference_id', $corConfId)
                 ->where('coordinators.is_active', 1)
                 ->orderBy('coordinators.region_id')
-                ->orderByDesc('coordinators.position_id')
+                ->orderBy('coordinators.position_id', 'desc')
                 ->get();
         } else {
             $coordinatorDetails = DB::table('coordinators')
@@ -1345,7 +1345,7 @@ class ReportController extends Controller
                 ->where('coordinators.on_leave', 0)
                 ->where('coordinators.is_active', 1)
                 ->orderBy('coordinators.region_id')
-                ->orderByDesc('coordinators.position_id')
+                ->orderBy('coordinators.position_id', 'desc')
                 ->get();
         }
         foreach ($coordinatorDetails as $key => $value) {
