@@ -5186,7 +5186,12 @@ class ChapterController extends Controller
             $check_beginning_balance = isset($input['check_beginning_balance']) ? $input['check_beginning_balance'] : null;
             $check_bank_statement_included = isset($input['checkBankStatementIncluded']) ? $input['checkBankStatementIncluded'] : null;
             $check_bank_statement_matches = isset($input['checkBankStatementMatches']) ? $input['checkBankStatementMatches'] : null;
-            $post_balance = isset($input['post_balance']) ? $input['post_balance'] : null;
+
+            $post_balance = $input['post_balance'];
+            $post_balance = str_replace(',', '', $post_balance);
+            $post_balance = $post_balance === '' ? null : $post_balance;
+
+            // $post_balance = isset($input['post_balance']) ? $input['post_balance'] : null;
 
             //Step 9 - Questions
             $check_purchased_pins = isset($input['checkPurchasedPins']) ? $input['checkPurchasedPins'] : null;

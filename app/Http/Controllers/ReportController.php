@@ -1328,15 +1328,15 @@ class ReportController extends Controller
                 ->join('coordinator_position as pos1', 'pos1.id', '=', 'coordinators.position_id')
                 ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'coordinators.sec_position_id')
                 ->join('region', 'coordinators.region_id', '=', 'region.id')
-                ->where('coordinators.on_leave', 0)
                 ->where('coordinators.conference_id', $corConfId)
+                ->where('coordinators.on_leave', 0)
                 ->where('coordinators.is_active', 1)
                 ->orderBy('coordinators.region_id')
-                ->orderBy('coordinators.position_id', 'desc')
+                ->orderByDesc('coordinators.position_id')
                 ->get();
         } else {
             $coordinatorDetails = DB::table('coordinators')
-                ->select('coordinators.coordinator_id AS id', 'coordinators.first_name', 'coordinators.last_name', 'pos1.short_title AS position_title',
+                ->select('coordinators.id AS id', 'coordinators.first_name', 'coordinators.last_name', 'pos1.short_title AS position_title',
                     'pos2.short_title AS sec_position_title', 'coordinators.layer_id', 'coordinators.report_id', 'coordinators.report_id AS tree_id',
                     'region.short_name AS region')
                 ->join('coordinator_position as pos1', 'pos1.id', '=', 'coordinators.position_id')
@@ -1345,7 +1345,7 @@ class ReportController extends Controller
                 ->where('coordinators.on_leave', 0)
                 ->where('coordinators.is_active', 1)
                 ->orderBy('coordinators.region_id')
-                ->orderBy('coordinators.position_id', 'desc')
+                ->orderByDesc('coordinators.position_id')
                 ->get();
         }
         foreach ($coordinatorDetails as $key => $value) {
