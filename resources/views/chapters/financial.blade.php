@@ -2640,10 +2640,43 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                             Current bank statement included (should be above):&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_bank_statement_included']) ? 'Please Review'
                                                 : ( $financial_report_array ['check_bank_statement_included'] == 0 ? 'NO' : ($financial_report_array ['check_bank_statement_included'] == 1 ? 'YES' : 'Please Review')) }}</strong><br>
                                         </div>
-                                        <div class="flex-item">
+
+
+                                        <div class="flex-item2">
+                                            Treasury Balance Now matches Reconciled Bank Balance:&nbsp;&nbsp;&nbsp;
+                                            <strong>
+                                                <span style="
+                                                    @if(is_null($financial_report_array['check_bank_statement_matches']))
+                                                        background-color: #FFFFFF; color: #000000;
+                                                    @elseif($financial_report_array['check_bank_statement_matches'] == 1)
+                                                        background-color: #28a745; color: #FFFFFF;
+                                                   {{-- @elseif($financial_report_array['check_bank_statement_matches'] == 0)
+                                                        background-color: #ffc107; color: #000000; --}}
+                                                    @elseif($financial_report_array['check_bank_statement_matches'] == 0)
+                                                        background-color: #dc3545; color: #FFFFFF;
+                                                    @else
+                                                        background-color: #FFFFFF; color: #000000;
+                                                    @endif
+                                                    padding: 2px 5px; border-radius: 3px;">
+                                                    @if(is_null($financial_report_array['check_bank_statement_matches']))
+                                                        Please Review
+                                                    @elseif($financial_report_array['check_bank_statement_matches'] == 0)
+                                                        Report is out of balance
+                                                    {{-- @elseif($financial_report_array['check_bank_statement_matches'] == 0)
+                                                        They are out of balance --}}
+                                                    @elseif($financial_report_array['check_bank_statement_matches'] == 1)
+                                                        Report balances
+                                                    @else
+                                                        Please Review
+                                                    @endif
+                                                </span>
+                                            </strong><br>
+                                        </div>
+
+                                        {{-- <div class="flex-item">
                                             Treasury Balance Now matches Reconciled Bank Balance:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_bank_statement_matches']) ? 'Please Review'
                                                 : ( $financial_report_array ['check_bank_statement_matches'] == 0 ? 'NO' : ($financial_report_array ['check_bank_statement_matches'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div>
+                                        </div> --}}
 
                                         <div class="flex-item2">
                                             Purchased membership pins or had leftovers:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_purchased_pins']) ? 'Please Review'
