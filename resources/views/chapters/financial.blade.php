@@ -2650,8 +2650,6 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                                         background-color: #FFFFFF; color: #000000;
                                                     @elseif($financial_report_array['check_bank_statement_matches'] == 1)
                                                         background-color: #28a745; color: #FFFFFF;
-                                                   {{-- @elseif($financial_report_array['check_bank_statement_matches'] == 0)
-                                                        background-color: #ffc107; color: #000000; --}}
                                                     @elseif($financial_report_array['check_bank_statement_matches'] == 0)
                                                         background-color: #dc3545; color: #FFFFFF;
                                                     @else
@@ -2660,12 +2658,10 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                                     padding: 2px 5px; border-radius: 3px;">
                                                     @if(is_null($financial_report_array['check_bank_statement_matches']))
                                                         Please Review
-                                                    @elseif($financial_report_array['check_bank_statement_matches'] == 0)
-                                                        Report is out of balance
-                                                    {{-- @elseif($financial_report_array['check_bank_statement_matches'] == 0)
-                                                        They are out of balance --}}
                                                     @elseif($financial_report_array['check_bank_statement_matches'] == 1)
                                                         Report balances
+                                                    @elseif($financial_report_array['check_bank_statement_matches'] == 0)
+                                                        Report is out of balance
                                                     @else
                                                         Please Review
                                                     @endif
@@ -2702,16 +2698,45 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                             Sistered another chapter:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_sistered_another_chapter']) ? 'Please Review'
                                                 : ($financial_report_array ['check_sistered_another_chapter'] == 0 ? 'NO' : ($financial_report_array ['check_sistered_another_chapter'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
                                         </div>
+
                                         <div class="flex-item2">
+                                            Proof of 990N Filing for 7/1/<?php echo date('Y')-1 .' - 6/30/'.date('Y');?> (should be above):&nbsp;&nbsp;&nbsp;
+                                            <strong>
+                                                <span style="
+                                                    @if(is_null($financial_report_array['check_current_990N_included']))
+                                                        background-color: #FFFFFF; color: #000000;
+                                                    @elseif($financial_report_array['check_current_990N_included'] == 1)
+                                                        background-color: #28a745; color: #FFFFFF;
+                                                    @elseif($financial_report_array['check_current_990N_included'] == 0)
+                                                        background-color: #dc3545; color: #FFFFFF;
+                                                    @else
+                                                        background-color: #FFFFFF; color: #000000;
+                                                    @endif
+                                                    padding: 2px 5px; border-radius: 3px;">
+                                                    @if(is_null($financial_report_array['check_current_990N_included']))
+                                                        Please Review
+                                                    @elseif($financial_report_array['check_current_990N_included'] == 1)
+                                                        990N is filed
+                                                    @elseif($financial_report_array['check_current_990N_included'] == 0)
+                                                        990N has not been filed
+                                                    @else
+                                                        Please Review
+                                                    @endif
+                                                </span>
+                                            </strong><br>
+                                        </div>
+
+                                        {{-- <div class="flex-item2">
                                             Proof of 990N Filing for 7/1/<?php echo date('Y')-1 .' - 6/30/'.date('Y');?> (should be above):&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_current_990N_included']) ? 'Please Review'
                                                 : ($financial_report_array ['check_current_990N_included'] == 0 ? 'NO' : ($financial_report_array ['check_current_990N_included'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div>
+                                        </div> --}}
+
                                     </div>
                                     </div>
                                     <div class="col-md-12"><br></div>
                                     @php
-                                        $yesBackground = '#43A047';  // Green background for "YES"
-                                        $noBackground = '#E53935';   // Red background for "NO"
+                                        $yesBackground = '#28a745';  // Green background for "YES"
+                                        $noBackground = '#dc3545';   // Red background for "NO"
                                     @endphp
 
                                     <div class="col-md-4" >
