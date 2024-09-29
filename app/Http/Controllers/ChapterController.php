@@ -5695,4 +5695,82 @@ class ChapterController extends Controller
         return view('boards.boardinfo')->with($data);
     }
 
+     /**
+     * View the Chapter Board Info Report View
+     */
+    public function showChapterReregistrationView(Request $request, $id)
+    {
+        $user = $request->user();
+        $user_type = $user->user_type;
+
+        $chapterDetails = Chapter::find($id);
+        $request->session()->put('chapterid', $id);
+
+        $stateArr = DB::table('state')
+            ->select('state.*')
+            ->orderBy('id')
+            ->get();
+
+        $chapterState = DB::table('state')
+            ->select('state_short_name')
+            ->where('id', '=', $chapterDetails->state)
+            ->get();
+        $chapterState = $chapterState[0]->state_short_name;
+
+        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN',
+            '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
+        $currentMonthCode = $chapterDetails->start_month_id;
+        $currentMonthAbbreviation = isset($foundedMonth[$currentMonthCode]) ? $foundedMonth[$currentMonthCode] : '';
+
+        $boardPosition = ['1' => 'President', '2' => 'AVP', '3' => 'MVP', '4' => 'Treasurer', '5' => 'Secretary'];
+        $boardPositionCode = 1;
+        $boardPositionAbbreviation = isset($boardPosition[$boardPositionCode]) ? $boardPosition[$boardPositionCode] : '';
+
+        $year = date('Y');
+        $month = date('m');
+
+        $next_renewal_year = $chapterDetails->next_renewal_year;
+        $start_month = $chapterDetails->start_month_id;
+        $late_month = $start_month + 1;
+
+        $due_date = Carbon::create($next_renewal_year, $start_month, 1);
+        $late_date = Carbon::create($next_renewal_year, $late_month, 1);
+
+        // Convert $start_month to words
+        $start_monthInWords = Carbon::createFromFormat('m', $start_month)->format('F');
+
+        // Determine the range start and end months correctly
+        $monthRangeStart = $start_month;
+        $monthRangeEnd = $start_month - 1;
+
+        // Adjust range for January
+        if ($start_month == 1) {
+            $monthRangeStart = 1;
+            $monthRangeEnd = 12;
+        }
+
+        // Create Carbon instances for start and end dates
+        $rangeStartDate = Carbon::create($year, $monthRangeStart, 1);
+        $rangeEndDate = Carbon::create($year, $monthRangeEnd, 1)->endOfMonth();
+
+        // Format the dates as words
+        $rangeStartDateFormatted = $rangeStartDate->format('F jS');
+        $rangeEndDateFormatted = $rangeEndDate->format('F jS');
+
+        $chapterList = DB::table('chapters as ch')
+            ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address',
+                'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
+            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->where('bd.board_position_id', '=', '1')
+            ->get();
+
+        $data = ['chapterState' => $chapterState, 'stateArr' => $stateArr, 'chapterList' => $chapterList, 'boardPositionAbbreviation' => $boardPositionAbbreviation, 'renewyear' => $next_renewal_year,
+            'currentMonthAbbreviation' => $currentMonthAbbreviation, 'startMonth' => $start_monthInWords, 'endRange' => $rangeEndDateFormatted, 'startRange' => $rangeStartDateFormatted,
+            'thisMonth' => $month, 'due_date' => $due_date, 'late_date' => $late_date, 'user_type' => $user_type];
+
+        return view('boards.payment')->with($data);
+    }
+
 }

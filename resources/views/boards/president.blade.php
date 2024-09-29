@@ -96,9 +96,15 @@
                                 Your chapter's anniversary month was <strong>{{ $startMonth }}</strong>.&nbsp; Your Re-registration payment is now considered overdue.
                             </p>
                             @endif
+                                @if($user_type === 'coordinator')
+                                    <button type="button" class="btn btn-primary" onclick="window.location.href='{{ route('chapter.viewreregpayment', ['id' => $list->id]) }}'">
+                                        <i class="fas fa-dollar-sign"></i>&nbsp; PAY HERE
+                                    </button>
+                                @else
                                 <a href="{{ route('board.showreregpayment') }}" class="btn btn-primary">
                                     <i class="fas fa-dollar-sign"></i>&nbsp; PAY HERE
                                 </a>
+                                @endif
                             </div>
                             <div class="col-md-12"><br><br></div>
                         @endif

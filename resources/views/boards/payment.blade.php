@@ -212,7 +212,11 @@
                                 DO NOT refresh page after clicking "Submit Payment" or you may be charged multiple times!</center></div>
                             <br>
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-share" ></i>&nbsp;{{ __('Submit Payment') }}</button>
+                            @if($user_type === 'coordinator')
+                                <a href="{{ route('chapter.viewpresident', $chapterList[0]->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Profile</a>
+                            @else
                             <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-home" ></i>&nbsp; Back to Profile</a>
+                            @endif
                         </div>
                     </form>
                 </div>
@@ -243,6 +247,18 @@
 @section('customscript')
 
 <script>
+/* Disable fields and buttons  */
+$(document).ready(function () {
+        var userType = @json($user_type);
+
+    if (userType === 'coordinator') {
+        // Disable all input fields, select elements, textareas, and buttons
+        $('button').not('#btn-back').prop('disabled', true);
+        $('input, select, textarea').prop('disabled', true);
+    }
+
+    });
+
     document.querySelector('form').addEventListener('submit', function(){
         document.querySelector('button[type="submit"]').setAttribute('disabled', 'disabled');
     });

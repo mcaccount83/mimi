@@ -162,6 +162,8 @@ Route::get('/chapter/unsubmit/{id}', [ChapterController::class, 'updateUnsubmit'
 Route::get('/chapter/view/{id}', [ChapterController::class, 'showChapterView'])->name('chapter.viewpresident');
 Route::get('/chapter/viewfinancial/{id}', [ChapterController::class, 'showChapterFinancialView'])->name('chapter.viewfinancial');
 Route::get('/chapter/viewboardinfo/{id}', [ChapterController::class, 'showChapterBoardInfoView'])->name('chapter.viewboardinfo');
+Route::get('/chapter/viewreregpayment/{id}', [ChapterController::class, 'showChapterReregistrationView'])->name('chapter.viewreregpayment');
+
 
 Route::get('chapter/boardinfo/{id}', [ChapterController::class, 'showBoardInfo'])->name('chapter.showboardinfo');
 Route::post('chapter/boardinfo/{id}', [ChapterController::class, 'createBoardInfo'])->name('chapter.createboardinfo');
