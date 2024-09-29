@@ -525,7 +525,11 @@
                     @endif
 
                     <div class="box-body text-center">
-                        <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
+                        @if($user_type === 'coordinator')
+                            <a href="{{ route('chapter.viewpresident', $chapterList[0]->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back</a>
+                        @else
+                            <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
+                        @endif
                         @if ($chapterList[0]->new_board_submitted != '1')
                         <button type="submit" class="btn btn-primary" onclick="return PreSaveValidate()" <?php if($chapterList[0]->new_board_submitted) echo "disabled"; ?>><i class="fas fa-mail-forward " ></i>&nbsp; Submit</button>
                         @endif
@@ -541,11 +545,18 @@
 @section('customscript')
 <script>
 $(document).ready(function() {
+    var userType = @json($user_type);
+
   $('#add_link_req').parent().hide();
   $('#not_link').parent().hide();
 
   // Disable all input fields, select elements, textareas, and submit button if the condition is met
-  if ("{{$chapterList[0]->new_board_submitted}}" === '1') {
+  if (userType === 'coordinator') {
+        // Disable all input fields, select elements, textareas, and buttons
+        $('button').not('#btn-back').prop('disabled', true);
+        $('input, select, textarea').prop('disabled', true);
+
+    } else if ("{{$chapterList[0]->new_board_submitted}}" === '1') {
         $('input, select, textarea').prop('disabled', true);
         $('#submit').prop('disabled', true);
     } else {
@@ -556,13 +567,6 @@ $(document).ready(function() {
 });
 
 // Disable Web Link Status option 0 and 1
-// document.getElementById('option0').disabled = true;
-// document.getElementById('option1').disabled = true;
-
-// document.querySelector('form').addEventListener('submit', function(){
-//         document.querySelector('button[type="submit"]').setAttribute('disabled', 'disabled');
-//     });
-
 document.getElementById('ch_webstatus').addEventListener('change', function() {
         // Update hidden input field with the new value only if the selected option is not disabled
         var selectedOption = this.options[this.selectedIndex];
@@ -636,19 +640,6 @@ function isPhone() {
         return false;
     }
 }
-//   function BoundaryError(error){
-// 		if (error){
-// 			$("#BoundaryIssue").prop("readonly",false);
-// 			$("#BoundaryIssue").prop("required",true);
-// 			$("#BoundaryIssueLabel").prop("readonly",false);
-// 		}
-// 		else{
-// 			$("#BoundaryIssue").prop("readonly",true);
-// 			$("#BoundaryIssue").prop("required",false);
-// 			$("#BoundaryIssueLabel").prop("readonly",true);
-// 		}
-// 	}
-
 
 //Boundary Visibility
     ShowBoundaryError();
@@ -694,39 +685,8 @@ function isPhone() {
 
 
 $(document).ready(function() {
-    // var phoneListArr = ["ch_pre_phone","ch_avp_phone","ch_mvp_phone","ch_trs_phone","ch_sec_phone"];
-    // for (var i = phoneListArr.length - 1; i >= 0; i--) {
-    //     var inputValue = $("#"+phoneListArr[i]).val();
-    //     if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
-    //     var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
-    //     $("#"+phoneListArr[i]).val(reInputValue);
-    // }
-
-    // $("#ch_pre_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
-    // $("#ch_avp_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
-    // $("#ch_mvp_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
-    // $("#ch_trs_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
-    // $("#ch_sec_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
 
 	var check = <?php echo "\"" . $chapterList[0]->boundary_issues . "\""; ?>;
-
-	// if(check == 0){
-	// 	$("#BoundaryIssue").prop("readonly",true);
-	// 	$("#BoundaryIssue").prop("required",false);
-	// }else{
-	// 	$("#BoundaryIssue").prop("readonly",false);
-	// 	$("#BoundaryIssue").prop("required",true);
-	// }
 
 	var pcid = $("#pcid").val();
 	if(pcid !=""){
@@ -742,212 +702,7 @@ $(document).ready(function() {
         });
     }
 
-//     var avp = $("#ch_avp_fname").val();
-//     if(avp ==''){
-//         $("#ch_avp_fname").prop("readonly",true);
-//         $("#ch_avp_lname").prop("readonly",true);
-//         $("#ch_avp_email").prop("readonly",true);
-//         $("#ch_avp_street").prop("readonly",true);
-//         $("#ch_avp_city").prop("readonly",true);
-//         $("#ch_avp_zip").prop("readonly",true);
-//         $("#ch_avp_phone").prop("readonly",true);
-//         $("#ch_avp_state").prop("disabled",true);
-//     }
-//     var mvp = $("#ch_mvp_fname").val();
-//     if(mvp ==''){
-//         $("#ch_mvp_fname").prop("readonly",true);
-//         $("#ch_mvp_lname").prop("readonly",true);
-//         $("#ch_mvp_email").prop("readonly",true);
-//         $("#ch_mvp_street").prop("readonly",true);
-//         $("#ch_mvp_city").prop("readonly",true);
-//         $("#ch_mvp_zip").prop("readonly",true);
-//         $("#ch_mvp_phone").prop("readonly",true);
-//         $("#ch_mvp_state").prop("disabled",true);
-//     }
-//     var trs = $("#ch_trs_fname").val();
-//     if(trs ==''){
-//         $("#ch_trs_fname").prop("readonly",true);
-//         $("#ch_trs_lname").prop("readonly",true);
-//         $("#ch_trs_email").prop("readonly",true);
-//         $("#ch_trs_street").prop("readonly",true);
-//         $("#ch_trs_city").prop("readonly",true);
-//         $("#ch_trs_zip").prop("readonly",true);
-//         $("#ch_trs_phone").prop("readonly",true);
-//         $("#ch_trs_state").prop("disabled",true);
-//     }
-//     var sec = $("#ch_sec_fname").val();
-//     if(sec ==''){
-//         $("#ch_sec_fname").prop("readonly",true);
-//         $("#ch_sec_lname").prop("readonly",true);
-//         $("#ch_sec_email").prop("readonly",true);
-//         $("#ch_sec_street").prop("readonly",true);
-//         $("#ch_sec_city").prop("readonly",true);
-//         $("#ch_sec_zip").prop("readonly",true);
-//         $("#ch_sec_phone").prop("readonly",true);
-//         $("#ch_sec_state").prop("disabled",true);
-//     }
-
   });
-
-//   function ConfirmVacant(checkboxid) {
-//     switch(checkboxid){
-// 					case "AVPVacant":
-//               if($("#AVPVacant").prop("checked") == true){
-//                 $("#ch_avp_fname").prop("readonly",true);
-//                 $("#ch_avp_lname").prop("readonly",true);
-//                 $("#ch_avp_email").prop("readonly",true);
-//                 $("#ch_avp_street").prop("readonly",true);
-//                 $("#ch_avp_city").prop("readonly",true);
-//                 $("#ch_avp_zip").prop("readonly",true);
-//                 $("#ch_avp_phone").prop("readonly",true);
-//                 $("#ch_avp_state").prop("disabled",true);
-//                 $("#ch_avp_fname").val("");
-//                 $("#ch_avp_lname").val("");
-//                 $("#ch_avp_email").val("");
-//                 $("#ch_avp_street").val("");
-//                 $("#ch_avp_city").val("");
-//                 $("#ch_avp_zip").val("");
-//                 $("#ch_avp_phone").val("");
-//                 $("#ch_avp_state").val("");
-//               }
-//               else{
-//                 $("#ch_avp_fname").prop("readonly",false);
-//                 $("#ch_avp_lname").prop("readonly",false);
-//                 $("#ch_avp_email").prop("readonly",false);
-//                 $("#ch_avp_street").prop("readonly",false);
-//                 $("#ch_avp_city").prop("readonly",false);
-//                 $("#ch_avp_zip").prop("readonly",false);
-//                 $("#ch_avp_phone").prop("readonly",false);
-//                 $("#ch_avp_state").prop("disabled",false);
-
-//                 $("#ch_avp_fname").prop("required",true);
-//                 $("#ch_avp_lname").prop("required",true);
-//                 $("#ch_avp_email").prop("required",true);
-//                 $("#ch_avp_street").prop("required",true);
-//                 $("#ch_avp_city").prop("required",true);
-//                 $("#ch_avp_zip").prop("required",true);
-//                 $("#ch_avp_phone").prop("required",true);
-//                 $("#ch_avp_state").prop("required",true);
-//               }
-//             break;
-//           case "MVPVacant":
-//               if($("#MVPVacant").prop("checked") == true){
-//                 $("#ch_mvp_fname").prop("readonly",true);
-//                 $("#ch_mvp_lname").prop("readonly",true);
-//                 $("#ch_mvp_email").prop("readonly",true);
-//                 $("#ch_mvp_street").prop("readonly",true);
-//                 $("#ch_mvp_city").prop("readonly",true);
-//                 $("#ch_mvp_zip").prop("readonly",true);
-//                 $("#ch_mvp_phone").prop("readonly",true);
-//                 $("#ch_mvp_state").prop("disabled",true);
-//                 $("#ch_mvp_fname").val("");
-//                 $("#ch_mvp_lname").val("");
-//                 $("#ch_mvp_email").val("");
-//                 $("#ch_mvp_street").val("");
-//                 $("#ch_mvp_city").val("");
-//                 $("#ch_mvp_zip").val("");
-//                 $("#ch_mvp_phone").val("");
-//                 $("#ch_mvp_state").val("");
-//               }
-//               else{
-//                 $("#ch_mvp_fname").prop("readonly",false);
-//                 $("#ch_mvp_lname").prop("readonly",false);
-//                 $("#ch_mvp_email").prop("readonly",false);
-//                 $("#ch_mvp_street").prop("readonly",false);
-//                 $("#ch_mvp_city").prop("readonly",false);
-//                 $("#ch_mvp_zip").prop("readonly",false);
-//                 $("#ch_mvp_phone").prop("readonly",false);
-//                 $("#ch_mvp_state").prop("disabled",false);
-//                 $("#ch_mvp_fname").prop("required",true);
-//                 $("#ch_mvp_lname").prop("required",true);
-//                 $("#ch_mvp_email").prop("required",true);
-//                 $("#ch_mvp_street").prop("required",true);
-//                 $("#ch_mvp_city").prop("required",true);
-//                 $("#ch_mvp_zip").prop("required",true);
-//                 $("#ch_mvp_phone").prop("required",true);
-//                 $("#ch_mvp_state").prop("required",true);
-//               }
-//             break;
-//           case "TreasVacant":
-//               if($("#TreasVacant").prop("checked") == true){
-//                 $("#ch_trs_fname").prop("readonly",true);
-//                 $("#ch_trs_lname").prop("readonly",true);
-//                 $("#ch_trs_email").prop("readonly",true);
-//                 $("#ch_trs_street").prop("readonly",true);
-//                 $("#ch_trs_city").prop("readonly",true);
-//                 $("#ch_trs_zip").prop("readonly",true);
-//                 $("#ch_trs_phone").prop("readonly",true);
-//                 $("#ch_trs_state").prop("disabled",true);
-//                 $("#ch_trs_fname").val("");
-//                 $("#ch_trs_lname").val("");
-//                 $("#ch_trs_email").val("");
-//                 $("#ch_trs_street").val("");
-//                 $("#ch_trs_city").val("");
-//                 $("#ch_trs_zip").val("");
-//                 $("#ch_trs_phone").val("");
-//                 $("#ch_trs_state").val("");
-//               }
-//               else{
-//                 $("#ch_trs_fname").prop("readonly",false);
-//                 $("#ch_trs_lname").prop("readonly",false);
-//                 $("#ch_trs_email").prop("readonly",false);
-//                 $("#ch_trs_street").prop("readonly",false);
-//                 $("#ch_trs_city").prop("readonly",false);
-//                 $("#ch_trs_zip").prop("readonly",false);
-//                 $("#ch_trs_phone").prop("readonly",false);
-//                 $("#ch_trs_state").prop("disabled",false);
-//                 $("#ch_trs_fname").prop("required",true);
-//                 $("#ch_trs_lname").prop("required",true);
-//                 $("#ch_trs_email").prop("required",true);
-//                 $("#ch_trs_street").prop("required",true);
-//                 $("#ch_trs_city").prop("required",true);
-//                 $("#ch_trs_zip").prop("required",true);
-//                 $("#ch_trs_phone").prop("required",true);
-//                 $("#ch_trs_state").prop("required",true);
-
-//               }
-//             break;
-//           case "SecVacant":
-//               if($("#SecVacant").prop("checked") == true){
-//                 $("#ch_sec_fname").prop("readonly",true);
-//                 $("#ch_sec_lname").prop("readonly",true);
-//                 $("#ch_sec_email").prop("readonly",true);
-//                 $("#ch_sec_street").prop("readonly",true);
-//                 $("#ch_sec_city").prop("readonly",true);
-//                 $("#ch_sec_zip").prop("readonly",true);
-//                 $("#ch_sec_phone").prop("readonly",true);
-//                 $("#ch_sec_state").prop("disabled",true);
-//                 $("#ch_sec_fname").val("");
-//                 $("#ch_sec_lname").val("");
-//                 $("#ch_sec_email").val("");
-//                 $("#ch_sec_street").val("");
-//                 $("#ch_sec_city").val("");
-//                 $("#ch_sec_zip").val("");
-//                 $("#ch_sec_phone").val("");
-//                 $("#ch_sec_state").val("");
-//               }
-//               else{
-//                 $("#ch_sec_fname").prop("readonly",false);
-//                 $("#ch_sec_lname").prop("readonly",false);
-//                 $("#ch_sec_email").prop("readonly",false);
-//                 $("#ch_sec_street").prop("readonly",false);
-//                 $("#ch_sec_city").prop("readonly",false);
-//                 $("#ch_sec_zip").prop("readonly",false);
-//                 $("#ch_sec_phone").prop("readonly",false);
-//                 $("#ch_sec_state").prop("disabled",false);
-//                 $("#ch_sec_fname").prop("required",true);
-//                 $("#ch_sec_lname").prop("required",true);
-//                 $("#ch_sec_email").prop("required",true);
-//                 $("#ch_sec_street").prop("required",true);
-//                 $("#ch_sec_city").prop("required",true);
-//                 $("#ch_sec_zip").prop("required",true);
-//                 $("#ch_sec_phone").prop("required",true);
-//                 $("#ch_sec_state").prop("required",true);
-//               }
-//             break;
-//     }
-
-//   }
 
 //submit validation function
   function PreSaveValidate(){

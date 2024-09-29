@@ -56,6 +56,11 @@
                 <div class="card card-outline card-primary">
                 <div class="card-header">
                     <h3 class="card-title">Chapter</h3>
+                    <br>
+                    &nbsp;&nbsp;<a href="{{ route('chapter.viewpresident', ['id' => $id]) }}" class="btn btn-xs bg-gradient-primary">
+                        <i class="fas fa-eye"></i>&nbsp;&nbsp;&nbsp;View Chapter Profile As President
+                    </a>
+
                 </div>
                 <!-- /.card-header -->
                 <div class="card-body">

@@ -28,7 +28,8 @@
                         Please save a copy of the PDF for your records.</font>"; ?></h4>
                          <div class="col-md-12 text-center">
                                 @if($submitted =='1')
-                                <a id="btn-download-pdf" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn btn-primary" ><i class="fas fa-download" ></i>&nbsp; Download PDF</a>
+                                <button type="button" id="btn-download-pdf" class="btn btn-primary" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $financial_report_array['financial_pdf_path'] }}'"><i class="fas fa-file-pdf"></i>&nbsp; Download PDF</button>
+                                {{-- <a id="btn-download-pdf" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn btn-primary" ><i class="fas fa-download" ></i>&nbsp; Download PDF</a> --}}
                                 @endif
                         </div>
                     </div>
@@ -3382,19 +3383,6 @@
                                     <div class="col-md-12 float-left">
                                     <strong>Email: </strong><a href="mailto:{{ $userEmail }}">{{ $userEmail }}</a>
                                     </div>
-
-                                {{-- <div class="col-md-6 float-left">
-                                    <label for="CompletedName">
-                                        Name (First & Last)
-                                    </label><span class="field-required">*</span>
-                                <input type="text" name="CompletedName" id="CompletedName" class="form-control" value="<?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_name'];}?>" required >
-                                </div> --}}
-                                {{-- <div class="col-md-6 float-left">
-                                    <label for="CompletedEmail">
-                                        Email Address
-                                    </label><span class="field-required">*</span>
-                                 <input type="text" name="CompletedEmail" id="CompletedEmail" class="form-control" value="<?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_email'];}?>" required >
-                                </div> --}}
                             </div>
                             <div class="card-body text-center">
                                 <button type="button" class="btn btn-primary" id="btn-step-13" ><i class="fas fa-save" ></i>&nbsp; Save</button>
@@ -3415,94 +3403,22 @@
             @endif
 
             <div class="card-body text-center">
-                @if($user_type !== 'outgoing')
-                    <a href="{{ route('home') }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back</a>
+                @if($user_type === 'board')
+                    <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
+                @endif
+                @if($user_type === 'coordinator')
+                    <a href="{{ route('chapter.viewpresident', $financial_report_array['chapter_id']) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back</a>
                 @endif
                 @if($submitted !='1')
                     <button type="button" id="btn-save" class="btn btn-primary"><i class="fas fa-save"></i>&nbsp; Save</button>
                 @endif
                 @if($submitted =='1')
-                    <a id="btn-download-pdf" href="https://drive.google.com/uc?export=download&id={{ $financial_report_array['financial_pdf_path'] }}" class="btn btn-primary"><i class="fas fa-file-pdf"></i>&nbsp; Download PDF</a>
+                    <button type="button" id="btn-download-pdf" class="btn btn-primary" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $financial_report_array['financial_pdf_path'] }}'"><i class="fas fa-file-pdf"></i>&nbsp; Download PDF</button>
+                    {{-- <a id="btn-download-pdf" href="https://drive.google.com/uc?export=download&id={{ $financial_report_array['financial_pdf_path'] }}" class="btn btn-primary"><i class="fas fa-file-pdf"></i>&nbsp; Download PDF</a> --}}
                 @endif
             </div>
 
-        <!-- Modal Popups for Uploading Files -->
-        {{-- <div class="modal fade" id="modal-roster">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Upload Roster</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form id="upload_roster" name="upload_roster" role="form" enctype="multipart/form-data" method="POST" action='{{ url("/files/storeRoster",$financial_report_array['chapter_id']) }}' >
-                            @csrf
-                            <input type="file" name='file' required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
-                        <button type="submit" class="btn btn-sm btn-success" id="btn-roster"><i class="fas fa-upload" ></i>&nbsp; Upload</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-        {{-- <div class="modal fade" id="modal-statement1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Upload Statement</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form id="upload_statement1" name="upload_statement1" role="form" enctype="multipart/form-data" method="POST" action='{{ url("/files/storeStatement1",$financial_report_array['chapter_id']) }}' >
-                            @csrf
-                            <input type="file" name='file' required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
-                        <button type="submit" class="btn btn-sm btn-success" id="btn-statement1"><i class="fas fa-upload" ></i>&nbsp; Upload</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="modal-statement2">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Upload Additional Statement</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{{ url('/files/storeStatement2/'. $financial_report_array['chapter_id']) }}" method="post" enctype="multipart/form-data">
-                            @csrf
-                            <input type="file" name='file' required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
-                        <button type="submit" class="btn btn-sm btn-success" id="btn-statement2"><i class="fas fa-upload" ></i>&nbsp; Upload</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="modal-990N">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Upload 990N Confirmation</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{{ url('/files/store990n/'. $financial_report_array['chapter_id']) }}" method="post" enctype="multipart/form-data">
-                            @csrf
-                            <input type="file" name='file' required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
-                        <button type="submit" class="btn btn-sm btn-success" id="btn-990N"><i class="fas fa-upload" ></i>&nbsp; Upload</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
+
         <div class="modal fade" id="modal-award1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -3609,15 +3525,21 @@
 /* Disable fields and buttons  */
     $(document).ready(function () {
         var submitted = @json($chapterDetails[0]->financial_report_received);
+        var userType = @json($user_type);
 
-        if (submitted == '1') {
+    if (userType === 'coordinator') {
+        // Disable all input fields, select elements, textareas, and buttons
+        $('button').not('#btn-back').prop('disabled', true);
+        $('input, select, textarea').prop('disabled', true);
+
+    } else if (submitted == '1') {
             $('button').not('#btn-back, #btn-download-pdf').prop('disabled', true);
-            $('input, select, textarea').not('#logout-form input, #logout-form select, #logout-form textarea').prop('disabled', true);
+            $('input, select, textarea').prop('disabled', true);
         } else {
             $('button, input, select, textarea').prop('disabled', false);
         }
         var allDisabled = true;
-        $('input, select, textarea').not('#logout-form input, #logout-form select, #logout-form textarea').each(function() {
+        $('input, select, textarea').each(function() {
             if (!$(this).prop('disabled')) {
                 allDisabled = false;
                 return false;

@@ -1066,11 +1066,14 @@ class BoardController extends Controller
      */
     public function showBoardInfo(Request $request)
     {
-        //$borDetails = User::find($request->user()->id)->BoardDetails;
-        $user = User::find($request->user()->id);
-        // Check if user is not found
-        if (! $user) {
-            return redirect()->route('home');
+        $user = $request->user();
+        $user_type = $user->user_type;
+        $userStatus = $user->is_active;
+        if ($userStatus != 1) {
+            Auth::logout();
+            $request->session()->flush();
+
+            return redirect()->to('/login');
         }
 
         // $borDetails = $user->BoardDetails;
@@ -1169,7 +1172,7 @@ class BoardController extends Controller
             $SECDetails = json_decode(json_encode($SECDetails));
         }
         $data = ['chapterState' => $chapterState, 'currentMonth' => $currentMonth, 'foundedMonth' => $foundedMonth, 'stateArr' => $stateArr, 'SECDetails' => $SECDetails,
-            'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PREDetails' => $PREDetails, 'chapterList' => $chapterList];
+            'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PREDetails' => $PREDetails, 'chapterList' => $chapterList, 'user_type' => $user_type];
 
         return view('boards.boardinfo')->with($data);
     }

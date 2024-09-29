@@ -61,7 +61,7 @@
         {{-- <a href="{{ route('home') }}" class="navbar-brand">
             <img src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC" class="brand-image img-circle elevation-3" >
           </a> --}}
-    @if($user_type !== 'outgoing')
+    @if($user_type == 'board')
 
       <div class="collapse navbar-collapse order-3" id="navbarCollapse">
         <!-- Left navbar links -->
@@ -85,7 +85,7 @@
       </div>
       @endif
 
-
+    @if($user_type !== 'coordinator')
       <!-- Right navbar links -->
       <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
         <li class="nav-item">
@@ -99,6 +99,27 @@
             </form>
         </li>
       </ul>
+      @endif
+
+      @if($user_type == 'coordinator')
+      @php
+          // Assuming you're already on a chapter edit page and the 'id' is available in the route.
+          $id = request()->route('id'); // Get the current chapter ID from the route
+      @endphp
+
+      @if ($id) <!-- Check if $id is not null -->
+          <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+              <li class="nav-item">
+                  <a class="nav-link" href="{{ route('chapters.edit', ['id' => $id]) }}">
+                      <span class="no-icon">Back to Coordinator Dashboard / Chapter Details</span>
+                  </a>
+              </li>
+          </ul>
+      @endif
+  @endif
+
+
+
     </div>
   </nav>
   <!-- /.navbar -->
@@ -108,7 +129,9 @@
     <!-- Content Header (Page header) -->
     <div class="content-header">
       <div class="container">
-
+        @if($user_type === 'coordinator')
+        <p class="description text-center"><span style="color: red;">You are Viewing Chapter Profile as a Coordinator -- All Information is READ ONLY.</p>
+        @endif
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->

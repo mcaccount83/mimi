@@ -13,6 +13,12 @@
         opacity: 0.6;   /* Optional: Adds a subdued effectfor Vacant Buttons */
     }
 
+    .disabled-link {
+    pointer-events: none; /* Prevent click events */
+    cursor: default; /* Change cursor to default */
+    color: #6c757d; /* Muted color */
+}
+
 </style>
 
 @section('content')
@@ -76,8 +82,6 @@
             $financialreport_yes = ($eoy_financialreport == 1);
         @endphp
 
-        {{-- <div class="col-md-12">
-            <div class="card card-primary card-outline"> --}}
                     <div class="card-body">
 	                    <div class="row">
                     @foreach($chapterList as $list)
@@ -118,7 +122,7 @@
                                 @if($financial_report_array->financial_pdf_path!=null)
                                     <a id="btn-download-pdf" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn btn-primary" ><i class="fas fa-download" ></i>&nbsp; Financial Report PDF</a>
                                 @else
-                                    <button id="ReportPDF" type="button" class="btn btn-primary" onclick="">
+                                    <button id="ReportPDF" type="button" class="btn btn-primary disabled" onclick="window.location.href='#'">
                                         <i class="fas fa-file-pdf"></i>&nbsp; No Financial Report on File
                                     </button>
                                 @endif
@@ -132,35 +136,48 @@
                             </p>
                                  @if($thisDate->month >= 6 && $thisDate->month <= 12 && $boardreport_yes)
                                         @if($list->new_board_active!='1')
-                                            <button id="BoardReport" type="button" class="btn btn-primary" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $list->id]) }}'">
+                                        @if($user_type === 'coordinator')
+                                            <button id="BoardReport" type="button" class="btn btn-primary" onclick="window.location.href='{{ route('chapter.viewboardinfo', ['id' => $list->id]) }}'">
                                                 <i class="fas fa-users"></i>&nbsp; {{ date('Y') . '-' . (date('Y') + 1) }} Board Report
                                             </button>
                                         @else
-                                            <a class="btn btn-primary disabled" href="#">
+                                            <button id="BoardReport" type="button" class="btn btn-primary" onclick="window.location.href='{{ route('boardinfo.showboardinfo', ['id' => $list->id]) }}'">
+                                                <i class="fas fa-users"></i>&nbsp; {{ date('Y') . '-' . (date('Y') + 1) }} Board Report
+                                            </button>
+                                        @endif
+
+                                        @else
+                                            <button id="BoardReport" class="btn btn-primary disabled" onclick="window.location.href='#'">
                                                 <i class="fas fa-users"></i>&nbsp; Board Report Activated
-                                            </a>
+                                            </button>
                                         @endif
                                 @else
-                                    <a class="btn btn-primary disabled" href="#">
+                                    <button id="BoardReport" class="btn btn-primary disabled" onclick="window.location.href='#'">
                                         <i class="fas fa-users"></i>&nbsp; Board Report Not Available
-                                    </a>
+                                    </button>
                                 @endif
                                 @if($thisDate->month >= 6 && $thisDate->month <= 12 && $financialreport_yes)
+                                    @if($user_type === 'coordinator')
+                                        <button id="FinancialReport" type="button" class="btn btn-primary" onclick="window.location.href='{{ route('chapter.viewfinancial', ['id' => $list->id]) }}'">
+                                            <i class="fas fa-file-invoice-dollar"></i>&nbsp; {{ date('Y')-1 .'-'.date('Y') }} Financial Report
+                                        </button>
+                                    @else
                                         <button id="FinancialReport" type="button" class="btn btn-primary" onclick="window.location.href='{{ route('board.showfinancial', ['id' => $list->id]) }}'">
                                             <i class="fas fa-file-invoice-dollar"></i>&nbsp; {{ date('Y')-1 .'-'.date('Y') }} Financial Report
                                         </button>
+                                    @endif
                                 @else
-                                    <a class="btn btn-primary disabled" href="#">
+                                    <button id="FinancialReport" class="btn btn-primary disabled" onclick="window.location.href='#'">
                                         <i class="fas fa-file-invoice-dollar"></i>&nbsp; Financial Report Not Available
-                                    </a>
+                                    </button>
                                 @endif
                                 @if($thisDate->month >= 7 && $thisDate->month <= 12)
                                     <a href="https://sa.www4.irs.gov/sso/ial1?resumePath=%2Fas%2F5Ad0mGlkzW%2Fresume%2Fas%2Fauthorization.ping&allowInteraction=true&reauth=false&connectionId=SADIPACLIENT&REF=3C53421849B7D5B806E50960DF0AC7530889D9ADE9238D5D3B8B00000069&vnd_pi_requested_resource=https%3A%2F%2Fsa.www4.irs.gov%2Fepostcard%2F&vnd_pi_application_name=EPOSTCARD"
                                         class="btn btn-primary" target="_blank" ><i class="fas fa-globe" ></i>&nbsp; {{ date('Y')-1 }} 990N IRS Online Filing</a>
                                 @else
-                                    <a class="btn btn-primary disabled" href="#" >
+                                    <button id="990NLink" class="btn btn-primary disabled" onclick="window.location.href='#'">
                                         <i class="fas fa-globe"></i>&nbsp; 990N Not Available Until July 1st
-                                    </a>
+                                    </button>
                                 @endif
                         </div>
 
@@ -240,25 +257,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-{{--
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Update Password</label>
-                                    <input  type="password" class="form-control cls-pswd" placeholder="***********" name="ch_pre_pswd" id="ch_pre_pswd" value="" maxlength="30" >
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Confirm Updated Password</label>
-                                    <input  type="password" class="form-control cls-pswd" placeholder="***********" name="ch_pre_pswd_cnf" id="ch_pre_pswd_cnf" value="" maxlength="30">
-                                    <input  type="hidden" name="ch_pre_pswd_chg" id="ch_pre_pswd_chg" value="0" >
-                                </div>
-                            </div>
-                        </div>
-                         <div class="clearfix"></div> --}}
 
                 </div>
                 <div class="card-header d-flex align-items-center">
@@ -711,64 +709,23 @@
                    <div class="box-body text-center">
                     <button id="Save" type="submit" class="btn btn-primary" onclick="return PreSaveValidate()"><i class="fas fa-save" ></i>&nbsp; Save</button>
                 </form>
-                    <button type="button" class="btn btn-primary" onclick="showChangePasswordAlert()"><i class="fas fa-lock" ></i>&nbsp; Change Password</button>
-                <a href="{{ route('logout') }}" class="btn btn-primary"
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                 <span><i class="fas fa-undo" ></i>&nbsp; {{ __('Logout') }}</span>
-             </a>
+                    <button id="Password" type="button" class="btn btn-primary" onclick="showChangePasswordAlert()"><i class="fas fa-lock" ></i>&nbsp; Change Password</button>
+
+                    <button id="logout-btn" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        <span><i class="fas fa-undo"></i>&nbsp; {{ __('Logout') }}</span>
+                    </button>
+
              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                  @csrf
              </form>
                 </div><br>
                     <div class="box-body text-center">
-                    {{-- <button type="button" class="btn btn-primary" onclick="window.open('https://groups.google.com/a/momsclub.org/g/2023-24boardlist)"><i class="fa fa-list fa-fw" aria-hidden="true" ></i>&nbsp; BoardList Forum</button> --}}
-                    <button type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-primary"><i class="fas fa-graduation-cap" ></i>&nbsp; eLearning Library</button>
-                    <a href="{{ route('board.resources') }}" class="btn btn-primary"><i class="fas fa-briefcase" ></i>&nbsp; Chapter Resources</a>
-                </div>
-                </div>
-
-                {{-- <div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <!-- Modal Header -->
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="changePasswordModalLabel">Change Password</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-
-                            <!-- Modal Body -->
-                            <div class="modal-body">
-                                <form action="{{ route('board.updatepassword') }}" method="POST">
-                                    @csrf
-                                    @method('PUT')
-
-                                    <!-- Current Password -->
-                                    <div class="form-group">
-                                        <label for="current_password">Current Password</label>
-                                        <input type="password" name="current_password" id="current_password" class="form-control" required>
+                    <button id="eLearning" type="button"  onclick="window.open('https://momsclub.org/elearning/')" class="btn btn-primary"><i class="fas fa-graduation-cap" ></i>&nbsp; eLearning Library</button>
+                    <button id="Resources" class="btn btn-primary" onclick="window.location='{{ route('board.resources') }}'">
+                        <i class="fas fa-briefcase"></i>&nbsp; Chapter Resources
+                    </button>
                                     </div>
-
-                                    <!-- New Password -->
-                                    <div class="form-group">
-                                        <label for="new_password">New Password</label>
-                                        <input type="password" name="new_password" id="new_password" class="form-control" required>
-                                     </div>
-
-                                    <!-- Confirm New Password -->
-                                    <div class="form-group">
-                                        <label for="new_password_confirmation">Confirm New Password</label>
-                                        <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="form-control" required>
-                                    </div>
-
-                                    <!-- Submit Button -->
-                                    <button type="submit" class="btn btn-primary">Update Password</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
+                </div>
 
             </div>
 @endsection
@@ -778,10 +735,18 @@
 $(document).ready(function () {
     var currentDate = new Date();
     var currentMonth = currentDate.getMonth() + 1; // JavaScript months are 0-based
+    var userType = @json($user_type);
 
-    if (currentMonth >= 5 && currentMonth <= 7) {
-        // Disable all input fields, select elements, textareas, and Save button except the logout elements
-        $('input, select, textarea').not('#logout-form input, #logout-form select, #logout-form textarea').prop('disabled', true);
+    if (userType === 'coordinator') {
+        // Disable all input fields, select elements, textareas, and buttons
+        $('input, select, textarea').prop('disabled', true);
+        $('#Save, #Password, #logout-btn, #eLearning, #Resources').prop('disabled', true);
+        // Disable links by adding a class and modifying their behavior
+        $('#display_corlist').addClass('disabled-link').attr('href', '#');
+
+    } else if (currentMonth >= 5 && currentMonth <= 7) {
+        // Disable all input fields, select elements, textareas, and Save button
+        $('input, select, textarea').prop('disabled', true);
         $('#Save').prop('disabled', true);
     } else {
         // If the condition is not met, keep the fields active
@@ -797,30 +762,26 @@ $(document).ready(function () {
 
 
 /* Disables Web Link Status options 0 and 1 */
-//ALWAYS leave thise fiels set to "true"
-// document.getElementById('option0').disabled = true;
-// document.getElementById('option1').disabled = true;
+    var originalWebsiteUrl = "{{$chapterList[0]->website_url}}"; // Original value from the database
 
-var originalWebsiteUrl = "{{$chapterList[0]->website_url}}"; // Original value from the database
+    function checkWebsiteChanged() {
+        var currentValue = document.getElementById('validate_url').value;
 
-function checkWebsiteChanged() {
-    var currentValue = document.getElementById('validate_url').value;
-
-    if (currentValue !== originalWebsiteUrl) {
-        document.getElementById('staticStatusField').style.display = 'none';
-        document.getElementById('editableStatusField').style.display = 'block';
-    } else {
-        document.getElementById('staticStatusField').style.display = 'block';
-        document.getElementById('editableStatusField').style.display = 'none';
-    }
-}
-document.getElementById('ch_webstatus').addEventListener('change', function() {
-        // Update hidden input field with the new value only if the selected option is not disabled
-        var selectedOption = this.options[this.selectedIndex];
-        if (!selectedOption.disabled) {
-            document.getElementById('ch_hid_webstatus').value = this.value;
+        if (currentValue !== originalWebsiteUrl) {
+            document.getElementById('staticStatusField').style.display = 'none';
+            document.getElementById('editableStatusField').style.display = 'block';
+        } else {
+            document.getElementById('staticStatusField').style.display = 'block';
+            document.getElementById('editableStatusField').style.display = 'none';
         }
-    });
+    }
+    document.getElementById('ch_webstatus').addEventListener('change', function() {
+            // Update hidden input field with the new value only if the selected option is not disabled
+            var selectedOption = this.options[this.selectedIndex];
+            if (!selectedOption.disabled) {
+                document.getElementById('ch_hid_webstatus').value = this.value;
+            }
+        });
 
     // Ensure the hidden field is updated with the selected value on form submission
     document.forms[0].addEventListener('submit', function() {
@@ -830,50 +791,26 @@ document.getElementById('ch_webstatus').addEventListener('change', function() {
         }
     });
 
-$( document ).ready(function() {
-	// var phoneListArr = ["ch_pre_phone", "ch_avp_phone", "ch_mvp_phone", "ch_trs_phone", "ch_sec_phone"];
-    // for (var i = phoneListArr.length - 1; i >= 0; i--) {
-    //     var inputValue = $("#"+phoneListArr[i]).val();
-    //     if(inputValue.length > 10) inputValue = inputValue.substring(0,12);
-    //     var reInputValue = inputValue.replace(/(\d{3})(\d{3})/, "$1-$2-");
-    //     $("#"+phoneListArr[i]).val(reInputValue);
-    // }
-	// $("ch_pre_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
-	// $("ch_avp_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
-    // $("ch_mvp_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
-    // $("ch_trs_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
-    // $("ch_sec_phone").keyup(function() {
-    //     this.value = this.value.replace(/(\d{3})(\d{3})/, "$1-$2")
-    // });
+    $( document ).ready(function() {
+        var pcid = $("#pcid").val();
+        if (pcid != "") {
+            $.ajax({
+                url: '{{ url("/checkreportid/") }}' + '/' + pcid,
+                type: "GET",
+                success: function (result) {
+                    console.log("AJAX result:", result);
+                    $("#display_corlist").html(result);
+                },
+                error: function (jqXHR, exception) {
+                    console.log("AJAX error:", exception);
+                }
+            });
+        }
 
-    var pcid = $("#pcid").val();
-    if (pcid != "") {
-        $.ajax({
-            url: '{{ url("/checkreportid/") }}' + '/' + pcid,
-            type: "GET",
-            success: function (result) {
-                console.log("AJAX result:", result);
-                $("#display_corlist").html(result);
-            },
-            error: function (jqXHR, exception) {
-                console.log("AJAX error:", exception);
-            }
+        $('.cls-pswd').on('keypress', function(e) {
+        if (e.which == 32)
+            return false;
         });
-    }
-
-    $('.cls-pswd').on('keypress', function(e) {
-    if (e.which == 32)
-        return false;
-	});
-
 
     });
 
@@ -903,15 +840,8 @@ $( document ).ready(function() {
     handleVacantCheckbox("SecVacant", "sec-field");
     handleVacantCheckbox("TreasVacant", "treas-field");
 
-// function isPhone() {
-//     if ((event.keyCode < 48 || event.keyCode > 57) && event.keyCode != 8) {
-//         event.keyCode = 0;
-//         alert("Please Enter Number Only");
-//         return false;
-//     }
-// }
 
-function is_url() {
+    function is_url() {
         var str = $("#validate_url").val().trim(); // Trim leading and trailing whitespace
         var chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
 
@@ -933,21 +863,6 @@ function is_url() {
             return false;
         }
     }
-
-// function isNumber(evt) {
-//     evt = (evt) ? evt : window.event;
-//     var charCode = (evt.which) ? evt.which : evt.keyCode;
-//         if (charCode > 31 && (charCode < 48 || charCode > 57)) {
-//             return false;
-//         }
-//         return true;
-//     }
-
-// function isAlphanumeric(e){
-// 	var k;
-//         document.all ? k = e.keyCode : k = e.which;
-//         return ((k > 64 && k < 91) || (k > 96 && k < 123) || k == 8 || k == 32 || (k >= 48 && k <= 57));
-//     }
 
 function PreSaveValidate(){
     var errMessage="";
@@ -977,36 +892,6 @@ function PreSaveValidate(){
             return false;
           }
 
-    // var phoneListArr = ["ch_pre_phone", "ch_avp_phone", "ch_mvp_phone", "ch_trs_phone", "ch_sec_phone"];
-
-    //     for (var i = 0; i < phoneListArr.length; i++) {
-    //         var inputField = document.getElementById(phoneListArr[i]);
-    //         var inputValue = inputField.value;
-    //         inputValue = inputValue.replace(/-/g, ''); // Remove hyphens
-    //         inputValue = inputValue.replace(/\D/g, '').substring(0, 10); // Remove non-digits and limit to 10 digits
-    //         inputField.value = inputValue; // Update the input field with the cleaned value
-    //     }
-
-//     var NewPassword=document.getElementById("ch_pre_pswd").value;
-//         //They changed their password
-//         if(document.getElementById("ch_pre_pswd").value != document.getElementById("ch_pre_pswd").getAttribute("value")){
-//             if(document.getElementById("ch_pre_pswd").value != document.getElementById("ch_pre_pswd_cnf").value){  //Make sure the password and confirmation match
-//                 alert ("The provided passwords do not match, please re-enter your password.");
-//                 document.getElementById("ch_pre_pswd_cnf").focus();
-//                 return false;
-//             }
-//             // Make sure the password is the right length
-//             else if(NewPassword.length < 7){
-//                 alert("Password must be at least 7 characters.");
-//                 document.getElementById("ch_pre_pswd").focus();
-//                 return false;
-//             }
-//             else{
-//                 document.getElementById("ch_pre_pswd_chg").value="1";
-//             }
-//         }
-
-    //Okay, all validation passed, save the records to the database
     return true;
 }
 

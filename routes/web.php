@@ -134,7 +134,7 @@ Route::post('/files/storeToolkit/{id}', [GoogleController::class, 'storeToolkit'
 Route::get('/chapter/list', [ChapterController::class, 'index'])->name('chapter.list');
 Route::get('/chapter/create', [ChapterController::class, 'create'])->name('chapters.create');
 Route::post('/chapter/create', [ChapterController::class, 'store'])->name('chapters.store');
-Route::get('/chapter/edit/{id}', [ChapterController::class, 'edit']);
+Route::get('/chapter/edit/{id}', [ChapterController::class, 'edit'])->name('chapters.edit');;
 Route::post('/chapter/update/{id}', [ChapterController::class, 'update'])->name('chapters.update');
 Route::get('/chapter/getEmail{id}', [ChapterController::class, 'getEmailDetails'])->name('get.emaildetails');
 Route::get('/chapter/zapped/view/{id}', [ChapterController::class, 'showZappedChapterView']);
@@ -159,6 +159,9 @@ Route::post('/chapter/financial/{id}', [ChapterController::class, 'storeFinancia
 Route::get('/chapter/clearreview/{id}', [ChapterController::class, 'updateClearReview']);
 Route::get('/chapter/unsubmit/{id}', [ChapterController::class, 'updateUnsubmit']);
 
+Route::get('/chapter/view/{id}', [ChapterController::class, 'showChapterView'])->name('chapter.viewpresident');
+Route::get('/chapter/viewfinancial/{id}', [ChapterController::class, 'showChapterFinancialView'])->name('chapter.viewfinancial');
+Route::get('/chapter/viewboardinfo/{id}', [ChapterController::class, 'showChapterBoardInfoView'])->name('chapter.viewboardinfo');
 
 Route::get('chapter/boardinfo/{id}', [ChapterController::class, 'showBoardInfo'])->name('chapter.showboardinfo');
 Route::post('chapter/boardinfo/{id}', [ChapterController::class, 'createBoardInfo'])->name('chapter.createboardinfo');
