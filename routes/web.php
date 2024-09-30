@@ -35,7 +35,6 @@ Route::post('login', [LoginController::class, 'login']);
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 Route::post('logout', [LoginController::class, 'logout']);
 
-
 // Password Reset Routes...
 Route::get('password/request', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
 Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
@@ -48,9 +47,7 @@ Route::put('/coordinator/password', [CoordinatorController::class, 'updatePasswo
 Route::post('/coordinator/check-password', [CoordinatorController::class, 'checkCurrentPassword'])->name('coordinator.checkpassword');
 Route::post('/chapter/password', [ChapterController::class, 'updatePassword'])->name('chapter.updatepassword');
 
-/**
- * Routes for Custom Links
- */
+// Custom Link Routes...
 Route::get('/checkemail/{id}', [ChapterController::class, 'checkEmail'])->name('check.email');
 Route::get('/checkreportid/{id}', [ChapterController::class, 'checkReportId'])->name('check.reportid');
 Route::get('/getregion/{id}', [CoordinatorController::class, 'getRegionList'])->name('get.region');
@@ -59,8 +56,8 @@ Route::get('/getdirectreport', [CoordinatorController::class, 'getDirectReportin
 Route::get('/getchapterprimary', [CoordinatorController::class, 'getChapterPrimaryFor'])->name('get.chapterprimary');
 // Route::get('/chapterlinks', [ChapterController::class, 'chapterLinks'])->name('chapter.links');
 
+// Error Log and Error Page Test Routes...
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
-
 Route::get('/test-500', function () { abort(500); });
 Route::get('/test-404', function () { abort(404); });
 Route::get('/test-403', function () { abort(403); });
@@ -68,15 +65,11 @@ Route::get('/test-401', function () { abort(401); });
 Route::get('/test-419', function () { abort(419); });
 Route::get('/test-429', function () { abort(429); });
 
-/**
- * Routes for Public Pages
- */
+// Public Page Routes...
 Route::get('/chapter-links', [PublicController::class, 'chapterLinks'])->name('chapter.links');
 Route::get('/chapter-resources', [PublicController::class, 'chapterResources'])->name('board.resources');
 
-/**
- * Routes for Admin Controller
- */
+// Admin Controller Routes...
 Route::get('/admin/eoy', [AdminController::class, 'showEOY'])->name('admin.eoy');
 Route::post('/admin/resetyear', [AdminController::class, 'resetYear'])->name('resetyear');
 Route::post('/admin/updateeoydatabase', [AdminController::class, 'updateEOYDatabase'])->name('admin.updateeoydatabase');
@@ -106,15 +99,17 @@ Route::get('/adminreports/nopresident', [AdminController::class, 'showNoPresiden
 Route::get('/adminreports/outgoingboard', [AdminController::class, 'showOutgoingBoard'])->name('admin.outgoingboard');
 // Route::post('/adminreports/updateoutgoingboard', [AdminController::class, 'updateOutgoingBoard'])->name('admin.updateoutgoingboard');
 
-/**
- * Routes for Payment Controller (Payment Processing)
- */
+// Payment Controller Routes...
 Route::post('/process-payment', [PaymentController::class, 'processPayment'])->name('process.payment');
 Route::post('/process-donation', [PaymentController::class, 'processDonation'])->name('process.donation');
 
-/**
- * Routes for Google Congroler (Uploading Files)
- */
+// PDF Controller Routes...
+Route::get('/board/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.financialreport');
+Route::get('/chapter/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.financialreport');
+Route::get('/board/chapteringoodstanding/pdf/{id}', [PDFController::class, 'generateGoodStanding'])->name('pdf.chapteringoodstanding');
+Route::get('/chapter/disbandletter/pdf/{id}', [PDFController::class, 'generateDisbandLetter'])->name('pdf.disbandletter');
+
+// Google Controller -- Uploading Files Routes...
 Route::post('/files/storeEIN/{id}', [GoogleController::class, 'storeEIN']);
 Route::post('/files/storeRoster/{id}', [GoogleController::class, 'storeRoster']);
 Route::post('/files/store990n/{id}', [GoogleController::class, 'store990N']);
@@ -128,9 +123,7 @@ Route::post('/files/storeAward5/{id}', [GoogleController::class, 'storeAward5'])
 Route::post('/files/storeResources/{id}', [GoogleController::class, 'storeResources'])->name('store.resources');
 Route::post('/files/storeToolkit/{id}', [GoogleController::class, 'storeToolkit'])->name('store.toolkit');
 
-/**
- * Routes for Chapter Controller
- */
+// Chapter Controller Routes...
 Route::get('/chapter/list', [ChapterController::class, 'index'])->name('chapter.list');
 Route::get('/chapter/create', [ChapterController::class, 'create'])->name('chapters.create');
 Route::post('/chapter/create', [ChapterController::class, 'store'])->name('chapters.store');
@@ -158,13 +151,6 @@ Route::get('/chapter/financial/{id}', [ChapterController::class, 'showFinancialR
 Route::post('/chapter/financial/{id}', [ChapterController::class, 'storeFinancialReport'])->name('chapter.storefinancial');
 Route::get('/chapter/clearreview/{id}', [ChapterController::class, 'updateClearReview']);
 Route::get('/chapter/unsubmit/{id}', [ChapterController::class, 'updateUnsubmit']);
-
-Route::get('/chapter/view/{id}', [ChapterController::class, 'showChapterView'])->name('chapter.viewpresident');
-Route::get('/chapter/viewfinancial/{id}', [ChapterController::class, 'showChapterFinancialView'])->name('chapter.viewfinancial');
-Route::get('/chapter/viewboardinfo/{id}', [ChapterController::class, 'showChapterBoardInfoView'])->name('chapter.viewboardinfo');
-Route::get('/chapter/viewreregpayment/{id}', [ChapterController::class, 'showChapterReregistrationView'])->name('chapter.viewreregpayment');
-
-
 Route::get('chapter/boardinfo/{id}', [ChapterController::class, 'showBoardInfo'])->name('chapter.showboardinfo');
 Route::post('chapter/boardinfo/{id}', [ChapterController::class, 'createBoardInfo'])->name('chapter.createboardinfo');
 Route::get('/chapter/re-registration', [ChapterController::class, 'showReRegistration'])->name('chapter.registration');
@@ -185,9 +171,13 @@ Route::post('/chapter/updatestatus/{id}', [ChapterController::class, 'updateStat
 Route::get('/chapter/einnotes/{id}', [ChapterController::class, 'showEinNotes'])->name('chapter.einnotes');
 Route::post('/chapter/einnotes/update/{id}', [ChapterController::class, 'createEinNotes'])->name('chapter.makeeinnotes');
 
-/**
- * Routes for Coordinator Controller
- */
+// Chapter Controller -- View as Chapter Routes...
+Route::get('/chapter/view/{id}', [ChapterController::class, 'showChapterView'])->name('chapter.viewpresident');
+Route::get('/chapter/viewfinancial/{id}', [ChapterController::class, 'showChapterFinancialView'])->name('chapter.viewfinancial');
+Route::get('/chapter/viewboardinfo/{id}', [ChapterController::class, 'showChapterBoardInfoView'])->name('chapter.viewboardinfo');
+Route::get('/chapter/viewreregpayment/{id}', [ChapterController::class, 'showChapterReregistrationView'])->name('chapter.viewreregpayment');
+
+// Coordinator Controller Routes...
 Route::get('/coordinatorlist', [CoordinatorController::class, 'index'])->name('coordinator.list');
 Route::get('/coordinator/create', [CoordinatorController::class, 'create'])->name('coordinator.create');
 Route::post('/coordinator/create', [CoordinatorController::class, 'store'])->name('coordinator.store');
@@ -212,9 +202,39 @@ Route::post('/coordinator/updateappreciation/{id}', [CoordinatorController::clas
 Route::get('/coordinator/birthday/{id}', [CoordinatorController::class, 'showBirthday'])->name('coordinator.birthday');
 Route::post('/coordinator/updatebirthday/{id}', [CoordinatorController::class, 'updateBirthday'])->name('coordinator.updatebirthday');
 
-/**
- * Routes for Export Controller
- */
+// Report Controller Routes...
+Route::get('/reports/chapterstatus', [ReportController::class, 'showChapterStatus'])->name('report.chapterstatus');
+Route::get('/reports/chapternew', [ReportController::class, 'showChapterNew'])->name('report.chapternew');
+Route::get('/reports/chapterlarge', [ReportController::class, 'showChapterLarge'])->name('report.chapterlarge');
+Route::get('/reports/chapterprobation', [ReportController::class, 'showChapterProbation'])->name('report.chapterprobation');
+Route::get('/reports/chaptercoordinators', [ReportController::class, 'showChapterCoordinators'])->name('report.chaptercoordinators');
+Route::get('/reports/coordinatortodo', [ReportController::class, 'showCoordinatorToDo'])->name('report.coordinatortodo');
+Route::get('/reports/intcoordinatortodo', [ReportController::class, 'showIntCoordinatorToDo'])->name('report.intcoordinatortodo');
+Route::get('/reports/chaptervolunteer', [ReportController::class, 'showChapterVolunteer'])->name('report.chaptervolunteer');
+Route::get('/reports/reportingtree', [ReportController::class, 'showReportingTree'])->name('report.reportingtree');
+Route::get('/reports/appreciation', [ReportController::class, 'showAppreciation'])->name('report.appreciation');
+Route::get('/reports/birthday', [ReportController::class, 'showBirthday'])->name('report.birthday');
+Route::get('/reports/intm2mdonation', [ReportController::class, 'showIntM2Mdonation'])->name('report.intm2mdonation');
+Route::get('/reports/m2mdonation', [ReportController::class, 'showM2Mdonation'])->name('report.m2mdonation');
+Route::get('/reports/inteinstatus', [ReportController::class, 'showIntEINstatus'])->name('report.inteinstatus');
+Route::get('/reports/einstatus', [ReportController::class, 'showEINstatus'])->name('report.einstatus');
+Route::get('/reports/boardlist', [ReportController::class, 'showBoardlist'])->name('report.boardlist');
+Route::get('/reports/socialmedia', [ReportController::class, 'showSocialMedia'])->name('report.socialmedia');
+Route::get('/reports/downloads', [ReportController::class, 'showDownloads'])->name('report.downloads');
+
+// Report Controller -- EOY Report Routes...
+Route::get('/yearreports/review', [ReportController::class, 'showReportToReview'])->name('report.review');
+Route::get('/yearreports/boardinfo', [ReportController::class, 'showReportToBoardInfo'])->name('report.boardinfo');
+Route::get('/yearreports/boardinfo/reminder', [ReportController::class, 'showReminderBoardInfo'])->name('report.boardinforeminder');
+Route::get('/yearreports/review/reminder', [ReportController::class, 'showreminderFinancialReport'])->name('report.financialreminder');
+Route::get('/yearreports/status/reminder', [ReportController::class, 'showReminderEOYReportsLate'])->name('report.eoylatereminder');
+Route::get('/yearreports/chapteraward', [ReportController::class, 'showChapterAwards'])->name('report.awards');
+Route::get('/yearreports/boundaryissue', [ReportController::class, 'showReportToIssues'])->name('report.issues');
+Route::get('/yearreports/chapterawards', [ReportController::class, 'showChapterAwards'])->name('report.chapterawards');
+Route::get('/yearreports/eoystatus', [ReportController::class, 'showEOYStatus'])->name('report.eoystatus');
+Route::get('/yearreports/addawards', [ReportController::class, 'showAddAwards'])->name('report.addawards');
+
+// Export Controller Routes...
 Route::get('/export/chapter/{id}', [ExportController::class, 'indexChapter'])->name('export.chapter');
 Route::get('/export/zapchapter', [ExportController::class, 'indexZappedChapter'])->name('export.zapchapter');
 Route::get('/export/coordinator/{id}', [ExportController::class, 'indexCoordinator'])->name('export.coordinator');
@@ -235,10 +255,10 @@ Route::get('/export/inteoystatus', [ExportController::class, 'indexIntEOYStatus'
 Route::get('/export/boardelection', [ExportController::class, 'indexBoardElection'])->name('export.boardelection');
 Route::get('/export/boardlist', [ExportController::class, 'indexBoardList'])->name('export.boardlist');
 
-/**
- * Routes for Board Controller
- */
+// Board Controller Routes...
+Route::get('/board/president', [BoardController::class, 'showPresident'])->name('board.showpresident');
 Route::post('/board/update/{id}', [BoardController::class, 'updatePresident'])->name('board.update');
+Route::get('/board/member', [BoardController::class, 'showMember'])->name('board.showmember');
 Route::post('/member/update/{id}', [BoardController::class, 'updateMember'])->name('member.update');
 Route::get('/boardinfo', [BoardController::class, 'showBoardInfo'])->name('boardinfo.showboardinfo');
 Route::post('/boardinfo/{id}', [BoardController::class, 'createBoardInfo'])->name('boardinfo.createboardinfo');
@@ -248,49 +268,7 @@ Route::get('/board/reregpayment', [BoardController::class, 'showReregistrationPa
 Route::get('/board/m2mdonation', [BoardController::class, 'showM2MDonationForm'])->name('board.showm2mdonation');
 Route::get('/board/resources', [BoardController::class, 'showResources'])->name('board.resources');
 
-/**
- * Routes for Report Controller
- */
-Route::get('/reports/chapterstatus', [ReportController::class, 'showChapterStatus'])->name('report.chapterstatus');
-Route::get('/reports/chapternew', [ReportController::class, 'showChapterNew'])->name('report.chapternew');
-Route::get('/reports/chapterlarge', [ReportController::class, 'showChapterLarge'])->name('report.chapterlarge');
-Route::get('/reports/chapterprobation', [ReportController::class, 'showChapterProbation'])->name('report.chapterprobation');
-Route::get('/reports/chaptercoordinators', [ReportController::class, 'showChapterCoordinators'])->name('report.chaptercoordinators');
-Route::get('/reports/coordinatortodo', [ReportController::class, 'showCoordinatorToDo'])->name('report.coordinatortodo');
-Route::get('/reports/intcoordinatortodo', [ReportController::class, 'showIntCoordinatorToDo'])->name('report.intcoordinatortodo');
-Route::get('/reports/chaptervolunteer', [ReportController::class, 'showChapterVolunteer'])->name('report.chaptervolunteer');
-Route::get('/reports/reportingtree', [ReportController::class, 'showReportingTree'])->name('report.reportingtree');
-Route::get('/reports/appreciation', [ReportController::class, 'showAppreciation'])->name('report.appreciation');
-Route::get('/reports/birthday', [ReportController::class, 'showBirthday'])->name('report.birthday');
-Route::get('/reports/intm2mdonation', [ReportController::class, 'showIntM2Mdonation'])->name('report.intm2mdonation');
-Route::get('/reports/m2mdonation', [ReportController::class, 'showM2Mdonation'])->name('report.m2mdonation');
-Route::get('/reports/inteinstatus', [ReportController::class, 'showIntEINstatus'])->name('report.inteinstatus');
-Route::get('/reports/einstatus', [ReportController::class, 'showEINstatus'])->name('report.einstatus');
-Route::get('/reports/boardlist', [ReportController::class, 'showBoardlist'])->name('report.boardlist');
-Route::get('/reports/socialmedia', [ReportController::class, 'showSocialMedia'])->name('report.socialmedia');
-Route::get('/reports/downloads', [ReportController::class, 'showDownloads'])->name('report.downloads');
-Route::get('/yearreports/review', [ReportController::class, 'showReportToReview'])->name('report.review');
-Route::get('/yearreports/boardinfo', [ReportController::class, 'showReportToBoardInfo'])->name('report.boardinfo');
-Route::get('/yearreports/boardinfo/reminder', [ReportController::class, 'showReminderBoardInfo'])->name('report.boardinforeminder');
-Route::get('/yearreports/review/reminder', [ReportController::class, 'showreminderFinancialReport'])->name('report.financialreminder');
-Route::get('/yearreports/status/reminder', [ReportController::class, 'showReminderEOYReportsLate'])->name('report.eoylatereminder');
-Route::get('/yearreports/chapteraward', [ReportController::class, 'showChapterAwards'])->name('report.awards');
-Route::get('/yearreports/boundaryissue', [ReportController::class, 'showReportToIssues'])->name('report.issues');
-Route::get('/yearreports/chapterawards', [ReportController::class, 'showChapterAwards'])->name('report.chapterawards');
-Route::get('/yearreports/eoystatus', [ReportController::class, 'showEOYStatus'])->name('report.eoystatus');
-Route::get('/yearreports/addawards', [ReportController::class, 'showAddAwards'])->name('report.addawards');
-
-/**
- * Routes for PDF Controller
- */
-Route::get('/board/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.financialreport');
-Route::get('/chapter/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.financialreport');
-Route::get('/board/chapteringoodstanding/pdf/{id}', [PDFController::class, 'generateGoodStanding'])->name('pdf.chapteringoodstanding');
-Route::get('/chapter/disbandletter/pdf/{id}', [PDFController::class, 'generateDisbandLetter'])->name('pdf.disbandletter');
-
-/**
- * Routes for BoardList Controller
- */
+// BoardList Controller -- Forum Routes...
 //  Route::get('/boardlist', [BoardListController::class, 'index'])->name('boardlist.index');
 // Route::get('/boardlist/{id}', [BoardListController::class, 'show'])->name('boardlist.show');
 // Add routes for other methods as needed
