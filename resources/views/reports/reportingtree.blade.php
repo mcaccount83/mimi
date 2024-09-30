@@ -39,7 +39,6 @@
                                             $position = htmlspecialchars($coordinator['position_title']);
                                             $sec_position = htmlspecialchars($coordinator['sec_position_title']);
                                             $region = htmlspecialchars($coordinator['region']);
-
                                             $node_label = "$name<br>$position";
                                             if ($sec_position) $node_label .= " / $sec_position";
                                             if ($region != "None") $node_label .= "<br>$region";
@@ -51,11 +50,10 @@
                                             $shouldExclude = ($report_id == "366" && $cord_pos_id == "7") || ($report_id == "1" && $cord_pos_id != "7");
                                         @endphp
                                         @if (!$shouldExclude)
-                                            {{ $report_id }} --> {{ $id }}
+                                            {{ $report_id }} --- {{ $id }}
                                         @endif
                                     @endforeach
                                 </div>
-
 
 
                         </div>
@@ -79,29 +77,34 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script type="module">
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    // import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
 
     document.addEventListener('DOMContentLoaded', function() {
     mermaid.initialize({
         startOnLoad: true,
-        theme: 'base',
         flowchart: {
-            curve: 'linear',
+            useMaxWidth: false,  // Prevents automatic shrinking of chart width
             nodeSpacing: 15,
             rankSpacing: 25,
-            padding: 10,
-            useMaxWidth: false  // Prevents automatic shrinking of chart width
+            rankdir: 'TB',  // Enforce top-to-bottom flow
+            padding: 10
         },
+        theme: 'base',
         themeVariables: {
-                fontSize: '15px',
-                nodeTextColor: '#fff',
-                primaryBorderColor: '#343a40',
-                primaryColor: '#007bff',
-            }
+            fontSize: '15px',
+            nodeTextColor: '#fff',
+            primaryBorderColor: '#343a40',
+            primaryColor: '#007bff'
+        }
     });
 
     mermaid.contentLoaded();
 });
+
+
+
+
 </script>
 @endsection
 
