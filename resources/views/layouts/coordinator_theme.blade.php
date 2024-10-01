@@ -532,6 +532,12 @@
                                     <p>Financial Reports</p>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a href="{{ route('report.eoyattachments') }}" class="nav-link {{ Request::is('yearreports/eoyattachments') ? 'active' : '' }} ">
+                                    <i class="nav-icon fas fa-paperclip"></i>
+                                    <p>Report Attachments</p>
+                                </a>
+                            </li>
                                 <li class="nav-item">
                                 <a href="{{ route('report.issues') }}" class="nav-link {{ Request::is('yearreports/boundaryissue') ? 'active' : '' }} {{ Request::is('chapter/boundaryview/*') ? 'active' : '' }}">
                                     <i class="nav-icon far fa-map"></i>

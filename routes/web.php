@@ -232,6 +232,7 @@ Route::get('/yearreports/chapteraward', [ReportController::class, 'showChapterAw
 Route::get('/yearreports/boundaryissue', [ReportController::class, 'showReportToIssues'])->name('report.issues');
 Route::get('/yearreports/chapterawards', [ReportController::class, 'showChapterAwards'])->name('report.chapterawards');
 Route::get('/yearreports/eoystatus', [ReportController::class, 'showEOYStatus'])->name('report.eoystatus');
+Route::get('/yearreports/eoyattachments', [ReportController::class, 'showEOYAttachments'])->name('report.eoyattachments');
 Route::get('/yearreports/addawards', [ReportController::class, 'showAddAwards'])->name('report.addawards');
 
 // Export Controller Routes...

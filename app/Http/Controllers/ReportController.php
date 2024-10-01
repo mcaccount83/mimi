@@ -1482,6 +1482,92 @@ class ReportController extends Controller
     }
 
     /**
+     * View the EOY Attachments list
+     */
+    public function showEOYAttachments(Request $request): View
+    {
+        $user = $request->user();
+        $lastUpdatedBy = $user->first_name.' '.$user->last_name;
+        //Get Coordinators Details
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
+        $corConfId = $corDetails['conference_id'];
+        $corRegId = $corDetails['region_id'];
+        $corlayerId = $corDetails['layer_id'];
+        $sqlLayerId = 'crt.layer'.$corlayerId;
+        $positionId = $corDetails['position_id'];
+        $secPositionId = $corDetails['sec_position_id'];
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
+        $request->session()->put('corregid', $corRegId);
+
+        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+            //Show Full Conference or Region
+            $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                ->select('crt.id')
+                ->get();
+        } else {
+            //Get Coordinator Reporting Tree
+            $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                ->select('crt.id')
+                ->where($sqlLayerId, '=', $corId)
+                ->get();
+        }
+        $inQryStr = '';
+        foreach ($reportIdList as $key => $val) {
+            $inQryStr .= $val->id.',';
+        }
+        $inQryStr = rtrim($inQryStr, ',');
+        $inQryArr = explode(',', $inQryStr);
+
+        $year = date('Y');
+
+        $baseQuery = DB::table('chapters')
+            ->select('chapters.*', 'rg.short_name as region', 'st.state_short_name as state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname',
+                'fr.roster_path as roster_path', 'fr.file_irs_path as file_irs_path', 'fr.bank_statement_included_path as bank_statement_included_path',
+                'fr.bank_statement_2_included_path as bank_statement_2_included_path')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'chapters.id')
+            ->join('region as rg', 'rg.id', '=', 'cd.region_id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->where('chapters.is_active', '=', '1')
+            ->where('bd.board_position_id', '=', '1')
+            ->where(function ($query) {
+                $query->where('created_at', '<=', date('Y-06-30'))
+                      ->orWhereNull('created_at');
+            });
+
+        if ($positionId == 6 || $positionId == 25) {
+            $baseQuery->where('chapters.conference', '=', $corConfId);
+        } elseif ($positionId == 5) {
+            $baseQuery->where('chapters.region', '=', $corRegId);
+        } else {
+            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
+        }
+
+        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
+            $checkBoxStatus = 'checked';
+            $baseQuery->where('chapters.primary_coordinator_id', '=', $corId)
+                ->orderBy('st.state_short_name')
+                ->orderBy('chapters.name');
+        } else {
+            $checkBoxStatus = '';
+            $baseQuery->orderBy('st.state_short_name')
+                ->orderBy('chapters.name');
+        }
+
+        $chapterList = $baseQuery->get();
+
+        $row_count = count($chapterList);
+
+        $countList = count($chapterList);
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
+
+        return view('reports.eoyattachments')->with($data);
+    }
+
+    /**
      * View the Financial Reports List
      */
     public function showReportToReview(Request $request): View
