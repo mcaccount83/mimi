@@ -31,22 +31,41 @@
             <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-				<th></th>
+				<th>Edit</th>
 				<th>State</th>
                 <th>Name</th>
+                <th>990N Attached</th>
+                <th>990N Verified</th>
                 <th>Chapter Roster</th>
                 <th>Primary Statement</th>
                 <th>Additional Statement</th>
-				<th>990N Filing</th>
 				</tr>
                 </thead>
                 <tbody>
                     @foreach($chapterList as $list)
                     <tr>
                         <td class="text-center align-middle">
-                        </td>
+                            <?php if (Session::get('positionid') >=5 && Session::get('positionid') <=7){ ?>
+                               <a href="<?php echo url("/chapter/attachmentview/{$list->id}") ?>"><i class="fas fa-edit"></i></a>
+                           <?php }?>
                         <td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
+                        <td  @if($list->file_irs_path != null)style="background-color: transparent;"
+                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->file_irs_path != null)
+                                YES
+                            @else
+                                NO
+                            @endif
+                        </td>
+                        <td  @if($list->check_current_990N_verified_IRS == 1)style="background-color: transparent;"
+                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->check_current_990N_verified_IRS == 1)
+                                YES
+                            @else
+                                NO
+                            @endif
+                        </td>
                         <td @if($list->roster_path != null)style="background-color: transparent;"
                             @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->roster_path != null)
@@ -71,14 +90,7 @@
                                 NO
                             @endif
                         </td>
-                        <td  @if($list->file_irs_path != null)style="background-color: transparent;"
-                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->file_irs_path != null)
-                                YES
-                            @else
-                                NO
-                            @endif
-                        </td>
+
                  </tr>
                   @endforeach
                   </tbody>

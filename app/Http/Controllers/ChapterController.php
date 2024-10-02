@@ -5431,6 +5431,106 @@ class ChapterController extends Controller
     }
 
      /**
+     * View the Report Status Details
+     */
+    public function showAttachmentView(Request $request, $id)
+    {
+        //$corDetails = User::find($request->user()->id)->Coordinators;
+        $user = User::find($request->user()->id);
+        // Check if user is not found
+        if (! $user) {
+            return redirect()->route('home');
+        }
+
+        $corDetails = $user->Coordinators;
+        // Check if BoardDetails is not found for the user
+        if (! $corDetails) {
+            return redirect()->route('home');
+        }
+
+        $corId = $corDetails['id'];
+        $corConfId = $corDetails['conference_id'];
+
+        $chapterList = DB::table('chapters as ch')
+            ->select('ch.id', 'ch.name', 'ch.state', 'ch.region', 'ch.new_board_submitted', 'ch.new_board_active', 'ch.financial_report_received', 'financial_report_complete',
+                'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id',
+                'ch.report_extension', 'ch.extension_notes',  'fr.roster_path as roster_path', 'fr.file_irs_path as file_irs_path', 'fr.bank_statement_included_path as bank_statement_included_path',
+                'fr.bank_statement_2_included_path as bank_statement_2_included_path', 'fr.check_current_990N_verified_IRS as check_current_990N_verified_IRS')
+            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
+            ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->where('bd.board_position_id', '=', '1')
+            ->get();
+        $stateArr = DB::table('state')
+            ->select('state.*')
+            ->orderBy('id')
+            ->get();
+        $countryArr = DB::table('country')
+            ->select('country.*')
+            ->orderBy('id')
+            ->get();
+        $regionList = DB::table('region')
+            ->select('id', 'long_name')
+            ->get();
+
+        $data = ['chapterList' => $chapterList, 'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr];
+
+        return view('chapters.reportattachments')->with($data);
+    }
+
+    public function updateAttachments(Request $request, $id): RedirectResponse
+    {
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $userId = $corDetails['user_id'];
+        $corId = $corDetails['id'];
+        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+
+        $chapter = Chapter::find($id);
+        DB::beginTransaction();
+        try {
+            $chapter->new_board_submitted = (int) $request->has('ch_board_submitted');
+            $chapter->new_board_active = (int) $request->has('ch_board_active');
+            $chapter->financial_report_received = (int) $request->has('ch_financial_received');
+            $chapter->financial_report_complete = (int) $request->has('ch_financial_complete');
+            $chapter->report_extension = (int) $request->has('ch_report_extension');
+            $chapter->extension_notes = $request->input('ch_extension_notes');
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            $chapter->save();
+
+            $report = FinancialReport::find($id);
+            if ($request->has('ch_financial_received') != null) {
+                $report->submitted = date('Y-m-d H:i:s');
+                $report->reviewer_id = $userId;
+            }
+            if ($request->has('ch_financial_received') == null) {
+                $report->submitted = null;
+                $report->reviewer_id = null;
+            }
+            if ($request->has('ch_financial_complete') != null) {
+                $report->review_complete = date('Y-m-d H:i:s');
+            }
+            if ($request->has('ch_financial_complete') == null) {
+                $report->review_complete = null;
+            }
+            $report->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            DB::rollback();
+
+            // Log the error
+            Log::error($e);
+
+            return redirect()->to('/yearreports/eoyattachments')->with('fail', 'Something went wrong, Please try again.');
+        }
+
+        return redirect()->to('/yearreports/eoyattachments')->with('success', 'Report attachments successfully updated');
+    }
+
+     /**
      * View the President Profile View
      */
     public function showChapterView(Request $request, $id)

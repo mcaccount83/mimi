@@ -27,7 +27,7 @@
                 <div class="col-12">
                     <div class="card card-outline card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">Re-Registration Payment</h3>
+                        <h3 class="card-title">Chapter</h3>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">

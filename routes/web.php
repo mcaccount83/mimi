@@ -168,6 +168,9 @@ Route::get('/chapter/re-registration/reminder', [ChapterController::class, 'crea
 Route::get('/chapter/re-registration/latereminder', [ChapterController::class, 'createLateReRegistration'])->name('chapter.latereminder');
 Route::get('/chapter/statusview/{id}', [ChapterController::class, 'showStatusView'])->name('chapter.statusview');
 Route::post('/chapter/updatestatus/{id}', [ChapterController::class, 'updateStatus'])->name('chapter.updatestatus');
+Route::get('/chapter/attachmentview/{id}', [ChapterController::class, 'showAttachmentView'])->name('chapter.attachmentview');
+Route::post('/chapter/updateattachments/{id}', [ChapterController::class, 'updateAttachments'])->name('chapter.updateattachments');
+
 Route::get('/chapter/einnotes/{id}', [ChapterController::class, 'showEinNotes'])->name('chapter.einnotes');
 Route::post('/chapter/einnotes/update/{id}', [ChapterController::class, 'createEinNotes'])->name('chapter.makeeinnotes');
 
