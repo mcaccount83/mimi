@@ -506,10 +506,12 @@
                         @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes))
                         <li class="nav-item {{ Request::is('yearreports/*') ? 'menu-open' : '' }} {{ Request::is('chapter/financial/*') ? 'menu-open' : '' }}
                                             {{ Request::is('chapter/boardinfo/*') ? 'menu-open' : '' }} {{ Request::is('chapter/boundaryview/*') ? 'menu-open' : '' }}
-                                            {{ Request::is('chapter/statusview/*') ? 'menu-open' : '' }} {{ Request::is('chapter/awardsview/*') ? 'menu-open' : '' }}">
+                                            {{ Request::is('chapter/statusview/*') ? 'menu-open' : '' }} {{ Request::is('chapter/awardsview/*') ? 'menu-open' : '' }}
+                                             {{ Request::is('chapter/attachmentview/*') ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link {{ Request::is('yearreports/*') ? 'active' : '' }} {{ Request::is('chapter/financial/*') ? 'active' : '' }}
                                                         {{ Request::is('chapter/boardinfo/*') ? 'active' : '' }} {{ Request::is('chapter/boundaryview/*') ? 'active' : '' }}
-                                                        {{ Request::is('chapter/statusview/*') ? 'active' : '' }} {{ Request::is('chapter/awardsview/*') ? 'active' : '' }}">
+                                                        {{ Request::is('chapter/statusview/*') ? 'active' : '' }} {{ Request::is('chapter/awardsview/*') ? 'active' : '' }}
+                                                        {{ Request::is('chapter/attachmentview/*') ? 'active' : '' }}">
                                 <i class="nav-icon far fa-chart-bar"></i>
                                 <p>EOY Reports<i class="fas fa-angle-left right"></i></p>
                             </a>
@@ -533,7 +535,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('report.eoyattachments') }}" class="nav-link {{ Request::is('yearreports/eoyattachments') ? 'active' : '' }} ">
+                                <a href="{{ route('report.eoyattachments') }}" class="nav-link {{ Request::is('yearreports/eoyattachments') ? 'active' : '' }} {{ Request::is('chapter/attachmentview/*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-paperclip"></i>
                                     <p>Report Attachments</p>
                                 </a>

@@ -164,7 +164,7 @@
         @endif
             <div class="col-12">
                 <div class="d-flex align-items-center">
-                    <label class="mr-2" for="irs_verified">990N Verified on IRS Website</label> <!-- Label in front -->
+                    <label class="mr-2" for="irs_verified">990N Filing Verified on IRS Website</label> <!-- Label in front -->
                     <div class="custom-control custom-switch">
                         <input type="checkbox" name="irs_verified" id="irs_verified" class="custom-control-input" {{ $chapterList[0]->check_current_990N_verified_IRS ? 'checked' : '' }} />
                         <label class="custom-control-label" for="irs_verified"></label> <!-- Empty label for the switch itself -->
