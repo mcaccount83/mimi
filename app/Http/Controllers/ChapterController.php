@@ -5455,7 +5455,7 @@ class ChapterController extends Controller
             ->select('ch.id', 'ch.name', 'ch.state', 'ch.region', 'ch.new_board_submitted', 'ch.new_board_active', 'ch.financial_report_received', 'financial_report_complete',
                 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id',
                 'ch.report_extension', 'ch.extension_notes',  'fr.roster_path as roster_path', 'fr.file_irs_path as file_irs_path', 'fr.bank_statement_included_path as bank_statement_included_path',
-                'fr.bank_statement_2_included_path as bank_statement_2_included_path', 'fr.check_current_990N_verified_IRS as check_current_990N_verified_IRS')
+                'fr.bank_statement_2_included_path as bank_statement_2_included_path', 'fr.check_current_990N_verified_IRS as check_current_990N_verified_IRS', 'check_current_990N_notes')
             ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
             ->where('ch.is_active', '=', '1')
@@ -5486,34 +5486,11 @@ class ChapterController extends Controller
         $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
-        $chapter = Chapter::find($id);
+        $report = FinancialReport::find($id);
         DB::beginTransaction();
         try {
-            $chapter->new_board_submitted = (int) $request->has('ch_board_submitted');
-            $chapter->new_board_active = (int) $request->has('ch_board_active');
-            $chapter->financial_report_received = (int) $request->has('ch_financial_received');
-            $chapter->financial_report_complete = (int) $request->has('ch_financial_complete');
-            $chapter->report_extension = (int) $request->has('ch_report_extension');
-            $chapter->extension_notes = $request->input('ch_extension_notes');
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');
-            $chapter->save();
-
-            $report = FinancialReport::find($id);
-            if ($request->has('ch_financial_received') != null) {
-                $report->submitted = date('Y-m-d H:i:s');
-                $report->reviewer_id = $userId;
-            }
-            if ($request->has('ch_financial_received') == null) {
-                $report->submitted = null;
-                $report->reviewer_id = null;
-            }
-            if ($request->has('ch_financial_complete') != null) {
-                $report->review_complete = date('Y-m-d H:i:s');
-            }
-            if ($request->has('ch_financial_complete') == null) {
-                $report->review_complete = null;
-            }
+            $report->check_current_990N_verified_IRS = (int) $request->has('irs_verified');
+            $report->check_current_990N_notes = $request->input('irs_notes');
             $report->save();
 
             DB::commit();
