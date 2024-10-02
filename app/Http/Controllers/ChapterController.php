@@ -5453,7 +5453,7 @@ class ChapterController extends Controller
 
         $chapterList = DB::table('chapters as ch')
             ->select('ch.id', 'ch.name', 'ch.state', 'ch.ein', 'fr.roster_path as roster_path', 'fr.file_irs_path as file_irs_path', 'fr.bank_statement_included_path as bank_statement_included_path',
-                'fr.bank_statement_2_included_path as bank_statement_2_included_path', 'fr.check_current_990N_verified_IRS as check_current_990N_verified_IRS', 'check_current_990N_notes')
+                'fr.bank_statement_2_included_path as bank_statement_2_included_path', 'fr.check_current_990N_verified_IRS as check_current_990N_verified_IRS', 'fr.check_current_990N_notes as check_current_990N_notes')
             ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
             ->where('ch.is_active', '=', '1')

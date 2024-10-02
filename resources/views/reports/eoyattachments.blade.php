@@ -34,11 +34,12 @@
 				<th>Edit</th>
 				<th>State</th>
                 <th>Name</th>
+                <th>Chapter Roster</th>
+                <th>Statement 1</th>
+                <th>Statement 2</th>
                 <th>990N Attached</th>
                 <th>990N Verified</th>
-                <th>Chapter Roster</th>
-                <th>Primary Statement</th>
-                <th>Additional Statement</th>
+                <th>990N Notes</th>
 				</tr>
                 </thead>
                 <tbody>
@@ -50,21 +51,6 @@
                            <?php }?>
                         <td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
-                        <td  @if($list->file_irs_path != null)style="background-color: transparent;"
-                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->file_irs_path != null)
-                                YES
-                            @else
-                                NO
-                            @endif
-                        </td>
-                        <td  @if($list->check_current_990N_verified_IRS == 1)style="background-color: transparent;"
-                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->check_current_990N_verified_IRS == 1)
-                                YES
-                            @else
-                                NO
-                            @endif
                         </td>
                         <td @if($list->roster_path != null)style="background-color: transparent;"
                             @else style="background-color:#dc3545; color: #ffffff;" @endif>
@@ -82,15 +68,29 @@
                                 NO
                             @endif
                         </td>
-                        <td @if($list->bank_statement_2_included_path != null)style="background-color: transparent;"
-                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td>
                             @if($list->bank_statement_2_included_path != null)
                                 YES
                             @else
                                 NO
                             @endif
                         </td>
-
+                        <td  @if($list->file_irs_path != null)style="background-color: transparent;"
+                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->file_irs_path != null)
+                                YES
+                            @else
+                                NO
+                            @endif
+                        </td>
+                        <td  @if($list->check_current_990N_verified_IRS == 1)style="background-color: transparent;"
+                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->check_current_990N_verified_IRS == 1)
+                                YES
+                            @else
+                                NO
+                            @endif
+                        <td>{{ $list->check_current_990N_notes }}</td>
                  </tr>
                   @endforeach
                   </tbody>
