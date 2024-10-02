@@ -628,7 +628,7 @@
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Re-Registration dues last paid</label>
-                <input type="text" name="ch_dues" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask  value="{{$chapterList[0]->dues_last_paid }}" readonly>
+                <input type="date" name="ch_dues" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{$chapterList[0]->dues_last_paid }}" disabled>
               </div>
               </div>
               <!-- /.form group -->
