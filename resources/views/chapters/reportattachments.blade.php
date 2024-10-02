@@ -36,7 +36,7 @@
               <div class="col-sm-4">
               <div class="form-group">
                 <label>MOMS Club of</label>
-                <input type="text" name="ch_name" class="form-control" maxlength="200" required value="{{ $chapterList[0]->name }}" onchange="PreviousNameReminder()" disabled>
+                <input type="text" name="ch_name" class="form-control" maxlength="200" required value="{{ $chapterList[0]->name }}"  disabled>
               </div>
               </div>
               <!-- /.form group -->
@@ -53,16 +53,12 @@
               </div>
               </div>
               <div class="col-sm-4">
-              <div class="form-group">
-                <label>Region</label> <span class="field-required">*</span>
-                <select id="ch_region" name="ch_region" class="form-control select2-bs4" style="width: 100%;" required disabled>
-                  <option value="">Select Region</option>
-                    @foreach($regionList as $rl)
-                      <option value="{{$rl->id}}" {{$chapterList[0]->region == $rl->id  ? 'selected' : ''}} >{{$rl->long_name}} </option>
-                    @endforeach
-                </select>
-                <input type="hidden" name="ch_hid_region" value="{{ $chapterList[0]->region }}">
-              </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                      <label>EIN</label>
+                      <input type="text" name="ch_name" class="form-control" maxlength="200" required value="{{ $chapterList[0]->ein }}"  disabled>
+                    </div>
+                    </div>
               </div>
               </div>
             </div>
