@@ -827,7 +827,7 @@ class CoordinatorController extends Controller
 
                 $chapters = DB::table('chapters as ch')
                     ->select('ch.name as chapter', 'st.state_short_name as state')
-                    ->leftJoin('coordinators as cd', 'cd._id', '=', 'ch.primary_coordinator_id')
+                    ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
                     ->leftJoin('state as st', 'ch.state', '=', 'st.id')
                     ->where('ch.is_Active', '=', '1')
                     ->where('primary_coordinator_id', $cordinatorId)
