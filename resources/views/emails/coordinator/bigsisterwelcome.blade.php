@@ -7,7 +7,7 @@
 <h4> {{ $mailData['firstName'] }} {{ $mailData['lastName'] }}, Welcome to Our Team!</h4>
 <p>Congratulations on your appointment to Big Sister! We are looking forward to working with you and hope you find your new role interesting, fulfilling and especially enjoyable!</p>
 <hr>
-<h4>Your Mentoring Coordinator and Her Role</h4>
+<b>Your Mentoring Coordinator and Her Role</b>
 <p>Big Sisters are considered "in training” and most of your training will come on the job. You'll form a close working relationship with your Mentoring Coordinator as she helps guide you through your MOMS Club Volunteer experience.</p>
 <p>Your Mentoring Coordinator is your "go to" for anything that you need. While your role is to support the chapters, your Mentoring Coordinator's role is to support YOU.</p>
 <p>As a Big Sister, communication (both with your chapters and your Mentoring Coordinator) is vital. You should be checking in with your Mentoring Coordinator every week to ensure you are receiving the information and support you need.</p>
