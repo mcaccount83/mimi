@@ -621,7 +621,7 @@
                                 </a>
                             </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('admin.mailqueue') }}" class="nav-link {{ Request::is('adminreports/mailqueue') ? 'active' : '' }}">
+                                    <a href="{{ route('queue-monitor::index') }}" target="_blank" class="nav-link {{ Request::is('adminreports/mailqueue') ? 'active' : '' }}">
                                         <i class="nav-icon fas fa-envelope"></i>
                                     <p>Mail Queue</p>
                                 </a>

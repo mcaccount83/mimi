@@ -926,11 +926,14 @@
                 <button type="button" class="btn bg-gradient-primary" onclick="showFileUploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace EIN Letter</button>
             @endif
             @endif
+            <button type="button" class="btn bg-gradient-primary" onclick="showEmailChapterModal()"><i class="fas fa-envelope"  ></i>&nbsp; Pre-Set Emails for Chapter</button>
+
             @if($regionalCoordinatorCondition)
               {{-- <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-disband"><i class="fas fa-ban"  ></i>&nbsp; Disband Chapter</button> --}}
               <button type="button" class="btn bg-gradient-primary" onclick="showDisbandChapterModal()"><i class="fas fa-ban"  ></i>&nbsp; Disband Chapter</button>
             @endif
               </div>
+
 
             <!-- /.box-body -->
 
@@ -1146,6 +1149,88 @@
                                 letter: data.disband_letter ? '1' : '0',
                                 chapterid: data.chapter_id,
                                 _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showConfirmButton: false,  // Automatically close without "OK" button
+                                    timer: 1500,
+                                    customClass: {
+                                        confirmButton: 'btn-sm btn-success'
+                                    }
+                                }).then(() => {
+                                    if (response.redirect) {
+                                        window.location.href = response.redirect;
+                                    }
+                                });
+                            },
+                            error: function(jqXHR, exception) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Something went wrong, Please try again.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'btn-sm btn-success'
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+
+    function showEmailChapterModal() {
+        Swal.fire({
+            title: 'Pre-Set Letters for Chapters',
+            html: `
+                <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chapterList[0]->id }}">
+                <br>
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" id="welcome_letter" class="custom-control-input">
+                    <label class="custom-control-label" for="welcome_letter">Send Welcome Letter to Chapter</label>
+                </div>
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'Send',
+            cancelButtonText: 'Close',
+            customClass: {
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger'
+            },
+            preConfirm: () => {
+                const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+
+                return {
+                    chapter_id: chapterId,
+                };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const data = result.value;
+
+                Swal.fire({
+                    title: 'Processing...',
+                    text: 'Please wait while we process your request.',
+                    allowOutsideClick: false,
+                    customClass: {
+                        confirmButton: 'btn-sm btn-success',
+                        cancelButton: 'btn-sm btn-danger'
+                    },
+                    didOpen: () => {
+                        Swal.showLoading();
+
+                        // Perform the AJAX request
+                        $.ajax({
+                            url: '{{ url('/mail/chapterwelcome') }}/' + data.chapter_id, // Pass chapter_id in the URL
+                            type: 'POST',
+                            data: {
+                               _token: '{{ csrf_token() }}'
                             },
                             success: function(response) {
                                 Swal.fire({

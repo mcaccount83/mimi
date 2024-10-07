@@ -5,11 +5,15 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use romanzipp\QueueMonitor\Traits\IsMonitored;
 use Illuminate\Support\Carbon;
 
-class PaymentsReRegChapterThankYou extends Mailable
+class PaymentsReRegChapterThankYou extends Mailable implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Queueable, Dispatchable, InteractsWithQueue, IsMonitored, SerializesModels;
 
     public $mailData;
 

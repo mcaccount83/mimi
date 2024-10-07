@@ -10,7 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
-class PaymentsM2MChapterThankYou extends Mailable implements ShouldQueue
+class NewChapterWelcome extends Mailable implements ShouldQueue
 {
     use Queueable, Dispatchable, InteractsWithQueue, IsMonitored, SerializesModels;
 
@@ -32,8 +32,8 @@ class PaymentsM2MChapterThankYou extends Mailable implements ShouldQueue
     public function build(): static
     {
         return $this
-            ->from('support@momsclub.org', 'MOMS Club')
-            ->subject('Thank You for Your Mother-to-Mother Fund Payment')
-            ->markdown('emails.payments.m2mchapterthankyou');
+            ->subject('Congratulations on your New Chapter!')
+            ->replyTo($this->mailData['userEmail'])
+            ->markdown('emails.chapterupdate.newchapterwelcome');
     }
 }

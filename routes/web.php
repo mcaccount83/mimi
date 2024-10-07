@@ -10,6 +10,7 @@ use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PublicController;
@@ -56,8 +57,15 @@ Route::get('/getdirectreport', [CoordinatorController::class, 'getDirectReportin
 Route::get('/getchapterprimary', [CoordinatorController::class, 'getChapterPrimaryFor'])->name('get.chapterprimary');
 // Route::get('/chapterlinks', [ChapterController::class, 'chapterLinks'])->name('chapter.links');
 
-// Error Log and Error Page Test Routes...
+// Error Log Routes...
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
+// Queue Routes...
+Route::get('jobs', [MailController::class, 'index'])->name('queue-monitor::index');
+// Route::get('', \romanzipp\QueueMonitor\Controllers\ShowQueueMonitorController::class)->name('queue-monitor::index');
+Route::delete('monitors/{monitor}', \romanzipp\QueueMonitor\Controllers\DeleteMonitorController::class)->name('queue-monitor::destroy');
+Route::patch('monitors/retry/{monitor}', \romanzipp\QueueMonitor\Controllers\RetryMonitorController::class)->name('queue-monitor::retry');
+Route::delete('purge', \romanzipp\QueueMonitor\Controllers\PurgeMonitorsController::class)->name('queue-monitor::purge');
+// Error Page Test Routes Routes...
 Route::get('/test-500', function () { abort(500); });
 Route::get('/test-404', function () { abort(404); });
 Route::get('/test-403', function () { abort(403); });
@@ -99,6 +107,8 @@ Route::get('/adminreports/nopresident', [AdminController::class, 'showNoPresiden
 Route::get('/adminreports/outgoingboard', [AdminController::class, 'showOutgoingBoard'])->name('admin.outgoingboard');
 // Route::post('/adminreports/updateoutgoingboard', [AdminController::class, 'updateOutgoingBoard'])->name('admin.updateoutgoingboard');
 
+
+
 // Payment Controller Routes...
 Route::post('/process-payment', [PaymentController::class, 'processPayment'])->name('process.payment');
 Route::post('/process-donation', [PaymentController::class, 'processDonation'])->name('process.donation');
@@ -122,6 +132,9 @@ Route::post('/files/storeAward4/{id}', [GoogleController::class, 'storeAward4'])
 Route::post('/files/storeAward5/{id}', [GoogleController::class, 'storeAward5']);
 Route::post('/files/storeResources/{id}', [GoogleController::class, 'storeResources'])->name('store.resources');
 Route::post('/files/storeToolkit/{id}', [GoogleController::class, 'storeToolkit'])->name('store.toolkit');
+
+// Mail Controller Routes...
+Route::post('/mail/chapterwelcome/{id}', [MailController::class, 'createNewChapterEmail'])->name('mail.chapterwelcome');
 
 // Chapter Controller Routes...
 Route::get('/chapter/list', [ChapterController::class, 'index'])->name('chapter.list');
