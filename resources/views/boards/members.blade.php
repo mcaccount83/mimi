@@ -396,13 +396,10 @@
                  <button id="Save" type="submit" class="btn btn-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
              </form>
              <button type="button" class="btn btn-primary" onclick="showChangePasswordAlert()"><i class="fas fa-lock" ></i>&nbsp; Change Password</button>
-             <a href="{{ route('logout') }}" class="btn btn-primary"
-             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-              <span><i class="fas fa-undo" ></i>&nbsp; {{ __('Logout') }}</span>
-          </a>
-          <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-              @csrf
-          </form>
+             <button id="logout-btn" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-undo" ></i>&nbsp; Logout</button>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
              </div><br>
                  <div class="box-body text-center">
                  {{-- <button type="button" class="btn btn-primary" onclick="window.open('https://groups.google.com/a/momsclub.org/g/2023-24boardlist)"><i class="fa fa-list fa-fw" aria-hidden="true" ></i>&nbsp; BoardList Forum</button> --}}

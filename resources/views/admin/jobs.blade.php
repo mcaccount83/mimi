@@ -1,5 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.coordinator_theme')
+
+@section('content')
 
 <head>
     <meta charset="utf-8">
@@ -118,7 +119,7 @@
 
 </body>
 
-</html>
+@endsection
 
 
 

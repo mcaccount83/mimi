@@ -25,13 +25,13 @@
 <br>
 <hr>
 <b>Step 3 - Open a Bank Account</b>
-<p>Now that you have your EIN and the Group Exemption Letter you should open a Chapter Checking Account. Check your area for banks that offer free accounts to non-profits.</p>
+<p>Now that you have your EIN Number ({{ $mailData['ein'] }}) you should open a Chapter Checking Account. Check your area for banks that offer free accounts to non-profits. In addtion to your EIN , you will likely need a copy of the Group Exemption Letter (attached) as well as the </p>
 <hr>
 <b>Step 4 - Set your Dues</b>
 <p>Most chapters charge between $20-$35 per year to their members. You will have an annual re-registration payment due to International at $5/member ($50 minimum) so be sure to include that in your calculations. Read more about how income from dues may be used.</p>
 <hr>
 <b>Step 5 - Hold your first Meeting</b>
-<p>As a chapter you’ll hold a monthly meeting where business can be discussed and voted on. All members (and potential members)  are invited to attend the monthly meeting. It may be held at a local park, a library, a church, whatever works for your area, time of year and budget.</p>
+<p>As a chapter you’ll hold a monthly meeting where business can be discussed and voted on. All members (and potential members) are invited to attend the monthly meeting. It may be held at a local park, a library, a church, whatever works for your area, time of year and budget.</p>
 <hr>
 <b>Step 6 - Look for Board Members</b>
 <p>To be successful, you will need help!  As you start getting new members, be on the lookout for any potential board members. If someone isn’t interested in a board position, get them involved as a playgroup or service project coordinator. The more people are personally involved, the more interest they will have in helping the new chapter to become successful!</p>

@@ -9,6 +9,7 @@ use App\Http\Controllers\ChapterController;
 use App\Http\Controllers\CoordinatorController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\LogViewerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\PaymentController;
@@ -58,9 +59,10 @@ Route::get('/getchapterprimary', [CoordinatorController::class, 'getChapterPrima
 // Route::get('/chapterlinks', [ChapterController::class, 'chapterLinks'])->name('chapter.links');
 
 // Error Log Routes...
-Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
+// Route::get('logs', [LogViewerController::class, 'index'])->name('logs');
+Route::get('admin/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
 // Queue Routes...
-Route::get('jobs', [MailController::class, 'index'])->name('queue-monitor::index');
+Route::get('admin/jobs', [MailController::class, 'index'])->name('queue-monitor::index');
 // Route::get('', \romanzipp\QueueMonitor\Controllers\ShowQueueMonitorController::class)->name('queue-monitor::index');
 Route::delete('monitors/{monitor}', \romanzipp\QueueMonitor\Controllers\DeleteMonitorController::class)->name('queue-monitor::destroy');
 Route::patch('monitors/retry/{monitor}', \romanzipp\QueueMonitor\Controllers\RetryMonitorController::class)->name('queue-monitor::retry');

@@ -88,16 +88,17 @@
     @if($user_type !== 'coordinator')
       <!-- Right navbar links -->
       <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('logout') }}" onclick="event.preventDefault();
-                        document.getElementById('logout-form').submit();">
-            <span class="no-icon">{{ __('Logout') }}</span>
 
+        <li class="nav-item">
+            <a href="{{ route('logout') }}" class="nav-link"
+               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+               <span class="no-icon">Logout</span>
             </a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-            @csrf
+                @csrf
             </form>
         </li>
+
       </ul>
       @endif
 

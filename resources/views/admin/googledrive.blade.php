@@ -39,6 +39,12 @@
                     <div class="form-group">
                         <label>EOY Report Attachments for {{ $googleDrive[0]->eoy_uploads_year }}:</label>&nbsp;{{ $googleDrive[0]->eoy_uploads }}
                     </div>
+                    <div class="form-group">
+                        <label>Disband Letters:</label>&nbsp;{{ $googleDrive[0]->disband_letter }}
+                    </div>
+                    <div class="form-group">
+                        <label>Good Standing Letters:</label>&nbsp;{{ $googleDrive[0]->good_standing_letter }}
+                    </div>
                     </div>
 
                     <div class="card-body text-center">
@@ -82,6 +88,18 @@
                                         <input type="text" class="form-control" id="eoyDriveYear" value="{{ $googleDrive[0]->eoy_uploads_year }}">
                                     </div>
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="disbandDrive">Shared Drive ID for Disband Letters</label>
+                                        <input type="text" class="form-control" id="disbandDrive" value="{{ $googleDrive[0]->disband_letter }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="goodStandingDrive">Shared Drive ID for Good Standing Letters</label>
+                                        <input type="text" class="form-control" id="goodStandingDrive" value="{{ $googleDrive[0]->good_standing_letter }}">
+                                    </div>
+                                </div>
                             </form>
                             <div class="col-md-12"><br></div>
                         </div>
@@ -114,12 +132,16 @@ function updateDrive() {
     var eoyDrive = document.getElementById('eoyDrive').value;
     var eoyDriveYear = document.getElementById('eoyDriveYear').value;
     var resourcesDrive = document.getElementById('resourcesDrive').value;
+    var disbandDrive = document.getElementById('disbandDrive').value;
+    var goodStandingDrive = document.getElementById('goodStandingDrive').value;
 
     var formData = new FormData();
     formData.append('einLetterDrive', einLetterDrive);
     formData.append('eoyDrive', eoyDrive);
     formData.append('eoyDriveYear', eoyDriveYear);
     formData.append('resourcesDrive', resourcesDrive);
+    formData.append('disbandDrive', disbandDrive);
+    formData.append('goodStandingDrive', goodStandingDrive);
 
     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 

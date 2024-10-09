@@ -16,14 +16,21 @@ class NewChapterWelcome extends Mailable implements ShouldQueue
 
     public $mailData;
 
+    protected $pdfPath;
+
+    protected $pdfPath2;
+
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($mailData)
+    public function __construct($mailData, $pdfPath, $pdfPath2)
     {
         $this->mailData = $mailData;
+        $this->pdfPath = $pdfPath;
+        $this->pdfPath = $pdfPath2;
     }
 
     /**
@@ -34,6 +41,14 @@ class NewChapterWelcome extends Mailable implements ShouldQueue
         return $this
             ->subject('Congratulations on your New Chapter!')
             ->replyTo($this->mailData['userEmail'])
-            ->markdown('emails.chapterupdate.newchapterwelcome');
+            ->markdown('emails.chapterupdate.newchapterwelcome')
+            ->attach($this->pdfPath, [
+                'as' => $this->mailData['state'].'_'.$this->mailData['chapter'].'_ChapterInGoodStanding.pdf',
+                'mime' => 'application/pdf',
+            ])
+            ->attach($this->pdfPath2, [
+                'as' => 'GroupExemptionLetter.pdf',
+                'mime' => 'application/pdf',
+            ]);
     }
 }

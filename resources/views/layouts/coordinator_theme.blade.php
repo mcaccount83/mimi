@@ -69,6 +69,12 @@
         top: 0;
         left: 0;
     }
+
+    .sidebar {
+        font-size: 0.90rem;
+        line-height: 1;
+    }
+
     .nav-icon {
         margin-right: 10px;
     }
@@ -562,12 +568,14 @@
                                             {{ Request::is('admin/reregdate/*') ? 'menu-open' : '' }} {{ Request::is('adminreports/duplicateuser') ? 'menu-open' : '' }}
                                             {{ Request::is('adminreports/duplicateboardid') ? 'menu-open' : '' }} {{ Request::is('adminreports/multipleboard') ? 'menu-open' : '' }}
                                             {{ Request::is('adminreports/nopresident') ? 'menu-open' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'menu-open' : '' }}
-                                             {{ Request::is('adminreports/mailqueue') ? 'menu-open' : '' }}  {{ Request::is('admin/googledrive') ? 'menu-open' : '' }}">
+                                             {{ Request::is('admin/jobs') ? 'menu-open' : '' }}  {{ Request::is('admin/googledrive') ? 'menu-open' : '' }}
+                                              {{ Request::is('admin/logs') ? 'menu-open' : '' }}">
                             <a href="#" class="nav-link {{ Request::is('admin/eoy') ? 'active' : '' }} {{ Request::is('admin/reregdate') ? 'active' : '' }}
                                                         {{ Request::is('admin/reregdate/*') ? 'active' : '' }} {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }}
                                                         {{ Request::is('adminreports/duplicateboardid') ? 'active' : '' }} {{ Request::is('adminreports/multipleboard') ? 'active' : '' }}
                                                         {{ Request::is('adminreports/nopresident') ? 'active' : '' }} {{ Request::is('adminreports/outgoingboard') ? 'active' : '' }}
-                                                         {{ Request::is('adminreports/mailqueue') ? 'active' : '' }} {{ Request::is('admin/googledrive') ? 'active' : '' }}">
+                                                         {{ Request::is('admin/jobs') ? 'active' : '' }} {{ Request::is('admin/googledrive') ? 'active' : '' }}
+                                                          {{ Request::is('admin/logs') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-unlock-alt"></i>
                                 <p>Admin Items<i class="fas fa-angle-left right"></i></p>
                             </a>
@@ -621,7 +629,7 @@
                                 </a>
                             </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('queue-monitor::index') }}" target="_blank" class="nav-link {{ Request::is('adminreports/mailqueue') ? 'active' : '' }}">
+                                    <a href="{{ route('queue-monitor::index') }}" target="_blank" class="nav-link {{ Request::is('admin/jobs') ? 'active' : '' }}">
                                         <i class="nav-icon fas fa-envelope"></i>
                                     <p>Mail Queue</p>
                                 </a>
@@ -633,7 +641,7 @@
                                 </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('logs') }}" target="_blank" class="nav-link {{ Request::is('logs') ? 'active' : '' }}">
+                                    <a href="{{ route('logs') }}" target="_blank" class="nav-link {{ Request::is('admin/logs') ? 'active' : '' }}">
                                         <i class="nav-icon fas fa-exclamation-triangle"></i>
                                         <p>Error Logs</p>
                                     </a>
@@ -695,14 +703,16 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                                    document.getElementById('logout-form').submit();">
-                                                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;&nbsp;{{ __('Logout') }}</span>
-                        </a>
+                            <a href="{{ route('logout') }}" class="nav-link"
+                               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                <i class="nav-icon fas fa-sign-out-alt"></i>
+                                <p>Logout</p>
+                            </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                                        @csrf
-                        </form>
+                                @csrf
+                            </form>
                         </li>
+
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->

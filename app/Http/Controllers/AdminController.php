@@ -1024,12 +1024,16 @@ class AdminController extends Controller
         $eoyDrive = $request->input('eoyDrive');
         $eoyDriveYear = $request->input('eoyDriveYear');
         $resourcesDrive = $request->input('resourcesDrive');
+        $disbandDrive = $request->input('disbandDrive');
+        $goodStandingDrive = $request->input('goodStandingDrive');
 
         $drive = GoogleDrive::firstOrFail();
         $drive->ein_letter_uploads = $einLetterDrive;
         $drive->eoy_uploads = $eoyDrive;
         $drive->eoy_uploads_year = $eoyDriveYear;
         $drive->resources_uploads = $resourcesDrive;
+        $drive->disband_letter = $disbandDrive;
+        $drive->good_standing_letter = $goodStandingDrive;
 
         $drive->save();
 
