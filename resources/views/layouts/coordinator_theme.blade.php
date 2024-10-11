@@ -262,7 +262,7 @@
                         <li class="nav-item">
                             <a href="{{ route('coordinator.list') }}" class="nav-link {{ Request::is('coordinatorlist') ? 'active' : '' }} {{ Request::is('coordinator/create') ? 'active' : '' }}
                                 {{ Request::is('coordinator/edit/*') ? 'active' : '' }} {{ Request::is('coordinator/role/*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-user-friends"></i>
+                                <i class="nav-icon fas fa-users"></i>
                                 <p>Coordinator List</p>
                             </a>
                         </li>
@@ -271,7 +271,7 @@
                         <li class="nav-item">
                             <a href="{{ route('coordinator.retired') }}" class="nav-link {{ Request::is('coordinator/retired') ? 'active' : '' }} {{ Request::is('coordinator/retired/view/*') ? 'active' : '' }}">
                                 <span class="nav-icon fa-layers fa-fw">
-                                    <i class="fas fa-user-friends"></i>
+                                    <i class="fas fa-users"></i>
                                     <i class="fas fa-slash"></i>
                                 </span>
                                 <p>Retired Coordinator List</p>
@@ -348,14 +348,14 @@
                             </li>
                                 <li class="nav-item">
                                 <a href="{{ route('coordinator.inter') }}" class="nav-link {{ Request::is('coordinator/international') ? 'active' : '' }} {{ Request::is('coordinator/international/view/*') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-user-friends"></i>
+                                    <i class="nav-icon fas fa-users"></i>
                                     <p>Coordinator List</p>
                                 </a>
                             </li>
                                 <li class="nav-item">
                                 <a href="{{ route('coordinator.retinter') }}" class="nav-link {{ Request::is('coordinator/retiredinternational') ? 'active' : '' }} {{ Request::is('coordinator/retiredinternational/view/*') ? 'active' : '' }}">
                                     <span class="nav-icon fa-layers fa-fw">
-                                        <i class="fas fa-user-friends"></i>
+                                        <i class="fas fa-users"></i>
                                         <i class="fas fa-slash"></i>
                                     </span>
                                     <p>Retired Coordinator List</p>
@@ -455,7 +455,7 @@
                                                         {{ Request::is('reports/intcoordinatortodo') ? 'active' : '' }} {{ Request::is('reports/appreciation') ? 'active' : '' }}
                                                         {{ Request::is('reports/birthday') ? 'active' : '' }} {{ Request::is('coordinator/appreciation/*') ? 'active' : '' }}
                                                         {{ Request::is('reports/reportingtree') ? 'active' : '' }} {{ Request::is('coordinator/birthday/*') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-user-check"></i>
+                                <i class="nav-icon fas fa-id-card"></i>
                                 <p>Coordinator Reports<i class="fas fa-angle-left right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
@@ -697,7 +697,7 @@
 
                         <li class="nav-item">
                             <a href="{{ route('coordinator.showprofile') }}" class="nav-link {{ Request::is('coordinator/profile') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-user-circle"></i>
+                            <i class="nav-icon fas fa-user-edit"></i>
                             <p>Update Profile</p>
                             </a>
                         </li>
