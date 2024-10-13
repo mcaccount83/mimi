@@ -92,11 +92,11 @@
                 <select name="cord_disp_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)">
                     <option value=""></option>
                     @foreach($positionList as $pos)
-                      <option value="{{$pos->id}}" {{$coordinatorDetails[0]->position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
+                      <option value="{{$pos->id}}" {{$coordinatorDetails[0]->display_position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
                     @endforeach
                 </select>
                 </div>
-                <input type="hidden" name="OldPrimaryPosition" value="{{$coordinatorDetails[0]->position_id}}">
+                <input type="hidden" name="OldDisplayPosition" value="{{$coordinatorDetails[0]->display_position_id}}">
             </div>
 					<div class="col-sm-4">
 						<div class="form-group">
@@ -204,7 +204,7 @@
                                     ->where(function ($query) use ($coordinatorDetails) {
                                         $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
                                             ->where('cd.position_id', '>=', 1)
-                                            ->where('cd.position_id', '<=', 6)
+                                            ->where('cd.position_id', '<=', 7)
                                             ->where('cd.is_active', 1);
                                     })
                                     ->orWhere(function ($query) use ($coordinatorDetails) {
@@ -303,14 +303,14 @@
                                         ->where(function ($query) use ($coordinatorDetails) {
                                             $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
                                                 ->where('cd.position_id', '>=', 1)
-                                                ->where('cd.position_id', '<=', 6)
+                                                ->where('cd.position_id', '<=', 7)
                                                 ->where('cd.is_active', 1);
                                         })
-                                        ->orWhere(function ($query) use ($coordinatorDetails) {
-                                    $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
-                                        ->where('cd.position_id', 25)
-                                        ->where('cd.is_active', 1);
-                                        })
+                                    //     ->orWhere(function ($query) use ($coordinatorDetails) {
+                                    // $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
+                                    //     ->where('cd.position_id', 25)
+                                    //     ->where('cd.is_active', 1);
+                                    //     })
                                         ->orderBy('cd.first_name')
                                         ->orderBy('cd.last_name')
                                         ->get();
@@ -323,20 +323,20 @@
                                             $query->where('cd.region_id', $coordinatorDetails[0]->region_id)
                                                 ->where(function ($query) {
                                                     $query->where('cd.position_id', '>=', 1)
-                                                        ->where('cd.position_id', '<=', 5)
+                                                        ->where('cd.position_id', '<=', 7)
                                                         ->where('cd.is_active', 1);
                                                 });
                                         })
                                         ->orWhere(function ($query) use ($coordinatorDetails) {
-                                            $query->where('cd.position_id', 6)
+                                            $query->where('cd.position_id', 7)
                                                 ->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
                                                 ->where('cd.is_active', 1);
                                         })
-                                        ->orWhere(function ($query) use ($coordinatorDetails) {
-                                            $query->where('cd.position_id', 25)
-                                                ->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
-                                                ->where('cd.is_active', 1);
-                                        })
+                                        // ->orWhere(function ($query) use ($coordinatorDetails) {
+                                        //     $query->where('cd.position_id', 25)
+                                        //         ->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
+                                        //         ->where('cd.is_active', 1);
+                                        // })
                                         ->orderBy('cd.first_name')
                                         ->orderBy('cd.last_name')
                                         ->get();
@@ -616,7 +616,7 @@ var iCoordinatorCount = <?php echo $row_count; ?>;
                     ->where(function ($query) use ($confid) {
                     $query->where('cd.conference_id', $confid)
                     ->where('cd.position_id', '>=', 1)
-                    ->where('cd.position_id', '<=', 6)
+                    ->where('cd.position_id', '<=', 7)
                     ->where('cd.is_active', 1);
                     })
                     ->orWhere(function ($query) use ($confid) {
@@ -678,7 +678,7 @@ var iCoordinatorCount = <?php echo $row_count; ?>;
                     ->where(function ($query) use ($confid) {
                         $query->where('cd.conference_id', $confid)
                             ->where('cd.position_id', '>=', 1)
-                            ->where('cd.position_id', '<=', 6)
+                            ->where('cd.position_id', '<=', 7)
                             ->where('cd.is_active', 1);
                             })
                             ->orWhere(function ($query) use ($confid) {

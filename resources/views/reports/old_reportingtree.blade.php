@@ -73,9 +73,9 @@
         echo "<br>" . $coordinator_array[$a]['region'];
 
         echo "'},'";
-        if ($coordinator_array[$a]['report_id']==366 && $cord_pos_id == 7)
+        if ($coordinator_array[$a]['report_id']==366 && $cord_pos_id == 8)
           echo "'";
-        else if($coordinator_array[$a]['report_id']==1 && $cord_pos_id != 7)
+        else if($coordinator_array[$a]['report_id']==1 && $cord_pos_id != 8)
           echo "'";
         else
           echo $coordinator_array[$a]['report_id'] . "'";

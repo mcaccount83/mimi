@@ -926,15 +926,17 @@ class CoordinatorController extends Controller
 
         //Save other changes
         $position_id = $request->input('cord_pri_pos');
+        $display_position_id = $request->input('cord_disp_pos');
         $sec_position_id = $request->input('cord_sec_pos');
         $old_position_id = $request->input('OldPrimaryPosition');
+        $old_display_position_id = $request->input('OldDisplayPosition');
         $old_sec_position_id = $request->input('OldSecPosition');
         $promote_date = $request->input('CoordinatorPromoteDate');
         //$report_id = $request->get('cord_report');
         if ($promote_date == '0000-00-00') {
             $promote_date = null;
         }
-        if ($position_id != $old_position_id || $sec_position_id != $old_sec_position_id) {
+        if ($position_id != $old_position_id || $display_position_id != $old_display_position_id || $sec_position_id != $old_sec_position_id) {
             $promote_date = $request->input('CoordinatorPromoteDateNew');
         }
 
@@ -944,6 +946,7 @@ class CoordinatorController extends Controller
                 ->where('id', $cordinatorId)
                 ->update([
                     'position_id' => $request->input('cord_pri_pos'),
+                    'display_position_id' => $request->input('cord_disp_pos'),
                     'sec_position_id' => $request->input('cord_sec_pos'),
                     'region_id' => $request->input('cord_region'),
                     'conference_id' => $request->input('cord_conf'),

@@ -2039,11 +2039,11 @@ class ExportController extends Controller
                 $cord_row_count = count($coordinator_array);
                 $stacked_coord_array = null;
 
-                for ($pos_row = 7; $pos_row > 0; $pos_row--) {
+                for ($pos_row = 8; $pos_row > 0; $pos_row--) {
                     $stacked_coord_array[$pos_row] = '';
                 }
 
-                for ($pos_row = 7; $pos_row > 0; $pos_row--) {
+                for ($pos_row = 8; $pos_row > 0; $pos_row--) {
                     $position_found = false;
 
                     for ($cord_row = 0; $cord_row < $cord_row_count; $cord_row++) {
