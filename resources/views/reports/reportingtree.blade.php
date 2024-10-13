@@ -269,85 +269,8 @@
 @endif
 
 <div class="card-body">
-        <button type="button" class="btn bg-gradient-primary" data-toggle="modal" data-target="#modal-positions">MIMI Position Abreviations</button>
-</div>
+        <button type="button" class="btn bg-gradient-primary" onclick="showPositionAbbreviations()">Position Abbreviations</button>
 
- <!-- Modal for MIMI Position Abriviations task -->
- <div class="modal fade" id="modal-positions">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title"><strong>Position Abreviations</strong</h3>
-            </div>
-            <div class="modal-body">
-                <table>
-                    <tr>
-                      <td><h4>BS</h4></td>
-                      <td><h4>Big Sister</h4></td>
-                    </tr>
-                    <tr>
-                      <td><h4>AC</h4></td>
-                      <td><h4>Area Coordinator</h4></td>
-                    </tr>
-                    <tr>
-                      <td><h4>SC</h4></td>
-                      <td><h4>State Coordinator</h4></td>
-                    </tr>
-                    <tr>
-                      <td><h4>ARC</h4></td>
-                      <td><h4>Assistant Regional Coordinator</h4></td>
-                    </tr>
-                    <tr>
-                      <td><h4>RC</h4></td>
-                      <td><h4>Regional Coordinator</h4></td>
-                    </tr>
-                    <tr>
-                      <td><h4>ACC</h4></td>
-                      <td><h4>Assistant Conference Coordinator</h4></td>
-                    </tr>
-                    <tr>
-                      <td><h4>CC</h4></td>
-                      <td><h4>Conference Coordinator</h4></td>
-                    </tr>
-                    <tr>
-                      <td><h4>IC</h4></td>
-                      <td><h4>Inquiries Coordinator</h4></td>
-                    </tr>
-                    <tr>
-                      <td><h4>WR</h4></td>
-                      <td><h4>Website Reviewer</h4></td>
-                    </tr>
-                    <tr>
-                      <td><h4>ReReg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h4></td>
-                      <td><h4>Re-registration Coordinator</h4></td>
-                    </tr>
-                    <tr>
-                      <td><h4>CDC</h4></td>
-                      <td><h4>Chapter Development Coordinator</h4></td>
-                    </tr>
-                    <tr>
-                      <td><h4>VC</h4></td>
-                      <td><h4>Volunteer Coordinator</h4></td>
-                    </tr>
-                    <tr>
-                      <td><h4>Corr</h4></td>
-                      <td><h4>Correspondence Coordinator</h4></td>
-                    </tr>
-                    <tr>
-                      <td><h4>SMC</h4></td>
-                      <td><h4>Conference Social Media Coordinator</h4></td>
-                    </tr>
-                    <tr>
-                      <td><h4>SPC</h4></td>
-                      <td><h4>Special Projects Coordinator</h4></td>
-                    </tr>
-                  </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times" ></i>&nbsp; Close</button>
-            </div>
-        </div>
-    </div>
 </div>
 
 </section>
@@ -364,6 +287,37 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+function showPositionAbbreviations() {
+    Swal.fire({
+        title: '<strong>Position Abbreviations</strong>',
+        html: `
+            <table>
+                <tr><td><h4>BS</h4></td><td><h4>Big Sister</h4></td></tr>
+                <tr><td><h4>AC</h4></td><td><h4>Area Coordinator</h4></td></tr>
+                <tr><td><h4>SC</h4></td><td><h4>State Coordinator</h4></td></tr>
+                <tr><td><h4>ARC</h4></td><td><h4>Assistant Regional Coordinator</h4></td></tr>
+                <tr><td><h4>RC</h4></td><td><h4>Regional Coordinator</h4></td></tr>
+                <tr><td><h4>ACC</h4></td><td><h4>Assistant Conference Coordinator</h4></td></tr>
+                <tr><td><h4>CC</h4></td><td><h4>Conference Coordinator</h4></td></tr>
+                <tr><td><h4>IC</h4></td><td><h4>Inquiries Coordinator</h4></td></tr>
+                <tr><td><h4>WR</h4></td><td><h4>Website Reviewer</h4></td></tr>
+                <tr><td><h4>ReReg&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h4></td><td><h4>Re-registration Coordinator</h4></td></tr>
+                <tr><td><h4>CDC</h4></td><td><h4>Chapter Development Coordinator</h4></td></tr>
+                <tr><td><h4>VC</h4></td><td><h4>Volunteer Coordinator</h4></td></tr>
+                <tr><td><h4>Corr</h4></td><td><h4>Correspondence Coordinator</h4></td></tr>
+                <tr><td><h4>SMC</h4></td><td><h4>Conference Social Media Coordinator</h4></td></tr>
+                <tr><td><h4>SPC</h4></td><td><h4>Special Projects Coordinator</h4></td></tr>
+            </table>`,
+        focusConfirm: false,
+        confirmButtonText: 'Close',
+        customClass: {
+            popup: 'swal-wide',
+            confirmButton: 'btn btn-danger'
+        }
+    });
+}
+
 </script>
 <script type="module">
     // import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
@@ -405,6 +359,10 @@ document.addEventListener('DOMContentLoaded', function() {
 .mermaid svg {
     width: auto !important;  /* Allow the chart to dynamically adjust width */
     height: auto !important; /* Adjust height dynamically */
+}
+
+.swal-wide {
+    width: 600px !important;
 }
 
 </style>
