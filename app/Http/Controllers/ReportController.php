@@ -110,11 +110,11 @@ class ReportController extends Controller
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
 
-        if ($corId == 25 || $positionId == 25) {
+        if ($positionId == 6) {
             //Get Coordinator Reporting Tree
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
-                ->where('crt.layer1', '=', '6')
+                ->where('crt.layer1', '=', '7')
                 ->get();
         } else {
             //Get Coordinator Reporting Tree
@@ -320,10 +320,10 @@ class ReportController extends Controller
         $request->session()->put('secpositionid', $secPositionId);
 
         //Get Coordinator Reporting Tree
-        if ($corId == 25 || $positionId == 25) {
+        if ($positionId == 6) {
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
-                ->where('crt.layer1', '=', '6')
+                ->where('crt.layer1', '=', '7')
                 ->get();
         } else {
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
@@ -1323,10 +1323,11 @@ class ReportController extends Controller
         if ($positionId != 8) {
             $coordinatorDetails = DB::table('coordinators')
                 ->select('coordinators.id AS id', 'coordinators.first_name', 'coordinators.last_name', 'pos1.short_title AS position_title',
-                    'pos2.short_title AS sec_position_title', 'coordinators.layer_id', 'coordinators.report_id', 'coordinators.report_id AS tree_id',
+                    'pos2.short_title AS sec_position_title', 'pos3.short_title AS display_position_title', 'coordinators.layer_id', 'coordinators.report_id', 'coordinators.report_id AS tree_id',
                     'region.short_name AS region', 'conference.conference_name as conference')
                 ->join('coordinator_position as pos1', 'pos1.id', '=', 'coordinators.position_id')
                 ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'coordinators.sec_position_id')
+                ->leftJoin('coordinator_position as pos3', 'pos3.id', '=', 'coordinators.display_position_id')
                 ->join('region', 'coordinators.region_id', '=', 'region.id')
                 ->join('conference', 'coordinators.conference_id', '=', 'conference.id')
                 ->where('coordinators.conference_id', $corConfId)
@@ -1338,10 +1339,11 @@ class ReportController extends Controller
         } else {
             $coordinatorDetails = DB::table('coordinators')
                 ->select('coordinators.id AS id', 'coordinators.first_name', 'coordinators.last_name', 'pos1.short_title AS position_title',
-                    'pos2.short_title AS sec_position_title', 'coordinators.layer_id', 'coordinators.report_id', 'coordinators.report_id AS tree_id',
+                    'pos2.short_title AS sec_position_title', 'pos3.short_title AS display_position_title', 'coordinators.layer_id', 'coordinators.report_id', 'coordinators.report_id AS tree_id',
                     'region.short_name AS region',  'conference.conference_name as conference')
                 ->join('coordinator_position as pos1', 'pos1.id', '=', 'coordinators.position_id')
                 ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'coordinators.sec_position_id')
+                ->leftJoin('coordinator_position as pos3', 'pos3.id', '=', 'coordinators.display_position_id')
                 ->join('region', 'coordinators.region_id', '=', 'region.id')
                 ->join('conference', 'coordinators.conference_id', '=', 'conference.id')
                 ->where('coordinators.on_leave', 0)

@@ -127,7 +127,7 @@
                 @php
                 $id = $coordinator['id'];
                 $name = htmlspecialchars($coordinator['first_name'] . ' ' . $coordinator['last_name']);
-                $position = htmlspecialchars($coordinator['position_title']);
+                $position = htmlspecialchars($coordinator['display_position_title']);
                 $sec_position = htmlspecialchars($coordinator['sec_position_title']);
                 $region = htmlspecialchars($coordinator['region']);
                 $conf = htmlspecialchars($coordinator['conference']);
@@ -171,7 +171,7 @@
                             if ($coordinator['conference'] === $conf) {
                                 $id = $coordinator['id'];
                 $name = htmlspecialchars($coordinator['first_name'] . ' ' . $coordinator['last_name']);
-                $position = htmlspecialchars($coordinator['position_title']);
+                $position = htmlspecialchars($coordinator['display_position_title']);
                 $sec_position = htmlspecialchars($coordinator['sec_position_title']);
                 $region = htmlspecialchars($coordinator['region']);
                 $conf = htmlspecialchars($coordinator['conference']);
@@ -202,7 +202,7 @@
                     @php
                     $id = $coordinator['id'];
                     $name = htmlspecialchars($coordinator['first_name'] . ' ' . $coordinator['last_name']);
-                    $position = htmlspecialchars($coordinator['position_title']);
+                    $position = htmlspecialchars($coordinator['display_position_title']);
                     $sec_position = htmlspecialchars($coordinator['sec_position_title']);
                     $region = htmlspecialchars($coordinator['region']);
                     $conf = htmlspecialchars($coordinator['conference']);
@@ -246,7 +246,7 @@
                                 if ($coordinator['region'] === $region) {
                                     $id = $coordinator['id'];
                 $name = htmlspecialchars($coordinator['first_name'] . ' ' . $coordinator['last_name']);
-                $position = htmlspecialchars($coordinator['position_title']);
+                $position = htmlspecialchars($coordinator['display_position_title']);
                 $sec_position = htmlspecialchars($coordinator['sec_position_title']);
                 $region = htmlspecialchars($coordinator['region']);
                 $conf = htmlspecialchars($coordinator['conference']);
