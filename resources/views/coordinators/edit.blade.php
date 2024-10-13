@@ -119,7 +119,13 @@
 						<input type="text" name="cord_altphone" id="cord_altphone" class="form-control" value="{{ $coordinatorDetails[0]->alt_phone }}"  data-inputmask='"mask": "(999) 999-9999"' data-mask>
 					  </div>
 					</div>
-					<div class="col-sm-6">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                          <label>Home Chapter</label><span class="field-required">*</span>
+                          <input type="text" name="cord_chapter" class="form-control" value="{{ $coordinatorDetails[0]->home_chapter }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" >
+                        </div>
+                      </div>
+					<div class="col-sm-3">
 						<div class="form-group">
 						<label>Birthday Month</label><span class="field-required">*</span>
 						<select name="cord_month" class="form-control select2-sb4" style="width: 100%;" required>
@@ -131,7 +137,7 @@
 						</select>
 						</div>
 					</div>
-					<div class="col-sm-6">
+					<div class="col-sm-3">
 						<div class="form-group">
 						<label>Birthday Day</label><span class="field-required">*</span>
 						<input type="number" name="cord_day" class="form-control" min="1" max="31" value="{{ $coordinatorDetails[0]->birthday_day }}" required>
@@ -229,35 +235,7 @@
 						</select>
 						</div>
 					</div>
-					<div class="col-sm-4">
-						<div class="form-group">
-						<label>Primary Position</label>
-						<select name="cord_month" class="form-control select2-sb4" style="width: 100%;" disabled>
-						   <option value=""></option>
-							@foreach($positionList as $pos)
-							  <option value="{{$pos->id}}" {{$coordinatorDetails[0]->position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
-							@endforeach
-						</select>
-						</div>
-					</div>
-					<div class="col-sm-4">
-						<div class="form-group">
-						<label>Secondary Position</label>
-						<select name="cord_month" class="form-control select2-sb4" style="width: 100%;" disabled>
-						  <option value=""></option>
-							@foreach($positionList as $pos)
-							  <option value="{{$pos->id}}" {{$coordinatorDetails[0]->sec_position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
-							@endforeach
-						</select>
-						</div>
-					</div>
-					<div class="col-sm-4">
-                        <div class="form-group">
-                          <label>Home Chapter</label>
-                          <input type="text" name="cord_chapter" class="form-control" value="{{ $coordinatorDetails[0]->home_chapter }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" disabled>
-                        </div>
-                      </div>
-                      <div class="col-sm-4">
+                    <div class="col-sm-4">
 						<div class="form-group">
 						<label>Conference</label>
 						<select name="cord_month" class="form-control select2-sb4" style="width: 100%;" disabled>
@@ -275,6 +253,39 @@
 						 <option value=""></option>
 							@foreach($regionList as $reg)
 							  <option value="{{$reg->id}}" {{$coordinatorDetails[0]->region_id == $reg->id  ? 'selected' : ''}}>{{$reg->long_name}}</option>
+							@endforeach
+						</select>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+						<label>Primary Position</label>
+						<select name="cord_month" class="form-control select2-sb4" style="width: 100%;" disabled>
+						   <option value=""></option>
+							@foreach($positionList as $pos)
+							  <option value="{{$pos->id}}" {{$coordinatorDetails[0]->position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
+							@endforeach
+						</select>
+						</div>
+					</div>
+                    <div class="col-sm-4">
+						<div class="form-group">
+						<label>Primary Position for MIMI Purposes</label>
+						<select name="cord_month" class="form-control select2-sb4" style="width: 100%;" disabled>
+						   <option value=""></option>
+							@foreach($positionList as $pos)
+							  <option value="{{$pos->id}}" {{$coordinatorDetails[0]->position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
+							@endforeach
+						</select>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+						<label>Secondary Position</label>
+						<select name="cord_month" class="form-control select2-sb4" style="width: 100%;" disabled>
+						  <option value=""></option>
+							@foreach($positionList as $pos)
+							  <option value="{{$pos->id}}" {{$coordinatorDetails[0]->sec_position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
 							@endforeach
 						</select>
 						</div>

@@ -64,9 +64,43 @@
                     <input type="hidden" name="OldReportPC" value="{{$coordinatorDetails[0]->report_id}}">
                 </div>
             </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                <label>Conference</label><span class="field-required">*</span>
+                <select name="cord_conf" id= "cord_conf" class="form-control select2-sb4" style="width: 100%;" required>
+
+                  @foreach($confList as $con)
+                      <option value="{{$con->id}}" {{$coordinatorDetails[0]->conference_id == $con->id  ? 'selected' : ''}}>{{$con->conference_name}}</option>
+                    @endforeach
+                </select>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                <label>Region</label><span class="field-required">*</span>
+                <select name="cord_region" id="cord_region" class="form-control select2-sb4" style="width: 100%;" required>
+                    <option value="0" {{$coordinatorDetails[0]->region_id == 0  ? 'selected' : ''}}>None</option>
+                    @foreach($regionList as $reg)
+                      <option value="{{$reg->id}}" {{$coordinatorDetails[0]->region_id == $reg->id  ? 'selected' : ''}}>{{$reg->long_name}}</option>
+                    @endforeach
+                </select>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                <label>Primary Position for Display</label><span class="field-required">*</span>
+                <select name="cord_disp_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)">
+                    <option value=""></option>
+                    @foreach($positionList as $pos)
+                      <option value="{{$pos->id}}" {{$coordinatorDetails[0]->position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
+                    @endforeach
+                </select>
+                </div>
+                <input type="hidden" name="OldPrimaryPosition" value="{{$coordinatorDetails[0]->position_id}}">
+            </div>
 					<div class="col-sm-4">
 						<div class="form-group">
-						<label>Primary Position</label><span class="field-required">*</span>
+						<label>Primary Position for MIMI Purposes</label><span class="field-required">*</span>
 						<select name="cord_pri_pos" id="cord_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" required>
 							@foreach($positionList as $pos)
 							  <option value="{{$pos->id}}" {{$coordinatorDetails[0]->position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
@@ -82,6 +116,7 @@
 						<input type="hidden" name="email" value="{{$coordinatorDetails[0]->email}}" />
 						<input type="hidden" name="RetireReason" id="RetireReason" value="" />
 					</div>
+
 					<div class="col-sm-4">
 						<div class="form-group">
 						<label>Secondary Position</label>
@@ -94,34 +129,8 @@
 						</div>
 						<input type="hidden" name="OldSecPosition" value="{{$coordinatorDetails[0]->sec_position_id}}">
 					</div>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                          <label>Home Chapter</label><span class="field-required">*</span>
-                          <input type="text" name="cord_chapter" class="form-control" value="{{ $coordinatorDetails[0]->home_chapter }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" >
-                        </div>
-                      </div>
-					<div class="col-sm-4">
-						<div class="form-group">
-						<label>Conference</label><span class="field-required">*</span>
-						<select name="cord_conf" id= "cord_conf" class="form-control select2-sb4" style="width: 100%;" required>
 
-						  @foreach($confList as $con)
-							  <option value="{{$con->id}}" {{$coordinatorDetails[0]->conference_id == $con->id  ? 'selected' : ''}}>{{$con->conference_name}}</option>
-							@endforeach
-						</select>
-						</div>
-					</div>
-					<div class="col-sm-4">
-						<div class="form-group">
-						<label>Region</label><span class="field-required">*</span>
-						<select name="cord_region" id="cord_region" class="form-control select2-sb4" style="width: 100%;" required>
-							<option value="0" {{$coordinatorDetails[0]->region_id == 0  ? 'selected' : ''}}>None</option>
-							@foreach($regionList as $reg)
-							  <option value="{{$reg->id}}" {{$coordinatorDetails[0]->region_id == $reg->id  ? 'selected' : ''}}>{{$reg->long_name}}</option>
-							@endforeach
-						</select>
-						</div>
-					</div>
+
                     <div class="col-sm-4">
                         <div class="form-group">
                           <label>Coordinator Start Date</label>
@@ -152,6 +161,13 @@
 					</div>
                 </div>
             </div>
+
+            <div class="col-12 text-center">
+                <p><b>Primary Position for Display</b> is required and used to display Coordinator's Title in Correspondence and Reporting Tree.<br>
+            <b>Primary Position for MIMI Purposes</b> is required adn used for assigning chapters to a Coordintoar and for all Menus/Visibility options to works correctly based on the role.<br>
+                    For assigning chapters, Coordinators should be assigned a MIMI role of BS, AC, AC, ARC, RC, ACC or CC.<br>
+            <b>Seconary Position</b> is optional and used to display Coordinator's Title in Correspondene and for all Menus/Visilbity options based on the role.</p>
+        </div>
 
 					<div class="card-header">
                         <h3 class="card-title">&nbsp;</h3>

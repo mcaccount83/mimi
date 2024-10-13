@@ -25,14 +25,12 @@
         <div class="container-fluid">
 
             @php
-            $assistConferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //CC-Founder & ACC
-            $regionalCoordinatorCondition = ($positionid >= 5 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*RC-Founder & ACC
-            $assistRegionalCoordinatorCondition = ($positionid >= 4 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*ARC-Founder & ACC
-            $bigSisterCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
-            $eoyTestCondition = ($positionid >= 6 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25) ||
-                    ($positionid == 29 || $secpositionid == 29);  //CC-Founder & ACC, AR Tester
-            $eoyReportCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25) ||
-                    ($positionid == 19 || $secpositionid == 19) || ($positionid == 29 || $secpositionid == 29);  //*BS-Founder & ACC, AR Reviewer, AR Tester
+            $assistConferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 8);  //*ACC-Founder
+            $regionalCoordinatorCondition = ($positionid >= 5 && $positionid <= 8);  //*RC-Founder
+            $assistRegionalCoordinatorCondition = ($positionid >= 4 && $positionid <= 8);  //*ARC-Founder
+            $bigSisterCondition = ($positionid >= 1 && $positionid <= 8);  //*BS-Founder
+            $eoyTestCondition = ($positionid >= 6 && $positionid <= 8) || ($positionid == 29 || $secpositionid == 29);  //*ACC-Founder, AR Tester
+            $eoyReportCondition = ($positionid >= 1 && $positionid <= 8) || ($positionid == 19 || $secpositionid == 19) || ($positionid == 29 || $secpositionid == 29);  //*BS-Founder, AR Reviewer, AR Tester
             $eoyReportConditionDISABLED = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
         @endphp
         @php

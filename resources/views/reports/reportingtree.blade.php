@@ -19,7 +19,7 @@
 
 <!-- Main content -->
 
-@if ($cord_pos_id == 7)
+@if ($cord_pos_id == 8)
     {{-- <div class="card-body">
         <div class="mermaid-container">
             <div class="mermaid flowchart" id="mermaid-chart">
@@ -144,7 +144,7 @@
                 @php
                     $report_id = $coordinator['report_id'];
                     $id = $coordinator['id'];
-                    $shouldExclude = ($report_id == "0" && $cord_pos_id == "7") || ($report_id == "1" && $cord_pos_id != "7");
+                    $shouldExclude = ($report_id == "0" && $cord_pos_id == "8") || ($report_id == "1" && $cord_pos_id != "8");
                     @endphp
                 @if (!$shouldExclude)
                     {{ $report_id }} --- {{ $id }}
@@ -219,7 +219,7 @@
                     @php
                         $report_id = $coordinator['report_id'];
                         $id = $coordinator['id'];
-                        $shouldExclude = ($report_id == "0" && $cord_pos_id == "7") || ($report_id == "1" && $cord_pos_id != "7");
+                        $shouldExclude = ($report_id == "0" && $cord_pos_id == "8") || ($report_id == "1" && $cord_pos_id != "8");
                         @endphp
                     @if (!$shouldExclude)
                         {{ $report_id }} --- {{ $id }}

@@ -89,8 +89,8 @@ class ChapterController extends Controller
         $request->session()->put('corconfid', $corConfId);
         $request->session()->put('corregid', $corRegId);
 
-        if ($positionId <= 7 || $positionId == 25) {
-            if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId <= 8) {
+            if ($positionId >= 5 && $positionId <= 7) {
                 //Show Full Conference or Region
                 $reportIdList = DB::table('coordinator_reporting_tree as crt')
                     ->select('crt.id')
@@ -110,7 +110,7 @@ class ChapterController extends Controller
             $inQryArr = explode(',', $inQryStr);
         }
 
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $chapterList = DB::table('chapters as ch')
                 ->select('ch.id', 'ch.name', 'ch.state', 'ch.ein', 'ch.primary_coordinator_id', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
                     'st.state_short_name as state', 'cd.region_id', 'ch.region')
@@ -793,7 +793,7 @@ class ChapterController extends Controller
             $ch_webstatus = $request->input('ch_webstatus');
             $ch_pcid = $request->input('ch_primarycor');
         }
-        if ($positionid == 7) {
+        if ($positionid == 8) {
             $ch_month = $request->input('ch_founddate');
             $ch_foundyear = $request->input('ch_foundyear');
         } else {
@@ -1840,7 +1840,7 @@ class ChapterController extends Controller
         }
         $inQryStr = rtrim($inQryStr, ',');
         $inQryArr = explode(',', $inQryStr);
-        if ($positionId == 7 || ($corId == 423 && $positionId == 8)) {
+        if ($positionId == 8 || ($corId == 423 && $positionId == 15)) {
             $inquiriesList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.inquiries_contact as inq_con', 'chapters.territory as terry', 'chapters.status as status', 'chapters.inquiries_note as inq_note', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'cd.email as cd_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'st.state_short_name as state')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
@@ -1851,7 +1851,7 @@ class ChapterController extends Controller
                 ->orderBy('st.state_short_name')
                 ->get();
 
-        } elseif ($positionId == 6 || $positionId == 25 || $positionId == 8 || $secPositionId == 8) {
+        } elseif ($positionId >= 6 && $positionId <= 7 || $positionId == 15 ||  15) {
             $inquiriesList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.inquiries_contact as inq_con', 'chapters.territory as terry', 'chapters.status as status', 'chapters.inquiries_note as inq_note', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'cd.email as cd_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'st.state_short_name as state')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
@@ -2004,7 +2004,7 @@ class ChapterController extends Controller
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $positionId = $corDetails['position_id'];
-        if ($positionId == 7) {
+        if ($positionId == 8) {
             $websiteList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.website_url as web', 'chapters.website_status as status', 'chapters.website_notes as web_notes', 'chapters.egroup as egroup', 'st.state_short_name as state')
                 ->join('state as st', 'chapters.state', '=', 'st.id')
@@ -2012,7 +2012,7 @@ class ChapterController extends Controller
                 ->orderBy('st.state_short_name')
                 ->orderBy('chapters.name')
                 ->get();
-        } elseif ($positionId == 6 || $positionId == 25) {
+        } elseif ($positionId >= 6 && $positionId <= 7) {
             $websiteList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.website_url as web', 'chapters.website_status as status', 'chapters.website_notes as web_notes', 'chapters.egroup as egroup', 'st.state_short_name as state')
                 ->join('state as st', 'chapters.state', '=', 'st.id')
@@ -2059,7 +2059,7 @@ class ChapterController extends Controller
         $corRegId = $corDetails['region_id'];
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        if ($positionId == 6 || $positionId == 25 || $secPositionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $chapterList = DB::table('chapters as ch')
                 ->select('ch.id', 'ch.state', 'ch.name', 'ch.ein', 'ch.zap_date', 'ch.disband_reason', 'st.state_short_name as state')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
@@ -2072,7 +2072,7 @@ class ChapterController extends Controller
                 ->orderByDesc('ch.zap_date')
                 ->get();
         } else {
-            if ($positionId == 7) {
+            if ($positionId == 8) {
                 $chapterList = DB::table('chapters as ch')
                     ->select('ch.id', 'ch.state', 'ch.name', 'ch.ein', 'ch.zap_date', 'ch.disband_reason', 'st.state_short_name as state')
                     ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
@@ -3586,8 +3586,8 @@ class ChapterController extends Controller
         $request->session()->put('corconfid', $corConfId);
         $request->session()->put('corregid', $corRegId);
 
-        if ($positionId <= 7 || $positionId == 25) {
-            if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId <= 8) {
+            if ($positionId >= 5 && $positionId <= 7) {
                 //Show Full Conference or Region
                 $reportIdList = DB::table('coordinator_reporting_tree as crt')
                     ->select('crt.id')
@@ -3621,7 +3621,7 @@ class ChapterController extends Controller
             ->where('bd.board_position_id', '=', '1');
 
         // Apply the position-based filtering
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $baseQuery->where('ch.conference', '=', $corConfId);
         } elseif ($positionId == 5) {
             $baseQuery->where('ch.region', '=', $corRegId);

@@ -198,7 +198,7 @@ class AdminController extends Controller
         // Determine if the user is allowed to add and update resources
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        $canEditFiles = ($positionId == 6 || $secPositionId == 6);  //CC Coordinator
+        $canEditFiles = ($positionId == 7 || $secPositionId == 7);  //CC Coordinator
 
         $data = ['resources' => $resources, 'canEditFiles' => $canEditFiles, 'coordinatorDetails' => $coordinatorDetails, 'id' => $id];
 

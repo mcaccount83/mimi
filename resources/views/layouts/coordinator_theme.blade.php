@@ -124,26 +124,24 @@
 
         @php
         $ITCondition = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
-        $coordinatorCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
-        $founderCondition = $positionid == 7;  //*Founder
-        $conferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 7);  //*CC-Founder
-        $assistConferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //CC-Founder & ACC
-        $regionalCoordinatorCondition = ($positionid >= 5 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*RC-Founder & ACC
-        $assistRegionalCoordinatorCondition = ($positionid >= 4 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*ARC-Founder & ACC
-        $supervisingCoordinatorCondition =  ($positionid >= 3 && $positionid <= 7 || $positionid == 25);  //*SC-Founder & ACC
-        $areaCoordinatorCondition =  ($positionid >= 2 && $positionid <= 7 || $positionid == 25);  //*AC-Founder & ACC
-        $bigSisterCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25);  //*BS-Founder & ACC
+        $coordinatorCondition = ($positionid >= 1 && $positionid <= 8);  //*BS-Founder
+        $founderCondition = $positionid == 8;  //*Founder
+        $conferenceCoordinatorCondition = ($positionid >= 7 && $positionid <= 8);  //*CC-Founder
+        $assistConferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 8);  //*ACC-Founder
+        $regionalCoordinatorCondition = ($positionid >= 5 && $positionid <= 8);  //*RC-Founder
+        $assistRegionalCoordinatorCondition = ($positionid >= 4 && $positionid <= 8) ;  //*ARC-Founder
+        $supervisingCoordinatorCondition =  ($positionid >= 3 && $positionid <= 8);  //*SC-Founder
+        $areaCoordinatorCondition =  ($positionid >= 2 && $positionid <= 8);  //*AC-Founder
+        $bigSisterCondition = ($positionid >= 1 && $positionid <= 8) ;  //*BS-Founder
 
-        $eoyTestCondition = ($positionid >= 6 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25) ||
-                ($positionid == 29 || $secpositionid == 29);  //CC-Founder & ACC, AR Tester
-        $eoyReportCondition = ($positionid >= 1 && $positionid <= 7) || ($positionid == 25 || $secpositionid == 25) ||
-                ($positionid == 19 || $secpositionid == 19) || ($positionid == 29 || $secpositionid == 29);  //*BS-Founder & ACC, AR Reviewer, AR Tester
+        $eoyTestCondition = ($positionid >= 6 && $positionid <= 8) || ($positionid == 29 || $secpositionid == 29);  //ACC-Founder, AR Tester
+        $eoyReportCondition = ($positionid >= 1 && $positionid <= 8) || ($positionid == 19 || $secpositionid == 19) || ($positionid == 29 || $secpositionid == 29);  //*BS-Founder, AR Reviewer, AR Tester
         $eoyReportConditionDISABLED = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
-        $inquiriesCondition = ($positionid == 8 || $secpositionid == 8);  //*Inquiries Coordinator
+        $inquiriesCondition = ($positionid == 15 || $secpositionid == 15);  //*Inquiries Coordinator
         $webReviewCondition = ($positionid == 9 || $secpositionid == 9);  //*Website Reviewer
         $einCondition = ($positionid == 12 || $secpositionid == 12);  //*EIN Coordinator
         $adminReportCondition = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
-        $m2mCondition = ($positionid == 21 || $secpositionid == 21);  //*M2M Committee
+        $m2mCondition = ($positionid == 21 || $secpositionid == 21) || ($positionid == 20 || $secpositionid == 20);  //*M2M Committee
         $listAdminCondition = ($positionid == 23 || $secpositionid == 23);  //*ListAdmin
     @endphp
 

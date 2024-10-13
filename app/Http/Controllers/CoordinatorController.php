@@ -98,7 +98,7 @@ class CoordinatorController extends Controller
         $inQryArr = explode(',', $inQryStr);
 
         //Get Coordinator List mapped with login coordinator
-        if ($positionId == 7) {
+        if ($positionId == 8) {
             $coordinatorList = DB::table('coordinators as cd')
                 ->select('cd.id as cor_id', 'cd.home_chapter as cor_chapter', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
                     'cd.phone as cor_phone', 'cd.report_id as report_id', 'cp.long_title as position',
@@ -1407,7 +1407,7 @@ class CoordinatorController extends Controller
         $corConfId = $corDetails['conference_id'];
         $positionId = $corDetails['position_id'];
 
-        if ($positionId == 7 || $positionId == 13) {
+        if ($positionId == 8 || $positionId == 13) {
             $retiredCoordinatorList = DB::table('coordinators as cd')
                 ->select('cd.id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.reason_retired as cor_reason', 'cd.zapped_date as cor_zapdate', 'cp.long_title as position')
                 ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')

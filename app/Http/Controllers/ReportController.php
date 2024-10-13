@@ -43,7 +43,7 @@ class ReportController extends Controller
         $request->session()->put('corconfid', $corConfId);
         $request->session()->put('corregid', $corRegId);
 
-        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId >= 5 && $positionId <= 7) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
@@ -70,7 +70,7 @@ class ReportController extends Controller
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1');
 
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($positionId == 5) {
             $baseQuery->where('chapters.region', '=', $corRegId);
@@ -164,7 +164,7 @@ class ReportController extends Controller
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
 
-        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId >= 5 && $positionId <= 7) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
@@ -194,7 +194,7 @@ class ReportController extends Controller
             ->orderBy('st.state_short_name')
             ->orderBy('chapters.name');
 
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($positionId == 5) {
             $baseQuery->where('chapters.region', '=', $corRegId);
@@ -350,7 +350,7 @@ class ReportController extends Controller
         } else {
             $date_clause = 'WHERE (chapters.start_year='.date('Y').' AND chapters.start_month_id<='.date('m').')';
         }
-        if ($positionId != 7) {
+        if ($positionId != 8) {
             $conference_clause = 'AND chapters.conference='.$corConfId;
         } else {
             $conference_clause = '';
@@ -420,7 +420,7 @@ class ReportController extends Controller
         $request->session()->put('corconfid', $corConfId);
         $request->session()->put('corregid', $corRegId);
 
-        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId >= 56 && $positionId <= 7) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
@@ -449,7 +449,7 @@ class ReportController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->where('chapters.members_paid_for', '>=', '60');
 
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($positionId == 5) {
             $baseQuery->where('chapters.region', '=', $corRegId);
@@ -494,7 +494,7 @@ class ReportController extends Controller
         $request->session()->put('corconfid', $corConfId);
         $request->session()->put('corregid', $corRegId);
 
-        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId >= 5 && $positionId <= 7) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
@@ -522,7 +522,7 @@ class ReportController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->whereIn('chapters.status', $status);
 
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($positionId == 5) {
             $baseQuery->where('chapters.region', '=', $corRegId);
@@ -563,7 +563,7 @@ class ReportController extends Controller
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
 
-        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId >= 5 && $positionId <= 7) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
@@ -594,7 +594,7 @@ class ReportController extends Controller
             ->orderByDesc('st.state_short_name')
             ->orderByDesc('chapters.name');
 
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($positionId == 5) {
             $baseQuery->where('chapters.region', '=', $corRegId);
@@ -626,7 +626,7 @@ class ReportController extends Controller
         $request->session()->put('positionid', $positionId);
         $request->session()->put('secpositionid', $secPositionId);
 
-        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId >= 5 && $positionId <= 7) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
@@ -654,7 +654,7 @@ class ReportController extends Controller
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1');
 
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($positionId == 5) {
             $baseQuery->where('chapters.region', '=', $corRegId);
@@ -766,7 +766,7 @@ class ReportController extends Controller
             $request->session()->put('positionid', $positionId);
             $request->session()->put('secpositionid', $secPositionId);
 
-            if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+            if ($positionId >= 5 && $positionId <= 7) {
                 //Show Full Conference or Region
                 $reportIdList = DB::table('coordinator_reporting_tree as crt')
                     ->select('crt.id')
@@ -794,7 +794,7 @@ class ReportController extends Controller
                 ->where('chapters.is_active', '=', '1')
                 ->where('bd.board_position_id', '=', '1');
 
-            if ($positionId == 6 || $positionId == 25) {
+            if ($positionId >= 6 && $positionId <= 7) {
                 $baseQuery->where('chapters.conference', '=', $corConfId);
             } elseif ($positionId == 5) {
                 $baseQuery->where('chapters.region', '=', $corRegId);
@@ -839,7 +839,7 @@ class ReportController extends Controller
         $positionId = $corDetails['position_id'];
         $request->session()->put('positionid', $positionId);
 
-        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId >= 5 && $positionId <= 7) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
@@ -868,7 +868,7 @@ class ReportController extends Controller
             ->orderBy('cd.region_id')
             ->orderByDesc('cp.id');
 
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $baseQuery->where('cd.conference_id', '=', $corConfId);
         } elseif ($positionId == 5) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
@@ -954,7 +954,7 @@ class ReportController extends Controller
         $request->session()->put('positionid', $positionId);
         $request->session()->put('secpositionid', $secPositionId);
 
-        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId >= 5 && $positionId <= 7) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
@@ -981,7 +981,7 @@ class ReportController extends Controller
             ->orderBy('rg.short_name')
             ->orderByDesc('cp.id');
 
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $baseQuery->where('cd.conference_id', '=', $corConfId);
         } elseif ($positionId == 5) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
@@ -1204,7 +1204,7 @@ class ReportController extends Controller
         $request->session()->put('positionid', $positionId);
         $request->session()->put('secpositionid', $secPositionId);
 
-        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId >= 5 && $positionId <= 7) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
@@ -1233,7 +1233,7 @@ class ReportController extends Controller
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.coordinator_start_date');
 
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $baseQuery->where('cd.conference_id', '=', $corConfId);
         } elseif ($positionId == 5) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
@@ -1265,7 +1265,7 @@ class ReportController extends Controller
         $request->session()->put('positionid', $positionId);
         $request->session()->put('secpositionid', $secPositionId);
 
-        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId >= 5 && $positionId <= 7) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
@@ -1293,7 +1293,7 @@ class ReportController extends Controller
             ->orderBy('cd.birthday_month_id')
             ->orderBy('cd.birthday_day');
 
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $baseQuery->where('cd.conference_id', '=', $corConfId);
         } elseif ($positionId == 5) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
@@ -1320,7 +1320,7 @@ class ReportController extends Controller
         $request->session()->put('positionid', $positionId);
         $cord_pos_id = $request->session()->get('positionid');
 
-        if ($positionId != 7) {
+        if ($positionId != 8) {
             $coordinatorDetails = DB::table('coordinators')
                 ->select('coordinators.id AS id', 'coordinators.first_name', 'coordinators.last_name', 'pos1.short_title AS position_title',
                     'pos2.short_title AS sec_position_title', 'coordinators.layer_id', 'coordinators.report_id', 'coordinators.report_id AS tree_id',
@@ -1421,7 +1421,7 @@ class ReportController extends Controller
         $request->session()->put('secpositionid', $secPositionId);
         $request->session()->put('corregid', $corRegId);
 
-        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId >= 5 && $positionId <= 7) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
@@ -1455,7 +1455,7 @@ class ReportController extends Controller
                       ->orWhereNull('created_at');
             });
 
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($positionId == 5) {
             $baseQuery->where('chapters.region', '=', $corRegId);
@@ -1504,7 +1504,7 @@ class ReportController extends Controller
         $request->session()->put('secpositionid', $secPositionId);
         $request->session()->put('corregid', $corRegId);
 
-        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId >= 5 && $positionId <= 7) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
@@ -1542,7 +1542,7 @@ class ReportController extends Controller
                       ->orWhereNull('created_at');
             });
 
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($positionId == 5) {
             $baseQuery->where('chapters.region', '=', $corRegId);
@@ -1590,7 +1590,7 @@ class ReportController extends Controller
         $request->session()->put('corconfid', $corConfId);
         $request->session()->put('corregid', $corRegId);
 
-        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId >= 5 && $positionId <= 7) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
@@ -1625,7 +1625,7 @@ class ReportController extends Controller
             })
             ->where('ch.is_active', 1);
 
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $baseQuery->where('ch.conference', '=', $corConfId);
         } elseif ($positionId == 5) {
             $baseQuery->where('ch.region', '=', $corRegId);
@@ -1682,7 +1682,7 @@ class ReportController extends Controller
         $request->session()->put('secpositionid', $secPositionId);
         $request->session()->put('corconfid', $corConfId);
 
-        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId >= 5 && $positionId <= 7) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
@@ -1715,7 +1715,7 @@ class ReportController extends Controller
                       ->orWhereNull('created_at');
             });
 
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($positionId == 5) {
             $baseQuery->where('chapters.region', '=', $corRegId);
@@ -2449,7 +2449,7 @@ class ReportController extends Controller
         $request->session()->put('secpositionid', $secPositionId);
         $request->session()->put('corconfid', $corConfId);
 
-        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId >= 5 && $positionId <= 7) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
@@ -2479,7 +2479,7 @@ class ReportController extends Controller
             ->where('chapters.new_board_submitted', '=', '1')
             ->where('bd.board_position_id', '=', '1');
 
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($positionId == 5) {
             $baseQuery->where('chapters.region', '=', $corRegId);
@@ -2523,7 +2523,7 @@ class ReportController extends Controller
         $request->session()->put('secpositionid', $secPositionId);
         $request->session()->put('corconfid', $corConfId);
 
-        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId >= 5 && $positionId <= 7) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
@@ -2562,7 +2562,7 @@ class ReportController extends Controller
                     ->orWhereNotNull('fr.award_5_nomination_type');
             });
 
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $baseQuery->where('ch.conference', '=', $corConfId);
         } elseif ($positionId == 5) {
             $baseQuery->where('ch.region', '=', $corRegId);
@@ -2612,7 +2612,7 @@ class ReportController extends Controller
         $request->session()->put('corconfid', $corConfId);
         $request->session()->put('corregid', $corRegId);
 
-        if ($positionId == 5 || $positionId == 6 || $positionId == 25) {
+        if ($positionId >= 5 && $positionId <= 7) {
             //Show Full Conference or Region
             $reportIdList = DB::table('coordinator_reporting_tree as crt')
                 ->select('crt.id')
@@ -2648,7 +2648,7 @@ class ReportController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->where('created_at', '<=', date('Y-06-30'));
 
-        if ($positionId == 6 || $positionId == 25) {
+        if ($positionId >= 6 && $positionId <= 7) {
             $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($positionId == 5) {
             $baseQuery->where('chapters.region', '=', $corRegId);

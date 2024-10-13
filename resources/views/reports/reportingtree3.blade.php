@@ -49,7 +49,7 @@
                 $report_id = $coordinator['report_id'];
                 $cord_pos_id = $coordinator['cord_pos_id']; // Assuming this is available in your array
                 // Determine whether to exclude certain nodes based on report_id and cord_pos_id
-                $shouldExclude = ($report_id == "366" && $cord_pos_id == "7") || ($report_id == "1" && $cord_pos_id != "7");
+                $shouldExclude = ($report_id == "0" && $cord_pos_id == "8") || ($report_id == "1" && $cord_pos_id != "8");
 
                 // Set the parent based on the exclusion logic
                 $parent = (!$shouldExclude && $report_id !== "None") ? $report_id : ""; // Keep root node as empty
