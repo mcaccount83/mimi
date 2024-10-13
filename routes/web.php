@@ -259,6 +259,7 @@ Route::get('/export/zapchapter', [ExportController::class, 'indexZappedChapter']
 Route::get('/export/coordinator/{id}', [ExportController::class, 'indexCoordinator'])->name('export.coordinator');
 Route::get('/export/retiredcoordinator', [ExportController::class, 'indexRetiredCoordinator'])->name('export.retiredcoordinator');
 Route::get('/export/einstatus', [ExportController::class, 'indexEINStatus'])->name('export.einstatus');
+Route::get('/export/irsfiling', [ExportController::class, 'indexInternationalIRSFiling'])->name('export.irsfiling');
 Route::get('/export/rereg', [ExportController::class, 'indexReReg'])->name('export.rereg');
 Route::get('/export/eoystatus', [ExportController::class, 'indexEOYStatus'])->name('export.eoystatus');
 Route::get('/export/chaptercoordinator', [ExportController::class, 'indexChapterCoordinator'])->name('export.chaptercoordinator');

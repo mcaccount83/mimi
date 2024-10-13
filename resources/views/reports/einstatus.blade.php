@@ -80,7 +80,6 @@
             </div>
                 <div class="card-body text-center">
                     <a href="{{ route('export.einstatus')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download " ></i>&nbsp;&nbsp;&nbsp;Export EIN Status List</button></a>
-
                 </div>
 
               </div>

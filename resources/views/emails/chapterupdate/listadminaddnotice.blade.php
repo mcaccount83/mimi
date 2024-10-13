@@ -1,5 +1,5 @@
 @component('mail::message')
-# ListAdmin Update Notification
+# ListAdmin Add Notification
 
 The follownig chapter has added to MIMI:  MOMS Club of {{$mailData['chapter_name']}}, {{$mailData['chapter_state']}}, Conference {{$mailData['conf']}}.<br>
 <br>

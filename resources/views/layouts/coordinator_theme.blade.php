@@ -600,7 +600,7 @@
                             </li>
                                 <li class="nav-item">
                                 <a href="{{ route('admin.duplicateuser') }}" class="nav-link {{ Request::is('adminreports/duplicateuser') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-user-plus"></i>
+                                    <i class="nav-icon fas fa-user-friends"></i>
                                     <p>Duplicate Users</p>
                                 </a>
                             </li>

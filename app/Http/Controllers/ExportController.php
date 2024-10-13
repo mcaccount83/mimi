@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Carbon\Carbon;
 
 class ExportController extends Controller
 {
@@ -995,6 +996,94 @@ class ExportController extends Controller
 
         return redirect()->to('/home');
     }
+
+    /**
+     * Export International Chapter List
+     */
+    public function indexInternationalIRSFiling(Request $request)
+    {
+        $fileName = 'int_subordinate_'.date('Y-m-d').'.csv';
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$fileName",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+
+        // Get January 1st of the previous year
+        $previousYear = Carbon::now()->subYear()->startOfYear();
+
+        //Get Coordinators Details
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
+        $corConfId = $corDetails['conference_id'];
+        $corlayerId = $corDetails['layer_id'];
+        $activeChapterList = DB::table('chapters')
+            ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
+                'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
+                'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
+            // ->where('chapters.is_active', '=', '1')
+            ->where(function($query) use ($previousYear) {
+                $query->where('chapters.is_active', '=', 1)
+                      ->orWhere(function($query) use ($previousYear) {
+                          $query->where('chapters.is_active', '=', 0)
+                                ->where('chapters.zap_date', '>', $previousYear);
+                      });
+            })
+            ->where('bd.board_position_id', '=', '1')
+            ->orderBy('chapters.ein')
+            ->get();
+
+            if (count($activeChapterList) > 0) {
+                $exportChapterList = [];
+                foreach ($activeChapterList as $list) {
+
+                    // Check if the chapter is active
+                    $deleteColumn = ($list->is_active == 1) ? 'DELETE' : '';
+
+                    // Prepare the chapter list data
+                    $exportChapterList[] = [
+                        'delete' => $deleteColumn,  // Column 1 (DELETE or empty)
+                        'ein' => $list->ein,
+                        'name' => $list->name,
+                        'pre_fname' => $list->pre_fname,
+                        'pre_lname' => $list->pre_lname,
+                        'pre_add' => $list->pre_add,
+                        'pre_city' => $list->pre_city,
+                        'pre_state' => $list->pre_state,
+                        'pre_zip' => $list->pre_zip,
+                    ];
+                }
+
+                $columns = ['Updates','EIN', 'Name', 'First Name', 'Last Name', 'Address', 'City', 'State', 'Zip'];
+                $callback = function () use ($exportChapterList, $columns) {
+                    $file = fopen('php://output', 'w');
+                    fputcsv($file, $columns);
+
+                    foreach ($exportChapterList as $list) {
+                        fputcsv($file, [
+                            $list['delete'],  // Column 1
+                            $list['ein'],
+                            $list['name'],
+                            $list['pre_fname'],
+                            $list['pre_lname'],
+                            $list['pre_add'],
+                            $list['pre_city'],
+                            $list['pre_state'],
+                            $list['pre_zip'],
+                        ]);
+                    }
+                    fclose($file);
+                };
+
+                return Response::stream($callback, 200, $headers);
+            }
+        }
 
     /**
      * Export EIN Status List
