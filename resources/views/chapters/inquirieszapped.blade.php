@@ -1,27 +1,38 @@
 @extends('layouts.coordinator_theme')
+<style>
+    .hidden-column {
+        display: none !important;
+    }
+    </style>
 
 @section('content')
- <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-      Inquiries Zapped List
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-        <li class="active">Inquiries Zapped List</li>
-      </ol>
-    </section>
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Inquiries Zapped Chapter List</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinator.showdashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">Inquiries Zapped Chapter List</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
     <!-- Main content -->
     <section class="content">
-      <div class="row">
-		<div class="col-md-12">
-          <div class="box">
-            <div class="box-header with-border">
-              <h3 class="box-title">List of Zapped Chapters</h3>
-              </div>
-            <!-- /.box-header -->
-
-            <div class="box-body table-responsive">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">List of Zapped Inquiries Chapters</h3>
+                </div>
+                <!-- /.card-header -->
+            <div class="card-body">
               <table id="chapterlist" class="table table-bordered table-hover">
               <thead>
 			    <tr>
@@ -54,6 +65,8 @@
            </div>
           <!-- /.box -->
         </div>
+    </div>
+
     </section>
     <!-- Main content -->
 

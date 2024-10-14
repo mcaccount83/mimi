@@ -137,11 +137,11 @@
         $eoyTestCondition = ($positionid >= 6 && $positionid <= 8) || ($positionid == 29 || $secpositionid == 29);  //ACC-Founder, AR Tester
         $eoyReportCondition = ($positionid >= 1 && $positionid <= 8) || ($positionid == 19 || $secpositionid == 19) || ($positionid == 29 || $secpositionid == 29);  //*BS-Founder, AR Reviewer, AR Tester
         $eoyReportConditionDISABLED = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
-        $inquiriesCondition = ($positionid == 15 || $secpositionid == 15);  //*Inquiries Coordinator
+        $inquiriesCondition = ($positionid == 15 || $secpositionid == 15 || $positionid == 18 || $secpositionid == 18);  //*Inquiries Coordinator
         $webReviewCondition = ($positionid == 9 || $secpositionid == 9);  //*Website Reviewer
         $einCondition = ($positionid == 12 || $secpositionid == 12);  //*EIN Coordinator
         $adminReportCondition = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
-        $m2mCondition = ($positionid == 21 || $secpositionid == 21) || ($positionid == 20 || $secpositionid == 20);  //*M2M Committee
+        $m2mCondition = ($positionid == 21 || $secpositionid == 21 || $positionid == 20 || $secpositionid == 20);  //*M2M Committee
         $listAdminCondition = ($positionid == 23 || $secpositionid == 23);  //*ListAdmin
     @endphp
 
