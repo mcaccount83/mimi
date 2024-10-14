@@ -96,20 +96,20 @@
                         </div>
                     </div>
 
-            <div class="col-sm-4">
-                <div class="form-group">
-                <label>Primary Position for Display</label><span class="field-required">*</span>
-                <select name="cord_disp_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" required>
-                    <option value=""></option>
-                    @foreach($positionList as $pos)
-                    @if($positionid == 8 || $pos->level_id == 2)  <!-- Show all if position_id is 8, otherwise restrict to level_id == 2 -->
-                    <option value="{{$pos->id}}" {{$coordinatorDetails[0]->display_position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
-                        @endif
-                    @endforeach
-                </select>
-                </div>
-                <input type="hidden" name="OldDisplayPosition" value="{{$coordinatorDetails[0]->display_position_id}}">
-            </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Primary Position for Display</label><span class="field-required">*</span>
+                            <select name="cord_disp_pos" id="disp_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" required>
+                                @foreach($positionList as $pos)
+                                    @if($positionid == 8 || $pos->level_id == 2)  <!-- Show all if position_id is 8, otherwise restrict to level_id == 2 -->
+                                        <option value="{{ $pos->id }}" {{ $coordinatorDetails[0]->display_position_id == $pos->id ? 'selected' : '' }}> {{ $pos->long_title }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                        <input type="hidden" name="OldDisplayPosition" value="{{ $coordinatorDetails[0]->display_position_id }}">
+                    </div>
+
 					<div class="col-sm-4">
 						<div class="form-group">
 						<label>Primary Position for MIMI Purposes</label><span class="field-required">*</span>
