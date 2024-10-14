@@ -34,16 +34,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
-use Symfony\Component\Mime\Email;
 
 class ChapterController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('preventBackHistory');
-        // $this->middleware('auth')->except('logout', 'chapterLinks', 'chapterLinks2');
         $this->middleware('auth')->except('logout');
     }
 
@@ -75,7 +71,6 @@ class ChapterController extends Controller
      */
     public function index(Request $request): View
     {
-        //Get Coordinators Details
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
@@ -218,7 +213,6 @@ class ChapterController extends Controller
         $array_rows = count($filterReportingList);
         $down_line_email = '';
         foreach ($filterReportingList as $key => $val) {
-            //if($corId != $val && $val >1){
             if ($val > 1) {
                 $corList = DB::table('coordinators as cd')
                     ->select('cd.email as cord_email')
@@ -256,15 +250,12 @@ class ChapterController extends Controller
      */
     public function create(Request $request)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->Coordinators;
-        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -286,8 +277,9 @@ class ChapterController extends Controller
             ->orderBy('long_name')
             ->get();
         $primaryCoordinatorList = DB::table('coordinators as cd')
-            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
+            ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
+            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
             ->where('cd.conference_id', '=', $corConfId)
             ->where('cd.position_id', '<=', '7')
             ->where('cd.position_id', '>=', '1')
@@ -566,15 +558,12 @@ class ChapterController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->Coordinators;
-        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -686,7 +675,6 @@ class ChapterController extends Controller
         $array_rows = count($filterReportingList);
         $down_line_email = '';
         foreach ($filterReportingList as $key => $val) {
-            // if($corId != $val && $val >1){
             if ($val > 1) {
                 $corList = DB::table('coordinators as cd')
                     ->select('cd.email as cord_email')
@@ -705,8 +693,9 @@ class ChapterController extends Controller
         $cc_string = '?cc='.$down_line_email;
 
         $primaryCoordinatorList = DB::table('coordinators as cd')
-            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
+            ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
+            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
             ->where('cd.conference_id', '=', $corConfId)
             ->where('cd.position_id', '<=', '7')
             ->where('cd.position_id', '>=', '1')
@@ -1604,15 +1593,12 @@ class ChapterController extends Controller
      */
     public function showIntChapter(Request $request)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->Coordinators;
-        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -1643,15 +1629,12 @@ class ChapterController extends Controller
      */
     public function showIntChapterView(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->Coordinators;
-        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -1763,7 +1746,6 @@ class ChapterController extends Controller
         $array_rows = count($filterReportingList);
         $down_line_email = '';
         foreach ($filterReportingList as $key => $val) {
-            // if($corId != $val && $val >1){
             if ($val > 1) {
                 $corList = DB::table('coordinators as cd')
                     ->select('cd.email as cord_email')
@@ -1782,8 +1764,9 @@ class ChapterController extends Controller
         $cc_string = '?cc='.$down_line_email;
 
         $primaryCoordinatorList = DB::table('coordinators as cd')
-            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
+            ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
+            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
             ->where('cd.conference_id', '=', $corConfId)
             ->where('cd.position_id', '<=', '7')
             ->where('cd.position_id', '>=', '1')
@@ -1805,15 +1788,12 @@ class ChapterController extends Controller
      */
     public function showInquiriesChapter(Request $request)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->Coordinators;
-        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -1882,15 +1862,12 @@ class ChapterController extends Controller
      */
     public function showZappedInquiries(Request $request)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->Coordinators;
-        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -1936,15 +1913,12 @@ class ChapterController extends Controller
      */
     public function showInquiries(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->Coordinators;
-        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -1984,15 +1958,12 @@ class ChapterController extends Controller
      */
     public function showWebsiteChapter(Request $request)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->Coordinators;
-        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -2038,15 +2009,12 @@ class ChapterController extends Controller
      */
     public function showZappedChapter(Request $request)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->Coordinators;
-        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -2106,15 +2074,12 @@ class ChapterController extends Controller
      */
     public function showIntZappedChapter(Request $request)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->Coordinators;
-        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -2143,15 +2108,12 @@ class ChapterController extends Controller
      */
     public function showZappedChapterView(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->Coordinators;
-        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -2159,7 +2121,6 @@ class ChapterController extends Controller
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $financial_report_array = FinancialReport::find($id);
-        //$reviewComplete = $financial_report_array['review_complete'];
         $chapterList = DB::table('chapters as ch')
             ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
             ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
@@ -2223,8 +2184,9 @@ class ChapterController extends Controller
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinators as cd')
-            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
+            ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
+            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
             ->where('cd.conference_id', '=', $corConfId)
             ->where('cd.position_id', '<=', '7')
             ->where('cd.position_id', '>=', '1')
@@ -2245,15 +2207,12 @@ class ChapterController extends Controller
      */
     public function showIntZappedChapterView(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->Coordinators;
-        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -2327,8 +2286,9 @@ class ChapterController extends Controller
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinators as cd')
-            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
+            ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
+            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
             ->where('cd.conference_id', '=', $corConfId)
             ->where('cd.position_id', '<=', '7')
             ->where('cd.position_id', '>=', '1')
@@ -2349,15 +2309,12 @@ class ChapterController extends Controller
      */
     public function editWebsite(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->Coordinators;
-        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -2388,8 +2345,9 @@ class ChapterController extends Controller
             ->get();
 
         $primaryCoordinatorList = DB::table('coordinators as cd')
-            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
+            ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
+            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
             ->where('cd.conference_id', '=', $corConfId)
             ->where('cd.position_id', '<=', '7')
             ->where('cd.position_id', '>=', '1')
@@ -2514,8 +2472,9 @@ class ChapterController extends Controller
             $i = 0;
             foreach ($filterReportingList as $key => $val) {
                 $corList = DB::table('coordinators as cd')
-                    ->select('cd.first_name as fname', 'cd.last_name as lname', 'cd.email as email', 'cp.short_title as pos')
-                    ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                    ->select('cd.first_name as fname', 'cd.last_name as lname', 'cd.email as email', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
+                    ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
+                    ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
                     ->where('cd.id', '=', $val)
                     ->where('cd.is_active', '=', 1)
                     ->get();
@@ -2523,7 +2482,11 @@ class ChapterController extends Controller
                 if (count($corList) > 0) {
                     $name = $corList[0]->fname.' '.$corList[0]->lname;
                     $email = $corList[0]->email;
-                    $pos = '('.$corList[0]->pos.')';
+                    if (!empty($corList[0]->sec_pos)) {
+                        $pos = '('.$corList[0]->pos.'/'.$corList[0]->sec_pos.')';
+                    } else {
+                        $pos = '('.$corList[0]->pos.')';
+                    }
 
                     if ($i == 0) {
                         $str .= "<tr>
@@ -3318,74 +3281,6 @@ class ChapterController extends Controller
 
         return redirect()->to('/reports/einstatus')->with('success', 'Your EIN/IRS Notes have been saved');
     }
-
-    /**
-     * Reset Password
-     */
-    // public function updateChapterResetPassword(Request $request): JsonResponse
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'pswd' => 'required|string|min:7',
-    //         'user_id' => 'required|exists:users,id',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         return response()->json(['error' => $validator->errors()->first()], 400);
-    //     }
-
-    //     $pswd = $request->input('pswd');
-    //     $userId = $request->input('user_id');
-    //     $newPswd = Hash::make($pswd);
-
-    //     try {
-    //         DB::transaction(function () use ($userId, $newPswd) {
-    //             // Update the password and nullify the remember token in the users table
-    //             DB::table('users')
-    //                 ->where('id', $userId)
-    //                 ->update(['password' => $newPswd, 'remember_token' => null]);
-
-    //             // Update the password in the boards table
-    //             DB::table('boards')
-    //                 ->where('user_id', $userId)
-    //                 ->update(['password' => $newPswd]);
-    //         });
-
-    //         return response()->json(['message' => 'Password has been reset successfully']);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => 'An error occurred while resetting the password.'], 500);
-    //     }
-    // }
-
-    /**
-     * Reset Password
-     */
-    // public function updateResetPassword(Request $request): JsonResponse
-    // {
-    //     $pswd = $request->input('pswd');
-    //     $userId = $request->input('user_id');
-
-    //     try {
-    //         DB::table('users')
-    //             ->where('id', $userId)
-    //             ->update([
-    //                 'password' => Hash::make($pswd),
-    //                 'remember_token' => '',
-    //                 'user_type' => 'board',
-    //                 'is_active' => '1',
-    //             ]);
-
-    //         DB::table('boards')
-    //             ->where('user_id', $userId)
-    //             ->update([
-    //                 'password' => Hash::make($pswd),
-    //                 'is_active' => '1',
-    //             ]);
-
-    //         return response()->json(['message' => 'Password has been reset successfully']);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => 'An error occurred while resetting the password.'], 500);
-    //     }
-    // }
 
     /**
      * M2M Payments
@@ -4653,211 +4548,6 @@ class ChapterController extends Controller
         return redirect()->to('/chapter/list')->with('success', 'Board Info has been Saved');
     }
 
-    /**
-     * Activate Board
-     */
-    // public function activateBoard($chapter_id, $lastUpdatedBy)
-    // {
-    //     $message = '';
-    //     // Fetching New Board Info from Incoming Board Members
-    //     $incomingBoardDetails = DB::table('incoming_board_member')
-    //         ->select('*')
-    //         ->where('chapter_id', '=', $chapter_id)
-    //         ->orderBy('board_position_id')
-    //         ->get();
-    //     $countIncomingBoardDetails = count($incomingBoardDetails);
-    //     if ($countIncomingBoardDetails > 0) {
-    //         DB::beginTransaction();
-    //         try {
-    //             // Fetching Existing Board Members from Board Details
-    //             $boardDetails = DB::table('boards')
-    //                 ->select('*')
-    //                 ->where('chapter_id', '=', $chapter_id)
-    //                 ->get();
-    //             $countBoardDetails = count($boardDetails);
-    //             if ($countBoardDetails > 0) {
-    //                 // Insert Outgoing Board Members
-    //                 foreach ($boardDetails as $record) {
-    //                     // Fetch existing password
-    //                     $existingPassword = DB::table('users')
-    //                         ->where('id', $record->user_id)
-    //                         ->value('password');
-
-    //                     DB::table('outgoing_board_member')->insert(
-    //                         [
-    //                             'first_name' => $record->first_name,
-    //                             'last_name' => $record->last_name,
-    //                             'email' => $record->email,
-    //                             'password' => $existingPassword, // Use existing password
-    //                             'remember_token' => '',
-    //                             'board_position_id' => $record->board_position_id,
-    //                             'chapter_id' => $chapter_id,
-    //                             'street_address' => $record->street_address,
-    //                             'city' => $record->city,
-    //                             'state' => $record->state,
-    //                             'zip' => $record->zip,
-    //                             'country' => $record->country,
-    //                             'phone' => $record->phone,
-    //                             'last_updated_by' => $lastUpdatedBy,
-    //                             'last_updated_date' => now(),
-    //                             'board_id' => $record->board_id,
-    //                             'user_id' => $record->user_id,
-    //                         ]
-    //                     );
-
-    //                     // Delete Details of Board members from users table
-    //                     DB::table('users')->where('id', $record->user_id)->delete();
-    //                 }
-
-    //                 // Delete Details of Board members from Board Details table
-    //                 DB::table('boards')->where('chapter_id', $chapter_id)->delete();
-
-    //                 // Fetch the latest board_id and increment it for each new board member
-    //                 $latestBoardId = DB::table('boards')
-    //                     ->select('board_id')
-    //                     ->orderByDesc('board_id')
-    //                     ->value('board_id');
-
-    //                 // Set initial board_id
-    //                 $boardId = is_null($latestBoardId) ? 1 : $latestBoardId + 1;
-
-    //                 // Create & Activate Details of Board members from Incoming Board Members
-    //                 foreach ($incomingBoardDetails as $incomingRecord) {
-    //                     // Check if user already exists
-    //                     $existingUser = DB::table('users')->where('email', $incomingRecord->email)->first();
-
-    //                     if ($existingUser) {
-    //                         $userId = $existingUser->id;
-    //                     } else {
-    //                         // Insert new user
-    //                         $userId = DB::table('users')->insertGetId(
-    //                             [
-    //                                 'first_name' => $incomingRecord->first_name,
-    //                                 'last_name' => $incomingRecord->last_name,
-    //                                 'email' => $incomingRecord->email,
-    //                                 'password' => Hash::make('TempPass4You'),
-    //                                 'user_type' => 'board',
-    //                                 'is_active' => 1,
-    //                             ]
-    //                         );
-    //                     }
-
-    //                     // Fetch the latest board_id for each new board member
-    //                     $latestBoardId = DB::table('boards')
-    //                         ->select('board_id')
-    //                         ->orderByDesc('board_id')
-    //                         ->value('board_id');
-
-    //                     // Set board_id for the new board member
-    //                     $boardId = is_null($latestBoardId) ? 1 : $latestBoardId + 1;
-
-    //                     // Prepare board details data
-    //                     $boardDetailsData = [
-    //                         'user_id' => $userId,
-    //                         'board_id' => $boardId,
-    //                         'first_name' => $incomingRecord->first_name,
-    //                         'last_name' => $incomingRecord->last_name,
-    //                         'email' => $incomingRecord->email,
-    //                         'password' => Hash::make('TempPass4You'),
-    //                         'remember_token' => '',
-    //                         'board_position_id' => $incomingRecord->board_position_id,
-    //                         'chapter_id' => $chapter_id,
-    //                         'street_address' => $incomingRecord->street_address,
-    //                         'city' => $incomingRecord->city,
-    //                         'state' => $incomingRecord->state,
-    //                         'zip' => $incomingRecord->zip,
-    //                         'country' => 'USA',
-    //                         'phone' => $incomingRecord->phone,
-    //                         'last_updated_by' => $lastUpdatedBy,
-    //                         'last_updated_date' => now(),
-    //                         'is_active' => 1,
-    //                     ];
-
-    //                     // Upsert board details
-    //                     DB::table('boards')->upsert(
-    //                         [$boardDetailsData], // The values to insert or update
-    //                         ['user_id', 'chapter_id'], // The unique constraints for upsert
-    //                         array_keys($boardDetailsData) // The columns to update if a conflict occurs
-    //                     );
-
-    //                     // Increment board_id for the next board member
-    //                     $boardId++;
-    //                 }
-
-    //                 // Update Chapter after Board Active
-    //                 DB::update('UPDATE chapters SET new_board_active = ? WHERE id = ?', [1, $chapter_id]);
-
-    //                 // Delete Details of Board members from Incoming Board Member table
-    //                 DB::table('incoming_board_member')
-    //                     ->where('chapter_id', $chapter_id)
-    //                     ->delete();
-    //             }
-
-    //             $chunkSize = 100;
-
-    //             // Update or insert for outgoing board members
-    //             $outgoingBoardMembers = DB::table('outgoing_board_member')->get();
-    //             foreach (array_chunk($outgoingBoardMembers->toArray(), $chunkSize) as $chunk) {
-    //                 foreach ($chunk as $outgoingMember) {
-    //                     $outgoingUser = DB::table('users')->where('email', $outgoingMember->email)->first();
-
-    //                     if ($outgoingUser) {
-    //                         // Update user_type for existing record
-    //                         DB::table('users')->where('email', $outgoingMember->email)->update([
-    //                             'user_type' => 'outgoing',
-    //                         ]);
-
-    //                         // Retrieve the user_id
-    //                         $userId = $outgoingUser->id;
-    //                     } else {
-    //                         // Insert new record
-    //                         $userId = DB::table('users')->insertGetId([
-    //                             'email' => $outgoingMember->email,
-    //                             'first_name' => $outgoingMember->first_name,
-    //                             'last_name' => $outgoingMember->last_name,
-    //                             'password' => Hash::make('TempPass4You'),
-    //                             'remember_token' => '',
-    //                             'user_type' => 'outgoing',
-    //                             'is_active' => 1,
-    //                         ]);
-    //                     }
-
-    //                     // Update outgoing_board_member with user_id
-    //                     DB::table('outgoing_board_member')->where('email', $outgoingMember->email)->update([
-    //                         'user_id' => $userId,
-    //                     ]);
-    //                 }
-    //             }
-
-    //             // Only update for board members who exist in the users table
-    //             $boardMembers = DB::table('boards')->get();
-    //             foreach ($boardMembers as $member) {
-    //                 $user = DB::table('users')->where('email', $member->email)->first();
-
-    //                 if ($user) {
-    //                     // Update user_type for existing record
-    //                     DB::table('users')->where('email', $member->email)->update([
-    //                         'user_type' => 'board',
-    //                     ]);
-    //                 }
-    //             }
-
-    //             DB::commit();
-    //         } catch (\Illuminate\Database\QueryException $e) {
-    //             DB::rollback();
-    //             Log::error($e);
-    //             $errorCode = $e->errorInfo[1];
-    //             if ($errorCode == 1062) {
-    //                 return $message = $e->errorInfo[2];
-    //             } else {
-    //                 return $message = 'fail';
-    //             }
-    //         }
-
-    //         return $message = 'success';
-    //     }
-    // }
-
     public function activateBoard($chapter_id, $lastUpdatedBy)
     {
         // Fetching New Board Info from Incoming Board Members
@@ -4972,7 +4662,6 @@ class ChapterController extends Controller
             }
         }
     }
-
 
     /**
      * Financial Report for Coordinator side for Reviewing of Chapters
@@ -5126,27 +4815,8 @@ class ChapterController extends Controller
         $input = $request->all();
         $farthest_step_visited_coord = $input['FurthestStep'];
         $reviewer_id = isset($input['AssignedReviewer']) ? $input['AssignedReviewer'] : null;
-        //$reviewer_id = $input['AssignedReviewer'];
         $reportReceived = $input['submitted'];
         $submitType = $input['submit_type'];
-        // if (! $reportReceived && $submitType == 'UnSubmit') {
-        //     DB::update('UPDATE chapters SET financial_report_received = ? where id = ?', [null, $chapter_id]);
-        //     DB::update('UPDATE financial_report SET farthest_step_visited_coord = ? where chapter_id = ?', [13, $chapter_id]);
-        //     // DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [null, $chapter_id]);
-        //     DB::update('UPDATE financial_report SET submitted = ? where chapter_id = ?', [null, $chapter_id]);
-
-        //     return redirect()->back()->with('success', 'Report has been successfully Unsubmitted');
-        //     exit;
-        // } elseif (! $reportReceived && $submitType == 'review_clear') {
-        //     DB::update('UPDATE chapters SET financial_report_received = ? where id = ?', [1, $chapter_id]);
-        //     DB::update('UPDATE chapters SET financial_report_complete = ? where id = ?', [null, $chapter_id]);
-        //     DB::update('UPDATE financial_report SET farthest_step_visited_coord = ? where chapter_id = ?', [13, $chapter_id]);
-        //     DB::update('UPDATE financial_report SET review_complete = ? where chapter_id = ?', [null, $chapter_id]);
-
-        //     return redirect()->back()->with('success', 'Review Complete has been successfully cleared');
-        //     exit;
-        // } else {
-
             $step_1_notes_log = $input['Step1_Log'];
             $step_2_notes_log = $input['Step2_Log'];
             $step_3_notes_log = $input['Step3_Log'];
@@ -5184,8 +4854,6 @@ class ChapterController extends Controller
             $post_balance = $input['post_balance'];
             $post_balance = str_replace(',', '', $post_balance);
             $post_balance = $post_balance === '' ? null : $post_balance;
-
-            // $post_balance = isset($input['post_balance']) ? $input['post_balance'] : null;
 
             //Step 9 - Questions
             $check_purchased_pins = isset($input['checkPurchasedPins']) ? $input['checkPurchasedPins'] : null;
@@ -5322,8 +4990,6 @@ class ChapterController extends Controller
             }
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
-        // }
-
     }
 
     /**
@@ -5331,15 +4997,12 @@ class ChapterController extends Controller
      */
     public function showStatusView(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->Coordinators;
-        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -5429,15 +5092,12 @@ class ChapterController extends Controller
      */
     public function showAttachmentView(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
         if (! $user) {
             return redirect()->route('home');
         }
 
         $corDetails = $user->Coordinators;
-        // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return redirect()->route('home');
         }
@@ -5504,7 +5164,6 @@ class ChapterController extends Controller
      */
     public function showChapterView(Request $request, $id)
     {
-
         $user = $request->user();
         $user_type = $user->user_type;
 

@@ -452,24 +452,6 @@ class CoordinatorController extends Controller
     }
 
     /**
-     * Update Coordinator Email (store)
-     */
-    // public function update2(Request $request, $id): RedirectResponse
-    // {
-    //     $corDetails = User::find($request->user()->id)->Coordinators;
-    //     $corId = $corDetails['id'];
-    //     $name = $corDetails['first_name'];
-    //     $cordinatorId = $id;
-    //     if ($request->input('cord_email') != $request->input('cord_email_chk')) {
-    //         DB::table('coordinators')
-    //             ->where('id', $cordinatorId)
-    //             ->update(['email' => $request->input('cord_email')]);
-    //     }
-
-    //     return redirect()->to('/coordinatorlist')->with('success', 'Coordinator email updated successfully.');
-    // }
-
-    /**
      * Update Coordinator (store)
      */
     public function update(Request $request, $id): RedirectResponse
@@ -532,11 +514,17 @@ class CoordinatorController extends Controller
         $corConfId = $corDetails['conference_id'];
         $corPosId = $corDetails['position_id'];
         $corRegId = $corDetails['region_id'];
+
         $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
             ->where('cd.is_active', '=', '1')
             ->where('cd.id', '=', $id)
             ->get();
+
+        $conference_id = $coordinatorDetails[0]->conference_id;
+        $position_id = $coordinatorDetails[0]->position_id;
+        $region_id = $coordinatorDetails[0]->region_id;
+
         $stateArr = DB::table('state')
             ->select('state.*')
             ->orderBy('id')
@@ -545,58 +533,34 @@ class CoordinatorController extends Controller
             ->select('country.*')
             ->orderBy('id')
             ->get();
+        // $regionList = DB::table('region')
+        //     ->select('id', 'long_name')
+        //     ->where('conference_id', '=', $corConfId)
+        //     ->orderBy('long_name')
+        //     ->get();
         $regionList = DB::table('region')
             ->select('id', 'long_name')
-            ->where('conference_id', '=', $corConfId)
+            ->where('conference_id', '=', $conference_id)
             ->orderBy('long_name')
             ->get();
         $confList = DB::table('conference')
             ->select('id', 'conference_name')
-            ->where('id', '>=', 0)
+            // ->where('id', '>=', 0)
             ->orderBy('conference_name')
             ->get();
         $positionList = DB::table('coordinator_position')
-            ->select('id', 'long_title')
+            ->select('id', 'long_title', 'level_id')
             ->orderBy('id')
             ->get();
 
-        $conference_id = $coordinatorDetails[0]->conference_id;
-        $position_id = $coordinatorDetails[0]->position_id;
-        $region_id = $coordinatorDetails[0]->region_id;
-
         /***Query For Report To in Frst Section */
-        if ($region_id > 0 && $position_id < 6) {
+        if ($region_id == 0) {
             $primaryCoordinatorList = DB::table('coordinators as cd')
                 ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
                 ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                ->where(function ($query) use ($conference_id, $position_id, $region_id) {
-                    $query->where('cd.conference_id', $conference_id)
-                        ->where('cd.position_id', '>', $position_id)
-                        ->where('cd.position_id', '>', 1)
-                        ->where('cd.region_id', $region_id)
-                        ->where('cd.is_active', 1);
-                })
-                ->orWhere(function ($query) use ($conference_id) {
-                    $query->where('cd.position_id', 6)
-                        ->where('cd.conference_id', $conference_id)
-                        ->where('cd.is_active', 1);
-                })
-                ->orWhere(function ($query) use ($conference_id) {
-                    $query->where('cd.position_id', 25)
-                        ->where('cd.conference_id', $conference_id)
-                        ->where('cd.is_active', 1);
-                })
-                ->orderBy('cd.position_id')
-                ->orderBy('cd.first_name')
-                ->orderBy('cd.last_name')
-                ->get();
-
-        } elseif ($conference_id > 0) {
-            $primaryCoordinatorList = DB::table('coordinators as cd')
-                ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-                ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                ->where('cd.position_id', '>', 1)
                 ->where('cd.conference_id', $conference_id)
+                ->where('cd.position_id', '>', $position_id)
+                ->where('cd.position_id', '>', 1)
                 ->where('cd.is_active', 1)
                 ->orderBy('cd.position_id')
                 ->orderBy('cd.first_name')
@@ -605,14 +569,20 @@ class CoordinatorController extends Controller
 
         } else {
             $primaryCoordinatorList = DB::table('coordinators as cd')
-                ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
-                ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                ->where('cd.is_active', 1)
-                ->orderBy('cd.position_id')
-                ->orderBy('cd.first_name')
-                ->orderBy('cd.last_name')
-                ->get();
-
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+            ->where('cd.conference_id', $conference_id)
+            ->where('cd.position_id', '>', $position_id)
+            ->where('cd.position_id', '>', 1)
+            ->where(function($query) use ($region_id) {
+                $query->where('cd.region_id', $region_id)
+                      ->orWhereIn('cd.position_id', [6, 7]);
+            })
+            ->where('cd.is_active', 1)
+            ->orderBy('cd.position_id')
+            ->orderBy('cd.first_name')
+            ->orderBy('cd.last_name')
+            ->get();
         }
 
         if ($region_id > 0) {
@@ -1180,13 +1150,13 @@ class CoordinatorController extends Controller
         $position_id = $_GET['pos_id'];
         $region_id = $_GET['reg_id'];
 
-        if ($region_id > 0 && $position_id < 6) {
+        if ($region_id > 0 && $position_id < 7) {
             $reportCoordinatorList = DB::select(DB::raw("SELECT cd.id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos
                                         FROM coordinators as cd
                                         INNER JOIN coordinator_position as cp ON cd.position_id=cp.id
                                         WHERE (cd.conference_id = $conference_id AND cd.position_id > $position_id AND cd.position_id > 1 AND cd.region_id = $region_id AND cd.is_active=1)
+                                        OR (cd.position_id = 7 AND cd.conference_id = $conference_id AND cd.is_active=1)
                                         OR (cd.position_id = 6 AND cd.conference_id = $conference_id AND cd.is_active=1)
-                                        OR (cd.position_id = 25 AND cd.conference_id = $conference_id AND cd.is_active=1)
                                         ORDER BY cd.position_id,cd.first_name, cd.last_name"));
         } elseif ($conference_id > 0) {
             $reportCoordinatorList = DB::select(DB::raw("SELECT cd.id as cid,cd.first_name as cor_f_name,cd.last_name as cor_l_name,cp.short_title as pos

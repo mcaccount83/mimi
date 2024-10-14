@@ -52,47 +52,59 @@
 					  </div>
 					</div>
 
-                  <div class="col-sm-4">
-                    <div class="form-group">
-                    <label>Reports To</label><span class="field-required">*</span>
-                    <select name="cord_report_pc" id="cord_report_pc" class="form-control select2-sb4" style="width: 100%;" required>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Reports To</label><span class="field-required">*</span>
+                            <select name="cord_report_pc" id="cord_report_pc" class="form-control select2-sb4" style="width: 100%;" required>
+                                @foreach($primaryCoordinatorList as $pcl)
+                                    <option value="{{ $pcl->cid }}" {{ $coordinatorDetails[0]->report_id == $pcl->cid ? 'selected' : '' }}>
+                                        {{ $pcl->cor_f_name }} {{ $pcl->cor_l_name }} ({{ $pcl->pos }})
+                                    </option>
+                                @endforeach
+                            </select>
+                            <input type="hidden" name="OldReportPC" value="{{ $coordinatorDetails[0]->report_id }}">
+                        </div>
+                    </div>
 
-                       @foreach($primaryCoordinatorList as $pcl)
-                          <option value="{{$pcl->cid}}" {{$coordinatorDetails[0]->report_id == $pcl->cid  ? 'selected' : ''}}>{{$pcl->cor_f_name}} {{$pcl->cor_l_name}} ({{$pcl->pos}})</option>
-                        @endforeach
-                    </select>
-                    <input type="hidden" name="OldReportPC" value="{{$coordinatorDetails[0]->report_id}}">
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="form-group">
-                <label>Conference</label><span class="field-required">*</span>
-                <select name="cord_conf" id= "cord_conf" class="form-control select2-sb4" style="width: 100%;" required>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Conference</label><span class="field-required">*</span>
+                            <select name="cord_conf" id="cord_conf" class="form-control select2-sb4" style="width: 100%;" onChange="CheckConference(this)" required @if($positionid != 8) disabled @endif>
+                                @foreach($confList as $con)
+                                    <option value="{{ $con->id }}" {{ $coordinatorDetails[0]->conference_id == $con->id ? 'selected' : '' }}>
+                                        {{ $con->conference_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @if($positionid != 8)
+                                <input type="hidden" name="cord_conf" value="{{ $coordinatorDetails[0]->conference_id }}">
+                            @endif
+                        </div>
+                    </div>
 
-                  @foreach($confList as $con)
-                      <option value="{{$con->id}}" {{$coordinatorDetails[0]->conference_id == $con->id  ? 'selected' : ''}}>{{$con->conference_name}}</option>
-                    @endforeach
-                </select>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="form-group">
-                <label>Region</label><span class="field-required">*</span>
-                <select name="cord_region" id="cord_region" class="form-control select2-sb4" style="width: 100%;" required>
-                    <option value="0" {{$coordinatorDetails[0]->region_id == 0  ? 'selected' : ''}}>None</option>
-                    @foreach($regionList as $reg)
-                      <option value="{{$reg->id}}" {{$coordinatorDetails[0]->region_id == $reg->id  ? 'selected' : ''}}>{{$reg->long_name}}</option>
-                    @endforeach
-                </select>
-                </div>
-            </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label>Region</label><span class="field-required">*</span>
+                            <select name="cord_region" id="cord_region" class="form-control select2-sb4" style="width: 100%;" onChange="CheckRegion(this)" required >
+                                <option value="0" {{ $coordinatorDetails[0]->region_id == 0 ? 'selected' : '' }}>None</option>
+                                @foreach($regionList as $reg)
+                                    <option value="{{ $reg->id }}" {{ $coordinatorDetails[0]->region_id == $reg->id ? 'selected' : '' }}>
+                                        {{ $reg->long_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
             <div class="col-sm-4">
                 <div class="form-group">
                 <label>Primary Position for Display</label><span class="field-required">*</span>
-                <select name="cord_disp_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)">
+                <select name="cord_disp_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" required>
                     <option value=""></option>
                     @foreach($positionList as $pos)
-                      <option value="{{$pos->id}}" {{$coordinatorDetails[0]->display_position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
+                    @if($positionid == 8 || $pos->level_id == 2)  <!-- Show all if position_id is 8, otherwise restrict to level_id == 2 -->
+                    <option value="{{$pos->id}}" {{$coordinatorDetails[0]->display_position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
+                        @endif
                     @endforeach
                 </select>
                 </div>
@@ -103,7 +115,9 @@
 						<label>Primary Position for MIMI Purposes</label><span class="field-required">*</span>
 						<select name="cord_pri_pos" id="cord_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)" required>
 							@foreach($positionList as $pos)
-							  <option value="{{$pos->id}}" {{$coordinatorDetails[0]->position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
+                                @if($pos->id >= 1 && $pos->id <= 7)  <!-- Show only positions with ID 1-7 -->
+                                <option value="{{$pos->id}}" {{$coordinatorDetails[0]->position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
+                                @endif
 							@endforeach
 						</select>
 						</div>
@@ -123,7 +137,9 @@
 						<select name="cord_sec_pos" class="form-control select2-sb4" style="width: 100%;" onChange="CheckPromotion(this)">
 							<option value=""></option>
 							@foreach($positionList as $pos)
-							  <option value="{{$pos->id}}" {{$coordinatorDetails[0]->sec_position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
+                            @if($positionid == 8 || $pos->level_id == 2)  <!-- Show all if position_id is 8, otherwise restrict to level_id == 2 -->
+                            <option value="{{$pos->id}}" {{$coordinatorDetails[0]->sec_position_id == $pos->id  ? 'selected' : ''}}>{{$pos->long_title}}</option>
+                              @endif
 							@endforeach
 						</select>
 						</div>
@@ -165,7 +181,6 @@
             <div class="col-12 text-center">
                 <p><b>Primary Position for Display</b> is required and used to display Coordinator's Title in Correspondence and Reporting Tree.<br>
             <b>Primary Position for MIMI Purposes</b> is required adn used for assigning chapters to a Coordintoar and for all Menus/Visibility options to works correctly based on the role.<br>
-                    For assigning chapters, Coordinators should be assigned a MIMI role of BS, AC, AC, ARC, RC, ACC or CC.<br>
             <b>Seconary Position</b> is optional and used to display Coordinator's Title in Correspondene and for all Menus/Visilbity options based on the role.</p>
         </div>
 
@@ -449,108 +464,60 @@
 @endsection
 @section('customscript')
 <script>
- $(document).ready(function() {
-	$('select[name="cord_conf"]').on('change', function() {
-            var confID = $(this).val();
-			if(confID) {
-                $.ajax({
-                    url: '{{ url("/get.region/") }}' + '/' + confID,
-                    type: "GET",
-                    dataType: "json",
-                    success:function(data) {
-						$('select[name="cord_region"]').empty();
-						$('select[name="cord_report"]').empty();
-						$('select[name="SelectCoordinator"]').empty();
-						$('#cord_region').html(data.html);
-                    }
-				});
-		    }else{
-                $('select[name="cord_region"]').empty();
-            }
-        });
+$(document).ready(function() {
+    // When the Conference dropdown changes
+    $('select[name="cord_conf"]').on('change', function() {
+        var confID = $(this).val();
+        console.log("Conference changed, ID:", confID); // Debugging
 
-		$('select[name="cord_region"]').on('change', function() {
-            var regID = $(this).val();
-			var confID = $('#cord_conf').val();
-			var posID = $('#cord_pos').val();
-            if(confID) {
-               	$.ajax({
-                    url: '{{ url("/get.reporting") }}',
-                    type: "GET",
-                    dataType: "json",
-					data: {conf_id: confID, reg_id: regID, pos_id: posID},
-                    success:function(data) {
-						$('select[name="cord_report"]').empty();
-						$('select[name="SelectCoordinator"]').empty();
-						$('#cord_report').html(data.html);
-                    }
-				});
-            }else{
-                $('select[name="cord_report"]').empty();
-            }
-        });
+        if(confID) {
+            $.ajax({
+                url: '{{ url("/getregion/") }}' + '/' + confID,
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    console.log("Regions fetched successfully:", data);  // Debugging
+                    $('select[name="cord_region"]').empty().html(data.html);
 
-		$('select[name="cord_region"]').on('change', function() {
-            var regID = $('#cord_region').val();
-			var confID = $('#cord_conf').val();
-			var posID = $('#cord_pos').val();
-            if(confID) {
-               	$.ajax({
-                    url: '{{ url("/get.directreport") }}',
-                    type: "GET",
-                    dataType: "json",
-					data: {conf_id: confID, reg_id: regID, pos_id: posID},
-                    success:function(data) {
-						$('select[name="SelectCoordinator"]').empty();
-						$('#SelectCoordinator').html(data.html);
-                    }
-				});
-            }else{
-                $('select[name="SelectCoordinator"]').empty();
-            }
-        });
+                    // Clear the Reports To dropdown
+                    $('select[name="cord_report_pc"]').empty();
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching regions:", error);  // Debugging
+                }
+            });
+        } else {
+            $('select[name="cord_region"]').empty();
+            $('select[name="cord_report_pc"]').empty();
+        }
+    });
 
-		$('select[name="cord_pri_pos"]').on('change', function() {
-            var regID = $('#cord_region').val();
-			var confID = $('#cord_conf').val();
-			var posID = $('#cord_pos').val();
-            if(confID) {
-               	$.ajax({
-                    url: '{{ url("/get.directreport") }}',
-                    type: "GET",
-                    dataType: "json",
-					data: {conf_id: confID, reg_id: regID, pos_id: posID},
-                    success:function(data) {
-						$('select[name="SelectCoordinator"]').empty();
-						$('#SelectCoordinator').html(data.html);
-                    }
-				});
-            }else{
-                $('select[name="SelectCoordinator"]').empty();
-            }
-        });
+    // When the Region dropdown changes
+    $('select[name="cord_region"]').on('change', function() {
+        var regID = $(this).val();
+        var confID = $('#cord_conf').val();
+        console.log("Region changed, ID:", regID);  // Debugging
 
-		$('select[name="cord_region"]').on('change', function() {
-            var regID = $('#cord_region').val();
-			var confID = $('#cord_conf').val();
-			var posID = $('#cord_pos').val();
-            if(confID) {
-               	$.ajax({
-                    url: '{{ url("/get.chapterprimary") }}',
-                    type: "GET",
-                    dataType: "json",
-					data: {conf_id: confID, reg_id: regID, pos_id: posID},
-                    success:function(data) {
-						$('select[name="SelectChapter"]').empty();
-						$('#SelectChapter').html(data.html);
-                    }
-				});
-            }else{
-                $('select[name="SelectChapter"]').empty();
-            }
-        });
+        if(confID && regID) {
+            $.ajax({
+                url: '{{ url("/getreporting") }}',
+                type: "GET",
+                dataType: "json",
+                data: { conf_id: confID, reg_id: regID },
+                success: function(data) {
+                    console.log("Reporting coordinators fetched:", data);  // Debugging
+                    $('select[name="cord_report_pc"]').empty().html(data.html);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching reporting coordinators:", error);  // Debugging
+                }
+            });
+        } else {
+            $('select[name="cord_report_pc"]').empty();
+        }
+    });
 
-   $("#remove-leave").click(function() {
+    $("#remove-leave").click(function() {
 		$("#submit_type").val('RemoveLeave');
 		$("#role").submit();
 	});
@@ -750,68 +717,45 @@ var iCoordinatorCount = <?php echo $row_count; ?>;
 				}
 			}
 
-	// function CheckPromotion(element){
-	// 	var promotionDate = prompt("If this position change is a promotion, please enter the promotion date in the format YYYY-MM-DD.  If this position change is not a promotion, press cancel and the promotion date will not be updated.","<?php echo date("Y-m-d"); ?>");
+    function CheckRegion() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This will refresh page and update ReportTo & Chapter options for new Region.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, continue',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger',
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $("#role").submit();
+            }
+        });
+    }
 
-	// 	if (promotionDate == null) {
-	// 		return true;
-	// 	}
-	// 	else{
-
-	// 		var allowBlank = false;
-	// 		var minYear = 1980;
-	// 		var maxYear = (new Date()).getFullYear();
-
-	// 		var errorMsg = "";
-
-	// 		// regular expression to match required date format
-	// 		re = /^(\d{4})-(\d{1,2})-(\d{1,2})/;
-
-	// 		if(promotionDate != '') {
-	// 		  if(regs = promotionDate.match(re)) {
-	// 			if(regs[13] < 1 || regs[3] > 31) {
-	// 			  errorMsg = "Invalid value for day: " + regs[1];
-	// 			} else if(regs[2] < 1 || regs[2] > 12) {
-	// 			  errorMsg = "Invalid value for month: " + regs[2];
-	// 			} else if(regs[1] < minYear || regs[1] > maxYear) {
-	// 			  errorMsg = "Invalid value for year: " + regs[1] + " - must be between " + minYear + " and " + maxYear;
-	// 			}
-	// 		  } else {
-	// 			errorMsg = "Invalid date format: " + promotionDate;
-	// 		  }
-	// 		} else if(!allowBlank) {
-	// 		  errorMsg = "Empty date not allowed!";
-	// 		}
-
-	// 		var defaultReset = false;
-
-	// 		if(errorMsg != "") {
-	// 			alert(errorMsg);
-
-	// 			for (var i = 0 ; i<element.length ; i++)
-	// 			{
-	// 				if (element[i].defaultSelected){
-	// 					element.value = element[i].value;
-	// 					defaultReset = true;
-	// 				}
-	// 			}
-
-	// 			if (!defaultReset)
-	// 				element.value = 0;
-
-	// 			element.focus();
-	// 			return false;
-	// 		}
-
-	// 		var lastPromotionHidden=document.getElementById("CoordinatorPromoteDateNew");
-	// 		lastPromotionHidden.value = promotionDate;
-
-	// 		var lastPromotion=document.getElementById("CoordinatorPromoteDate");
-	// 		lastPromotion.value = promotionDate;
-
-	// 		return true;
-	// 	}
-	// }
+    function CheckConference() {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This will refresh page and update Region, ReportTo & Chapter options for new Conference.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, continue',
+            cancelButtonText: 'Cancel',
+            customClass: {
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger',
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $("#role").submit();
+            }
+        });
+    }
 
     function CheckPromotion(element) {
         const minYear = 1980;
@@ -984,70 +928,6 @@ var iCoordinatorCount = <?php echo $row_count; ?>;
         }
     }
 
-    // function PreRetireValidate(LoA=false){
-	// 	//Ensure all their chapters and coordinators have been reassigned before we allow them to be retired.
-	// 	//First, check the coordinators
-	// 	var table=document.getElementById("coordinator-list");
-	// 	var tablerowcountCord = table.rows.length;
-	// 	var i;
-	// 	var selectbox;
-	// 	var value;
-
-	// 	for(i=0; i<tablerowcountCord; i++){
-	// 		selectid = "Report" + i;
-
-	// 		value = getSelectedValue(selectid);
-	// 		if(value == <?php echo $coordinatorDetails[0]->id; ?>){
-	// 			if (LoA)
-	// 				alert ("All direct reports must be assigned to a new supervising coordinator before this coordinator can be put on a leave of absence.");
-	// 			else
-	// 				alert ("All direct reports must be assigned to a new supervising coordinator before this coordinator can be retired.");
-	// 			return false;
-	// 		}
-
-	// 	}
-
-	// 	table=document.getElementById("chapter-list");
-	// 	tablerowcountChap = table.rows.length;
-
-	// 	for(i=0; i<tablerowcountChap; i++){
-	// 		selectid = "PCID" + i;
-
-	// 		value = getSelectedValue(selectid);
-	// 		if(value == <?php echo $coordinatorDetails[0]->id; ?>){
-	// 			if (LoA)
-	// 				alert ("All assigned chapters must be assigned to a new supervising coordinator before this coordinator can be put on a leave of absence.");
-	// 			else
-	// 				alert ("All assigned chapters must be assigned to a new supervising coordinator before this coordinator can be retired.");
-	// 			return false;
-	// 		}
-	// 	}
-
-	// 	if(tablerowcountChap <= 1 && tablerowcountCord <= 1){
-	// 		if (LoA){
-	// 			$("#submit_type").val('Leave');
-	// 			return true;
-	// 		}else{
-	// 			var reason = prompt("Retiring a volunteer will remove their login to MIMI.  If you wish to continue, please enter their reason for retiring and press OK.", "");
-
-	// 			if (reason != null) {
-	// 					$("#submit_type").val('Retire');
-	// 					document.getElementById("RetireReason").value = reason;
-	// 					return true;
-	// 			}
-	// 			else
-	// 				return false;
-	// 		}
-
-	// 	}else{
-	// 		if (LoA)
-	// 				alert ("All direct reports must be assigned to a new supervising coordinator before this coordinator can be put on a leave of absence.");
-	// 			else
-	// 				alert ("All direct reports must be assigned to a new supervising coordinator before this coordinator can be retired.");
-	// 			return false;
-	// 	}
-
-	// }
 </script>
 @endsection
 
