@@ -1848,7 +1848,7 @@ class ChapterController extends Controller
                 ->orderBy('st.state_short_name')
                 ->get();
 
-        } elseif ($positionId >= 6 && $positionId <= 7 || $positionId == 15) {
+        } elseif ($positionId >= 6 && $positionId <= 7 || $positionId == 15 || $secPositionId == 15) {
             $inquiriesList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.inquiries_contact as inq_con', 'chapters.territory as terry', 'chapters.status as status', 'chapters.inquiries_note as inq_note', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'cd.email as cd_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'st.state_short_name as state')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
