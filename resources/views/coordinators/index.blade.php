@@ -32,7 +32,7 @@
                 <thead>
                   <tr>
                     <th>Details</th>
-                    <th>Region</th>
+                    <th>Conf/Reg</th>
                     <th>First Name</th>
 					<th>Last Name</th>
 					<th>Primary Position</th>
@@ -48,7 +48,13 @@
                   @foreach($coordinatorList as $list)
                     <tr>
                       <td><center><a href="<?php echo url("/coordinator/edit/{$list->cor_id}") ?>"><i class="fas fa-edit"></i></a></center></td>
-                      <td>{{ $list->reg }}</td>
+                    <td>
+                        @if ($list->reg != "None")
+                            {{ $list->conf }} / {{ $list->reg }}
+                        @else
+                            {{ $list->conf }}
+                        @endif
+                    </td>
                       <td>{{ $list->cor_fname }}</td>
                       <td>{{ $list->cor_lname }}</td>
                       <td>{{ $list->display_pos }}</td>
@@ -74,15 +80,13 @@
                 <div class="card-body text-center">
               <a class="btn bg-gradient-primary" href="{{ route('coordinator.create') }}"><i class="fas fa-plus" ></i>&nbsp;&nbsp;&nbsp;Add New Coordinator</a>
               <?php
-			 if($checkBoxStatus){ ?>
-				<a href="{{ route('export.coordinator',$corId) }}"><button class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export Coordinator List</button></a>
+            if($checkBoxStatus){ ?>
+				 <button class="btn bg-gradient-primary" disabled><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export Coordinator List</button></a>
 			<?php
 			 }
 			 else{ ?>
 				<a href="{{ route('export.coordinator','0') }}"><button class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export Coordinator List</button></a>
 			 <?php } ?>
-
-
               <a class="btn bg-gradient-primary" href="mailto:{{ $emailListCord }}"><i class="fas fa-envelope" ></i>&nbsp;&nbsp;&nbsp;E-mail Listed Coordinators</a>
             </div>
          </div>
@@ -107,5 +111,6 @@ function showPrimary() {
         window.location.href = base_url;
     }
 }
+
 </script>
 @endsection

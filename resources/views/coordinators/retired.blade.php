@@ -5,7 +5,7 @@
         <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-            <h1>Rtired Coordinator List</h1>
+            <h1>Retired Coordinator List</h1>
             </div>
             <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -32,6 +32,7 @@
               <thead>
 			    <tr>
 				  <th>Details</th>
+                  <th>Conf/Reg</th>
 				   <th>First Name</th>
                   <th>Last Name</th>
                   <th>Position</th>
@@ -43,6 +44,13 @@
                 @foreach($retiredCoordinatorList as $list)
                   <tr>
                         <td><center><a href="<?php echo url("/coordinator/retired/view/{$list->cor_id}") ?>"><i class="fas fa-eye"></i></a></center></td>
+                        <td>
+                            @if ($list->reg != "None")
+                                {{ $list->conf }} / {{ $list->reg }}
+                            @else
+                                {{ $list->conf }}
+                            @endif
+                        </td>
                         <td>{{ $list->cor_fname }}</td>
                         <td>{{ $list->cor_lname }}</td>
                         <td>{{ $list->position }}</td>

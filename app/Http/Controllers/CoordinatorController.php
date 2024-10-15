@@ -73,88 +73,65 @@ class CoordinatorController extends Controller
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
+        $corRegId = $corDetails['region_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
 
-        if ($corId == 25 || $positionId == 25) {
-            //Get Coordinator Reporting Tree
-            $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                ->select('crt.id')
-                ->where('crt.layer1', '=', '6')
-                ->get();
+        if ($positionId <= 8) {
+            if ($positionId >= 5 && $positionId <= 7) {
+                //Show Full Conference or Region
+                $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                    ->select('crt.id')
+                    ->get();
+            } else {
+                //Get Coordinator Reporting Tree
+                $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                    ->select('crt.id')
+                    ->where($sqlLayerId, '=', $corId)
+                    ->get();
+            }
+            $inQryStr = '';
+            foreach ($reportIdList as $key => $val) {
+                $inQryStr .= $val->id.',';
+            }
+            $inQryStr = rtrim($inQryStr, ',');
+            $inQryArr = explode(',', $inQryStr);
+        }
+
+        $baseQuery = DB::table('coordinators as cd')
+        ->select('cd.id as cor_id', 'cd.home_chapter as cor_chapter', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
+            'cd.phone as cor_phone', 'cd.report_id as report_id', 'cp.short_title as position', 'pos2.long_title as sec_pos', 'pos3.long_title as display_pos',
+            'cd.conference_id as conf', 'cd.coordinator_start_date as coordinator_start_date', 'rg.short_name as reg', 'report.first_name as report_fname',
+            'report.last_name as report_lname', 'cf.short_name as conf')
+        ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
+        ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
+        ->leftJoin('coordinator_position as pos3', 'pos3.id', '=', 'cd.display_position_id')
+        ->join('region as rg', 'rg.id', '=', 'cd.region_id')
+        ->join('conference as cf', 'cf.id', '=', 'cd.conference_id')
+        ->leftJoin('coordinators as report', 'report.id', '=', 'cd.report_id')
+        ->where('cd.is_active', '=', '1');
+
+        if ($positionId >= 6 && $positionId <= 7) {
+            $baseQuery->where('cd.conference_id', '=', $corConfId);
+        } elseif ($positionId == 5) {
+            $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
-            //Get Coordinator Reporting Tree
-            $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                ->select('crt.id')
-                ->where($sqlLayerId, '=', $corId)
-                ->get();
+            $baseQuery->whereIn('cd.report_id', $inQryArr);
         }
-        $inQryStr = '';
-        foreach ($reportIdList as $key => $val) {
-            $inQryStr .= $val->id.',';
-        }
-        $inQryStr = rtrim($inQryStr, ',');
-        $inQryArr = explode(',', $inQryStr);
 
-        //Get Coordinator List mapped with login coordinator
-        if ($positionId == 8) {
-            $coordinatorList = DB::table('coordinators as cd')
-                ->select('cd.id as cor_id', 'cd.home_chapter as cor_chapter', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
-                    'cd.phone as cor_phone', 'cd.report_id as report_id', 'cp.short_title as position', 'pos2.long_title as sec_pos', 'pos3.long_title as display_pos',
-                    // DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
-                    'cd.conference_id as conf', 'cd.coordinator_start_date as coordinator_start_date', 'rg.short_name as reg', 'report.first_name as report_fname',
-                    'report.last_name as report_lname')
-                ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
-
-                ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
-                ->leftJoin('coordinator_position as pos3', 'pos3.id', '=', 'cd.display_position_id')
-
-                ->join('region as rg', 'rg.id', '=', 'cd.region_id')
-                ->leftJoin('coordinators as report', 'report.id', '=', 'cd.report_id')
-                ->where('cd.is_active', '=', '1')
-                ->whereIn('cd.report_id', $inQryArr)
-                // ->orderBy('cd.first_name')
-                ->orderBy('cd.coordinator_start_date')
-                ->get();
-        } elseif ($corId == 38) {
-            $coordinatorList = DB::table('coordinators as cd')
-                ->select('cd.id as cor_id', 'cd.home_chapter as cor_chapter', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
-                    'cd.phone as cor_phone', 'cd.report_id as report_id', 'cp.short_title as position', 'pos2.long_title as sec_pos', 'pos3.long_title as display_pos',
-                    // DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
-                    'cd.conference_id as conf', 'cd.coordinator_start_date as coordinator_start_date', 'rg.short_name as reg', 'report.first_name as report_fname',
-                    'report.last_name as report_lname')
-                ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
-                ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
-                ->leftJoin('coordinator_position as pos3', 'pos3.id', '=', 'cd.display_position_id')
-
-                ->join('region as rg', 'rg.id', '=', 'cd.region_id')
-                ->leftJoin('coordinators as report', 'report.id', '=', 'cd.report_id')
-                ->where('cd.is_active', '=', '1')
-                ->where('cd.region_id', '=', '15')
-                // ->orderBy('cd.first_name')
-                ->orderBy('cd.coordinator_start_date')
-                ->get();
+        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
+            $checkBoxStatus = 'checked';
+            $baseQuery->where('cd.report_id', $corId)
+                ->where('cd.id', '!=', $corId)
+                ->orderBy('cd.coordinator_start_date');
         } else {
-            $coordinatorList = DB::table('coordinators as cd')
-                ->select('cd.id as cor_id', 'cd.home_chapter as cor_chapter', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
-                    'cd.phone as cor_phone', 'cd.report_id as report_id', 'cp.short_title as position', 'pos2.long_title as sec_pos', 'pos3.long_title as display_pos',
-                    // DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
-                    'cd.conference_id as conf', 'cd.coordinator_start_date as coordinator_start_date', 'rg.short_name as reg', 'report.first_name as report_fname',
-                    'report.last_name as report_lname')
-                ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
-                ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
-                ->leftJoin('coordinator_position as pos3', 'pos3.id', '=', 'cd.display_position_id')
-
-                ->join('region as rg', 'rg.id', '=', 'cd.region_id')
-                ->leftJoin('coordinators as report', 'report.id', '=', 'cd.report_id')
-                ->where('cd.is_active', '=', '1')
-                ->where('cd.conference_id', '=', $corConfId)
-                ->whereIn('cd.report_id', $inQryArr)
-                // ->orderBy('cd.first_name')
-                ->orderBy('cd.coordinator_start_date')
-                ->get();
+            $checkBoxStatus = '';
+            $baseQuery->where('cd.id', '!=', $corId)
+            ->orderBy('cd.coordinator_start_date');
         }
+
+        $coordinatorList = $baseQuery->get();
 
         //Get the e-mail addresses for all the listed coordinators
         $emailListCord = '';
@@ -170,40 +147,6 @@ class CoordinatorController extends Controller
             }
         }
 
-        if (isset($_GET['check'])) {
-            if ($_GET['check'] == 'yes') {
-                $checkBoxStatus = 'checked';
-                //Get Coordinator List mapped with login coordinator
-                $coordinatorList = DB::table('coordinators as cd')
-                    ->select('cd.id as cor_id', 'cd.home_chapter as cor_chapter', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
-                        'cd.phone as cor_phone', 'cd.report_id as report_id', 'cp.long_title as position',
-                        DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
-                        'cd.conference_id as conf', 'cd.coordinator_start_date as coordinator_start_date', 'rg.short_name as reg', 'report.first_name as report_fname',
-                        'report.last_name as report_lname')
-                    ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
-                    ->join('region as rg', 'rg.id', '=', 'cd.region_id')
-                    ->leftJoin('coordinators as report', 'report.id', '=', 'cd.report_id')
-                    ->where('cd.is_active', '=', '1')
-                    ->where('cd.report_id', $corId)
-                    ->orderBy('cd.first_name')
-                    ->get();
-                //Get the e-mail addresses for all the listed coordinators
-                $emailListCord = '';
-                $row_count = count($coordinatorList);
-                for ($row = 0; $row < $row_count; $row++) {
-                    $email = $coordinatorList[$row]->cor_email;
-                    $escaped_email = str_replace("'", "\\'", $email);
-
-                    if ($emailListCord == '') {
-                        $emailListCord = $escaped_email;
-                    } else {
-                        $emailListCord .= ';'.$escaped_email;
-                    }
-                }
-            }
-        } else {
-            $checkBoxStatus = '';
-        }
         $countList = count($coordinatorList);
         $data = ['countList' => $countList, 'corId' => $corId, 'coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus, 'emailListCord' => $emailListCord];
 
@@ -1389,28 +1332,32 @@ class CoordinatorController extends Controller
      */
     public function showRetiredCoordinator(Request $request): View
     {
-        //Get Coordinator Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $positionId = $corDetails['position_id'];
+         //Get Coordinator Details
+         $corDetails = User::find($request->user()->id)->Coordinators;
+         $corConfId = $corDetails['conference_id'];
+         $corRegId = $corDetails['region_id'];
+         $positionId = $corDetails['position_id'];
 
-        if ($positionId == 8 || $positionId == 13) {
-            $retiredCoordinatorList = DB::table('coordinators as cd')
-                ->select('cd.id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.reason_retired as cor_reason', 'cd.zapped_date as cor_zapdate', 'cp.long_title as position')
-                ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
-                ->where('cd.is_active', '=', '0')
-                ->orderByDesc('cd.zapped_date')
-                ->get();
-        } else {
-            $retiredCoordinatorList = DB::table('coordinators as cd')
-                ->select('cd.id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.reason_retired as cor_reason', 'cd.zapped_date as cor_zapdate', 'cp.long_title as position')
-                ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
-                ->where('cd.is_active', '=', '0')
-                ->where('cd.conference_id', $corConfId)
-                ->orderByDesc('cd.zapped_date')
-                ->get();
-        }
+         $baseQuery = DB::table('coordinators as cd')
+            ->select('cd.id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.reason_retired as cor_reason', 'cd.zapped_date as cor_zapdate',
+                'cp.long_title as position', 'rg.short_name as reg', 'cf.short_name as conf')
+            ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
+            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
+            ->leftJoin('coordinator_position as pos3', 'pos3.id', '=', 'cd.display_position_id')
+            ->join('region as rg', 'rg.id', '=', 'cd.region_id')
+            ->join('conference as cf', 'cf.id', '=', 'cd.conference_id')
+            ->where('cd.is_active', '=', '0');
+
+         if ($positionId >= 6 && $positionId <= 7) {
+             $baseQuery->where('cd.conference_id', '=', $corConfId);
+         } elseif ($positionId == 5) {
+             $baseQuery->where('cd.region_id', '=', $corRegId);
+         } else {
+             $baseQuery;
+         }
+
+         $retiredCoordinatorList = $baseQuery->get();
+
         //Get Coordinator List mapped with login coordinator
         $data = ['retiredCoordinatorList' => $retiredCoordinatorList];
 
@@ -1662,17 +1609,17 @@ class CoordinatorController extends Controller
             ->where('cd.is_active', '=', '1')
             ->get();
 
-        $directChapterTo = DB::table('chapters as ch')
-            ->select('ch.id as ch_id', 'ch.name as ch_name', 'st.state_short_name as st_name')
-            ->join('state as st', 'ch.state', '=', 'st.id')
-            ->where('ch.primary_coordinator_id', '=', $id)
-            ->where('ch.is_active', '=', '1')
-            ->get();
+        // $directChapterTo = DB::table('chapters as ch')
+        //     ->select('ch.id as ch_id', 'ch.name as ch_name', 'st.state_short_name as st_name')
+        //     ->join('state as st', 'ch.state', '=', 'st.id')
+        //     ->where('ch.primary_coordinator_id', '=', $id)
+        //     ->where('ch.is_active', '=', '1')
+        //     ->get();
 
-        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
-        $currentMonth = $coordinatorDetails[0]->birthday_month_id;
+        // $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
+        // $currentMonth = $coordinatorDetails[0]->birthday_month_id;
 
-        $data = ['directChapterTo' => $directChapterTo, 'directReportTo' => $directReportTo, 'primaryCoordinatorList' => $primaryCoordinatorList, 'positionList' => $positionList, 'confList' => $confList, 'currentMonth' => $currentMonth, 'coordinatorDetails' => $coordinatorDetails, 'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
+        $data = ['directReportTo' => $directReportTo, 'primaryCoordinatorList' => $primaryCoordinatorList, 'positionList' => $positionList, 'confList' => $confList, 'coordinatorDetails' => $coordinatorDetails, 'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, ];
 
         return view('coordinators.appreciation')->with($data);
     }
@@ -1782,14 +1729,14 @@ class CoordinatorController extends Controller
             ->where('cd.is_active', '=', '1')
             ->get();
 
-        $directChapterTo = DB::table('chapters as ch')
-            ->select('ch.id as ch_id', 'ch.name as ch_name', 'st.state_short_name as st_name')
-            ->join('state as st', 'ch.state', '=', 'st.id')
-            ->where('ch.primary_coordinator_id', '=', $id)
-            ->where('ch.is_active', '=', '1')
-            ->get();
+        // $directChapterTo = DB::table('chapters as ch')
+        //     ->select('ch.id as ch_id', 'ch.name as ch_name', 'st.state_short_name as st_name')
+        //     ->join('state as st', 'ch.state', '=', 'st.id')
+        //     ->where('ch.primary_coordinator_id', '=', $id)
+        //     ->where('ch.is_active', '=', '1')
+        //     ->get();
 
-        $data = ['directChapterTo' => $directChapterTo, 'directReportTo' => $directReportTo, 'primaryCoordinatorList' => $primaryCoordinatorList, 'positionList' => $positionList, 'confList' => $confList, 'coordinatorDetails' => $coordinatorDetails, 'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr];
+        $data = ['directReportTo' => $directReportTo, 'primaryCoordinatorList' => $primaryCoordinatorList, 'positionList' => $positionList, 'confList' => $confList, 'coordinatorDetails' => $coordinatorDetails, 'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr];
 
         return view('coordinators.birthday')->with($data);
     }
