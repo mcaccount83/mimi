@@ -1216,55 +1216,55 @@ class ChapterController extends Controller
                     ->queue(new ChaptersPrimaryCoordinatorChangePCNotice($mailData));
             }
 
-            //Website Notifications//
-            $cor_details = db::table('coordinators')
-                ->select('email')
-                ->where('conference_id', $corConfId)
-                ->where('position_id', 9)
-                ->where('is_active', 1)
-                ->get();
-            $row_count = count($cor_details);
-            if ($row_count == 0) {
-                $cc_details = db::table('coordinators')
-                    ->select('email')
-                    ->where('conference_id', $corConfId)
-                    ->where('position_id', 6)
-                    ->where('is_active', 1)
-                    ->get();
-                $to_email4 = $cc_details[0]->email;   //conference coordinator
-            } else {
-                $to_email4 = $cor_details[0]->email;  //website reviewer if conf has one
-            }
+            // //Website Notifications//
+            // $cor_details = db::table('coordinators')
+            //     ->select('email')
+            //     ->where('conference_id', $corConfId)
+            //     ->where('position_id', 9)
+            //     ->where('is_active', 1)
+            //     ->get();
+            // $row_count = count($cor_details);
+            // if ($row_count == 0) {
+            //     $cc_details = db::table('coordinators')
+            //         ->select('email')
+            //         ->where('conference_id', $corConfId)
+            //         ->where('position_id', 6)
+            //         ->where('is_active', 1)
+            //         ->get();
+            //     $to_email4 = $cc_details[0]->email;   //conference coordinator
+            // } else {
+            //     $to_email4 = $cor_details[0]->email;  //website reviewer if conf has one
+            // }
 
-            if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
-                $chapterDetails = Chapter::find($chapterId);
-                $stateArr = DB::table('state')
-                    ->select('state.*')
-                    ->orderBy('id')
-                    ->get();
+            // if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
+            //     $chapterDetails = Chapter::find($chapterId);
+            //     $stateArr = DB::table('state')
+            //         ->select('state.*')
+            //         ->orderBy('id')
+            //         ->get();
 
-                $chapterState = DB::table('state')
-                    ->select('state_short_name')
-                    ->where('id', '=', $chapterDetails->state)
-                    ->get();
-                $chapterState = $chapterState[0]->state_short_name;
+            //     $chapterState = DB::table('state')
+            //         ->select('state_short_name')
+            //         ->where('id', '=', $chapterDetails->state)
+            //         ->get();
+            //     $chapterState = $chapterState[0]->state_short_name;
 
-                $mailData = [
-                    'chapter_name' => $request->input('ch_name'),
-                    'chapter_state' => $chapterState,
-                    'ch_website_url' => $request->input('ch_website'),
-                ];
+            //     $mailData = [
+            //         'chapter_name' => $request->input('ch_name'),
+            //         'chapter_state' => $chapterState,
+            //         'ch_website_url' => $request->input('ch_website'),
+            //     ];
 
-                if ($request->input('ch_webstatus') == 1) {
-                    Mail::to($to_email4)
-                        ->queue(new WebsiteAddNoticeAdmin($mailData));
-                }
+            //     if ($request->input('ch_webstatus') == 1) {
+            //         Mail::to($to_email4)
+            //             ->queue(new WebsiteAddNoticeAdmin($mailData));
+            //     }
 
-                if ($request->input('ch_webstatus') == 2) {
-                    Mail::to($to_email4)
-                        ->queue(new WebsiteReviewNotice($mailData));
-                }
-            }
+            //     if ($request->input('ch_webstatus') == 2) {
+            //         Mail::to($to_email4)
+            //             ->queue(new WebsiteReviewNotice($mailData));
+            //     }
+            // }
 
             //Update Chapter MailData//
             $presInfoUpd = DB::table('chapters')
@@ -2387,55 +2387,55 @@ class ChapterController extends Controller
                 'social3' => $request->input('ch_social3'),
                 'website_notes' => $request->input('ch_notes')]);
 
-        //Website Notifications//
-        $cor_details = db::table('coordinators')
-            ->select('email')
-            ->where('conference_id', $corConfId)
-            ->where('position_id', 9)
-            ->where('is_active', 1)
-            ->get();
-        $row_count = count($cor_details);
-        if ($row_count == 0) {
-            $cc_details = db::table('coordinators')
-                ->select('email')
-                ->where('conference_id', $corConfId)
-                ->where('position_id', 6)
-                ->where('is_active', 1)
-                ->get();
-            $to_email4 = $cc_details[0]->email;    //conference coordinator
-        } else {
-            $to_email4 = $cor_details[0]->email;   //website reviewer if conf has one
-        }
+        // //Website Notifications//
+        // $cor_details = db::table('coordinators')
+        //     ->select('email')
+        //     ->where('conference_id', $corConfId)
+        //     ->where('position_id', 9)
+        //     ->where('is_active', 1)
+        //     ->get();
+        // $row_count = count($cor_details);
+        // if ($row_count == 0) {
+        //     $cc_details = db::table('coordinators')
+        //         ->select('email')
+        //         ->where('conference_id', $corConfId)
+        //         ->where('position_id', 6)
+        //         ->where('is_active', 1)
+        //         ->get();
+        //     $to_email4 = $cc_details[0]->email;    //conference coordinator
+        // } else {
+        //     $to_email4 = $cor_details[0]->email;   //website reviewer if conf has one
+        // }
 
-        if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
-            $chapterDetails = Chapter::find($id);
-            $stateArr = DB::table('state')
-                ->select('state.*')
-                ->orderBy('id')
-                ->get();
+        // if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
+        //     $chapterDetails = Chapter::find($id);
+        //     $stateArr = DB::table('state')
+        //         ->select('state.*')
+        //         ->orderBy('id')
+        //         ->get();
 
-            $chapterState = DB::table('state')
-                ->select('state_short_name')
-                ->where('id', '=', $chapterDetails->state)
-                ->get();
-            $chapterState = $chapterState[0]->state_short_name;
+        //     $chapterState = DB::table('state')
+        //         ->select('state_short_name')
+        //         ->where('id', '=', $chapterDetails->state)
+        //         ->get();
+        //     $chapterState = $chapterState[0]->state_short_name;
 
-            $mailData = [
-                'chapter_name' => $request->input('ch_name'),
-                'chapter_state' => $chapterState,
-                'ch_website_url' => $request->input('ch_website'),
-            ];
+        //     $mailData = [
+        //         'chapter_name' => $request->input('ch_name'),
+        //         'chapter_state' => $chapterState,
+        //         'ch_website_url' => $request->input('ch_website'),
+        //     ];
 
-            if ($request->input('ch_webstatus') == 1) {
-                Mail::to($to_email4)
-                    ->queue(new WebsiteAddNoticeAdmin($mailData));
-            }
+        //     if ($request->input('ch_webstatus') == 1) {
+        //         Mail::to($to_email4)
+        //             ->queue(new WebsiteAddNoticeAdmin($mailData));
+        //     }
 
-            if ($request->input('ch_webstatus') == 2) {
-                Mail::to($to_email4)
-                    ->queue(new WebsiteReviewNotice($mailData));
-            }
-        }
+        //     if ($request->input('ch_webstatus') == 2) {
+        //         Mail::to($to_email4)
+        //             ->queue(new WebsiteReviewNotice($mailData));
+        //     }
+        // }
 
         return redirect()->to('/chapter/website')->with('success', 'Chapter Website has been changed successfully.');
     }
