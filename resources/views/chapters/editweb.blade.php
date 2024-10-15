@@ -74,62 +74,59 @@
             <!-- /.card-header -->
             <div class="card-body">
                 <div class="row">
-      <!-- /.form group -->
-              <div class="col-sm-6">
-                <div class="form-group">
-                  <label>Chapter Website</label>
-                  <input type="text" name="ch_website" class="form-control" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}" maxlength="50" id="validate_url" onchange="is_url(); updateWebsiteStatus();">
-                </div>
-                </div>
-                  <!-- /.form group -->
-                  <div class="col-sm-6">
+                <!-- /.form group -->
+                <div class="col-sm-6">
                     <div class="form-group">
-                        <label>Website Link Status</label> <span class="field-required">*</span>
-                        <select id="ch_webstatus" name="ch_webstatus" class="form-control select2-sb4" style="width: 100%;" required>
-                            <option value="0" id="option0" {{$chapterList[0]->website_status == 0 ? 'selected' : ''}} disabled>Website Not Linked</option>
-                            <option value="1" id="option1" {{$chapterList[0]->website_status == 1 ? 'selected' : ''}}>Website Linked</option>
-                            <option value="2" id="option2" {{$chapterList[0]->website_status == 2 ? 'selected' : ''}}>Add Link Requested</option>
-                            <option value="3" id="option3" {{$chapterList[0]->website_status == 3 ? 'selected' : ''}}>Do Not Link</option>
-                        </select>
-                        <input type="hidden" name="ch_hid_webstatus" value="{{ $chapterList[0]->website_status }}">
+                      <label>Chapter Website</label>
+                      <input type="text" name="ch_website" class="form-control" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}" maxlength="50" id="validate_url" onchange="is_url(); updateWebsiteStatus();">
                     </div>
-                </div>
-              <!-- /.form group -->
-             <div class="col-sm-12">
-              <div class="form-group">
-                <label>Web Reviewer Notes (not visible to board members)</label>
-                <input type="text" name="ch_notes" class="form-control" value="{{ $chapterList[0]->website_notes}}">
-              </div>
-              </div>
-              <!-- /.form group -->
+                    </div>
+                      <!-- /.form group -->
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Website Link Status</label> <span class="field-required">*</span>
+                            <select id="ch_webstatus" name="ch_webstatus" class="form-control select2-bs4" style="width: 100%;" required>
+                                <option value="0" id="option0" {{$chapterList[0]->website_status == 0 ? 'selected' : ''}} disabled>Website Not Linked</option>
+                                <option value="1" id="option1" {{$chapterList[0]->website_status == 1 ? 'selected' : ''}}>Website Linked</option>
+                                <option value="2" id="option2" {{$chapterList[0]->website_status == 2 ? 'selected' : ''}}>Add Link Requested</option>
+                                <option value="3" id="option3" {{$chapterList[0]->website_status == 3 ? 'selected' : ''}}>Do Not Link</option>
+                            </select>
+
+                            <input type="hidden" name="ch_hid_webstatus" value="{{ $chapterList[0]->website_status }}">
+                        </div>
+                    </div>
+                <!-- /.form group -->
               <div class="col-sm-12">
               <div class="form-group">
-                <label>Online Discussion Group (Meetup, Google Groups, Etc)</label>
-                <input type="text" name="ch_onlinediss" class="form-control" value="{{ $chapterList[0]->egroup}}">
+                <label>Online Discussion Group (Meetup, Google Groups, etc)</label>
+                <input type="text" name="ch_onlinediss" class="form-control" value="{{ $chapterList[0]->egroup}}" maxlength="50" >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-4">
               <div class="form-group">
                 <label>Facebook</label>
-                <input type="text" name="ch_social1" class="form-control" value="{{ $chapterList[0]->social1}}">
+                <input type="text" name="ch_social1" class="form-control" value="{{ $chapterList[0]->social1}}" maxlength="50" >
               </div>
               </div>
-             <!-- /.form group -->
+              <!-- /.form group -->
               <div class="col-sm-4">
               <div class="form-group">
                 <label>Twitter</label>
-                <input type="text" name="ch_social2" class="form-control" value="{{ $chapterList[0]->social2}}">
+                <input type="text" name="ch_social2" class="form-control" value="{{ $chapterList[0]->social2}}" maxlength="50" >
               </div>
-              </div><!-- /.form group -->
+              </div>
+              <!-- /.form group -->
               <div class="col-sm-4">
               <div class="form-group">
                 <label>Instagram</label>
-                <input type="text" name="ch_social3" class="form-control" value="{{ $chapterList[0]->social3}}">
+                <input type="text" name="ch_social3" class="form-control" value="{{ $chapterList[0]->social3}}" maxlength="50" >
               </div>
               </div>
+
             </div>
         </div>
+
 
         <div class="card-header">
             <h3 class="card-title">President</h3>
@@ -169,24 +166,21 @@
             </div>
         </div>
 
-        <div class="card-header">
-            <h3 class="card-title">International MOMS Club Coordinators</h3>
-        </div>
-        <!-- /.card-header -->
-        <div class="card-body">
-            <div class="row">
-  <!-- /.form group -->
-              <div class="form-group">
-                <select name="ch_primarycor" id="ch_primarycor" class="form-control select2-sb4" style="width: 100%; display:none" onchange="checkReportId(this.value)" required>
-                <option value="">Select Primary Coordinator</option>
-                @foreach($primaryCoordinatorList as $pcl)
-                      <option value="{{$pcl->cid}}" {{$chapterList[0]->primary_coordinator_id == $pcl->cid  ? 'selected' : ''}}>{{$pcl->cor_f_name}} {{$pcl->cor_l_name}} ({{$pcl->pos}})</option>
-                    @endforeach
-                </select>
-              </div>
-              <div id="display_corlist"> </div>
-              </div>
-              </div>
+       <div class="card-header">
+        <h3 class="card-title">International MOMS Club Coordinators</h3>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <div class="row">
+<!-- /.form group -->
+                <div class="col-md-6 float-left">
+                    <input  type="hidden" id="pcid" value="{{ $chapterList[0]->primary_coordinator_id}}">
+                    <div id="display_corlist">
+                    </div>
+                </div>
+            </div>
+          </div>
+
 
                           <!-- /.box-body -->
               <div class="card-body text-center">
@@ -213,38 +207,38 @@
     document.getElementById('option0').disabled = true;
 
 
-  $( document ).ready(function() {
+//   $( document ).ready(function() {
 
-    var selectedCorId = $("select#ch_primarycor option").filter(":selected").val();
-    if(selectedCorId !=""){
-      $.ajax({
-        url: '{{ url("/checkreportid/") }}' + '/' + selectedCorId,
-            type: "GET",
-            success: function(result) {
-               $("#display_corlist").html(result);
-            },
-            error: function (jqXHR, exception) {
+//     var selectedCorId = $("select#ch_primarycor option").filter(":selected").val();
+//     if(selectedCorId !=""){
+//       $.ajax({
+//         url: '{{ url("/checkreportid/") }}' + '/' + selectedCorId,
+//             type: "GET",
+//             success: function(result) {
+//                $("#display_corlist").html(result);
+//             },
+//             error: function (jqXHR, exception) {
 
-            }
-        });
-    }
+//             }
+//         });
+//     }
 
-  });
+//   });
 
 
-  function checkReportId(val){
-          $.ajax({
-            url: '{{ url("/checkreportid/") }}' + '/' + val,
-            type: "GET",
-            success: function(result) {
-               $("#display_corlist").html(result);
-            },
-            error: function (jqXHR, exception) {
+//   function checkReportId(val){
+//           $.ajax({
+//             url: '{{ url("/checkreportid/") }}' + '/' + val,
+//             type: "GET",
+//             success: function(result) {
+//                $("#display_corlist").html(result);
+//             },
+//             error: function (jqXHR, exception) {
 
-            }
-        });
+//             }
+//         });
 
-      }
+//       }
 
       function is_url() {
         var str = $("#validate_url").val().trim(); // Trim leading and trailing whitespace
@@ -281,6 +275,20 @@
                 chWebStatusSelect.value = '2';
             }
         }
+
+        var pcid = $("#pcid").val();
+	if(pcid !=""){
+		$.ajax({
+            url: '{{ url("/checkreportid/") }}' + '/' + pcid,
+            type: "GET",
+            success: function(result) {
+				$("#display_corlist").html(result);
+            },
+            error: function (jqXHR, exception) {
+
+            }
+        });
+    }
 
 </script>
 @endsection
