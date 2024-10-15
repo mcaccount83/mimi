@@ -35,12 +35,13 @@
                     <th>Region</th>
                     <th>First Name</th>
 					<th>Last Name</th>
-					<th>Position</th>
+					<th>Primary Position</th>
+                    <th>Primary (MIMI) Position</th>
 					<th>Secondary Position</th>
 					<th>Hire Date</th>
                     <th>Email</th>
                     <th>Reports To</th>
-                    <th>Home Chapter</th>
+                    {{-- <th>Home Chapter</th> --}}
                 </tr>
                 </thead>
                 <tbody>
@@ -50,12 +51,13 @@
                       <td>{{ $list->reg }}</td>
                       <td>{{ $list->cor_fname }}</td>
                       <td>{{ $list->cor_lname }}</td>
+                      <td>{{ $list->display_pos }}</td>
                       <td>{{ $list->position }}</td>
                       <td>{{ $list->sec_pos }}</td>
                 	  <td><span class="date-mask">{{ $list->coordinator_start_date }}</span></td>
                       <td><a href="mailto:{{ $list->cor_email }}">{{ $list->cor_email }}</a></td>
                       <td>{{$list->report_fname}} {{$list->report_lname}}</td>
-                      <td>{{ $list->cor_chapter }}</td>
+                      {{-- <td>{{ $list->cor_chapter }}</td> --}}
                     </tr>
                   @endforeach
                 </tbody>

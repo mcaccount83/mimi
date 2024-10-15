@@ -101,45 +101,58 @@ class CoordinatorController extends Controller
         if ($positionId == 8) {
             $coordinatorList = DB::table('coordinators as cd')
                 ->select('cd.id as cor_id', 'cd.home_chapter as cor_chapter', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
-                    'cd.phone as cor_phone', 'cd.report_id as report_id', 'cp.long_title as position',
-                    DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
+                    'cd.phone as cor_phone', 'cd.report_id as report_id', 'cp.short_title as position', 'pos2.long_title as sec_pos', 'pos3.long_title as display_pos',
+                    // DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
                     'cd.conference_id as conf', 'cd.coordinator_start_date as coordinator_start_date', 'rg.short_name as reg', 'report.first_name as report_fname',
                     'report.last_name as report_lname')
                 ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
+
+                ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
+                ->leftJoin('coordinator_position as pos3', 'pos3.id', '=', 'cd.display_position_id')
+
                 ->join('region as rg', 'rg.id', '=', 'cd.region_id')
                 ->leftJoin('coordinators as report', 'report.id', '=', 'cd.report_id')
                 ->where('cd.is_active', '=', '1')
                 ->whereIn('cd.report_id', $inQryArr)
-                ->orderBy('cd.first_name')
+                // ->orderBy('cd.first_name')
+                ->orderBy('cd.coordinator_start_date')
                 ->get();
         } elseif ($corId == 38) {
             $coordinatorList = DB::table('coordinators as cd')
                 ->select('cd.id as cor_id', 'cd.home_chapter as cor_chapter', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
-                    'cd.phone as cor_phone', 'cd.report_id as report_id', 'cp.long_title as position',
-                    DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
+                    'cd.phone as cor_phone', 'cd.report_id as report_id', 'cp.short_title as position', 'pos2.long_title as sec_pos', 'pos3.long_title as display_pos',
+                    // DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
                     'cd.conference_id as conf', 'cd.coordinator_start_date as coordinator_start_date', 'rg.short_name as reg', 'report.first_name as report_fname',
                     'report.last_name as report_lname')
                 ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
+                ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
+                ->leftJoin('coordinator_position as pos3', 'pos3.id', '=', 'cd.display_position_id')
+
                 ->join('region as rg', 'rg.id', '=', 'cd.region_id')
                 ->leftJoin('coordinators as report', 'report.id', '=', 'cd.report_id')
                 ->where('cd.is_active', '=', '1')
                 ->where('cd.region_id', '=', '15')
-                ->orderBy('cd.first_name')
+                // ->orderBy('cd.first_name')
+                ->orderBy('cd.coordinator_start_date')
                 ->get();
         } else {
             $coordinatorList = DB::table('coordinators as cd')
                 ->select('cd.id as cor_id', 'cd.home_chapter as cor_chapter', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
-                    'cd.phone as cor_phone', 'cd.report_id as report_id', 'cp.long_title as position',
-                    DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
+                    'cd.phone as cor_phone', 'cd.report_id as report_id', 'cp.short_title as position', 'pos2.long_title as sec_pos', 'pos3.long_title as display_pos',
+                    // DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
                     'cd.conference_id as conf', 'cd.coordinator_start_date as coordinator_start_date', 'rg.short_name as reg', 'report.first_name as report_fname',
                     'report.last_name as report_lname')
                 ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
+                ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
+                ->leftJoin('coordinator_position as pos3', 'pos3.id', '=', 'cd.display_position_id')
+
                 ->join('region as rg', 'rg.id', '=', 'cd.region_id')
                 ->leftJoin('coordinators as report', 'report.id', '=', 'cd.report_id')
                 ->where('cd.is_active', '=', '1')
                 ->where('cd.conference_id', '=', $corConfId)
                 ->whereIn('cd.report_id', $inQryArr)
-                ->orderBy('cd.first_name')
+                // ->orderBy('cd.first_name')
+                ->orderBy('cd.coordinator_start_date')
                 ->get();
         }
 
