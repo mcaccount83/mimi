@@ -56,6 +56,7 @@
                         <div class="form-group">
                             <label>Reports To</label><span class="field-required">*</span>
                             <select name="cord_report_pc" id="cord_report_pc" class="form-control select2-sb4" style="width: 100%;" required>
+                                <option value="" disabled selected>Select a coordinator</option> <!-- Disable empty option -->
                                 @foreach($primaryCoordinatorList as $pcl)
                                     <option value="{{ $pcl->cid }}" {{ $coordinatorDetails[0]->report_id == $pcl->cid ? 'selected' : '' }}>
                                         {{ $pcl->cor_f_name }} {{ $pcl->cor_l_name }} ({{ $pcl->pos }})

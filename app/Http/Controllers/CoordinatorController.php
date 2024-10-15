@@ -260,6 +260,7 @@ class CoordinatorController extends Controller
                     'first_name' => $input['cord_fname'],
                     'last_name' => $input['cord_lname'],
                     'position_id' => 1,
+                    'display_position_id' => 1,
                     'email' => $input['cord_email'],
                     'sec_email' => $input['sec_email'],
                     'report_id' => $corId,
