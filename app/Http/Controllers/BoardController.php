@@ -741,7 +741,7 @@ class BoardController extends Controller
                 $cc_details = db::table('coordinators')
                     ->select('email')
                     ->where('conference_id', $ConfId)
-                    ->where('position_id', 6)
+                    ->where('position_id', 7)
                     ->where('is_active', 1)
                     ->get();
                 $to_email4 = $cc_details[0]->email;    //conference coordinator
