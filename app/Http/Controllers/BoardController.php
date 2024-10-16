@@ -1827,9 +1827,26 @@ class BoardController extends Controller
                 ->where('chapters.id', '=', $chapterId)
                 ->get();
 
+            $resources = DB::table('resources')
+                ->select('resources.*',
+                    DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),
+                    DB::raw('CASE
+                        WHEN category = 1 THEN "BYLAWS"
+                        WHEN category = 2 THEN "FACT SHEETS"
+                        WHEN category = 3 THEN "COPY READY MATERIAL"
+                        WHEN category = 4 THEN "IDEAS AND INSPIRATION"
+                        WHEN category = 5 THEN "CHAPTER RESOURCES"
+                        WHEN category = 6 THEN "SAMPLE CHPATER FILES"
+                        WHEN category = 7 THEN "END OF YEAR"
+                        ELSE "Unknown"
+                    END as priority_word'))
+                ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
+                ->orderBy('name')
+                ->get();
+
             $submitted = $chapterDetails[0]->financial_report_received;
             $data = ['financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails, 'user_type' => $user_type,
-                'userName' => $userName, 'userEmail' => $userEmail];
+                'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources];
 
             DB::commit();
 

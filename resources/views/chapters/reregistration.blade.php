@@ -73,12 +73,12 @@
                         @endphp
                         <tr>
                             <td>
-                                @if (Session::get('positionid') == 6)
+                                @if (Session::get('positionid') == 7)
                                     <center><a href="{{ url("/chapter/re-registration/payment/{$list->id}") }}"><i class="far fa-credit-card"></i></a></center>
                                 @endif
                             </td>
                             <td>
-                                @if (Session::get('positionid') == 6)
+                                @if (Session::get('positionid') == 7)
                                     <center><a href="{{ url("/chapter/re-registration/notes/{$list->id}") }}"><i class="fas fa-pencil-alt"></i></a></center>
                                 @endif
                             </td>
@@ -115,11 +115,11 @@
                     </div>
                 </div>
                 <div class="card-body text-center">
-                <?php if(Session::get('positionid') ==6 || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>
+                <?php if(Session::get('positionid') == 7 || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>
                     {{-- <p>**Known issue - will not send more than 10 messages.**</p> --}}
                 <a title="Re-registration reminders will be sent to all unpaid chapters in your conference with renewal dates this month." href="{{ route('chapter.reminder') }}"><button class="btn bg-gradient-primary"   <?php if($checkBoxStatus) echo "disabled";?>><i class="fas fa-envelope" ></i>&nbsp; Send Current Month Reminders</button></a>
                 <?php }?>
-                <?php if(Session::get('positionid') ==6 || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>
+                <?php if(Session::get('positionid') == 7 || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>
                     <a href="{{route('chapter.latereminder')}}" class="btn bg-gradient-primary" <?php if($checkBoxStatus) echo "disabled";?>><i class="fas fa-envelope" ></i>&nbsp; Send One Month Late Notices</a>
                 <?php }?>
 					<a href="{{ route('export.rereg')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download" ></i>&nbsp; Export Overdue Chapter List</button></a>

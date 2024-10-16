@@ -1511,259 +1511,7 @@
             </div>
                 <!------End Step 8 ------>
 
-                <!------Start Step 9 ------>
-                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='9') echo "active";?>">
-                    <div class="card-header" id="accordion-header-members">
-                        <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseNine" style="width: 100%;">BANK RECONCILIATION</a>
-                        </h4>
-                    </div>
-                    <div id="collapseNine" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='9') echo 'show'; ?>" data-parent="#accordion">
-                        <div class="card-body">
-                    <section>
-                        @if (!is_null($financial_report_array['bank_statement_included_path']))
-                            <div class="col-md-12">
-                                <label>Bank Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_included_path']; ?>" >&nbsp; View Bank Statement</a><br>
-                            </div>
-                        @endif
-                        @if (!is_null($financial_report_array['bank_statement_2_included_path']))
-                            <div class="col-md-12">
-                                <label>Additional Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" >&nbsp; View Additional Bank Statement</a><br>
-                            </div>
-                        @endif
-                        <div class="col-md-12" id="StatementBlock">
-                            <strong style="color:red">Please Note</strong><br>
-                                This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
-                            @if (!is_null($financial_report_array['bank_statement_included_path']))
-                                <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Bank Statement</button>
-                                {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement1" ><i class="fas fa-undo" ></i>&nbsp; Replace Bank Statement</button> --}}
-                            @else
-                            <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Bank Statement</button>
-                            {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement1" ><i class="fas fa-upload" ></i>&nbsp; Upload Bank Statement</button> --}}
-                            @endif
-                        </div>
-                            <input type="hidden" name="StatementFile" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
-                        <div class="clearfix"></div>
-                        <div class="col-md-12"><br></div>
-                        <div class="col-md-12" id="Statement2Block">
-                            @if (!is_null($financial_report_array['bank_statement_2_included_path']))
-                                <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Additional Bank Statement</button>
-                                {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement2" ><i class="fas fa-undo" ></i>&nbsp; Replace Additional Bank Statement</button> --}}
-                            @else
-                                <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Additional Bank Statement</button>
-                                {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement2" ><i class="fas fa-upload" ></i>&nbsp; Upload Additional Bank Statement</button> --}}
-                            @endif
-                        </div>
-                        <input type="hidden" name="Statement2File" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
-                        <div class="clearfix"></div>
-                        <div class="col-md-12"><br></div>
-
-                        <div class="col-12 form-row form-group">
-                        <div class="col-md-6 ">
-                            <div class="form-group">
-                                <label for="AmountReservedFromLastYear">
-                                    This Year's Beginning Balance (July 1, <?php echo date('Y')-1;?>):
-                                </label>
-                                <div class="form-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">$</span>
-                                        <input type="text" class="form-control" oninput="TreasuryBalanceChange()" name="AmountReservedFromLastYear" id="AmountReservedFromLastYear"
-                                            value="<?php if(!empty($financial_report_array)) echo $financial_report_array['amount_reserved_from_previous_year'] ?>"
-                                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 ">
-                            <div class="form-group">
-                                <label for="BankBalanceNow">
-                                    Last Bank Statement Balance (June 30, <?php echo date('Y');?>):
-                                </label>
-                                <div class="form-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">$</span>
-                                <input type="text" class="form-control" name="BankBalanceNow" id="BankBalanceNow" oninput="ChangeBankRec()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['bank_balance_now'] ?>"
-                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 " style="display:none" >
-                        <div class="form-group">
-                            <label for="PettyCash">
-                                Petty Cash on Hand (if any):
-                            </label>
-                            <div class="form-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" name="PettyCash" id="PettyCash" oninput="ChangeBankRec()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['petty_cash'] ?>"
-                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                        </div>
-                        </div>
-                        </div>
-                   </div>
-                   <div class="col-md-6 ">
-                    <div class="form-group">
-                        <label for="TotalNetIncome">
-                            Profit/Loss:
-                        </label>
-                        <div class="form-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">$</span>
-                        <input type="text"class="form-control" name="TotalNetIncome" id="TotalNetIncome"
-                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                    <div class="col-md-6 ">
-                        <div class="form-group">
-                            <label for="TreasuryBalanceNow">
-                                Ending Balance (Treasury Balance Now):
-                            </label>
-                            <div class="form-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" name="TreasuryBalanceNow" id="TreasuryBalanceNow"
-                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-                        </div>
-                        </div>
-                        </div>
-                    </div>
-                    <hr>
-                </div>
-                <div class="col-12 form-row form-group">
-                  <p>If your most recent bank statement’s ending balance does not match your “Treasury Balance Now”, you must reconcile your checking account using the worksheet below so that the balances match.</p>
-                  <p>To balance your account, start with your bank statement’s ending balance, then list any deposits and any outstanding payments. When done, the new reconciled balance will match your treasury balance.</p>
-                  <p>View a step by step instruction video <a href="https://momsclub.org/elearning/courses/annual-financial-report-bank-reconciliation/">HERE</a>.</p>
-                  <br>
-                <label>Bank Reconciliation:</label>
-                    <table id="bank-rec" width="100%" class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <td>Date</td>
-                                <td>Check No.</td>
-                                <td>Transaction Desc.</td>
-                                <td>Payment Amount</td>
-                                <td>Deposit Amount</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                $bank_rec_array = null;
-                                if (isset($financial_report_array['bank_reconciliation_array'])) {
-                                    $bank_rec_array = unserialize(base64_decode($financial_report_array['bank_reconciliation_array']));
-                                    $BankRecRowCount = is_array($bank_rec_array) ? count($bank_rec_array) : 0;
-                                } else {
-                                    $BankRecRowCount = 1;
-                                }
-                            @endphp
-                            @for ($row = 0; $row < $BankRecRowCount; $row++)
-                                <tr>
-                                    <td>
-                                        <div class="form-group">
-                                            <input type="date" class="form-control" name="BankRecDate{{ $row }}" id="BankRecDate{{ $row }}"
-                                            data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $bank_rec_array[$row]['bank_rec_date'] ?? '' }}" >
-                                        </div>
-                                    </td>
-
-                                    <td>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" name="BankRecCheckNo{{ $row }}" id="BankRecCheckNo{{ $row }}"
-                                                value="{{ $bank_rec_array[$row]['bank_rec_check_no'] ?? '' }}">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-group">
-                                            <input type="text" class="form-control" name="BankRecDesc{{ $row }}" id="BankRecDesc{{ $row }}"
-                                                value="{{ $bank_rec_array[$row]['bank_rec_desc'] ?? '' }}">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">$</span>
-                                                </div>
-                                                <input type="text" class="form-control" name="BankRecPaymentAmount{{ $row }}" id="BankRecPaymentAmount{{ $row }}"
-                                                    oninput="ChangeBankRec()" value="{{ $bank_rec_array[$row]['bank_rec_payment_amount'] ?? '' }}"
-                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">$</span>
-                                                </div>
-                                                <input type="text" class="form-control" name="BankRecDepositAmount{{ $row }}" id="BankRecDepositAmount{{ $row }}"
-                                                    oninput="ChangeBankRec()" value="{{ $bank_rec_array[$row]['bank_rec_desposit_amount'] ?? '' }}"
-                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endfor
-                        </tbody>
-                    </table>
-                    <div class="col-md-12">
-                        <button type="button" class="btn btn-sm btn-success" onclick="AddBankRecRow()">
-                            <i class="fas fa-plus"></i>&nbsp; Add Row
-                        </button>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="DeleteBankRecRow()">
-                            <i class="fas fa-minus"></i>&nbsp; Remove Row
-                        </button>
-                    </div>
-                    <div class="col-md-12"><br></div>
-                    <div class="col-md-12">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="ReconciledBankBalance">
-                                Reconciled Bank Balance:
-                            </label>
-                            <div class="form-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" name="ReconciledBankBalance" id="ReconciledBankBalance"
-                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6"><br></div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="TreasuryBalanceNowR">
-                                Treasury Balance Now:
-                            </label>
-                            <div class="form-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">$</span>
-                            <input type="text" class="form-control" name="TreasuryBalanceNowR" id="TreasuryBalanceNowR"
-                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                    <div id="ReconciliationAlert" class="alert alert-warning" style="display: none;">
-                        <h5><i class="icon fas fa-exclamation-triangle"></i> Alert!</h5>
-                        <div id="ReconciledBankBalanceWarning" class="alert-message"></div>
-                    </div>
-                </div>
-                    <input type="hidden" name="BankRecRowCount" id="BankRecRowCount" value="<?php echo $BankRecRowCount; ?>" />
-                    <hr>
-                </div>
-                <div class="card-body text-center">
-                              <button type="submit" id="btn-step-9" class="btn btn-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
-                </div>
-            </section>
-            </div><!-- end of accordion body -->
-            </div><!-- end of accordion item -->
-        </div>
-            <!------End Step 9 ------>
-
-            <!------Start Step 10 ------>
+                <!------Start Step 10 ------>
             <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='10') echo "active";?>">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
@@ -1777,7 +1525,7 @@
                   <div class="col-sm-12">
                     <h3>July 1, <?php echo date('Y')-1 .' - June 30, '.date('Y');?></h3>
                   </div>
-                    <div class="col-sm-12 float-left">
+                    {{-- <div class="col-sm-12 float-left">
                         <div class="form-group">
                             <div class="col-sm-6 float-left">
                               <label for="">
@@ -1795,7 +1543,7 @@
                         </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="col-sm-12">
                         <div class="box-brd">
                         <h4>Income</h4>
@@ -2158,7 +1906,7 @@
                             </div>
                             </div>
                         </div>
-                        <div class="col-sm-12 float-left">
+                        {{-- <div class="col-sm-12 float-left">
                             <div class="form-group">
                                 <div class="col-sm-6 float-left">
                                 <label for="">
@@ -2174,13 +1922,350 @@
                                     </div>
                                 </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                      </section>
             </div><!-- end of accordion body -->
             </div><!-- end of accordion item -->
         </div>
             <!------End Step 10 ------>
+
+                <!------Start Step 9 ------>
+                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='9') echo "active";?>">
+                    <div class="card-header" id="accordion-header-members">
+                        <h4 class="card-title w-100">
+                            <a class="d-block" data-toggle="collapse" href="#collapseNine" style="width: 100%;">BANK RECONCILIATION</a>
+                        </h4>
+                    </div>
+                    <div id="collapseNine" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='9') echo 'show'; ?>" data-parent="#accordion">
+                        <div class="card-body">
+                    <section>
+                        @if (!is_null($financial_report_array['bank_statement_included_path']))
+                            <div class="col-md-12">
+                                <label>Bank Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_included_path']; ?>" >&nbsp; View Bank Statement</a><br>
+                            </div>
+                        @endif
+                        @if (!is_null($financial_report_array['bank_statement_2_included_path']))
+                            <div class="col-md-12">
+                                <label>Additional Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" >&nbsp; View Additional Bank Statement</a><br>
+                            </div>
+                        @endif
+                        <div class="col-md-12" id="StatementBlock">
+                            <strong style="color:red">Please Note</strong><br>
+                                This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
+                            @if (!is_null($financial_report_array['bank_statement_included_path']))
+                                <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Bank Statement</button>
+                                {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement1" ><i class="fas fa-undo" ></i>&nbsp; Replace Bank Statement</button> --}}
+                            @else
+                            <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Bank Statement</button>
+                            {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement1" ><i class="fas fa-upload" ></i>&nbsp; Upload Bank Statement</button> --}}
+                            @endif
+                        </div>
+                            <input type="hidden" name="StatementFile" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
+                        <div class="clearfix"></div>
+                        <div class="col-md-12"><br></div>
+                        <div class="col-md-12" id="Statement2Block">
+                            @if (!is_null($financial_report_array['bank_statement_2_included_path']))
+                                <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Additional Bank Statement</button>
+                                {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement2" ><i class="fas fa-undo" ></i>&nbsp; Replace Additional Bank Statement</button> --}}
+                            @else
+                                <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Additional Bank Statement</button>
+                                {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement2" ><i class="fas fa-upload" ></i>&nbsp; Upload Additional Bank Statement</button> --}}
+                            @endif
+                        </div>
+                        <input type="hidden" name="Statement2File" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
+                        <div class="clearfix"></div>
+                        <div class="col-md-12"><br></div>
+
+                        <div class="col-12 form-row form-group">
+                        <div class="col-md-6 ">
+                            <div class="form-group">
+                                <label for="AmountReservedFromLastYear">
+                                    This Year's Beginning Balance (July 1, <?php echo date('Y')-1;?>):
+                                </label>
+                                <div class="form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                        <input type="text" class="form-control" oninput="TreasuryBalanceChange()" name="AmountReservedFromLastYear" id="AmountReservedFromLastYear"
+                                            value="<?php if(!empty($financial_report_array)) echo $financial_report_array['amount_reserved_from_previous_year'] ?>"
+                                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 ">
+                            <div class="form-group">
+                                <label for="LastYearReportEnding">
+                                    Last Year's Report Ending Balance (June 30, <?php echo date('Y')-1;?>):
+                                </label>
+                                <div class="form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                        <input type="text" class="form-control" name="LastYearReportEnding" id="LastYearReportEnding"
+                                            value="{{$financial_report_array['pre_balance'] }}?>"
+                                            data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 ">
+                            <div class="form-group">
+                                <label for="TotalNetIncome">
+                                    Profit/Loss:
+                                </label>
+                                <div class="form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                <input type="text"class="form-control" name="TotalNetIncome" id="TotalNetIncome"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 ">
+                            <br>
+                        </div>
+                        <div class="col-md-6 ">
+                            <div class="form-group">
+                                <label for="TreasuryBalanceNow">
+                                    Ending Balance (Treasury Balance Now):
+                                </label>
+                                <div class="form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="TreasuryBalanceNow" id="TreasuryBalanceNow"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
+                            </div>
+                            </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 ">
+                            <div class="form-group">
+                                <label for="BankBalanceNow">
+                                    Ending Bank Statement Balance (June 30, <?php echo date('Y');?>):
+                                </label>
+                                <div class="form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="BankBalanceNow" id="BankBalanceNow" oninput="ChangeBankRec()" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['bank_balance_now'] ?>"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                </div>
+                <div class="col-12 form-row form-group">
+                  <p>If your most recent bank statement’s ending balance does not match your “Treasury Balance Now”, you must reconcile your checking account using the worksheet below so that the balances match.</p>
+                  <p>To balance your account, start with your bank statement’s ending balance, then list any deposits and any outstanding payments. When done, the new reconciled balance will match your treasury balance.</p>
+                  <p>View a step by step instruction video <a href="https://momsclub.org/elearning/courses/annual-financial-report-bank-reconciliation/">HERE</a>.</p>
+                  <br>
+                <label>Bank Reconciliation:</label>
+                    <table id="bank-rec" width="100%" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <td>Date</td>
+                                <td>Check No.</td>
+                                <td>Transaction Desc.</td>
+                                <td>Payment Amount</td>
+                                <td>Deposit Amount</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $bank_rec_array = null;
+                                if (isset($financial_report_array['bank_reconciliation_array'])) {
+                                    $bank_rec_array = unserialize(base64_decode($financial_report_array['bank_reconciliation_array']));
+                                    $BankRecRowCount = is_array($bank_rec_array) ? count($bank_rec_array) : 0;
+                                } else {
+                                    $BankRecRowCount = 1;
+                                }
+                            @endphp
+                            @for ($row = 0; $row < $BankRecRowCount; $row++)
+                                <tr>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="date" class="form-control" name="BankRecDate{{ $row }}" id="BankRecDate{{ $row }}"
+                                            data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $bank_rec_array[$row]['bank_rec_date'] ?? '' }}" >
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="BankRecCheckNo{{ $row }}" id="BankRecCheckNo{{ $row }}"
+                                                value="{{ $bank_rec_array[$row]['bank_rec_check_no'] ?? '' }}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" name="BankRecDesc{{ $row }}" id="BankRecDesc{{ $row }}"
+                                                value="{{ $bank_rec_array[$row]['bank_rec_desc'] ?? '' }}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" class="form-control" name="BankRecPaymentAmount{{ $row }}" id="BankRecPaymentAmount{{ $row }}"
+                                                    oninput="ChangeBankRec()" value="{{ $bank_rec_array[$row]['bank_rec_payment_amount'] ?? '' }}"
+                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" class="form-control" name="BankRecDepositAmount{{ $row }}" id="BankRecDepositAmount{{ $row }}"
+                                                    oninput="ChangeBankRec()" value="{{ $bank_rec_array[$row]['bank_rec_desposit_amount'] ?? '' }}"
+                                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'">
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endfor
+                        </tbody>
+                    </table>
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-sm btn-success" onclick="AddBankRecRow()">
+                            <i class="fas fa-plus"></i>&nbsp; Add Row
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="DeleteBankRecRow()">
+                            <i class="fas fa-minus"></i>&nbsp; Remove Row
+                        </button>
+                    </div>
+                    <div class="col-md-12"><br></div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="TreasuryBalanceNowR">
+                                    Ending Balance (Treasury Balance Now):
+                                </label>
+                                <div class="form-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" name="TreasuryBalanceNowR" id="TreasuryBalanceNowR"
+                                    data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="ReconciledBankBalance">
+                                Reconciled Bank Balance:
+                            </label>
+                            <div class="form-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                            <input type="text" class="form-control" name="ReconciledBankBalance" id="ReconciledBankBalance"
+                                data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'" readonly>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+
+                    <div id="ReconciliationAlert" class="alert alert-warning" style="display: none;">
+                        <h5><i class="icon fas fa-exclamation-triangle"></i> Alert!</h5>
+                        <div id="ReconciledBankBalanceWarning" class="alert-message"></div>
+                    </div>
+                </div>
+                    <input type="hidden" name="BankRecRowCount" id="BankRecRowCount" value="<?php echo $BankRecRowCount; ?>" />
+                    <hr>
+                </div>
+                <div class="card-body text-center">
+                              <button type="submit" id="btn-step-9" class="btn btn-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
+                </div>
+            </section>
+            </div><!-- end of accordion body -->
+            </div><!-- end of accordion item -->
+        </div>
+            <!------End Step 9 ------>
+
+            <!------Start Step 9.5 ------>
+                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='95') echo "active";?>">
+                    <div class="card-header" id="accordion-header-members">
+                        <h4 class="card-title w-100">
+                            <a class="d-block" data-toggle="collapse" href="#collapseNineFive" style="width: 100%;">990N IRS FILING</a>
+                        </h4>
+                    </div>
+                    <div id="collapseNineFive" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='95') echo 'show'; ?>" data-parent="#accordion">
+                        <div class="card-body">
+                    <section>
+                        @if (!is_null($financial_report_array['file_irs_path']))
+                            <div class="col-md-12">
+                                <label>990N Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['file_irs_path']; ?>" >&nbsp; View 990N Confirmation</a><br>
+                            </div>
+                        @endif
+
+                        <div class="col-12" id="FileIRSBlock">
+                            <strong style="color:red">Please Note</strong><br>
+                                This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
+                            @if (!is_null($financial_report_array['file_irs_path']))
+                                <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace 990N Confirmation</button>
+                            @else
+                                <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload 990N Confirmation</button>
+                            @endif
+                        </div>
+                        <input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $financial_report_array['file_irs_path']; ?>">
+                        <div class="clearfix"></div>
+                        <div class="col-md-12"><br></div>
+
+                <div class="col-12">
+                    {{-- <strong><u>990N (e-Postcard) Information</u></strong><br> --}}
+                    The 990N filing is an IRS requirement that all chapters must complete, but it cannot be filed before July 1st.  After filing, upload a copy of your chapter's filing confirmation here.  You can upload a copy of your confirmation email or screenshot after filing.  All chapters should file their 990N directly with the IRS and not through a third party. <span style="color:red"><i>The IRS does not charge a fee for 990N filings.</i></span><br>
+                    <br>
+                    @if($thisDate->month >= 1 && $thisDate->month <= 6)
+                    <table>
+                        <tr>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            <td><span class="text-danger">990N Filing Instructions will be available on July 1st. Since chapter cannot file until then, we are also unable to verify that instructions/screenshots have not changed since last year until that date, so please bear with us until we get them updated and posted.</span><br></td>
+                        </tr>
+                    </table>
+                    @endif
+                    @if($thisDate->month >= 7 && $thisDate->month <= 12)
+                    <table>
+                        <tr>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            <td><a href="https://www.irs.gov/charities-non-profits/annual-electronic-filing-requirement-for-small-exempt-organizations-form-990-n-e-postcard" target="_blank">990N IRS Website Link to File</a></td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            @foreach($resources as $resourceItem)
+                            @if ($resourceItem->name === '990N Filing Instructions')
+                                <td><a href="{{ $resourceItem->file_path }}" target="_blank">990N Filing Instructions
+                                </a></td>
+                            @endif
+                            @endforeach
+                        </tr>
+                        <tr>
+                            <td>&nbsp;&nbsp;&nbsp;</td>
+                            @foreach($resources as $resourceItem)
+                            @if ($resourceItem->name === '990N Filing FAQs')
+                                <td><a href="{{ $resourceItem->file_path }}" target="_blank">990N Filing FAQs
+                                </a></td>
+                            @endif
+                            @endforeach
+                        </tr>
+                    </table>
+                    @endif
+                    <br>
+                </div>
+                <div class="card-body text-center">
+                    <button type="submit" id="btn-step-95" class="btn btn-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
+                </div>
+            </section>
+            </div><!-- end of accordion body -->
+            </div><!-- end of accordion item -->
+        </div>
+            <!------End Step 9.5 ------>
+
+
 
             <!------Start Step 11 ------>
             <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='11') echo "active";?>">
@@ -2653,7 +2738,7 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label>21. Did your chapter file their IRS 990N for <?php echo date('Y')-1 .'-'.date('Y');?> (CANNOT BE DONE BEFORE JULY 1, <?php echo date('Y');?>)?<span class="field-required">*</span></label>
+                        <label>21. Is a copy of your chpater's <?php echo date('Y')-1;?> 990N Filing included?  Confirmation can be uploaded or replaced in the 990N IRS Filing Section.<span class="field-required">*</span></label>
                         <div class="col-md-12 row">
                             <div class="form-check" style="margin-left: 20px;">
                                 <input class="form-check-input" type="radio" id="FileIRSYes" name="FileIRS" value="1" {{ $financial_report_array->file_irs === 1 ? 'checked' : '' }} onchange="ToggleFileIRSExplanation()">
@@ -2677,31 +2762,28 @@
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
-                    <div class="col-12" id="FileIRSBlock">
+                    {{-- <div class="col-12" id="FileIRSBlock">
                         <div class="col-md-12 mar_bot_20" id="990NBlock" <?php if (!empty($financial_report_array)) {if ($financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
                             <div class="col-md-12">
                                 <strong style="color:red">Please Note</strong><br>
                                     This will refresh the screen - be sure to save all work before clicking button to Upload 990N Confirmation.<br>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload 990N Confirmation</button>
-                                    {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-990N" ><i class="fas fa-upload" ></i>&nbsp; Upload 990N Confirmation</button> --}}
                             </div>
                         </div>
                         <input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $financial_report_array['file_irs_path']; ?>">
                         <div class="col-md-12 mar_bot_20" <?php if (!empty($financial_report_array)) {if (!$financial_report_array['file_irs_path']) echo "style=\"display: none;\"";} ?>>
                             <div class="col-md-12" >
                                 <div>
-                                {{-- <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['file_irs_path']; ?>">View 990N Confirmation</a><br>
-                                <br> --}}
+
                                     <strong style="color:red">Please Note</strong><br>
                                     This will refresh the screen - be sure to save all work before clicking button to Replace 990N Confirmation.<br>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace 990N Confirmation</button>
-                                    {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-990N" ><i class="fas fa-undo" ></i>&nbsp; Replace 990N Confirmation</button> --}}
                             </div>
                             </div>
                         </div>
                         <div class="clearfix"></div>
                         <div class="col-md-12" ><br></div>
-                    </div>
+                    </div> --}}
                     <div class="form-group row">
                         <label>22. Is a copy of your chapter’s most recent bank statement included? Statement(s) can be uploaded or replaced in the Bank Reconciliation Section.<span class="field-required">*</span></label>
                         <div class="col-md-12 row">
@@ -4273,9 +4355,16 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
         }
     }
 
+    // function TreasuryBalanceChange() {
+    //     var TreasuryBalance = parseFloat(document.getElementById("AmountReservedFromLastYear").value.replace(/,/g, '')) || 0;
+    //     document.getElementById("SumAmountReservedFromPreviousYear").value = TreasuryBalance.toFixed(2);
+
+    //     ReCalculateSummaryTotal();
+    // }
+
     function TreasuryBalanceChange() {
         var TreasuryBalance = parseFloat(document.getElementById("AmountReservedFromLastYear").value.replace(/,/g, '')) || 0;
-        document.getElementById("SumAmountReservedFromPreviousYear").value = TreasuryBalance.toFixed(2);
+        document.getElementById("AmountReservedFromLastYear").value = TreasuryBalance.toFixed(2);
 
         ReCalculateSummaryTotal();
     }
@@ -4398,7 +4487,9 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
         SumInternationalEventIncome = parseNumber(document.getElementById("SumInternationalEventIncome").value);
         SumMonetaryDonationIncome = parseNumber(document.getElementById("SumMonetaryDonationIncome").value);
         SumChapterReRegistrationExpense = parseNumber(document.getElementById("SumChapterReRegistrationExpense").value);
-        TreasuryBalance = parseNumber(document.getElementById("SumAmountReservedFromPreviousYear").value);
+        // TreasuryBalance = parseNumber(document.getElementById("SumAmountReservedFromPreviousYear").value);
+        TreasuryBalance = parseNumber(document.getElementById("AmountReservedFromLastYear").value);
+
 
         // Perform calculations
         SumTotalExpense = SumTotalChildrensRoomExpense + SumMeetingRoomExpense + ServiceExpenseTotal + SumOtherExpense + SumPartyExpense + SumOperatingExpense + SumInternationalEventExpense + SumChapterReRegistrationExpense;
@@ -4414,7 +4505,7 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
         document.getElementById("SumTotalNetIncome").value = SumTotalNetIncome.toFixed(2);
         document.getElementById("TreasuryBalanceNow").value = TreasuryBalanceNow.toFixed(2);
         document.getElementById("TreasuryBalanceNowR").value = TreasuryBalanceNow.toFixed(2);
-        document.getElementById("SumTreasuryBalanceNow").value = TreasuryBalanceNow.toFixed(2);
+        // document.getElementById("SumTreasuryBalanceNow").value = TreasuryBalanceNow.toFixed(2);
 
         // Call other functions if necessary
         ChangeBankRec();
@@ -5389,6 +5480,11 @@ function showAward5UploadModal() {
             if (!EnsureReconciliation()) return false;
             submitFormWithStep(9);
         });
+        $("#btn-step-95").click(function() {
+            submitFormWithStep(95);
+        });
+
+        //Step 10 - Financial Report Review doesn't have a save button
 
         $("#btn-step-11").click(function() {
             if (!EnsureQuestions()) return false;
@@ -5682,7 +5778,7 @@ function showAward5UploadModal() {
         function Ensure990() {
             var fileIRS = document.getElementById('FileIRS');
             var path990N = document.getElementById('990NPath');
-            var message = `<p>Your chapter's 990N filing confirmation was not uploaded in the CHAPTER QUESTIONS section, but you indicated the file was attached.</p>
+            var message = `<p>Your chapter's 990N filing confirmation was not uploaded in the 990N IRS Filing section, but you indicated the file was attached.</p>
                 <p>Please upload 990 Confirmation to Continue.</p>`;
             if (fileIRS && fileIRS.value == "1" && path990N && path990N.value == "") {
                 customWarningAlert(message);

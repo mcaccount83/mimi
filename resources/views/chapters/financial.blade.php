@@ -1189,14 +1189,14 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
             </div>
 				<!------End Step 8 ------>
 
-                <!------Start Step 9 ------>
-                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='9') echo "active";?>">
+                <!------Start Step 10 ------>
+                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='10') echo "active";?>">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseNine" style="width: 100%;">FINANCIAL SUMMARY</a>
+                            <a class="d-block" data-toggle="collapse" href="#collapseTen" style="width: 100%;">FINANCIAL SUMMARY</a>
                         </h4>
                     </div>
-                    <div id="collapseNine" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='9') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseTen" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='10') echo 'show'; ?>" data-parent="#accordion">
                         <div class="card-body">
 				<section>
                     <?php
@@ -1311,24 +1311,24 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
                     <div class="col-12">
                         <div class="form-group row">
-                            <label for="Step9_Note">Add New Note:</label>
-                            <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+                            <label for="Step10_Note">Add New Note:</label>
+                            <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(10)" name="Step10_Note" id="Step10_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
                             <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                            <button type="button" id="AddNote9" class="btn btn-sm bg-gradient-success" onclick="AddNote(9)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                            <button type="button" id="AddNote10" class="btn btn-sm bg-gradient-success" onclick="AddNote(10)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                     </div>
                 </div>
             </div>
             </div>
 					<div class="col-12">
-						<label for="Step9_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+						<label for="Step10_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 					</div>
 					<div class="col-12">
-						<textarea class="form-control" style="width:100%" rows="8" name="Step9_Log" id="Step9_Log" readonly><?php echo $financial_report_array['step_9_notes_log']; ?></textarea>
+						<textarea class="form-control" style="width:100%" rows="8" name="Step10_Log" id="Step10_Log" readonly><?php echo $financial_report_array['step_10_notes_log']; ?></textarea>
 					</div>
                                             <div class="col-12"><br></div>
 		    <!-- end:report_review -->
                     <div class="col-12 text-center">
-                        <button type="submit" id="btn-step-9" class="btn bg-gradient-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+                        <button type="submit" id="btn-step-10" class="btn bg-gradient-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
                         </div>
                     </div>
                 </div>
@@ -1336,18 +1336,25 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 			</div>
 			</div>
         </div>
-			<!------End Step 9 ------>
+			<!------End Step 10 ------>
 
-				<!------Start Step 10 ------>
-                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='10') echo "active";?>">
+                <!------Start Step 9 ------>
+                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='9') echo "active";?>">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseTen" style="width: 100%;">BANK RECONCILIATION</a>
+                            <a class="d-block" data-toggle="collapse" href="#collapseNine" style="width: 100%;">BANK RECONCILIATION</a>
                         </h4>
                     </div>
-                    <div id="collapseTen" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='10') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseNine" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='9') echo 'show'; ?>" data-parent="#accordion">
                         <div class="card-body">
 					<section>
+                        {{-- <?php
+                            $totalIncome = $totalDues + $totalServiceIncome + $totalPartyIncome + $totalDonationAmount + $totalEventIncome + $totalOtherIncome;
+                            $totalExpenses = $financial_report_array['manditory_meeting_fees_paid'] + $financial_report_array['voluntary_donations_paid'] + $financial_report_array['paid_baby_sitters'] + $totalChildrensRoomExpenses + $totalServiceProjectExpenses
+                                    + $totalPartyExpense + $financial_report_array['office_printing_costs'] + $financial_report_array['office_postage_costs'] +
+                                    $financial_report_array['office_membership_pins_cost'] + $totalOfficeExpense + $financial_report_array['annual_registration_fee'] + $totalEventExpense + $totalOtherExpenses;
+                            $treasuryBalance = $financial_report_array ['amount_reserved_from_previous_year'] + $totalIncome - $totalExpenses
+                        ?> --}}
                         <div class="flex-container">
                             <div class="flex-item">
                                 Beginning Balance&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array ['amount_reserved_from_previous_year'], 2)}}</strong><br>
@@ -1448,7 +1455,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                             </table>
                         <br>
                         Reconciled Bank Statement:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array ['bank_balance_now'] + $totalReconciliation, 2) }}</strong><br>
-                        Treasury Balance Now:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($treasuryBalance, 2)}}</strong><br>
+                        {{-- Treasury Balance Now:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($treasuryBalance, 2)}}</strong><br> --}}
 
 						<hr style="border-bottom: 2px solid #007bff">
 				<!-- start:report_review -->
@@ -1563,26 +1570,26 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
                     <div class="col-12">
                                 <div class="form-group row">
-                                        <label for="Step10_Note">Add New Note:</label>
-                                        <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(10)" name="Step10_Note" id="Step10_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+                                        <label for="Step9_Note">Add New Note:</label>
+                                        <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
                                         <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                        <button type="button" id="AddNote10" class="btn btn-sm bg-gradient-success" onclick="AddNote(10)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                        <button type="button" id="AddNote9" class="btn btn-sm bg-gradient-success" onclick="AddNote(9)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                     </div>
                                 </div>
                             </div>
                             </div>
 
 							<div class="col-12">
-								<label for="Step10_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+								<label for="Step9_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 							</div>
 							<div class="col-12">
-								<textarea class="form-control" style="width:100%" rows="8" name="Step10_Log" id="Step10_Log" readonly><?php echo $financial_report_array['step_10_notes_log']; ?></textarea>
+								<textarea class="form-control" style="width:100%" rows="8" name="Step9_Log" id="Step9_Log" readonly><?php echo $financial_report_array['step_9_notes_log']; ?></textarea>
 							</div>
                             <div class="col-12"><br></div>
 
                     <!-- end:report_review -->
                     <div class="col-12 text-center">
-                        <button type="submit" id="btn-step-10" class="btn bg-gradient-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+                        <button type="submit" id="btn-step-9" class="btn bg-gradient-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
                     </div>
                 </div>
             </div>
@@ -1590,7 +1597,100 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 			</div>
 			</div>
         </div>
-			<!------End Step 10 ------>
+			<!------End Step 9 ------>
+
+            <!------Start Step 9.5 ------>
+            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='95') echo "active";?>">
+                <div class="card-header" id="accordion-header-members">
+                    <h4 class="card-title w-100">
+                        <a class="d-block" data-toggle="collapse" href="#collapseNineFive" style="width: 100%;">990N IRS FILING</a>
+                    </h4>
+                </div>
+                <div id="collapseNineFive" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='95') echo 'show'; ?>" data-parent="#accordion">
+                    <div class="card-body">
+                <section>
+                    <div class="flex-container">
+                        <div class="col-12">
+                            <p>The 990N filing is an IRS requirement that all chapters must complete, but it cannot be filed before July 1st.  After filing, upload a copy of your chapter's filing confirmation here.  You can upload a copy of your confirmation email or screenshot after filing.  All chapters should file their 990N directly with the IRS and not through a third party. <span style="color:red"><i>The IRS does not charge a fee for 990N filings.</i></span></p>
+                        </div>
+                </div>
+
+
+                    <hr style="border-bottom: 2px solid #007bff">
+            <!-- start:report_review -->
+            <div  class="form-row report_review">
+                <div class="card-header col-md-12">
+                    <h3 class="card-title" style="color:#007bff"><strong>ANNUAL REPORT REVIEW</strong></h3>
+                </div>
+                        <div class="card-body form-row">
+                              <div class="col-12">
+                            @if (!is_null($financial_report_array['roster_path']))
+                                    <div class="col-12">
+                                        <label>990N Filing Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $financial_report_array['file_irs_path'] }}">&nbsp; View 990N Confirmation</a><br>
+                                    </div>
+                                    <div class="col-12" id="990NBlock">
+                                        <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Replace 990N File.<br>
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace 990N Confirmation</button>
+                                </div>
+                            @else
+                                <div class="col-12" id="990NBlock">
+                                        <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Upload 990N File.<br>
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload 990N Confirmation</button>
+                                </div>
+                            @endif
+                            <input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $financial_report_array['file_irs_path']; ?>">
+                            <div class="clearfix"></div>
+                            <div class="col-12"><br></div>
+                            <div class="col-12">
+
+                                <div class="form-group row">
+                                    <label>Did the chapter file their 990N with the date range of <strong>7/1/<?php echo date('Y')-1 .' - 6/30/'.date('Y');?></strong>?<span class="field-required">*&nbsp;</span></label>
+                                    <div class="col-12 row">
+                                        <div class="form-check" style="margin-right: 20px;">
+                                            <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="1" {{ $financial_report_array['check_current_990N_included'] === 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label">Yes</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="0" {{ $financial_report_array['check_current_990N_included'] === 0 ? 'checked' : '' }}>
+                                            <label class="form-check-label">No</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                <div class="col-12">
+                            <div class="form-group row">
+                                    <label for="Step95_Note">Add New Note:</label>
+                                    <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(95)" name="Step95_Note" id="Step95_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+                                    <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
+                                    <button type="button" id="AddNote95" class="btn btn-sm bg-gradient-success" onclick="AddNote(95)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="Step95_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                        </div>
+                        <div class="col-12">
+                            <textarea class="form-control" style="width:100%" rows="8" name="Step95_Log" id="Step95_Log" readonly><?php echo $financial_report_array['step_95_notes_log']; ?></textarea>
+                        </div>
+                        <div class="col-12"><br></div>
+
+                <!-- end:report_review -->
+                <div class="col-12 text-center">
+                    <button type="submit" id="btn-step-95" class="btn bg-gradient-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+                </div>
+            </div>
+        </div>
+            </section>
+        </div>
+        </div>
+    </div>
+        <!------End Step 9.5 ------>
+
+
 
 			<!------Start Step 11 ------>
             <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='11') echo "active";?>">
@@ -1774,7 +1874,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                     </div>
                     <div class="card-body form-row">
                         <div class="col-12">
-                            @if (!is_null($financial_report_array['roster_path']))
+                            {{-- @if (!is_null($financial_report_array['roster_path']))
                                     <div class="col-12">
                                         <label>990N Filing Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $financial_report_array['file_irs_path'] }}">&nbsp; View 990N Confirmation</a><br>
                                     </div>
@@ -1782,19 +1882,17 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Replace 990N File.<br>
                                         <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace 990N Confirmation</button>
-                                        {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-990N" ><i class="fas fa-undo" ></i>&nbsp; Replace Roster File</button> --}}
                                 </div>
                             @else
                                 <div class="col-12" id="990NBlock">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload 990N File.<br>
                                         <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload 990N Confirmation</button>
-                                        {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-990N" ><i class="fas fa-upload" ></i>&nbsp; Upload Roster File</button> --}}
                                 </div>
                             @endif
                             <input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $financial_report_array['file_irs_path']; ?>">
                             <div class="clearfix"></div>
-                            <div class="col-12"><br></div>
+                            <div class="col-12"><br></div> --}}
                             <div class="col-12">
 
                                     <div class="col-12">
@@ -1877,7 +1975,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
+                                        {{-- <div class="form-group row">
                                             <label>Did they attach proof of 990N Filing with the date range of <strong>7/1/<?php echo date('Y')-1 .' - 6/30/'.date('Y');?></strong>?<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
@@ -1889,7 +1987,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
 
                                         <div class="form-group row">
                                             <label for="Step11_Note">Add New Note:</label>
@@ -2505,7 +2603,6 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                 <div class="col-md-12">
                                     <div class="col-xs-12">
                                         <label class="control-label" for="DownloadPDF">Financial Report PDF:</label>
-                                    {{-- <a id="viewPdfLink" href="{{ url("/chapter/financial/pdf/{$chapterid}?mode=download") }}">Download PDF</a> --}}
                                 <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>">Download PDF</a>
                                 </div>
 
@@ -2669,36 +2766,6 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                             </strong><br>
                                         </div>
 
-                                        {{-- <div class="flex-item">
-                                            Treasury Balance Now matches Reconciled Bank Balance:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_bank_statement_matches']) ? 'Please Review'
-                                                : ( $financial_report_array ['check_bank_statement_matches'] == 0 ? 'NO' : ($financial_report_array ['check_bank_statement_matches'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div> --}}
-
-                                        <div class="flex-item2">
-                                            Purchased membership pins or had leftovers:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_purchased_pins']) ? 'Please Review'
-                                                : ( $financial_report_array ['check_purchased_pins'] == 0 ? 'NO' : ($financial_report_array ['check_purchased_pins'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div>
-                                        <div class="flex-item2">
-                                            Purchased MOMS Club merchandise:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_purchased_mc_merch']) ? 'Please Review'
-                                                : ($financial_report_array ['check_purchased_mc_merch'] == 0 ? 'NO' : ($financial_report_array ['check_purchased_mc_merch'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div>
-                                        <div class="flex-item2">
-                                            Offered MOMS Club merchandise or info on how to buy to members:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_offered_merch']) ? 'Please Review'
-                                                : ( $financial_report_array ['check_offered_merch'] == 0 ? 'NO' : ( $financial_report_array ['check_offered_merch'] == 1 ? 'YES' : 'Pleae Review' )) }}</strong><br>
-                                        </div>
-                                        <div class="flex-item2">
-                                            Manual/by-laws made available to members:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_bylaws_available']) ? 'Please Review'
-                                                : ( $financial_report_array ['check_bylaws_available'] == 0 ? 'NO' : ($financial_report_array ['check_bylaws_available'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div>
-                                        <div class="flex-item2">
-                                            Attended International Event (in person or virtual):&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_attended_training']) ? 'Please Review'
-                                                : ($financial_report_array ['check_attended_training'] == 0 ? 'NO' : ($financial_report_array ['check_attended_training'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div>
-                                        <div class="flex-item2">
-                                            Sistered another chapter:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_sistered_another_chapter']) ? 'Please Review'
-                                                : ($financial_report_array ['check_sistered_another_chapter'] == 0 ? 'NO' : ($financial_report_array ['check_sistered_another_chapter'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div>
-
                                         <div class="flex-item2">
                                             Proof of 990N Filing for 7/1/<?php echo date('Y')-1 .' - 6/30/'.date('Y');?> (should be above):&nbsp;&nbsp;&nbsp;
                                             <strong>
@@ -2726,10 +2793,32 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                             </strong><br>
                                         </div>
 
-                                        {{-- <div class="flex-item2">
-                                            Proof of 990N Filing for 7/1/<?php echo date('Y')-1 .' - 6/30/'.date('Y');?> (should be above):&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_current_990N_included']) ? 'Please Review'
-                                                : ($financial_report_array ['check_current_990N_included'] == 0 ? 'NO' : ($financial_report_array ['check_current_990N_included'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div> --}}
+                                        <div class="flex-item2">
+                                            Purchased membership pins or had leftovers:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_purchased_pins']) ? 'Please Review'
+                                                : ( $financial_report_array ['check_purchased_pins'] == 0 ? 'NO' : ($financial_report_array ['check_purchased_pins'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
+                                        </div>
+                                        <div class="flex-item2">
+                                            Purchased MOMS Club merchandise:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_purchased_mc_merch']) ? 'Please Review'
+                                                : ($financial_report_array ['check_purchased_mc_merch'] == 0 ? 'NO' : ($financial_report_array ['check_purchased_mc_merch'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
+                                        </div>
+                                        <div class="flex-item2">
+                                            Offered MOMS Club merchandise or info on how to buy to members:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_offered_merch']) ? 'Please Review'
+                                                : ( $financial_report_array ['check_offered_merch'] == 0 ? 'NO' : ( $financial_report_array ['check_offered_merch'] == 1 ? 'YES' : 'Pleae Review' )) }}</strong><br>
+                                        </div>
+                                        <div class="flex-item2">
+                                            Manual/by-laws made available to members:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_bylaws_available']) ? 'Please Review'
+                                                : ( $financial_report_array ['check_bylaws_available'] == 0 ? 'NO' : ($financial_report_array ['check_bylaws_available'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
+                                        </div>
+                                        <div class="flex-item2">
+                                            Attended International Event (in person or virtual):&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_attended_training']) ? 'Please Review'
+                                                : ($financial_report_array ['check_attended_training'] == 0 ? 'NO' : ($financial_report_array ['check_attended_training'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
+                                        </div>
+                                        <div class="flex-item2">
+                                            Sistered another chapter:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_sistered_another_chapter']) ? 'Please Review'
+                                                : ($financial_report_array ['check_sistered_another_chapter'] == 0 ? 'NO' : ($financial_report_array ['check_sistered_another_chapter'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
+                                        </div>
+
+
 
                                     </div>
                                     </div>
@@ -2858,90 +2947,8 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 		<!------End Step 13 ------>
 			</div><!-- end of accordion -->
 			</form>
-            {{-- <div class="modal fade" id="modal-roster">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">Upload Roster</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form id="upload_roster" name="upload_roster" role="form" enctype="multipart/form-data" method="POST" action='{{ url("/files/storeRoster",$chapterid) }}' >
-                                @csrf
-                                <input type="file" name='file' required>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success" id="btn-roster">Upload</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade" id="modal-statement1">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">Upload Statement</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form id="upload_statement1" name="upload_statement1" role="form" enctype="multipart/form-data" method="POST" action='{{ url("/files/storeStatement1",$chapterid) }}' >
-                                @csrf
-                                <input type="file" name='file' required>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success" id="btn-statement1">Upload</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade" id="modal-statement2">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">Upload Additional Statement</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{ url('/files/storeStatement2/'. $chapterid) }}" method="post" enctype="multipart/form-data">
-                                @csrf
-                                <input type="file" name='file' required>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success" id="btn-statement2">Upload</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade" id="modal-990N">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title">Upload 990N Confirmation</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{ url('/files/store990n/'. $chapterid) }}" method="post" enctype="multipart/form-data">
-                                @csrf
-                                <input type="file" name='file' required>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-success" id="btn-990N">Upload</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div> --}}
+        </div>
+
             <div class="card-body text-center">
                 <a href="{{ route('home') }}" class="btn bg-gradient-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
             @if ($submitted)
@@ -3251,9 +3258,6 @@ function show990NUploadModal() {
     });
 }
 
-
-
-
     $("#review-complete").click(function() {
         if (!CheckMembers()) {
         return false;
@@ -3333,10 +3337,6 @@ function show990NUploadModal() {
         submitFormWithStep(8);
     });
     $("#btn-step-9").click(function() {
-        if (!CheckFinancial()) return false;
-        submitFormWithStep(9);
-    });
-    $("#btn-step-10").click(function() {
         var post_balance = $('#post_balance').val();
         if (post_balance == null || post_balance == '') {
             customWarningAlert('Please enter Ending Balance');
@@ -3345,6 +3345,13 @@ function show990NUploadModal() {
         } if (!CheckReconciliation()) {
             return false;
         }
+        submitFormWithStep(9);
+    });
+    $("#btn-step-95").click(function() {
+        submitFormWithStep(95);
+    });
+    $("#btn-step-10").click(function() {
+        if (!CheckFinancial()) return false;
         submitFormWithStep(10);
     });
     $("#btn-step-11").click(function() {
@@ -3424,8 +3431,9 @@ function show990NUploadModal() {
             6: 'International',
             7: 'Donations',
             8: 'Other',
-            9: 'Financials',
-            10: 'Reconciliation',
+            9: 'Reconciliation',
+            95: '990N',
+            10: 'Financials',
             11: 'Questions',
             12: 'Awards',
         }

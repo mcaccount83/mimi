@@ -4826,6 +4826,7 @@ class ChapterController extends Controller
             $step_7_notes_log = $input['Step7_Log'];
             $step_8_notes_log = $input['Step8_Log'];
             $step_9_notes_log = $input['Step9_Log'];
+            $step_95_notes_log = $input['Step95_Log'];
             $step_10_notes_log = $input['Step10_Log'];
             $step_11_notes_log = $input['Step11_Log'];
             $step_12_notes_log = $input['Step12_Log'];
@@ -4914,6 +4915,7 @@ class ChapterController extends Controller
                 $report->step_7_notes_log = $step_7_notes_log;
                 $report->step_8_notes_log = $step_8_notes_log;
                 $report->step_9_notes_log = $step_9_notes_log;
+                $report->step_95_notes_log = $step_95_notes_log;
                 $report->step_10_notes_log = $step_10_notes_log;
                 $report->step_11_notes_log = $step_11_notes_log;
                 $report->step_12_notes_log = $step_12_notes_log;
@@ -5307,9 +5309,26 @@ class ChapterController extends Controller
             ->where('chapters.id', '=', $id)
             ->get();
 
+        $resources = DB::table('resources')
+            ->select('resources.*',
+                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),
+                DB::raw('CASE
+                    WHEN category = 1 THEN "BYLAWS"
+                    WHEN category = 2 THEN "FACT SHEETS"
+                    WHEN category = 3 THEN "COPY READY MATERIAL"
+                    WHEN category = 4 THEN "IDEAS AND INSPIRATION"
+                    WHEN category = 5 THEN "CHAPTER RESOURCES"
+                    WHEN category = 6 THEN "SAMPLE CHPATER FILES"
+                    WHEN category = 7 THEN "END OF YEAR"
+                    ELSE "Unknown"
+                END as priority_word'))
+            ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
+            ->orderBy('name')
+            ->get();
+
         $submitted = $chapterDetails[0]->financial_report_received;
         $data = ['financial_report_array' => $financial_report_array, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails, 'user_type' => $user_type,
-            'userName' => $userName, 'userEmail' => $userEmail];
+            'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources];
 
         DB::commit();
         return view('boards.financial')->with($data);
