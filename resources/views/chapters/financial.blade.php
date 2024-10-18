@@ -1189,14 +1189,14 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
             </div>
 				<!------End Step 8 ------>
 
-                <!------Start Step 10 ------>
-                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='10') echo "active";?>">
+                <!------Start Step 9 ------>
+                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='9') echo "active";?>">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseTen" style="width: 100%;">FINANCIAL SUMMARY</a>
+                            <a class="d-block" data-toggle="collapse" href="#collapseNine" style="width: 100%;">FINANCIAL SUMMARY</a>
                         </h4>
                     </div>
-                    <div id="collapseTen" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='10') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseNine" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='9') echo 'show'; ?>" data-parent="#accordion">
                         <div class="card-body">
 				<section>
                     <?php
@@ -1311,24 +1311,24 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
                     <div class="col-12">
                         <div class="form-group row">
-                            <label for="Step10_Note">Add New Note:</label>
-                            <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(10)" name="Step10_Note" id="Step10_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+                            <label for="Step9_Note">Add New Note:</label>
+                            <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
                             <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                            <button type="button" id="AddNote10" class="btn btn-sm bg-gradient-success" onclick="AddNote(10)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                            <button type="button" id="AddNote9" class="btn btn-sm bg-gradient-success" onclick="AddNote(9)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                     </div>
                 </div>
             </div>
             </div>
 					<div class="col-12">
-						<label for="Step10_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+						<label for="Step9_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 					</div>
 					<div class="col-12">
-						<textarea class="form-control" style="width:100%" rows="8" name="Step10_Log" id="Step10_Log" readonly><?php echo $financial_report_array['step_10_notes_log']; ?></textarea>
+						<textarea class="form-control" style="width:100%" rows="8" name="Step9_Log" id="Step9_Log" readonly><?php echo $financial_report_array['step_9_notes_log']; ?></textarea>
 					</div>
                                             <div class="col-12"><br></div>
 		    <!-- end:report_review -->
                     <div class="col-12 text-center">
-                        <button type="submit" id="btn-step-10" class="btn bg-gradient-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+                        <button type="submit" id="btn-step-9" class="btn bg-gradient-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
                         </div>
                     </div>
                 </div>
@@ -1336,16 +1336,16 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 			</div>
 			</div>
         </div>
-			<!------End Step 10 ------>
+			<!------End Step 9 ------>
 
-                <!------Start Step 9 ------>
-                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='9') echo "active";?>">
+                <!------Start Step 10 ------>
+                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='10') echo "active";?>">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseNine" style="width: 100%;">BANK RECONCILIATION</a>
+                            <a class="d-block" data-toggle="collapse" href="#collapseTen" style="width: 100%;">BANK RECONCILIATION</a>
                         </h4>
                     </div>
-                    <div id="collapseNine" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='9') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseTen" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='10') echo 'show'; ?>" data-parent="#accordion">
                         <div class="card-body">
 					<section>
                         {{-- <?php
@@ -1570,26 +1570,26 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
                     <div class="col-12">
                                 <div class="form-group row">
-                                        <label for="Step9_Note">Add New Note:</label>
-                                        <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+                                        <label for="Step10_Note">Add New Note:</label>
+                                        <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(10)" name="Step10_Note" id="Step10_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
                                         <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                        <button type="button" id="AddNote9" class="btn btn-sm bg-gradient-success" onclick="AddNote(9)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                        <button type="button" id="AddNote10" class="btn btn-sm bg-gradient-success" onclick="AddNote(10)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                     </div>
                                 </div>
                             </div>
                             </div>
 
 							<div class="col-12">
-								<label for="Step9_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+								<label for="Step10_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 							</div>
 							<div class="col-12">
-								<textarea class="form-control" style="width:100%" rows="8" name="Step9_Log" id="Step9_Log" readonly><?php echo $financial_report_array['step_9_notes_log']; ?></textarea>
+								<textarea class="form-control" style="width:100%" rows="8" name="Step10_Log" id="Step10_Log" readonly><?php echo $financial_report_array['step_10_notes_log']; ?></textarea>
 							</div>
                             <div class="col-12"><br></div>
 
                     <!-- end:report_review -->
                     <div class="col-12 text-center">
-                        <button type="submit" id="btn-step-9" class="btn bg-gradient-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+                        <button type="submit" id="btn-step-10" class="btn bg-gradient-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
                     </div>
                 </div>
             </div>
@@ -1597,16 +1597,16 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 			</div>
 			</div>
         </div>
-			<!------End Step 9 ------>
+			<!------End Step 10 ------>
 
-            <!------Start Step 9.5 ------>
-            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='95') echo "active";?>">
+            <!------Start Step 11 ------>
+            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='11') echo "active";?>">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
-                        <a class="d-block" data-toggle="collapse" href="#collapseNineFive" style="width: 100%;">990N IRS FILING</a>
+                        <a class="d-block" data-toggle="collapse" href="#collapseEleven" style="width: 100%;">990N IRS FILING</a>
                     </h4>
                 </div>
-                <div id="collapseNineFive" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='95') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseEleven" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='11') echo 'show'; ?>" data-parent="#accordion">
                     <div class="card-body">
                 <section>
                     <div class="flex-container">
@@ -1661,26 +1661,26 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
                 <div class="col-12">
                             <div class="form-group row">
-                                    <label for="Step95_Note">Add New Note:</label>
-                                    <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(95)" name="Step95_Note" id="Step95_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+                                    <label for="Step11_Note">Add New Note:</label>
+                                    <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(11)" name="Step11_Note" id="Step11_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
                                     <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                    <button type="button" id="AddNote95" class="btn btn-sm bg-gradient-success" onclick="AddNote(95)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                    <button type="button" id="AddNote11" class="btn btn-sm bg-gradient-success" onclick="AddNote(11)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                 </div>
                             </div>
                         </div>
                         </div>
 
                         <div class="col-12">
-                            <label for="Step95_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                            <label for="Step11_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                         </div>
                         <div class="col-12">
-                            <textarea class="form-control" style="width:100%" rows="8" name="Step95_Log" id="Step95_Log" readonly><?php echo $financial_report_array['step_95_notes_log']; ?></textarea>
+                            <textarea class="form-control" style="width:100%" rows="8" name="Step11_Log" id="Step11_Log" readonly><?php echo $financial_report_array['step_11_notes_log']; ?></textarea>
                         </div>
                         <div class="col-12"><br></div>
 
                 <!-- end:report_review -->
                 <div class="col-12 text-center">
-                    <button type="submit" id="btn-step-95" class="btn bg-gradient-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+                    <button type="submit" id="btn-step-11" class="btn bg-gradient-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
                 </div>
             </div>
         </div>
@@ -1688,18 +1688,18 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
         </div>
         </div>
     </div>
-        <!------End Step 9.5 ------>
+        <!------End Step 11 ------>
 
 
 
-			<!------Start Step 11 ------>
-            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='11') echo "active";?>">
+			<!------Start Step 12 ------>
+            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='12') echo "active";?>">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
-                        <a class="d-block" data-toggle="collapse" href="#collapseEleven" style="width: 100%;">CHAPTER QUESTIONS</a>
+                        <a class="d-block" data-toggle="collapse" href="#collapseTwelve" style="width: 100%;">CHAPTER QUESTIONS</a>
                     </h4>
                 </div>
-                <div id="collapseEleven" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='11') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseTwelve" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='12') echo 'show'; ?>" data-parent="#accordion">
                     <div class="card-body">
 				<section>
                     <table>
@@ -1990,26 +1990,26 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                         </div> --}}
 
                                         <div class="form-group row">
-                                            <label for="Step11_Note">Add New Note:</label>
-                                            <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(11)" name="Step11_Note" id="Step11_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+                                            <label for="Step12_Note">Add New Note:</label>
+                                            <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(12)" name="Step12_Note" id="Step12_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
                                             <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-                                            <button type="button" id="AddNote11" class="btn btn-sm bg-gradient-success" onclick="AddNote(11)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+                                            <button type="button" id="AddNote12" class="btn btn-sm bg-gradient-success" onclick="AddNote(12)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
 							<div class="col-12">
-								<label for="Step11_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+								<label for="Step12_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 							</div>
 							<div class="col-12">
-								<textarea class="form-control" style="width:100%" rows="8" name="Step11_Log" id="Step11_Log" readonly><?php echo $financial_report_array['step_11_notes_log']; ?></textarea>
+								<textarea class="form-control" style="width:100%" rows="8" name="Step12_Log" id="Step12_Log" readonly><?php echo $financial_report_array['step_12_notes_log']; ?></textarea>
 							</div>
                             <div class="col-12"><br></div>
 
 				<!-- end:report_review -->
                 <div class="col-12 text-center">
-						<button type="submit" id="btn-step-11" class="btn bg-gradient-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+						<button type="submit" id="btn-step-12" class="btn bg-gradient-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
 					</div>
                 </div>
             </div>
@@ -2017,16 +2017,16 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 		  </div>
 		  </div>
         </div>
-			<!------End Step 11 ------>
+			<!------End Step 12 ------>
 
-			<!------Start Step 12 ------>
-            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='12') echo "active";?>">
+			<!------Start Step 13 ------>
+            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='13') echo "active";?>">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
-                        <a class="d-block" data-toggle="collapse" href="#collapseTwelve" style="width: 100%;">AWARD NOMINATIONS</a>
+                        <a class="d-block" data-toggle="collapse" href="#collapseThirteen" style="width: 100%;">AWARD NOMINATIONS</a>
                     </h4>
                 </div>
-                <div id="collapseTwelve" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='12') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseThirteen" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='13') echo 'show'; ?>" data-parent="#accordion">
                     <div class="card-body">
 					<section>
 					<div class="form-row form-group">
@@ -2553,26 +2553,26 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
                                     <div class="col-12">
                                         <div class="form-group row">
-											<label for="Step12_Note">Add New Note:</label>
-											<textarea class="form-control" style="width:100%" oninput="EnableNoteLogButton(12)" rows="3" name="Step12_Note" id="Step12_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+											<label for="Step13_Note">Add New Note:</label>
+											<textarea class="form-control" style="width:100%" oninput="EnableNoteLogButton(13)" rows="3" name="Step13_Note" id="Step13_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
                                             <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
-											<button type="button" id="AddNote12" class="btn btn-sm bg-gradient-success" onclick="AddNote(12)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
+											<button type="button" id="AddNote13" class="btn btn-sm bg-gradient-success" onclick="AddNote(13)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 										</div>
                                     </div>
                                 </div>
                                 </div>
 
 										<div class="col-md-12">
-											<label for="Step12_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+											<label for="Step13_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 										</div>
 										<div class="col-12">
-											<textarea class="form-control" style="width:100%" rows="8" name="Step12_Log" id="Step12_Log" readonly><?php echo $financial_report_array['step_12_notes_log']; ?></textarea>
+											<textarea class="form-control" style="width:100%" rows="8" name="Step13_Log" id="Step13_Log" readonly><?php echo $financial_report_array['step_13_notes_log']; ?></textarea>
 										</div>
                                         <div class="col-12"><br></div>
 
 							<!-- end:report_review -->
                         <div class="col-12 text-center">
-							 <button type="submit" id="btn-step-12" class="btn bg-gradient-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+							 <button type="submit" id="btn-step-13" class="btn bg-gradient-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
 						</div>
                     </div>
                 </div>
@@ -2580,17 +2580,16 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 				</div>
             </div>
         </div>
-            <!------End Step 12 ------>
+            <!------End Step 13 ------>
 
-
-			<!------Start Step 13 ------>
-            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='13') echo "active";?>">
+			<!------Start Step 14 ------>
+            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='14') echo "active";?>">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
-                        <a class="d-block" data-toggle="collapse" href="#collapseThirteen" style="width: 100%;">REVIEW SUMMARY</a>
+                        <a class="d-block" data-toggle="collapse" href="#collapseFourteen" style="width: 100%;">REVIEW SUMMARY</a>
                     </h4>
                 </div>
-                <div id="collapseThirteen" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='13') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseFourteen" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='14') echo 'show'; ?>" data-parent="#accordion">
                     <div class="card-body">
 						<section>
                             <div class="col-md-12">
@@ -2884,7 +2883,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 										<strong>Reviewer Notes Logged for this Report (not visible to chapter):</strong><br>
                                         <?php
                                         $financial_report_notes = [];
-                                        for ($i = 1; $i <= 12; $i++) {
+                                        for ($i = 1; $i <= 13; $i++) {
                                             $key = 'step_' . $i . '_notes_log';
                                             if (isset($financial_report_array[$key])) {
                                                 $notes = explode("\n", $financial_report_array[$key]);
@@ -2922,29 +2921,25 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
                         <div class="card-body text-center">
                             <br>
-                            <button type="submit" id="btn-step-13" class="btn bg-gradient-primary"><i class="fas fa-save"></i>&nbsp; Save</button>
+                            <button type="submit" id="btn-step-14" class="btn bg-gradient-primary"><i class="fas fa-save"></i>&nbsp; Save</button>
 
-                            <?php
-                            if ($financial_report_array['review_complete'] != "" && $submitted && (Session::get('positionid') == 5 || Session::get('positionid') == 6 || Session::get('positionid') == 7)) { ?>
-                                <button type="button" class="btn bg-gradient-success" id="review-clear"><i class="fas fa-minus"></i>&nbsp; Clear Review Complete</button>
-                                {{-- <a href="<?php echo url("/chapter/clearreview/{$chapterDetails[0]->id}") ?>" class="btn bg-gradient-success"><i class="fas fa-minus"></i>&nbsp; Clear Review Complete</a> --}}
-                            <?php
-                            } elseif ($financial_report_array['review_complete'] != "" && $submitted && (Session::get('positionid') != 5 && Session::get('positionid') != 6 && Session::get('positionid') != 7)) { ?>
-                                <button type="button" class="btn bg-gradient-success disabled"><i class="fas fa-minus"></i>&nbsp; Clear Review Complete</button>
-                            <?php
-                            } else { ?>
+                            @if ($financial_report_array['review_complete'] != "" && $submitted)
+                                @if ($regionalCoordinatorCondition)
+                                    <button type="button" class="btn bg-gradient-success" id="review-clear"><i class="fas fa-minus"></i>&nbsp; Clear Review Complete</button>
+                                @else
+                                    <button type="button" class="btn bg-gradient-success disabled"><i class="fas fa-minus"></i>&nbsp; Clear Review Complete</button>
+                                @endif
+                            @else
                                 <button type="button" class="btn bg-gradient-success" id="review-complete"><i class="fas fa-check"></i>&nbsp; Mark as Review Complete</button>
-                            <?php } ?>
-                            <button type="button" class="btn bg-gradient-danger" id="unsubmit"><i class="fas fa-times"></i>&nbsp; UnSubmit Report</button>
-                            {{-- <a href="<?php echo url("/chapter/unsubmit/{$chapterDetails[0]->id}") ?>" class="btn bg-gradient-danger"><i class="fas fa-times"></i>&nbsp; UnSubmit Report</a> --}}
-                            <p style="color:red;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></p>
-
+                            @endif
+                                <button type="button" class="btn bg-gradient-danger" id="unsubmit"><i class="fas fa-times"></i>&nbsp; UnSubmit Report</button>
+                                <p style="color:red;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></p>
 					</div>
                 </section>
 				</div>
             </div>
         </div>
-		<!------End Step 13 ------>
+		<!------End Step 14 ------>
 			</div><!-- end of accordion -->
 			</form>
         </div>
@@ -3287,7 +3282,7 @@ function show990NUploadModal() {
 		var result=confirm("This will finalize this report and flag it as 'review complete'.  Do you wish to continue?");
 		if(result){
             $("#submit_type").val('review_complete');
-            $("#FurthestStep").val('13');
+            $("#FurthestStep").val('14');
             $("#financial_report").submit();
 		 } else {
             $(this).prop('disabled', false);
@@ -3337,6 +3332,10 @@ function show990NUploadModal() {
         submitFormWithStep(8);
     });
     $("#btn-step-9").click(function() {
+        if (!CheckFinancial()) return false;
+        submitFormWithStep(9);
+    });
+    $("#btn-step-10").click(function() {
         var post_balance = $('#post_balance').val();
         if (post_balance == null || post_balance == '') {
             customWarningAlert('Please enter Ending Balance');
@@ -3345,30 +3344,26 @@ function show990NUploadModal() {
         } if (!CheckReconciliation()) {
             return false;
         }
-        submitFormWithStep(9);
-    });
-    $("#btn-step-95").click(function() {
-        submitFormWithStep(95);
-    });
-    $("#btn-step-10").click(function() {
-        if (!CheckFinancial()) return false;
         submitFormWithStep(10);
     });
     $("#btn-step-11").click(function() {
-        if (!CheckQuestions()) return false;
         submitFormWithStep(11);
     });
     $("#btn-step-12").click(function() {
+        if (!CheckQuestions()) return false;
         submitFormWithStep(12);
     });
     $("#btn-step-13").click(function() {
+        submitFormWithStep(13);
+    });
+    $("#btn-step-14").click(function() {
         var assignedReviewer = $('#AssignedReviewer').val();
         if (assignedReviewer == null || assignedReviewer == '') {
             customWarningAlert('Please select a Reviewer');
             $('#AssignedReviewer').focus();
             return false;
         }
-        submitFormWithStep(13);
+        submitFormWithStep(14);
     });
 });
 
@@ -3431,11 +3426,11 @@ function show990NUploadModal() {
             6: 'International',
             7: 'Donations',
             8: 'Other',
-            9: 'Reconciliation',
-            95: '990N',
-            10: 'Financials',
-            11: 'Questions',
-            12: 'Awards',
+            9: 'Financials',
+            10: 'Reconciliation',
+            11: '990N',
+            12: 'Questions',
+            13: 'Awards',
         }
 
         var noteTextValue = noteText[NoteNumber] || NoteNumber;

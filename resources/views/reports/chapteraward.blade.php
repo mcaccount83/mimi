@@ -181,21 +181,20 @@
                 <!-- /.card-body -->
                     <div class="col-sm-12">
                         <div class="custom-control custom-switch">
-                            <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
-                            <label class="custom-control-label" for="showPrimary">Only show chapters I am Primary Reviewer for</label>
+                            <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input"
+                                   {{ $checkBoxStatus }} onchange="showPrimary()" />
+                            <label class="custom-control-label" for="showPrimary">Show All Chapters</label>
                         </div>
                     </div>
                     <div class="card-body text-center">
-                          <a class="btn bg-gradient-primary" href="{{ route('report.addawards') }}"><i class="fas fa-eye" ></i>&nbsp;&nbsp;&nbsp;View All Chapers</a>
+                          {{-- <a class="btn bg-gradient-primary" href="{{ route('report.addawards') }}"><i class="fas fa-eye" ></i>&nbsp;&nbsp;&nbsp;View All Chapers</a> --}}
 
-			  <?php
-			 if($checkBoxStatus){ ?>
+        {{-- @if ($checkBoxStatus)
 				<a href="{{ route('export.chapteraward',$corId) }}"><button class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-envelope" ></i>&nbsp;&nbsp;&nbsp;Export Award List</button></a>
-			<?php
-			 }
-			 else{ ?>
+
+			 @else
 				<a href="{{ route('export.chapteraward','0') }}"><button class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-envelope" ></i>&nbsp;&nbsp;&nbsp;Export Award List</button></a>
-			 <?php } ?>
+		@endif --}}
 
 
 
@@ -212,15 +211,14 @@
 @endsection
 @section('customscript')
 <script>
-         function showPrimary() {
-    var base_url = '{{ url("/yearreports/chapterawards") }}';
+    function showPrimary() {
+        var base_url = '{{ url("/yearreports/chapterawards") }}';
 
-    if ($("#showPrimary").prop("checked") == true) {
-        window.location.href = base_url + '?check=yes';
-    } else {
-        window.location.href = base_url;
+        if ($("#showPrimary").prop("checked") == true) {
+            window.location.href = base_url + '?check=yes';
+        } else {
+            window.location.href = base_url;
+        }
     }
-}
-
-</script>
+    </script>
 @endsection

@@ -64,14 +64,14 @@
                     @if ($currentMonth == 7)
                       <label><input type="checkbox" name="todo_990_due" id="todo_990_due" {{ $coordinatorDetails[0]->todo_990_due ? 'checked' : '' }}>&nbsp;&nbsp;Remind Chapters 990Ns are Due</label><br/>
                     @endif
-                <?php if ($positionid >= 5 && $positionid <= 7){ ?>
+                <?php if ($regionalCoordinatorCondition){ ?>
                     <label><input type="checkbox" name="todo_send_rereg" id="todo_send_rereg" {{ $coordinatorDetails[0]->todo_send_rereg ? 'checked' : '' }}>&nbsp;&nbsp;Send Re-Registration Reminders</label><br/>
                     <label><input type="checkbox" name="todo_send_late" id="todo_send_late" {{ $coordinatorDetails[0]->todo_send_late ? 'checked' : '' }}>&nbsp;&nbsp;Send Re-Registration Late Notices</label><br/>
                     <label><input type="checkbox" name="todo_record_rereg" id="todo_record_rereg" {{ $coordinatorDetails[0]->todo_record_rereg ? 'checked' : '' }}>&nbsp;&nbsp;Record Re-Registration Payments</label><br/>
                     <label><input type="checkbox" name="todo_record_m2m" id="todo_record_m2m" {{ $coordinatorDetails[0]->todo_record_m2m ? 'checked' : '' }}>&nbsp;&nbsp;Record M2M Donations</label><br/>
                     <label><input type="checkbox" name="todo_export_reports" id="todo_export_reports" {{ $coordinatorDetails[0]->todo_export_reports ? 'checked' : '' }}>&nbsp;&nbsp;Download Conference Reports</label><br/>
                 <?php } ?>
-                <?php if ($positionid == 8 || $secpositionid == 13) {?>
+                <?php if ($founderCondition || $ITCondition) {?>
                     <label><input type="checkbox" name="todo_export_int_reports" id="todo_export_int_reports" {{ $coordinatorDetails[0]->todo_export_int_reports ? 'checked' : '' }}>&nbsp;&nbsp;Download International Reports</label><br/>
                 <?php } ?>
                 </div>
@@ -79,10 +79,10 @@
 
                     <a href="#" onclick="uncheckAll(event)"><i class="fas fa-times"></i> Uncheck All</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="javascript:void(0);" onclick="document.getElementById('update-dashboard').submit();"><i class="fas fa-save"></i> Save</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <?php if ($positionid >= 6 && $positionid <= 7) {?>
+                    <?php if ($assistConferenceCoordinatorCondition) {?>
                         <a href="{{ url('/reports/coordinatortodo') }}"><i class="fas fa-check-square"></i> View To Do List Report</a>
                     <?php } ?>
-                    <?php if ($positionid == 8) {?>
+                    <?php if ($founderCondition) {?>
                         <a href="{{ url('/reports/intcoordinatortodo') }}"><i class="fas fa-check-square"></i> View To Do List Report</a>
                     <?php } ?>
                 </div>

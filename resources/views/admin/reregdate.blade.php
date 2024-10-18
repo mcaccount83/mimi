@@ -53,10 +53,11 @@
               {{-- <table id="chapterlist_reRegDate" class="table table-bordered table-hover"> --}}
               <thead>
       			    <tr>
-          			<th></th>
-          			<th>Chapter State</th>
-                    <th>Chapter Name</th>
-                    <th class="nosort" id="due_sort">Renew Date</th>
+          			<th>Edit Date</th>
+                    <th>Conf/Reg</th>
+          			<th>State</th>
+                    <th>Name</th>
+                    <th class="nosort" id="due_sort">Renewal Date</th>
                     <th>Last Paid</th>
                 </tr>
                 </thead>
@@ -65,6 +66,13 @@
                   <tr>
                         <td class="text-center align-middle">
                             <a href="<?php echo url("/admin/reregdate/{$list->id}") ?>"><i class="fas fa-edit"></i></a>
+                        </td>
+                        <td>
+                            @if ($list->reg != "None")
+                                {{ $list->conf }} / {{ $list->reg }}
+                            @else
+                                {{ $list->conf }}
+                            @endif
                         </td>
                         <td>{{ $list->state_short_name }}</td>
                         <td>{{ $list->name }}</td>

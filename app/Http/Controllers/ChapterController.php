@@ -84,19 +84,15 @@ class ChapterController extends Controller
         $request->session()->put('corconfid', $corConfId);
         $request->session()->put('corregid', $corRegId);
 
-        if ($positionId <= 8) {
-            if ($positionId >= 5 && $positionId <= 7) {
-                //Show Full Conference or Region
-                $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                    ->select('crt.id')
-                    ->get();
-            } else {
+        // Get the conditions
+        $conditions = getPositionConditions($positionId, $secPositionId);
+
+        if ($conditions['coordinatorCondition']) {
                 //Get Coordinator Reporting Tree
                 $reportIdList = DB::table('coordinator_reporting_tree as crt')
                     ->select('crt.id')
                     ->where($sqlLayerId, '=', $corId)
                     ->get();
-            }
             $inQryStr = '';
             foreach ($reportIdList as $key => $val) {
                 $inQryStr .= $val->id.',';
@@ -105,7 +101,7 @@ class ChapterController extends Controller
             $inQryArr = explode(',', $inQryStr);
         }
 
-        if ($positionId >= 6 && $positionId <= 7) {
+        if ($conditions['assistConferenceCoordinatorCondition']) {
             $chapterList = DB::table('chapters as ch')
                 ->select('ch.id', 'ch.name', 'ch.state', 'ch.ein', 'ch.primary_coordinator_id', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
                     'st.state_short_name as state', 'cd.region_id', 'ch.region')
@@ -118,7 +114,7 @@ class ChapterController extends Controller
                 ->orderBy('st.state_short_name')
                 ->orderBy('ch.name')
                 ->get();
-        } elseif ($positionId == 5) {
+        } elseif ($conditions['regionalCoordinatorCondition']) {
             $chapterList = DB::table('chapters as ch')
                 ->select('ch.id', 'ch.name', 'ch.state', 'ch.ein', 'ch.primary_coordinator_id', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
                     'st.state_short_name as state', 'cd.region_id', 'ch.region')
@@ -764,8 +760,13 @@ class ChapterController extends Controller
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
-        $positionid = $corDetails['position_id'];
-        if ($positionid < 5) {
+        $positionId = $corDetails['position_id'];
+        $secPositionId = $corDetails['sec_position_id'];
+
+        // Get the conditions
+        $conditions = getPositionConditions($positionId, $secPositionId);
+
+        if ($conditions['regionalCoordinatorCondition']) {
             $ch_state = $request->input('ch_hid_state');
             $ch_country = $request->input('ch_hid_country');
             $ch_region = $request->input('ch_hid_region');
@@ -780,7 +781,7 @@ class ChapterController extends Controller
             $ch_webstatus = $request->input('ch_webstatus');
             $ch_pcid = $request->input('ch_primarycor');
         }
-        if ($positionid == 8) {
+        if ($conditions['founderCondition']) {
             $ch_month = $request->input('ch_founddate');
             $ch_foundyear = $request->input('ch_foundyear');
         } else {
@@ -1806,6 +1807,9 @@ class ChapterController extends Controller
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
 
+        // Get the conditions
+        $conditions = getPositionConditions($positionId, $secPositionId);
+
         //Get Coordinator Reporting Tree
         $reportIdList = DB::table('coordinator_reporting_tree as crt')
             ->select('crt.id')
@@ -1817,7 +1821,7 @@ class ChapterController extends Controller
         }
         $inQryStr = rtrim($inQryStr, ',');
         $inQryArr = explode(',', $inQryStr);
-        if ($positionId == 8 || $positionId == 18 || $secPositionId == 18) {
+        if ($conditions['founderCondition'] || $conditions['inquiriesInternationalCondition']) {
             $inquiriesList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.inquiries_contact as inq_con', 'chapters.territory as terry', 'chapters.status as status', 'chapters.inquiries_note as inq_note', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'cd.email as cd_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'st.state_short_name as state')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
@@ -1828,8 +1832,8 @@ class ChapterController extends Controller
                 ->orderBy('st.state_short_name')
                 ->get();
 
-        } elseif ($positionId >= 6 && $positionId <= 7 || $positionId == 15 || $secPositionId == 15) {
-            $inquiriesList = DB::table('chapters')
+        } elseif ($conditions['assistConferenceCoordinatorCondition'] || $conditions['inquiriesConferneceCondition']) {
+                    $inquiriesList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.inquiries_contact as inq_con', 'chapters.territory as terry', 'chapters.status as status', 'chapters.inquiries_note as inq_note', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'cd.email as cd_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'st.state_short_name as state')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
@@ -1972,7 +1976,12 @@ class ChapterController extends Controller
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
         $positionId = $corDetails['position_id'];
-        if ($positionId == 8) {
+        $secPositionId = $corDetails['sec_position_id'];
+
+        // Get the conditions
+        $conditions = getPositionConditions($positionId, $secPositionId);
+
+        if ($conditions['founderCondition']) {
             $websiteList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.website_url as web', 'chapters.website_status as status', 'chapters.website_notes as web_notes', 'chapters.egroup as egroup', 'st.state_short_name as state')
                 ->join('state as st', 'chapters.state', '=', 'st.id')
@@ -1980,7 +1989,7 @@ class ChapterController extends Controller
                 ->orderBy('st.state_short_name')
                 ->orderBy('chapters.name')
                 ->get();
-        } elseif ($positionId >= 6 && $positionId <= 7) {
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
             $websiteList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.website_url as web', 'chapters.website_status as status', 'chapters.website_notes as web_notes', 'chapters.egroup as egroup', 'st.state_short_name as state')
                 ->join('state as st', 'chapters.state', '=', 'st.id')
@@ -2024,37 +2033,47 @@ class ChapterController extends Controller
         $corRegId = $corDetails['region_id'];
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
-        if ($positionId >= 6 && $positionId <= 7) {
+
+         // Get the conditions
+         $conditions = getPositionConditions($positionId, $secPositionId);
+
+        if ($conditions['assistConferenceCoordinatorCondition']) {
             $chapterList = DB::table('chapters as ch')
-                ->select('ch.id', 'ch.state', 'ch.name', 'ch.ein', 'ch.zap_date', 'ch.disband_reason', 'st.state_short_name as state')
+                ->select('ch.id', 'ch.state', 'ch.name', 'ch.ein', 'ch.zap_date', 'ch.disband_reason', 'st.state_short_name as state',
+                    'cf.short_name as conf', 'rg.short_name as reg')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
                 ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
                 ->leftJoin('state as st', 'ch.state', '=', 'st.id')
                 ->leftjoin('region as rg', 'ch.region', '=', 'rg.id')
+                ->leftJoin('conference as cf', 'ch.conference', '=', 'cf.id')
                 ->where('ch.is_active', '=', '0')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('ch.conference', '=', $corConfId)
                 ->orderByDesc('ch.zap_date')
                 ->get();
         } else {
-            if ($positionId == 8) {
+            if ($conditions['founderCondition']) {
                 $chapterList = DB::table('chapters as ch')
-                    ->select('ch.id', 'ch.state', 'ch.name', 'ch.ein', 'ch.zap_date', 'ch.disband_reason', 'st.state_short_name as state')
+                    ->select('ch.id', 'ch.state', 'ch.name', 'ch.ein', 'ch.zap_date', 'ch.disband_reason', 'st.state_short_name as state',
+                        'cf.short_name as conf', 'rg.short_name as reg')
                     ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
                     ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
                     ->leftJoin('state as st', 'ch.state', '=', 'st.id')
                     ->leftjoin('region as rg', 'ch.region', '=', 'rg.id')
+                    ->leftJoin('conference as cf', 'ch.conference', '=', 'cf.id')
                     ->where('ch.is_active', '=', '0')
                     ->where('bd.board_position_id', '=', '1')
                     ->orderByDesc('ch.zap_date')
                     ->get();
             } else {
                 $chapterList = DB::table('chapters as ch')
-                    ->select('ch.id', 'ch.state', 'ch.name', 'ch.ein', 'ch.zap_date', 'ch.disband_reason', 'st.state_short_name as state')
+                    ->select('ch.id', 'ch.state', 'ch.name', 'ch.ein', 'ch.zap_date', 'ch.disband_reason', 'st.state_short_name as state',
+                        'cf.short_name as conf', 'rg.short_name as reg')
                     ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
                     ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
                     ->leftJoin('state as st', 'ch.state', '=', 'st.id')
                     ->leftjoin('region as rg', 'ch.region', '=', 'rg.id')
+                    ->leftJoin('conference as cf', 'ch.conference', '=', 'cf.id')
                     ->where('ch.is_active', '=', '0')
                     ->where('bd.board_position_id', '=', '1')
                     ->where('ch.region', '=', $corRegId)
@@ -3475,19 +3494,15 @@ class ChapterController extends Controller
         $request->session()->put('corconfid', $corConfId);
         $request->session()->put('corregid', $corRegId);
 
-        if ($positionId <= 8) {
-            if ($positionId >= 5 && $positionId <= 7) {
-                //Show Full Conference or Region
-                $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                    ->select('crt.id')
-                    ->get();
-            } else {
+         // Get the conditions
+         $conditions = getPositionConditions($positionId, $secPositionId);
+
+        if ($conditions['coordinatorCondition']) {
                 //Get Coordinator Reporting Tree
                 $reportIdList = DB::table('coordinator_reporting_tree as crt')
                     ->select('crt.id')
                     ->where($sqlLayerId, '=', $corId)
                     ->get();
-            }
             $inQryStr = '';
             foreach ($reportIdList as $key => $val) {
                 $inQryStr .= $val->id.',';
@@ -3500,19 +3515,20 @@ class ChapterController extends Controller
             ->select(
                 'ch.id', 'ch.notes', 'ch.name', 'ch.state', 'ch.reg_notes', 'ch.next_renewal_year', 'ch.dues_last_paid', 'ch.start_month_id',
                 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name'
-            )
+                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name', 'cf.short_name as conf', 'rg.short_name as reg')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
+            ->leftJoin('conference as cf', 'ch.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'ch.region', '=', 'rg.id')
             ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->leftJoin('db_month as db', 'ch.start_month_id', '=', 'db.id')
             ->where('ch.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1');
 
         // Apply the position-based filtering
-        if ($positionId >= 6 && $positionId <= 7) {
+        if ($conditions['assistConferenceCoordinatorCondition']) {
             $baseQuery->where('ch.conference', '=', $corConfId);
-        } elseif ($positionId == 5) {
+        } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('ch.region', '=', $corRegId);
         } else {
             $baseQuery->whereIn('ch.primary_coordinator_id', $inQryArr);
@@ -4826,10 +4842,10 @@ class ChapterController extends Controller
             $step_7_notes_log = $input['Step7_Log'];
             $step_8_notes_log = $input['Step8_Log'];
             $step_9_notes_log = $input['Step9_Log'];
-            $step_95_notes_log = $input['Step95_Log'];
             $step_10_notes_log = $input['Step10_Log'];
             $step_11_notes_log = $input['Step11_Log'];
             $step_12_notes_log = $input['Step12_Log'];
+            $step_13_notes_log = $input['Step13_Log'];
 
             $reviewer_email_message = $input['reviewer_email_message'];
 
@@ -4915,10 +4931,10 @@ class ChapterController extends Controller
                 $report->step_7_notes_log = $step_7_notes_log;
                 $report->step_8_notes_log = $step_8_notes_log;
                 $report->step_9_notes_log = $step_9_notes_log;
-                $report->step_95_notes_log = $step_95_notes_log;
                 $report->step_10_notes_log = $step_10_notes_log;
                 $report->step_11_notes_log = $step_11_notes_log;
                 $report->step_12_notes_log = $step_12_notes_log;
+                $report->step_13_notes_log = $step_13_notes_log;
                 $report->check_roster_attached = $check_roster_attached;
                 $report->check_renewal_seems_right = $check_renewal_seems_right;
                 $report->check_minimum_service_project = $check_minimum_service_project;

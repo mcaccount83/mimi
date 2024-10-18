@@ -23,32 +23,6 @@
         @csrf
      <section class="content">
         <div class="container-fluid">
-
-            @php
-            $assistConferenceCoordinatorCondition = ($positionid >= 6 && $positionid <= 8);  //*ACC-Founder
-            $regionalCoordinatorCondition = ($positionid >= 5 && $positionid <= 8);  //*RC-Founder
-            $assistRegionalCoordinatorCondition = ($positionid >= 4 && $positionid <= 8);  //*ARC-Founder
-            $bigSisterCondition = ($positionid >= 1 && $positionid <= 8);  //*BS-Founder
-            $eoyTestCondition = ($positionid >= 6 && $positionid <= 8) || ($positionid == 29 || $secpositionid == 29);  //*ACC-Founder, AR Tester
-            $eoyReportCondition = ($positionid >= 1 && $positionid <= 8) || ($positionid == 19 || $secpositionid == 19) || ($positionid == 29 || $secpositionid == 29);  //*BS-Founder, AR Reviewer, AR Tester
-            $eoyReportConditionDISABLED = ($positionid == 13 || $secpositionid == 13);  //*IT Coordinator
-        @endphp
-        @php
-            $admin = DB::table('admin')
-                ->select('admin.*',
-                    DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),)
-                ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
-                ->orderBy('admin.id', 'desc') // Assuming 'id' represents the order of insertion
-                ->first();
-
-            $eoy_testers = $admin->eoy_testers;
-            $eoy_coordinators = $admin->eoy_coordinators;
-
-            $testers_yes = ($eoy_testers == 1);
-            $coordinators_yes = ($eoy_coordinators == 1);
-        @endphp
-
-
         <div class="row">
             <div class="col-12">
                 <div class="card card-outline card-primary">

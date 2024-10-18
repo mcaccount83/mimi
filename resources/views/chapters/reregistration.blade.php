@@ -35,8 +35,9 @@
                             <th>Payment</th>
                             <th>Notes</th>
                             <th>Email</th>
-                            <th>Chapter State</th>
-                            <th>Chapter Name</th>
+                            <th>Conf/Reg</th>
+                            <th>State</th>
+                            <th>Name</th>
                             <th>Re-Registration Notes</th>
                             <th>Due</th>
                             <th>Last Paid</th>
@@ -73,16 +74,23 @@
                         @endphp
                         <tr>
                             <td>
-                                @if (Session::get('positionid') == 7)
+                                @if ($conferenceCoordinatorCondition)
                                     <center><a href="{{ url("/chapter/re-registration/payment/{$list->id}") }}"><i class="far fa-credit-card"></i></a></center>
                                 @endif
                             </td>
                             <td>
-                                @if (Session::get('positionid') == 7)
+                                @if ($conferenceCoordinatorCondition)
                                     <center><a href="{{ url("/chapter/re-registration/notes/{$list->id}") }}"><i class="fas fa-pencil-alt"></i></a></center>
                                 @endif
                             </td>
                             <td><center><a href="mailto:{{ $emailListCord }}{{ $cc_string }}&subject=Re-Registration Reminder - MOMS Club of {{ $list->name }}, {{ $list->state_short_name }}&body={{ urlencode($mail_message) }}"><i class="far fa-envelope"></i></a></center></td>
+                            <td>
+                                @if ($list->reg != "None")
+                                    {{ $list->conf }} / {{ $list->reg }}
+                                @else
+                                    {{ $list->conf }}
+                                @endif
+                            </td>
                             <td>{{ $list->state_short_name }}</td>
                             <td>{{ $list->name }}</td>
                             <td>{{ $list->reg_notes }}</td>
@@ -115,11 +123,11 @@
                     </div>
                 </div>
                 <div class="card-body text-center">
-                <?php if(Session::get('positionid') == 7 || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>
+                <?php if($conferenceCoordinatorCondition){ ?>
                     {{-- <p>**Known issue - will not send more than 10 messages.**</p> --}}
                 <a title="Re-registration reminders will be sent to all unpaid chapters in your conference with renewal dates this month." href="{{ route('chapter.reminder') }}"><button class="btn bg-gradient-primary"   <?php if($checkBoxStatus) echo "disabled";?>><i class="fas fa-envelope" ></i>&nbsp; Send Current Month Reminders</button></a>
                 <?php }?>
-                <?php if(Session::get('positionid') == 7 || Session::get('positionid') == 10 || Session::get('secpositionid') ==10){ ?>
+                <?php if($conferenceCoordinatorCondition){ ?>
                     <a href="{{route('chapter.latereminder')}}" class="btn bg-gradient-primary" <?php if($checkBoxStatus) echo "disabled";?>><i class="fas fa-envelope" ></i>&nbsp; Send One Month Late Notices</a>
                 <?php }?>
 					<a href="{{ route('export.rereg')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download" ></i>&nbsp; Export Overdue Chapter List</button></a>

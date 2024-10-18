@@ -432,10 +432,12 @@ class AdminController extends Controller
         $reChapterList = DB::table('chapters as ch')
             ->select('ch.id', 'ch.notes', 'ch.name', 'ch.state', 'ch.reg_notes', 'ch.next_renewal_year', 'ch.dues_last_paid', 'ch.start_month_id',
                 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name')
+                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name', 'cf.short_name as conf', 'rg.short_name as reg')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
             ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'ch.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'ch.region', '=', 'rg.id')
             ->leftJoin('db_month as db', 'ch.start_month_id', '=', 'db.id')
             ->where('ch.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')

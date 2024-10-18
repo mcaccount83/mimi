@@ -77,20 +77,17 @@ class CoordinatorController extends Controller
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
+        $secPositionId = $corDetails['sec_position_id'];
 
-        if ($positionId <= 8) {
-            if ($positionId >= 5 && $positionId <= 7) {
-                //Show Full Conference or Region
-                $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                    ->select('crt.id')
-                    ->get();
-            } else {
+         // Get the conditions
+         $conditions = getPositionConditions($positionId, $secPositionId);
+
+         if ($conditions['coordinatorCondition']) {
                 //Get Coordinator Reporting Tree
                 $reportIdList = DB::table('coordinator_reporting_tree as crt')
                     ->select('crt.id')
                     ->where($sqlLayerId, '=', $corId)
                     ->get();
-            }
             $inQryStr = '';
             foreach ($reportIdList as $key => $val) {
                 $inQryStr .= $val->id.',';
@@ -112,9 +109,9 @@ class CoordinatorController extends Controller
         ->leftJoin('coordinators as report', 'report.id', '=', 'cd.report_id')
         ->where('cd.is_active', '=', '1');
 
-        if ($positionId >= 6 && $positionId <= 7) {
+        if ($conditions['assistConferenceCoordinatorCondition']) {
             $baseQuery->where('cd.conference_id', '=', $corConfId);
-        } elseif ($positionId == 5) {
+        } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
             $baseQuery->whereIn('cd.report_id', $inQryArr);
@@ -1337,6 +1334,10 @@ class CoordinatorController extends Controller
          $corConfId = $corDetails['conference_id'];
          $corRegId = $corDetails['region_id'];
          $positionId = $corDetails['position_id'];
+         $secPositionId = $corDetails['sec_position_id'];
+
+          // Get the conditions
+          $conditions = getPositionConditions($positionId, $secPositionId);
 
          $baseQuery = DB::table('coordinators as cd')
             ->select('cd.id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.reason_retired as cor_reason', 'cd.zapped_date as cor_zapdate',
@@ -1348,9 +1349,9 @@ class CoordinatorController extends Controller
             ->join('conference as cf', 'cf.id', '=', 'cd.conference_id')
             ->where('cd.is_active', '=', '0');
 
-         if ($positionId >= 6 && $positionId <= 7) {
-             $baseQuery->where('cd.conference_id', '=', $corConfId);
-         } elseif ($positionId == 5) {
+        if ($conditions['assistConferenceCoordinatorCondition']) {
+                $baseQuery->where('cd.conference_id', '=', $corConfId);
+         } elseif ($conditions['regionalCoordinatorCondition']) {
              $baseQuery->where('cd.region_id', '=', $corRegId);
          } else {
              $baseQuery;

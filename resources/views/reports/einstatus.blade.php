@@ -47,7 +47,7 @@
                 @foreach($chapterList as $list)
                   <tr>
                     <td>
-                        @if (Session::get('positionid') == 7)
+                        @if ($conferenceCoordinatorCondition)
                         <center><a href="{{ url("/chapter/einnotes/{$list->id}") }}"><i class="fas fa-pencil-alt"></i></a></center>
                         @endif
                     </td>

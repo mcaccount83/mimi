@@ -2036,7 +2036,7 @@ class BoardController extends Controller
         $bank_balance_now = $bank_balance_now === '' ? null : $bank_balance_now;
 
 
-        $petty_cash = $input['PettyCash'];
+        // $petty_cash = $input['PettyCash'];
 
         $BankRecArray = null;
         $FieldCount = $input['BankRecRowCount'];
@@ -2263,7 +2263,7 @@ class BoardController extends Controller
                     'other_income_and_expenses_array' => $other_income_and_expenses_array,
                     'amount_reserved_from_previous_year' => $amount_reserved_from_previous_year,
                     'bank_balance_now' => $bank_balance_now,
-                    'petty_cash' => $petty_cash,
+                    // 'petty_cash' => $petty_cash,
                     'bank_reconciliation_array' => $bank_reconciliation_array,
                     'receive_compensation' => $receive_compensation,
                     'receive_compensation_explanation' => $receive_compensation_explanation,
@@ -2385,7 +2385,7 @@ class BoardController extends Controller
                 $report->other_income_and_expenses_array = $other_income_and_expenses_array;
                 $report->amount_reserved_from_previous_year = $amount_reserved_from_previous_year;
                 $report->bank_balance_now = $bank_balance_now;
-                $report->petty_cash = $petty_cash;
+                // $report->petty_cash = $petty_cash;
                 $report->bank_reconciliation_array = $bank_reconciliation_array;
                 $report->receive_compensation = $receive_compensation;
                 $report->receive_compensation_explanation = $receive_compensation_explanation;

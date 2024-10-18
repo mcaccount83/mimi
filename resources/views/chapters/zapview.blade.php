@@ -700,14 +700,16 @@
 
             <!-- /.box-body -->
             <div class="card-body text-center">
+                @if ($regionalCoordinatorCondition)
                <a href="<?php echo url("/chapter/unzap/{$chapterList[0]->id}") ?>" class="btn bg-gradient-primary"><i class="fas fa-undo"  ></i>&nbsp; UnZap</a>
+               @endif
               <a href="{{ route('chapter.zapped') }}" class="btn bg-gradient-primary"><i class="fa fa-reply" ></i>&nbsp; Back</a>
               </div>
               <div class="card-body text-center">
+                @if ($regionalCoordinatorCondition)
                     <button type="button" class="btn bg-gradient-primary" onclick="return UpdateEmail()"><i class="fas fa-envelope" ></i>&nbsp; Update President Email</button>
-
-
-                          <button type="submit" class="btn bg-gradient-primary" ><i class="fas fa-save"></i>&nbsp; Save Email Change</button>
+                    <button type="submit" class="btn bg-gradient-primary" ><i class="fas fa-save"></i>&nbsp; Save Email Change</button>
+                    @endif
 
             <!-- /.box-body -->
 

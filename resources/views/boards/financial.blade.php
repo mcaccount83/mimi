@@ -1511,14 +1511,14 @@
             </div>
                 <!------End Step 8 ------>
 
-                <!------Start Step 10 ------>
-            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='10') echo "active";?>">
+                <!------Start Step 9 ------>
+            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='9') echo "active";?>">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
-                        <a class="d-block" data-toggle="collapse" href="#collapseTen" style="width: 100%;">FINANCIAL SUMMARY</a>
+                        <a class="d-block" data-toggle="collapse" href="#collapseNine" style="width: 100%;">FINANCIAL SUMMARY</a>
                     </h4>
                 </div>
-                <div id="collapseTen" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='10') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseNine" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='9') echo 'show'; ?>" data-parent="#accordion">
                     <div class="card-body">
                 <section>
                 <div class="col-12 form-row form-group">
@@ -1928,16 +1928,16 @@
             </div><!-- end of accordion body -->
             </div><!-- end of accordion item -->
         </div>
-            <!------End Step 10 ------>
+            <!------End Step 9 ------>
 
-                <!------Start Step 9 ------>
-                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='9') echo "active";?>">
+                <!------Start Step 10 ------>
+                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='10') echo "active";?>">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseNine" style="width: 100%;">BANK RECONCILIATION</a>
+                            <a class="d-block" data-toggle="collapse" href="#collapseTen" style="width: 100%;">BANK RECONCILIATION</a>
                         </h4>
                     </div>
-                    <div id="collapseNine" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='9') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseTen" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='10') echo 'show'; ?>" data-parent="#accordion">
                         <div class="card-body">
                     <section>
                         @if (!is_null($financial_report_array['bank_statement_included_path']))
@@ -2179,22 +2179,22 @@
                     <hr>
                 </div>
                 <div class="card-body text-center">
-                              <button type="submit" id="btn-step-9" class="btn btn-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
+                              <button type="submit" id="btn-step-10" class="btn btn-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
                 </div>
             </section>
             </div><!-- end of accordion body -->
             </div><!-- end of accordion item -->
         </div>
-            <!------End Step 9 ------>
+            <!------End Step 10 ------>
 
-            <!------Start Step 9.5 ------>
-                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='95') echo "active";?>">
+            <!------Start Step 11 ------>
+                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='11') echo "active";?>">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseNineFive" style="width: 100%;">990N IRS FILING</a>
+                            <a class="d-block" data-toggle="collapse" href="#collapseEleven" style="width: 100%;">990N IRS FILING</a>
                         </h4>
                     </div>
-                    <div id="collapseNineFive" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='95') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseEleven" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='11') echo 'show'; ?>" data-parent="#accordion">
                         <div class="card-body">
                     <section>
                         @if (!is_null($financial_report_array['file_irs_path']))
@@ -2257,24 +2257,22 @@
                     <br>
                 </div>
                 <div class="card-body text-center">
-                    <button type="submit" id="btn-step-95" class="btn btn-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
+                    <button type="submit" id="btn-step-11" class="btn btn-primary"><i class="fas fa-save" ></i>&nbsp; Save</button>
                 </div>
             </section>
             </div><!-- end of accordion body -->
             </div><!-- end of accordion item -->
         </div>
-            <!------End Step 9.5 ------>
+            <!------End Step 11 ------>
 
-
-
-            <!------Start Step 11 ------>
-            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='11') echo "active";?>">
+            <!------Start Step 12 ------>
+            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='12') echo "active";?>">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
-                        <a class="d-block" data-toggle="collapse" href="#collapseEleven" style="width: 100%;">CHAPTER QUESTIONS</a>
+                        <a class="d-block" data-toggle="collapse" href="#collapseTwelve" style="width: 100%;">CHAPTER QUESTIONS</a>
                     </h4>
                 </div>
-                <div id="collapseEleven" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='11') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseTwelve" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='12') echo 'show'; ?>" data-parent="#accordion">
                     <div class="card-body">
                 <section>
                 <div id="form-step-8" role="form" data-toggle="validator" class="form-row form-group">
@@ -2819,32 +2817,26 @@
                             <textarea class="form-control" rows="2" name="WheresTheMoney" id="WheresTheMoney"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['wheres_the_money'];}?></textarea>
                         </div>
                     </div>
-
-
-
-
                 </div>
-
-
 
                     </div>
                     <div class="card-body text-center">
-                              <button type="button" class="btn btn-primary" id="btn-step-11" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+                              <button type="button" class="btn btn-primary" id="btn-step-12" ><i class="fas fa-save" ></i>&nbsp; Save</button>
                     </div>
               </section>
           </div><!-- end of accordion body -->
           </div><!-- end of accordion item -->
         </div>
-            <!------End Step 11 ------>
+            <!------End Step 12 ------>
 
-            <!------Begin Step 12 ------>
-            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='12') echo "active";?>">
+            <!------Begin Step 13 ------>
+            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='13') echo "active";?>">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
-                        <a class="d-block" data-toggle="collapse" href="#collapseTwelve" style="width: 100%;">AWARD NOMINATIONS</a>
+                        <a class="d-block" data-toggle="collapse" href="#collapseThirteen" style="width: 100%;">AWARD NOMINATIONS</a>
                     </h4>
                 </div>
-                <div id="collapseTwelve" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='12') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseThirteen" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='13') echo 'show'; ?>" data-parent="#accordion">
                     <div class="card-body">
                     <section>
                     <div class="col-12 form-row form-group">
@@ -3438,22 +3430,22 @@
                             </div>
                     </div>
                     <div class="card-body text-center">
-                             <button type="button" id="btn-step-12" class="btn btn-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+                             <button type="button" id="btn-step-13" class="btn btn-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
                     </div>
                      </section>
                     </div><!-- end of accordion body -->
                 </div><!-- end of accordion item -->
             </div>
-                <!------End Step 12 ------>
+                <!------End Step 13 ------>
 
-                <!------Start Step 13 ------>
-                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='13') echo "active";?>">
+                <!------Start Step 14 ------>
+                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited'] =='14') echo "active";?>">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseThirteen" style="width: 100%;">SUBMIT REPORT</a>
+                            <a class="d-block" data-toggle="collapse" href="#collapseFourteen" style="width: 100%;">SUBMIT REPORT</a>
                         </h4>
                     </div>
-                    <div id="collapseThirteen" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='13') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseFourteen" class="collapse <?php if($financial_report_array['farthest_step_visited'] =='14') echo 'show'; ?>" data-parent="#accordion">
                         <div class="card-body">
                         <section>
                             <div class="form-row form-group">
@@ -3467,7 +3459,7 @@
                                     </div>
                             </div>
                             <div class="card-body text-center">
-                                <button type="button" class="btn btn-primary" id="btn-step-13" ><i class="fas fa-save" ></i>&nbsp; Save</button>
+                                <button type="button" class="btn btn-primary" id="btn-step-14" ><i class="fas fa-save" ></i>&nbsp; Save</button>
                                 @if($thisDate->month >= 3 && $thisDate->month <= 12)
                                 <button type="button" class="btn btn-success" id="final-submit" ><i class="fas fa-share-square" ></i>&nbsp; Submit</button>
                                 @endif
@@ -3476,7 +3468,7 @@
                     </div><!-- end of accordion body -->
                 </div><!-- end of accordion item -->
             </div>
-                <!------End Step 13 ------>
+                <!------End Step 14 ------>
 
                 </div><!-- end of accordion -->
             </form>
@@ -5476,29 +5468,29 @@ function showAward5UploadModal() {
             submitFormWithStep(8);
         });
         $("#btn-step-9").click(function() {
-            if (!EnsureStatement()) return false;
-            if (!EnsureReconciliation()) return false;
             submitFormWithStep(9);
         });
-        $("#btn-step-95").click(function() {
-            submitFormWithStep(95);
+        $("#btn-step-10").click(function() {
+            if (!EnsureStatement()) return false;
+            if (!EnsureReconciliation()) return false;
+            submitFormWithStep(10);
         });
-
-        //Step 10 - Financial Report Review doesn't have a save button
-
         $("#btn-step-11").click(function() {
-            if (!EnsureQuestions()) return false;
             submitFormWithStep(11);
         });
         $("#btn-step-12").click(function() {
+            if (!EnsureQuestions()) return false;
             submitFormWithStep(12);
         });
         $("#btn-step-13").click(function() {
-            // if (!EnsureSubmitInformation()) return false;
             submitFormWithStep(13);
         });
-        $("#btn-save").click(function() {
+        $("#btn-step-14").click(function() {
+            // if (!EnsureSubmitInformation()) return false;
             submitFormWithStep(14);
+        });
+        $("#btn-save").click(function() {
+            submitFormWithStep(15);
         });
     });
 
@@ -5540,7 +5532,7 @@ function showAward5UploadModal() {
 
                 // Proceed with form submission
                 $("#submitted").val('1');
-                $("#FurthestStep").val('15');
+                $("#FurthestStep").val('16');
                 $("#financial_report").submit();
             } else {
                 // Optionally handle the case where the user cancels
