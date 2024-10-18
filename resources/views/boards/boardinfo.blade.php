@@ -129,7 +129,6 @@
                                 <option value="2" id="option2" {{$chapterList[0]->website_status == 2 ? 'selected' : ''}}>Add Link Requested</option>
                                 <option value="3" id="option3" {{$chapterList[0]->website_status == 3 ? 'selected' : ''}}>Do Not Link</option>
                             </select>
-
                             <input type="hidden" name="ch_hid_webstatus" id="ch_hid_webstatus" value="{{ $chapterList[0]->website_status }}">
                         </div>
                     </div>
@@ -567,13 +566,43 @@ $(document).ready(function() {
 });
 
 // Disable Web Link Status option 0 and 1
-document.getElementById('ch_webstatus').addEventListener('change', function() {
-        // Update hidden input field with the new value only if the selected option is not disabled
-        var selectedOption = this.options[this.selectedIndex];
-        if (!selectedOption.disabled) {
-            document.getElementById('ch_hid_webstatus').value = this.value;
+// document.getElementById('ch_webstatus').addEventListener('change', function() {
+//         // Update hidden input field with the new value only if the selected option is not disabled
+//         var selectedOption = this.options[this.selectedIndex];
+//         if (!selectedOption.disabled) {
+//             document.getElementById('ch_hid_webstatus').value = this.value;
+//         }
+//     });
+
+//     // Ensure the hidden field is updated with the selected value on form submission
+//     document.forms[0].addEventListener('submit', function() {
+//         var selectedOption = document.getElementById('ch_webstatus').options[document.getElementById('ch_webstatus').selectedIndex];
+//         if (selectedOption.disabled) {
+//             document.getElementById('ch_hid_webstatus').value = selectedOption.value;
+//         }
+//     });
+
+    /* Disables Web Link Status options 0 and 1 */
+    var originalWebsiteUrl = "{{$chapterList[0]->website_url}}"; // Original value from the database
+
+    function checkWebsiteChanged() {
+        var currentValue = document.getElementById('validate_url').value;
+
+        if (currentValue !== originalWebsiteUrl) {
+            document.getElementById('staticStatusField').style.display = 'none';
+            document.getElementById('editableStatusField').style.display = 'block';
+        } else {
+            document.getElementById('staticStatusField').style.display = 'block';
+            document.getElementById('editableStatusField').style.display = 'none';
         }
-    });
+    }
+    document.getElementById('ch_webstatus').addEventListener('change', function() {
+            // Update hidden input field with the new value only if the selected option is not disabled
+            var selectedOption = this.options[this.selectedIndex];
+            if (!selectedOption.disabled) {
+                document.getElementById('ch_hid_webstatus').value = this.value;
+            }
+        });
 
     // Ensure the hidden field is updated with the selected value on form submission
     document.forms[0].addEventListener('submit', function() {

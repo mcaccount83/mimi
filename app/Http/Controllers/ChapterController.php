@@ -4215,7 +4215,7 @@ class ChapterController extends Controller
 
         $chapterList = DB::table('chapters as ch')
             ->select('ch.id', 'ch.name', 'ch.state', 'ch.territory', 'ch.boundary_issues', 'ch.boundary_issue_notes', 'ch.inquiries_contact', 'ch.website_url', 'ch.website_status',
-                'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id')
+                'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'ch.new_board_submitted')
             ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $chapterId)
