@@ -42,24 +42,23 @@ class ExportController extends Controller
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
 
-        if ($positionId >= 5 && $positionId <= 7) {
-            //Show Full Conference or Region
-            $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                ->select('crt.id')
-                ->get();
-        } else {
-            //Get Coordinator Reporting Tree
-            $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                ->select('crt.id')
-                ->where($sqlLayerId, '=', $corId)
-                ->get();
-        }
-        $inQryStr = '';
-        foreach ($reportIdList as $key => $val) {
-            $inQryStr .= $val->id.',';
-        }
-        $inQryStr = rtrim($inQryStr, ',');
-        $inQryArr = explode(',', $inQryStr);
+        // Get the conditions
+        $conditions = getPositionConditions($positionId, $secPositionId);
+
+        if ($conditions['coordinatorCondition']) {
+           //Get Coordinator Reporting Tree
+               $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                   ->select('crt.id')
+                   ->where($sqlLayerId, '=', $corId)
+                   ->get();
+
+           $inQryStr = '';
+           foreach ($reportIdList as $key => $val) {
+               $inQryStr .= $val->id.',';
+           }
+           $inQryStr = rtrim($inQryStr, ',');
+           $inQryArr = explode(',', $inQryStr);
+       }
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city', 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
@@ -71,11 +70,11 @@ class ExportController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->orderBy('chapters.name');
 
-        if ($positionId == 8) {
-
-        } elseif ($positionId >= 6 && $positionId <= 7) {
+            if ($conditions['founderCondition']) {
+                $baseQuery;
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
             $baseQuery->where('chapters.conference', '=', $corConfId);
-        } elseif ($positionId == 5) {
+        } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('chapters.region', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
@@ -273,6 +272,24 @@ class ExportController extends Controller
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
 
+         // Get the conditions
+         $conditions = getPositionConditions($positionId, $secPositionId);
+
+         if ($conditions['coordinatorCondition']) {
+            //Get Coordinator Reporting Tree
+                $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                    ->select('crt.id')
+                    ->where($sqlLayerId, '=', $corId)
+                    ->get();
+
+            $inQryStr = '';
+            foreach ($reportIdList as $key => $val) {
+                $inQryStr .= $val->id.',';
+            }
+            $inQryStr = rtrim($inQryStr, ',');
+            $inQryArr = explode(',', $inQryStr);
+        }
+
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city', 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
@@ -283,14 +300,14 @@ class ExportController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->orderByDesc('chapters.zap_date');
 
-        if ($positionId == 8) {
-
-        } elseif ($positionId >= 6 && $positionId <= 7) {
+            if ($conditions['founderCondition']) {
+                $baseQuery;
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
             $baseQuery->where('chapters.conference', '=', $corConfId);
-        } elseif ($positionId == 5) {
+        } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('chapters.region', '=', $corRegId);
         } else {
-            $baseQuery->whereIn('chapters.primary_coordinator_id', $corId);
+            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
 
         $zappedChapterList = $baseQuery->get();
@@ -476,6 +493,24 @@ class ExportController extends Controller
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
 
+         // Get the conditions
+         $conditions = getPositionConditions($positionId, $secPositionId);
+
+        if ($conditions['coordinatorCondition']) {
+            //Get Coordinator Reporting Tree
+                $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                    ->select('crt.id')
+                    ->where($sqlLayerId, '=', $corId)
+                    ->get();
+
+            $inQryStr = '';
+            foreach ($reportIdList as $key => $val) {
+                $inQryStr .= $val->id.',';
+            }
+            $inQryStr = rtrim($inQryStr, ',');
+            $inQryArr = explode(',', $inQryStr);
+        }
+
         $currentYear = date('Y');
         $currentMonth = date('m');
 
@@ -497,14 +532,14 @@ class ExportController extends Controller
             ->orderBy('chapters.next_renewal_year')
             ->orderBy('chapters.start_month_id');
 
-        if ($positionId == 8) {
-
-        } elseif ($positionId >= 6 && $positionId <= 7) {
+            if ($conditions['founderCondition']) {
+                $baseQuery;
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
             $baseQuery->where('chapters.conference', '=', $corConfId);
-        } elseif ($positionId == 5) {
+        } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('chapters.region', '=', $corRegId);
         } else {
-            $baseQuery->whereIn('chapters.primary_coordinator_id', $corId);
+            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
 
         $ReRegList = $baseQuery->get();
@@ -1108,29 +1143,23 @@ class ExportController extends Controller
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
 
-        if ($positionId >= 5 && $positionId <= 7) {
-            //Show Full Conference or Region
-            $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                ->select('crt.id')
-                ->get();
-        } else {
-            //Get Coordinator Reporting Tree
-            $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                ->select('crt.id')
-                ->where($sqlLayerId, '=', $corId)
-                ->get();
-        }
-        //Get Coordinator Reporting Tree
-        $reportIdList = DB::table('coordinator_reporting_tree as crt')
-            ->select('crt.id')
-            ->where($sqlLayerId, '=', $corId)
-            ->get();
-        $inQryStr = '';
-        foreach ($reportIdList as $key => $val) {
-            $inQryStr .= $val->id.',';
-        }
-        $inQryStr = rtrim($inQryStr, ',');
-        $inQryArr = explode(',', $inQryStr);
+        // Get the conditions
+        $conditions = getPositionConditions($positionId, $secPositionId);
+
+        if ($conditions['coordinatorCondition']) {
+           //Get Coordinator Reporting Tree
+               $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                   ->select('crt.id')
+                   ->where($sqlLayerId, '=', $corId)
+                   ->get();
+
+           $inQryStr = '';
+           foreach ($reportIdList as $key => $val) {
+               $inQryStr .= $val->id.',';
+           }
+           $inQryStr = rtrim($inQryStr, ',');
+           $inQryArr = explode(',', $inQryStr);
+       }
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
@@ -1145,11 +1174,11 @@ class ExportController extends Controller
             ->orderBy('st.state_short_name')
             ->orderBy('chapters.name');
 
-        if ($positionId == 8) {
-
-        } elseif ($positionId >= 6 && $positionId <= 7) {
+        if ($conditions['founderCondition']) {
+                $baseQuery;
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
             $baseQuery->where('chapters.conference', '=', $corConfId);
-        } elseif ($positionId == 5) {
+        } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('chapters.region', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
@@ -1311,43 +1340,43 @@ class ExportController extends Controller
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
 
-        if ($positionId >= 5 && $positionId <= 7) {
-            //Show Full Conference or Region
-            $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                ->select('crt.id')
-                ->get();
-        } else {
-            //Get Coordinator Reporting Tree
-            $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                ->select('crt.id')
-                ->where($sqlLayerId, '=', $corId)
-                ->get();
-        }
-        $inQryStr = '';
-        foreach ($reportIdList as $key => $val) {
-            $inQryStr .= $val->id.',';
-        }
-        $inQryStr = rtrim($inQryStr, ',');
-        $inQryArr = explode(',', $inQryStr);
+        // Get the conditions
+        $conditions = getPositionConditions($positionId, $secPositionId);
+
+        if ($conditions['coordinatorCondition']) {
+           //Get Coordinator Reporting Tree
+               $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                   ->select('crt.id')
+                   ->where($sqlLayerId, '=', $corId)
+                   ->get();
+
+           $inQryStr = '';
+           foreach ($reportIdList as $key => $val) {
+               $inQryStr .= $val->id.',';
+           }
+           $inQryStr = rtrim($inQryStr, ',');
+           $inQryArr = explode(',', $inQryStr);
+       }
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'chapters.new_board_submitted as new_board_submitted',
                 'chapters.new_board_active as new_board_active', 'chapters.financial_report_received as financial_report_received',
                 'chapters.financial_report_complete as financial_report_complete', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
-                'st.state_short_name as state', 'fr.reviewer_id as reviewer_id')
+                'st.state_short_name as state', 'fr.reviewer_id as reviewer_id', 'cd2.first_name as fr_fname', 'cd2.last_name as fr_lname')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftjoin('financial_report as fr', 'chapters.id', '=', 'fr.chapter_id')
+            ->leftJoin('financial_report as fr', 'chapters.id', '=', 'fr.chapter_id')
+            ->leftJoin('coordinators as cd2', 'cd2.id', '=', 'fr.reviewer_id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->orderBy('st.state_short_name')
             ->orderBy('chapters.name');
 
-        if ($positionId == 8) {
-
-        } elseif ($positionId >= 6 && $positionId <= 7) {
+            if ($conditions['founderCondition']) {
+                $baseQuery;
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
             $baseQuery->where('chapters.conference', '=', $corConfId);
-        } elseif ($positionId == 5) {
+        } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('chapters.region', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
@@ -1400,7 +1429,7 @@ class ExportController extends Controller
                         $list->financial_report_received,
                         $list->financial_report_complete,
                         $list->cd_fname.' '.$list->cd_lname,
-                        $list->reviewer_id,
+                        $list->fr_fname.' '.$list->fr_lname,
                     ]);
                 }
                 fclose($file);
@@ -1501,7 +1530,7 @@ class ExportController extends Controller
     /**
      * Export Coordinator List
      */
-    public function indexCoordinator(Request $request, $id)
+    public function indexCoordinator(Request $request)
     {
         $fileName = 'coordinator_export_'.date('Y-m-d').'.csv';
         $headers = [
@@ -1521,48 +1550,49 @@ class ExportController extends Controller
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
 
-        if ($positionId >= 5 && $positionId <= 7) {
-            //Show Full Conference or Region
-            $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                ->select('crt.id')
-                ->get();
-        } else {
-            //Get Coordinator Reporting Tree
-            $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                ->select('crt.id')
-                ->where($sqlLayerId, '=', $corId)
-                ->get();
-        }
-        $inQryStr = '';
-        foreach ($reportIdList as $key => $val) {
-            $inQryStr .= $val->id.',';
-        }
-        $inQryStr = rtrim($inQryStr, ',');
-        $inQryArr = explode(',', $inQryStr);
+        // Get the conditions
+        $conditions = getPositionConditions($positionId, $secPositionId);
+
+        if ($conditions['coordinatorCondition']) {
+           //Get Coordinator Reporting Tree
+               $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                   ->select('crt.id')
+                   ->where($sqlLayerId, '=', $corId)
+                   ->get();
+
+           $inQryStr = '';
+           foreach ($reportIdList as $key => $val) {
+               $inQryStr .= $val->id.',';
+           }
+           $inQryStr = rtrim($inQryStr, ',');
+           $inQryArr = explode(',', $inQryStr);
+       }
 
         $baseQuery = DB::table('coordinators as cd')
-            ->select('cd.*', 'cp.long_title as position', 'cd.first_name as reporting_fname', 'cd.last_name as reporting_lname', 'rg.short_name as reg_name')
+            ->select('cd.*', 'cp.long_title as position', 'cds.first_name as reporting_fname', 'cds.last_name as reporting_lname', 'rg.short_name as reg_name',
+                'cp2.long_title as sec_position')
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
+            ->leftjoin('coordinator_position as cp2', 'cp2.id', '=', 'cd.sec_position_id')
             ->join('coordinators as cds', 'cds.id', '=', 'cd.report_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.first_name');
 
-        if ($positionId == 8) {
-
-        } elseif ($positionId >= 6 && $positionId <= 7) {
+         if ($conditions['founderCondition']) {
+                $baseQuery;
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
             $baseQuery->where('cd.conference_id', '=', $corConfId);
-        } elseif ($positionId == 5) {
+        } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
-            $baseQuery->whereIn('cd.report_id', $inQryArr);
+            $baseQuery->whereIn('cd.report_id', '=', $inQryArr);
         }
 
         $exportCoordinatorList = $baseQuery->get();
 
         if (count($exportCoordinatorList) > 0) {
-            $columns = ['Id', 'Conference', 'Region', 'First Name', 'Last Name', 'Position', 'Sec Position', 'Email', 'Sec Email', 'Report Id', 'Address', 'City',
-                'State', 'Zip', 'Phone', 'Alt Phone', 'Birthday Month', 'Birthday Day', 'Coordinator Start', 'Last Promoted', 'Last UpdatedBy', 'Last UpdatedDate'];
+            $columns = ['Id', 'Conference', 'Region', 'First Name', 'Last Name', 'Position', 'Sec Position', 'Email', 'Sec Email', 'Report To', 'Address', 'City',
+                'State', 'Zip', 'Phone', 'Alt Phone', 'Birthday', 'Coordinator Start', 'Last Promoted', 'Last UpdatedBy', 'Last UpdatedDate'];
             $callback = function () use ($exportCoordinatorList, $columns) {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, $columns);
@@ -1574,23 +1604,127 @@ class ExportController extends Controller
                         $list->first_name,
                         $list->last_name,
                         $list->position,
-                        $this->coordinatorPosition($list->sec_position_id),
+                        $list->sec_position,
                         $list->email,
                         $list->sec_email,
-                        $this->get_reporting_coordinator($list->report_id),
-                        // $list->reporting_fname." ".$list->reporting_lname,
+                        $list->reporting_fname.' '.$list->reporting_lname,
                         $list->address,
                         $list->city,
                         $list->state,
                         $list->zip,
                         $list->phone,
                         $list->alt_phone,
-                        $list->birthday_month_id,
-                        $list->birthday_day,
+                        $list->birthday_month_id.'/'.$list->birthday_day,
                         $list->coordinator_start_date,
                         $list->last_promoted,
                         $list->last_updated_by,
                         $list->last_updated_date,
+                    ]);
+                }
+                fclose($file);
+            };
+
+            return Response::stream($callback, 200, $headers);
+        }
+
+        return redirect()->to('/home');
+    }
+
+    /**
+     * Export Retired Coordinator List
+     */
+    public function indexRetiredCoordinator(Request $request)
+    {
+        $fileName = 'coordinator_retire_export_'.date('Y-m-d').'.csv';
+        $headers = [
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$fileName",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
+        //Get Coordinators Details
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
+        $corConfId = $corDetails['conference_id'];
+        $corRegId = $corDetails['region_id'];
+        $corlayerId = $corDetails['layer_id'];
+        $sqlLayerId = 'crt.layer'.$corlayerId;
+        $positionId = $corDetails['position_id'];
+        $secPositionId = $corDetails['sec_position_id'];
+
+        // Get the conditions
+        $conditions = getPositionConditions($positionId, $secPositionId);
+
+        if ($conditions['coordinatorCondition']) {
+           //Get Coordinator Reporting Tree
+               $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                   ->select('crt.id')
+                   ->where($sqlLayerId, '=', $corId)
+                   ->get();
+
+           $inQryStr = '';
+           foreach ($reportIdList as $key => $val) {
+               $inQryStr .= $val->id.',';
+           }
+           $inQryStr = rtrim($inQryStr, ',');
+           $inQryArr = explode(',', $inQryStr);
+       }
+
+        $baseQuery = DB::table('coordinators as cd')
+            ->select('cd.*', 'cp.long_title as position', 'cds.first_name as reporting_fname', 'cds.last_name as reporting_lname', 'rg.short_name as reg_name',
+                'cp2.long_title as sec_position')
+            ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
+            ->leftjoin('coordinator_position as cp2', 'cp2.id', '=', 'cd.sec_position_id')
+            ->join('coordinators as cds', 'cds.id', '=', 'cd.report_id')
+            ->join('region as rg', 'rg.id', '=', 'cd.region_id')
+            ->where('cd.is_active', '=', '0')
+            ->orderByDesc('cd.zapped_date');
+
+         if ($conditions['founderCondition']) {
+                $baseQuery;
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+            $baseQuery->where('cd.conference_id', '=', $corConfId);
+        } elseif ($conditions['regionalCoordinatorCondition']) {
+            $baseQuery->where('cd.region_id', '=', $corRegId);
+        } else {
+            $baseQuery->whereIn('cd.report_id', '=', $inQryArr);
+        }
+
+        $exportCoordinatorList = $baseQuery->get();
+
+        if (count($exportCoordinatorList) > 0) {
+            $columns = ['Id', 'Conference', 'Region', 'First Name', 'Last Name', 'Position', 'Sec Position', 'Email', 'Sec Email', 'Report To', 'Address', 'City',
+                'State', 'Zip', 'Phone', 'Alt Phone', 'Birthday', 'Coordinator Start', 'Last Promoted', 'Last UpdatedBy', 'Last UpdatedDate',
+                'Retire Date', 'Reason'];
+            $callback = function () use ($exportCoordinatorList, $columns) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, $columns);
+
+                foreach ($exportCoordinatorList as $list) {
+                    fputcsv($file, [$list->id,
+                        $list->conference_id,
+                        $list->reg_name,
+                        $list->first_name,
+                        $list->last_name,
+                        $list->position,
+                        $list->sec_position,
+                        $list->email,
+                        $list->sec_email,
+                        $list->reporting_fname.' '.$list->reporting_lname,
+                        $list->address,
+                        $list->city,
+                        $list->state,
+                        $list->zip,
+                        $list->phone,
+                        $list->alt_phone,
+                        $list->birthday_month_id.'/'.$list->birthday_day,
+                        $list->coordinator_start_date,
+                        $list->last_promoted,
+                        $list->last_updated_by,
+                        $list->last_updated_date,
+                        $list->zapped_date,
+                        $list->reason_retired,
                     ]);
                 }
                 fclose($file);
@@ -1621,17 +1755,19 @@ class ExportController extends Controller
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
-        //Get Coordinator Reporting Tree
-        $reportIdList = DB::table('coordinator_reporting_tree as crt')
-            ->select('crt.id')
-            ->where($sqlLayerId, '=', $corId)
-            ->get();
-        $inQryStr = '';
-        foreach ($reportIdList as $key => $val) {
-            $inQryStr .= $val->id.',';
-        }
-        $inQryStr = rtrim($inQryStr, ',');
-        $inQryArr = explode(',', $inQryStr);
+
+           //Get Coordinator Reporting Tree
+               $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                   ->select('crt.id')
+                   ->where($sqlLayerId, '=', $corId)
+                   ->get();
+
+           $inQryStr = '';
+           foreach ($reportIdList as $key => $val) {
+               $inQryStr .= $val->id.',';
+           }
+           $inQryStr = rtrim($inQryStr, ',');
+           $inQryArr = explode(',', $inQryStr);
 
         //Get Coordinator List mapped with login coordinator
         $exportCoordinatorList = DB::table('coordinators as cd')
@@ -1647,7 +1783,7 @@ class ExportController extends Controller
 
         if (count($exportCoordinatorList) > 0) {
             $columns = ['Conference', 'Region', 'First Name', 'Last Name', 'Position', 'Sec Position', 'Email', 'Sec Email', 'Reports To', 'Address', 'City',
-                'State', 'Zip', 'Phone', 'Alt Phone', 'Birthday Month', 'Birthday Day', 'Coordinator Start', 'Last Promoted', 'Last UpdatedBy', 'Last UpdatedDate'];
+                'State', 'Zip', 'Phone', 'Alt Phone', 'Birthday', 'Coordinator Start', 'Last Promoted', 'Last UpdatedBy', 'Last UpdatedDate'];
             $callback = function () use ($exportCoordinatorList, $columns) {
                 $file = fopen('php://output', 'w');
                 fputcsv($file, $columns);
@@ -1668,8 +1804,7 @@ class ExportController extends Controller
                         $list->zip,
                         $list->phone,
                         $list->alt_phone,
-                        $list->birthday_month_id,
-                        $list->birthday_day,
+                        $list->birthday_month_id.'/'.$list->birthday_day,
                         $list->coordinator_start_date,
                         $list->last_promoted,
                         $list->last_updated_by,
@@ -1704,23 +1839,27 @@ class ExportController extends Controller
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$corlayerId;
-        //Get Coordinator Reporting Tree
-        $reportIdList = DB::table('coordinator_reporting_tree as crt')
-            ->select('crt.id')
-            ->where($sqlLayerId, '=', $corId)
-            ->get();
-        $inQryStr = '';
-        foreach ($reportIdList as $key => $val) {
-            $inQryStr .= $val->id.',';
-        }
-        $inQryStr = rtrim($inQryStr, ',');
-        $inQryArr = explode(',', $inQryStr);
+
+                //Get Coordinator Reporting Tree
+                $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                    ->select('crt.id')
+                    ->where($sqlLayerId, '=', $corId)
+                    ->get();
+
+            $inQryStr = '';
+            foreach ($reportIdList as $key => $val) {
+                $inQryStr .= $val->id.',';
+            }
+            $inQryStr = rtrim($inQryStr, ',');
+            $inQryArr = explode(',', $inQryStr);
 
         //Get Coordinator List mapped with login coordinator
 
         $exportCoordinatorList = DB::table('coordinators as cd')
-            ->select('cd.*', 'cp.long_title as position', 'cd.first_name as reporting_fname', 'cd.last_name as reporting_lname', 'rg.short_name as reg_name')
+            ->select('cd.*', 'cp.long_title as position', 'cds.first_name as reporting_fname', 'cds.last_name as reporting_lname', 'rg.short_name as reg_name',
+                'cp2.long_title as sec_position')
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
+            ->leftjoin('coordinator_position as cp2', 'cp2.id', '=', 'cd.sec_position_id')
             ->join('coordinators as cds', 'cds.id', '=', 'cd.report_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->where('cd.is_active', '=', '0')
@@ -1729,7 +1868,7 @@ class ExportController extends Controller
 
         if (count($exportCoordinatorList) > 0) {
             $columns = ['Conference', 'Region', 'First Name', 'Last Name', 'Position', 'Sec Position', 'Email', 'Sec Email', 'Reports To', 'Address', 'City', 'State',
-                'Zip', 'Phone', 'Alt Phone', 'Birthday Month', 'Birthday Day', 'Coordinator Start', 'Last Promoted', 'Last UpdatedBy', 'Last UpdatedDate',
+                'Zip', 'Phone', 'Alt Phone', 'Birthday', 'Coordinator Start', 'Last Promoted', 'Last UpdatedBy', 'Last UpdatedDate',
                 'Disband Date', 'Disband Reason'];
             $callback = function () use ($exportCoordinatorList, $columns) {
                 $file = fopen('php://output', 'w');
@@ -1741,18 +1880,17 @@ class ExportController extends Controller
                         $list->first_name,
                         $list->last_name,
                         $list->position,
-                        $this->coordinatorPosition($list->sec_position_id),
+                        $list->sec_position,
                         $list->email,
                         $list->sec_email,
-                        $this->get_reporting_coordinator($list->report_id),
+                        $list->reporting_fname.' '.$list->reporting_lname,
                         $list->address,
                         $list->city,
                         $list->state,
                         $list->zip,
                         $list->phone,
                         $list->alt_phone,
-                        $list->birthday_month_id,
-                        $list->birthday_day,
+                        $list->birthday_month_id.'/'.$list->birthday_day,
                         $list->coordinator_start_date,
                         $list->last_promoted,
                         $list->last_updated_by,
@@ -1770,105 +1908,6 @@ class ExportController extends Controller
         return redirect()->to('/home');
     }
 
-    /**
-     * Export Retired Coordinator List
-     */
-    public function indexRetiredCoordinator(Request $request): StreamedResponse
-    {
-
-        $fileName = 'coordinator_retire_'.date('Y-m-d').'.csv';
-        $corDetails = User::find($request->user()->id)->Coordinators;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $tasks = Coordinators::select('*')
-            ->where([
-                ['is_active', '=', 0],
-                ['conference_id', '=', $corConfId],
-            ])
-            ->orderByDesc('coordinators.zapped_date')
-            ->get();
-
-        $headers = [
-            'Content-type' => 'text/csv',
-            'Content-Disposition' => "attachment; filename=$fileName",
-            'Pragma' => 'no-cache',
-            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
-            'Expires' => '0',
-        ];
-        $_result = DB::table('coordinator_position as p')->select('*')->get();
-        $_temp = [];
-        foreach ($_result as $_v) {
-            $_temp[$_v->id] = $_v->long_title;
-        }
-        $_result = DB::table('region as r')->select('*')->get();
-        $_temp = [];
-        foreach ($_result as $_v) {
-            $_temp[$_v->id] = $_v->long_name;
-        }
-
-        //var_dump($_temp);die;
-        $columns = ['Conference', 'Region', 'First Name', 'Last Name', 'Position', 'Sec Position', 'Email', 'Sec Email', 'Report Id', 'Address', 'City', 'State',
-            'Zip', 'Phone', 'Alt Phone', 'Birthday Month', 'Birthday Day', 'Coordinator Start', 'Last Promoted', 'Last UpdatedBy', 'Last UpdatedDate', 'Retire Date', 'Reason'];
-
-        $callback = function () use ($tasks, $columns, $_temp) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, $columns);
-
-            foreach ($tasks as $task) {
-                $row['Conference'] = $task->conference_id;
-                $row['Region'] = empty($_temp[$task->region_id]) ? '' : $_temp[$task->region_id];
-                $row['First Name'] = $task->first_name;
-                $row['Last Name'] = $task->last_name;
-                $row['Position'] = empty($_temp[$task->position_id]) ? '' : $_temp[$task->position_id];
-                $row['Sec Position'] = empty($_temp[$task->sec_position_id]) ? '' : $_temp[$task->sec_position_id];
-                $row['Email'] = $task->email;
-                $row['Sec Email'] = $task->sec_email;
-                $row['Report Id'] = $task->report_id;
-                $row['Address'] = $task->address;
-                $row['City'] = $task->city;
-                $row['State'] = $task->state;
-                $row['Zip'] = $task->zip;
-                $row['Phone'] = $task->phone;
-                $row['Alt Phone'] = $task->alt_phone;
-                $row['Birthday Month'] = $task->birthday_month_id;
-                $row['Birthday Day'] = $task->birthday_day;
-                $row['Coordinator Start'] = $task->coordinator_start_date;
-                $row['Last Promoted'] = $task->last_promoted;
-                $row['Last UpdatedBy'] = $task->last_updated_by;
-                $row['Last UpdatedDate'] = $task->last_updated_date;
-                $row['Retire Date'] = $task->zapped_date;
-                $row['Reason'] = $task->reason_retired;
-
-                fputcsv($file, [$row['Conference'], $row['Region'], $row['First Name'], $row['Last Name'], $row['Position'], $row['Sec Position'], $row['Email'], $row['Sec Email'], $row['Report Id'], $row['Address'], $row['City'], $row['State'], $row['Zip'], $row['Phone'], $row['Alt Phone'], $row['Birthday Month'], $row['Birthday Day'], $row['Coordinator Start'], $row['Last Promoted'], $row['Last UpdatedBy'], $row['Last UpdatedDate'], $row['Retire Date'], $row['Reason']]);
-            }
-
-            fclose($file);
-        };
-
-        return Response::stream($callback, 200, $headers);
-    }
-
-    public function coordinatorPosition($id)
-    {
-        if ($id != '0' && $id != '') {
-            $data = DB::table('coordinator_position')->select('*')->where('id', $id)->first();
-
-            return $data->long_title;
-        } else {
-            return '';
-        }
-    }
-
-    public function get_reporting_coordinator($id)
-    {
-        if ($id != '0' && $id != '') {
-            $data = DB::table('coordinators')->select('*')->where('id', $id)->first();
-
-            return $data->first_name.' '.$data->last_name;
-        } else {
-            return '';
-        }
-    }
 
     /**
      * Export Coordinator Appreciation List
@@ -1876,17 +1915,6 @@ class ExportController extends Controller
     public function indexAppreciation(Request $request): StreamedResponse
     {
         $fileName = 'coordinator_appreciation_'.date('Y-m-d').'.csv';
-        $corDetails = User::find($request->user()->id)->Coordinators;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $exportCoordinatorList = Coordinators::select('*')
-            ->where([
-                ['is_active', '=', 1],
-                ['conference_id', '=', $corConfId],
-            ])
-            ->orderBy('coordinators.coordinator_start_date')
-            ->get();
-
         $headers = [
             'Content-type' => 'text/csv',
             'Content-Disposition' => "attachment; filename=$fileName",
@@ -1895,48 +1923,142 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
 
-        $_result = DB::table('coordinator_position as p')->select('*')->get();
-        $_temp = [];
-        foreach ($_result as $_v) {
-            $_temp[$_v->id] = $_v->long_title;
-        }
-        $columns = ['Conference', 'Region', 'First Name', 'Last Name', 'Start Date', 'Position', 'Secondary Position', '<1 Year', '1 Year', '2 Years',
-            '3 Years', '4 Years', '5 Years', '6 Years', '7 Years', '8 Years', '9 Years', 'Necklace', 'Top Tier/Other'];
-        $callback = function () use ($exportCoordinatorList, $columns) {
-            $file = fopen('php://output', 'w');
-            fputcsv($file, $columns);
+             //Get Coordinators Details
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
+        $corConfId = $corDetails['conference_id'];
+        $corRegId = $corDetails['region_id'];
+        $corlayerId = $corDetails['layer_id'];
+        $sqlLayerId = 'crt.layer'.$corlayerId;
+        $positionId = $corDetails['position_id'];
+        $secPositionId = $corDetails['sec_position_id'];
 
-            foreach ($exportCoordinatorList as $list) {
-                $row['Conference'] = $list->conference_id;
-                $row['Region'] = $list->region_id;
-                $row['First Name'] = $list->first_name;
-                $row['Last Name'] = $list->last_name;
-                $row['Start Date'] = $list->coordinator_start_date;
-                $row['Position'] = $list->position_id;
-                $row['Secondary Position'] = $list->sec_position_id;
-                $row['< 1 Year'] = $list->recognition_year0;
-                $row['1 Year'] = $list->recognition_year1;
-                $row['2 Years'] = $list->recognition_year2;
-                $row['3 Years'] = $list->recognition_year3;
-                $row['4 Years'] = $list->recognition_year4;
-                $row['5 Years'] = $list->recognition_year5;
-                $row['6 Years'] = $list->recognition_year6;
-                $row['7 Years'] = $list->recognition_year7;
-                $row['8 Years'] = $list->recognition_year8;
-                $row['9 Years'] = $list->recognition_year9;
-                $row['Necklace'] = $list->recognition_necklace;
-                $row['Top Tier/Other'] = $list->recognition_toptier;
+        // Get the conditions
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
-                fputcsv($file, [$row['Conference'], $row['Region'], $row['First Name'], $row['Last Name'], $row['Start Date'], $row['Position'], $row['Secondary Position'],
-                    $row['< 1 Year'], $row['1 Year'], $row['2 Years'], $row['3 Years'], $row['4 Years'], $row['5 Years'], $row['6 Years'], $row['7 Years'], $row['8 Years'],
-                    $row['9 Years'], $row['Necklace'], $row['Top Tier/Other']]);
+            //Get Coordinator Reporting Tree
+                $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                    ->select('crt.id')
+                    ->where($sqlLayerId, '=', $corId)
+                    ->get();
+
+            $inQryStr = '';
+            foreach ($reportIdList as $key => $val) {
+                $inQryStr .= $val->id.',';
             }
+            $inQryStr = rtrim($inQryStr, ',');
+            $inQryArr = explode(',', $inQryStr);
 
-            fclose($file);
-        };
+            $baseQuery = DB::table('coordinators as cd')
+            ->select('cd.*', 'cp.long_title as position', 'cp2.long_title as sec_position')
+            ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
+            ->leftjoin('coordinator_position as cp2', 'cp2.id', '=', 'cd.sec_position_id')
+            ->where('cd.is_active', '=', '1');
 
-        return Response::stream($callback, 200, $headers);
+         if ($conditions['founderCondition']) {
+                $baseQuery;
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+            $baseQuery->where('cd.conference_id', '=', $corConfId);
+        } elseif ($conditions['regionalCoordinatorCondition']) {
+            $baseQuery->where('cd.region_id', '=', $corRegId);
+        } else {
+            $baseQuery->whereIn('cd.report_id', '=', $inQryArr);
+        }
+
+        $exportCoordinatorList = $baseQuery->get();
+
+        if (count($exportCoordinatorList) > 0) {
+            $columns = ['Conference', 'Region', 'First Name', 'Last Name', 'Start Date', 'Position', 'Secondary Position', '<1 Year', '1 Year', '2 Years',
+            '3 Years', '4 Years', '5 Years', '6 Years', '7 Years', '8 Years', '9 Years', 'Necklace', 'Top Tier/Other'];
+            $callback = function () use ($exportCoordinatorList, $columns) {
+                $file = fopen('php://output', 'w');
+                fputcsv($file, $columns);
+
+                foreach ($exportCoordinatorList as $list) {
+                    fputcsv($file, [
+                        $list->conference_id,
+                        $list->region_id,
+                        $list->first_name,
+                        $list->last_name,
+                        $list->coordinator_start_date,
+                        $list->position,
+                        $list->sec_position,
+                        $list->recognition_year0,
+                        $list->recognition_year1,
+                        $list->recognition_year2,
+                        $list->recognition_year3,
+                        $list->recognition_year4,
+                        $list->recognition_year5,
+                        $list->recognition_year6,
+                        $list->recognition_year7,
+                        $list->recognition_year8,
+                        $list->recognition_year9,
+                        $list->recognition_necklace,
+                        $list->recognition_toptier,
+                    ]);
+                }
+                fclose($file);
+            };
+
+            return Response::stream($callback, 200, $headers);
+        }
+
+        return redirect()->to('/home');
     }
+
+
+
+    //     $exportCoordinatorList = Coordinators::select('*')
+    //         ->where([
+    //             ['is_active', '=', 1],
+    //             ['conference_id', '=', $corConfId],
+    //         ])
+    //         ->orderBy('coordinators.coordinator_start_date')
+    //         ->get();
+
+
+    //     $_result = DB::table('coordinator_position as p')->select('*')->get();
+    //     $_temp = [];
+    //     foreach ($_result as $_v) {
+    //         $_temp[$_v->id] = $_v->long_title;
+    //     }
+    //     $columns = ['Conference', 'Region', 'First Name', 'Last Name', 'Start Date', 'Position', 'Secondary Position', '<1 Year', '1 Year', '2 Years',
+    //         '3 Years', '4 Years', '5 Years', '6 Years', '7 Years', '8 Years', '9 Years', 'Necklace', 'Top Tier/Other'];
+    //     $callback = function () use ($exportCoordinatorList, $columns) {
+    //         $file = fopen('php://output', 'w');
+    //         fputcsv($file, $columns);
+
+    //         foreach ($exportCoordinatorList as $list) {
+    //             $row['Conference'] = $list->conference_id;
+    //             $row['Region'] = $list->region_id;
+    //             $row['First Name'] = $list->first_name;
+    //             $row['Last Name'] = $list->last_name;
+    //             $row['Start Date'] = $list->coordinator_start_date;
+    //             $row['Position'] = $list->position_id;
+    //             $row['Secondary Position'] = $list->sec_position_id;
+    //             $row['< 1 Year'] = $list->recognition_year0;
+    //             $row['1 Year'] = $list->recognition_year1;
+    //             $row['2 Years'] = $list->recognition_year2;
+    //             $row['3 Years'] = $list->recognition_year3;
+    //             $row['4 Years'] = $list->recognition_year4;
+    //             $row['5 Years'] = $list->recognition_year5;
+    //             $row['6 Years'] = $list->recognition_year6;
+    //             $row['7 Years'] = $list->recognition_year7;
+    //             $row['8 Years'] = $list->recognition_year8;
+    //             $row['9 Years'] = $list->recognition_year9;
+    //             $row['Necklace'] = $list->recognition_necklace;
+    //             $row['Top Tier/Other'] = $list->recognition_toptier;
+
+    //             fputcsv($file, [$row['Conference'], $row['Region'], $row['First Name'], $row['Last Name'], $row['Start Date'], $row['Position'], $row['Secondary Position'],
+    //                 $row['< 1 Year'], $row['1 Year'], $row['2 Years'], $row['3 Years'], $row['4 Years'], $row['5 Years'], $row['6 Years'], $row['7 Years'], $row['8 Years'],
+    //                 $row['9 Years'], $row['Necklace'], $row['Top Tier/Other']]);
+    //         }
+
+    //         fclose($file);
+    //     };
+
+    //     return Response::stream($callback, 200, $headers);
+    // }
 
     /**
      * Export Chapter Coordinator List
@@ -1967,24 +2089,23 @@ class ExportController extends Controller
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
 
-        if ($positionId >= 5 && $positionId <= 7) {
-            //Show Full Conference or Region
-            $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                ->select('crt.id')
-                ->get();
-        } else {
+         // Get the conditions
+         $conditions = getPositionConditions($positionId, $secPositionId);
+
+         if ($conditions['coordinatorCondition']) {
             //Get Coordinator Reporting Tree
-            $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                ->select('crt.id')
-                ->where($sqlLayerId, '=', $corId)
-                ->get();
+                $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                    ->select('crt.id')
+                    ->where($sqlLayerId, '=', $corId)
+                    ->get();
+
+            $inQryStr = '';
+            foreach ($reportIdList as $key => $val) {
+                $inQryStr .= $val->id.',';
+            }
+            $inQryStr = rtrim($inQryStr, ',');
+            $inQryArr = explode(',', $inQryStr);
         }
-        $inQryStr = '';
-        foreach ($reportIdList as $key => $val) {
-            $inQryStr .= $val->id.',';
-        }
-        $inQryStr = rtrim($inQryStr, ',');
-        $inQryArr = explode(',', $inQryStr);
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
@@ -1997,11 +2118,11 @@ class ExportController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->orderBy('chapters.name');
 
-        if ($positionId == 8) {
-
-        } elseif ($positionId >= 6 && $positionId <= 7) {
+            if ($conditions['founderCondition']) {
+                $baseQuery;
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
             $baseQuery->where('chapters.conference', '=', $corConfId);
-        } elseif ($positionId == 5) {
+        } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('chapters.region', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
@@ -2141,27 +2262,26 @@ class ExportController extends Controller
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
 
-        if ($positionId >= 5 && $positionId <= 7) {
-            //Show Full Conference or Region
-            $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                ->select('crt.id')
-                ->get();
-        } else {
-            //Get Coordinator Reporting Tree
-            $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                ->select('crt.id')
-                ->where($sqlLayerId, '=', $corId)
-                ->get();
-        }
-        $inQryStr = '';
-        foreach ($reportIdList as $key => $val) {
-            $inQryStr .= $val->id.',';
-        }
-        $inQryStr = rtrim($inQryStr, ',');
-        $inQryArr = explode(',', $inQryStr);
+        // Get the conditions
+        $conditions = getPositionConditions($positionId, $secPositionId);
+
+        if ($conditions['coordinatorCondition']) {
+           //Get Coordinator Reporting Tree
+               $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                   ->select('crt.id')
+                   ->where($sqlLayerId, '=', $corId)
+                   ->get();
+
+           $inQryStr = '';
+           foreach ($reportIdList as $key => $val) {
+               $inQryStr .= $val->id.',';
+           }
+           $inQryStr = rtrim($inQryStr, ',');
+           $inQryArr = explode(',', $inQryStr);
+       }
 
         //Get Chapter List mapped with login coordinator
-        $activeChapterList = DB::table('chapters')
+        $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
                 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
                 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
@@ -2171,10 +2291,20 @@ class ExportController extends Controller
             ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
-            ->where('chapters.conference', '=', $corConfId)
             ->orderBy('st.state_short_name')
-            ->orderBy('chapters.name')
-            ->get();
+            ->orderBy('chapters.name');
+
+            if ($conditions['founderCondition']) {
+                $baseQuery;
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+            $baseQuery->where('chapters.conference', '=', $corConfId);
+        } elseif ($conditions['regionalCoordinatorCondition']) {
+            $baseQuery->where('chapters.region', '=', $corRegId);
+        } else {
+            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
+        }
+
+        $activeChapterList = $baseQuery->get();
 
         if (count($activeChapterList) > 0) {
             $exportChapterList = [];
@@ -2395,16 +2525,21 @@ class ExportController extends Controller
         $conference_id = $corDetails['conference_id'];
         $layer_id = $corDetails['layer_id'];
         $sqlLayerId = 'crt.layer'.$layer_id;
-        //Get Coordinator Reporting Tree
-        $reportIdList = DB::table('coordinator_reporting_tree as crt')
-            ->select('crt.id')
-            ->where($sqlLayerId, '=', $coordinator_id)
-            ->get();
-        $inQryStr = '';
-        foreach ($reportIdList as $key => $val) {
-            $inQryStr .= $val->id.',';
-        }
-        $inQryStr = rtrim($inQryStr, ',');
+
+
+            //Get Coordinator Reporting Tree
+                $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                    ->select('crt.id')
+                    ->where($sqlLayerId, '=', $coordinator_id)
+                    ->get();
+
+            $inQryStr = '';
+            foreach ($reportIdList as $key => $val) {
+                $inQryStr .= $val->id.',';
+            }
+            $inQryStr = rtrim($inQryStr, ',');
+            $inQryArr = explode(',', $inQryStr);
+
         $chapterList = DB::table('chapters as ch')
             ->select('ch.id as id', 'ch.name as name', 'ch.primary_coordinator_id as pc_id', 'fr.reviewer_id as reviewer_id', 'cd.id as cord_id', 'cd.first_name as reviewer_first_name', 'cd.last_name as reviewer_last_name', 'st.state_short_name as state', 'fr.award_1_nomination_type as award_1_type', 'fr.award_2_nomination_type as award_2_type', 'fr.award_3_nomination_type as award_3_type', 'fr.award_4_nomination_type as award_4_type', 'fr.award_5_nomination_type as award_5_type', 'fr.check_award_1_approved as award_1_approved', 'fr.check_award_2_approved as award_2_approved', 'fr.check_award_3_approved as award_3_approved', 'fr.check_award_4_approved as award_4_approved', 'fr.check_award_5_approved as award_5_approved')
             ->join('state as st', 'ch.state', '=', 'st.id')

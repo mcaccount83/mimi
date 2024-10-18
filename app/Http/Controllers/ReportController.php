@@ -2416,9 +2416,6 @@ class ReportController extends Controller
 
         $chapterList = $baseQuery->get();
 
-        // $checkBoxStatus = request('check', 'no'); // Default to 'no' if it's not set
-
-
         $chapterList = $chapterList->toArray();
         $countList = count($chapterList);
 
