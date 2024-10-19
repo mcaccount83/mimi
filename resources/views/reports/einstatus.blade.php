@@ -33,6 +33,7 @@
               <thead>
 			    <tr>
                     <th>Notes</th>
+                    <th>Conf/Reg</th>
 				  <th>State</th>
                   <th>Name</th>
                   <th>Start Date</th>
@@ -49,6 +50,13 @@
                     <td>
                         @if ($conferenceCoordinatorCondition)
                         <center><a href="{{ url("/chapter/einnotes/{$list->id}") }}"><i class="fas fa-pencil-alt"></i></a></center>
+                        @endif
+                    </td>
+                    <td>
+                        @if ($list->reg != "None")
+                            {{ $list->conf }} / {{ $list->reg }}
+                        @else
+                            {{ $list->conf }}
                         @endif
                     </td>
 						<td>{{ $list->state }}</td>

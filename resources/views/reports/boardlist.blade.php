@@ -32,7 +32,7 @@
               <table id="chapterlist" class="table table-sm table-hover">
               <thead>
 			    <tr>
-			      <th>Conf</th>
+			      <th>Conf/Reg</th>
 				  <th>State</th>
                   <th>Name</th>
                   <th>Chapter Email</th>
@@ -46,8 +46,14 @@
                 <tbody>
                 @foreach($activeChapterList as $list)
                   <tr>
-					<td>{{ $list->conference }}</td>
-					<td>{{ $list->state }}</td>
+                    <td>
+                        @if ($list->reg != "None")
+                            {{ $list->conf }} / {{ $list->reg }}
+                        @else
+                            {{ $list->conf }}
+                        @endif
+                    </td>
+                    <td>{{ $list->state }}</td>
                     <td>{{ $list->name }}</td>
                     <td>{{ $list->chapter_email }}</td>
                     <td>{{ $list->pre_email }}</td>

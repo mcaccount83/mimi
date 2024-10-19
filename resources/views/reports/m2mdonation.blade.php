@@ -33,7 +33,7 @@
               <thead>
 			    <tr>
 					<?php if(Session::get('positionid') >=6 && Session::get('positionid') <=7){ ?><th>Donation</th><?php }?>
-				  <th>State</th>
+				  <th>Conf/Reg</th><th>State</th>
                   <th>Name</th>
                     <th>M2M Fund Donation</th>
                     <th>Donation Date</th>
@@ -47,7 +47,14 @@
 	                    <?php if(Session::get('positionid') >=6 && Session::get('positionid') <=7){ ?>
                             <td class="text-center align-middle">
 	                            <a href="<?php echo url("/chapter/m2mdonation/{$list->id}") ?>"><i class="far fa-credit-card "></i></a><?php }?></td>
-						<td>{{ $list->state }}</td>
+                                <td>
+                                    @if ($list->reg != "None")
+                                        {{ $list->conf }} / {{ $list->reg }}
+                                    @else
+                                        {{ $list->conf }}
+                                    @endif
+                                </td>
+                                <td>{{ $list->state }}</td>
                         <td>{{ $list->name }}</td>
 						<td>${{ $list->m2m_payment }}</td>
 						<td><span class="date-mask">{{ $list->m2m_date }}</span></td>

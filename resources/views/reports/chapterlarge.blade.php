@@ -33,6 +33,7 @@
               <thead>
 			    <tr>
 					<th>Details</th>
+                    <th>Conf/Reg</th>
 				  <th>State</th>
                   <th>Name</th>
                  <th>Chapter Size</th>
@@ -45,7 +46,14 @@
                   <tr>
 						<td class="text-center align-middle">
                             <a href="<?php echo url("/chapter/edit/{$list->id}") ?>"><i class="fas fa-edit"></i></a></td>
-						<td>{{ $list->state }}</td>
+                            <td>
+                                @if ($list->reg != "None")
+                                    {{ $list->conf }} / {{ $list->reg }}
+                                @else
+                                    {{ $list->conf }}
+                                @endif
+                            </td>
+                            <td>{{ $list->state }}</td>
                         <td>{{ $list->name }}</td>
                         <td>{{ $list->members_paid_for }}</td>
 						<td><span class="date-mask">{{ $list->dues_last_paid }}</span></td>

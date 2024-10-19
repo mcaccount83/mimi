@@ -18,107 +18,6 @@
 </section>
 
 <!-- Main content -->
-
-@if ($cord_pos_id == 8)
-    {{-- <div class="card-body">
-        <div class="mermaid-container">
-            <div class="mermaid flowchart" id="mermaid-chart">
-                flowchart TD
-                @foreach ($coordinator_array as $coordinator)
-                    @php
-                        $id = $coordinator['id'];
-                        $name = htmlspecialchars($coordinator['first_name'] . ' ' . $coordinator['last_name']);
-                        $position = htmlspecialchars($coordinator['position_title']);
-                        $sec_position = htmlspecialchars($coordinator['sec_position_title']);
-                        $region = htmlspecialchars($coordinator['region']);
-                        $conf = htmlspecialchars($coordinator['conference']);
-                        $node_label = "$name<br>$position";
-                        if ($sec_position) $node_label .= " / $sec_position";
-                        if ($region != "None") $node_label .= "<br>$region";
-                        if ($region == "None") $node_label .= "<br>$conf";
-                    @endphp
-                        {{ $id }}["{{ $node_label }}"]
-                    @php
-                        $report_id = $coordinator['report_id'];
-                        $id = $coordinator['id'];
-                        $shouldExclude = ($report_id == "0" && $cord_pos_id == "7") || ($report_id == "1" && $cord_pos_id != "7");
-                        @endphp
-                    @if (!$shouldExclude)
-                        {{ $report_id }} --- {{ $id }}
-                    @endif
-                @endforeach
-            </div>
-    </div>
-</div> --}}
-
-{{-- <div class="card-body">
-    <div class="mermaid-container">
-        <div class="mermaid flowchart" id="mermaid-chart">
-            flowchart TD
-            @foreach ($coordinator_array as $coordinator)
-                @php
-                    $id = $coordinator['id'];
-                    $name = htmlspecialchars($coordinator['first_name'] . ' ' . $coordinator['last_name']);
-                    $position = htmlspecialchars($coordinator['position_title']);
-                    $sec_position = htmlspecialchars($coordinator['sec_position_title']);
-                    $region = htmlspecialchars($coordinator['region']);
-                    $conf = htmlspecialchars($coordinator['conference']);
-                    $node_label = "$name<br>$position";
-                    if ($sec_position) $node_label .= " / $sec_position";
-                    if ($region != "None") $node_label .= "<br>$region";
-                    if ($region == "None") $node_label .= "<br>$conf";
-                @endphp
-                    {{ $id }}["{{ $node_label }}"]
-            @endforeach
-
-            %% Connect Coordinators %%
-            @foreach ($coordinator_array as $coordinator)
-                @php
-                $report_id = $coordinator['report_id'];
-                $id = $coordinator['id'];
-                $shouldExclude = ($report_id == "0" && $cord_pos_id == "7") || ($report_id == "1" && $cord_pos_id != "7");
-                @endphp
-            @if (!$shouldExclude)
-                {{ $report_id }} --- {{ $id }}
-                @endif
-            @endforeach
-
-            %% Dynamic Subgraphs %%
-            @php
-                $confs = []; // To store unique regions
-                foreach ($coordinator_array as $coordinator) {
-                    $conf = $coordinator['conference'];
-                    if ($conf !== "International") { // Only include regions that are not "None"
-                        $confs[$conf] = true; // Use the region as key for uniqueness
-                    }
-                }
-            @endphp
-
-            @foreach ($confs as $conf => $_)
-                subgraph {{ $conf }}
-                    direction TB
-                    style {{ $conf }} fill:none,stroke:none
-                    @foreach ($coordinator_array as $coordinator)
-                        @php
-                            $id = $coordinator['id'];
-                            $name = htmlspecialchars($coordinator['first_name'] . ' ' . $coordinator['last_name']);
-                            $position = htmlspecialchars($coordinator['position_title']);
-                            $sec_position = htmlspecialchars($coordinator['sec_position_title']);
-                            $region = htmlspecialchars($coordinator['region']);
-                            $conf = htmlspecialchars($coordinator['conference']);
-                            $node_label = "$name<br>$position";
-                            if ($sec_position) $node_label .= " / $sec_position";
-                            if ($region != "None") $node_label .= "<br>$region";
-                            if ($region == "None") $node_label .= "<br>$conf";
-                        @endphp
-                            {{ $id }}["{{ $node_label }}"]
-                    @endforeach
-                end
-            @endforeach
-        </div>
-    </div>
-</div> --}}
-
 <div class="card-body">
     <div class="mermaid-container">
         <div class="mermaid flowchart" id="mermaid-chart">
@@ -135,8 +34,8 @@
                 if ($sec_position) $node_label .= " / $sec_position";
                 if ($region != "None") $node_label .= "<br>$region";
                 if ($region == "None") $node_label .= "<br>$conf";
-            @endphp
-                    {{ $id }}["{{ $node_label }}"]
+                @endphp
+                {{ $id }}["{{ $node_label }}"]
             @endforeach
 
             %% Connect Coordinators %%
@@ -144,8 +43,8 @@
                 @php
                     $report_id = $coordinator['report_id'];
                     $id = $coordinator['id'];
-                    $shouldExclude = ($report_id == "0" && $cord_pos_id == "8") || ($report_id == "1" && $cord_pos_id != "8");
-                    @endphp
+                    $shouldExclude = ($report_id == "0" && $founderCondition) || ($report_id == "1" && !$founderCondition);
+                @endphp
                 @if (!$shouldExclude)
                     {{ $report_id }} --- {{ $id }}
                 @endif
@@ -153,37 +52,91 @@
 
             %% Dynamic Subgraphs %%
             @php
-                $confs = []; // To store unique regions
+                $conference_groups = [];
+                $region_groups = [];
+
                 foreach ($coordinator_array as $coordinator) {
-                    $conf = $coordinator['conference'];
-                    if ($conf !== "International") { // Only include regions that are not "None"
-                        $confs[$conf] = true; // Use the region as key for uniqueness
+                    if ($founderCondition) {
+                        $conf = $coordinator['conference'];
+                        if ($conf !== "Intl") {
+                            if (!isset($conference_groups[$conf])) {
+                                $conference_groups[$conf] = [];
+                            }
+                            $region = $coordinator['region'];
+                            if ($region !== "None") {
+                                $conference_groups[$conf][$region][] = $coordinator;
+                            }
+                        }
+                    } else {
+                        $region = $coordinator['region'];
+                        if ($region !== "None") {
+                            if (!isset($region_groups[$region])) {
+                                $region_groups[$region] = [];
+                            }
+                            $region_groups[$region][] = $coordinator;
+                        }
                     }
                 }
             @endphp
 
-            @foreach ($confs as $conf => $_)
-                subgraph {{ $conf }}
+            %% Founder Condition Groups %%
+            @if ($founderCondition)
+                @foreach ($conference_groups as $conference => $coordinators_by_region)
+                    subgraph {{ $conference }}
+                        direction TB
+                        style {{ $conference }} fill:none,stroke:none
+
+                        %% Add nodes for each region under the conference
+                        @foreach ($coordinators_by_region as $region => $coordinators)
+                            subgraph {{ $region }}
+                                direction TB
+                                style {{ $region }} fill:none,stroke:none
+
+                                %% Add coordinators for this region
+                                @foreach ($coordinators as $coordinator)
+                                    @php
+                                        $id = $coordinator['id'];
+                                        $name = htmlspecialchars($coordinator['first_name'] . ' ' . $coordinator['last_name']);
+                                        $position = htmlspecialchars($coordinator['display_position_title']);
+                                        $sec_position = htmlspecialchars($coordinator['sec_position_title']);
+                                        $node_label = "$name<br>$position";
+                                        if ($sec_position) {
+                                            $node_label .= " / $sec_position";
+                                        }
+                                        if ($coordinator['region'] != "None") {
+                                            $node_label .= "<br>" . htmlspecialchars($coordinator['region']);
+                                        }
+                                    @endphp
+                                    {{ $id }}["{{ $node_label }}"]
+                                @endforeach
+                            end
+                        @endforeach
+                    end
+                @endforeach
+            @endif
+
+            %% Non-Founder Condition Groups %%
+            @foreach ($region_groups as $region => $coordinators)
+                subgraph {{ $region }}
                     direction TB
-                    {{-- style {{ $conf }} fill:none,stroke:none --}}
-                    @foreach ($coordinator_array as $coordinator)
+                    style {{ $region }} fill:none,stroke:none
+
+                    %% Add coordinators for this region
+                    @foreach ($coordinators as $coordinator)
                         @php
-                            if ($coordinator['conference'] === $conf) {
-                                $id = $coordinator['id'];
-                $name = htmlspecialchars($coordinator['first_name'] . ' ' . $coordinator['last_name']);
-                $position = htmlspecialchars($coordinator['display_position_title']);
-                $sec_position = htmlspecialchars($coordinator['sec_position_title']);
-                $region = htmlspecialchars($coordinator['region']);
-                $conf = htmlspecialchars($coordinator['conference']);
-                $node_label = "$name<br>$position";
-                if ($sec_position) $node_label .= " / $sec_position";
-                if ($region != "None") $node_label .= "<br>$region";
-                if ($region == "None") $node_label .= "<br>$conf";
+                            $id = $coordinator['id'];
+                            $name = htmlspecialchars($coordinator['first_name'] . ' ' . $coordinator['last_name']);
+                            $position = htmlspecialchars($coordinator['display_position_title']);
+                            $sec_position = htmlspecialchars($coordinator['sec_position_title']);
+                            $node_label = "$name<br>$position";
+                            if ($sec_position) {
+                                $node_label .= " / $sec_position";
+                            }
+                            if ($coordinator['region'] != "None") {
+                                $node_label .= "<br>" . htmlspecialchars($coordinator['region']);
+                            }
                         @endphp
                         {{ $id }}["{{ $node_label }}"]
-                        @php
-                            } // End if for region
-                        @endphp
                     @endforeach
                 end
             @endforeach
@@ -193,80 +146,7 @@
 
 
 
-@else
-    <div class="card-body">
-        <div class="mermaid-container">
-            <div class="mermaid flowchart" id="mermaid-chart">
-                flowchart TD
-                @foreach ($coordinator_array as $coordinator)
-                    @php
-                    $id = $coordinator['id'];
-                    $name = htmlspecialchars($coordinator['first_name'] . ' ' . $coordinator['last_name']);
-                    $position = htmlspecialchars($coordinator['display_position_title']);
-                    $sec_position = htmlspecialchars($coordinator['sec_position_title']);
-                    $region = htmlspecialchars($coordinator['region']);
-                    $conf = htmlspecialchars($coordinator['conference']);
-                    $node_label = "$name<br>$position";
-                    if ($sec_position) $node_label .= " / $sec_position";
-                    if ($region != "None") $node_label .= "<br>$region";
-                    if ($region == "None") $node_label .= "<br>$conf";
-                @endphp
-                        {{ $id }}["{{ $node_label }}"]
-                @endforeach
 
-                %% Connect Coordinators %%
-                @foreach ($coordinator_array as $coordinator)
-                    @php
-                        $report_id = $coordinator['report_id'];
-                        $id = $coordinator['id'];
-                        $shouldExclude = ($report_id == "0" && $cord_pos_id == "8") || ($report_id == "1" && $cord_pos_id != "8");
-                        @endphp
-                    @if (!$shouldExclude)
-                        {{ $report_id }} --- {{ $id }}
-                    @endif
-                @endforeach
-
-                %% Dynamic Subgraphs %%
-                @php
-                    $regions = []; // To store unique regions
-                    foreach ($coordinator_array as $coordinator) {
-                        $region = $coordinator['region'];
-                        if ($region !== "None") { // Only include regions that are not "None"
-                            $regions[$region] = true; // Use the region as key for uniqueness
-                        }
-                    }
-                @endphp
-
-                @foreach ($regions as $region => $_)
-                    subgraph {{ $region }}
-                        direction TB
-                        style {{ $region }} fill:none,stroke:none
-                        @foreach ($coordinator_array as $coordinator)
-                            @php
-                                if ($coordinator['region'] === $region) {
-                                    $id = $coordinator['id'];
-                $name = htmlspecialchars($coordinator['first_name'] . ' ' . $coordinator['last_name']);
-                $position = htmlspecialchars($coordinator['display_position_title']);
-                $sec_position = htmlspecialchars($coordinator['sec_position_title']);
-                $region = htmlspecialchars($coordinator['region']);
-                $conf = htmlspecialchars($coordinator['conference']);
-                $node_label = "$name<br>$position";
-                if ($sec_position) $node_label .= " / $sec_position";
-                if ($region != "None") $node_label .= "<br>$region";
-                if ($region == "None") $node_label .= "<br>$conf";
-                            @endphp
-                            {{ $id }}["{{ $node_label }}"]
-                            @php
-                                } // End if for region
-                            @endphp
-                        @endforeach
-                    end
-                @endforeach
-            </div>
-        </div>
-    </div>
-
-@endif
 
 <div class="card-body">
         <button type="button" class="btn bg-gradient-primary" onclick="showPositionAbbreviations()">Position Abbreviations</button>
@@ -375,5 +255,9 @@ function showPositionAbbreviations() {
 .swal-wide {
     width: 600px !important;
 }
+
+.mermaid .cluster.default.flowchart-label {
+        display: none; /* Hides the text */
+    }
 
 </style>

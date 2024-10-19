@@ -32,8 +32,7 @@
 				<thead>
 			    <tr>
 			        <th>Edit</th>
-			        <th>Conference</th>
-					<th>Reigon</th>
+			        <th>Conf/Reg</th>
 					<th>First Name</th>
 					<th>Last Name</th>
 					<th>Birthday</th>
@@ -46,8 +45,13 @@
                   <tr>
                       <td class="text-center align-middle">
                         <a href="<?php echo url("/coordinator/birthday/{$list->cor_id}") ?>"><i class="fas fa-edit"></i></a></td>
-                      <td>{{ $list->cor_conf }}</td>
-                      <td>{{ $list->reg }}</td>
+                        <td>
+                            @if ($list->reg != "None")
+                                {{ $list->conf }} / {{ $list->reg }}
+                            @else
+                                {{ $list->conf }}
+                            @endif
+                        </td>
                     <td>{{ $list->cor_fname }}</td>
                     <td>{{ $list->cor_lname }}</td>
                     <td data-sort="{{str_pad($list->b_month, 2, '0', STR_PAD_LEFT) . '-' .  $list->b_day}}">{{ $list->month }}  {{ $list->b_day }}</td>

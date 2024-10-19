@@ -32,6 +32,7 @@
               <thead>
 			    <tr>
 				  <th>Details</th>
+                  <th>Conf/Reg</th>
 				  <th>State</th>
                   <th>Name</th>
 				   <th>CC</th>
@@ -75,6 +76,7 @@
 
                         echo "<tr>";
                         echo "<td class='text-center align-middle'><a href='/chapter/edit/{$row->id}'><i class='fas fa-edit' ></i></a></td> \n";
+                        echo "<td>{$row->conf} / {$row->reg}</td>\n";
                         echo "<td>{$row->state}</td>\n";
                         echo "<td>{$row->name}</td>\n";
 

@@ -32,6 +32,7 @@
 				<thead>
 			    <tr>
 			        <th>Edit</th>
+                    <th>Conf/Reg</th>
 					<th>First Name</th>
 					<th>Last Name</th>
 					<th>Start Date</th>
@@ -55,7 +56,14 @@
                   <tr>
                     <td class="text-center align-middle">
                         <a href="<?php echo url("/coordinator/appreciation/{$list->cor_id}") ?>"><i class="fas fa-edit "></i></a></td>
-                    <td>{{ $list->cor_fname }}</td>
+                        <td>
+                            @if ($list->reg != "None")
+                                {{ $list->conf }} / {{ $list->reg }}
+                            @else
+                                {{ $list->conf }}
+                            @endif
+                        </td>
+                        <td>{{ $list->cor_fname }}</td>
                     <td>{{ $list->cor_lname }}</td>
                     <td><span class="date-mask">{{ $list->start_date }}</span></td>
                     <td>{{ $list->yr_0 }}</td>

@@ -32,8 +32,7 @@
 				<thead>
 			    <tr>
 			        <th>Details</th>
-			        <th>Conference</th>
-					<th>Region</th>
+			        <th>Conf/Reg</th>
 					<th>First Name</th>
 					<th>Last Name</th>
 					<th>Position</th>
@@ -48,8 +47,13 @@
                   <tr>
                     <td class="text-center align-middle">
                         <a href="<?php echo url("/coordinator/edit/{$list->cor_id}") ?>"><i class="fas fa-edit"></i></a></td>
-                    <td>{{ $list->cor_conf }}</td>
-                    <td>{{ $list->reg }}</td>
+                        <td>
+                            @if ($list->reg != "None")
+                                {{ $list->conf }} / {{ $list->reg }}
+                            @else
+                                {{ $list->conf }}
+                            @endif
+                        </td>
                     <td>{{ $list->cor_fname }}</td>
                     <td>{{ $list->cor_lname }}</td>
 					<td>{{ $list->position }}</td>

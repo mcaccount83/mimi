@@ -62,10 +62,13 @@ class ReportController extends Controller
         }
 
         $baseQuery = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
+                'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1');
 
@@ -191,10 +194,13 @@ class ReportController extends Controller
 
 
         $baseQuery = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month')
+            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
+                'st.state_short_name as state', 'db.month_long_name as start_month', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
@@ -247,10 +253,13 @@ class ReportController extends Controller
 
         //Get Chapter List mapped with login coordinator
         $chapterList = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month')
+            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
+                'st.state_short_name as state', 'db.month_long_name as start_month', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
@@ -347,41 +356,20 @@ class ReportController extends Controller
            $inQryArr = explode(',', $inQryStr);
        }
 
-
-        // $date_clause = '';
-        // $last_year = date('Y') - 1;
-        // $month_last_year = date('m');
-
-        // //see if dates stretch into next year
-        // if (date('m') < 12) {
-        //     $date_clause = 'WHERE ((chapters.start_year='.$last_year.' AND chapters.start_month_id>='.$month_last_year.')
-        //                 OR (chapters.start_year='.date('Y').'))';
-        // } else {
-        //     $date_clause = 'WHERE (chapters.start_year='.date('Y').' AND chapters.start_month_id<='.date('m').')';
-        // }
-        // if ($positionId != 8) {
-        //     $conference_clause = 'AND chapters.conference='.$corConfId;
-        // } else {
-        //     $conference_clause = '';
-        // }
-
         //Get Chapter List mapped with login coordinator
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'chapters.id as ch_id', 'chapters.name as ch_name', 'db.month_short_name as month_name', 'db.month_long_name as start_month', 'start_year as year', 'cd.first_name as cor_f_name',
                 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
-                'st.state_short_name as ch_state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname')
+                'st.state_short_name as ch_state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->whereRaw('DATE_ADD(CONCAT(chapters.start_year, "-", chapters.start_month_id, "-01"), INTERVAL 1 YEAR) > CURDATE()');
-
-            // ->whereIn('chapters.primary_coordinator_id', $inQryArr)
-            // ->orderBy('st.state_short_name')
-            // ->orderBy('chapters.name')
-            // ->get();
 
             if ($conditions['founderCondition']) {
                 $baseQuery;
@@ -439,10 +427,12 @@ class ReportController extends Controller
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->where('chapters.members_paid_for', '>=', '60');
@@ -515,10 +505,13 @@ class ReportController extends Controller
         $status = [4, 5, 6];
 
         $baseQuery = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
+                'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->whereIn('chapters.status', $status);
@@ -586,10 +579,12 @@ class ReportController extends Controller
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month')
+                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
@@ -650,10 +645,12 @@ class ReportController extends Controller
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1');
 
@@ -791,10 +788,12 @@ class ReportController extends Controller
 
             $baseQuery = DB::table('chapters')
                 ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                    'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+                    'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+                ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
                 ->where('chapters.is_active', '=', '1')
                 ->where('bd.board_position_id', '=', '1');
 
@@ -865,12 +864,12 @@ class ReportController extends Controller
        }
 
         $baseQuery = DB::table('coordinators as cd')
-            ->select('cd.id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
-                'cd.report_id as report_id', 'cp.long_title as position',
-                DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
-                'rg.short_name as reg', 'cd.conference_id as cor_conf')
+            ->select('cd.id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.report_id as report_id',
+                'cp.long_title as position', 'pos2.long_title as sec_pos', 'cd.conference_id as cor_conf', 'rg.short_name as reg', 'cf.short_name as conf')
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
+            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
+            ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.region_id')
             ->orderByDesc('cp.id');
@@ -1092,9 +1091,12 @@ class ReportController extends Controller
 
         //Get Chapter List mapped with login coordinator
         $activeChapterList = DB::table('chapters')
-            ->select('chapters.*', 'chapters.conference as conf', 'chapters.email as chapter_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city', 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
+            ->select('chapters.*', 'chapters.conference as conf', 'chapters.email as chapter_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add',
+                'bd.city as pre_city', 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('region as rg', 'rg.id', '=', 'chapters.region')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->orderBy('st.state_short_name')
@@ -1244,9 +1246,10 @@ class ReportController extends Controller
                 'cd.report_id as report_id', 'cd.sec_position_id as sec_position_id', 'cp.long_title as position', 'rg.short_name as reg', 'cd.conference_id as cor_conf',
                 'cd.recognition_year0 as yr_0', 'cd.recognition_year1 as yr_1', 'cd.recognition_year2 as yr_2', 'cd.recognition_year3 as yr_3', 'cd.recognition_year4 as yr_4',
                 'cd.recognition_year5 as yr_5', 'cd.recognition_year6 as yr_6', 'cd.recognition_year7 as yr_7', 'cd.recognition_year8 as yr_8', 'cd.recognition_year9 as yr_9',
-                'cd.recognition_toptier as toptier', 'cd.coordinator_start_date as start_date', 'cd.recognition_necklace as necklace')
+                'cd.recognition_toptier as toptier', 'cd.coordinator_start_date as start_date', 'cd.recognition_necklace as necklace', 'cf.short_name as conf')
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
+            ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.coordinator_start_date');
 
@@ -1303,9 +1306,11 @@ class ReportController extends Controller
           }
 
         $baseQuery = DB::table('coordinators as cd')
-            ->select('cd.id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.report_id as report_id', 'cd.sec_position_id as sec_position_id', 'cd.card_sent as card_sent', 'cp.long_title as position', 'rg.short_name as reg', 'cd.conference_id as cor_conf', 'cd.birthday_month_id as b_month', 'cd.birthday_day as b_day', 'db.month_long_name as month')
+            ->select('cd.id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.report_id as report_id', 'cd.sec_position_id as sec_position_id', 'cd.card_sent as card_sent',
+                'cp.long_title as position', 'rg.short_name as reg', 'cf.short_name as conf', 'cd.birthday_month_id as b_month', 'cd.birthday_day as b_day', 'db.month_long_name as month')
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
+            ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
             ->join('db_month as db', 'cd.birthday_month_id', '=', 'db.id')
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.birthday_month_id')
@@ -1364,15 +1369,17 @@ class ReportController extends Controller
 
         $baseQuery = DB::table('coordinators')
             ->select('coordinators.id AS id', 'coordinators.first_name', 'coordinators.last_name', 'pos1.short_title AS position_title',
-                'pos2.short_title AS sec_position_title', 'pos3.short_title AS display_position_title', 'coordinators.layer_id', 'coordinators.report_id', 'coordinators.report_id AS tree_id',
-                'region.short_name AS region', 'conference.conference_name as conference')
+                'pos2.short_title AS sec_position_title', 'pos3.short_title AS display_position_title', 'coordinators.layer_id', 'coordinators.report_id',
+                'coordinators.report_id AS tree_id', 'region.short_name AS region', 'conference.short_name as conference')
             ->join('coordinator_position as pos1', 'pos1.id', '=', 'coordinators.position_id')
             ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'coordinators.sec_position_id')
             ->leftJoin('coordinator_position as pos3', 'pos3.id', '=', 'coordinators.display_position_id')
             ->join('region', 'coordinators.region_id', '=', 'region.id')
             ->join('conference', 'coordinators.conference_id', '=', 'conference.id')
             ->where('coordinators.on_leave', 0)
-            ->where('coordinators.is_active', 1);
+            ->where('coordinators.is_active', 1)
+            ->orderBy('coordinators.region_id')
+            ->orderBy('coordinators.conference_id');
 
             if ($conditions['founderCondition']) {
                 $baseQuery;
@@ -2424,88 +2431,4 @@ class ReportController extends Controller
         return view('reports.chapteraward', $data);
     }
 
-    /**
-     * List of Chapter Awards -- All Chapters
-     */
-    // public function showAddAwards(Request $request): View
-    // {
-    //     $user = $request->user();
-    //     $lastUpdatedBy = $user->first_name.' '.$user->last_name;
-    //     //Get Coordinators Details
-    //     $corDetails = User::find($request->user()->id)->Coordinators;
-    //     $corId = $corDetails['id'];
-    //     $corConfId = $corDetails['conference_id'];
-    //     $corRegId = $corDetails['region_id'];
-    //     $corlayerId = $corDetails['layer_id'];
-    //     $sqlLayerId = 'crt.layer'.$corlayerId;
-    //     $positionId = $corDetails['position_id'];
-    //     $secPositionId = $corDetails['sec_position_id'];
-    //     $request->session()->put('positionid', $positionId);
-    //     $request->session()->put('secpositionid', $secPositionId);
-    //     $request->session()->put('corconfid', $corConfId);
-    //     $request->session()->put('corregid', $corRegId);
-
-    //     // Get the conditions
-    //     $conditions = getPositionConditions($positionId, $secPositionId);
-
-    //     if ($conditions['coordinatorCondition']) {
-    //        //Get Coordinator Reporting Tree
-    //            $reportIdList = DB::table('coordinator_reporting_tree as crt')
-    //                ->select('crt.id')
-    //                ->where($sqlLayerId, '=', $corId)
-    //                ->get();
-
-    //        $inQryStr = '';
-    //        foreach ($reportIdList as $key => $val) {
-    //            $inQryStr .= $val->id.',';
-    //        }
-    //        $inQryStr = rtrim($inQryStr, ',');
-    //        $inQryArr = explode(',', $inQryStr);
-    //    }
-
-    //     $year = date('Y');
-
-    //     $baseQuery = DB::table('chapters')
-    //         ->select('chapters.*', 'rg.short_name as region', 'st.state_short_name as state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname',
-    //             'fr.award_1_nomination_type', 'fr.award_2_nomination_type', 'fr.award_3_nomination_type', 'fr.award_4_nomination_type', 'fr.award_5_nomination_type',
-    //             'fr.check_award_1_approved as award_1_approved',
-    //             'fr.check_award_2_approved as award_2_approved', 'fr.check_award_3_approved as award_3_approved',
-    //             'fr.check_award_4_approved as award_4_approved', 'fr.check_award_5_approved as award_5_approved')
-    //         ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-    //         ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-    //         ->join('region as rg', 'rg.id', '=', 'cd.region_id')
-    //         ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-    //         ->leftJoin('financial_report as fr', 'chapters.id', '=', 'fr.chapter_id')
-    //         ->where('chapters.is_active', '=', '1')
-    //         ->where('bd.board_position_id', '=', '1')
-    //         ->where('created_at', '<=', date('Y-06-30'));
-
-    //         if ($conditions['founderCondition']) {
-    //             $baseQuery;
-    //     } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-    //         $baseQuery->where('chapters.conference', '=', $corConfId);
-    //     } elseif ($conditions['regionalCoordinatorCondition']) {
-    //         $baseQuery->where('chapters.region', '=', $corRegId);
-    //     } else {
-    //         $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
-    //     }
-
-    //     if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-    //         $checkBoxStatus = 'checked';
-    //         $baseQuery->where('chapters.primary_coordinator_id', '=', $corId)
-    //             ->orderBy('st.state_short_name')
-    //             ->orderBy('chapters.name');
-    //     } else {
-    //         $checkBoxStatus = '';
-    //         $baseQuery->orderBy('st.state_short_name')
-    //             ->orderBy('chapters.name');
-    //     }
-
-    //     $chapterList = $baseQuery->get();
-
-    //     $countList = count($chapterList);
-    //     $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
-
-    //     return view('reports.addawards')->with($data);
-    // }
 }

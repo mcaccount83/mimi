@@ -33,19 +33,26 @@
               <thead>
 			    <tr>
 					<th>Review</th>
-					<th>Chapter State</th>
-					<th>Chapter Name</th>
+                    <th>Conf/Reg</th>
+					<th>State</th>
+					<th>Name</th>
                     <th>Status</th>
                     <th>Website</th>
-                    <th>Meetup/Google Groups/Etc</th>
+                    <th>Online Group/App</th>
                     <th>Web Reviewer Notes</th>
-
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($websiteList as $list)
                   <tr>
 						<td><center><a href="<?php echo url("/chapter/website/edit/{$list->id}") ?>"><i class="fas fa-edit "></i></a></center></td>
+                        <td>
+                            @if ($list->reg != "None")
+                                {{ $list->conf }} / {{ $list->reg }}
+                            @else
+                                {{ $list->conf }}
+                            @endif
+                        </td>
                         <td>{{ $list->state }}</td>
                         <td>{{ $list->chapter_name }}</td>
                         <td>

@@ -426,7 +426,7 @@
                                 </a>
                             </li>
                             @endif
-                            @if (($positionid ==7))
+                            @if ($conferenceCoordinatorCondition && !$founderCondition)
                             <li class="nav-item">
                                 <a href="{{ route('report.coordinatortodo') }}" class="nav-link {{ Request::is('reports/coordinatortodo') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-university"></i>
@@ -569,12 +569,6 @@
                                     <p>Duplicate Board Details</p>
                                 </a>
                                 </li>
-                                {{-- <li class="nav-item">
-                                <a href="{{ route('admin.multipleboard') }}" class="nav-link {{ Request::is('adminreports/multipleboard') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-random"></i>
-                                    <p>Multiple Boards</p>
-                                </a>
-                                </li> --}}
                                 <li class="nav-item">
                                 <a href="{{ route('admin.nopresident') }}" class="nav-link {{ Request::is('adminreports/nopresident') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-minus-circle"></i>

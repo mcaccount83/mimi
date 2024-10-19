@@ -32,6 +32,7 @@
               <thead>
 			    <tr>
 				  <th>Details</th>
+                  <th>Conf/Reg</th>
 				  <th>State</th>
                   <th>Name</th>
                  <th>Status</th>
@@ -43,7 +44,14 @@
                   <tr>
 						<td class="text-center align-middle">
                             <a href="<?php echo url("/chapter/edit/{$list->id}") ?>"><i class="fas fa-edit "></i></a></td>
-						<td>{{ $list->state }}</td>
+                            <td>
+                                @if ($list->reg != "None")
+                                    {{ $list->conf }} / {{ $list->reg }}
+                                @else
+                                    {{ $list->conf }}
+                                @endif
+                            </td>
+                            <td>{{ $list->state }}</td>
                         <td>{{ $list->name }}</td>
 						@switch($list->status)
                                 @case(4)

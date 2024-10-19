@@ -109,7 +109,9 @@ class CoordinatorController extends Controller
         ->leftJoin('coordinators as report', 'report.id', '=', 'cd.report_id')
         ->where('cd.is_active', '=', '1');
 
-        if ($conditions['assistConferenceCoordinatorCondition']) {
+        if ($conditions['founderCondition']) {
+            $baseQuery;
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
             $baseQuery->where('cd.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
@@ -1349,7 +1351,9 @@ class CoordinatorController extends Controller
             ->join('conference as cf', 'cf.id', '=', 'cd.conference_id')
             ->where('cd.is_active', '=', '0');
 
-        if ($conditions['assistConferenceCoordinatorCondition']) {
+            if ($conditions['founderCondition']) {
+                $baseQuery;
+            } elseif ($conditions['assistConferenceCoordinatorCondition']) {
                 $baseQuery->where('cd.conference_id', '=', $corConfId);
          } elseif ($conditions['regionalCoordinatorCondition']) {
              $baseQuery->where('cd.region_id', '=', $corRegId);

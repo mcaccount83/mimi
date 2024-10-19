@@ -32,6 +32,7 @@
               <thead>
 			    <tr>
                     <th>Details</th>
+                    <th>Conf/Reg</th>
                     <th>State</th>
                     <th>Name</th>
                     <th>EIN</th>
@@ -43,6 +44,13 @@
                 @foreach($chapterList as $list)
                   <tr>
                     <td><center><a href="<?php echo url("/chapter/zapped/view/{$list->id}") ?>"><i class="fas fa-eye"></i></a></center></td>
+                    <td>
+                        @if ($list->reg != "None")
+                            {{ $list->conf }} / {{ $list->reg }}
+                        @else
+                            {{ $list->conf }}
+                        @endif
+                    </td>
                     <td>{{ $list->state }}</td>
                     <td>{{ $list->name }}</td>
                     <td>{{ $list->ein }}</td>

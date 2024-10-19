@@ -32,6 +32,7 @@
 				<thead>
 			    <tr>
 					<th>Details</th>
+                    <th>Conf/Reg</th>
 					<th>State</th>
 					<th>Name</th>
 					<th>Founded</th>
@@ -44,7 +45,14 @@
                   <tr>
                     <td class="text-center align-middle">
                             <a href="<?php echo url("/chapter/edit/{$list->ch_id}") ?>"><i class="fas fa-edit "></i></a></td>
-						<td>{{ $list->ch_state }}</td>
+                            <td>
+                                @if ($list->reg != "None")
+                                    {{ $list->conf }} / {{ $list->reg }}
+                                @else
+                                    {{ $list->conf }}
+                                @endif
+                            </td>
+                            <td>{{ $list->ch_state }}</td>
                         <td>{{ $list->ch_name }}</td>
                         <td data-sort="{{ $list->year . '-' . str_pad($list->start_month, 2, '0', STR_PAD_LEFT) }}">
                             {{ $list->start_month }} {{ $list->year }}
