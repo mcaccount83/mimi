@@ -143,7 +143,7 @@
                                  @if($thisDate->month >= 6 && $thisDate->month <= 12 && $boardreport_yes)
                                         @if($list->new_board_active!='1')
                                         @if($user_type === 'coordinator')
-                                            <button id="BoardReport" type="button" class="btn btn-primary" onclick="window.location.href='{{ route('chapter.viewboardinfo', ['id' => $list->id]) }}'">
+                                            <button id="BoardReport" type="button" class="btn btn-primary" onclick="window.location.href='{{ route('viewas.viewchapterboardinfo', ['id' => $list->id]) }}'">
                                                 <i class="fas fa-users"></i>&nbsp; {{ date('Y') . '-' . (date('Y') + 1) }} Board Report
                                             </button>
                                         @else
@@ -164,7 +164,7 @@
                                 @endif
                                 @if($thisDate->month >= 6 && $thisDate->month <= 12 && $financialreport_yes)
                                     @if($user_type === 'coordinator')
-                                        <button id="FinancialReport" type="button" class="btn btn-primary" onclick="window.location.href='{{ route('chapter.viewfinancial', ['id' => $list->id]) }}'">
+                                        <button id="FinancialReport" type="button" class="btn btn-primary" onclick="window.location.href='{{ route('viewas.viewchapterfinancial', ['id' => $list->id]) }}'">
                                             <i class="fas fa-file-invoice-dollar"></i>&nbsp; {{ date('Y')-1 .'-'.date('Y') }} Financial Report
                                         </button>
                                     @else
@@ -798,7 +798,7 @@ $(document).ready(function () {
         var pcid = $("#pcid").val();
         if (pcid != "") {
             $.ajax({
-                url: '{{ url("/checkreportid/") }}' + '/' + pcid,
+                url: '{{ url("/load-coordinator-list/") }}' + '/' + pcid,
                 type: "GET",
                 success: function (result) {
                     console.log("AJAX result:", result);
@@ -898,6 +898,23 @@ function PreSaveValidate(){
     return true;
 }
 
+function checkDuplicateEmail(email, id) {
+        $.ajax({
+            url: '{{ url("/checkemail/") }}' + '/' + email,
+            type: "GET",
+            success: function(result) {
+                if (result.exists) {
+                    alert('This Email already used in the system. Please try with new one.');
+                    $("#" + id).val('');
+                    $("#" + id).focus();
+                }
+            },
+            error: function(jqXHR, exception) {
+                console.error("Error checking email: ", exception);
+            }
+        });
+    }
+
 function showChangePasswordAlert() {
     Swal.fire({
         title: 'Change Password',
@@ -942,7 +959,7 @@ function showChangePasswordAlert() {
 
             // Return the AJAX call as a promise to let Swal wait for it
             return $.ajax({
-                url: '{{ route("board.checkpassword") }}',  // Check current password route
+                url: '{{ route("checkpassword") }}',  // Check current password route
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
@@ -977,7 +994,7 @@ function showChangePasswordAlert() {
 
             // Send the form data via AJAX to update the password
             $.ajax({
-                url: '{{ route("board.updatepassword") }}',
+                url: '{{ route("updatepassword") }}',
                 type: 'PUT',
                 data: {
                     _token: '{{ csrf_token() }}',

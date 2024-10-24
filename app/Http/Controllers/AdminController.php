@@ -148,6 +148,65 @@ class AdminController extends Controller
     }
 
     /**
+     * View the Downloads List
+     */
+    public function showDownloads(Request $request): View
+    {
+        //Get Coordinators Details
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
+        $corConfId = $corDetails['conference_id'];
+        $corRegId = $corDetails['region_id'];
+        $corlayerId = $corDetails['layer_id'];
+        $sqlLayerId = 'crt.layer'.$corlayerId;
+        $positionId = $corDetails['position_id'];
+        $secPositionId = $corDetails['sec_position_id'];
+
+          // Get the conditions
+        $conditions = getPositionConditions($positionId, $secPositionId);
+
+        if ($conditions['coordinatorCondition']) {
+            //Get Coordinator Reporting Tree
+                $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                    ->select('crt.id')
+                    ->where($sqlLayerId, '=', $corId)
+                    ->get();
+
+            $inQryStr = '';
+            foreach ($reportIdList as $key => $val) {
+                $inQryStr .= $val->id.',';
+            }
+            $inQryStr = rtrim($inQryStr, ',');
+            $inQryArr = explode(',', $inQryStr);
+        }
+
+        //Get Chapter List mapped with login coordinator
+        $baseQuery = DB::table('chapters')
+            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
+            ->where('chapters.is_active', '=', '1')
+            ->where('bd.board_position_id', '=', '1');
+
+            if ($conditions['founderCondition']) {
+                $baseQuery;
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+                $baseQuery->where('chapters.conference', '=', $corConfId);
+            } elseif ($conditions['regionalCoordinatorCondition']) {
+                $baseQuery->where('chapters.region', '=', $corRegId);
+        } else {
+            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
+        }
+            $chapterList = $baseQuery->get();
+
+        $data = ['chapterList' => $chapterList, 'corId' => $corId, 'positionId' => $positionId, 'secPositionId' => $secPositionId];
+
+        return view('admin.downloads')->with($data);
+    }
+
+    /**
      * View Resources List
      */
     public function showResources(Request $request): View

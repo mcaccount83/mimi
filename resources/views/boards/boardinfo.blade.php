@@ -525,7 +525,7 @@
 
                     <div class="box-body text-center">
                         @if($user_type === 'coordinator')
-                            <a href="{{ route('chapter.viewpresident', $chapterList[0]->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back</a>
+                            <a href="{{ route('viewas.viewchapterpresident', $chapterList[0]->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back</a>
                         @else
                             <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-reply" ></i>&nbsp; Back</a>
                         @endif
@@ -720,7 +720,7 @@ $(document).ready(function() {
 	var pcid = $("#pcid").val();
 	if(pcid !=""){
 		$.ajax({
-            url: '{{ url("/checkreportid/") }}' + '/' + pcid,
+            url: '{{ url("/load-coordinator-list/") }}' + '/' + pcid,
             type: "GET",
             success: function(result) {
 				$("#display_corlist").html(result);
@@ -732,6 +732,23 @@ $(document).ready(function() {
     }
 
   });
+
+  function checkDuplicateEmail(email, id) {
+        $.ajax({
+            url: '{{ url("/checkemail/") }}' + '/' + email,
+            type: "GET",
+            success: function(result) {
+                if (result.exists) {
+                    alert('This Email already used in the system. Please try with new one.');
+                    $("#" + id).val('');
+                    $("#" + id).focus();
+                }
+            },
+            error: function(jqXHR, exception) {
+                console.error("Error checking email: ", exception);
+            }
+        });
+    }
 
 //submit validation function
   function PreSaveValidate(){

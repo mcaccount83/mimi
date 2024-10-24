@@ -213,7 +213,7 @@
                             <br>
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-share" ></i>&nbsp;{{ __('Submit Payment') }}</button>
                             @if($user_type === 'coordinator')
-                                <a href="{{ route('chapter.viewpresident', $chapterList[0]->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Profile</a>
+                                <a href="{{ route('viewas.viewchapterpresident', $chapterList[0]->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Profile</a>
                             @else
                             <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-home" ></i>&nbsp; Back to Profile</a>
                             @endif

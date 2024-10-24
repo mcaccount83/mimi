@@ -151,15 +151,15 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
                         <li class="nav-item">
-                            <a href="{{ route('coordinator.showdashboard') }}" class="nav-link {{ Request::is('coordinator/dashboard') ? 'active' : '' }}">
+                            <a href="{{ route('coordinators.coorddashboard') }}" class="nav-link {{ Request::is('coordinator/dashboard') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>Dashboard</p>
                             </a>
                         </li>
                         @if ($coordinatorCondition)
                         <li class="nav-item">
-                            <a href="{{ route('chapter.list') }}" class="nav-link {{ Request::is('chapter/list') ? 'active' : '' }} {{ Request::is('chapter/edit/*') ? 'active' : '' }}
-                                     {{ Request::is('chapter/create') ? 'active' : '' }}">
+                            <a href="{{ route('chapters.chaplist') }}" class="nav-link {{ Request::is('chapter/chapterlist') ? 'active' : '' }} {{ Request::is('chapter/chapterview/*') ? 'active' : '' }}
+                                     {{ Request::is('chapter/chapternew') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-list"></i>
                                 <p>Chapter List</p>
                             </a>
@@ -167,7 +167,7 @@
                         @endif
                         @if ($regionalCoordinatorCondition)
                         <li class="nav-item">
-                            <a href="{{ route('chapter.zapped') }}" class="nav-link {{ Request::is('chapter/zapped') ? 'active' : '' }}  {{ Request::is('chapter/zapped/view/*') ? 'active' : '' }}">
+                            <a href="{{ route('chapters.chapzapped') }}" class="nav-link {{ Request::is('chapter/zapped') ? 'active' : '' }}  {{ Request::is('chapter/zappedview/*') ? 'active' : '' }}">
                                 <span class="nav-icon fa-layers fa-fw">
                                     <i class="fas fa-list"></i>
                                     <i class="fas fa-slash"></i>
@@ -178,8 +178,8 @@
                         @endif
                         @if ($regionalCoordinatorCondition)
                         <li class="nav-item">
-                            <a href="{{ route('chapter.registration') }}" class="nav-link {{ Request::is('chapter/re-registration') ? 'active' : '' }} {{ Request::is('chapter/re-registration/payment/*') ? 'active' : '' }}
-                                    {{ Request::is('chapter/re-registration/notes/*') ? 'active' : '' }}">
+                            <a href="{{ route('chapters.chapreregistration') }}" class="nav-link {{ Request::is('chapter/reregistration') ? 'active' : '' }} {{ Request::is('chapter/reregistrationpayment/*') ? 'active' : '' }}
+                                    {{ Request::is('chapter/reregistrationnotes/*') ? 'active' : '' }}">
                                 <i class="nav-icon far fa-credit-card"></i>
                                 <p>Re-Registration</p>
                             </a>
@@ -187,7 +187,7 @@
                         @endif
                         @if ($inquiriesCondition || $regionalCoordinatorCondition)
                         <li class="nav-item">
-                            <a href="{{ route('chapter.inquiries') }}" class="nav-link {{ Request::is('chapter/inquiries') ? 'active' : '' }} {{ Request::is('chapter/inquiriesview/*') ? 'active' : '' }}">
+                            <a href="{{ route('chapters.chapinquiries') }}" class="nav-link {{ Request::is('chapter/inquiries') ? 'active' : '' }} {{ Request::is('chapter/inquiriesview/*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-map-marker-alt"></i>
                                 <p>Inquiries</p>
                             </a>
@@ -195,7 +195,7 @@
                         @endif
                         @if ($inquiriesCondition)
                         <li class="nav-item">
-                            <a href="{{ route('chapter.inquirieszapped') }}" class="nav-link {{ Request::is('chapter/inquirieszapped') ? 'active' : '' }}">
+                            <a href="{{ route('chapters.chapinquirieszapped') }}" class="nav-link {{ Request::is('chapter/inquirieszapped') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-ban"></i>
                                 <p>Zapped Chapters</p>
                             </a>
@@ -203,7 +203,7 @@
                         @endif
                         @if ($webReviewCondition || $regionalCoordinatorCondition)
                         <li class="nav-item">
-                            <a href="{{ route('chapter.website') }}" class="nav-link {{ Request::is('chapter/website') ? 'active' : '' }} {{ Request::is('chapter/website/edit/*') ? 'active' : '' }}">
+                            <a href="{{ route('chapters.chapwebsite') }}" class="nav-link {{ Request::is('chapter/website') ? 'active' : '' }} {{ Request::is('chapter/websiteview/*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-laptop"></i>
                                 <p>Website Review</p>
                             </a>
@@ -211,7 +211,7 @@
                         @endif
                         @if ($listAdminCondition || $ITCondition)
                         <li class="nav-item">
-                            <a href="{{ route('report.boardlist') }}" class="nav-link {{ Request::is('reports/boardlist') ? 'active' : '' }}">
+                            <a href="{{ route('chapters.chapboardlist') }}" class="nav-link {{ Request::is('chapter/updatewebsite') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-paste"></i>
                                 <p>BoardList</p>
                             </a>
@@ -219,8 +219,8 @@
                         @endif
                         @if ($regionalCoordinatorCondition)
                         <li class="nav-item">
-                            <a href="{{ route('coordinator.list') }}" class="nav-link {{ Request::is('coordinatorlist') ? 'active' : '' }} {{ Request::is('coordinator/create') ? 'active' : '' }}
-                                {{ Request::is('coordinator/edit/*') ? 'active' : '' }} {{ Request::is('coordinator/role/*') ? 'active' : '' }}">
+                            <a href="{{ route('coordinators.coordlist') }}" class="nav-link {{ Request::is('coordinator/coordlist') ? 'active' : '' }} {{ Request::is('coordinator/coordinatornew') ? 'active' : '' }}
+                                {{ Request::is('coordinator/coordinatorview/*') ? 'active' : '' }} {{ Request::is('coordinator/roleview/*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>Coordinator List</p>
                             </a>
@@ -228,7 +228,7 @@
                         @endif
                         @if ($regionalCoordinatorCondition)
                         <li class="nav-item">
-                            <a href="{{ route('coordinator.retired') }}" class="nav-link {{ Request::is('coordinator/retired') ? 'active' : '' }} {{ Request::is('coordinator/retired/view/*') ? 'active' : '' }}">
+                            <a href="{{ route('coordinators.coordretired') }}" class="nav-link {{ Request::is('coordinator/retired') ? 'active' : '' }} {{ Request::is('coordinator/retiredview/*') ? 'active' : '' }}">
                                 <span class="nav-icon fa-layers fa-fw">
                                     <i class="fas fa-users"></i>
                                     <i class="fas fa-slash"></i>
@@ -239,7 +239,7 @@
                         @endif
                         @if ($einCondition)
                         <li class="nav-item">
-                            <a href="{{ route('chapter.inter') }}" class="nav-link <?php if (($positionid == 12)){ ?> {{ Request::is('home') ? 'active' : '' }}<?php }?>  {{ Request::is('chapter/international') ? 'active' : '' }}">
+                            <a href="{{ route('international.intchapter') }}" class="nav-link {{ Request::is('international/chapter') ? 'active' : '' }} {{ Request::is('international/chapterview/*') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-list"></i>
                                 <p>International Chapter List</p>
                             </a>
@@ -247,7 +247,7 @@
                         @endif
                         @if ($einCondition)
                         <li class="nav-item">
-                            <a href="{{ route('chapter.interzap') }}" class="nav-link {{ Request::is('chapter/international/zap') ? 'active' : '' }} {{ Request::is('chapter/international/zapped/view/*') ? 'active' : '' }}">
+                            <a href="{{ route('international.intchapterzapped') }}" class="nav-link {{ Request::is('international/chapterzapped') ? 'active' : '' }} {{ Request::is('international/chapterzappedview/*') ? 'active' : '' }}">
                                 <span class="nav-icon fa-layers fa-fw">
                                     <i class="fas fa-list"></i>
                                     <i class="fas fa-slash"></i>
@@ -258,46 +258,35 @@
                         @endif
                         @if ($einCondition)
                         <li class="nav-item">
-                            <a href="{{ route('report.inteinstatus') }}" class="nav-link {{ Request::is('reports/inteinstatus') ? 'active' : '' }}">
+                            <a href="{{ route('international.inteinstatus') }}" class="nav-link {{ Request::is('international/einstatus') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-university"></i>
-                                <p>Chapter EIN Status</p>
+                                <p>International EIN Status</p>
                             </a>
                         </li>
                         @endif
                         @if ($m2mCondition)
                         <li class="nav-item">
-                            <a href="{{ route('report.intm2mdonation') }}" class="nav-link {{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
+                            <a href="{{ route('international.intdonation') }}" class="nav-link {{ Request::is('nternational/donation') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-money-bill-alt"></i>
-                                <p>M2M Donations</p>
+                                <p>International Donations List</p>
                             </a>
                         </li>
                         @endif
 
                         @if ($adminReportCondition)
-                        <li class="nav-item {{ Request::is('chapter/international') ? 'menu-open' : '' }} {{ Request::is('chapter/international/view/*') ? 'menu-open' : '' }}
-                                            {{ Request::is('chapter/international/zap') ? 'menu-open' : '' }} {{ Request::is('chapter/international/zapped/view/*') ? 'menu-open' : '' }}
-                                            {{ Request::is('chapter/international/zap') ? 'menu-open' : '' }} {{ Request::is('chapter/international/zapped/view/*') ? 'menu-open' : '' }}
-                                            {{ Request::is('coordinator/international') ? 'menu-open' : '' }} {{ Request::is('coordinator/international/view/*') ? 'menu-open' : '' }}
-                                            {{ Request::is('coordinator/retiredinternational') ? 'menu-open' : '' }} {{ Request::is('coordinator/retiredinternational/view/*') ? 'menu-open' : '' }}
-                                            {{ Request::is('reports/inteinstatus') ? 'menu-open' : '' }} {{ Request::is('reports/intm2mdonation') ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link {{ Request::is('chapter/international') ? 'active' : '' }} {{ Request::is('chapter/international/view/*') ? 'active' : '' }}
-                                                        {{ Request::is('chapter/international/zap') ? 'active' : '' }} {{ Request::is('chapter/international/zapped/view/*') ? 'active' : '' }}
-                                                        {{ Request::is('chapter/international/zap') ? 'active' : '' }} {{ Request::is('chapter/international/zapped/view/*') ? 'active' : '' }}
-                                                        {{ Request::is('coordinator/international') ? 'active' : '' }} {{ Request::is('coordinator/international/view/*') ? 'active' : '' }}
-                                                        {{ Request::is('coordinator/retiredinternational') ? 'active' : '' }} {{ Request::is('coordinator/retiredinternational/view/*') ? 'active' : '' }}
-                                                        {{ Request::is('reports/inteinstatus') ? 'active' : '' }} {{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
+                        <li class="nav-item {{ Request::is('international/*') ? 'menu-open' : '' }} "> <a href="#" class="nav-link {{ Request::is('internatinal/*') ? 'active' : '' }} ">
                                 <i class="nav-icon fa fa-globe"></i>
                                 <p>International Lists<i class="fas fa-angle-left right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                <a href="{{ route('chapter.inter') }}" class="nav-link {{ Request::is('chapter/international') ? 'active' : '' }} {{ Request::is('chapter/international/view/*') ? 'active' : '' }}">
+                                <a href="{{ route('international.intchapter') }}" class="nav-link {{ Request::is('international/chapter') ? 'active' : '' }} {{ Request::is('international/chapterview/*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-list"></i>
                                     <p>Chapter List</p>
                                 </a>
                             </li>
                                 <li class="nav-item">
-                                <a href="{{ route('chapter.interzap') }}" class="nav-link {{ Request::is('chapter/international/zap') ? 'active' : '' }} {{ Request::is('chapter/international/zapped/view/*') ? 'active' : '' }}">
+                                <a href="{{ route('international.intchapterzapped') }}" class="nav-link {{ Request::is('international/chapterzapped') ? 'active' : '' }} {{ Request::is('international/chapterzappedview/*') ? 'active' : '' }}">
                                     <span class="nav-icon fa-layers fa-fw">
                                         <i class="fas fa-list"></i>
                                         <i class="fas fa-slash"></i>
@@ -306,13 +295,13 @@
                                 </a>
                             </li>
                                 <li class="nav-item">
-                                <a href="{{ route('coordinator.inter') }}" class="nav-link {{ Request::is('coordinator/international') ? 'active' : '' }} {{ Request::is('coordinator/international/view/*') ? 'active' : '' }}">
+                                <a href="{{ route('international.intcoord') }}" class="nav-link {{ Request::is('international/coordinator') ? 'active' : '' }} {{ Request::is('international/coordinatorview/*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-users"></i>
                                     <p>Coordinator List</p>
                                 </a>
                             </li>
                                 <li class="nav-item">
-                                <a href="{{ route('coordinator.retinter') }}" class="nav-link {{ Request::is('coordinator/retiredinternational') ? 'active' : '' }} {{ Request::is('coordinator/retiredinternational/view/*') ? 'active' : '' }}">
+                                <a href="{{ route('international.intcoordretired') }}" class="nav-link {{ Request::is('international/coordinatorretired') ? 'active' : '' }} {{ Request::is('iternational/coordinatorretiredview/*') ? 'active' : '' }}">
                                     <span class="nav-icon fa-layers fa-fw">
                                         <i class="fas fa-users"></i>
                                         <i class="fas fa-slash"></i>
@@ -321,15 +310,15 @@
                                 </a>
                                 </li>
                                 <li class="nav-item">
-                                <a href="{{ route('report.inteinstatus') }}" class="nav-link {{ Request::is('reports/inteinstatus') ? 'active' : '' }}">
+                                <a href="{{ route('international.inteinstatus') }}" class="nav-link {{ Request::is('international/einstatus') ? 'active' : '' }} {{ Request::is('iternational/einstatusview/*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-university"></i>
                                     <p>Chapter EIN Status</p>
                                 </a>
                                 </li>
                                 <li class="nav-item">
-                                <a href="{{ route('report.intm2mdonation') }}" class="nav-link {{ Request::is('reports/intm2mdonation') ? 'active' : '' }}">
+                                <a href="{{ route('international.intdonation') }}" class="nav-link {{ Request::is('international/donation') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-money-bill-alt"></i>
-                                    <p>M2M Donations</p>
+                                    <p>Donations List</p>
                                 </a>
                             </li>
                             </ul>
@@ -337,66 +326,57 @@
                         @endif
 
                         @if ($regionalCoordinatorCondition)
-                        <li class="nav-item {{ Request::is('reports/chapterstatus') ? 'menu-open' : '' }} {{ Request::is('reports/chapternew') ? 'menu-open' : '' }}
-                                            {{ Request::is('reports/chapterlarge') ? 'menu-open' : '' }} {{ Request::is('reports/chapterprobation') ? 'menu-open' : '' }}
-                                            {{ Request::is('reports/chaptercoordinators') ? 'menu-open' : '' }} {{ Request::is('reports/m2mdonation') ? 'menu-open' : '' }}
-                                            {{ Request::is('chapter/m2mdonation/*') ? 'menu-open' : '' }} {{ Request::is('reports/einstatus') ? 'menu-open' : '' }}
-                                            {{ Request::is('reports/socialmedia') ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link {{ Request::is('reports/chapterstatus') ? 'active' : '' }} {{ Request::is('reports/chapternew') ? 'active' : '' }}
-                                                        {{ Request::is('reports/chapterlarge') ? 'active' : '' }} {{ Request::is('reports/chapterprobation') ? 'active' : '' }}
-                                                        {{ Request::is('reports/chaptercoordinators') ? 'active' : '' }} {{ Request::is('reports/m2mdonation') ? 'active' : '' }}
-                                                        {{ Request::is('chapter/m2mdonation/*') ? 'active' : '' }} {{ Request::is('reports/einstatus') ? 'active' : '' }}
-                                                        {{ Request::is('reports/socialmedia') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-tasks"></i>
+                        <li class="nav-item {{ Request::is('chapterreports/*') ? 'menu-open' : '' }} "> <a href="#" class="nav-link {{ Request::is('chapterreports/*') ? 'active' : '' }} ">
+                             <i class="nav-icon fas fa-tasks"></i>
                                 <p>Chapter Reports<i class="fas fa-angle-left right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                <a href="{{ route('report.chapterstatus') }}" class="nav-link {{ Request::is('reports/chapterstatus') ? 'active' : '' }}">
+                                <a href="{{ route('chapreports.chaprptchapterstatus') }}" class="nav-link {{ Request::is('chapterreports/chapterstatus') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-check-square"></i>
                                     <p>Chapter Status</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('report.einstatus') }}" class="nav-link {{ Request::is('reports/einstatus') ? 'active' : '' }}">
+                                <a href="{{ route('chapreports.chaprpteinstatus') }}" class="nav-link {{ Request::is('chapterreports/einstatus') ? 'active' : '' }} {{ Request::is('chapterreports/einstatusview/*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-university"></i>
                                     <p>Chapter EIN Status</p>
                                 </a>
                             </li>
                             @if ($assistConferenceCoordinatorCondition)
                                 <li class="nav-item">
-                                <a href="{{ route('report.chapternew') }}" class="nav-link {{ Request::is('reports/chapternew') ? 'active' : '' }}">
+                                <a href="{{ route('chapreports.chaprptnewchapters') }}" class="nav-link {{ Request::is('chapterreports/newchapters') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-plus-square"></i>
                                     <p>New Chapters</p>
                                 </a>
                             </li>
                             @endif
                                 <li class="nav-item">
-                                <a href="{{ route('report.chapterlarge') }}" class="nav-link {{ Request::is('reports/chapterlarge') ? 'active' : '' }}">
+                                <a href="{{ route('chapreports.chaprptlargechapters') }}" class="nav-link {{ Request::is('chapterreports/largechapters') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-expand-alt"></i>
                                     <p>Large Chapters</p>
                                 </a>
                                 </li>
                                 <li class="nav-item">
-                                <a href="{{ route('report.chapterprobation') }}" class="nav-link {{ Request::is('reports/chapterprobation') ? 'active' : '' }}">
+                                <a href="{{ route('chapreports.chaprptprobation') }}" class="nav-link {{ Request::is('chapterreports/probation') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-times-circle"></i>
                                     <p>Probation Chapters</p>
                                 </a>
                                 </li>
                                 <li class="nav-item">
-                                <a href="{{ route('report.m2mdonation') }}" class="nav-link {{ Request::is('reports/m2mdonation') ? 'active' : '' }} {{ Request::is('chapter/m2mdonation/*') ? 'active' : '' }}">
+                                <a href="{{ route('chapreports.chaprptdonations') }}" class="nav-link {{ Request::is('chapterreports/donations') ? 'active' : '' }} {{ Request::is('chapterreports/donationsview/*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-money-bill-alt"></i>
-                                    <p>M2M Donations</p>
+                                    <p>Donations List</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('report.socialmedia') }}" class="nav-link {{ Request::is('reports/socialmedia') ? 'active' : '' }}">
+                                <a href="{{ route('chapreports.chaprptsocialmedia') }}" class="nav-link {{ Request::is('chapterreports/socialmedia') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-share-alt"></i>
                                     <p>Social Media</p>
                                 </a>
                                 </li>
                             <li class="nav-item">
-                                <a href="{{ route('report.chaptercoordinators') }}" class="nav-link {{ Request::is('reports/chaptercoordinators') ? 'active' : '' }}">
+                                <a href="{{ route('chapreports.chaprptcoordinators') }}" class="nav-link {{ Request::is('chapterreports/coordinators') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-house-user"></i>
                                     <p>Chapter Coordinators</p>
                                 </a>
@@ -406,21 +386,14 @@
                         @endif
 
                         @if ($coordinatorCondition)
-                        <li class="nav-item {{ Request::is('reports/chaptervolunteer') ? 'menu-open' : '' }} {{ Request::is('reports/coordinatortodo') ? 'menu-open' : '' }}
-                                            {{ Request::is('reports/intcoordinatortodo') ? 'menu-open' : '' }} {{ Request::is('reports/appreciation') ? 'menu-open' : '' }}
-                                            {{ Request::is('reports/birthday') ? 'menu-open' : '' }} {{ Request::is('coordinator/appreciation/*') ? 'menu-open' : '' }}
-                                            {{ Request::is('reports/reportingtree') ? 'menu-open' : '' }} {{ Request::is('coordinator/birthday/*') ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link {{ Request::is('reports/chaptervolunteer') ? 'active' : '' }} {{ Request::is('reports/coordinatortodo') ? 'active' : '' }}
-                                                        {{ Request::is('reports/intcoordinatortodo') ? 'active' : '' }} {{ Request::is('reports/appreciation') ? 'active' : '' }}
-                                                        {{ Request::is('reports/birthday') ? 'active' : '' }} {{ Request::is('coordinator/appreciation/*') ? 'active' : '' }}
-                                                        {{ Request::is('reports/reportingtree') ? 'active' : '' }} {{ Request::is('coordinator/birthday/*') ? 'active' : '' }}">
+                        <li class="nav-item {{ Request::is('coordreports/*') ? 'menu-open' : '' }} "> <a href="#" class="nav-link {{ Request::is('coordreports/*') ? 'active' : '' }} ">
                                 <i class="nav-icon fas fa-id-card"></i>
                                 <p>Coordinator Reports<i class="fas fa-angle-left right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
                                 @if ($supervisingCoordinatorCondition)
                                 <li class="nav-item">
-                                <a href="{{ route('report.chaptervolunteer') }}" class="nav-link {{ Request::is('reports/chaptervolunteer') ? 'active' : '' }}">
+                                <a href="{{ route('coordreports.coordrptvolutilization') }}" class="nav-link {{ Request::is('coordreports/volunteerutilization') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-check-square"></i>
                                     <p>Volunteer Utilization</p>
                                 </a>
@@ -428,23 +401,23 @@
                             @endif
                             @if ($conferenceCoordinatorCondition && !$founderCondition)
                             <li class="nav-item">
-                                <a href="{{ route('report.coordinatortodo') }}" class="nav-link {{ Request::is('reports/coordinatortodo') ? 'active' : '' }}">
+                                <a href="{{ route('coordreports.coordrpttodo') }}" class="nav-link {{ Request::is('coordreports/coordinatortodo') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-university"></i>
                                     <p>Cooordinator ToDo</p>
                                 </a>
                             </li>
                             @endif
-                            @if ($founderCondition)
+                            {{-- @if ($founderCondition)
                             <li class="nav-item">
-                                <a href="{{ route('report.intcoordinatortodo') }}" class="nav-link {{ Request::is('reports/intcoordinatortodo') ? 'active' : '' }}">
+                                <a href="{{ route('report.intcoordinatortodo') }}" class="nav-link {{ Request::is('coordreports/intcoordinatortodo') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-plus-square"></i>
                                     <p>Coordinator ToDo</p>
                                 </a>
                             </li>
-                            @endif
+                            @endif --}}
                             @if ($assistConferenceCoordinatorCondition)
                                 <li class="nav-item">
-                                <a href="{{ route('report.appreciation') }}" class="nav-link {{ Request::is('reports/appreciation') ? 'active' : '' }} {{ Request::is('coordinator/appreciation/*') ? 'active' : '' }}">
+                                <a href="{{ route('coordreports.coordrptappreciation') }}" class="nav-link {{ Request::is('coordreports/appreciation') ? 'active' : '' }} {{ Request::is('coordreports/appreciationview/*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-expand-alt"></i>
                                     <p>Volunteer Appreciation</p>
                                 </a>
@@ -452,14 +425,14 @@
                                 @endif
                                 @if ($regionalCoordinatorCondition)
                                 <li class="nav-item">
-                                <a href="{{ route('report.birthday') }}" class="nav-link {{ Request::is('reports/birthday') ? 'active' : '' }} {{ Request::is('coordinator/birthday/*') ? 'active' : '' }}">
+                                <a href="{{ route('coordreports.coordrptbirthdays') }}" class="nav-link {{ Request::is('coordreports/birthdays') ? 'active' : '' }} {{ Request::is('coordreports/birthdaysview/*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-times-circle"></i>
                                     <p>Volunteer Birthdays</p>
                                 </a>
                                 </li>
                                 @endif
                                 <li class="nav-item">
-                                <a href="{{ route('report.reportingtree') }}" class="nav-link {{ Request::is('reports/reportingtree') ? 'active' : '' }}">
+                                <a href="{{ route('coordreports.coordrptreportingtree') }}" class="nav-link {{ Request::is('coordreports/reportingtree') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-money-bill-alt"></i>
                                     <p>Reporting Tree</p>
                                 </a>
@@ -469,51 +442,43 @@
                         @endif
 
                         @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes))
-                        <li class="nav-item {{ Request::is('yearreports/*') ? 'menu-open' : '' }} {{ Request::is('chapter/financial/*') ? 'menu-open' : '' }}
-                                            {{ Request::is('chapter/boardinfo/*') ? 'menu-open' : '' }} {{ Request::is('chapter/boundaryview/*') ? 'menu-open' : '' }}
-                                            {{ Request::is('chapter/statusview/*') ? 'menu-open' : '' }} {{ Request::is('chapter/awardsview/*') ? 'menu-open' : '' }}
-                                             {{ Request::is('chapter/attachmentview/*') ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link {{ Request::is('yearreports/*') ? 'active' : '' }} {{ Request::is('chapter/financial/*') ? 'active' : '' }}
-                                                        {{ Request::is('chapter/boardinfo/*') ? 'active' : '' }} {{ Request::is('chapter/boundaryview/*') ? 'active' : '' }}
-                                                        {{ Request::is('chapter/statusview/*') ? 'active' : '' }} {{ Request::is('chapter/awardsview/*') ? 'active' : '' }}
-                                                        {{ Request::is('chapter/attachmentview/*') ? 'active' : '' }}">
+                        <li class="nav-item {{ Request::is('eoy/*') ? 'menu-open' : '' }} "> <a href="#" class="nav-link {{ Request::is('eoy/*') ? 'active' : '' }} ">
                                 <i class="nav-icon far fa-chart-bar"></i>
                                 <p>EOY Reports<i class="fas fa-angle-left right"></i></p>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                <a href="{{ route('report.eoystatus') }}" class="nav-link {{ Request::is('yearreports/eoystatus') ? 'active' : '' }} {{ Request::is('chapter/statusview/*') ? 'active' : '' }}">
+                                <a href="{{ route('eoyreports.eoystatus') }}" class="nav-link {{ Request::is('eoy/status') ? 'active' : '' }} {{ Request::is('eoy/statusview/*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-tasks"></i>
                                     <p>End of Year Status</p>
                                 </a>
                             </li>
                                 <li class="nav-item">
-                                <a href="{{ route('report.boardinfo') }}" class="nav-link {{ Request::is('yearreports/boardinfo') ? 'active' : '' }} {{ Request::is('chapter/boardinfo/*') ? 'active' : '' }}">
+                                <a href="{{ route('eoyreports.eoyboardreport') }}" class="nav-link {{ Request::is('eoy/boardreport') ? 'active' : '' }} {{ Request::is('eoy/boardreportview/*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-users"></i>
                                     <p>Board Reports</p>
                                 </a>
                             </li>
                                 <li class="nav-item">
-                                <a href="{{ route('report.review') }}" class="nav-link {{ Request::is('yearreports/review') ? 'active' : '' }} {{ Request::is('chapter/financial/*') ? 'active' : '' }}">
+                                <a href="{{ route('eoyreports.eoyfinancialreport') }}" class="nav-link {{ Request::is('eoy/financialreport') ? 'active' : '' }} {{ Request::is('eoy/financialreportview/*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-file-invoice-dollar"></i>
                                     <p>Financial Reports</p>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ route('report.eoyattachments') }}" class="nav-link {{ Request::is('yearreports/eoyattachments') ? 'active' : '' }} {{ Request::is('chapter/attachmentview/*') ? 'active' : '' }}">
+                                <a href="{{ route('eoyreports.eoyattachments') }}" class="nav-link {{ Request::is('eoy/attachments') ? 'active' : '' }} {{ Request::is('eoy/attachmentsview/*') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-paperclip"></i>
                                     <p>Report Attachments</p>
                                 </a>
                             </li>
                                 <li class="nav-item">
-                                <a href="{{ route('report.issues') }}" class="nav-link {{ Request::is('yearreports/boundaryissue') ? 'active' : '' }} {{ Request::is('chapter/boundaryview/*') ? 'active' : '' }}">
+                                <a href="{{ route('eoyreports.eoyboundaries') }}" class="nav-link {{ Request::is('eoy/boundaries') ? 'active' : '' }} {{ Request::is('eoy/boundariesview/*') ? 'active' : '' }}">
                                     <i class="nav-icon far fa-map"></i>
                                     <p>Boundary Issues</p>
                                 </a>
                                 </li>
                                 <li class="nav-item">
-                                <a href="{{ route('report.awards') }}" class="nav-link {{ Request::is('yearreports/chapterawards') ? 'active' : '' }} {{ Request::is('yearreports/addawards') ? 'active' : '' }}
-                                        {{ Request::is('chapter/awardsview/*') ? 'active' : '' }}">
+                                <a href="{{ route('eoyreports.eoyawards') }}" class="nav-link {{ Request::is('eoy/awards') ? 'active' : '' }} {{ Request::is('eoy/awardsview') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-award"></i>
                                     <p>Chapter Awards</p>
                                 </a>
@@ -603,9 +568,9 @@
                         </li>
                         @endif
 
-                        <li class="nav-item {{ Request::is('reports/downloads') ? 'menu-open' : '' }} {{ Request::is('admin/bugs') ? 'menu-open' : '' }}
+                        <li class="nav-item {{ Request::is('admin/downloads') ? 'menu-open' : '' }} {{ Request::is('admin/bugs') ? 'menu-open' : '' }}
                                             {{ Request::is('admin/resources') ? 'menu-open' : '' }} {{ Request::is('admin/toolkit') ? 'menu-open' : '' }}">
-                            <a href="#" class="nav-link {{ Request::is('reports/downloads') ? 'active' : '' }} {{ Request::is('admin/bugs') ? 'active' : '' }}
+                            <a href="#" class="nav-link {{ Request::is('admin/downloads') ? 'active' : '' }} {{ Request::is('admin/bugs') ? 'active' : '' }}
                                                         {{ Request::is('admin/resources') ? 'active' : '' }} {{ Request::is('admin/toolkit') ? 'active' : '' }} ">
                                 <i class="nav-icon fas fa-cogs"></i>
                                 <p>Resources<i class="fas fa-angle-left right"></i></p>
@@ -613,7 +578,7 @@
                             <ul class="nav nav-treeview">
                         @if ($assistConferenceCoordinatorCondition)
                         <li class="nav-item">
-                            <a href="{{ route('report.downloads') }}" class="nav-link {{ Request::is('reports/downloads') ? 'active' : '' }}">
+                            <a href="{{ route('admin.downloads') }}" class="nav-link {{ Request::is('admin/downloads') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-download"></i>
                             <p>Download Reports</p>
                             </a>
@@ -649,7 +614,7 @@
                 </ul>
 
                         <li class="nav-item">
-                            <a href="{{ route('coordinator.showprofile') }}" class="nav-link {{ Request::is('coordinator/profile') ? 'active' : '' }}">
+                            <a href="{{ route('coordinators.coordprofile') }}" class="nav-link {{ Request::is('coordinator/profile') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-user-edit"></i>
                             <p>Update Profile</p>
                             </a>

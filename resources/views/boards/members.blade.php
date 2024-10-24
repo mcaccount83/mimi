@@ -433,6 +433,29 @@ $(document).ready(function () {
     }
 });
 
+$( document ).ready(function() {
+        var pcid = $("#pcid").val();
+        if (pcid != "") {
+            $.ajax({
+                url: '{{ url("/load-coordinator-list/") }}' + '/' + pcid,
+                type: "GET",
+                success: function (result) {
+                    console.log("AJAX result:", result);
+                    $("#display_corlist").html(result);
+                },
+                error: function (jqXHR, exception) {
+                    console.log("AJAX error:", exception);
+                }
+            });
+        }
+
+        $('.cls-pswd').on('keypress', function(e) {
+        if (e.which == 32)
+            return false;
+        });
+
+    });
+
 var originalWebsiteUrl = "{{$chapterDetails->website_url}}"; // Original value from the database
 
 function checkWebsiteChanged() {
@@ -461,29 +484,6 @@ document.getElementById('ch_webstatus').addEventListener('change', function() {
         if (selectedOption.disabled) {
             document.getElementById('ch_hid_webstatus').value = selectedOption.value;
         }
-    });
-
-
-    $( document ).ready(function() {
-        var pcid = $("#pcid").val();
-        if (pcid != "") {
-            $.ajax({
-                url: '{{ url("/checkreportid/") }}' + '/' + pcid,
-                type: "GET",
-                success: function (result) {
-                    console.log("AJAX result:", result);
-                    $("#display_corlist").html(result);
-                },
-                error: function (jqXHR, exception) {
-                    console.log("AJAX error:", exception);
-                }
-            });
-        }
-
-        $('.cls-pswd').on('keypress', function(e) {
-        if (e.which == 32)
-            return false;
-        });
     });
 
 function is_url() {
@@ -553,7 +553,7 @@ function showChangePasswordAlert() {
 
             // Return the AJAX call as a promise to let Swal wait for it
             return $.ajax({
-                url: '{{ route("board.checkpassword") }}',  // Check current password route
+                url: '{{ route("checkpassword") }}',  // Check current password route
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
@@ -588,7 +588,7 @@ function showChangePasswordAlert() {
 
             // Send the form data via AJAX to update the password
             $.ajax({
-                url: '{{ route("board.updatepassword") }}',
+                url: '{{ route("updatepassword") }}',
                 type: 'PUT',
                 data: {
                     _token: '{{ csrf_token() }}',
