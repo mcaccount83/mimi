@@ -26,28 +26,28 @@
 					<div class="col-sm-6 col-xs-12">
 					  <div class="form-group">
 						<label>First Name</label><span class="field-required">*</span>
-						<input type="text" name="cord_fname" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->first_name }}" maxlength="50" required  autocomplete="nope">
+						<input type="text" name="cord_fname" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->first_name }}"  required  autocomplete="nope">
 					  </div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-6 col-xs-12">
 					  <div class="form-group">
 						<label>Last Name</label><span class="field-required">*</span>
-						<input type="text" name="cord_lname" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->last_name }}" maxlength="50" required oautocomplete="nope">
+						<input type="text" name="cord_lname" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->last_name }}"  required oautocomplete="nope">
 					  </div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-12 col-xs-12">
 						<div class="form-group">
 							<label>Street Address</label><span class="field-required">*</span>
-							<input autocomplete="nope" name="cord_addr" class="form-control my-colorpicker1" rows="4" maxlength="250" required value="{{ $coordinatorDetails[0]->address }}	">
+							<input autocomplete="nope" name="cord_addr" class="form-control my-colorpicker1" rows="4"  required value="{{ $coordinatorDetails[0]->address }}	">
 						</div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-3 col-xs-12">
 						<div class="form-group">
 							<label>City</label><span class="field-required">*</span>
-							<input type="text" name="cord_city" class="form-control my-colorpicker1" maxlength="50" value="{{ $coordinatorDetails[0]->city }}" required autocomplete="nope">
+							<input type="text" name="cord_city" class="form-control my-colorpicker1"  value="{{ $coordinatorDetails[0]->city }}" required autocomplete="nope">
 						</div>
 					</div>
 					<!-- /.form group -->
@@ -77,14 +77,14 @@
 					<div class="col-sm-3 col-xs-12">
 					  <div class="form-group">
 						<label>Zip</label><span class="field-required">*</span>
-						<input type="text" name="cord_zip" class="form-control my-colorpicker1" maxlength="10" value="{{ $coordinatorDetails[0]->zip }}" required  autocomplete="nope">
+						<input type="text" name="cord_zip" class="form-control my-colorpicker1"  value="{{ $coordinatorDetails[0]->zip }}" required  autocomplete="nope">
 					  </div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-6 col-xs-12">
 					  <div class="form-group">
 						<label>Email</label><span class="field-required">*</span>
-						<input type="email" name="cord_email" id="cord_email" class="form-control my-colorpicker1" maxlength="50" value="{{ $coordinatorDetails[0]->email }}" required autocomplete="nope">
+						<input type="email" name="cord_email" id="cord_email" class="form-control my-colorpicker1"  value="{{ $coordinatorDetails[0]->email }}" required autocomplete="nope">
 						<input type="hidden" id="cord_email_chk" value="{{ $coordinatorDetails[0]->email }}">
 					  </div>
 					</div>
@@ -92,7 +92,7 @@
 					<div class="col-sm-6 col-xs-12">
 					  <div class="form-group">
 						<label>Secondary Email</label>
-						<input type="email" name="cord_sec_email" id="cord_sec_email" class="form-control my-colorpicker1" maxlength="50" value="{{ $coordinatorDetails[0]->sec_email }}" autocomplete="nope">
+						<input type="email" name="cord_sec_email" id="cord_sec_email" class="form-control my-colorpicker1"  value="{{ $coordinatorDetails[0]->sec_email }}" autocomplete="nope">
 						<input type="hidden" id="cord_email_chk" value="{{ $coordinatorDetails[0]->sec_email }}">
 					  </div>
 					</div>
@@ -100,13 +100,13 @@
 					<div class="col-sm-6 col-xs-12">
 					  <div class="form-group">
 						<label>Phone</label><span class="field-required">*</span>
-						<input type="text" name="cord_phone" id="cord_phone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->phone }}" maxlength="12" required  autocomplete="nope">
+						<input type="text" name="cord_phone" id="cord_phone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->phone }}"  required  autocomplete="nope">
 					  </div>
 					</div>
 					<div class="col-sm-6 col-xs-12">
 					  <div class="form-group">
 						<label>Alternate Phone</label>
-						<input type="text" name="cord_altphone" id="cord_altphone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->alt_phone }}" maxlength="12" autocomplete="nope">
+						<input type="text" name="cord_altphone" id="cord_altphone" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->alt_phone }}"  autocomplete="nope">
 					  </div>
 					</div>
 					<div class="col-sm-6 col-xs-12">
@@ -237,7 +237,7 @@
 					<div class="col-sm-12 col-xs-12">
 					  <div class="form-group">
 						<label>Home Chapter</label>
-						<input type="text" name="cord_chapter" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->home_chapter }}" maxlength="50" " autocomplete="nope" disabled>
+						<input type="text" name="cord_chapter" class="form-control my-colorpicker1" value="{{ $coordinatorDetails[0]->home_chapter }}"  " autocomplete="nope" disabled>
 					  </div>
 					</div>
 

@@ -36,14 +36,14 @@
 					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>First Name</label><span class="field-required">*</span>
-						<input type="text" name="cord_fname" class="form-control" value="{{ $coordinatorDetails[0]->first_name }}" maxlength="50" required >
+						<input type="text" name="cord_fname" class="form-control" value="{{ $coordinatorDetails[0]->first_name }}"  required >
 					  </div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>Last Name</label><span class="field-required">*</span>
-						<input type="text" name="cord_lname" class="form-control" value="{{ $coordinatorDetails[0]->last_name }}" maxlength="50" required >
+						<input type="text" name="cord_lname" class="form-control" value="{{ $coordinatorDetails[0]->last_name }}"  required >
 					  </div>
 					</div>
 
@@ -51,14 +51,14 @@
 					<div class="col-sm-12">
 						<div class="form-group">
 							<label>Street Address</label><span class="field-required">*</span>
-							<input name="cord_addr" class="form-control" rows="4" maxlength="250" value="{{ $coordinatorDetails[0]->address }}" required>
+							<input name="cord_addr" class="form-control" rows="4"  value="{{ $coordinatorDetails[0]->address }}" required>
 						</div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-3">
 						<div class="form-group">
 							<label>City</label><span class="field-required">*</span>
-							<input type="text" name="cord_city" class="form-control" maxlength="50" value="{{ $coordinatorDetails[0]->city }}" required >
+							<input type="text" name="cord_city" class="form-control"  value="{{ $coordinatorDetails[0]->city }}" required >
 						</div>
 					</div>
 					<!-- /.form group -->
@@ -89,21 +89,21 @@
 					<div class="col-sm-3">
 					  <div class="form-group">
 						<label>Zip</label><span class="field-required">*</span>
-						<input type="text" name="cord_zip" class="form-control" maxlength="10" value="{{ $coordinatorDetails[0]->zip }}" required >
+						<input type="text" name="cord_zip" class="form-control"  value="{{ $coordinatorDetails[0]->zip }}" required >
 					  </div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>E-mail</label><span class="field-required">*</span>
-						<input type="email" name="cord_email" id="cord_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" maxlength="50" value="{{ $coordinatorDetails[0]->email }}" required>
+						<input type="email" name="cord_email" id="cord_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)"  value="{{ $coordinatorDetails[0]->email }}" required>
 						<input type="hidden" id="cord_email_chk" value="{{ $coordinatorDetails[0]->email }}">
 					  </div>
 					</div>
 					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>Secondary E-mail</label>
-						<input type="email" name="cord_sec_email" id="cord_sec_email" class="form-control"  maxlength="50" value="{{ $coordinatorDetails[0]->sec_email }}">
+						<input type="email" name="cord_sec_email" id="cord_sec_email" class="form-control"   value="{{ $coordinatorDetails[0]->sec_email }}">
 						 </div>
 					</div>
 					<!-- /.form group -->
@@ -179,7 +179,7 @@
                     <div class="col-sm-4">
                         <div class="form-group">
                           <label>Home Chapter</label><span class="field-required">*</span>
-                          <input type="text" name="cord_chapter" class="form-control" value="{{ $coordinatorDetails[0]->home_chapter }}" maxlength="50"  >
+                          <input type="text" name="cord_chapter" class="form-control" value="{{ $coordinatorDetails[0]->home_chapter }}"   >
                         </div>
                       </div>
 					<div class="col-sm-4">

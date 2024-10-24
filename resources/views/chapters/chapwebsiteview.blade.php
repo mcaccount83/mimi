@@ -78,7 +78,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                       <label>Chapter Website</label>
-                      <input type="text" name="ch_website" class="form-control" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}" maxlength="50" id="validate_url" onchange="is_url(); updateWebsiteStatus();">
+                      <input type="text" name="ch_website" class="form-control" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}"  id="validate_url" onchange="is_url(); updateWebsiteStatus();">
                     </div>
                     </div>
                       <!-- /.form group -->
@@ -99,28 +99,28 @@
               <div class="col-sm-12">
               <div class="form-group">
                 <label>Online Discussion Group (Meetup, Google Groups, etc)</label>
-                <input type="text" name="ch_onlinediss" class="form-control" value="{{ $chapterList[0]->egroup}}" maxlength="50" >
+                <input type="text" name="ch_onlinediss" class="form-control" value="{{ $chapterList[0]->egroup}}"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-4">
               <div class="form-group">
                 <label>Facebook</label>
-                <input type="text" name="ch_social1" class="form-control" value="{{ $chapterList[0]->social1}}" maxlength="50" >
+                <input type="text" name="ch_social1" class="form-control" value="{{ $chapterList[0]->social1}}"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-4">
               <div class="form-group">
                 <label>Twitter</label>
-                <input type="text" name="ch_social2" class="form-control" value="{{ $chapterList[0]->social2}}" maxlength="50" >
+                <input type="text" name="ch_social2" class="form-control" value="{{ $chapterList[0]->social2}}"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-4">
               <div class="form-group">
                 <label>Instagram</label>
-                <input type="text" name="ch_social3" class="form-control" value="{{ $chapterList[0]->social3}}" maxlength="50" >
+                <input type="text" name="ch_social3" class="form-control" value="{{ $chapterList[0]->social3}}"  >
               </div>
               </div>
 

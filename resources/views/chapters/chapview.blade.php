@@ -41,7 +41,7 @@
                         <div class="col-sm-4 ">
                     <div class="form-group">
                         <label>MOMS Club of</label> <span class="field-required">*</span>
-                        <input type="text" name="ch_name" class="form-control" maxlength="200" required value="{{ $chapterList[0]->name }}" onchange="PreviousNameReminder()">
+                        <input type="text" name="ch_name" class="form-control"  required value="{{ $chapterList[0]->name }}" onchange="PreviousNameReminder()">
                     </div>
                     </div>
                     <!-- /.form group -->
@@ -99,7 +99,7 @@
                         <div class="col-sm-2 ">
                     <div class="form-group">
                         <label>EIN</label>
-                        <input type="text" id="ch_ein" name="ch_ein" class="form-control" value="{{ $chapterList[0]->ein }}" maxlength="10" readonly>
+                        <input type="text" id="ch_ein" name="ch_ein" class="form-control" value="{{ $chapterList[0]->ein }}"  readonly>
                     </div>
                     </div>
                         <!-- /.form group -->
@@ -111,7 +111,7 @@
                                     @else
                                     <a class="btn bg-gradient-primary" href="{{ $chapterList[0]->ein_letter_path }}" target="blank"><i class="fas fa-university"></i>&nbsp;&nbsp;&nbsp;View/Download EIN Letter</a>
                                     @endif
-                        <input type="hidden" id="ch_ein_letter_path" name="ch_ein_letter_path" class="form-control" value="{{ $chapterList[0]->ein_letter_path }}" maxlength="250" readonly>
+                        <input type="hidden" id="ch_ein_letter_path" name="ch_ein_letter_path" class="form-control" value="{{ $chapterList[0]->ein_letter_path }}"  readonly>
                     </div>
                     </div>
                     <!-- /.form group -->
@@ -132,7 +132,7 @@
                         <div class="col-sm-8 ">
                     <div class="form-group">
                         <label>Status Notes (not visible to board members)</label>
-                        <input type="text" name="ch_notes" class="form-control" maxlength="50" value="{{ $chapterList[0]->notes}}" >
+                        <input type="text" name="ch_notes" class="form-control"  value="{{ $chapterList[0]->notes}}" >
                     </div>
                     </div>
                     <!-- /.form group -->
@@ -155,21 +155,21 @@
               <div class="col-sm-6">
               <div class="form-group">
                 <label>First Name</label> <span class="field-required">*</span>
-                <input type="text" name="ch_pre_fname" class="form-control " value="{{ $chapterList[0]->first_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_pre_fname" class="form-control " value="{{ $chapterList[0]->first_name }}"  required onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 ">
               <div class="form-group">
                 <label>Last Name</label> <span class="field-required">*</span>
-                <input type="text" name="ch_pre_lname" class="form-control " value="{{ $chapterList[0]->last_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_pre_lname" class="form-control " value="{{ $chapterList[0]->last_name }}"  required onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
                             <!-- /.form group -->
               <div class="col-sm-6 ">
               <div class="form-group">
                 <label>Email</label> <span class="field-required">*</span>
-                <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control " onblur="checkDuplicateEmail(this.value,this.id)" value="{{ $chapterList[0]->bd_email }}" maxlength="50" required >
+                <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control " onblur="checkDuplicateEmail(this.value,this.id)" value="{{ $chapterList[0]->bd_email }}"  required >
                 <input type="hidden" id="ch_pre_email_chk" value="{{ $chapterList[0]->bd_email }}">
               </div>
               </div>
@@ -185,14 +185,14 @@
               <div class="col-sm-12 ">
               <div class="form-group">
                 <label>Street Address</label> <span class="field-required">*</span>
-                <input name="ch_pre_street" class="form-control " rows="4"  maxlength="250" value="{{ $chapterList[0]->street_address }}" required>
+                <input name="ch_pre_street" class="form-control " rows="4"   value="{{ $chapterList[0]->street_address }}" required>
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-4 ">
               <div class="form-group">
                 <label>City</label> <span class="field-required">*</span>
-                <input type="text" name="ch_pre_city" class="form-control " maxlength="50" value="{{ $chapterList[0]->city }}" required onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_pre_city" class="form-control "  value="{{ $chapterList[0]->city }}" required onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
@@ -211,7 +211,7 @@
               <div class="col-sm-4 ">
               <div class="form-group">
                 <label>Zip</label> <span class="field-required">*</span>
-                <input type="text" name="ch_pre_zip" class="form-control " value="{{ $chapterList[0]->zip }}" maxlength="10" required onkeypress="return isNumber(event)">
+                <input type="text" name="ch_pre_zip" class="form-control " value="{{ $chapterList[0]->zip }}"  required onkeypress="return isNumber(event)">
               </div>
               </div>
 
@@ -240,21 +240,21 @@
               <div class="col-sm-6  avp-field">
               <div class="form-group">
                 <label>First Name</label>
-                <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control " value="{{$AVPDetails[0]->avp_fname != ''  ? $AVPDetails[0]->avp_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control " value="{{$AVPDetails[0]->avp_fname != ''  ? $AVPDetails[0]->avp_fname : ''}}"  onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6  avp-field">
               <div class="form-group">
                 <label>Last Name</label>
-                <input type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control " value="{{$AVPDetails[0]->avp_lname != ''  ? $AVPDetails[0]->avp_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control " value="{{$AVPDetails[0]->avp_lname != ''  ? $AVPDetails[0]->avp_lname : ''}}"  onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6  avp-field">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="ch_avp_email" id="ch_avp_email" class="form-control " onblur="checkDuplicateEmail(this.value,this.id)" value="{{$AVPDetails[0]->avp_email != ''  ? $AVPDetails[0]->avp_email : ''}}" maxlength="50">
+                <input type="email" name="ch_avp_email" id="ch_avp_email" class="form-control " onblur="checkDuplicateEmail(this.value,this.id)" value="{{$AVPDetails[0]->avp_email != ''  ? $AVPDetails[0]->avp_email : ''}}" >
                 <input type="hidden" id="ch_avp_email_chk" value="{{ $AVPDetails[0]->avp_email }}">
               </div>
               </div>
@@ -269,13 +269,13 @@
                <div class="col-sm-12  avp-field">
               <div class="form-group">
                 <label>Street Address</label>
-                <input name="ch_avp_street" id="ch_avp_street" class="form-control " rows="4" maxlength="250" value="{{$AVPDetails[0]->avp_addr != ''  ? $AVPDetails[0]->avp_addr : ''}}">
+                <input name="ch_avp_street" id="ch_avp_street" class="form-control " rows="4"  value="{{$AVPDetails[0]->avp_addr != ''  ? $AVPDetails[0]->avp_addr : ''}}">
               </div>
               </div>
               <div class="col-sm-4 avp-field">
               <div class="form-group">
                 <label>City</label>
-                <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control " value="{{$AVPDetails[0]->avp_city != ''  ? $AVPDetails[0]->avp_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control " value="{{$AVPDetails[0]->avp_city != ''  ? $AVPDetails[0]->avp_city : ''}}"  onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
@@ -294,7 +294,7 @@
               <div class="col-sm-4 avp-field">
               <div class="form-group">
                 <label>Zip</label>
-                <input type="text" name="ch_avp_zip" id="ch_avp_zip" maxlength="10" class="form-control " value="{{$AVPDetails[0]->avp_zip != ''  ? $AVPDetails[0]->avp_zip : ''}}" onkeypress="return isNumber(event)">
+                <input type="text" name="ch_avp_zip" id="ch_avp_zip"  class="form-control " value="{{$AVPDetails[0]->avp_zip != ''  ? $AVPDetails[0]->avp_zip : ''}}" onkeypress="return isNumber(event)">
               </div>
               </div>
               <div class="card-body text-center avp-field">
@@ -322,21 +322,21 @@
               <div class="col-sm-6 mvp-field">
               <div class="form-group">
                 <label>First Name</label>
-                <input type="text" name="ch_mvp_fname" id="ch_mvp_fname"  class="form-control" value="{{$MVPDetails[0]->mvp_fname != ''  ? $MVPDetails[0]->mvp_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_mvp_fname" id="ch_mvp_fname"  class="form-control" value="{{$MVPDetails[0]->mvp_fname != ''  ? $MVPDetails[0]->mvp_fname : ''}}"  onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 mvp-field">
               <div class="form-group">
                 <label>Last Name</label>
-                <input type="text" name="ch_mvp_lname" id="ch_mvp_lname" class="form-control" value="{{$MVPDetails[0]->mvp_lname != ''  ? $MVPDetails[0]->mvp_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_mvp_lname" id="ch_mvp_lname" class="form-control" value="{{$MVPDetails[0]->mvp_lname != ''  ? $MVPDetails[0]->mvp_lname : ''}}"  onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 mvp-field">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="ch_mvp_email" id="ch_mvp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$MVPDetails[0]->mvp_email != ''  ? $MVPDetails[0]->mvp_email : ''}}" maxlength="50">
+                <input type="email" name="ch_mvp_email" id="ch_mvp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$MVPDetails[0]->mvp_email != ''  ? $MVPDetails[0]->mvp_email : ''}}" >
                 <input type="hidden" id="ch_mvp_email_chk" value="{{ $MVPDetails[0]->mvp_email }}">
               </div>
               </div>
@@ -351,13 +351,13 @@
                <div class="col-sm-12 mvp-field">
               <div class="form-group">
                 <label>Street Address</label>
-                <input name="ch_mvp_street" id="ch_mvp_street" class="form-control" rows="4" value="{{$MVPDetails[0]->mvp_addr != ''  ? $MVPDetails[0]->mvp_addr : ''}}" maxlength="250">
+                <input name="ch_mvp_street" id="ch_mvp_street" class="form-control" rows="4" value="{{$MVPDetails[0]->mvp_addr != ''  ? $MVPDetails[0]->mvp_addr : ''}}" >
               </div>
               </div>
               <div class="col-sm-4 mvp-field">
               <div class="form-group">
                 <label>City</label>
-                <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control" value="{{$MVPDetails[0]->mvp_city != ''  ? $MVPDetails[0]->mvp_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control" value="{{$MVPDetails[0]->mvp_city != ''  ? $MVPDetails[0]->mvp_city : ''}}"  onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
@@ -376,7 +376,7 @@
               <div class="col-sm-4 mvp-field">
               <div class="form-group">
                 <label>Zip</label>
-                <input type="text" name="ch_mvp_zip" id="ch_mvp_zip" maxlength="10" class="form-control" value="{{$MVPDetails[0]->mvp_zip != ''  ? $MVPDetails[0]->mvp_zip : ''}}" onkeypress="return isNumber(event)" >
+                <input type="text" name="ch_mvp_zip" id="ch_mvp_zip"  class="form-control" value="{{$MVPDetails[0]->mvp_zip != ''  ? $MVPDetails[0]->mvp_zip : ''}}" onkeypress="return isNumber(event)" >
               </div>
               </div>
               <div class="card-body text-center mvp-field">
@@ -404,21 +404,21 @@
               <div class="col-sm-6 treas-field">
               <div class="form-group">
                 <label>First Name</label>
-                <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control" value="{{$TRSDetails[0]->trs_fname != ''  ? $TRSDetails[0]->trs_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)" >
+                <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control" value="{{$TRSDetails[0]->trs_fname != ''  ? $TRSDetails[0]->trs_fname : ''}}"  onkeypress="return isAlphanumeric(event)" >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 treas-field">
               <div class="form-group">
                 <label>Last Name</label>
-                <input type="text" name="ch_trs_lname" id="ch_trs_lname" class="form-control" value="{{$TRSDetails[0]->trs_lname != ''  ? $TRSDetails[0]->trs_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)" >
+                <input type="text" name="ch_trs_lname" id="ch_trs_lname" class="form-control" value="{{$TRSDetails[0]->trs_lname != ''  ? $TRSDetails[0]->trs_lname : ''}}"  onkeypress="return isAlphanumeric(event)" >
               </div>
               </div>
              <!-- /.form group -->
               <div class="col-sm-6 treas-field">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="ch_trs_email" id="ch_trs_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$TRSDetails[0]->trs_email != ''  ? $TRSDetails[0]->trs_email : ''}}" maxlength="50">
+                <input type="email" name="ch_trs_email" id="ch_trs_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$TRSDetails[0]->trs_email != ''  ? $TRSDetails[0]->trs_email : ''}}" >
                 <input type="hidden" id="ch_trs_email_chk" value="{{ $TRSDetails[0]->trs_email }}">
               </div>
               </div>
@@ -433,13 +433,13 @@
                <div class="col-sm-12 treas-field">
               <div class="form-group">
                 <label>Street Address</label>
-                <input name="ch_trs_street" id="ch_trs_street" class="form-control" rows="4" value="{{$TRSDetails[0]->trs_addr != ''  ? $TRSDetails[0]->trs_addr : ''}}" maxlength="250" >
+                <input name="ch_trs_street" id="ch_trs_street" class="form-control" rows="4" value="{{$TRSDetails[0]->trs_addr != ''  ? $TRSDetails[0]->trs_addr : ''}}"  >
               </div>
               </div>
               <div class="col-sm-4 treas-field">
               <div class="form-group">
                 <label>City</label>
-                <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control" value="{{$TRSDetails[0]->trs_city != ''  ? $TRSDetails[0]->trs_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control" value="{{$TRSDetails[0]->trs_city != ''  ? $TRSDetails[0]->trs_city : ''}}"  onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
@@ -458,7 +458,7 @@
               <div class="col-sm-4 treas-field">
               <div class="form-group">
                 <label>Zip</label>
-                <input type="text" name="ch_trs_zip" id="ch_trs_zip" maxlength="10" class="form-control" value="{{$TRSDetails[0]->trs_zip != ''  ? $TRSDetails[0]->trs_zip : ''}}" onkeypress="return isNumber(event)">
+                <input type="text" name="ch_trs_zip" id="ch_trs_zip"  class="form-control" value="{{$TRSDetails[0]->trs_zip != ''  ? $TRSDetails[0]->trs_zip : ''}}" onkeypress="return isNumber(event)">
               </div>
               </div>
               <div class="card-body text-center treas-field">
@@ -486,21 +486,21 @@
               <div class="col-sm-6 sec-field">
               <div class="form-group">
                 <label>First Name</label>
-                <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control" value="{{$SECDetails[0]->sec_fname != ''  ? $SECDetails[0]->sec_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control" value="{{$SECDetails[0]->sec_fname != ''  ? $SECDetails[0]->sec_fname : ''}}"  onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 sec-field">
               <div class="form-group">
                 <label>Last Name</label>
-                <input type="text" name="ch_sec_lname" id="ch_sec_lname" class="form-control" value="{{$SECDetails[0]->sec_lname != ''  ? $SECDetails[0]->sec_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)" >
+                <input type="text" name="ch_sec_lname" id="ch_sec_lname" class="form-control" value="{{$SECDetails[0]->sec_lname != ''  ? $SECDetails[0]->sec_lname : ''}}"  onkeypress="return isAlphanumeric(event)" >
               </div>
               </div>
              <!-- /.form group -->
               <div class="col-sm-6 sec-field">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="ch_sec_email" id="ch_sec_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$SECDetails[0]->sec_email != ''  ? $SECDetails[0]->sec_email : ''}}" maxlength="50" >
+                <input type="email" name="ch_sec_email" id="ch_sec_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$SECDetails[0]->sec_email != ''  ? $SECDetails[0]->sec_email : ''}}"  >
                 <input type="hidden" id="ch_sec_email_chk" value="{{ $SECDetails[0]->sec_email }}">
               </div>
               </div>
@@ -515,13 +515,13 @@
                <div class="col-sm-12 sec-field">
               <div class="form-group">
                 <label>Street Address</label>
-                <input name="ch_sec_street" id="ch_sec_street" class="form-control" rows="4" value="{{$SECDetails[0]->sec_addr != ''  ? $SECDetails[0]->sec_addr : ''}}" maxlength="250" >
+                <input name="ch_sec_street" id="ch_sec_street" class="form-control" rows="4" value="{{$SECDetails[0]->sec_addr != ''  ? $SECDetails[0]->sec_addr : ''}}"  >
               </div>
               </div>
               <div class="col-sm-4 sec-field">
               <div class="form-group">
                 <label>City</label>
-                <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control" value="{{$SECDetails[0]->sec_city != ''  ? $SECDetails[0]->sec_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)" >
+                <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control" value="{{$SECDetails[0]->sec_city != ''  ? $SECDetails[0]->sec_city : ''}}"  onkeypress="return isAlphanumeric(event)" >
               </div>
               </div>
               <!-- /.form group -->
@@ -540,7 +540,7 @@
               <div class="col-sm-4 sec-field">
               <div class="form-group">
                 <label>Zip</label>
-                <input type="text" name="ch_sec_zip" id="ch_sec_zip" maxlength="10" class="form-control" value="{{$SECDetails[0]->sec_zip != ''  ? $SECDetails[0]->sec_zip : ''}}" onkeypress="return isNumber(event)" >
+                <input type="text" name="ch_sec_zip" id="ch_sec_zip"  class="form-control" value="{{$SECDetails[0]->sec_zip != ''  ? $SECDetails[0]->sec_zip : ''}}" onkeypress="return isNumber(event)" >
               </div>
               </div>
               <div class="card-body text-center sec-field">
@@ -560,7 +560,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                       <label>Chapter Website</label>
-                      <input type="text" name="ch_website" class="form-control" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}" maxlength="50" id="validate_url" onchange="is_url(); updateWebsiteStatus();">
+                      <input type="text" name="ch_website" class="form-control" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}"  id="validate_url" onchange="is_url(); updateWebsiteStatus();">
                     </div>
                     </div>
                       <!-- /.form group -->
@@ -581,56 +581,56 @@
               <div class="col-sm-12">
               <div class="form-group">
                 <label>Online Discussion Group (Meetup, Google Groups, etc)</label>
-                <input type="text" name="ch_onlinediss" class="form-control" value="{{ $chapterList[0]->egroup}}" maxlength="50" >
+                <input type="text" name="ch_onlinediss" class="form-control" value="{{ $chapterList[0]->egroup}}"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-4">
               <div class="form-group">
                 <label>Facebook</label>
-                <input type="text" name="ch_social1" class="form-control" value="{{ $chapterList[0]->social1}}" maxlength="50" >
+                <input type="text" name="ch_social1" class="form-control" value="{{ $chapterList[0]->social1}}"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-4">
               <div class="form-group">
                 <label>Twitter</label>
-                <input type="text" name="ch_social2" class="form-control" value="{{ $chapterList[0]->social2}}" maxlength="50" >
+                <input type="text" name="ch_social2" class="form-control" value="{{ $chapterList[0]->social2}}"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-4">
               <div class="form-group">
                 <label>Instagram</label>
-                <input type="text" name="ch_social3" class="form-control" value="{{ $chapterList[0]->social3}}" maxlength="50" >
+                <input type="text" name="ch_social3" class="form-control" value="{{ $chapterList[0]->social3}}"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Chapter Email Address</label>
-                <input type="email" name="ch_email" class="form-control" value="{{ $chapterList[0]->email}}" maxlength="50" >
+                <input type="email" name="ch_email" class="form-control" value="{{ $chapterList[0]->email}}"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6">
               <div class="form-group">
                 <label>PO Box</label>
-                <input type="text" name="ch_pobox" class="form-control" maxlength="30" value="{{ $chapterList[0]->po_box}}" >
+                <input type="text" name="ch_pobox" class="form-control"  value="{{ $chapterList[0]->po_box}}" >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Inquiries Email Address</label> <span class="field-required">*</span>
-                <input type="email" name="ch_inqemailcontact" class="form-control" value="{{ $chapterList[0]->inquiries_contact}}" maxlength="50" required >
+                <input type="email" name="ch_inqemailcontact" class="form-control" value="{{ $chapterList[0]->inquiries_contact}}"  required >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Inquiries Notes (not visible to board members)</label>
-                <input type="text" name="ch_inqnote" class="form-control" value="{{ $chapterList[0]->inquiries_note}}" maxlength="50" >
+                <input type="text" name="ch_inqnote" class="form-control" value="{{ $chapterList[0]->inquiries_note}}"  >
               </div>
               </div>
 
@@ -656,14 +656,14 @@
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Previously Known As</label>
-                <input type="text" name="ch_preknown" id="ch_preknown" class="form-control" value="{{ $chapterList[0]->former_name}}" maxlength="50" >
+                <input type="text" name="ch_preknown" id="ch_preknown" class="form-control" value="{{ $chapterList[0]->former_name}}"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Sistered By</label>
-                <input type="text" name="ch_sistered" id="ch_sistered" class="form-control" value="{{ $chapterList[0]->sistered_by}}" maxlength="50" >
+                <input type="text" name="ch_sistered" id="ch_sistered" class="form-control" value="{{ $chapterList[0]->sistered_by}}"  >
               </div>
               </div>
                 <!-- /.form group -->
@@ -683,7 +683,7 @@
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Founded Year</label>
-                <input type="text" name="ch_foundyear" class="form-control" maxlength="4" value="{{ $chapterList[0]->start_year}}" disabled>
+                <input type="text" name="ch_foundyear" class="form-control"  value="{{ $chapterList[0]->start_year}}" disabled>
                 <input type="hidden" name="ch_hid_foundyear" value="{{$chapterList[0]->start_year}}">
               </div>
               </div>
@@ -705,7 +705,7 @@
               <div class="col-sm-12">
               <div class="form-group">
                 <label>Re-Registration Notes (not visible to board members)</label>
-                <input type="text" name="ch_regnotes" class="form-control" maxlength="50" value="{{ $chapterList[0]->reg_notes}}" >
+                <input type="text" name="ch_regnotes" class="form-control"  value="{{ $chapterList[0]->reg_notes}}" >
               </div>
               </div>
 

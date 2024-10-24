@@ -36,7 +36,7 @@
               <div class="col-sm-4">
               <div class="form-group">
                 <label>MOMS Club of</label>
-                <input type="text" name="ch_name" class="form-control" maxlength="200" required value="{{ $chapterList[0]->name }}" onchange="PreviousNameReminder()" disabled>
+                <input type="text" name="ch_name" class="form-control"  required value="{{ $chapterList[0]->name }}" onchange="PreviousNameReminder()" disabled>
               </div>
               </div>
               <!-- /.form group -->
@@ -122,7 +122,7 @@
                       <div class="col-sm-6">
                         <div class="form-group">
                           <label>Extension Notes</label>
-                          <input type="text" name="ch_extension_notes" id="ch_extension_notes" class="form-control" maxlength="50" value="{{$chapterList[0]->extension_notes}}">
+                          <input type="text" name="ch_extension_notes" id="ch_extension_notes" class="form-control"  value="{{$chapterList[0]->extension_notes}}">
                         </div>
                         </div>
                     </div>

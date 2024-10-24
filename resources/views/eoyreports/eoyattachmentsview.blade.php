@@ -36,7 +36,7 @@
               <div class="col-sm-4">
               <div class="form-group">
                 <label>MOMS Club of</label>
-                <input type="text" name="ch_name" class="form-control" maxlength="200" required value="{{ $chapterList[0]->name }}"  disabled>
+                <input type="text" name="ch_name" class="form-control"  required value="{{ $chapterList[0]->name }}"  disabled>
               </div>
               </div>
               <!-- /.form group -->
@@ -56,7 +56,7 @@
                 <div class="col-sm-4">
                     <div class="form-group">
                       <label>EIN</label>
-                      <input type="text" name="ch_name" class="form-control" maxlength="200" required value="{{ $chapterList[0]->ein }}"  disabled>
+                      <input type="text" name="ch_name" class="form-control"  required value="{{ $chapterList[0]->ein }}"  disabled>
                     </div>
                     </div>
               </div>
@@ -170,7 +170,7 @@
             <div class="col-6">
                 <div class="form-group">
                   <label>990N Filing Notes:</label>
-                  <input type="text" name="irs_notes" id="irs_notes" class="form-control" maxlength="50" value="{{$chapterList[0]->check_current_990N_notes}}">
+                  <input type="text" name="irs_notes" id="irs_notes" class="form-control"  value="{{$chapterList[0]->check_current_990N_notes}}">
                 </div>
                 </div>
 

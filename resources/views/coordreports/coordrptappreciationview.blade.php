@@ -35,44 +35,44 @@
 					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>First Name</label>
-						<input type="text" name="cord_fname" class="form-control" value="{{ $coordinatorDetails[0]->first_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_fname" class="form-control" value="{{ $coordinatorDetails[0]->first_name }}"  required onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>Last Name</label>
-						<input type="text" name="cord_lname" class="form-control" value="{{ $coordinatorDetails[0]->last_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_lname" class="form-control" value="{{ $coordinatorDetails[0]->last_name }}"  required onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 					<div class="col-sm-12">
 					  <div class="form-group">
 						<label>Address</label>
-						<input type="text" name="cord_address" class="form-control" value="{{ $coordinatorDetails[0]->address }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_address" class="form-control" value="{{ $coordinatorDetails[0]->address }}"  required onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 					<div class="col-sm-3">
 					  <div class="form-group">
 						<label>City</label>
-						<input type="text" name="cord_city" class="form-control" value="{{ $coordinatorDetails[0]->city }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_city" class="form-control" value="{{ $coordinatorDetails[0]->city }}"  required onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 					<div class="col-sm-3">
 					  <div class="form-group">
 						<label>State</label>
-						<input type="text" name="cord_state" class="form-control" value="{{ $coordinatorDetails[0]->state }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_state" class="form-control" value="{{ $coordinatorDetails[0]->state }}"  required onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 					<div class="col-sm-3">
 					  <div class="form-group">
 						<label>Countyry</label>
-						<input type="text" name="cord_country" class="form-control" value="{{ $coordinatorDetails[0]->country }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_country" class="form-control" value="{{ $coordinatorDetails[0]->country }}"  required onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 					<div class="col-sm-3">
 					  <div class="form-group">
 						<label>Zip</label>
-						<input type="text" name="cord_zip" class="form-control" value="{{ $coordinatorDetails[0]->zip }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_zip" class="form-control" value="{{ $coordinatorDetails[0]->zip }}"  required onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 										<div class="col-sm-6">
@@ -128,61 +128,61 @@
 				    <div class="col-sm-3">
 					  <div class="form-group">
 						<label>< 1 Year</label>
-						<input type="text" name="cord_year0" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year0 }}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_year0" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year0 }}"  onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 					<div class="col-sm-3">
 					  <div class="form-group">
 						<label>1 Year</label>
-						<input type="text" name="cord_year1" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year1 }}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_year1" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year1 }}"  onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 					<div class="col-sm-3">
 					  <div class="form-group">
 						<label>2 Years</label>
-						<input type="text" name="cord_year2" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year2 }}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_year2" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year2 }}"  onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 				<div class="col-sm-3">
 					  <div class="form-group">
 						<label>3 Years</label>
-						<input type="text" name="cord_year3" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year3 }}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_year3" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year3 }}"  onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 									    <div class="col-sm-3">
 					  <div class="form-group">
 						<label>4 Years</label>
-						<input type="text" name="cord_year4" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year4 }}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_year4" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year4 }}"  onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 					<div class="col-sm-3">
 					  <div class="form-group">
 						<label>5 Years</label>
-						<input type="text" name="cord_year5" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year5 }}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_year5" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year5 }}"  onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 					<div class="col-sm-3">
 					  <div class="form-group">
 						<label>6 Years</label>
-						<input type="text" name="cord_year6" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year6 }}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_year6" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year6 }}"  onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 				<div class="col-sm-3">
 					  <div class="form-group">
 						<label>7 Years</label>
-						<input type="text" name="cord_year7" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year7 }}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_year7" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year7 }}"  onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 										<div class="col-sm-3">
 					  <div class="form-group">
 						<label>8 Years</label>
-						<input type="text" name="cord_year8" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year8 }}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_year8" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year8 }}"  onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 				<div class="col-sm-3">
 					  <div class="form-group">
 						<label>9 Years</label>
-						<input type="text" name="cord_year9" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year9 }}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+						<input type="text" name="cord_year9" class="form-control" value="{{ $coordinatorDetails[0]->recognition_year9 }}"  onkeypress="return isAlphanumeric(event)">
 					  </div>
 					</div>
 
@@ -196,7 +196,7 @@
                   <div class="col-sm-12">
               <div class="form-group">
                 <label>Top Tier or Other Gifts Received</label>
-                <textarea name="cord_toptier" class="form-control" rows="4" maxlength="200">{{ $coordinatorDetails[0]->recognition_toptier }}</textarea>
+                <textarea name="cord_toptier" class="form-control" rows="4" >{{ $coordinatorDetails[0]->recognition_toptier }}</textarea>
               </div>
               </div>
 				</div>

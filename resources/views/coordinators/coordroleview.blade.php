@@ -41,14 +41,14 @@
 				    <div class="col-sm-6">
 					  <div class="form-group">
 						<label>First Name</label><span class="field-required">*</span>
-						<input type="text" name="cord_fname" class="form-control" value="{{ $coordinatorDetails[0]->first_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" readonly>
+						<input type="text" name="cord_fname" class="form-control" value="{{ $coordinatorDetails[0]->first_name }}"  required onkeypress="return isAlphanumeric(event)" autocomplete="nope" readonly>
 					  </div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>Last Name</label><span class="field-required">*</span>
-						<input type="text" name="cord_lname" class="form-control" value="{{ $coordinatorDetails[0]->last_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" readonly>
+						<input type="text" name="cord_lname" class="form-control" value="{{ $coordinatorDetails[0]->last_name }}"  required onkeypress="return isAlphanumeric(event)" autocomplete="nope" readonly>
 					  </div>
 					</div>
 

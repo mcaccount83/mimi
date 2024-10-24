@@ -938,7 +938,7 @@
                                 <tr>
                                     <td>
                                         <div class="form-group">
-                                            <input type="text" maxlength="250" class="form-control" name="OfficeDesc{{ $row }}" id="OfficeDesc{{ $row }}" value="{{ $other_office_expenses[$row]['office_other_desc'] ?? '' }}">
+                                            <input type="text" class="form-control" name="OfficeDesc{{ $row }}" id="OfficeDesc{{ $row }}" value="{{ $other_office_expenses[$row]['office_other_desc'] ?? '' }}">
                                         </div>
                                     </td>
                                     <td>
@@ -4096,7 +4096,7 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
         var cell1 = row.insertCell(0);
         var cell2 = row.insertCell(1);
 
-        cell1.innerHTML = `<div class="form-group"><input maxlength="250" type="text" class="form-control" name="OfficeDesc${ExpenseCount}" id="OfficeDesc${ExpenseCount}"></div>`;
+        cell1.innerHTML = `<div class="form-group"><input type="text" class="form-control" name="OfficeDesc${ExpenseCount}" id="OfficeDesc${ExpenseCount}"></div>`;
         cell2.innerHTML = `<div class="form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">$</span></div><input type="text" class="form-control" name="OfficeExpenses${ExpenseCount}" id="OfficeExpenses${ExpenseCount}" oninput="ChangeOfficeExpenses()" data-inputmask="'alias': 'currency', 'rightAlign': false, 'groupSeparator': ',', 'digits': 2, 'digitsOptional': false, 'placeholder': '0'"></div></div>`;
 
         ExpenseCount++;

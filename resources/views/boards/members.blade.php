@@ -198,13 +198,13 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>First Name</label> <span class="field-required">*</span>
-                            <input   type="text" name="bor_fname" id="bor_fname" class="form-control" placeholder="First Name" value="{{ $borDetails->first_name }}" maxlength="50" required  onkeypress="return isAlphanumeric(event)" >
+                            <input   type="text" name="bor_fname" id="bor_fname" class="form-control" placeholder="First Name" value="{{ $borDetails->first_name }}"  required  onkeypress="return isAlphanumeric(event)" >
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Last Name</label> <span class="field-required">*</span>
-                            <input   type="text" name="bor_lname" id="bor_lname" class="form-control" placeholder="Last Name" value="{{ $borDetails->last_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
+                            <input   type="text" name="bor_lname" id="bor_lname" class="form-control" placeholder="Last Name" value="{{ $borDetails->last_name }}"  required onkeypress="return isAlphanumeric(event)">
                         </div>
                     </div>
                 </div>
@@ -212,7 +212,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Email</label> <span class="field-required">*</span>
-                            <input  type="email" name="bor_email" id="bor_email" class="form-control" placeholder="Email ID" value="{{ $borDetails->email }}" maxlength="50" required >
+                            <input  type="email" name="bor_email" id="bor_email" class="form-control" placeholder="Email ID" value="{{ $borDetails->email }}"  required >
                             <input  type="hidden" id="bor_email_chk" value="{{ $borDetails->email }}">
                         </div>
                     </div>
@@ -227,7 +227,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Street Address</label> <span class="field-required">*</span>
-                            <input  type="text" name="bor_addr" id="bor_addr" class="form-control" placeholder="Street Address" value="{{ $borDetails->street_address }}" maxlength="250" required >
+                            <input  type="text" name="bor_addr" id="bor_addr" class="form-control" placeholder="Street Address" value="{{ $borDetails->street_address }}"  required >
                         </div>
                     </div>
                 </div>
@@ -235,7 +235,7 @@
                     <div class="col-md-4 pr-1">
                         <div class="form-group">
                             <label>City</label> <span class="field-required">*</span>
-                            <input  type="text" name="bor_city" id="bor_city" class="form-control" placeholder="City" value="{{ $borDetails->city }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" >
+                            <input  type="text" name="bor_city" id="bor_city" class="form-control" placeholder="City" value="{{ $borDetails->city }}"  required onkeypress="return isAlphanumeric(event)" >
                         </div>
                     </div>
                     <div class="col-md-4 pr-1">
@@ -252,7 +252,7 @@
                     <div class="col-md-4 pl-1">
                         <div class="form-group">
                             <label>Zip Code</label> <span class="field-required">*</span>
-                            <input  type="text" name="bor_zip" id="bor_zip" class="form-control" placeholder="ZIP Code" value="{{ $borDetails->zip }}" maxlength="10" required onkeypress="return isNumber(event)" >
+                            <input  type="text" name="bor_zip" id="bor_zip" class="form-control" placeholder="ZIP Code" value="{{ $borDetails->zip }}"  required onkeypress="return isNumber(event)" >
                         </div>
                     </div>
                 </div>

@@ -36,28 +36,28 @@
 					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>First Name</label><span class="field-required">*</span>
-						<input type="text" name="cord_fname" id="cord_fname" class="form-control" maxlength="50" required autocomplete="nope">
+						<input type="text" name="cord_fname" id="cord_fname" class="form-control"  required autocomplete="nope">
 					  </div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>Last Name</label><span class="field-required">*</span>
-						<input type="text" name="cord_lname" id="cord_lname" class="form-control" maxlength="50" required autocomplete="nope">
+						<input type="text" name="cord_lname" id="cord_lname" class="form-control"  required autocomplete="nope">
 					  </div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-12">
 						<div class="form-group">
 							<label>Street Address</label><span class="field-required">*</span>
-							<input autocomplete="nope" name="cord_addr" id="cord_addr" class="form-control" rows="4" maxlength="250" required >
+							<input autocomplete="nope" name="cord_addr" id="cord_addr" class="form-control" rows="4"  required >
 						</div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-3">
 						<div class="form-group">
 							<label>City</label><span class="field-required">*</span>
-							<input type="text" name="cord_city" id="cord_city" class="form-control" maxlength="50" required autocomplete="nope">
+							<input type="text" name="cord_city" id="cord_city" class="form-control"  required autocomplete="nope">
 						</div>
 					</div>
 					<!-- /.form group -->
@@ -89,21 +89,21 @@
 					<div class="col-sm-3">
 					  <div class="form-group">
 						<label>Zip</label><span class="field-required">*</span>
-						<input type="text" name="cord_zip" id="cord_zip" class="form-control" maxlength="10" required autocomplete="nope">
+						<input type="text" name="cord_zip" id="cord_zip" class="form-control"  required autocomplete="nope">
 					  </div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>Email</label><span class="field-required">*</span>
-						<input type="email" name="cord_email" id="cord_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" maxlength="50" required autocomplete="nope">
+						<input type="email" name="cord_email" id="cord_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)"  required autocomplete="nope">
 					  </div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>Secondary Email</label>
-						<input type="sec_email" name="sec_email" id="sec_email" class="form-control" maxlength="50" autocomplete="nope">
+						<input type="sec_email" name="sec_email" id="sec_email" class="form-control"  autocomplete="nope">
 					  </div>
 					</div>
 					<!-- /.form group -->
@@ -122,7 +122,7 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                           <label>Home Chapter</label><span class="field-required">*</span>
-                          <input type="text" name="cord_chapter" id="cord_chapter" class="form-control" maxlength="50" required  autocomplete="nope">
+                          <input type="text" name="cord_chapter" id="cord_chapter" class="form-control"  required  autocomplete="nope">
                         </div>
                       </div>
 					<div class="col-sm-3">

@@ -34,7 +34,7 @@
               <div class="col-sm-4">
               <div class="form-group">
                 <label>MOMS Club of</label>
-                <input type="text" name="ch_name" class="form-control" maxlength="200" required value="{{ $chapterList[0]->name }}" onchange="PreviousNameReminder()">
+                <input type="text" name="ch_name" class="form-control" required value="{{ $chapterList[0]->name }}" onchange="PreviousNameReminder()">
               </div>
               </div>
               <!-- /.form group -->
@@ -65,7 +65,7 @@
              <div class="col-sm-12">
               <div class="form-group">
                 <label>Boundaires</label>
-                <input type="text" name="ch_territory" class="form-control" value="{{ $chapterList[0]->territory }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" >
+                <input type="text" name="ch_territory" class="form-control" value="{{ $chapterList[0]->territory }}"  required onkeypress="return isAlphanumeric(event)" >
 			</div>
 			</div>
              <div class="col-sm-4">
@@ -84,20 +84,20 @@
           <div class="col-sm-8">
               <div class="form-group">
                 <label>Status Notes (not visible to board members)</label>
-                <input type="text" name="ch_notes" class="form-control" maxlength="50" value="{{ $chapterList[0]->notes}}" >
+                <input type="text" name="ch_notes" class="form-control"  value="{{ $chapterList[0]->notes}}" >
               </div>
               </div>
 
 			  <div class="col-sm-4">
               <div class="form-group">
                 <label>Inquiries Email Address</label>
-                <input type="email" name="ch_inqemailcontact" class="form-control" value="{{ $chapterList[0]->inquiries_contact}}" maxlength="50" required >
+                <input type="email" name="ch_inqemailcontact" class="form-control" value="{{ $chapterList[0]->inquiries_contact}}"  required >
               </div>
               </div>
               <div class="col-sm-8">
               <div class="form-group">
                 <label>Inquiries Notes (not visible to board members)</label>
-                <input type="text" name="ch_inqnote" class="form-control" value="{{ $chapterList[0]->inquiries_note}}" maxlength="50" >
+                <input type="text" name="ch_inqnote" class="form-control" value="{{ $chapterList[0]->inquiries_note}}"  >
               </div>
               </div>
         </div>
@@ -114,21 +114,21 @@
               <div class="col-sm-6">
               <div class="form-group">
                 <label>First Name</label>
-                <input type="text" name="ch_pre_fname" class="form-control" value="{{ $chapterList[0]->first_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_pre_fname" class="form-control" value="{{ $chapterList[0]->first_name }}"  required onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
          <!-- /.form group -->
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Last Name</label>
-                <input type="text" name="ch_pre_lname" class="form-control" value="{{ $chapterList[0]->last_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)">
+                <input type="text" name="ch_pre_lname" class="form-control" value="{{ $chapterList[0]->last_name }}"  required onkeypress="return isAlphanumeric(event)">
               </div>
               </div>
                             <!-- /.form group -->
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{ $chapterList[0]->bd_email }}" maxlength="50" required >
+                <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{ $chapterList[0]->bd_email }}"  required >
                 <input type="hidden" id="ch_pre_email_chk" value="{{ $chapterList[0]->bd_email }}">
               </div>
               </div>
@@ -136,7 +136,7 @@
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Phone</label>
-                <input type="text" name="ch_pre_phone" id="ch_pre_phone" class="form-control" value="{{ $chapterList[0]->phone }}" maxlength="12" required onkeypress="return isPhone(event)">
+                <input type="text" name="ch_pre_phone" id="ch_pre_phone" class="form-control" value="{{ $chapterList[0]->phone }}"  required onkeypress="return isPhone(event)">
               </div>
               </div>
         </div>

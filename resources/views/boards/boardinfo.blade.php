@@ -73,7 +73,7 @@
 						<div class="col-md-12">
 							<div class="form-group">
 								<label>Boundaries listed in MIMI (used for Inquiries)</label>
-								<input type="text" name="ch_boundry" class="form-control" value="{{ $chapterList[0]->territory }}"  maxlength="250" readonly>
+								<input type="text" name="ch_boundry" class="form-control" value="{{ $chapterList[0]->territory }}"  readonly>
 							</div>
 						</div>
 				    </div>
@@ -106,7 +106,7 @@
 						<div class="col-md-12">
 							<div class="form-group">
 								<label>Email Address to Give to MOMS Interested in joining your Chapter</label>
-								<input type="text" name="InquiriesContact" class="form-control" value="{{ $chapterList[0]->inquiries_contact }}" required maxlength="50" required>
+								<input type="text" name="InquiriesContact" class="form-control" value="{{ $chapterList[0]->inquiries_contact }}" required>
 							</div>
 						</div>
                     </div>
@@ -116,7 +116,7 @@
                 <div class="col-6">
                     <div class="form-group">
                       <label>Chapter Website</label>
-                      <input type="text" name="ch_website" class="form-control my-colorpicker1" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}" maxlength="50" id="validate_url" onchange="is_url(); updateWebsiteStatus();">
+                      <input type="text" name="ch_website" class="form-control my-colorpicker1" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}" id="validate_url" onchange="is_url(); updateWebsiteStatus();">
                     </div>
                     </div>
                       <!-- /.form group -->
@@ -136,28 +136,28 @@
               <div class="col-12 ">
               <div class="form-group">
                 <label>Online Discussion Group (Meetup, Google Groups, etc)</label>
-                <input type="text" name="ch_onlinediss" class="form-control my-colorpicker1" value="{{ $chapterList[0]->egroup}}" maxlength="50" >
+                <input type="text" name="ch_onlinediss" class="form-control my-colorpicker1" value="{{ $chapterList[0]->egroup}}"  >
               </div>
               </div>
               <!-- /.form group -->
                             <div class="col-md-4 ">
                                 <div class="form-group">
                 <label>Facebook</label>
-                <input type="text" name="ch_social1" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social1}}" maxlength="50" >
+                <input type="text" name="ch_social1" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social1}}" >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-md-4 ">
               <div class="form-group">
                 <label>Twitter</label>
-                <input type="text" name="ch_social2" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social2}}" maxlength="50" >
+                <input type="text" name="ch_social2" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social2}}" >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-md-4">
               <div class="form-group">
                 <label>Instagram</label>
-                <input type="text" name="ch_social3" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social3}}" maxlength="50" >
+                <input type="text" name="ch_social3" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social3}}"  >
               		</div>
 						</div>
 
@@ -172,13 +172,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>First Name</label>
-                                    <input type="text" name="ch_pre_fname" class="form-control" placeholder="First Name" value="{{ $PREDetails[0]->pre_fname }}" required maxlength="50" onkeypress="return isAlphanumeric(event)">
+                                    <input type="text" name="ch_pre_fname" class="form-control" placeholder="First Name" value="{{ $PREDetails[0]->pre_fname }}" required  onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Last Name</label>
-                                    <input type="text" name="ch_pre_lname" class="form-control" placeholder="Last Name" value="{{ $PREDetails[0]->pre_lname }}" required maxlength="50" onkeypress="return isAlphanumeric(event)">
+                                    <input type="text" name="ch_pre_lname" class="form-control" placeholder="Last Name" value="{{ $PREDetails[0]->pre_lname }}" required  onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
                         </div>
@@ -186,7 +186,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Email ID</label>
-                                    <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control" placeholder="Email ID" value="{{ $PREDetails[0]->pre_email }}" maxlength="50" required>
+                                    <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control" placeholder="Email ID" value="{{ $PREDetails[0]->pre_email }}"  required>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -200,7 +200,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Street Address</label>
-                                    <input type="text" name="ch_pre_street" class="form-control" placeholder="Street Address" value="{{ $PREDetails[0]->pre_addr }}" required maxlength="250">
+                                    <input type="text" name="ch_pre_street" class="form-control" placeholder="Street Address" value="{{ $PREDetails[0]->pre_addr }}" required >
                                 </div>
                             </div>
                         </div>
@@ -208,7 +208,7 @@
                             <div class="col-md-4 pr-1">
                                 <div class="form-group">
                                     <label>City</label>
-                                    <input type="text" name="ch_pre_city" class="form-control" placeholder="City" value="{{ $PREDetails[0]->pre_city }}" required maxlength="50" onkeypress="return isAlphanumeric(event)">
+                                    <input type="text" name="ch_pre_city" class="form-control" placeholder="City" value="{{ $PREDetails[0]->pre_city }}" required  onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
                             <div class="col-md-4 pr-1">
@@ -225,7 +225,7 @@
                             <div class="col-md-4 pl-1">
                                 <div class="form-group">
                                     <label>Zip Code</label>
-                                    <input type="text" name="ch_pre_zip" class="form-control" placeholder="ZIP Code" value="{{ $PREDetails[0]->pre_zip }}" maxlength="10" required onkeypress="return isNumber(event)">
+                                    <input type="text" name="ch_pre_zip" class="form-control" placeholder="ZIP Code" value="{{ $PREDetails[0]->pre_zip }}"  required >
                                 </div>
                             </div>
                         </div>
@@ -246,13 +246,13 @@
                             <div class="col-md-6 avp-field">
                                 <div class="form-group">
                                     <label>First Name</label>
-                                    <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control" placeholder="First Name" value="{{$AVPDetails[0]->avp_fname != ''  ? $AVPDetails[0]->avp_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                                    <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control" placeholder="First Name" value="{{$AVPDetails[0]->avp_fname != ''  ? $AVPDetails[0]->avp_fname : ''}}"  onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
                             <div class="col-md-6 avp-field">
                                 <div class="form-group">
                                     <label>Last Name</label>
-                                    <input type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control" placeholder="Last Name" value="{{$AVPDetails[0]->avp_lname != ''  ? $AVPDetails[0]->avp_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                                    <input type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control" placeholder="Last Name" value="{{$AVPDetails[0]->avp_lname != ''  ? $AVPDetails[0]->avp_lname : ''}}"  onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
                         </div>
@@ -260,7 +260,7 @@
                             <div class="col-md-5 avp-field">
                                 <div class="form-group">
                                     <label>Email ID</label>
-                                    <input type="email" name="ch_avp_email" id="ch_avp_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$AVPDetails[0]->avp_email != ''  ? $AVPDetails[0]->avp_email : ''}}" maxlength="50">
+                                    <input type="email" name="ch_avp_email" id="ch_avp_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$AVPDetails[0]->avp_email != ''  ? $AVPDetails[0]->avp_email : ''}}" >
                                 </div>
                             </div>
                             <div class="col-md-5 avp-field">
@@ -274,7 +274,7 @@
                             <div class="col-md-12 avp-field">
                                 <div class="form-group">
                                     <label>Street Address</label>
-                                    <input type="text" name="ch_avp_street" id="ch_avp_street" class="form-control" placeholder="Street Address" value="{{$AVPDetails[0]->avp_addr != ''  ? $AVPDetails[0]->avp_addr : ''}}" maxlength="250">
+                                    <input type="text" name="ch_avp_street" id="ch_avp_street" class="form-control" placeholder="Street Address" value="{{$AVPDetails[0]->avp_addr != ''  ? $AVPDetails[0]->avp_addr : ''}}" >
                                 </div>
                             </div>
                         </div>
@@ -282,7 +282,7 @@
                             <div class="col-md-4 pr-1 avp-field">
                                 <div class="form-group">
                                     <label>City</label>
-                                    <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control" placeholder="City" value="{{$AVPDetails[0]->avp_city != ''  ? $AVPDetails[0]->avp_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                                    <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control" placeholder="City" value="{{$AVPDetails[0]->avp_city != ''  ? $AVPDetails[0]->avp_city : ''}}"  onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
                             <div class="col-md-4 pr-1 avp-field">
@@ -299,7 +299,7 @@
                             <div class="col-md-4 pl-1 avp-field">
                                 <div class="form-group">
                                     <label>Zip Code</label>
-                                    <input type="text" name="ch_avp_zip" id="ch_avp_zip" class="form-control" placeholder="ZIP Code" value="{{$AVPDetails[0]->avp_zip != ''  ? $AVPDetails[0]->avp_zip : ''}}" maxlength="10" onkeypress="return isNumber(event)">
+                                    <input type="text" name="ch_avp_zip" id="ch_avp_zip" class="form-control" placeholder="ZIP Code" value="{{$AVPDetails[0]->avp_zip != ''  ? $AVPDetails[0]->avp_zip : ''}}"  >
                                 </div>
                             </div>
                         </div>
@@ -318,13 +318,13 @@
                             <div class="col-md-6 mvp-field">
                                 <div class="form-group">
                                     <label>First Name</label>
-                                    <input type="text" name="ch_mvp_fname" id="ch_mvp_fname" class="form-control" placeholder="First Name" value="{{$MVPDetails[0]->mvp_fname != ''  ? $MVPDetails[0]->mvp_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                                    <input type="text" name="ch_mvp_fname" id="ch_mvp_fname" class="form-control" placeholder="First Name" value="{{$MVPDetails[0]->mvp_fname != ''  ? $MVPDetails[0]->mvp_fname : ''}}"  onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
                             <div class="col-md-6 mvp-field">
                                 <div class="form-group">
                                     <label>Last Name</label>
-                                    <input type="text" name="ch_mvp_lname" id="ch_mvp_lname" class="form-control" placeholder="Last Name" value="{{$MVPDetails[0]->mvp_lname != ''  ? $MVPDetails[0]->mvp_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                                    <input type="text" name="ch_mvp_lname" id="ch_mvp_lname" class="form-control" placeholder="Last Name" value="{{$MVPDetails[0]->mvp_lname != ''  ? $MVPDetails[0]->mvp_lname : ''}}"  onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
                         </div>
@@ -332,7 +332,7 @@
                             <div class="col-md-5 mvp-field">
                                 <div class="form-group">
                                     <label>Email ID</label>
-                                    <input type="email" name="ch_mvp_email" id="ch_mvp_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$MVPDetails[0]->mvp_email != ''  ? $MVPDetails[0]->mvp_email : ''}}" maxlength="50">
+                                    <input type="email" name="ch_mvp_email" id="ch_mvp_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$MVPDetails[0]->mvp_email != ''  ? $MVPDetails[0]->mvp_email : ''}}" >
                                 </div>
                             </div>
                             <div class="col-md-5 mvp-field">
@@ -346,7 +346,7 @@
                             <div class="col-md-12 mvp-field">
                                 <div class="form-group">
                                     <label>Street Address</label>
-                                    <input type="text" name="ch_mvp_street" id="ch_mvp_street" class="form-control" placeholder="Street Address" value="{{$MVPDetails[0]->mvp_addr != ''  ? $MVPDetails[0]->mvp_addr : ''}}" maxlength="250">
+                                    <input type="text" name="ch_mvp_street" id="ch_mvp_street" class="form-control" placeholder="Street Address" value="{{$MVPDetails[0]->mvp_addr != ''  ? $MVPDetails[0]->mvp_addr : ''}}" >
                                 </div>
                             </div>
                         </div>
@@ -354,7 +354,7 @@
                             <div class="col-md-4 pr-1 mvp-field">
                                 <div class="form-group">
                                     <label>City</label>
-                                    <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control" placeholder="City" value="{{$MVPDetails[0]->mvp_city != ''  ? $MVPDetails[0]->mvp_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                                    <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control" placeholder="City" value="{{$MVPDetails[0]->mvp_city != ''  ? $MVPDetails[0]->mvp_city : ''}}"  onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
                             <div class="col-md-4 pr-1 mvp-field">
@@ -371,7 +371,7 @@
                             <div class="col-md-4 pl-1 mvp-field">
                                 <div class="form-group">
                                     <label>Zip Code</label>
-                                    <input type="text" name="ch_mvp_zip" id="ch_mvp_zip" class="form-control" placeholder="ZIP Code" value="{{$MVPDetails[0]->mvp_zip != ''  ? $MVPDetails[0]->mvp_zip : ''}}" maxlength="10" onkeypress="return isNumber(event)">
+                                    <input type="text" name="ch_mvp_zip" id="ch_mvp_zip" class="form-control" placeholder="ZIP Code" value="{{$MVPDetails[0]->mvp_zip != ''  ? $MVPDetails[0]->mvp_zip : ''}}"  >
                                 </div>
                             </div>
                         </div>
@@ -390,13 +390,13 @@
                             <div class="col-md-6 treas-field">
                                 <div class="form-group">
                                     <label>First Name</label>
-                                    <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control" placeholder="First Name" value="{{$TRSDetails[0]->trs_fname != ''  ? $TRSDetails[0]->trs_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                                    <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control" placeholder="First Name" value="{{$TRSDetails[0]->trs_fname != ''  ? $TRSDetails[0]->trs_fname : ''}}"  onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
                             <div class="col-md-6 treas-field">
                                 <div class="form-group">
                                     <label>Last Name</label>
-                                    <input type="text" name="ch_trs_lname" id="ch_trs_lname" class="form-control" placeholder="Last Name" value="{{$TRSDetails[0]->trs_lname != ''  ? $TRSDetails[0]->trs_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                                    <input type="text" name="ch_trs_lname" id="ch_trs_lname" class="form-control" placeholder="Last Name" value="{{$TRSDetails[0]->trs_lname != ''  ? $TRSDetails[0]->trs_lname : ''}}"  onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
                         </div>
@@ -404,7 +404,7 @@
                             <div class="col-md-5 treas-field">
                                 <div class="form-group">
                                     <label>Email ID</label>
-                                    <input type="email" name="ch_trs_email" id="ch_trs_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$TRSDetails[0]->trs_email != ''  ? $TRSDetails[0]->trs_email : ''}}" maxlength="50">
+                                    <input type="email" name="ch_trs_email" id="ch_trs_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$TRSDetails[0]->trs_email != ''  ? $TRSDetails[0]->trs_email : ''}}" >
                                 </div>
                             </div>
                             <div class="col-md-5 treas-field">
@@ -418,7 +418,7 @@
                             <div class="col-md-12 treas-field">
                                 <div class="form-group">
                                     <label>Street Address</label>
-                                    <input type="text" name="ch_trs_street" id="ch_trs_street" class="form-control" placeholder="Street Address" value="{{$TRSDetails[0]->trs_addr != ''  ? $TRSDetails[0]->trs_addr : ''}}" maxlength="250">
+                                    <input type="text" name="ch_trs_street" id="ch_trs_street" class="form-control" placeholder="Street Address" value="{{$TRSDetails[0]->trs_addr != ''  ? $TRSDetails[0]->trs_addr : ''}}" >
                                 </div>
                             </div>
                         </div>
@@ -426,7 +426,7 @@
                             <div class="col-md-4 pr-1 treas-field">
                                 <div class="form-group">
                                     <label>City</label>
-                                    <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control" placeholder="City" value="{{$TRSDetails[0]->trs_city != ''  ? $TRSDetails[0]->trs_city : ''}}" maxlength="50">
+                                    <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control" placeholder="City" value="{{$TRSDetails[0]->trs_city != ''  ? $TRSDetails[0]->trs_city : ''}}" >
                                 </div>
                             </div>
                             <div class="col-md-4 pr-1 treas-field">
@@ -443,7 +443,7 @@
                             <div class="col-md-4 pl-1 treas-field">
                                 <div class="form-group">
                                     <label>Zip Code</label>
-                                    <input type="text" name="ch_trs_zip" id="ch_trs_zip" class="form-control" placeholder="ZIP Code" value="{{$TRSDetails[0]->trs_zip != ''  ? $TRSDetails[0]->trs_zip : ''}}" maxlength="10" onkeypress="return isNumber(event)">
+                                    <input type="text" name="ch_trs_zip" id="ch_trs_zip" class="form-control" placeholder="ZIP Code" value="{{$TRSDetails[0]->trs_zip != ''  ? $TRSDetails[0]->trs_zip : ''}}"  >
                                 </div>
                             </div>
                         </div>
@@ -462,13 +462,13 @@
                             <div class="col-md-6 sec-field">
                                 <div class="form-group">
                                     <label>First Name</label>
-                                    <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control" placeholder="First Name" value="{{$SECDetails[0]->sec_fname != ''  ? $SECDetails[0]->sec_fname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                                    <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control" placeholder="First Name" value="{{$SECDetails[0]->sec_fname != ''  ? $SECDetails[0]->sec_fname : ''}}"  onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
                             <div class="col-md-6 sec-field">
                                 <div class="form-group">
                                     <label>Last Name</label>
-                                    <input type="text" name="ch_sec_lname" id="ch_sec_lname" class="form-control" placeholder="Last Name" value="{{$SECDetails[0]->sec_lname != ''  ? $SECDetails[0]->sec_lname : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                                    <input type="text" name="ch_sec_lname" id="ch_sec_lname" class="form-control" placeholder="Last Name" value="{{$SECDetails[0]->sec_lname != ''  ? $SECDetails[0]->sec_lname : ''}}"  onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
                         </div>
@@ -476,7 +476,7 @@
                             <div class="col-md-5 sec-field">
                                 <div class="form-group">
                                     <label>Email ID</label>
-                                    <input type="email" name="ch_sec_email" id="ch_sec_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$SECDetails[0]->sec_email != ''  ? $SECDetails[0]->sec_email : ''}}" maxlength="50">
+                                    <input type="email" name="ch_sec_email" id="ch_sec_email" class="form-control" placeholder="Email ID" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$SECDetails[0]->sec_email != ''  ? $SECDetails[0]->sec_email : ''}}" >
                                 </div>
                             </div>
                             <div class="col-md-5">
@@ -490,7 +490,7 @@
                             <div class="col-md-12 sec-field">
                                 <div class="form-group">
                                     <label>Street Address</label>
-                                    <input type="text" name="ch_sec_street" id="ch_sec_street" class="form-control" placeholder="Street Address" maxlength="250" value="{{$SECDetails[0]->sec_addr != ''  ? $SECDetails[0]->sec_addr : ''}}" >
+                                    <input type="text" name="ch_sec_street" id="ch_sec_street" class="form-control" placeholder="Street Address"  value="{{$SECDetails[0]->sec_addr != ''  ? $SECDetails[0]->sec_addr : ''}}" >
                                 </div>
                             </div>
                         </div>
@@ -498,7 +498,7 @@
                             <div class="col-md-4 pr-1 sec-field">
                                 <div class="form-group">
                                     <label>City</label>
-                                    <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control" placeholder="City" value="{{$SECDetails[0]->sec_city != ''  ? $SECDetails[0]->sec_city : ''}}" maxlength="50" onkeypress="return isAlphanumeric(event)">
+                                    <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control" placeholder="City" value="{{$SECDetails[0]->sec_city != ''  ? $SECDetails[0]->sec_city : ''}}"  onkeypress="return isAlphanumeric(event)">
                                 </div>
                             </div>
                             <div class="col-md-4 pr-1 sec-field">
@@ -515,7 +515,7 @@
                             <div class="col-md-4 pl-1 sec-field">
                                 <div class="form-group">
                                     <label>Zip Code</label>
-                                    <input type="text" name="ch_sec_zip" id="ch_sec_zip" class="form-control" placeholder="ZIP Code" value="{{$SECDetails[0]->sec_zip != ''  ? $SECDetails[0]->sec_zip : ''}}" maxlength="10" onkeypress="return isNumber(event)">
+                                    <input type="text" name="ch_sec_zip" id="ch_sec_zip" class="form-control" placeholder="ZIP Code" value="{{$SECDetails[0]->sec_zip != ''  ? $SECDetails[0]->sec_zip : ''}}"  >
                                 </div>
                             </div>
                         </div>

@@ -38,7 +38,7 @@
                 <div class="col-sm-4">
               <div class="form-group">
                 <label>MOMS Club of</label> <span class="field-required">*</span>
-                <input type="text" name="ch_name" class="form-control" maxlength="200" required>
+                <input type="text" name="ch_name" class="form-control"  required>
               </div>
               </div>
               <!-- /.form group -->
@@ -82,14 +82,14 @@
               <div class="col-sm-4">
               <div class="form-group">
                 <label>EIN</label>
-                <input type="text" id="ch_ein" name="ch_ein" class="form-control" maxlength="10">
+                <input type="text" id="ch_ein" name="ch_ein" class="form-control" >
               </div>
               </div>
                 <!-- /.form group -->
                   <div class="col-sm-4">
                     <div class="form-group">
                     <label> </label>
-                    <input type="text" id="" name="" class="form-control" maxlength="10" readonly>
+                    <input type="text" id="" name="" class="form-control"  readonly>
                        </div>
                     </div>
               <!-- /.form group -->
@@ -109,7 +109,7 @@
                <div class="col-sm-8">
                 <div class="form-group">
                   <label>Status Note (not visible to board members)</label>
-                  <input type="text" name="ch_notes" class="form-control" maxlength="50">
+                  <input type="text" name="ch_notes" class="form-control" >
                 </div>
                 </div>
 
@@ -117,7 +117,7 @@
               <div class="col-sm-12">
               <div class="form-group">
                 <label>Boundaries</label> <span class="field-required">*</span>
-                <input type="text" name="ch_boundariesterry" class="form-control" maxlength="250" required>
+                <input type="text" name="ch_boundariesterry" class="form-control"  required>
               </div>
               </div>
               </div>
@@ -133,21 +133,21 @@
               <div class="col-sm-6">
               <div class="form-group">
                 <label>First Name</label> <span class="field-required">*</span>
-                <input type="text" name="ch_pre_fname" class="form-control" maxlength="50" required >
+                <input type="text" name="ch_pre_fname" class="form-control"  required >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Last Name</label> <span class="field-required">*</span>
-                <input type="text" name="ch_pre_lname" class="form-control" maxlength="50" required >
+                <input type="text" name="ch_pre_lname" class="form-control"  required >
               </div>
               </div>
 			  <!-- /.form group -->
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Email</label> <span class="field-required">*</span>
-                <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" maxlength="50" required>
+                <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)"  required>
               </div>
               </div>
               <!-- /.form group -->
@@ -161,14 +161,14 @@
               <div class="col-sm-12">
               <div class="form-group">
                 <label>Street Address</label> <span class="field-required">*</span>
-                <input name="ch_pre_street" class="form-control" rows="4" maxlength="250" required>
+                <input name="ch_pre_street" class="form-control" rows="4"  required>
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-4">
               <div class="form-group">
                 <label>City</label> <span class="field-required">*</span>
-                <input type="text" name="ch_pre_city" class="form-control" maxlength="50" required >
+                <input type="text" name="ch_pre_city" class="form-control"  required >
               </div>
               </div>
               <!-- /.form group -->
@@ -187,7 +187,7 @@
               <div class="col-sm-4">
               <div class="form-group">
                 <label>Zip</label> <span class="field-required">*</span>
-                <input type="text" name="ch_pre_zip" class="form-control" maxlength="10" required >
+                <input type="text" name="ch_pre_zip" class="form-control"  required >
               </div>
               </div>
 
@@ -212,21 +212,21 @@
               <div class="col-sm-6 avp-field">
               <div class="form-group">
                 <label>First Name</label>
-                <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control" maxlength="50" >
+                <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 avp-field">
               <div class="form-group">
                 <label>Last Name</label>
-                <input type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control" maxlength="50" >
+                <input type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 avp-field">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="ch_avp_email" id="ch_avp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" maxlength="50">
+                <input type="email" name="ch_avp_email" id="ch_avp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" >
               </div>
               </div>
               <!-- /.form group -->
@@ -240,13 +240,13 @@
                <div class="col-sm-12 avp-field">
               <div class="form-group">
                 <label>Street Address</label>
-                <input name="ch_avp_street" id="ch_avp_street" class="form-control" rows="4" maxlength="250">
+                <input name="ch_avp_street" id="ch_avp_street" class="form-control" rows="4" >
               </div>
               </div>
               <div class="col-sm-6 avp-field">
               <div class="form-group">
                 <label>City</label>
-                <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control" maxlength="50" >
+                <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control"  >
               </div>
               </div>
               <!-- /.form group -->
@@ -265,7 +265,7 @@
               <div class="col-sm-6 avp-field">
               <div class="form-group">
                 <label>Zip</label>
-                <input type="text" name="ch_avp_zip" id="ch_avp_zip" class="form-control" maxlength="10" >
+                <input type="text" name="ch_avp_zip" id="ch_avp_zip" class="form-control"  >
               </div>
               </div>
               </div>
@@ -290,21 +290,21 @@
               <div class="col-sm-6 mvp-field">
               <div class="form-group">
                 <label>First Name</label>
-                <input type="text" name="ch_mvp_fname" id="ch_mvp_fname" class="form-control" maxlength="50">
+                <input type="text" name="ch_mvp_fname" id="ch_mvp_fname" class="form-control" >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 mvp-field">
               <div class="form-group">
                 <label>Last Name</label>
-                <input type="text" name="ch_mvp_lname" id="ch_mvp_lname" class="form-control" maxlength="50" >
+                <input type="text" name="ch_mvp_lname" id="ch_mvp_lname" class="form-control"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 mvp-field">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="ch_mvp_email" id="ch_mvp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" maxlength="50">
+                <input type="email" name="ch_mvp_email" id="ch_mvp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" >
               </div>
               </div>
               <!-- /.form group -->
@@ -318,13 +318,13 @@
                <div class="col-sm-12 mvp-field">
               <div class="form-group">
                 <label>Street Address</label>
-                <input name="ch_mvp_street" id="ch_mvp_street" class="form-control" rows="4" maxlength="250">
+                <input name="ch_mvp_street" id="ch_mvp_street" class="form-control" rows="4" >
               </div>
               </div>
               <div class="col-sm-6 mvp-field">
               <div class="form-group">
                 <label>City</label>
-                <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control" maxlength="50" >
+                <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control"  >
               </div>
               </div>
               <!-- /.form group -->
@@ -343,7 +343,7 @@
               <div class="col-sm-6 mvp-field">
               <div class="form-group">
                 <label>Zip</label>
-                <input type="text" name="ch_mvp_zip" id="ch_mvp_zip" class="form-control" maxlength="10" >
+                <input type="text" name="ch_mvp_zip" id="ch_mvp_zip" class="form-control"  >
               </div>
               </div>
               </div>
@@ -367,21 +367,21 @@
               <div class="col-sm-6 treas-field">
               <div class="form-group">
                 <label>First Name</label>
-                <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control" maxlength="50" >
+                <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 treas-field">
               <div class="form-group">
                 <label>Last Name</label>
-                <input type="text" name="ch_trs_lname" id="ch_trs_lname" class="form-control" maxlength="50" >
+                <input type="text" name="ch_trs_lname" id="ch_trs_lname" class="form-control"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 treas-field">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="ch_trs_email" id="ch_trs_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" maxlength="50">
+                <input type="email" name="ch_trs_email" id="ch_trs_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" >
               </div>
               </div>
               <!-- /.form group -->
@@ -395,13 +395,13 @@
                <div class="col-sm-12 treas-field">
               <div class="form-group">
                 <label>Street Address</label>
-                <input name="ch_trs_street" id="ch_trs_street" class="form-control" rows="4" maxlength="250">
+                <input name="ch_trs_street" id="ch_trs_street" class="form-control" rows="4" >
               </div>
               </div>
               <div class="col-sm-6 treas-field">
               <div class="form-group">
                 <label>City</label>
-                <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control" maxlength="50" >
+                <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control"  >
               </div>
               </div>
               <!-- /.form group -->
@@ -420,7 +420,7 @@
               <div class="col-sm-6 treas-field">
               <div class="form-group">
                 <label>Zip</label>
-                <input type="text" name="ch_trs_zip" id="ch_trs_zip" class="form-control" maxlength="10" >
+                <input type="text" name="ch_trs_zip" id="ch_trs_zip" class="form-control"  >
               </div>
               </div>
 
@@ -445,21 +445,21 @@
               <div class="col-sm-6 sec-field">
               <div class="form-group">
                 <label>First Name</label>
-                <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control" maxlength="50" >
+                <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 sec-field">
               <div class="form-group">
                 <label>Last Name</label>
-                <input type="text" name="ch_sec_lname" id="ch_sec_lname" class="form-control" maxlength="50" >
+                <input type="text" name="ch_sec_lname" id="ch_sec_lname" class="form-control"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 sec-field">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="ch_sec_email" id="ch_sec_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" maxlength="50">
+                <input type="email" name="ch_sec_email" id="ch_sec_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" >
               </div>
               </div>
               <!-- /.form group -->
@@ -473,13 +473,13 @@
                <div class="col-sm-12 sec-field">
               <div class="form-group">
                 <label>Street Address</label>
-                <input name="ch_sec_street" id="ch_sec_street" class="form-control" rows="4" maxlength="250">
+                <input name="ch_sec_street" id="ch_sec_street" class="form-control" rows="4" >
               </div>
               </div>
               <div class="col-sm-6 sec-field">
               <div class="form-group">
                 <label>City</label>
-                <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control" maxlength="50">
+                <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control" >
               </div>
               </div>
               <!-- /.form group -->
@@ -498,7 +498,7 @@
               <div class="col-sm-6 sec-field">
               <div class="form-group">
                 <label>Zip</label>
-                <input type="text" name="ch_sec_zip" id="ch_sec_zip" class="form-control" maxlength="10" >
+                <input type="text" name="ch_sec_zip" id="ch_sec_zip" class="form-control"  >
               </div>
               </div>
               </div>
@@ -514,35 +514,35 @@
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Chapter Email Address</label>
-                <input type="email" name="ch_email" class="form-control" maxlength="30">
+                <input type="email" name="ch_email" class="form-control" >
               </div>
               </div>
                 <!-- /.form group -->
                 <div class="col-sm-6">
                     <div class="form-group">
                       <label>PO Box</label>
-                      <input type="text" name="ch_pobox" class="form-control" maxlength="30">
+                      <input type="text" name="ch_pobox" class="form-control" >
                     </div>
                     </div>
               <!-- /.form group -->
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Inquiries Email Address</label> <span class="field-required">*</span>
-                <input type="email" name="ch_inqemailcontact" class="form-control" maxlength="50" required>
+                <input type="email" name="ch_inqemailcontact" class="form-control"  required>
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Inquiries Notes (not visible to board members)</label>
-                <input type="text" name="ch_inqnote" class="form-control" maxlength="50">
+                <input type="text" name="ch_inqnote" class="form-control" >
               </div>
               </div>
                <!-- /.form group -->
                <div class="col-sm-12">
                 <div class="form-group">
                   <label>Additional Information (not visible to board members)</label>
-                  <textarea name="ch_addinfo" class="form-control" rows="4" maxlength="250"></textarea>
+                  <textarea name="ch_addinfo" class="form-control" rows="4" ></textarea>
                 </div>
                 </div>
 
@@ -571,7 +571,7 @@
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Founded Year</label>
-                <input type="text" name="ch_foundyear" class="form-control" maxlength="4" value={{$currentYear}} required readonly>
+                <input type="text" name="ch_foundyear" class="form-control" value={{$currentYear}} required readonly>
               </div>
               </div>
               <!-- /.form group -->

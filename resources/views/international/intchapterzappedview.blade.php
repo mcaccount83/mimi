@@ -261,20 +261,20 @@
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label>Phone</label>
-                <input type="text" name="ch_mvp_phone" id="ch_mvp_phone" maxlength="20" class="form-control my-colorpicker1" value="{{$MVPDetails[0]->mvp_phone }}" disabled>
+                <input type="text" name="ch_mvp_phone" id="ch_mvp_phone"  class="form-control my-colorpicker1" value="{{$MVPDetails[0]->mvp_phone }}" disabled>
               </div>
               </div>
                <!-- /.form group -->
                <div class="col-sm-12 col-xs-12">
               <div class="form-group">
                 <label>Street Address</label>
-                <textarea name="ch_mvp_street" id="ch_mvp_street" class="form-control my-colorpicker1" rows="4" maxlength="100" disabled>{{$MVPDetails[0]->mvp_addr}}</textarea>
+                <textarea name="ch_mvp_street" id="ch_mvp_street" class="form-control my-colorpicker1" rows="4"  disabled>{{$MVPDetails[0]->mvp_addr}}</textarea>
               </div>
               </div>
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label>City</label>
-                <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control my-colorpicker1" value="{{ $MVPDetails[0]->mvp_city }}" maxlength="30" disabled>
+                <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control my-colorpicker1" value="{{ $MVPDetails[0]->mvp_city }}"  disabled>
               </div>
               </div>
               <!-- /.form group -->
@@ -290,7 +290,7 @@
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label>Zip</label>
-                <input type="text" name="ch_mvp_zip" id="ch_mvp_zip" maxlength="20" class="form-control my-colorpicker1" value="{{$MVPDetails[0]->mvp_zip }}" disabled>
+                <input type="text" name="ch_mvp_zip" id="ch_mvp_zip"  class="form-control my-colorpicker1" value="{{$MVPDetails[0]->mvp_zip }}" disabled>
               </div>
               </div>
               <!-- /.form group -->
@@ -333,20 +333,20 @@
 			  <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label>Phone</label>
-                <input type="text" name="ch_trs_phone" id="ch_trs_phone" maxlength="20" class="form-control my-colorpicker1"  value="{{ $TRSDetails[0]->trs_phone }}" disabled>
+                <input type="text" name="ch_trs_phone" id="ch_trs_phone"  class="form-control my-colorpicker1"  value="{{ $TRSDetails[0]->trs_phone }}" disabled>
               </div>
               </div>
                <!-- /.form group -->
                <div class="col-sm-12 col-xs-12">
               <div class="form-group">
                 <label>Street Address</label>
-                <textarea name="ch_trs_street" id="ch_trs_street" class="form-control my-colorpicker1" rows="4" maxlength="100" disabled>{{$TRSDetails[0]->trs_addr}}</textarea>
+                <textarea name="ch_trs_street" id="ch_trs_street" class="form-control my-colorpicker1" rows="4"  disabled>{{$TRSDetails[0]->trs_addr}}</textarea>
               </div>
               </div>
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label>City</label>
-                <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control my-colorpicker1" value="{{ $TRSDetails[0]->trs_city }}" maxlength="30" disabled>
+                <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control my-colorpicker1" value="{{ $TRSDetails[0]->trs_city }}"  disabled>
               </div>
               </div>
               <!-- /.form group -->
@@ -362,7 +362,7 @@
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label>Zip</label>
-                <input type="text" name="ch_trs_zip" id="ch_trs_zip" maxlength="20" class="form-control my-colorpicker1" value="{{$TRSDetails[0]->trs_zip }}" disabled>
+                <input type="text" name="ch_trs_zip" id="ch_trs_zip"  class="form-control my-colorpicker1" value="{{$TRSDetails[0]->trs_zip }}" disabled>
               </div>
               </div>
               <!-- /.form group -->
@@ -404,20 +404,20 @@
 			   <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label>Phone</label>
-                <input type="text" name="ch_sec_phone" id="ch_sec_phone" maxlength="20" class="form-control my-colorpicker1"  value="{{ $SECDetails[0]->sec_phone }}" disabled>
+                <input type="text" name="ch_sec_phone" id="ch_sec_phone"  class="form-control my-colorpicker1"  value="{{ $SECDetails[0]->sec_phone }}" disabled>
               </div>
               </div>
                <!-- /.form group -->
                <div class="col-sm-12 col-xs-12">
               <div class="form-group">
                 <label>Street Address</label>
-                <textarea name="ch_sec_street" id="ch_sec_street" class="form-control my-colorpicker1" rows="4" maxlength="100" disabled>{{$SECDetails[0]->sec_addr}}</textarea>
+                <textarea name="ch_sec_street" id="ch_sec_street" class="form-control my-colorpicker1" rows="4"  disabled>{{$SECDetails[0]->sec_addr}}</textarea>
               </div>
               </div>
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label>City</label>
-                <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control my-colorpicker1" value="{{ $SECDetails[0]->sec_city }}" maxlength="30" disabled>
+                <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control my-colorpicker1" value="{{ $SECDetails[0]->sec_city }}"  disabled>
               </div>
               </div>
               <!-- /.form group -->
@@ -433,7 +433,7 @@
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label>Zip</label>
-                <input type="text" name="ch_sec_zip" id="ch_sec_zip" maxlength="20" class="form-control my-colorpicker1" value="{{$SECDetails[0]->sec_zip }}" disabled>
+                <input type="text" name="ch_sec_zip" id="ch_sec_zip"  class="form-control my-colorpicker1" value="{{$SECDetails[0]->sec_zip }}" disabled>
               </div>
               </div>
               <!-- /.form group -->
@@ -456,7 +456,7 @@
                 <div class="col-sm-6 col-xs-12">
                     <div class="form-group">
                       <label>Chapter Website</label>
-                      <input type="text" name="ch_website" class="form-control my-colorpicker1" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}" maxlength="50" id="validate_url" onchange="is_url(); updateWebsiteStatus();">
+                      <input type="text" name="ch_website" class="form-control my-colorpicker1" placeholder="http://www.momsclubofchaptername.com" value="{{$chapterList[0]->website_url}}"  id="validate_url" onchange="is_url(); updateWebsiteStatus();">
                     </div>
                     </div>
                       <!-- /.form group -->
@@ -477,56 +477,56 @@
               <div class="col-sm-12 col-xs-12">
               <div class="form-group">
                 <label>Online Discussion Group (Meetup, Google Groups, etc)</label>
-                <input type="text" name="ch_onlinediss" class="form-control my-colorpicker1" value="{{ $chapterList[0]->egroup}}" maxlength="50" >
+                <input type="text" name="ch_onlinediss" class="form-control my-colorpicker1" value="{{ $chapterList[0]->egroup}}"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-4 col-xs-12">
               <div class="form-group">
                 <label>Facebook</label>
-                <input type="text" name="ch_social1" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social1}}" maxlength="50" >
+                <input type="text" name="ch_social1" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social1}}"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-4 col-xs-12">
               <div class="form-group">
                 <label>Twitter</label>
-                <input type="text" name="ch_social2" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social2}}" maxlength="50" >
+                <input type="text" name="ch_social2" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social2}}"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-4 col-xs-12">
               <div class="form-group">
                 <label>Instagram</label>
-                <input type="text" name="ch_social3" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social3}}" maxlength="50" >
+                <input type="text" name="ch_social3" class="form-control my-colorpicker1" value="{{ $chapterList[0]->social3}}"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label>Chapter Email Address</label>
-                <input type="email" name="ch_email" class="form-control my-colorpicker1" value="{{ $chapterList[0]->email}}" maxlength="50" >
+                <input type="email" name="ch_email" class="form-control my-colorpicker1" value="{{ $chapterList[0]->email}}"  >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label>PO Box</label>
-                <input type="text" name="ch_pobox" class="form-control my-colorpicker1" maxlength="30" value="{{ $chapterList[0]->po_box}}" >
+                <input type="text" name="ch_pobox" class="form-control my-colorpicker1"  value="{{ $chapterList[0]->po_box}}" >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label>Inquiries Email Address</label> <span class="field-required">*</span>
-                <input type="email" name="ch_inqemailcontact" class="form-control my-colorpicker1" value="{{ $chapterList[0]->inquiries_contact}}" maxlength="50" required >
+                <input type="email" name="ch_inqemailcontact" class="form-control my-colorpicker1" value="{{ $chapterList[0]->inquiries_contact}}"  required >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6 col-xs-12">
               <div class="form-group">
                 <label>Inquiries Notes (not visible to board members)</label>
-                <input type="text" name="ch_inqnote" class="form-control my-colorpicker1" value="{{ $chapterList[0]->inquiries_note}}" maxlength="50" >
+                <input type="text" name="ch_inqnote" class="form-control my-colorpicker1" value="{{ $chapterList[0]->inquiries_note}}"  >
               </div>
               </div>
               <!-- /.form group -->

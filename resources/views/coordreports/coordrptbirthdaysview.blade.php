@@ -34,28 +34,28 @@
 					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>First Name</label>
-						<input type="text" name="cord_fname" class="form-control" value="{{ $coordinatorDetails[0]->first_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" readonly>
+						<input type="text" name="cord_fname" class="form-control" value="{{ $coordinatorDetails[0]->first_name }}"  required onkeypress="return isAlphanumeric(event)" readonly>
 					  </div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-6">
 					  <div class="form-group">
 						<label>Last Name</label>
-						<input type="text" name="cord_lname" class="form-control" value="{{ $coordinatorDetails[0]->last_name }}" maxlength="50" required onkeypress="return isAlphanumeric(event)" readonly>
+						<input type="text" name="cord_lname" class="form-control" value="{{ $coordinatorDetails[0]->last_name }}"  required onkeypress="return isAlphanumeric(event)" readonly>
 					  </div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-12">
 						<div class="form-group">
 							<label>Street Address</label><span class="field-required">*</span>
-							<input autocomplete="nope" name="cord_addr" class="form-control" rows="4" maxlength="250" required value="{{ $coordinatorDetails[0]->address }}	" readonly>
+							<input autocomplete="nope" name="cord_addr" class="form-control" rows="4"  required value="{{ $coordinatorDetails[0]->address }}	" readonly>
 						</div>
 					</div>
 					<!-- /.form group -->
 					<div class="col-sm-4">
 						<div class="form-group">
 							<label>City</label><span class="field-required">*</span>
-							<input type="text" name="cord_city" class="form-control" maxlength="50" value="{{ $coordinatorDetails[0]->city }}" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" readonly>
+							<input type="text" name="cord_city" class="form-control"  value="{{ $coordinatorDetails[0]->city }}" required onkeypress="return isAlphanumeric(event)" autocomplete="nope" readonly>
 						</div>
 					</div>
 					<!-- /.form group -->
@@ -73,13 +73,13 @@
 					<div class="col-sm-4">
 					  <div class="form-group">
 						<label>Zip</label><span class="field-required">*</span>
-						<input type="text" name="cord_zip" class="form-control" maxlength="10" value="{{ $coordinatorDetails[0]->zip }}" required onkeypress="return isNumber(event)" autocomplete="nope" readonly>
+						<input type="text" name="cord_zip" class="form-control"  value="{{ $coordinatorDetails[0]->zip }}" required onkeypress="return isNumber(event)" autocomplete="nope" readonly>
 					  </div>
 					</div>
                 	<div class="col-sm-6">
 					  <div class="form-group">
 						<label>Coordinator Birthday</label><span class="field-required">*</span>
-						<input type="text" name="cord_bday" class="form-control" maxlength="10" value="{{ $coordinatorDetails[0]->birthday_month_id }} / {{ $coordinatorDetails[0]->birthday_day }}" required onkeypress="return isNumber(event)" autocomplete="nope" readonly>
+						<input type="text" name="cord_bday" class="form-control"  value="{{ $coordinatorDetails[0]->birthday_month_id }} / {{ $coordinatorDetails[0]->birthday_day }}" required onkeypress="return isNumber(event)" autocomplete="nope" readonly>
 					  </div>
 					</div>
 

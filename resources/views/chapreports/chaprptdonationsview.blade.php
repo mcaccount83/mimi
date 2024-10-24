@@ -45,7 +45,7 @@
 				<input type="hidden" name="ch_state" value="{{ $chapterList[0]->statename }}">
 
                 <label>Chapter Name</label>
-                <input type="text" name="ch_long_name" class="form-control" maxlength="200" required value="{{ $chapterList[0]->statename }} - {{ $chapterList[0]->name }}"  readonly>
+                <input type="text" name="ch_long_name" class="form-control"  required value="{{ $chapterList[0]->statename }} - {{ $chapterList[0]->name }}"  readonly>
               </div>
               </div>
                 <!-- /.form group -->

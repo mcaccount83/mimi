@@ -59,7 +59,7 @@
               <div class="col-sm-12">
               <div class="form-group">
                 <label>EIN/IRS Notes (not visible to board members)</label>
-                <input type="textera" name="ch_einnotes" id="ch_einnotes" rows="3" class="form-control" maxlength="255" value="{{ $chapterList[0]->ein_notes}}" >
+                <input type="textera" name="ch_einnotes" id="ch_einnotes" rows="3" class="form-control"  value="{{ $chapterList[0]->ein_notes}}" >
               </div>
               </div>
 

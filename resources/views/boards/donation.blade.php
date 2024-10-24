@@ -66,7 +66,7 @@
                         <div class="form-group row">
                             <div class="col-md-6">
                             <label for="card_number" >{{ __('Card Number') }}</label> <span class="field-required">*</span>
-                                <input id="card_number" type="text" class="form-control @error('card_number') is-invalid @enderror" name="card_number" required autocomplete="off" maxlength="16">
+                                <input id="card_number" type="text" class="form-control @error('card_number') is-invalid @enderror" name="card_number" required autocomplete="off" >
                                 @error('card_number')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -76,7 +76,7 @@
 
                             <div class="col-md-3">
                             <label for="expiration_date" ">{{ __('Expiration Date (MM/YY)') }}</label> <span class="field-required">*</span>
-                                <input id="expiration_date" type="text" class="form-control @error('expiration_date') is-invalid @enderror" name="expiration_date" required autocomplete="off" maxlength="5">
+                                <input id="expiration_date" type="text" class="form-control @error('expiration_date') is-invalid @enderror" name="expiration_date" required autocomplete="off" >
                                 @error('expiration_date')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -86,7 +86,7 @@
 
                             <div class="col-md-3">
                             <label for="cvv" >{{ __('CVV') }}</label> <span class="field-required">*</span>
-                                <input id="cvv" type="text" class="form-control @error('cvv') is-invalid @enderror" name="cvv" required autocomplete="off" maxlength="4">
+                                <input id="cvv" type="text" class="form-control @error('cvv') is-invalid @enderror" name="cvv" required autocomplete="off" >
                                 @error('cvv')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>

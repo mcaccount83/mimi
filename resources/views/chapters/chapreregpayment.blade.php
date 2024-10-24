@@ -44,21 +44,21 @@
 				<input type="hidden" name="ch_name" value="{{ $chapterList[0]->name }}">
 				<input type="hidden" name="ch_state" value="{{ $chapterList[0]->statename }}">
                 <label>Chapter name</label>
-                <input type="text" name="ch_fullname" class="form-control" maxlength="200" value="{{ $chapterList[0]->statename }} - {{ $chapterList[0]->name }}" readonly>
+                <input type="text" name="ch_fullname" class="form-control"  value="{{ $chapterList[0]->statename }} - {{ $chapterList[0]->name }}" readonly>
 
               </div>
 			  </div>
 			  <div class="col-sm-12">
                 <div class="form-group">
                     <label>Last Payment</label>
-                    <input type="date" name="ch_lastpay" class="form-control" maxlength="200" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $chapterList[0]->dues_last_paid }}" readonly>
+                    <input type="date" name="ch_lastpay" class="form-control"  data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $chapterList[0]->dues_last_paid }}" readonly>
                 </div>
             </div>
 			<!-- /.form group -->
               <div class="col-sm-12">
               <div class="form-group">
                 <label>Re-Registration Notes (not visible to board members)</label>
-                <input type="text" name="ch_regnotes" id="ch_regnotes" class="form-control" maxlength="50" value="{{ $chapterList[0]->reg_notes}}" >
+                <input type="text" name="ch_regnotes" id="ch_regnotes" class="form-control"  value="{{ $chapterList[0]->reg_notes}}" >
               </div>
               </div>
               <!-- /.form group -->

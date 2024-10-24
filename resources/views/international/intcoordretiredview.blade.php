@@ -92,7 +92,7 @@
 					<div class="col-sm-12">
 					  <div class="form-group">
 						<label>Email</label>
-						<input type="email" name="cord_email" id="cord_email" class="form-control" maxlength="50" value="{{ $coordinatorDetails[0]->email }}" required autocomplete="nope">
+						<input type="email" name="cord_email" id="cord_email" class="form-control"  value="{{ $coordinatorDetails[0]->email }}" required autocomplete="nope">
 						<input type="hidden" name="cord_email2" id="cord_email_chk" value="{{ $coordinatorDetails[0]->email }}">
 					  </div>
 					</div>
