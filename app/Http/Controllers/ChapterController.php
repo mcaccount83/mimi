@@ -1770,7 +1770,8 @@ class ChapterController extends Controller
             ->where('ch.id', '=', $id)
             ->where('bd.board_position_id', '=', '1')
             ->get();
-
+        $corConfId = $chapterList[0]->conference;
+        $corId = $chapterList[0]->primary_coordinator_id;
         $AVPDetails = DB::table('boards as bd')
             ->select('bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.board_position_id', 'bd.street_address as avp_addr', 'bd.city as avp_city', 'bd.zip as avp_zip', 'bd.phone as avp_phone', 'bd.state as avp_state', 'bd.user_id as user_id')
             ->where('bd.chapter_id', '=', $id)
@@ -1824,22 +1825,16 @@ class ChapterController extends Controller
             ->where('conference_id', '=', $corConfId)
             ->orderBy('long_name')
             ->get();
-
-        $primaryCoordinatorList = DB::table('coordinators as cd')
-            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
-            ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
-            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
-            ->where('cd.conference_id', '=', $corConfId)
-            ->where('cd.position_id', '<=', '7')
-            ->where('cd.position_id', '>=', '1')
-            ->where('cd.is_active', '=', '1')
-            ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name')
+        $confList = DB::table('conference')
+            ->select('id', 'conference_name')
+            ->where('id', '>=', 0)
+            ->orderBy('conference_name')
             ->get();
+
 
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
         $currentMonth = $chapterList[0]->start_month_id;
-        $data = ['corId' => $corId, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'chapterList' => $chapterList, 'regionList' => $regionList, 'primaryCoordinatorList' => $primaryCoordinatorList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth, 'currentMonth' => $currentMonth];
+        $data = ['corId' => $corId, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'chapterList' => $chapterList, 'regionList' => $regionList, 'confList' => $confList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth, 'currentMonth' => $currentMonth];
 
         return view('chapters.chapzappedview')->with($data);
     }
