@@ -29,14 +29,15 @@
                     </h3>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         @if ($supervisingCoordinatorCondition)
-                        <a class="dropdown-item" href="/coordreports/volunteerutilization">Coordinator Utilization Report</a>
+
+                        <a class="dropdown-item" href="{{ route('coordreports.coordrptvolutilization') }}">Coordinator Utilization Report</a>
                         @endif
-                        {{-- <a class="dropdown-item" href="/coordreports/coordinatortodo">Coordinator ToDo List</a> --}}
                         @if ($assistConferenceCoordinatorCondition)
-                            <a class="dropdown-item" href="/coordreports/appreciation">Coordinator Appreciation Report</a>
-                            <a class="dropdown-item" href="/coordreports/birthdays">Coordinator Birthday Report</a>
+
+                        <a class="dropdown-item" href="{{ route('coordreports.coordrptappreciation') }}">Coordinator Appreciation Report</a>
+                        <a class="dropdown-item" href="{{ route('coordreports.coordrptbirthdays') }}">Coordinator Birthday Report</a>
                         @endif
-                        <a class="dropdown-item" href="/coordreports/reportingtree">Coordinator Reporting Tree</a>
+                        <a class="dropdown-item" href="{{ route('coordreports.coordrptreportingtree') }}">Coordinator Reporting Tree</a>
                     </div>
                 </div>
             </div>
@@ -169,10 +170,6 @@
     </div>
 </div>
 
-
-
-
-
 <div class="card-body">
         <button type="button" class="btn bg-gradient-primary" onclick="showPositionAbbreviations()">Position Abbreviations</button>
 
@@ -183,18 +180,19 @@
 
 @section('customscript')
 <script>
-
 document.addEventListener("DOMContentLoaded", function() {
     const dropdownItems = document.querySelectorAll(".dropdown-item");
     const currentPath = window.location.pathname;
 
     dropdownItems.forEach(item => {
-        // Check if the item's href matches the current path
-        if (item.getAttribute("href") === currentPath) {
+        const itemPath = new URL(item.href).pathname;
+
+        if (itemPath === currentPath) {
             item.classList.add("active");
         }
     });
 });
+
 
 document.addEventListener('DOMContentLoaded', function() {
     mermaid.initialize({
