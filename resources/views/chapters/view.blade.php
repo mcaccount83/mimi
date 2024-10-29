@@ -90,8 +90,17 @@
                         <b>Sistered By:</b> <span class="float-right">{{ $chapterList[0]->sistered_by }}</span>
                     </li>
                     <input type="hidden" id="ch_primarycor" value="{{ $chapterList[0]->primary_coordinator_id }}">
-                    <li id="display_corlist" class="list-group-item"></li>
+                    <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
                 </ul>
+                <div class="text-center">
+                    @if ($chapterList[0]->is_active == 1 )
+                        <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
+                    @else
+                        <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
+                        Disband Date: <span class="date-mask">{{ $chapterList[0]->zap_date }}</span><br>
+                        {{ $chapterList[0]->disband_reason }}
+                    @endif
+                </div>
               </div>
               <!-- /.card-body -->
             </div>
