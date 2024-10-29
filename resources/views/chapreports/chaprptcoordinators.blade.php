@@ -89,7 +89,7 @@
                         $cord_row_count = count($coordinator_array);
 
                         echo "<tr>";
-                        echo "<td class='text-center align-middle'><a href='/chapter/chapterview/{$row->id}'><i class='fas fa-edit' ></i></a></td> \n";
+                        echo "<td class='text-center align-middle'><a href='/chapterdetails/{$row->id}'><i class='fas fa-eye' ></i></a></td> \n";
                         echo "<td>{$row->conf} / {$row->reg}</td>\n";
                         echo "<td>{$row->state}</td>\n";
                         echo "<td>{$row->name}</td>\n";

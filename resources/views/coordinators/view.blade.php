@@ -104,7 +104,9 @@
                 <div class="tab-content">
                   <div class="active tab-pane" id="general">
                     <div class="general-field">
-                        <h3 class="profile-username">Chapters & Coordinators</h3>
+                        <h3 class="profile-username">Chapters & Coordinators
+                            <button class="btn bg-gradient-primary btn-xs" onclick="window.location.href='{{ route('coordreports.coordrptreportingtree') }}'">View Coordinator Reporting Tree</button>
+                        </h3>
                         <div class="row">
                         <div class="col-sm-6">
 							<div class="form-group">

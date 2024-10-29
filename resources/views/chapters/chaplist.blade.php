@@ -61,9 +61,7 @@
                 <tbody>
                     @foreach($chapterList as $list)
                         <tr id="chapter-{{ $list->id }}">
-                            <td class="text-center align-middle">
-                                <a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a>
-                            </td>
+                            <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                             <td class="text-center align-middle">
                                 <a href="mailto:" class="email-link" data-chapter="{{ $list->id }}">
                                     <i class="far fa-envelope"></i>

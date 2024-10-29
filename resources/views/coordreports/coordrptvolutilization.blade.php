@@ -61,8 +61,8 @@
                 <tbody>
                 @foreach($coordinatorList as $list)
                   <tr>
-                    <td class="text-center align-middle"><a href="{{ url("/coordinator/coordinatorview/{$list->cor_id}") }}"><i class="fas fa-edit"></i></a></td>
-                        <td>
+                    <td class="text-center align-middle"><a href="{{ url("/coorddetails/{$list->cor_id}") }}"><i class="fas fa-eye"></i></a></td>
+                    <td>
                             @if ($list->reg != "None")
                                 {{ $list->conf }} / {{ $list->reg }}
                             @else
