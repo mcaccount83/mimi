@@ -30,16 +30,16 @@
                                     Duplicate Board Details
                                 </h3>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="/admin/reregdate">Re-Registration Renewal Dates</a>
-                                      <a class="dropdown-item" href="/admin/eoy">End of Year Procedures</a>
-                                      <a class="dropdown-item" href="/adminreports/duplicateuser">Duplicate Users</a>
-                                      <a class="dropdown-item" href="/adminreports/duplicateboardid">Duplicate Board Details</a>
-                                      <a class="dropdown-item" href="/adminreports/nopresident">Chapters with No President</a>
-                                      <a class="dropdown-item" href="/adminreports/outgoingboard">Outgoing Board Members</a>
-                                      <a class="dropdown-item" href="/admin/googledrive">Google Drive Settings</a>
-                                      <a class="dropdown-item" href="/admin/jobs">Outgoing Mail Queue</a>
-                                      <a class="dropdown-item" href="/admin/sentemails" target="_blank">Sent Mail</a>
-                                      <a class="dropdown-item" href="/admin/logs" target="_blank">System Error Logs</a>
+                                    <a class="dropdown-item" href="{{ route('admin.reregdate') }}">Re-Registration Renewal Dates</a>
+                                      <a class="dropdown-item" href="{{ route('admin.eoy') }}">End of Year Procedures</a>
+                                      <a class="dropdown-item" href="{{ route('admin.duplicateuser') }}">Duplicate Users</a>
+                                      <a class="dropdown-item" href="{{ route('admin.duplicateboardid') }}">Duplicate Board Details</a>
+                                      <a class="dropdown-item" href="{{ route('admin.nopresident') }}">Chapters with No President</a>
+                                      <a class="dropdown-item" href="{{ route('admin.eoystatus') }}">Outgoing Board Members</a>
+                                      <a class="dropdown-item" href="{{ route('admin.googledrive') }}">Google Drive Settings</a>
+                                      <a class="dropdown-item" href="{{ route('admin.mailqueue') }}">Outgoing Mail Queue</a>
+                                      <a class="dropdown-item" href="{{ route('admin.eoystatus') }}" target="_blank">Sent Mail</a>
+                                      <a class="dropdown-item" href="{{ route('logs') }}" target="_blank">System Error Logs</a>
                                   </div>
                             </div>
                         </div>
@@ -93,8 +93,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const currentPath = window.location.pathname;
 
     dropdownItems.forEach(item => {
-        // Check if the item's href matches the current path
-        if (item.getAttribute("href") === currentPath) {
+        const itemPath = new URL(item.href).pathname;
+
+        if (itemPath === currentPath) {
             item.classList.add("active");
         }
     });

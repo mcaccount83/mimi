@@ -58,15 +58,15 @@
                           Chapter Resources
                       </h3>
                       <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                          <a class="dropdown-item" href="/resources/toolkit">Coordinator Toolkit</a>
-                          <a class="dropdown-item" href="/resources/resources">Chapter Resources</a>
-                          @if ($assistConferenceCoordinatorCondition)
-                          <a class="dropdown-item" href="/resources/downloads">Download Reports</a>
-                          @endif
-                          @if ($regionalCoordinatorCondition)
-                          <a class="dropdown-item" href="/resources/bugs">MIMI Bugs & Wishes</a>
-                          @endif
-                          <a class="dropdown-item" href="https://momsclub.org/elearning/" target="_blank">eLearning</a>
+                        <a class="dropdown-item" href="{{ route('admin.toolkit') }}">Coordinator Toolkit</a>
+                        <a class="dropdown-item" href="{{ route('admin.resources') }}">Chapter Resources</a>
+                        @if ($assistConferenceCoordinatorCondition)
+                        <a class="dropdown-item" href="{{ route('admin.downloads') }}">Download Reports</a>
+                        @endif
+                        @if ($regionalCoordinatorCondition)
+                        <a class="dropdown-item" href="{{ route('admin.bugs') }}">MIMI Bugs & Wishes</a>
+                        @endif
+                        <a class="dropdown-item" href="https://momsclub.org/elearning/" target="_blank">eLearning</a>
                       </div>
                   </div>
               </div>
@@ -452,14 +452,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/masonry/4.2.2/masonry.pkgd.min.js"></script>
 
 <script>
-
 document.addEventListener("DOMContentLoaded", function() {
     const dropdownItems = document.querySelectorAll(".dropdown-item");
     const currentPath = window.location.pathname;
 
     dropdownItems.forEach(item => {
-        // Check if the item's href matches the current path
-        if (item.getAttribute("href") === currentPath) {
+        const itemPath = new URL(item.href).pathname;
+
+        if (itemPath === currentPath) {
             item.classList.add("active");
         }
     });
