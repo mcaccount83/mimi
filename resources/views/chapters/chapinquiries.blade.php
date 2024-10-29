@@ -53,27 +53,26 @@
 				<?php $row = 0;?>
                 @foreach($inquiriesList as $list)
                   <tr>
-						<td><center><a href="<?php echo url("/chapter/inquiriesview/{$list->id}") ?>"><i class="fas fa-eye"></i></a></center></td>
-                        <td><center><button type="button" class="btn btn-xs" onclick="return CopyEmail(<?php echo $row?>);" style="background-color: transparent; border: none;">
-                            <i class="far fa-copy fa-lg text-primary" ></i></button></center></td>
+                    <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                        <td class="text-center align-middle"><button type="button" class="btn btn-xs" onclick="return CopyEmail(<?php echo $row?>);" style="background-color: transparent; border: none;">
+                            <i class="far fa-copy fa-lg text-primary" ></i></button></td>
 
-						<td><center><button type="button" class="btn btn-xs" onclick="return CopyInquiryResp(<?php echo $row?>);" style="background-color: transparent; border: none;">
-                            <i class="far fa-copy fa-lg text-primary" ></i></button></center></td>
-						<td bgcolor="<?php
-							if($list->status=='4' || $list->status=='6')
-                                    echo 'background-color: #dc3545; color: #ffffff;';
-							elseif($list->status=='5')
-									echo "#ffc107";
-
-							?>">
-							@if($list->status=='4' || $list->status=='6')
-							DNR
-							@elseif($list->status=='5')
-							Prob
-							@else
-								OK
-							@endif
-						</td>
+                            <td class="text-center align-middle"><button type="button" class="btn btn-xs" onclick="return CopyInquiryResp(<?php echo $row?>);" style="background-color: transparent; border: none;">
+                            <i class="far fa-copy fa-lg text-primary" ></i></button></td>
+                            @switch($list->status)
+                                @case(1)
+                                    <td>OK</td>
+                                    @break
+                                @case(4)
+                                    <td style="background-color: #dc3545; color: #ffffff;">Do Not Refer</td>
+                                    @break
+                                @case(5)
+                                    <td style="background-color: #ffc107;">Probation</td>
+                                    @break
+                                @case(6)
+                                    <td style="background-color: #dc3545; color: #ffffff;">Do Not Refer</td>
+                                    @break
+                            @endswitch
                         <td>{{ $list->state }}</td>
                         <td>{{ $list->chapter_name }}</td>
                         <td>{{ $list->terry }}</td>

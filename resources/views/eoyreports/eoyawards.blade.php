@@ -5,12 +5,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Chapter Awards Report</h1>
+          <h1>End of Year Reports</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">Chapter Awards Report</li>
+            <li class="breadcrumb-item active">Chapter Awards</li>
           </ol>
         </div>
       </div>
@@ -24,7 +24,20 @@
             <div class="col-12">
               <div class="card">
                 <div class="card-header">
-                  <h3 class="card-title">Report of Chapter Awards&nbsp;<small>(Chapters that were added after June 30, <?php echo date('Y');?> will not be listed)</small></h3>
+                    <div class="dropdown">
+                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Chapter Awards
+                        </h3>
+                        <span class="ml-2">Chapters that were added after June 30, <?php echo date('Y');?> will not be listed</span>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="/eoy/status">Report Status</a>
+                            <a class="dropdown-item" href="/eoy/boardreport">Board Election Reports</a>
+                            <a class="dropdown-item" href="/eoy/financialreport">Financial Reports</a>
+                            <a class="dropdown-item" href="/eoy/attachments">Financial Report Attachments</a>
+                            <a class="dropdown-item" href="/eoy/boundaries">Boundary Issues</a>
+                            <a class="dropdown-item" href="/eoy/awards">Chapter Awards</a>
+                        </div>
+                    </div>
                 </div>
                 <!-- /.card-header -->
             <div class="card-body">
@@ -44,10 +57,10 @@
                   <tbody>
                   @foreach($chapterList as $list)
                     <tr>
-                        <td class="text-center">
-                           <?php if (Session::get('positionid') >=5 && Session::get('positionid') <=7 || $position = 25){ ?>
-                                <a href="<?php echo url("/eoy/awardsview/{$list->id}") ?>"><i class="fas fa-edit"></i></a>
-                          <?php }?>
+                        <td class="text-center align-middle">
+                            @if ($assistConferenceCoordinatorCondition)
+                                <a href="{{ url("/eoy/awardsview/{$list->id}") }}"><i class="fas fa-edit"></i></a>
+                          @endif
                         </td>
                         <td>{{ $list->state }}</td>
                             <td>{{ $list->name }}</td>
@@ -211,14 +224,26 @@
 @endsection
 @section('customscript')
 <script>
-    function showPrimary() {
-        var base_url = '{{ url("/eoy/awards") }}';
+document.addEventListener("DOMContentLoaded", function() {
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    const currentPath = window.location.pathname;
 
-        if ($("#showPrimary").prop("checked") == true) {
-            window.location.href = base_url + '?check=yes';
-        } else {
-            window.location.href = base_url;
+    dropdownItems.forEach(item => {
+        // Check if the item's href matches the current path
+        if (item.getAttribute("href") === currentPath) {
+            item.classList.add("active");
         }
+    });
+});
+
+function showPrimary() {
+    var base_url = '{{ url("/eoy/awards") }}';
+
+    if ($("#showPrimary").prop("checked") == true) {
+        window.location.href = base_url + '?check=yes';
+    } else {
+        window.location.href = base_url;
     }
-    </script>
+}
+</script>
 @endsection

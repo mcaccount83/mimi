@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Chapter;
 use App\Models\FinancialReport;
 use App\Models\User;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -15,11 +16,13 @@ class HomeController extends Controller
     /**
      * Create a new controller instance.
      */
-    public function __construct()
-    {
-        //$this->middleware('preventBackHistory');
-        $this->middleware('auth');
-    }
+    protected $userController;
+
+    public function __construct(UserController $userController)
+        {
+            $this->middleware('auth')->except('logout');
+            $this->userController = $userController;
+        }
 
     /**
      * Home page for Coordinators & Board Members - logic for login redirect
@@ -30,56 +33,19 @@ class HomeController extends Controller
         $user_type = $user->user_type;
         $userStatus = $user->is_active;
         if ($userStatus != 1) {
-            Auth::logout();
+            Auth::logout();  // logout inactive user
             $request->session()->flush();
 
             return redirect()->to('/login');
         }
 
         if ($user_type == 'coordinator') {
-            //Get Coordinators Details
-            $corDetails = $request->user()->Coordinators;
-            $corId = $corDetails->id;
-            $corConfId = $corDetails->conference_id;
-
-            $corlayerId = $corDetails['layer_id'];
-            $sqlLayerId = 'crt.layer'.$corlayerId;
-            $positionId = $corDetails['position_id'];
-            $secPositionId = $corDetails['sec_position_id'];
-            $request->session()->put('positionid', $positionId);
-            $request->session()->put('secpositionid', $secPositionId);
-            $request->session()->put('corconfid', $corConfId);
-
-             // Get the conditions
-             $conditions = getPositionConditions($positionId, $secPositionId);
-
-            if ($conditions['conferenceCoordinatorCondition']) {
-                //Get Coordinator Reporting Tree
-                $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                    ->select('crt.id')
-                    ->where('crt.layer1', '=', '7')
-                    ->get();
-
-            } else {
-                //Get Coordinator Reporting Tree
-                $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                    ->select('crt.id')
-                    ->where($sqlLayerId, '=', $corId)
-                    ->get();
-
-            }
-            $inQryStr = '';
-            foreach ($reportIdList as $key => $val) {
-                $inQryStr .= $val->id.',';
-            }
-            $inQryStr = rtrim($inQryStr, ',');
-            $inQryArr = explode(',', $inQryStr);
-
+            //Send to Coordinator Dashboard
             return redirect()->to('coordinator/dashboard');
         }
 
         if ($user_type == 'board') {
-            //Get Board Details
+            //Send to President or Board Profile Screen
             $borDetails = $request->user()->BoardDetails;
             $borPositionId = $borDetails['board_position_id'];
 
@@ -91,7 +57,7 @@ class HomeController extends Controller
         }
 
         if ($user_type == 'outgoing') {
-            //Get Outgoing Board Details
+            //Send to Financial Report without Menus
             $user = User::with('OutgoingDetails')->find($request->user()->id);
             $userName = $user['first_name'].' '.$user['last_name'];
             $userEmail = $user['email'];
@@ -136,11 +102,11 @@ class HomeController extends Controller
             return view('boards.financial')->with($data);
 
         } else {
-            Auth::logout(); // logout user
+            Auth::logout(); // logout non-user
             $request->session()->flush();
 
             return redirect()->to('/login');
         }
-
     }
+
 }

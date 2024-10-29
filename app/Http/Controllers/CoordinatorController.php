@@ -300,8 +300,6 @@ class CoordinatorController extends Controller
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
 
@@ -309,17 +307,9 @@ class CoordinatorController extends Controller
          $conditions = getPositionConditions($positionId, $secPositionId);
 
          if ($conditions['coordinatorCondition']) {
-                //Get Coordinator Reporting Tree
-                $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                    ->select('crt.id')
-                    ->where($sqlLayerId, '=', $corId)
-                    ->get();
-            $inQryStr = '';
-            foreach ($reportIdList as $key => $val) {
-                $inQryStr .= $val->id.',';
-            }
-            $inQryStr = rtrim($inQryStr, ',');
-            $inQryArr = explode(',', $inQryStr);
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
         }
 
         $baseQuery = DB::table('coordinators as cd')

@@ -33,11 +33,9 @@ class ChapterReportController extends Controller
     {
         //Get Coordinators Details
         $corDetails = User::find($request->user()->id)->Coordinators;
-        $corId = $corDetails['coordinator_id'];
+        $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
         $request->session()->put('positionid', $positionId);
@@ -49,18 +47,9 @@ class ChapterReportController extends Controller
         $conditions = getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
-            //Get Coordinator Reporting Tree
-                $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                    ->select('crt.id')
-                    ->where($sqlLayerId, '=', $corId)
-                    ->get();
-
-            $inQryStr = '';
-            foreach ($reportIdList as $key => $val) {
-                $inQryStr .= $val->id.',';
-            }
-            $inQryStr = rtrim($inQryStr, ',');
-            $inQryArr = explode(',', $inQryStr);
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
         }
 
         $baseQuery = DB::table('chapters')
@@ -109,6 +98,8 @@ class ChapterReportController extends Controller
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
+        $corConfId = $corDetails['conference_id'];
+        $corRegId = $corDetails['region_id'];
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
         $request->session()->put('positionid', $positionId);
@@ -159,13 +150,10 @@ class ChapterReportController extends Controller
      */
     public function showRptEINstatus(Request $request): View
     {
-        //Get Coordinators Details
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
 
@@ -173,19 +161,10 @@ class ChapterReportController extends Controller
        $conditions = getPositionConditions($positionId, $secPositionId);
 
        if ($conditions['coordinatorCondition']) {
-           //Get Coordinator Reporting Tree
-               $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                   ->select('crt.id')
-                   ->where($sqlLayerId, '=', $corId)
-                   ->get();
-
-           $inQryStr = '';
-           foreach ($reportIdList as $key => $val) {
-               $inQryStr .= $val->id.',';
-           }
-           $inQryStr = rtrim($inQryStr, ',');
-           $inQryArr = explode(',', $inQryStr);
-       }
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
+        }
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
@@ -223,21 +202,13 @@ class ChapterReportController extends Controller
      */
     public function showRptEINstatusView(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
-        $user = User::find($request->user()->id);
-        // Check if user is not found
-        if (! $user) {
-            return redirect()->route('home');
-        }
-
-        $corDetails = $user->Coordinators;
-        // Check if BoardDetails is not found for the user
-        if (! $corDetails) {
-            return redirect()->route('home');
-        }
-
+        $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
+        $corRegId = $corDetails['region_id'];
+        $positionId = $corDetails['position_id'];
+        $secPositionId = $corDetails['sec_position_id'];
+
         $chapterList = DB::table('chapters as ch')
             ->select('ch.id', 'ch.name', 'ch.ein', 'ch.ein_notes',
                 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.conference_id as cor_confid', 'cd.email as cor_email', 'bd.email as bor_email', 'st.state_short_name as statename')
@@ -248,9 +219,11 @@ class ChapterReportController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->where('ch.id', $id)
             ->get();
+
         $maxDateLimit = Carbon::now()->format('Y-m-d');
         $minDateLimit = Carbon::now()->subYear()->format('Y-m-d');
         // $minDateLimit = '';
+
         $data = ['chapterList' => $chapterList, 'maxDateLimit' => $maxDateLimit, 'minDateLimit' => $minDateLimit];
 
         return view('chapreports.chaprpteinstatusview')->with($data);
@@ -263,6 +236,10 @@ class ChapterReportController extends Controller
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
+        $corConfId = $corDetails['conference_id'];
+        $corRegId = $corDetails['region_id'];
+        $positionId = $corDetails['position_id'];
+        $secPositionId = $corDetails['sec_position_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         $nextRenewalYear = $request->input('ch_nxt_renewalyear');
@@ -270,6 +247,7 @@ class ChapterReportController extends Controller
         //$nextRenewalYear = date('Y');
         $primaryCordEmail = $request->input('ch_pc_email');
         $boardPresEmail = $request->input('ch_pre_email');
+
         $chapter = Chapter::find($id);
         DB::beginTransaction();
         try {
@@ -297,13 +275,10 @@ class ChapterReportController extends Controller
      */
     public function showRptNewChapters(Request $request): View
     {
-        //Get Coordinators Details
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
         $request->session()->put('positionid', $positionId);
@@ -313,19 +288,10 @@ class ChapterReportController extends Controller
        $conditions = getPositionConditions($positionId, $secPositionId);
 
        if ($conditions['coordinatorCondition']) {
-           //Get Coordinator Reporting Tree
-               $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                   ->select('crt.id')
-                   ->where($sqlLayerId, '=', $corId)
-                   ->get();
-
-           $inQryStr = '';
-           foreach ($reportIdList as $key => $val) {
-               $inQryStr .= $val->id.',';
-           }
-           $inQryStr = rtrim($inQryStr, ',');
-           $inQryArr = explode(',', $inQryStr);
-       }
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
+        }
 
         //Get Chapter List mapped with login coordinator
         $baseQuery = DB::table('chapters')
@@ -364,13 +330,10 @@ class ChapterReportController extends Controller
      */
     public function showRptLargeChapters(Request $request): View
     {
-        //Get Coordinators Details
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
         $request->session()->put('positionid', $positionId);
@@ -382,18 +345,9 @@ class ChapterReportController extends Controller
         $conditions = getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
-            //Get Coordinator Reporting Tree
-                $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                    ->select('crt.id')
-                    ->where($sqlLayerId, '=', $corId)
-                    ->get();
-
-            $inQryStr = '';
-            foreach ($reportIdList as $key => $val) {
-                $inQryStr .= $val->id.',';
-            }
-            $inQryStr = rtrim($inQryStr, ',');
-            $inQryArr = explode(',', $inQryStr);
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
         }
 
         $baseQuery = DB::table('chapters')
@@ -441,13 +395,10 @@ class ChapterReportController extends Controller
      */
     public function showRptProbation(Request $request): View
     {
-        //Get Coordinators Details
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
         $request->session()->put('positionid', $positionId);
@@ -459,19 +410,10 @@ class ChapterReportController extends Controller
          $conditions = getPositionConditions($positionId, $secPositionId);
 
          if ($conditions['coordinatorCondition']) {
-             //Get Coordinator Reporting Tree
-                 $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                     ->select('crt.id')
-                     ->where($sqlLayerId, '=', $corId)
-                     ->get();
-
-             $inQryStr = '';
-             foreach ($reportIdList as $key => $val) {
-                 $inQryStr .= $val->id.',';
-             }
-             $inQryStr = rtrim($inQryStr, ',');
-             $inQryArr = explode(',', $inQryStr);
-         }
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
+        }
 
         $status = [4, 5, 6];
 
@@ -520,13 +462,10 @@ class ChapterReportController extends Controller
      */
     public function showRptDonations(Request $request): View
     {
-        //Get Coordinators Details
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
         $request->session()->put('positionid', $positionId);
@@ -536,19 +475,10 @@ class ChapterReportController extends Controller
          $conditions = getPositionConditions($positionId, $secPositionId);
 
          if ($conditions['coordinatorCondition']) {
-             //Get Coordinator Reporting Tree
-                 $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                     ->select('crt.id')
-                     ->where($sqlLayerId, '=', $corId)
-                     ->get();
-
-             $inQryStr = '';
-             foreach ($reportIdList as $key => $val) {
-                 $inQryStr .= $val->id.',';
-             }
-             $inQryStr = rtrim($inQryStr, ',');
-             $inQryArr = explode(',', $inQryStr);
-         }
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
+        }
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
@@ -594,23 +524,15 @@ class ChapterReportController extends Controller
      */
     public function showRptDonationsView(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
-        $user = User::find($request->user()->id);
-        // Check if user is not found
-        if (! $user) {
-            return redirect()->route('home');
-        }
-
-        $corDetails = $user->Coordinators;
-        // Check if BoardDetails is not found for the user
-        if (! $corDetails) {
-            return redirect()->route('home');
-        }
-
+        $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
+        $corRegId = $corDetails['region_id'];
+        $positionId = $corDetails['position_id'];
+        $secPositionId = $corDetails['sec_position_id'];
+
         $chapterList = DB::table('chapters as ch')
-            ->select('ch.id', 'ch.state', 'ch.name', 'ch.sustaining_donation', 'ch.m2m_payment', 'ch.m2m_date', 'cd.conference_id as cor_confid', 'ch.sustaining_date',
+            ->select('ch.*', 'ch.id', 'ch.state', 'ch.name', 'ch.sustaining_donation', 'ch.m2m_payment', 'ch.m2m_date', 'cd.conference_id as cor_confid', 'ch.sustaining_date',
                 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.conference_id as cor_confid', 'cd.email as cor_email', 'bd.email as bor_email', 'st.state_short_name as statename')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
@@ -619,10 +541,34 @@ class ChapterReportController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->where('ch.id', $id)
             ->get();
+
         $maxDateLimit = Carbon::now()->format('Y-m-d');
         $minDateLimit = Carbon::now()->subYear()->format('Y-m-d');
         // $minDateLimit = '';
-        $data = ['chapterList' => $chapterList, 'maxDateLimit' => $maxDateLimit, 'minDateLimit' => $minDateLimit];
+
+        $corConfId = $chapterList[0]->conference;
+        $corId = $chapterList[0]->primary_coordinator_id;
+        $stateArr = DB::table('state')
+            ->select('state.*')
+            ->orderBy('id')
+            ->get();
+        $countryArr = DB::table('country')
+            ->select('country.*')
+            ->orderBy('id')
+            ->get();
+        $regionList = DB::table('region')
+            ->select('id', 'long_name')
+            ->where('conference_id', '=', $corConfId)
+            ->orderBy('long_name')
+            ->get();
+        $confList = DB::table('conference')
+            ->select('id', 'conference_name')
+            ->where('id', '>=', 0)
+            ->orderBy('conference_name')
+            ->get();
+
+        $data = ['chapterList' => $chapterList, 'maxDateLimit' => $maxDateLimit, 'minDateLimit' => $minDateLimit,
+            'regionList' => $regionList, 'confList' => $confList,'stateArr' => $stateArr, 'countryArr' => $countryArr];
 
         return view('chapreports.chaprptdonationsview')->with($data);
     }
@@ -634,6 +580,10 @@ class ChapterReportController extends Controller
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
+        $corConfId = $corDetails['conference_id'];
+        $corRegId = $corDetails['region_id'];
+        $positionId = $corDetails['position_id'];
+        $secPositionId = $corDetails['sec_position_id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         $primaryCordEmail = $request->input('ch_pc_email');
@@ -654,19 +604,20 @@ class ChapterReportController extends Controller
 
         DB::beginTransaction();
         try {
-            $chapter->m2m_date = $request->input('ch_m2m_date');
-            $chapter->m2m_payment = $request->input('ch_m2m_payment');
-            $chapter->sustaining_date = $request->input('ch_sustaining_date');
-            $chapter->sustaining_donation = $request->input('ch_sustaining_donation');
+            $chapter->m2m_date = $request->input('M2MPaymentDate');
+            $chapter->m2m_payment = $request->input('M2MPayment');
+            $chapter->sustaining_date = $request->input('SustainingPaymentDate');
+            $chapter->sustaining_donation = $request->input('SustainingPayment');
             $chapter->last_updated_by = $lastUpdatedBy;
             $chapter->last_updated_date = date('Y-m-d H:i:s');
             $chapter->save();
+
             if ($request->input('ch_thanks') == 'on') {
                 $mailData = [
                     'chapterName' => $request->input('ch_name'),
                     'chapterState' => $request->input('ch_state'),
                     'chapterPreEmail' => $request->input('ch_pre_email'),
-                    'chapterAmount' => $request->input('ch_m2m_payment'),
+                    'chapterAmount' => $request->input('M2MPayment'),
                     'cordFname' => $request->input('ch_pc_fname'),
                     'cordLname' => $request->input('ch_pc_lname'),
                     'cordConf' => $request->input('ch_pc_confid'),
@@ -683,7 +634,7 @@ class ChapterReportController extends Controller
                     'chapterName' => $request->input('ch_name'),
                     'chapterState' => $request->input('ch_state'),
                     'chapterPreEmail' => $request->input('ch_pre_email'),
-                    'chapterTotal' => $request->input('ch_sustaining_donation'),
+                    'chapterTotal' => $request->input('SustainingPayment'),
                     'cordFname' => $request->input('ch_pc_fname'),
                     'cordLname' => $request->input('ch_pc_lname'),
                     'cordConf' => $request->input('ch_pc_confid'),
@@ -713,13 +664,10 @@ class ChapterReportController extends Controller
      */
     public function showRptSocialMedia(Request $request): View
     {
-        //Get Coordinators Details
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
 
@@ -727,19 +675,10 @@ class ChapterReportController extends Controller
          $conditions = getPositionConditions($positionId, $secPositionId);
 
          if ($conditions['coordinatorCondition']) {
-             //Get Coordinator Reporting Tree
-                 $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                     ->select('crt.id')
-                     ->where($sqlLayerId, '=', $corId)
-                     ->get();
-
-             $inQryStr = '';
-             foreach ($reportIdList as $key => $val) {
-                 $inQryStr .= $val->id.',';
-             }
-             $inQryStr = rtrim($inQryStr, ',');
-             $inQryArr = explode(',', $inQryStr);
-         }
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
+        }
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
@@ -778,13 +717,10 @@ class ChapterReportController extends Controller
     public function showRptChapterCoordinators(Request $request): View
     {
         try {
-            //Get Coordinators Details
             $corDetails = User::find($request->user()->id)->Coordinators;
             $corId = $corDetails['id'];
             $corConfId = $corDetails['conference_id'];
             $corRegId = $corDetails['region_id'];
-            $corlayerId = $corDetails['layer_id'];
-            $sqlLayerId = 'crt.layer'.$corlayerId;
             $positionId = $corDetails['position_id'];
             $secPositionId = $corDetails['sec_position_id'];
             $request->session()->put('positionid', $positionId);
@@ -794,18 +730,9 @@ class ChapterReportController extends Controller
             $conditions = getPositionConditions($positionId, $secPositionId);
 
             if ($conditions['coordinatorCondition']) {
-                //Get Coordinator Reporting Tree
-                    $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                        ->select('crt.id')
-                        ->where($sqlLayerId, '=', $corId)
-                        ->get();
-
-                $inQryStr = '';
-                foreach ($reportIdList as $key => $val) {
-                    $inQryStr .= $val->id.',';
-                }
-                $inQryStr = rtrim($inQryStr, ',');
-                $inQryArr = explode(',', $inQryStr);
+                // Load Reporting Tree
+                $coordinatorData = $this->userController->loadReportingTree($corId);
+                $inQryArr = $coordinatorData['inQryArr'];
             }
 
             $baseQuery = DB::table('chapters')
@@ -850,5 +777,74 @@ class ChapterReportController extends Controller
             echo $e->getMessage();
         }
     }
+
+
+
+
+
+    public function viewChaperReports(Request $request): View
+    {
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
+        $corConfId = $corDetails['conference_id'];
+        $corRegId = $corDetails['region_id'];
+        $positionId = $corDetails['position_id'];
+        $secPositionId = $corDetails['sec_position_id'];
+        $request->session()->put('positionid', $positionId);
+        $request->session()->put('secpositionid', $secPositionId);
+        $request->session()->put('corconfid', $corConfId);
+        $request->session()->put('corregid', $corRegId);
+
+         // Get the conditions
+         $conditions = getPositionConditions($positionId, $secPositionId);
+
+         if ($conditions['coordinatorCondition']) {
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
+        }
+
+        $status = [4, 5, 6];
+
+        $baseQuery = DB::table('chapters')
+            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
+                'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
+            ->where('chapters.is_active', '=', '1')
+            ->where('bd.board_position_id', '=', '1')
+            ->whereIn('chapters.status', $status);
+
+            if ($conditions['founderCondition']) {
+                $baseQuery;
+        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+            $baseQuery->where('chapters.conference', '=', $corConfId);
+        } elseif ($conditions['regionalCoordinatorCondition']) {
+            $baseQuery->where('chapters.region', '=', $corRegId);
+        } else {
+            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
+        }
+
+        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
+            $checkBoxStatus = 'checked';
+            $baseQuery->where('chapters.primary_coordinator_id', '=', $corId)
+                ->orderBy('st.state_short_name')
+                ->orderBy('chapters.name');
+        } else {
+            $checkBoxStatus = '';
+            $baseQuery->orderByDesc('st.state_short_name')
+                ->orderByDesc('chapters.name');
+        }
+
+        $chapterList = $baseQuery->get();
+
+        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $corId];
+
+        return view('chapreports.view')->with($data);
+    }
+
 
 }

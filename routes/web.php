@@ -52,20 +52,11 @@ Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('
 Route::get('/checkemail/{email}', [UserController::class, 'checkEmail'])->name('checkemail');
 Route::post('/checkpassword', [UserController::class, 'checkCurrentPassword'])->name('checkpassword');
 Route::put('/updatepassword', [UserController::class, 'updatePassword'])->name('updatepassword');
-Route::get('/load-coord-email/{corId}', [UserController::class, 'loadCoordEmail'])->name('load.coord.email');
 Route::get('/load-email-details/{chId}', [UserController::class, 'loadEmailDetails'])->name('load.email.details');
 Route::get('/load-coordinator-list/{id}', [UserController::class, 'loadCoordinatorList'])->name('load.coordinator.list');
-Route::get('/load-conference-coord/{chConf}/{chPcid}', [UserController::class, 'loadConferenceCoord'])->name('load.conference.coord');
-Route::get('/load-user/{user_id}', [UserController::class, 'loadUser'])->name('load.user');
-
-// Route::put('/board/password', [BoardController::class, 'updatePassword'])->name('board.updatepassword');
-// Route::post('/board/check-password', [BoardController::class, 'checkCurrentPassword'])->name('board.checkpassword');
-// Route::put('/coordinator/password', [CoordinatorController::class, 'updatePassword'])->name('coordinator.updatepassword');
-// Route::post('/coordinator/check-password', [CoordinatorController::class, 'checkCurrentPassword'])->name('coordinator.checkpassword');
-// Route::post('/chapter/password', [ChapterController::class, 'updatePassword'])->name('chapter.updatepassword');
-// Route::post('/chapter/resetpswd', [ChapterController::class, 'updateChapterResetPassword'])->name('chapter.resetpswd');
-// Route::post('/chapter/resetpassword', [ChapterController::class, 'updateResetPassword'])->name('chapter.resetpassword');
-// Route::get('/checkemail/{id}', [ChapterController::class, 'checkEmail'])->name('check.email');
+// Route::get('/load-coord-email/{corId}', [UserController::class, 'loadCoordEmail'])->name('load.coord.email');
+// Route::get('/load-conference-coord/{chConf}/{chPcid}', [UserController::class, 'loadConferenceCoord'])->name('load.conference.coord');
+// Route::get('/load-user/{user_id}', [UserController::class, 'loadUser'])->name('load.user');
 
 // Error Log Routes...
 Route::get('admin/logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index'])->name('logs');
@@ -98,24 +89,24 @@ Route::post('/admin/updateeoychapter', [AdminController::class, 'updateEOYChapte
 Route::get('/admin/reregdate', [AdminController::class, 'showReRegDate'])->name('admin.reregdate');
 Route::get('/admin/reregdate/{id}', [AdminController::class, 'EditReRegDate'])->name('admin.editreregdate');
 Route::post('/admin/updatereregdate/{id}', [AdminController::class, 'UpdateReRegDate'])->name('admin.updatereregdate');
-Route::get('/admin/bugs', [AdminController::class, 'showBugs'])->name('admin.bugs');
-Route::post('/admin/addbugs', [AdminController::class, 'addBugs'])->name('admin.addbugs');
-Route::post('/admin/updatebugs/{id}', [AdminController::class, 'updateBugs'])->name('admin.updatebugs');
-Route::get('/admin/downloads', [AdminController::class, 'showDownloads'])->name('admin.downloads');
-Route::get('/admin/resources', [AdminController::class, 'showResources'])->name('admin.resources');
-Route::post('/admin/addresources', [AdminController::class, 'addResources'])->name('admin.addresources');
-Route::post('/admin/updateresources/{id}', [AdminController::class, 'updateResources'])->name('admin.updateresources');
-Route::get('/admin/toolkit', [AdminController::class, 'showToolkit'])->name('admin.toolkit');
-Route::post('/admin/addtoolkit', [AdminController::class, 'addToolkit'])->name('admin.addtoolkit');
-Route::post('/admin/updatetoolkit/{id}', [AdminController::class, 'updateToolkit'])->name('admin.updatetoolkit');
+Route::get('/resources/bugs', [AdminController::class, 'showBugs'])->name('admin.bugs');
+Route::post('/resources/addbugs', [AdminController::class, 'addBugs'])->name('admin.addbugs');
+Route::post('/resources/updatebugs/{id}', [AdminController::class, 'updateBugs'])->name('admin.updatebugs');
+Route::get('/resources/downloads', [AdminController::class, 'showDownloads'])->name('admin.downloads');
+Route::get('/resources/resources', [AdminController::class, 'showResources'])->name('admin.resources');
+Route::post('/resources/addresources', [AdminController::class, 'addResources'])->name('admin.addresources');
+Route::post('/resources/updateresources/{id}', [AdminController::class, 'updateResources'])->name('admin.updateresources');
+Route::get('/resources/toolkit', [AdminController::class, 'showToolkit'])->name('admin.toolkit');
+Route::post('/resources/addtoolkit', [AdminController::class, 'addToolkit'])->name('admin.addtoolkit');
+Route::post('/resources/updatetoolkit/{id}', [AdminController::class, 'updateToolkit'])->name('admin.updatetoolkit');
 Route::get('/admin/googledrive', [AdminController::class, 'showGoogleDrive'])->name('admin.googledrive');
 Route::post('/admin/updategoogledrive', [AdminController::class, 'updateGoogleDrive'])->name('admin.updategoogledrive');
-Route::get('/adminreports/mailqueue', [AdminController::class, 'showMailQueue'])->name('admin.mailqueue');
 Route::get('/adminreports/duplicateuser', [AdminController::class, 'showDuplicate'])->name('admin.duplicateuser');
 Route::get('/adminreports/duplicateboardid', [AdminController::class, 'showDuplicateId'])->name('admin.duplicateboardid');
 Route::get('/adminreports/multipleboard', [AdminController::class, 'showMultiple'])->name('admin.multipleboard');
 Route::get('/adminreports/nopresident', [AdminController::class, 'showNoPresident'])->name('admin.nopresident');
 Route::get('/adminreports/outgoingboard', [AdminController::class, 'showOutgoingBoard'])->name('admin.outgoingboard');
+Route::get('/adminreports/mailqueue', [AdminController::class, 'showMailQueue'])->name('admin.mailqueue');
 // Route::post('/admin/eoy/update/{id}', [AdminController::class, 'updateEOY'])->name('admin.eoyupdate');
 // Route::post('/adminreports/updateoutgoingboard', [AdminController::class, 'updateOutgoingBoard'])->name('admin.updateoutgoingboard');
 
@@ -303,3 +294,11 @@ Route::get('/board/resources', [BoardController::class, 'showResources'])->name(
 // Route::get('/boardlist', [BoardListController::class, 'index'])->name('boardlist.index');
 // Route::get('/boardlist/{id}', [BoardListController::class, 'show'])->name('boardlist.show');
 // Add routes for other methods as needed
+
+Route::get('/chapterdetails/{id}', [ChapterController::class, 'viewChapterDetails'])->name('chapters.view');
+Route::get('/chapterdetailsedit/{id}', [ChapterController::class, 'editChapterDetails'])->name('chapters.edit');
+Route::post('/chapterdetailsupdate/{id}', [ChapterController::class, 'updateChapterDetails'])->name('chapters.update');
+Route::post('/chapter/updateEIN/{id}', [ChapterController::class, 'updateEIN'])->name('chapters.updateein');
+Route::get('/chapterreports', [ChapterReportController::class, 'viewChaperReports'])->name('chapreports.view');
+
+

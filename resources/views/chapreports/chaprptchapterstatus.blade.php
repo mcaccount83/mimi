@@ -5,7 +5,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Chapter Status Report</h1>
+          <h1>Chapter Reports</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -24,7 +24,21 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">Report of Chapter Status</h3>
+                <div class="dropdown">
+                    <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Chapter Status Report
+                    </h3>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="/chapterreports/chapterstatus">Chapter Status Report</a>
+                        <a class="dropdown-item" href="/chapterreports/einstatus">EIN Status Report</a>
+                        <a class="dropdown-item" href="/chapterreports/newchapters">New Chapter Report</a>
+                        <a class="dropdown-item" href="/chapterreports/largechapters">Large Chapter Report</a>
+                        <a class="dropdown-item" href="/chapterreports/probation">Chapter Probation Report</a>
+                        <a class="dropdown-item" href="/chapterreports/donations">Chapter Donation Report</a>
+                        <a class="dropdown-item" href="/chapterreports/socialmedia">Social Media Report</a>
+                        <a class="dropdown-item" href="/chapterreports/coordinators">Chapter Coordinators Report</a>
+                    </div>
+                </div>
             </div>
             <!-- /.card-header -->
         <div class="card-body">
@@ -42,7 +56,7 @@
                 <tbody>
                     @foreach($chapterList as $list)
                         <tr>
-                            <td><center><a href="{{ url("/chapter/edit/{$list->id}") }}"><i class="fas fa-edit"></i></a></center></td>
+                            <td class="text-center align-middle"><a href="{{ url("/chapter/chapterview/{$list->id}") }}"><i class="fas fa-edit"></i></a></td>
                             <td>
                                 @if ($list->reg != "None")
                                     {{ $list->conf }} / {{ $list->reg }}
@@ -71,15 +85,13 @@
                     @endforeach
                 </tbody>
                 </table>
-				 <div class="radio-chk labelcheck">
-              <div class="col-sm-6 col-xs-12">
-                <div class="form-group">
-                    <label style="display: block;"><input type="checkbox" name="showPrimary" id="showPrimary" class="ios-switch green bigswitch" {{$checkBoxStatus}} onchange="showPrimary()" /><div><div></div></div>
-                  </label>
-                  <span> Only show chapters 'Not Ok'</span>
+			   <div class="col-sm-12">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
+                    <label class="custom-control-label" for="showPrimary">Only show chapters 'Not Ok'</label>
                 </div>
-              </div>
-              </div>
+            </div>
+
             </div>
            </div>
           <!-- /.box -->
@@ -94,7 +106,7 @@
 @section('customscript')
 <script>
     function showPrimary() {
-    var base_url = '{{ url("/reports/chapterstatus") }}';
+    var base_url = '{{ url("/chapterreports/chapterstatus") }}';
 
     if ($("#showPrimary").prop("checked") == true) {
         window.location.href = base_url + '?check=yes';
@@ -102,6 +114,20 @@
         window.location.href = base_url;
     }
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    const currentPath = window.location.pathname;
+
+    dropdownItems.forEach(item => {
+        // Check if the item's href matches the current path
+        if (item.getAttribute("href") === currentPath) {
+            item.classList.add("active");
+        }
+    });
+});
+
+
 
 </script>
 @endsection

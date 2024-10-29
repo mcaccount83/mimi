@@ -5,12 +5,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Volunteer Utilization Report</h1>
+          <h1>Coordinator Reports</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">Volunteer Utilization Report</li>
+            <li class="breadcrumb-item active">Coordinator Utilization Report</li>
           </ol>
         </div>
       </div>
@@ -24,7 +24,18 @@
             <div class="col-12">
               <div class="card">
                 <div class="card-header">
-                  <h3 class="card-title">Report of Volunteer Utilization</h3>
+                    <div class="dropdown">
+                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Coordinator Utilization Report
+                        </h3>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="/coordreports/volunteerutilization">Coordinator Utilization Report</a>
+                            {{-- <a class="dropdown-item" href="/coordreports/coordinatortodo">Coordinator ToDo List</a> --}}
+                            <a class="dropdown-item" href="/coordreports/appreciation">Coordinator Appreciation Report</a>
+                            <a class="dropdown-item" href="/coordreports/birthdays">Coordinator Birthday Report</a>
+                            <a class="dropdown-item" href="/coordreports/reportingtree">Coordinator Reporting Tree</a>
+                        </div>
+                    </div>
                 </div>
                 <!-- /.card-header -->
             <div class="card-body">
@@ -45,8 +56,7 @@
                 <tbody>
                 @foreach($coordinatorList as $list)
                   <tr>
-                    <td class="text-center align-middle">
-                        <a href="<?php echo url("/coordinator/edit/{$list->cor_id}") ?>"><i class="fas fa-edit"></i></a></td>
+                    <td class="text-center align-middle"><a href="{{ url("/coordinator/coordinatorview/{$list->cor_id}") }}"><i class="fas fa-edit"></i></a></td>
                         <td>
                             @if ($list->reg != "None")
                                 {{ $list->conf }} / {{ $list->reg }}
@@ -76,4 +86,21 @@
 
     <!-- /.content -->
 
+@endsection
+@section('customscript')
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    const currentPath = window.location.pathname;
+
+    dropdownItems.forEach(item => {
+        // Check if the item's href matches the current path
+        if (item.getAttribute("href") === currentPath) {
+            item.classList.add("active");
+        }
+    });
+});
+
+
+</script>
 @endsection

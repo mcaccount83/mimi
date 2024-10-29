@@ -5,12 +5,12 @@
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1>Chapter List</h1>
+              <h1>Chapters</h1>
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
                 <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li class="breadcrumb-item active">Chapter List</li>
+                <li class="breadcrumb-item active">Active Chapter List</li>
               </ol>
             </div>
           </div>
@@ -24,7 +24,21 @@
             <div class="col-12">
               <div class="card">
                 <div class="card-header">
-                  <h3 class="card-title">List of Chapters</h3>
+                    <div class="dropdown">
+                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Active Chapter List
+                        </h3>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            @if ($coordinatorCondition)
+                                <a class="dropdown-item" href="/chapter/chapterlist">Active Chapter List</a>
+                                <a class="dropdown-item" href="/chapter/zapped">Zapped Chapter List</a>
+                            @endif
+                            @if (($einCondition) || ($adminReportCondition))
+                                <a class="dropdown-item" href="/international/chapter">International Active Chapter List</a>
+                                <a class="dropdown-item" href="/international/chapterzapped">International Zapped Chapter List</a>
+                            @endif
+                        </div>
+                    </div>
                 </div>
                 <!-- /.card-header -->
             <div class="card-body">
@@ -48,7 +62,7 @@
                     @foreach($chapterList as $list)
                         <tr id="chapter-{{ $list->id }}">
                             <td class="text-center align-middle">
-                                <a href="{{ url("/chapter/chapterview/{$list->id}") }}"><i class="far fa-edit"></i></a>
+                                <a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a>
                             </td>
                             <td class="text-center align-middle">
                                 <a href="mailto:" class="email-link" data-chapter="{{ $list->id }}">
@@ -113,6 +127,18 @@
 
 @section('customscript')
 <script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    const currentPath = window.location.pathname;
+
+    dropdownItems.forEach(item => {
+        // Check if the item's href matches the current path
+        if (item.getAttribute("href") === currentPath) {
+            item.classList.add("active");
+        }
+    });
+});
+
     document.addEventListener('DOMContentLoaded', function() {
         // Loop through each chapter and fetch the email details
         document.querySelectorAll('.email-link').forEach(function(emailLink) {
@@ -135,7 +161,7 @@
     });
 
 function showPrimary() {
-var base_url = '{{ url("/chapter/chaplist") }}';
+var base_url = '{{ url("/chapter/chapterlist") }}';
 
     if ($("#showPrimary").prop("checked") == true) {
         window.location.href = base_url + '?check=yes';

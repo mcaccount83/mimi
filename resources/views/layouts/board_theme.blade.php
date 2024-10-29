@@ -111,8 +111,8 @@
       @if ($id) <!-- Check if $id is not null -->
           <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
               <li class="nav-item">
-                  <a class="nav-link" href="{{ route('chapters.chapview', ['id' => $id]) }}">
-                      <span class="no-icon">Back to Coordinator Dashboard / Chapter Details</span>
+                  <a class="nav-link" href="{{ route('chapters.view', ['id' => $id]) }}">
+                      <span class="no-icon">Back to Coordinator View / Chapter Details</span>
                   </a>
               </li>
           </ul>

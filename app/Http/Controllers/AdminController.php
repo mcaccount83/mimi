@@ -571,8 +571,10 @@ class AdminController extends Controller
         }
     }
 
-    /**
-     * mail in queue
+
+
+      /**
+     * error logs
      */
     public function showMailQueue(): View
     {
@@ -583,6 +585,7 @@ class AdminController extends Controller
 
         return view('admin.mailqueue')->with($data);
     }
+
 
     /**
      * List of Duplicate Users

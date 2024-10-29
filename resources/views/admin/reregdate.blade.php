@@ -6,12 +6,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Chapter Re-Registration Dates Report</h1>
+          <h1>Admin Tasks/Reports</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">Chapter Re-Registration Dates Report</li>
+            <li class="breadcrumb-item active">Re-Registration Renewal Dates</li>
           </ol>
         </div>
       </div>
@@ -44,9 +44,25 @@
         <div class="row">
             <div class="col-12">
                 <div class="card card-outline card-primary">
-                <div class="card-header">
-                    <h3 class="card-title">Report of Chapter Re-Registration Dates</h3>
-                </div>
+                    <div class="card-header">
+                        <div class="dropdown">
+                            <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Re-Registration Renewal Dates
+                            </h3>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="/admin/reregdate">Re-Registration Renewal Dates</a>
+                                  <a class="dropdown-item" href="/admin/eoy">End of Year Procedures</a>
+                                  <a class="dropdown-item" href="/adminreports/duplicateuser">Duplicate Users</a>
+                                  <a class="dropdown-item" href="/adminreports/duplicateboardid">Duplicate Board Details</a>
+                                  <a class="dropdown-item" href="/adminreports/nopresident">Chapters with No President</a>
+                                  <a class="dropdown-item" href="/adminreports/outgoingboard">Outgoing Board Members</a>
+                                  <a class="dropdown-item" href="/admin/googledrive">Google Drive Settings</a>
+                                  <a class="dropdown-item" href="/admin/jobs">Outgoing Mail Queue</a>
+                                  <a class="dropdown-item" href="/admin/sentemails" target="_blank">Sent Mail</a>
+                                  <a class="dropdown-item" href="/admin/logs" target="_blank">System Error Logs</a>
+                              </div>
+                        </div>
+                    </div>
                  <!-- /.card-header -->
     <div class="card-body">
         <table id="chapterlist" class="table table-sm table-hover" >
@@ -64,9 +80,7 @@
                 <tbody>
                     @foreach($reChapterList as $list)
                   <tr>
-                        <td class="text-center align-middle">
-                            <a href="<?php echo url("/admin/reregdate/{$list->id}") ?>"><i class="fas fa-edit"></i></a>
-                        </td>
+                        <td class="text-center align-middle"><a href="{{ url("/admin/reregdate/{$list->id}") }}"><i class="fas fa-edit"></i></a></td>
                         <td>
                             @if ($list->reg != "None")
                                 {{ $list->conf }} / {{ $list->reg }}
@@ -104,6 +118,16 @@
 
 @section('customscript')
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    const currentPath = window.location.pathname;
 
+    dropdownItems.forEach(item => {
+        // Check if the item's href matches the current path
+        if (item.getAttribute("href") === currentPath) {
+            item.classList.add("active");
+        }
+    });
+});
 </script>
 @endsection

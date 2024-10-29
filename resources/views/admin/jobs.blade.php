@@ -3,17 +3,62 @@
 @section('content')
 
 <head>
-    <meta charset="utf-8">
+    {{-- <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="google" content="notranslate">
+    <meta name="google" content="notranslate"> --}}
     @if(config('queue-monitor.ui.refresh_interval'))
         <meta http-equiv="refresh" content="{{ config('queue-monitor.ui.refresh_interval') }}">
     @endif
-    <title>Queue Monitor</title>
+    {{-- <title>Queue Monitor</title> --}}
     <link href="{{ config('settings.base_url') }}public/vendor/queue-monitor/app.css" rel="stylesheet">
 </head>
 
-<body class="font-sans pb-64 bg-white dark:bg-gray-800 dark:text-white">
+ <!-- Content Header (Page header) -->
+ <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Admin Tasks/Reports</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="breadcrumb-item active">Outgoing Mail Queue</li>
+          </ol>
+        </div>
+      </div>
+    </div><!-- /.container-fluid -->
+  </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-outline card-primary">
+                        <div class="card-header">
+                            <div class="dropdown">
+                                <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Outgoing Mail Queue
+                                </h3>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="/admin/reregdate">Re-Registration Renewal Dates</a>
+                                      <a class="dropdown-item" href="/admin/eoy">End of Year Procedures</a>
+                                      <a class="dropdown-item" href="/adminreports/duplicateuser">Duplicate Users</a>
+                                      <a class="dropdown-item" href="/adminreports/duplicateboardid">Duplicate Board Details</a>
+                                      <a class="dropdown-item" href="/adminreports/nopresident">Chapters with No President</a>
+                                      <a class="dropdown-item" href="/adminreports/outgoingboard">Outgoing Board Members</a>
+                                      <a class="dropdown-item" href="/admin/googledrive">Google Drive Settings</a>
+                                      <a class="dropdown-item" href="/admin/jobs">Outgoing Mail Queue</a>
+                                      <a class="dropdown-item" href="/admin/sentemails" target="_blank">Sent Mail</a>
+                                      <a class="dropdown-item" href="/admin/logs" target="_blank">System Error Logs</a>
+                                  </div>
+                            </div>
+                        </div>
+                     <!-- /.card-header -->
+        <div class="card-body">
+
+{{-- <body class="font-sans pb-64 bg-white dark:bg-gray-800 dark:text-white"> --}}
 
     {{-- <nav class="flex items-center py-4 border-b border-gray-100 dark:border-gray-600">
         <h1 class="px-4 w-full font-semibold text-lg">
@@ -21,12 +66,12 @@
         </h1>
     </nav> --}}
 
-    <main class="flex">
+    {{-- <main class="flex"> --}}
 
-            <article class="w-full p-4">
-                <h1 class="px-4 w-full font-semibold text-lg mb-4">
+            {{-- <article class="w-full p-4"> --}}
+                {{-- <h1 class="px-4 w-full font-semibold text-lg mb-4">
                     Queue Monitor
-                </h1>
+                </h1> --}}
             <table class="w-full rounded-md whitespace-no-wrap rounded-md border dark:border-gray-600 border-separate border-spacing-0 mb-4">
                 <thead class="rounded-t-md">
 
@@ -43,7 +88,6 @@
 
                     @forelse($pendingJobs as $job)
                         <tr class="font-sm leading-relaxed">
-
                             <td class="p-4 text-gray-800 dark:text-gray-300 text-sm leading-5 border-b border-gray-200 dark:border-gray-600">
                                 <div class="inline-flex flex-1 px-2 text-xs font-medium leading-5 rounded-full bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-50">
                                     Queued
@@ -94,6 +138,7 @@
                         @endforelse
 
                 </tbody>
+            </table>
 
         {{-- </article>
 
@@ -103,7 +148,7 @@
             ])
 
             @if(config('queue-monitor.ui.allow_purge'))
-                {{-- <div class="mt-12"> --}}
+                <div class="mt-2">
                     <form action="{{ route('queue-monitor::purge') }}" method="post">
                         @csrf
                         @method('delete')
@@ -111,14 +156,32 @@
                             @lang('Delete all processed entries')
                         </button>
                     </form>
-                {{-- </div> --}}
+                </div>
             @endif
-        </article>
 
-    </main>
 
-</body>
+        {{-- </article> --}}
 
+    {{-- </main> --}}
+
+{{-- </body> --}}
+
+@endsection
+@section('customscript')
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    const currentPath = window.location.pathname;
+
+    dropdownItems.forEach(item => {
+        // Check if the item's href matches the current path
+        if (item.getAttribute("href") === currentPath) {
+            item.classList.add("active");
+        }
+    });
+});
+
+</script>
 @endsection
 
 

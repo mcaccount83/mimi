@@ -5,12 +5,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Boundary Issues Report</h1>
+          <h1>End of Year Reports</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">Boundary Issues Report</li>
+            <li class="breadcrumb-item active">Boundary Issues</li>
           </ol>
         </div>
       </div>
@@ -24,7 +24,20 @@
             <div class="col-12">
               <div class="card">
                 <div class="card-header">
-                  <h3 class="card-title">Report of Boundary Issues</h3>
+                    <div class="dropdown">
+                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Boundary Issues
+                        </h3>
+                        <span class="ml-2">Chapters that were added after June 30, <?php echo date('Y');?> will not be listed</span>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="/eoy/status">Report Status</a>
+                            <a class="dropdown-item" href="/eoy/boardreport">Board Election Reports</a>
+                            <a class="dropdown-item" href="/eoy/financialreport">Financial Reports</a>
+                            <a class="dropdown-item" href="/eoy/attachments">Financial Report Attachments</a>
+                            <a class="dropdown-item" href="/eoy/boundaries">Boundary Issues</a>
+                            <a class="dropdown-item" href="/eoy/awards">Chapter Awards</a>
+                        </div>
+                    </div>
                 </div>
                 <!-- /.card-header -->
             <div class="card-body">
@@ -44,7 +57,7 @@
                 @if($list->boundary_issue_notes != '')
                   <tr>
 						<td class="text-center align-middle">
-                            <a href="<?php echo url("/eoy/boundariesview/{$list->id}") ?>"><i class="fas fa-edit"></i></a></td>
+                            <a href="{{ url("/eoy/boundariesview/{$list->id}") }}"><i class="fas fa-edit"></i></a></td>
 						<td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
                         <td>{{ $list->boundary_issue_notes}}</td>
@@ -81,7 +94,19 @@
 @endsection
 @section('customscript')
 <script>
-     function showPrimary() {
+document.addEventListener("DOMContentLoaded", function() {
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    const currentPath = window.location.pathname;
+
+    dropdownItems.forEach(item => {
+        // Check if the item's href matches the current path
+        if (item.getAttribute("href") === currentPath) {
+            item.classList.add("active");
+        }
+    });
+});
+
+function showPrimary() {
     var base_url = '{{ url("/eoy/boundaries") }}';
 
     if ($("#showPrimary").prop("checked") == true) {
@@ -90,7 +115,5 @@
         window.location.href = base_url;
     }
 }
-
-
 </script>
 @endsection

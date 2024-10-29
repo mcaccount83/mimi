@@ -19,8 +19,6 @@
 
 
     <!-- Main content -->
-    <form method="POST" action='{{ route("chapters.updatechapzapped",$chapterList[0]->id) }}'>
-        @csrf
         <section class="content">
             <div class="container-fluid">
             <div class="row">
@@ -36,58 +34,35 @@
                             <div class="col-sm-4 ">
                         <div class="form-group">
                             <label>MOMS Club of</label> <span class="field-required">*</span>
-                            <input type="text" name="ch_name" class="form-control"  required value="{{ $chapterList[0]->name }}" onchange="PreviousNameReminder()">
+                            <input type="text" name="ch_name" class="form-control"  required value="{{ $chapterList[0]->name }}" >
                         </div>
                         </div>
                         <!-- /.form group -->
                             <div class="col-sm-4 ">
                         <div class="form-group">
                             <label>State</label> <span class="field-required">*</span>
-                            <select id="ch_state" name="ch_state" class="form-control select2-bs4" style="width: 100%;" required >
-                            <option value="">Select State</option>
-                                @foreach($stateArr as $state)
-                                <option value="{{$state->id}}" {{$chapterList[0]->state == $state->id  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
-                                @endforeach
-                            </select>
-                            <input type="hidden" name="ch_hid_state" value="{{ $chapterList[0]->state }}">
+                            <input type="text" name="ch_state" class="form-control"  required value="{{ $chapterList[0]->statename }}" >
                         </div>
                         </div>
                         <!-- /.form group -->
                             <div class="col-sm-4 ">
                         <div class="form-group">
                             <label>Country</label> <span class="field-required">*</span>
-                            <select id="ch_country" name="ch_country" class="form-control select2-bs4" style="width: 100%;" required >
-                            <option value="">Select Country</option>
-                                @foreach($countryArr as $con)
-                                <option value="{{$con->short_name}}" {{$chapterList[0]->country == $con->short_name  ? 'selected' : ''}}>{{$con->name}}</option>
-                                @endforeach
-                            </select>
-                            <input type="hidden" name="ch_hid_country" value="{{ $chapterList[0]->country }}">
+                            <input type="text" name="ch_ountry" class="form-control"  required value="{{ $chapterList[0]->countryname }}" >
                         </div>
                         </div>
                         <!-- /.form group -->
                             <div class="col-sm-4 ">
                         <div class="form-group">
                             <label>Conference</label> <span class="field-required">*</span>
-                            <select id="ch_conference" name="ch_conference" class="form-control select2-bs4" style="width: 100%;" required disabled>
-                            <option value="">Select Conference</option>
-                                        @foreach($confList as $con)
-                                <option value="{{$con->id}}" {{$chapterList[0]->conference == $con->id  ? 'selected' : ''}} >{{$con->conference_name}} </option>
-                                @endforeach
-                                    </select>
+                            <input type="text" name="ch_conference" class="form-control"  required value="{{ $chapterList[0]->confname }}" >
                                     </div>
                                 </div>
                         <!-- /.form group -->
                             <div class="col-sm-4 ">
                         <div class="form-group">
                             <label>Region</label> <span class="field-required">*</span>
-                            <select id="ch_region" name="ch_region" class="form-control select2-bs4-bs4" style="width: 100%;" required >
-                            <option value="">Select Region</option>
-                                @foreach($regionList as $rl)
-                                <option value="{{$rl->id}}" {{$chapterList[0]->region == $rl->id  ? 'selected' : ''}} >{{$rl->long_name}} </option>
-                                @endforeach
-                            </select>
-                            <input type="hidden" name="ch_hid_region" value="{{ $chapterList[0]->region }}">
+                            <input type="text" name="ch_region" class="form-control"  required value="{{ $chapterList[0]->regname }}" >
                         </div>
                         </div>
                                 <!-- /.form group -->
@@ -100,27 +75,14 @@
                             <!-- /.form group -->
                                 <div class="col-sm-2 ">
                         <div class="form-group">
-                            <label>&nbsp;&nbsp;&nbsp;</label><br>
-                            @if(empty($chapterList[0]->ein_letter_path))
-                                <a class="btn bg-gradient-primary disabled" href="#" ><i class="fas fa-university"></i>&nbsp;&nbsp;&nbsp;No EIN Letter on File</i></a>
-                                        @else
-                                        <a class="btn bg-gradient-primary" href="{{ $chapterList[0]->ein_letter_path }}" target="blank"><i class="fas fa-university"></i>&nbsp;&nbsp;&nbsp;View/Download EIN Letter</a>
-                                        @endif
-                            <input type="hidden" id="ch_ein_letter_path" name="ch_ein_letter_path" class="form-control" value="{{ $chapterList[0]->ein_letter_path }}"  readonly>
+                                <a class="btn bg-gradient-primary disabled" id="ein_letter_path" name="ein_letter_path" href="#" ><i class="fas fa-university"></i>&nbsp;&nbsp;&nbsp;No EIN Letter on File</i></a>
                         </div>
                         </div>
                         <!-- /.form group -->
                             <div class="col-sm-4 ">
                         <div class="form-group">
                             <label>Status</label> <span class="field-required">*</span>
-                            <select id="ch_status" name="ch_status" class="form-control select2-bs4" style="width: 100%;" required >
-                            <option value="">Select Status</option>
-                            <option value="1" {{$chapterList[0]->status == 1  ? 'selected' : ''}}>Operating OK</option>
-                            <option value="4" {{$chapterList[0]->status == 4  ? 'selected' : ''}}>On Hold Do not Refer</option>
-                            <option value="5" {{$chapterList[0]->status == 5  ? 'selected' : ''}}>Probation</option>
-                            <option value="6" {{$chapterList[0]->status == 6  ? 'selected' : ''}}>Probation Do Not Refer</option>
-                            </select>
-                            <input type="hidden" name="ch_hid_status" value="{{ $chapterList[0]->status }}">
+                            <input type="text" name="ch_status" class="form-control"  value="{{ $probationStatusWords}}" >
                         </div>
                         </div>
                                         <!-- /.form group -->
@@ -150,22 +112,21 @@
                   <div class="col-sm-6">
                   <div class="form-group">
                     <label>First Name</label> <span class="field-required">*</span>
-                    <input type="text" name="ch_pre_fname" class="form-control " value="{{ $chapterList[0]->first_name }}"  required onkeypress="return isAlphanumeric(event)">
+                    <input type="text" name="ch_pre_fname" class="form-control " value="{{ $chapterList[0]->first_name }}"  required >
                   </div>
                   </div>
                   <!-- /.form group -->
                   <div class="col-sm-6 ">
                   <div class="form-group">
                     <label>Last Name</label> <span class="field-required">*</span>
-                    <input type="text" name="ch_pre_lname" class="form-control " value="{{ $chapterList[0]->last_name }}"  required onkeypress="return isAlphanumeric(event)">
+                    <input type="text" name="ch_pre_lname" class="form-control " value="{{ $chapterList[0]->last_name }}"  required >
                   </div>
                   </div>
                                 <!-- /.form group -->
                   <div class="col-sm-6 ">
                   <div class="form-group">
                     <label>Email</label> <span class="field-required">*</span>
-                    <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control " onblur="checkDuplicateEmail(this.value,this.id)" value="{{ $chapterList[0]->bd_email }}"  required >
-                    <input type="hidden" id="ch_pre_email_chk" value="{{ $chapterList[0]->bd_email }}">
+                    <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control "  value="{{ $chapterList[0]->bd_email }}"  required >
                   </div>
                   </div>
                   <!-- /.form group -->
@@ -187,33 +148,23 @@
                   <div class="col-sm-4 ">
                   <div class="form-group">
                     <label>City</label> <span class="field-required">*</span>
-                    <input type="text" name="ch_pre_city" class="form-control "  value="{{ $chapterList[0]->city }}" required onkeypress="return isAlphanumeric(event)">
+                    <input type="text" name="ch_pre_city" class="form-control "  value="{{ $chapterList[0]->city }}" required >
                   </div>
                   </div>
                   <!-- /.form group -->
                   <div class="col-sm-4 ">
                   <div class="form-group">
                     <label>State</label> <span class="field-required">*</span>
-                    <select name="ch_pre_state" class="form-control select2-bs4" style="width: 100%;" required >
-                    <option value="">Select State</option>
-                        @foreach($stateArr as $state)
-                          <option value="{{$state->state_short_name}}" {{$chapterList[0]->bd_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
-                        @endforeach
-                    </select>
+                    <input type="text" name="ch_state" class="form-control"  required value="{{ $chapterList[0]->bd_state }}" >
                   </div>
                   </div>
                   <!-- /.form group -->
-                  {{-- <div class="col-sm-4 ">
+                  <div class="col-sm-4 ">
                   <div class="form-group">
                     <label>Zip</label> <span class="field-required">*</span>
-                    <input type="text" name="ch_pre_zip" class="form-control " value="{{ $chapterList[0]->zip }}"  required onkeypress="return isNumber(event)">
+                    <input type="text" name="ch_pre_zip" class="form-control " value="{{ $chapterList[0]->zip }}"  required >
                   </div>
                   </div>
-
-                  <div class="card-body text-center">
-                    <p>This will reset password to default "TempPass4You" for this user only.</p>
-                    <button type="button" class="btn bg-gradient-primary" id="{{ $chapterList[0]->user_id }}" onclick="return updatePassword(this.id)"><i class="fas fa-redo-alt"></i>&nbsp;&nbsp;&nbsp;Reset Password</button>
-                  </div> --}}
                   </div>
                 </div>
 
@@ -226,7 +177,7 @@
                          <!-- /.form group -->
                   <div class="col-sm-12">
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" name="AVPVacant" id="AVPVacant" class="custom-control-input" {{$AVPDetails[0]->avp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
+                        <input type="checkbox" name="AVPVacant" id="AVPVacant" class="custom-control-input" {{$AVPDetails[0]->avp_fname == ''  ? 'checked' : ''}}  />
                         <label class="custom-control-label" for="AVPVacant">Vacant</label>
                     </div>
                     </div>
@@ -235,21 +186,21 @@
                   <div class="col-sm-6  avp-field">
                   <div class="form-group">
                     <label>First Name</label>
-                    <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control " value="{{$AVPDetails[0]->avp_fname != ''  ? $AVPDetails[0]->avp_fname : ''}}"  onkeypress="return isAlphanumeric(event)">
+                    <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control " value="{{$AVPDetails[0]->avp_fname != ''  ? $AVPDetails[0]->avp_fname : ''}}"  >
                   </div>
                   </div>
                   <!-- /.form group -->
                   <div class="col-sm-6  avp-field">
                   <div class="form-group">
                     <label>Last Name</label>
-                    <input type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control " value="{{$AVPDetails[0]->avp_lname != ''  ? $AVPDetails[0]->avp_lname : ''}}"  onkeypress="return isAlphanumeric(event)">
+                    <input type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control " value="{{$AVPDetails[0]->avp_lname != ''  ? $AVPDetails[0]->avp_lname : ''}}"  >
                   </div>
                   </div>
                   <!-- /.form group -->
                   <div class="col-sm-6  avp-field">
                   <div class="form-group">
                     <label>Email</label>
-                    <input type="email" name="ch_avp_email" id="ch_avp_email" class="form-control " onblur="checkDuplicateEmail(this.value,this.id)" value="{{$AVPDetails[0]->avp_email != ''  ? $AVPDetails[0]->avp_email : ''}}" >
+                    <input type="email" name="ch_avp_email" id="ch_avp_email" class="form-control "  value="{{$AVPDetails[0]->avp_email != ''  ? $AVPDetails[0]->avp_email : ''}}" >
                     <input type="hidden" id="ch_avp_email_chk" value="{{ $AVPDetails[0]->avp_email }}">
                   </div>
                   </div>
@@ -270,32 +221,23 @@
                   <div class="col-sm-4 avp-field">
                   <div class="form-group">
                     <label>City</label>
-                    <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control " value="{{$AVPDetails[0]->avp_city != ''  ? $AVPDetails[0]->avp_city : ''}}"  onkeypress="return isAlphanumeric(event)">
+                    <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control " value="{{$AVPDetails[0]->avp_city != ''  ? $AVPDetails[0]->avp_city : ''}}"  >
                   </div>
                   </div>
                   <!-- /.form group -->
                   <div class="col-sm-4  avp-field">
                   <div class="form-group">
                     <label>State</label>
-                    <select name="ch_avp_state" id="ch_avp_state" class="form-control select2-bs4" style="width: 100%;" >
-                    <option value="">Select State</option>
-                        @foreach($stateArr as $state)
-                          <option value="{{$state->state_short_name}}" {{$AVPDetails[0]->avp_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
-                        @endforeach
-                    </select>
+                    <input type="text" name="ch_avp_statename" id="ch_avp_statename" class="form-control " value="{{$AVPDetails[0]->avp_statename != ''  ? $AVPDetails[0]->avp_statename : ''}}"  >
                   </div>
                   </div>
                   <!-- /.form group -->
-                  {{-- <div class="col-sm-4 avp-field">
+                  <div class="col-sm-4 avp-field">
                   <div class="form-group">
                     <label>Zip</label>
-                    <input type="text" name="ch_avp_zip" id="ch_avp_zip"  class="form-control " value="{{$AVPDetails[0]->avp_zip != ''  ? $AVPDetails[0]->avp_zip : ''}}" onkeypress="return isNumber(event)">
+                    <input type="text" name="ch_avp_zip" id="ch_avp_zip"  class="form-control " value="{{$AVPDetails[0]->avp_zip != ''  ? $AVPDetails[0]->avp_zip : ''}}" >
                   </div>
                   </div>
-                  <div class="card-body text-center avp-field">
-                    <p>This will reset password to default "TempPass4You" for this user only.</p>
-                    <button type="button" class="btn bg-gradient-primary" id="{{ $AVPDetails[0]->user_id }}" onclick="return updatePassword(this.id)" {{$AVPDetails[0]->user_id == ''  ? 'disabled' : ''}} ><i class="fas fa-redo-alt"></i>&nbsp;&nbsp;&nbsp;Reset Password</button>
-                  </div> --}}
                   </div>
                 </div>
 
@@ -308,7 +250,7 @@
                          <!-- /.form group -->
                   <div class="col-sm-12">
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" name="MVPVacant" id="MVPVacant" class="custom-control-input" {{$MVPDetails[0]->mvp_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
+                        <input type="checkbox" name="MVPVacant" id="MVPVacant" class="custom-control-input" {{$MVPDetails[0]->mvp_fname == ''  ? 'checked' : ''}}  />
                         <label class="custom-control-label" for="MVPVacant">Vacant</label>
                     </div>
                     </div>
@@ -317,21 +259,21 @@
                   <div class="col-sm-6 mvp-field">
                   <div class="form-group">
                     <label>First Name</label>
-                    <input type="text" name="ch_mvp_fname" id="ch_mvp_fname"  class="form-control" value="{{$MVPDetails[0]->mvp_fname != ''  ? $MVPDetails[0]->mvp_fname : ''}}"  onkeypress="return isAlphanumeric(event)">
+                    <input type="text" name="ch_mvp_fname" id="ch_mvp_fname"  class="form-control" value="{{$MVPDetails[0]->mvp_fname != ''  ? $MVPDetails[0]->mvp_fname : ''}}"  >
                   </div>
                   </div>
                   <!-- /.form group -->
                   <div class="col-sm-6 mvp-field">
                   <div class="form-group">
                     <label>Last Name</label>
-                    <input type="text" name="ch_mvp_lname" id="ch_mvp_lname" class="form-control" value="{{$MVPDetails[0]->mvp_lname != ''  ? $MVPDetails[0]->mvp_lname : ''}}"  onkeypress="return isAlphanumeric(event)">
+                    <input type="text" name="ch_mvp_lname" id="ch_mvp_lname" class="form-control" value="{{$MVPDetails[0]->mvp_lname != ''  ? $MVPDetails[0]->mvp_lname : ''}}"  >
                   </div>
                   </div>
                   <!-- /.form group -->
                   <div class="col-sm-6 mvp-field">
                   <div class="form-group">
                     <label>Email</label>
-                    <input type="email" name="ch_mvp_email" id="ch_mvp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$MVPDetails[0]->mvp_email != ''  ? $MVPDetails[0]->mvp_email : ''}}" >
+                    <input type="email" name="ch_mvp_email" id="ch_mvp_email" class="form-control"  value="{{$MVPDetails[0]->mvp_email != ''  ? $MVPDetails[0]->mvp_email : ''}}" >
                     <input type="hidden" id="ch_mvp_email_chk" value="{{ $MVPDetails[0]->mvp_email }}">
                   </div>
                   </div>
@@ -352,32 +294,23 @@
                   <div class="col-sm-4 mvp-field">
                   <div class="form-group">
                     <label>City</label>
-                    <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control" value="{{$MVPDetails[0]->mvp_city != ''  ? $MVPDetails[0]->mvp_city : ''}}"  onkeypress="return isAlphanumeric(event)">
+                    <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control" value="{{$MVPDetails[0]->mvp_city != ''  ? $MVPDetails[0]->mvp_city : ''}}" >
                   </div>
                   </div>
                   <!-- /.form group -->
                   <div class="col-sm-4 mvp-field">
                   <div class="form-group">
                     <label>State</label>
-                    <select name="ch_mvp_state" id="ch_mvp_state" class="form-control select2-bs4" style="width: 100%;" >
-                    <option value="">Select State</option>
-                        @foreach($stateArr as $state)
-                          <option value="{{$state->state_short_name}}" {{$MVPDetails[0]->mvp_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
-                        @endforeach
-                    </select>
+                    <input type="text" name="ch_mvp_state" id="ch_mvp_state" class="form-control" value="{{$MVPDetails[0]->mvp_statename != ''  ? $MVPDetails[0]->mvp_statename : ''}}">
                   </div>
                   </div>
                   <!-- /.form group -->
-                  {{-- <div class="col-sm-4 mvp-field">
+                  <div class="col-sm-4 mvp-field">
                   <div class="form-group">
                     <label>Zip</label>
-                    <input type="text" name="ch_mvp_zip" id="ch_mvp_zip"  class="form-control" value="{{$MVPDetails[0]->mvp_zip != ''  ? $MVPDetails[0]->mvp_zip : ''}}" onkeypress="return isNumber(event)" >
+                    <input type="text" name="ch_mvp_zip" id="ch_mvp_zip"  class="form-control" value="{{$MVPDetails[0]->mvp_zip != ''  ? $MVPDetails[0]->mvp_zip : ''}}"  >
                   </div>
                   </div>
-                  <div class="card-body text-center mvp-field">
-                    <p>This will reset password to default "TempPass4You" for this user only.</p>
-                    <button type="button" class="btn bg-gradient-primary" id="{{ $MVPDetails[0]->user_id }}" onclick="return updatePassword(this.id)" {{$MVPDetails[0]->user_id == ''  ? 'disabled' : ''}} ><i class="fas fa-redo-alt" ></i>&nbsp; Reset Password</button>
-                  </div> --}}
                   </div>
                 </div>
 
@@ -390,7 +323,7 @@
                         <!-- /.form group -->
                   <div class="col-sm-12">
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input" {{$TRSDetails[0]->trs_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
+                        <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input" {{$TRSDetails[0]->trs_fname == ''  ? 'checked' : ''}}  />
                         <label class="custom-control-label" for="TreasVacant">Vacant</label>
                     </div>
                     </div>
@@ -399,21 +332,21 @@
                   <div class="col-sm-6 treas-field">
                   <div class="form-group">
                     <label>First Name</label>
-                    <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control" value="{{$TRSDetails[0]->trs_fname != ''  ? $TRSDetails[0]->trs_fname : ''}}"  onkeypress="return isAlphanumeric(event)" >
+                    <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control" value="{{$TRSDetails[0]->trs_fname != ''  ? $TRSDetails[0]->trs_fname : ''}}"   >
                   </div>
                   </div>
                   <!-- /.form group -->
                   <div class="col-sm-6 treas-field">
                   <div class="form-group">
                     <label>Last Name</label>
-                    <input type="text" name="ch_trs_lname" id="ch_trs_lname" class="form-control" value="{{$TRSDetails[0]->trs_lname != ''  ? $TRSDetails[0]->trs_lname : ''}}"  onkeypress="return isAlphanumeric(event)" >
+                    <input type="text" name="ch_trs_lname" id="ch_trs_lname" class="form-control" value="{{$TRSDetails[0]->trs_lname != ''  ? $TRSDetails[0]->trs_lname : ''}}"   >
                   </div>
                   </div>
                  <!-- /.form group -->
                   <div class="col-sm-6 treas-field">
                   <div class="form-group">
                     <label>Email</label>
-                    <input type="email" name="ch_trs_email" id="ch_trs_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$TRSDetails[0]->trs_email != ''  ? $TRSDetails[0]->trs_email : ''}}" >
+                    <input type="email" name="ch_trs_email" id="ch_trs_email" class="form-control"  value="{{$TRSDetails[0]->trs_email != ''  ? $TRSDetails[0]->trs_email : ''}}" >
                     <input type="hidden" id="ch_trs_email_chk" value="{{ $TRSDetails[0]->trs_email }}">
                   </div>
                   </div>
@@ -434,32 +367,23 @@
                   <div class="col-sm-4 treas-field">
                   <div class="form-group">
                     <label>City</label>
-                    <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control" value="{{$TRSDetails[0]->trs_city != ''  ? $TRSDetails[0]->trs_city : ''}}"  onkeypress="return isAlphanumeric(event)">
+                    <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control" value="{{$TRSDetails[0]->trs_city != ''  ? $TRSDetails[0]->trs_city : ''}}"  >
                   </div>
                   </div>
                   <!-- /.form group -->
                   <div class="col-sm-4 treas-field">
                   <div class="form-group">
                     <label>State</label>
-                    <select name="ch_trs_state" id="ch_trs_state" class="form-control select2-bs4" style="width: 100%;">
-                    <option value="">Select State</option>
-                        @foreach($stateArr as $state)
-                          <option value="{{$state->state_short_name}}" {{$TRSDetails[0]->trs_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
-                        @endforeach
-                    </select>
+                    <input type="text" name="ch_trs_state" id="ch_trs_state" class="form-control" value="{{$TRSDetails[0]->trs_statename != ''  ? $TRSDetails[0]->trs_statename : ''}}"  >
                   </div>
                   </div>
                   <!-- /.form group -->
-                  {{-- <div class="col-sm-4 treas-field">
+                 <div class="col-sm-4 treas-field">
                   <div class="form-group">
                     <label>Zip</label>
-                    <input type="text" name="ch_trs_zip" id="ch_trs_zip"  class="form-control" value="{{$TRSDetails[0]->trs_zip != ''  ? $TRSDetails[0]->trs_zip : ''}}" onkeypress="return isNumber(event)">
+                    <input type="text" name="ch_trs_zip" id="ch_trs_zip"  class="form-control" value="{{$TRSDetails[0]->trs_zip != ''  ? $TRSDetails[0]->trs_zip : ''}}" >
                   </div>
                   </div>
-                  <div class="card-body text-center treas-field">
-                    <p>This will reset password to default "TempPass4You" for this user only.</p>
-                    <button type="button" class="btn bg-gradient-primary" id="{{ $TRSDetails[0]->user_id }}" onclick="return updatePassword(this.id)" {{$TRSDetails[0]->user_id == ''  ? 'disabled' : ''}} ><i class="fas fa-redo-alt" ></i>&nbsp; Reset Password</button>
-                  </div> --}}
                   </div>
                 </div>
 
@@ -472,7 +396,7 @@
                         <!-- /.form group -->
                   <div class="col-sm-12">
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" name="SecVacant" id="SecVacant" class="custom-control-input" {{$SECDetails[0]->sec_fname == ''  ? 'checked' : ''}} onchange="ConfirmVacant(this.id)" />
+                        <input type="checkbox" name="SecVacant" id="SecVacant" class="custom-control-input" {{$SECDetails[0]->sec_fname == ''  ? 'checked' : ''}}  />
                         <label class="custom-control-label" for="SecVacant">Vacant</label>
                     </div>
                     </div>
@@ -481,21 +405,21 @@
                   <div class="col-sm-6 sec-field">
                   <div class="form-group">
                     <label>First Name</label>
-                    <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control" value="{{$SECDetails[0]->sec_fname != ''  ? $SECDetails[0]->sec_fname : ''}}"  onkeypress="return isAlphanumeric(event)">
+                    <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control" value="{{$SECDetails[0]->sec_fname != ''  ? $SECDetails[0]->sec_fname : ''}}"  >
                   </div>
                   </div>
                   <!-- /.form group -->
                   <div class="col-sm-6 sec-field">
                   <div class="form-group">
                     <label>Last Name</label>
-                    <input type="text" name="ch_sec_lname" id="ch_sec_lname" class="form-control" value="{{$SECDetails[0]->sec_lname != ''  ? $SECDetails[0]->sec_lname : ''}}"  onkeypress="return isAlphanumeric(event)" >
+                    <input type="text" name="ch_sec_lname" id="ch_sec_lname" class="form-control" value="{{$SECDetails[0]->sec_lname != ''  ? $SECDetails[0]->sec_lname : ''}}"   >
                   </div>
                   </div>
                  <!-- /.form group -->
                   <div class="col-sm-6 sec-field">
                   <div class="form-group">
                     <label>Email</label>
-                    <input type="email" name="ch_sec_email" id="ch_sec_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$SECDetails[0]->sec_email != ''  ? $SECDetails[0]->sec_email : ''}}"  >
+                    <input type="email" name="ch_sec_email" id="ch_sec_email" class="form-control"  value="{{$SECDetails[0]->sec_email != ''  ? $SECDetails[0]->sec_email : ''}}"  >
                     <input type="hidden" id="ch_sec_email_chk" value="{{ $SECDetails[0]->sec_email }}">
                   </div>
                   </div>
@@ -516,32 +440,23 @@
                   <div class="col-sm-4 sec-field">
                   <div class="form-group">
                     <label>City</label>
-                    <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control" value="{{$SECDetails[0]->sec_city != ''  ? $SECDetails[0]->sec_city : ''}}"  onkeypress="return isAlphanumeric(event)" >
+                    <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control" value="{{$SECDetails[0]->sec_city != ''  ? $SECDetails[0]->sec_city : ''}}"   >
                   </div>
                   </div>
                   <!-- /.form group -->
                   <div class="col-sm-4 sec-field">
                   <div class="form-group">
                     <label>State</label>
-                    <select name="ch_sec_state" id="ch_sec_state" class="form-control select2-bs4" style="width: 100%;" >
-                    <option value="">Select State</option>
-                        @foreach($stateArr as $state)
-                          <option value="{{$state->state_short_name}}" {{$SECDetails[0]->sec_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
-                        @endforeach
-                    </select>
+                    <input type="text" name="ch_sec_state" id="ch_sec_state" class="form-control" value="{{$SECDetails[0]->sec_statename != ''  ? $SECDetails[0]->sec_statename : ''}}"   >
                   </div>
                   </div>
                   <!-- /.form group -->
-                  {{-- <div class="col-sm-4 sec-field">
+                  <div class="col-sm-4 sec-field">
                   <div class="form-group">
                     <label>Zip</label>
-                    <input type="text" name="ch_sec_zip" id="ch_sec_zip"  class="form-control" value="{{$SECDetails[0]->sec_zip != ''  ? $SECDetails[0]->sec_zip : ''}}" onkeypress="return isNumber(event)" >
+                    <input type="text" name="ch_sec_zip" id="ch_sec_zip"  class="form-control" value="{{$SECDetails[0]->sec_zip != ''  ? $SECDetails[0]->sec_zip : ''}}"  >
                   </div>
                   </div>
-                  <div class="card-body text-center sec-field">
-                    <p>This will reset password to default "TempPass4You" for this user only.</p>
-                    <button type="button" class="btn bg-gradient-primary" id="{{ $SECDetails[0]->user_id }}" onclick="return updatePassword(this.id)" {{$SECDetails[0]->user_id == ''  ? 'disabled' : ''}} ><i class="fas fa-redo-alt"></i>&nbsp; Reset Password</button>
-                </div> --}}
                   </div>
                 </div>
 
@@ -562,14 +477,7 @@
                           <div class="col-sm-6">
                             <div class="form-group">
                                 <label>Website Link Status</label> <span class="field-required">*</span>
-                                <select id="ch_webstatus" name="ch_webstatus" class="form-control select2-bs4" style="width: 100%;" required>
-                                    <option value="0" id="option0" {{$chapterList[0]->website_status == 0 ? 'selected' : ''}} disabled>Website Not Linked</option>
-                                    <option value="1" id="option1" {{$chapterList[0]->website_status == 1 ? 'selected' : ''}}>Website Linked</option>
-                                    <option value="2" id="option2" {{$chapterList[0]->website_status == 2 ? 'selected' : ''}}>Add Link Requested</option>
-                                    <option value="3" id="option3" {{$chapterList[0]->website_status == 3 ? 'selected' : ''}}>Do Not Link</option>
-                                </select>
-
-                                <input type="hidden" name="ch_hid_webstatus" value="{{ $chapterList[0]->website_status }}">
+                                <input type="text" name="ch_webstatus" class="form-control"  value="{{ $websiteStatusWords}}" >
                             </div>
                         </div>
                     <!-- /.form group -->
@@ -629,8 +537,6 @@
                   </div>
                   </div>
 
-
-
                   <!-- /.form group -->
                   <div class="col-sm-12">
                   <div class="form-group">
@@ -665,13 +571,7 @@
                   <div class="col-sm-6">
                   <div class="form-group">
                     <label>Founded Month</label>
-                    <select name="ch_founddate" class="form-control select2-bs4" style="width: 100%;" disabled>
-                     <option value="">Select Month</option>
-                      @foreach($foundedMonth as $key=>$val)
-                      <option value="{{$key}}" {{$currentMonth == $key  ? 'selected' : ''}}>{{$val}}</option>
-                     @endforeach
-                    </select>
-                    <input type="hidden" name="ch_hid_founddate" value="{{$currentMonth}}">
+                    <input type="text" name="ch_founddate" class="form-control"  value="{{ $startMonthName}}" disabled>
                   </div>
                   </div>
                   <!-- /.form group -->
@@ -679,7 +579,6 @@
                   <div class="form-group">
                     <label>Founded Year</label>
                     <input type="text" name="ch_foundyear" class="form-control"  value="{{ $chapterList[0]->start_year}}" disabled>
-                    <input type="hidden" name="ch_hid_foundyear" value="{{$chapterList[0]->start_year}}">
                   </div>
                   </div>
                   <!-- /.form group -->
@@ -696,20 +595,18 @@
                     <input type="text" name="ch_memberpaid" class="form-control" value="{{ $chapterList[0]->members_paid_for }}" disabled>
                   </div>
                   </div>
-                                   <!-- /.form group -->
+                   <!-- /.form group -->
                   <div class="col-sm-12">
                   <div class="form-group">
                     <label>Re-Registration Notes (not visible to board members)</label>
                     <input type="text" name="ch_regnotes" class="form-control"  value="{{ $chapterList[0]->reg_notes}}" >
                   </div>
                   </div>
-
-                                        <!-- /.form group -->
+                  <!-- /.form group -->
                   <div class="col-sm-6">
                   <div class="form-group">
                     <label>M2M Fund Donation Date</label>
                     <input type="date" name="ch_m2mdate" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{$chapterList[0]->m2m_date }}" disabled>
-                    {{-- <input type="date" name="ch_m2mdate" class="form-control" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" value="{{$chapterList[0]->m2m_date }}" disabled> --}}
                   </div>
                   </div>
                                 <!-- /.form group -->
@@ -724,7 +621,6 @@
                   <div class="form-group">
                     <label>Sustaining Chapter Donation Date</label>
                     <input type="date" name="ch_sustaining_date" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{$chapterList[0]->sustaining_date }}" disabled>
-                    {{-- <input type="date" name="ch_sustaining_date" class="form-control" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" value="{{$chapterList[0]->sustaining_date }}" disabled> --}}
                   </div>
                   </div>
                   <!-- /.form group -->
@@ -734,16 +630,7 @@
                     <input type="text" name="ch_sustaining_donation" class="form-control" value="${{ $chapterList[0]->sustaining_donation }}" disabled>
                   </div>
                   </div>
-                {{-- </div>
-            </div>
-
-                <div class="card-header">
-                    <h3 class="card-title">&nbsp;</h3>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                    <div class="row"> --}}
-                <!-- /.form group -->
+                  <!-- /.form group -->
 				<div class="col-sm-6">
               <div class="form-group">
                 <label>Disband Date</label>
@@ -773,22 +660,19 @@
                     </div>
 				  </div>
 			  </div>
-
               </div>
 
-            <!-- /.box-body -->
             <div class="card-body text-center">
                 @if ($regionalCoordinatorCondition)
-               <a href="<?php echo url("/chapter/unzap/{$chapterList[0]->id}") ?>" class="btn bg-gradient-primary"><i class="fas fa-undo"  ></i>&nbsp; UnZap</a>
+                    <a href="{{ url("/chapter/unzap/{$chapterList[0]->id}") }}" class="btn bg-gradient-primary"><i class="fas fa-undo"  ></i>&nbsp; UnZap</a>
                @endif
-              <a href="{{ route('chapters.chapzapped') }}" class="btn bg-gradient-primary"><i class="fa fa-reply" ></i>&nbsp; Back</a>
+                <a href="{{ route('chapters.chapzapped') }}" class="btn bg-gradient-primary"><i class="fa fa-reply" ></i>&nbsp; Back</a>
               </div>
               <div class="card-body text-center">
                 @if ($regionalCoordinatorCondition)
                     <button type="button" class="btn bg-gradient-primary" onclick="return UpdateEmail()"><i class="fas fa-envelope" ></i>&nbsp; Update President Email</button>
                     <button type="submit" class="btn bg-gradient-primary" ><i class="fas fa-save"></i>&nbsp; Save Email Change</button>
                     @endif
-
             <!-- /.box-body -->
 
           </div>
@@ -803,44 +687,103 @@
 
 @section('customscript')
 <script>
-// Disable fields and buttons
 $(document).ready(function () {
-   $('input, select, textarea').prop('disabled', true);
+    // $('#ein_letter_path').addClass('disabled').attr('aria-disabled', 'true');
+    $('input, select, textarea').prop('disabled', true);
 });
 
-function UpdateEmail(){
-    var email=document.getElementById("ch_pre_email").value;
-    var new_email="";
+function UpdateEmail() {
+    var email = document.getElementById("ch_pre_email").value;
 
-    if (email==""){
-        new_email = prompt("Please enter the new email address for the President");
+    Swal.fire({
+        title: 'Confirm Email Address Change',
+        text: 'This President already has an email address. Are you REALLY sure you want to change it?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Change Email Address',
+        cancelButtonText: 'Cancel',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: 'Enter New Email Address',
+                input: 'text',
+                inputLabel: 'Please enter the new email address for the President',
+                inputPlaceholder: 'Enter Email Address',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Email address cannot be empty!';
+                    }
+                    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailPattern.test(value)) {
+                        return 'Please enter a valid email address!';
+                    }
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Submit',
+                cancelButtonText: 'Cancel',
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    var new_email = result.value;
+                    document.getElementById("ch_pre_email").value = new_email;
 
-        if (new_email != null) {
-            document.getElementById("ch_pre_email").value = new_email;
-            return true;
+                    submitFormAjax(new_email); // Pass new_email to AJAX Submit function
+                }
+            });
         }
-    }
-    else{
-        var result=confirm("This President already has an emails address, are you sure you want to update it?");
-        if(result){
-            new_email = prompt("Please enter the new email address for the President");
-            if (new_email != null) {
-                document.getElementById("ch_pre_email").value = new_email;
-                return true;
-            }
-        }
-        else{
-            return false;
-        }
-    }
+    });
 }
 
-  $( document ).ready(function() {
+// Submit form via AJAX
+function submitFormAjax(new_email) {
+    var formData = new FormData();
+    formData.append('ch_pre_email', new_email);
+    formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
+    fetch('{{ route("chapters.updatechapzapped",$chapterList[0]->id) }}', {
+        method: 'POST',
+        body: formData,
+    }).then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              Swal.fire('Success', data.message, 'success');
+          } else {
+              Swal.fire('Error', data.message || 'Something went wrong, please try again', 'error');
+          }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          Swal.fire('Error', 'Something went wrong, please try again', 'error');
+      });
+}
+
+// Check for Duplicate Email -- THIS CURRENTLY ISN'T WORKING ON THIS PAGE
+// function checkDuplicateEmail(email, id) {
+//     return $.ajax({
+//         url: '{{ url("/check.email/") }}' + '/' + email,
+//         type: "GET"
+//     }).then((result) => {
+//         return result.exists; // Return true if email is duplicate, otherwise false
+//     }).catch((error) => {
+//         console.error('Error checking email:', error);
+//         return false;  // Return false if there's an error (treat as no duplicate found)
+//     });
+// }
+
+// Toggle Switch visibility for vacant positions
+ $( document ).ready(function() {
 	var avp = $("#ch_avp_fname").val();
     var mvp = $("#ch_mvp_fname").val();
     var trs = $("#ch_trs_fname").val();
     var sec = $("#ch_sec_fname").val();
-    });
+});
 
 // Function to handle show/hide logic for vacant checkboxes
 function handleVacantCheckbox(checkboxId, fieldClass) {
@@ -855,35 +798,18 @@ function handleVacantCheckbox(checkboxId, fieldClass) {
     });
 
     // Initial show/hide logic on page load
-        if ($("#" + checkboxId).prop("checked")) {
-            fields.hide().find('input, select, textarea').prop('required', false).val(null);
-        } else {
-            fields.show().find('input, select, textarea').prop('required', true);
-        }
+    if ($("#" + checkboxId).prop("checked")) {
+        fields.hide().find('input, select, textarea').prop('required', false).val(null);
+    } else {
+        fields.show().find('input, select, textarea').prop('required', true);
     }
+}
 
-    // Apply the logic for each checkbox with a specific class
-    handleVacantCheckbox("MVPVacant", "mvp-field");
-    handleVacantCheckbox("AVPVacant", "avp-field");
-    handleVacantCheckbox("SecVacant", "sec-field");
-    handleVacantCheckbox("TreasVacant", "treas-field");
-
-//submit validation function
-  function PreSaveValidate(){
-    var errMessage="";
-//Ensure there are no e-mail addresses repeated
-        if($("#ch_pre_email").val() == $("#ch_avp_email").val() || $("#ch_pre_email").val() == $("#ch_mvp_email").val() || $("#ch_pre_email").val() == $("#ch_trs_email").val() || $("#ch_pre_email").val() == $("#ch_sec_email").val()) {
-            errMessage = "The e-mail address provided for the Chapter President was also provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
-        }
-        if(errMessage.length > 0){
-            alert (errMessage);
-            return false;
-        }
-        //Okay, all validation passed, save the records to the database
-        return true;
-    }
-
-
+// Apply the logic for each checkbox with a specific class
+handleVacantCheckbox("MVPVacant", "mvp-field");
+handleVacantCheckbox("AVPVacant", "avp-field");
+handleVacantCheckbox("SecVacant", "sec-field");
+handleVacantCheckbox("TreasVacant", "treas-field");
 
 </script>
 @endsection

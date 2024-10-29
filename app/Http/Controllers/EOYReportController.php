@@ -40,8 +40,6 @@ class EOYReportController extends Controller
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
         $request->session()->put('positionid', $positionId);
@@ -52,19 +50,10 @@ class EOYReportController extends Controller
            $conditions = getPositionConditions($positionId, $secPositionId);
 
            if ($conditions['coordinatorCondition']) {
-              //Get Coordinator Reporting Tree
-                  $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                      ->select('crt.id')
-                      ->where($sqlLayerId, '=', $corId)
-                      ->get();
-
-              $inQryStr = '';
-              foreach ($reportIdList as $key => $val) {
-                  $inQryStr .= $val->id.',';
-              }
-              $inQryStr = rtrim($inQryStr, ',');
-              $inQryArr = explode(',', $inQryStr);
-          }
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
+        }
 
         $year = date('Y');
 
@@ -320,8 +309,6 @@ class EOYReportController extends Controller
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
         $request->session()->put('positionid', $positionId);
@@ -332,18 +319,9 @@ class EOYReportController extends Controller
          $conditions = getPositionConditions($positionId, $secPositionId);
 
          if ($conditions['coordinatorCondition']) {
-            //Get Coordinator Reporting Tree
-                $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                    ->select('crt.id')
-                    ->where($sqlLayerId, '=', $corId)
-                    ->get();
-
-            $inQryStr = '';
-            foreach ($reportIdList as $key => $val) {
-                $inQryStr .= $val->id.',';
-            }
-            $inQryStr = rtrim($inQryStr, ',');
-            $inQryArr = explode(',', $inQryStr);
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
         }
 
         $year = date('Y');
@@ -893,8 +871,6 @@ class EOYReportController extends Controller
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
         $request->session()->put('positionid', $positionId);
@@ -906,18 +882,9 @@ class EOYReportController extends Controller
          $conditions = getPositionConditions($positionId, $secPositionId);
 
          if ($conditions['coordinatorCondition']) {
-            //Get Coordinator Reporting Tree
-                $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                    ->select('crt.id')
-                    ->where($sqlLayerId, '=', $corId)
-                    ->get();
-
-            $inQryStr = '';
-            foreach ($reportIdList as $key => $val) {
-                $inQryStr .= $val->id.',';
-            }
-            $inQryStr = rtrim($inQryStr, ',');
-            $inQryArr = explode(',', $inQryStr);
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
         }
 
         $year = date('Y');
@@ -1409,8 +1376,6 @@ class EOYReportController extends Controller
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
         $request->session()->put('positionid', $positionId);
@@ -1421,19 +1386,10 @@ class EOYReportController extends Controller
         $conditions = getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
-           //Get Coordinator Reporting Tree
-               $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                   ->select('crt.id')
-                   ->where($sqlLayerId, '=', $corId)
-                   ->get();
-
-           $inQryStr = '';
-           foreach ($reportIdList as $key => $val) {
-               $inQryStr .= $val->id.',';
-           }
-           $inQryStr = rtrim($inQryStr, ',');
-           $inQryArr = explode(',', $inQryStr);
-       }
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
+        }
 
         $year = date('Y');
 
@@ -1570,8 +1526,6 @@ class EOYReportController extends Controller
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
         $request->session()->put('positionid', $positionId);
@@ -1582,19 +1536,10 @@ class EOYReportController extends Controller
         $conditions = getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
-           //Get Coordinator Reporting Tree
-               $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                   ->select('crt.id')
-                   ->where($sqlLayerId, '=', $corId)
-                   ->get();
-
-           $inQryStr = '';
-           foreach ($reportIdList as $key => $val) {
-               $inQryStr .= $val->id.',';
-           }
-           $inQryStr = rtrim($inQryStr, ',');
-           $inQryArr = explode(',', $inQryStr);
-       }
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
+        }
 
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
@@ -1720,8 +1665,6 @@ class EOYReportController extends Controller
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $sqlLayerId = 'crt.layer'.$corlayerId;
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
         $request->session()->put('positionid', $positionId);
@@ -1732,18 +1675,9 @@ class EOYReportController extends Controller
          $conditions = getPositionConditions($positionId, $secPositionId);
 
          if ($conditions['coordinatorCondition']) {
-            //Get Coordinator Reporting Tree
-                $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                    ->select('crt.id')
-                    ->where($sqlLayerId, '=', $corId)
-                    ->get();
-
-            $inQryStr = '';
-            foreach ($reportIdList as $key => $val) {
-                $inQryStr .= $val->id.',';
-            }
-            $inQryStr = rtrim($inQryStr, ',');
-            $inQryArr = explode(',', $inQryStr);
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
         }
 
         $baseQuery = DB::table('chapters as ch')

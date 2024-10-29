@@ -5,7 +5,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Social Media Report</h1>
+          <h1>Chapter Report</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -24,7 +24,22 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-              <h3 class="card-title">Social Media Accounts</h3>
+                <div class="dropdown">
+                    <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Social Media Report
+                    </h3>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="/chapterreports/chapterstatus">Chapter Status Report</a>
+                        <a class="dropdown-item" href="/chapterreports/einstatus">EIN Status Report</a>
+                        <a class="dropdown-item" href="/chapterreports/newchapters">New Chapter Report</a>
+                        <a class="dropdown-item" href="/chapterreports/largechapters">Large Chapter Report</a>
+                        <a class="dropdown-item" href="/chapterreports/probation">Chapter Probation Report</a>
+                        <a class="dropdown-item" href="/chapterreports/donations">Chapter Donation Report</a>
+                        <!-- Uncommented to allow selection -->
+                        <a class="dropdown-item" href="/chapterreports/socialmedia">Social Media Report</a>
+                        <a class="dropdown-item" href="/chapterreports/coordinators">Chapter Coordinators Report</a>
+                    </div>
+                </div>
             </div>
             <!-- /.card-header -->
         <div class="card-body">
@@ -71,5 +86,19 @@
 
 @endsection
 @section('customscript')
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    const currentPath = window.location.pathname;
 
+    dropdownItems.forEach(item => {
+        // Check if the item's href matches the current path
+        if (item.getAttribute("href") === currentPath) {
+            item.classList.add("active");
+        }
+    });
+});
+
+
+</script>
 @endsection

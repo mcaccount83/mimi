@@ -45,7 +45,7 @@
                 <tbody>
                 @foreach($websiteList as $list)
                   <tr>
-						<td><center><a href="<?php echo url("/chapter/websiteview/{$list->id}") ?>"><i class="fas fa-edit "></i></a></center></td>
+                    <td class="text-center align-middle"><a href="{{ url("/chapter/websiteview/{$list->id}") }}"><i class="fas fa-edit "></i></a></td>
                         <td>
                             @if ($list->reg != "None")
                                 {{ $list->conf }} / {{ $list->reg }}

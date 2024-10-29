@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Request;
+
+
 if (!function_exists('getPositionConditions')) {
     function getPositionConditions($positionId, $secPositionId) {
         return [
@@ -25,6 +28,17 @@ if (!function_exists('getPositionConditions')) {
             'm2mCondition' => ($positionId == 21 || $secPositionId == 21 || $positionId == 20 || $secPositionId == 20),
             'listAdminCondition' => ($positionId == 23 || $secPositionId == 23),
         ];
+    }
+}
+
+if (! function_exists('isActiveRoute')) {
+    function isActiveRoute(array $routes) {
+        foreach ($routes as $route) {
+            if (Request::is($route)) {
+                return 'active';
+            }
+        }
+        return '';
     }
 }
 

@@ -23,57 +23,91 @@
     @csrf
     <section class="content">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card card-outline card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">Chapter</h3>
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-outline card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Chapter</h3>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <div class="row">
+                        <input type="hidden" name="ch_name" value="{{ $chapterList[0]->name }}">
+                        <input type="hidden" name="ch_state" value="{{ $chapterList[0]->statename }}">
+                        <!-- /.form group -->
+                        <div class="col-sm-4 ">
+                    <div class="form-group">
+                        <label>MOMS Club of</label> <span class="field-required">*</span>
+                        <input type="text" name="ch_name" class="form-control disable-field"  required value="{{ $chapterList[0]->name }}" >
                     </div>
-                    <!-- /.card-header -->
-                    <div class="card-body">
-                        <div class="row">
-              <!-- /.form group -->
-              <div class="col-sm-6">
-              <div class="form-group">
-                <label>MOMS Club of</label>
-                <input type="text" name="ch_name" id="ch_name" class="form-control"  value="{{ $chapterList[0]->name }}" readonly>
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-6">
-              <div class="form-group">
-                <label>State</label>
-                <select name="ch_state" id="ch_state" class="form-control select2-sb4" style="width: 100%;" disabled>
-                  <option value="">Select State</option>
-                    @foreach($stateArr as $state)
-                      <option value="{{$state->id}}" {{$chapterList[0]->state == $state->id  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
-                    @endforeach
-                </select>
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-6">
-              <div class="form-group">
-                <label>Status</label>
-                <select id="ch_status" name="ch_status" class="form-control select2-sb4" style="width: 100%;" disabled>
-                  <option value="">Select Status</option>
-                  <option value="1" {{$chapterList[0]->status == 1  ? 'selected' : ''}}>Operating OK</option>
-                  <option value="4" {{$chapterList[0]->status == 4  ? 'selected' : ''}}>On Hold Do not Refer</option>
-                  <option value="5" {{$chapterList[0]->status == 5  ? 'selected' : ''}}>Probation</option>
-                  <option value="6" {{$chapterList[0]->status == 6  ? 'selected' : ''}}>Probation Do Not Link</option>
-                </select>
-              </div>
-              </div>
+                    </div>
+                    <!-- /.form group -->
+                        <div class="col-sm-4 ">
+                    <div class="form-group">
+                        <label>State</label> <span class="field-required">*</span>
+                        <select id="ch_state" name="ch_state" class="form-control disable-field select2-bs4" style="width: 100%;" required >
+                        <option value="">Select State</option>
+                            @foreach($stateArr as $state)
+                            <option value="{{$state->id}}" {{$chapterList[0]->state == $state->id  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
+                            @endforeach
+                        </select>
+                        <input type="hidden" name="ch_hid_state" value="{{ $chapterList[0]->state }}">
+                    </div>
+                    </div>
+                    <!-- /.form group -->
+                        <div class="col-sm-4 ">
+                    <div class="form-group">
+                        <label>Country</label> <span class="field-required">*</span>
+                        <select id="ch_country" name="ch_country" class="form-control disable-field select2-bs4" style="width: 100%;" required >
+                        <option value="">Select Country</option>
+                            @foreach($countryArr as $con)
+                            <option value="{{$con->short_name}}" {{$chapterList[0]->country == $con->short_name  ? 'selected' : ''}}>{{$con->name}}</option>
+                            @endforeach
+                        </select>
+                        <input type="hidden" name="ch_hid_country" value="{{ $chapterList[0]->country }}">
+                    </div>
+                    </div>
+                    <!-- /.form group -->
+                        <div class="col-sm-4 ">
+                    <div class="form-group">
+                        <label>Conference</label> <span class="field-required">*</span>
+                        <select id="ch_conference" name="ch_conference" class="form-control disable-field select2-bs4" style="width: 100%;" required >
+                        <option value="">Select Conference</option>
+                                    @foreach($confList as $con)
+                            <option value="{{$con->id}}" {{$chapterList[0]->conference == $con->id  ? 'selected' : ''}} >{{$con->conference_name}} </option>
+                            @endforeach
+                                </select>
+                                </div>
+                            </div>
+                    <!-- /.form group -->
+                        <div class="col-sm-4 ">
+                    <div class="form-group">
+                        <label>Region</label> <span class="field-required">*</span>
+                        <select id="ch_region" name="ch_region" class="form-control disable-field select2-bs4-bs4" style="width: 100%;" required >
+                        <option value="">Select Region</option>
+                            @foreach($regionList as $rl)
+                            <option value="{{$rl->id}}" {{$chapterList[0]->region == $rl->id  ? 'selected' : ''}} >{{$rl->long_name}} </option>
+                            @endforeach
+                        </select>
+                        <input type="hidden" name="ch_hid_region" value="{{ $chapterList[0]->region }}">
+                    </div>
+                    </div>
 
-              </div>
-            </div>
+                    <!-- /.form group -->
+                        <div class="col-sm-4 ">
+                    <div class="form-group">
+                        <label>Status</label> <span class="field-required">*</span>
+                        <select id="ch_status" name="ch_status" class="form-control disable-field select2-bs4" style="width: 100%;" required >
+                        <option value="">Select Status</option>
+                        <option value="1" {{$chapterList[0]->status == 1  ? 'selected' : ''}}>Operating OK</option>
+                        <option value="4" {{$chapterList[0]->status == 4  ? 'selected' : ''}}>On Hold Do not Refer</option>
+                        <option value="5" {{$chapterList[0]->status == 5  ? 'selected' : ''}}>Probation</option>
+                        <option value="6" {{$chapterList[0]->status == 6  ? 'selected' : ''}}>Probation Do Not Refer</option>
+                        </select>
+                        <input type="hidden" name="ch_hid_status" value="{{ $chapterList[0]->status }}">
+                    </div>
+                </div>
 
-            <div class="card-header">
-                <h3 class="card-title">Information</h3>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-                <div class="row">
                 <!-- /.form group -->
                 <div class="col-sm-6">
                     <div class="form-group">
@@ -96,28 +130,28 @@
                         </div>
                     </div>
                 <!-- /.form group -->
-              <div class="col-sm-12">
+              <div class="col-sm-3">
               <div class="form-group">
-                <label>Online Discussion Group (Meetup, Google Groups, etc)</label>
+                <label>Forum/Group/App</label>
                 <input type="text" name="ch_onlinediss" class="form-control" value="{{ $chapterList[0]->egroup}}"  >
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-4">
+              <div class="col-sm-3">
               <div class="form-group">
                 <label>Facebook</label>
                 <input type="text" name="ch_social1" class="form-control" value="{{ $chapterList[0]->social1}}"  >
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-4">
+              <div class="col-sm-3">
               <div class="form-group">
                 <label>Twitter</label>
                 <input type="text" name="ch_social2" class="form-control" value="{{ $chapterList[0]->social2}}"  >
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-4">
+              <div class="col-sm-3">
               <div class="form-group">
                 <label>Instagram</label>
                 <input type="text" name="ch_social3" class="form-control" value="{{ $chapterList[0]->social3}}"  >
@@ -138,28 +172,28 @@
               <div class="col-sm-6">
               <div class="form-group">
                 <label>First Name</label>
-                <input type="text" name="ch_pre_fname" class="form-control" value="{{ $chapterList[0]->first_name }}" disabled>
+                <input type="text" name="ch_pre_fname" class="form-control disable-field" value="{{ $chapterList[0]->first_name }}" >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Last Name</label>
-                <input type="text" name="ch_pre_lname" class="form-control" value="{{ $chapterList[0]->last_name }}" disabled>
+                <input type="text" name="ch_pre_lname" class="form-control disable-field" value="{{ $chapterList[0]->last_name }}" >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Email</label>
-                <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control" value="{{ $chapterList[0]->bd_email }}" disabled>
+                <input type="email" name="ch_pre_email" id="ch_pre_email" class="form-control disable-field" value="{{ $chapterList[0]->bd_email }}" >
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-6">
               <div class="form-group">
                 <label>Phone</label>
-                <input type="text" name="ch_pre_phone" class="form-control" value="{{ $chapterList[0]->phone }}" disabled>
+                <input type="text" name="ch_pre_phone" class="form-control disable-field" value="{{ $chapterList[0]->phone }}" >
               </div>
               </div>
 
@@ -186,6 +220,11 @@
 
   @section('customscript')
   <script>
+     // Disble fields
+     $(document).ready(function () {
+        // Disable for all users
+        $('.disable-field').prop('disabled', true);
+    });
 
     // Disable Web Link Status option 0
     document.getElementById('option0').disabled = true;

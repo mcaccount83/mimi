@@ -5,12 +5,12 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-          <h1>Downloads List</h1>
+          <h1>Resources</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">Downloads List</li>
+            <li class="breadcrumb-item active">Download Reports</li>
           </ol>
         </div>
       </div>
@@ -24,7 +24,22 @@
     <div class="col-md-6">
         <div class="card card-outline card-primary">
             <div class="card-header">
-                <h3 class="card-title">Available Conference Reports</h3>
+                <div class="dropdown">
+                    <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Download Reports
+                    </h3>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="/resources/toolkit">Coordinator Toolkit</a>
+                        <a class="dropdown-item" href="/resources/resources">Chapter Resources</a>
+                        @if ($assistConferenceCoordinatorCondition)
+                        <a class="dropdown-item" href="/resources/downloads">Download Reports</a>
+                        @endif
+                        @if ($regionalCoordinatorCondition)
+                        <a class="dropdown-item" href="/resources/bugs">MIMI Bugs & Wishes</a>
+                        @endif
+                        <a class="dropdown-item" href="https://momsclub.org/elearning/" target="_blank">eLearning</a>
+                    </div>
+                </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -108,5 +123,21 @@
 
 @endsection
 @section('customscript')
+<script>
+
+document.addEventListener("DOMContentLoaded", function() {
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    const currentPath = window.location.pathname;
+
+    dropdownItems.forEach(item => {
+        // Check if the item's href matches the current path
+        if (item.getAttribute("href") === currentPath) {
+            item.classList.add("active");
+        }
+    });
+});
+
+</script>
+
 
 @endsection

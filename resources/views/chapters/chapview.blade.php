@@ -41,14 +41,14 @@
                         <div class="col-sm-4 ">
                     <div class="form-group">
                         <label>MOMS Club of</label> <span class="field-required">*</span>
-                        <input type="text" name="ch_name" class="form-control"  required value="{{ $chapterList[0]->name }}" onchange="PreviousNameReminder()">
+                        <input type="text" name="ch_name" class="form-control disable-RCCondition"  required value="{{ $chapterList[0]->name }}" onchange="PreviousNameReminder()">
                     </div>
                     </div>
                     <!-- /.form group -->
                         <div class="col-sm-4 ">
                     <div class="form-group">
                         <label>State</label> <span class="field-required">*</span>
-                        <select id="ch_state" name="ch_state" class="form-control select2-bs4" style="width: 100%;" required >
+                        <select id="ch_state" name="ch_state" class="form-control disable-RCCondition select2-bs4" style="width: 100%;" required >
                         <option value="">Select State</option>
                             @foreach($stateArr as $state)
                             <option value="{{$state->id}}" {{$chapterList[0]->state == $state->id  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
@@ -61,7 +61,7 @@
                         <div class="col-sm-4 ">
                     <div class="form-group">
                         <label>Country</label> <span class="field-required">*</span>
-                        <select id="ch_country" name="ch_country" class="form-control select2-bs4" style="width: 100%;" required >
+                        <select id="ch_country" name="ch_country" class="form-control disable-field select2-bs4" style="width: 100%;" required >
                         <option value="">Select Country</option>
                             @foreach($countryArr as $con)
                             <option value="{{$con->short_name}}" {{$chapterList[0]->country == $con->short_name  ? 'selected' : ''}}>{{$con->name}}</option>
@@ -74,19 +74,20 @@
                         <div class="col-sm-4 ">
                     <div class="form-group">
                         <label>Conference</label> <span class="field-required">*</span>
-                        <select id="ch_conference" name="ch_conference" class="form-control select2-bs4" style="width: 100%;" required disabled>
+                        <select id="ch_conference" name="ch_conference" class="form-control disable-field select2-bs4" style="width: 100%;" required >
                         <option value="">Select Conference</option>
                                     @foreach($confList as $con)
                             <option value="{{$con->id}}" {{$chapterList[0]->conference == $con->id  ? 'selected' : ''}} >{{$con->conference_name}} </option>
                             @endforeach
                                 </select>
+                                <input type="hidden" name="ch_hid_conference" value="{{ $chapterList[0]->conference }}">
                                 </div>
                             </div>
                     <!-- /.form group -->
                         <div class="col-sm-4 ">
                     <div class="form-group">
                         <label>Region</label> <span class="field-required">*</span>
-                        <select id="ch_region" name="ch_region" class="form-control select2-bs4-bs4" style="width: 100%;" required >
+                        <select id="ch_region" name="ch_region" class="form-control disable-field select2-bs4-bs4" style="width: 100%;" required >
                         <option value="">Select Region</option>
                             @foreach($regionList as $rl)
                             <option value="{{$rl->id}}" {{$chapterList[0]->region == $rl->id  ? 'selected' : ''}} >{{$rl->long_name}} </option>
@@ -99,7 +100,8 @@
                         <div class="col-sm-2 ">
                     <div class="form-group">
                         <label>EIN</label>
-                        <input type="text" id="ch_ein" name="ch_ein" class="form-control" value="{{ $chapterList[0]->ein }}"  readonly>
+                        <input type="text" id="ch_ein" name="ch_ein" class="form-control" value="{{ $chapterList[0]->ein }}" readonly >
+                        <input type="hidden" name="ch_hid_ein" value="{{ $chapterList[0]->ein }}">
                     </div>
                     </div>
                         <!-- /.form group -->
@@ -118,7 +120,7 @@
                         <div class="col-sm-4 ">
                     <div class="form-group">
                         <label>Status</label> <span class="field-required">*</span>
-                        <select id="ch_status" name="ch_status" class="form-control select2-bs4" style="width: 100%;" required >
+                        <select id="ch_status" name="ch_status" class="form-control disable-RCCondition select2-bs4" style="width: 100%;" required >
                         <option value="">Select Status</option>
                         <option value="1" {{$chapterList[0]->status == 1  ? 'selected' : ''}}>Operating OK</option>
                         <option value="4" {{$chapterList[0]->status == 4  ? 'selected' : ''}}>On Hold Do not Refer</option>
@@ -132,14 +134,16 @@
                         <div class="col-sm-8 ">
                     <div class="form-group">
                         <label>Status Notes (not visible to board members)</label>
-                        <input type="text" name="ch_notes" class="form-control"  value="{{ $chapterList[0]->notes}}" >
+                        <input type="text" name="ch_notes" class="form-control disable-RCCondition"  value="{{ $chapterList[0]->notes}}" >
+                        <input type="hidden" name="ch_hid_notes" value="{{ $chapterList[0]->notes}}" >
                     </div>
                     </div>
                     <!-- /.form group -->
                     <div class="col-sm-12">
                     <div class="form-group">
                         <label>Boundaries</label> <span class="field-required">*</span>
-                        <input type="text" name="ch_boundariesterry" class="form-control" rows="2" value="{{ $chapterList[0]->territory }}" required >
+                        <input type="text" name="ch_boundariesterry" class="form-control disable-RCCondition" rows="2" value="{{ $chapterList[0]->territory }}" required >
+                        <input type="hidden" name="ch_hid_boundariesterry" value="{{ $chapterList[0]->territory}}" >
                     </div>
                     </div>
               </div>
@@ -578,28 +582,28 @@
                         </div>
                     </div>
                 <!-- /.form group -->
-              <div class="col-sm-12">
+              <div class="col-sm-3">
               <div class="form-group">
-                <label>Online Discussion Group (Meetup, Google Groups, etc)</label>
+                <label>Forum/Group/App</label>
                 <input type="text" name="ch_onlinediss" class="form-control" value="{{ $chapterList[0]->egroup}}"  >
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-4">
+              <div class="col-sm-3">
               <div class="form-group">
                 <label>Facebook</label>
                 <input type="text" name="ch_social1" class="form-control" value="{{ $chapterList[0]->social1}}"  >
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-4">
+              <div class="col-sm-3">
               <div class="form-group">
                 <label>Twitter</label>
                 <input type="text" name="ch_social2" class="form-control" value="{{ $chapterList[0]->social2}}"  >
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-4">
+              <div class="col-sm-3">
               <div class="form-group">
                 <label>Instagram</label>
                 <input type="text" name="ch_social3" class="form-control" value="{{ $chapterList[0]->social3}}"  >
@@ -652,99 +656,111 @@
             <!-- /.card-header -->
             <div class="card-body">
                 <div class="row">
+                       <!-- /.form group -->
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label>Founded Month</label>
+                  <select name="ch_founddate" class="form-control disable-field select2-bs4" style="width: 100%;" >
+                   <option value="">Select Month</option>
+                    @foreach($foundedMonth as $key=>$val)
+                    <option value="{{$key}}" {{$currentMonth == $key  ? 'selected' : ''}}>{{$val}}</option>
+                   @endforeach
+                  </select>
+                  <input type="hidden" name="ch_hid_founddate" value="{{$chapterList[0]->start_month_id}}">
+                </div>
+                </div>
+                <!-- /.form group -->
+                <div class="col-sm-3">
+                <div class="form-group">
+                  <label>Founded Year</label>
+                  <input type="text" name="ch_foundyear" class="form-control disable-field"  value="{{ $chapterList[0]->start_year}}" >
+                  <input type="hidden" name="ch_hid_foundyear" value="{{$chapterList[0]->start_year}}">
+                </div>
+                </div>
                <!-- /.form group -->
-              <div class="col-sm-6">
+              <div class="col-sm-3">
               <div class="form-group">
                 <label>Previously Known As</label>
-                <input type="text" name="ch_preknown" id="ch_preknown" class="form-control" value="{{ $chapterList[0]->former_name}}"  >
+                <input type="text" name="ch_preknown" id="ch_preknown" class="form-control disable-RCCondition" value="{{ $chapterList[0]->former_name}}"  >
+                <input type="hidden" name="ch_hid_preknown" value="{{$chapterList[0]->former_name}}">
               </div>
               </div>
               <!-- /.form group -->
-              <div class="col-sm-6">
+              <div class="col-sm-3">
               <div class="form-group">
                 <label>Sistered By</label>
-                <input type="text" name="ch_sistered" id="ch_sistered" class="form-control" value="{{ $chapterList[0]->sistered_by}}"  >
-              </div>
-              </div>
-                <!-- /.form group -->
-              <div class="col-sm-6">
-              <div class="form-group">
-                <label>Founded Month</label>
-                <select name="ch_founddate" class="form-control select2-bs4" style="width: 100%;" disabled>
-                 <option value="">Select Month</option>
-                  @foreach($foundedMonth as $key=>$val)
-                  <option value="{{$key}}" {{$currentMonth == $key  ? 'selected' : ''}}>{{$val}}</option>
-                 @endforeach
-                </select>
-                <input type="hidden" name="ch_hid_founddate" value="{{$currentMonth}}">
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-6">
-              <div class="form-group">
-                <label>Founded Year</label>
-                <input type="text" name="ch_foundyear" class="form-control"  value="{{ $chapterList[0]->start_year}}" disabled>
-                <input type="hidden" name="ch_hid_foundyear" value="{{$chapterList[0]->start_year}}">
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-6">
-              <div class="form-group">
-                <label>Re-Registration Dues Paid</label>
-                <input type="date" name="ch_dues" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{$chapterList[0]->dues_last_paid }}" disabled>
-              </div>
-              </div>
-              <!-- /.form group -->
-              <div class="col-sm-6">
-              <div class="form-group">
-                <label>Number of Members</label>
-                <input type="text" name="ch_memberpaid" class="form-control" value="{{ $chapterList[0]->members_paid_for }}" disabled>
-              </div>
-              </div>
-                               <!-- /.form group -->
-              <div class="col-sm-12">
-              <div class="form-group">
-                <label>Re-Registration Notes (not visible to board members)</label>
-                <input type="text" name="ch_regnotes" class="form-control"  value="{{ $chapterList[0]->reg_notes}}" >
+                <input type="text" name="ch_sistered" id="ch_sistered" class="form-control disable-RCCondition" value="{{ $chapterList[0]->sistered_by}}"  >
+                <input type="hidden" name="ch_hid_sistered" value="{{$chapterList[0]->sistered_by}}">
               </div>
               </div>
 
-                                    <!-- /.form group -->
-              <div class="col-sm-6">
+              <!-- /.form group -->
+              <div class="col-sm-3">
               <div class="form-group">
-                <label>M2M Fund Donation Date</label>
-                <input type="date" name="ch_m2mdate" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{$chapterList[0]->m2m_date }}" disabled>
-                {{-- <input type="date" name="ch_m2mdate" class="form-control" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" value="{{$chapterList[0]->m2m_date }}" disabled> --}}
-              </div>
-              </div>
-                            <!-- /.form group -->
-              <div class="col-sm-6">
-              <div class="form-group">
-                <label>M2M Fund Donation</label>
-                <input type="text" name="ch_m2mpayment" class="form-control" value="${{ $chapterList[0]->m2m_payment }}" disabled>
+                <label>Re-Registration Dues Paid</label>
+                <input type="date" name="ch_dues" class="form-control disable-field" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{$chapterList[0]->dues_last_paid }}" >
               </div>
               </div>
               <!-- /.form group -->
+              <div class="col-sm-3">
+              <div class="form-group">
+                <label>Number of Members</label>
+                <input type="text" name="ch_memberpaid" class="form-control disable-field" value="{{ $chapterList[0]->members_paid_for }}" >
+              </div>
+              </div>
+                               <!-- /.form group -->
               <div class="col-sm-6">
               <div class="form-group">
-                <label>Sustaining Chapter Donation Date</label>
-                <input type="date" name="ch_sustaining_date" class="form-control" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{$chapterList[0]->sustaining_date }}" disabled>
-                {{-- <input type="date" name="ch_sustaining_date" class="form-control" pattern="(?:19|20)[0-9]{2}-(?:(?:0[1-9]|1[0-2])-(?:0[1-9]|1[0-9]|2[0-9])|(?:(?!02)(?:0[1-9]|1[0-2])-(?:30))|(?:(?:0[13578]|1[02])-31))" value="{{$chapterList[0]->sustaining_date }}" disabled> --}}
+                <label>Re-Registration Notes (not visible to board members)</label>
+                <input type="text" name="ch_regnotes" class="form-control disable-field"  value="{{ $chapterList[0]->reg_notes}}" >
               </div>
               </div>
+
               <!-- /.form group -->
               <div class="col-sm-6">
-              <div class="form-group">
+                <div class="form-group">
+                    <label>M2M Fund Donation</label>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <input type="date" name="ch_m2m_date" class="form-control disable-field" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $chapterList[0]->m2m_date }}" >
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" name="ch_m2m_payment" id="ch_m2m_payment" class="form-control disable-field" value="${{ $chapterList[0]->m2m_payment }}" >
+                        </div>
+                    </div>
+                </div>
+            </div>
+          <!-- /.form group -->
+          <div class="col-sm-6">
+            <div class="form-group">
                 <label>Sustaining Chapter Donation</label>
-                <input type="text" name="ch_sustaining_donation" class="form-control" value="${{ $chapterList[0]->sustaining_donation }}" disabled>
-              </div>
-              </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <input type="date" name="ch_sustaining_date" class="form-control disable-field" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy" data-mask value="{{ $chapterList[0]->sustaining_date }}" >
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" name="ch_sustaining_donation" id="ch_sustaining_donation" class="form-control disable-field" value="${{ $chapterList[0]->sustaining_donation }}" >
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if($conferenceCoordinatorCondition)
+        <div class="card-body text-center">
+                <button type="button" id="ReportStatus" class="btn bg-gradient-primary" onclick="window.location.href='{{ route('chapters.chapreregpayment', ['id' => $id]) }}'">
+                    Enter Re-Registration Payment
+                </button>
+                <button type="button" id="BoardReportAlwaysDisabled" class="btn bg-gradient-primary" onclick="window.location.href='{{ route('chapreports.chaprptdonationsview', ['id' => $id]) }}'">
+                    Enter Chapter Donation
+                </button>
+             </div>
+             @endif
+
             </div>
         </div>
 
             @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes))
             <div class="card-header">
-                <h3 class="card-title">EOY Reporting</h3>
+                {{-- <h3 class="card-title">EOY Reporting</h3> --}}
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -752,28 +768,28 @@
             <!-- /.form group -->
             <div class="col-sm-3">
               <div class="custom-control custom-switch">
-                    <input disabled type="checkbox" name="BoardInfo" id="BoardInfo" class="custom-control-input"  {{$chapterList[0]->new_board_submitted ? 'checked' : '' }} />
+                    <input type="checkbox" name="BoardInfo" id="BoardInfo" class="custom-control-input disable-field"  {{$chapterList[0]->new_board_submitted ? 'checked' : '' }} />
                     <label class="custom-control-label" for="BoardInfo" ><?php echo $a = date('Y'); echo "-"; echo $a+1;?> Board Info Received</label>
               </div>
               </div>
               <!-- /.form group -->
               <div class="col-sm-3">
                 <div class="custom-control custom-switch">
-                    <input disabled type="checkbox" name="BoardActive" id="BoardActive" class="custom-control-input" {{ $chapterList[0]->new_board_active ? 'checked' : '' }} />
+                    <input type="checkbox" name="BoardActive" id="BoardActive" class="custom-control-input disable-field" {{ $chapterList[0]->new_board_active ? 'checked' : '' }} />
                     <label class="custom-control-label" for="BoardActive">{{ date('Y') . '-' . (date('Y') + 1) }} Board Activated</label>
                 </div>
                 </div>
               <!-- /.form group -->
               <div class="col-sm-3">
                 <div class="custom-control custom-switch">
-                    <input disabled type="checkbox" name="FinancialReceived" id="FinancialReceived" class="custom-control-input" {{$chapterList[0]->financial_report_received ? 'checked' : '' }} />
+                    <input type="checkbox" name="FinancialReceived" id="FinancialReceived" class="custom-control-input disable-field" {{$chapterList[0]->financial_report_received ? 'checked' : '' }} />
                     <label class="custom-control-label" for="FinancialReceived"><?php echo date('Y')-1 .'-'.date('Y');?> Financial Report Received</label>
                     </div>
                 </div>
               <!-- /.form group -->
               <div class="col-sm-3">
                 <div class="custom-control custom-switch">
-                    <input disabled type="checkbox" name="ch_financial_complete" id="FinancialComplete" class="custom-control-input" {{$chapterList[0]->financial_report_complete ? 'checked' : '' }} />
+                    <input type="checkbox" name="ch_financial_complete" id="FinancialComplete" class="custom-control-input disable-field" {{$chapterList[0]->financial_report_complete ? 'checked' : '' }} />
                     <label class="custom-control-label" for="FinancialComplete"><?php echo date('Y')-1 .'-'.date('Y');?> Financial Review Completed</label>
                     </div>
                 </div>
@@ -800,7 +816,7 @@
 
         @if (!($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes)))
         <div class="card-header">
-            <h3 class="card-title">EOY Reporting</h3>
+            {{-- <h3 class="card-title">EOY Reporting</h3> --}}
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -851,7 +867,7 @@
         </div>
 
               <div class="card-header">
-            <h3 class="card-title"></h3>
+            {{-- <h3 class="card-title"></h3> --}}
         </div>
         <!-- /.card-header -->
         <div class="card-body">
@@ -860,31 +876,29 @@
                   <div class="col-sm-6">
                   <div class="form-group">
                     <label>Last Updated By</label>
-                    <input type="text" class="form-control" value="{{$chapterList[0]->last_updated_by}}" disabled>
+                    <input type="text" class="form-control disable-field" value="{{$chapterList[0]->last_updated_by}}" >
                   </div>
                   </div>
                   <!-- /.form group -->
                   <div class="col-sm-6">
                   <div class="form-group">
                     <label>Last Updated Date</label>
-                    <input type="text" class="form-control" value="{{$chapterList[0]->last_updated_date}}" disabled>
+                    <input type="text" class="form-control disable-field" data-inputmask-alias="datetime" data-inputmask-inputformat="mm/dd/yyyy hh:mm:ss"
+                        data-mask value="{{ \Carbon\Carbon::parse($chapterList[0]->last_updated_date)->format('m/d/Y H:i:s') }}" >
                   </div>
                   </div>
               </div>
               </div>
+
         </div>
     </div>
 
             <!-- /.box-body -->
             <div class="card-body text-center">
-            @if($bigSisterCondition)
               <button type="submit" class="btn bg-gradient-primary" onclick="return PreSaveValidate()" ><i class="fas fa-save"></i>&nbsp; Save</button>
-
               <a href="mailto:{{ $emailListChap }}?cc={{ $emailListCoord }}&subject=MOMS Club of {{ $chapterList[0]->name }}" class="btn bg-gradient-primary"><i class="fas fa-envelope"></i>&nbsp; E-mail Board</a>
             </form>
-
             <button type="button" class="btn bg-gradient-primary" onclick="ConfirmCancel(this);" ><i class="fas fa-undo"></i>&nbsp; Reset Data</button>
-            @endif
               <a href="{{ route('chapters.chaplist') }}" class="btn bg-gradient-primary"><i class="fa fa-reply fa-fw" ></i>&nbsp; Back</a>
 
                 <br><br>
@@ -920,12 +934,13 @@
 
   @section('customscript')
   <script>
-    // Disble fields for non Primary Coordinators
+    //Disable fields
     $(document).ready(function () {
-        // Check if the assistant conference coordinator condition is not met
-        if (!($bigSisterCondition)) {
-            // Disable all input fields, select elements, textareas, and Save button
-            $('input, select, textarea').prop('disabled', true);
+        // Disable fiels for all users with class
+        $('.disable-field').prop('disabled', true);
+        // Disable fiels for all uers below RC with class
+        if (!($RegionalCoordinatorCondition)) {
+            $('.disable-RCCondition').prop('disabled', true);
         }
     });
 
@@ -1244,6 +1259,7 @@ $(document).ready(function() {
 
 });
 
+
 // Function to handle show/hide logic for vacant checkboxes
 function handleVacantCheckbox(checkboxId, fieldClass) {
     var fields = $("." + fieldClass);
@@ -1300,9 +1316,19 @@ handleVacantCheckbox("TreasVacant", "treas-field");
             type: "GET",
             success: function(result) {
                 if (result.exists) {
-                    alert('This Email already used in the system. Please try with new one.');
-                    $("#" + id).val('');
-                    $("#" + id).focus();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Duplicate Email',
+                        html: 'This email is already used in the system.<br>Please try a new one.',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success',
+                            cancelButton: 'btn-sm btn-danger'
+                        }
+                    }).then(() => {
+                        $("#" + id).val('');
+                        $("#" + id).focus();
+                    });
                 }
             },
             error: function(jqXHR, exception) {
@@ -1311,74 +1337,36 @@ handleVacantCheckbox("TreasVacant", "treas-field");
         });
     }
 
-  //submit validation function
-  function PreSaveValidate(){
-    var errMessage="";
-          //Ensure there are no e-mail addresses repeated
-          if($("#ch_pre_email").val() != ""){
-            if($("#ch_pre_email").val() == $("#ch_avp_email").val() || $("#ch_pre_email").val() == $("#ch_mvp_email").val() || $("#ch_pre_email").val() == $("#ch_trs_email").val() || $("#ch_pre_email").val() == $("#ch_sec_email").val()) {
-              errMessage = "The e-mail address provided for the Chapter President was also provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
-            }
-          }
-          if($("#ch_avp_email").val() != ""){
-            if($("#ch_avp_email").val() == $("#ch_mvp_email").val() || $("#ch_avp_email").val() == $("#ch_trs_email").val() || $("#ch_avp_email").val() == $("#ch_sec_email").val()) {
-              errMessage = "The e-mail address provided for the Chapter AVP was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
-            }
-          }
-          if($("#ch_mvp_email").val() != ""){
-            if($("#ch_mvp_email").val() == $("#ch_trs_email").val() || $("#ch_mvp_email").val() == $("#ch_sec_email").val()) {
-              errMessage = "The e-mail address provided for the Chapter MVP was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
-            }
-          }
-          if($("#ch_trs_email").val() != ""){
-            if($("#ch_trs_email").val() == $("#ch_sec_email").val()) {
-              errMessage = "The e-mail address provided for the Chapter Treasurer was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
-            }
-          }
+  // Submit validation function before submit
+function PreSaveValidate() {
+    var errMessage = "";
 
-          if(errMessage.length > 0){
-            customErrorAlert(errMessage);
-            return false;
-          }
+    // Get email values and trim whitespace
+    var preEmail = $("#ch_pre_email").val().trim();
+    var avpEmail = $("#ch_avp_email").val().trim();
+    var mvpEmail = $("#ch_mvp_email").val().trim();
+    var trsEmail = $("#ch_trs_email").val().trim();
+    var secEmail = $("#ch_sec_email").val().trim();
 
-          var phoneListArr = ["ch_pre_phone", "ch_avp_phone", "ch_mvp_phone", "ch_trs_phone", "ch_sec_phone"];
+    // Create an array of emails
+    var emails = [preEmail, avpEmail, mvpEmail, trsEmail, secEmail];
 
-                for (var i = 0; i < phoneListArr.length; i++) {
-                    var inputField = document.getElementById(phoneListArr[i]);
-                    var inputValue = inputField.value;
-                    inputValue = inputValue.replace(/-/g, ''); // Remove hyphens
-                    inputValue = inputValue.replace(/\D/g, '').substring(0, 10); // Remove non-digits and limit to 10 digits
-                    inputField.value = inputValue; // Update the input field with the cleaned value
-                }
+    // Use a Set to identify duplicates
+    var uniqueEmails = new Set(emails.filter(email => email !== "")); // filter out empty values
 
-                //Okay, all validation passed, save the records to the database
-                return true;
-            }
+    // Check for duplicates
+    if (uniqueEmails.size !== emails.filter(email => email !== "").length) {
+        errMessage = "You entered the same email address for more than one board member. Please enter a unique e-mail address for each board member or mark the position as vacant.";
+    }
 
-    // function updatePassword(userid){
-    //     var new_password = "TempPass4You";
+    if (errMessage.length > 0) {
+        customErrorAlert(errMessage);
+        return false;
+    }
 
-    //         $.ajax({
-    //         url: '{{ route('updatepassword') }}',
-    //         type: "POST",
-    //         data: {
-    //             user_id: userid,
-    //             new_password: new_password,
-    //             _token: '{{ csrf_token() }}'
-    //         },
-    //         success: function(result) {
-    //             customSuccessAlert(result.message.replace('<br>', '\n'));
-    //         },
-    //         error: function(jqXHR, exception) {
-    //             if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
-    //                 customErrorAlert(jqXHR.responseJSON.error);
-    //             } else {
-    //                 customErrorAlert('An error occurred while resetting the password.');
-    //             }
-    //         }
-    //     });
-    //     return true;
-    // }
+    return true;
+}
+
 
     function updatePassword(userid){
         var new_password = "TempPass4You";
@@ -1400,7 +1388,6 @@ handleVacantCheckbox("TreasVacant", "treas-field");
         });
         return true;
     }
-
 
     function UpdateEIN() {
         var ein = document.getElementById("ch_ein").value;
@@ -1470,8 +1457,6 @@ handleVacantCheckbox("TreasVacant", "treas-field");
     function submitForm() {
         document.getElementById("myForm").submit(); // Trigger form submission
     }
-
-
 
 </script>
 @endsection

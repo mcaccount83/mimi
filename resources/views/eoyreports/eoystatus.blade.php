@@ -5,12 +5,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>EOY Status Report</h1>
+          <h1>End of Year Reports</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">EOY Status Report</li>
+            <li class="breadcrumb-item active">Report Status</li>
           </ol>
         </div>
       </div>
@@ -24,8 +24,21 @@
         <div class="col-12">
           <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Report of End of Year Status&nbsp;<small>(Chapters that were added after June 30, <?php echo date('Y');?> will not be listed)</small></h3>
-              </div>
+                <div class="dropdown">
+                    <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Report Status
+                    </h3>
+                    <span class="ml-2">Chapters that were added after June 30, <?php echo date('Y');?> will not be listed</span>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="/eoy/status">Report Status</a>
+                        <a class="dropdown-item" href="/eoy/boardreport">Board Election Reports</a>
+                        <a class="dropdown-item" href="/eoy/financialreport">Financial Reports</a>
+                        <a class="dropdown-item" href="/eoy/attachments">Financial Report Attachments</a>
+                        <a class="dropdown-item" href="/eoy/boundaries">Boundary Issues</a>
+                        <a class="dropdown-item" href="/eoy/awards">Chapter Awards</a>
+                    </div>
+                </div>
+            </div>
             <!-- /.card-header -->
             <div class="card-body">
                 <table id="chapterlist" class="table table-sm table-hover" >
@@ -102,6 +115,19 @@
 @endsection
 @section('customscript')
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    const currentPath = window.location.pathname;
+
+    dropdownItems.forEach(item => {
+        // Check if the item's href matches the current path
+        if (item.getAttribute("href") === currentPath) {
+            item.classList.add("active");
+        }
+    });
+});
+
+
 document.addEventListener('DOMContentLoaded', function() {
     // Iterate through each email link
     document.querySelectorAll('.email-link').forEach(function(emailLink) {
