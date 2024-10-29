@@ -22,8 +22,8 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
-          <div class="card">
-            <div class="card-header">
+            <div class="card card-outline card-primary">
+                <div class="card-header">
                 <div class="dropdown">
                     <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         International Retired Coordinator List
@@ -57,7 +57,7 @@
                 <tbody>
                 @foreach($intCoordinatorList as $list)
                   <tr>
-                        <td class="text-center align-middle"><a href="{{ url("/iternational/coordinatorretiredview/{$list->cor_id}") }}"><i class="fas fa-eye"></i></a></td>
+                        <td class="text-center align-middle"><a href="{{ url("/coorddetails/{$list->cor_id}") }}"><i class="fas fa-eye"></i></a></td>
                         <td>{{ $list->cor_cid }}</td>
                         <td>{{ $list->reg_name }}</td>
                         <td>{{ $list->cor_fname }}</td>

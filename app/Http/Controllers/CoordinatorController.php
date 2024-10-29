@@ -1599,12 +1599,13 @@ class CoordinatorController extends Controller
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
+        $userConfId = $corDetails['conference_id'];
         $coordinatorDetails = DB::table('coordinators as cd')
-            ->select('cd.*','st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname',
-                'cp.long_title as position', 'cp2.long_title as sec_position', 'cd2.first_name as report_fname', 'cd2.last_name as report_lname')
+            ->select('cd.*','st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'cp.long_title as position',
+                'cp3.long_title as display_position', 'cp2.long_title as sec_position', 'cd2.first_name as report_fname', 'cd2.last_name as report_lname')
             ->leftJoin('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')  // Primary Position
             ->leftJoin('coordinator_position as cp2', 'cd.sec_position_id', '=', 'cp2.id')  //Secondary Position
+            ->leftJoin('coordinator_position as cp3', 'cd.display_position_id', '=', 'cp3.id')  //Display Position
             ->leftJoin('coordinators as cd2', 'cd.report_id', '=', 'cd2.id') //Supervising Coordinator
             ->leftJoin('state as st', 'cd.state', '=', 'st.id')
             ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
@@ -1613,7 +1614,29 @@ class CoordinatorController extends Controller
             ->where('cd.id', '=', $id)
             ->get();
 
-        $data = ['coordinatorDetails' => $coordinatorDetails,];
+        $corIsActive = $coordinatorDetails[0]->is_active;
+        $corConfId = $coordinatorDetails[0]->conference_id;
+
+        $directReportTo = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+            ->where('cd.report_id', '=', $id)
+            ->where('cd.is_active', '=', '1')
+            ->get();
+
+        $directChapterTo = DB::table('chapters as ch')
+            ->select('ch.id as ch_id', 'ch.name as ch_name', 'st.state_short_name as st_name')
+            ->join('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.primary_coordinator_id', '=', $id)
+            ->where('ch.is_active', '=', '1')
+            ->get();
+
+        $month = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
+        $birthMonth = $coordinatorDetails[0]->birthday_month_id;
+        $birthMonthWords = $month[$birthMonth] ?? 'Status Unknown';
+
+        $data = ['coordinatorDetails' => $coordinatorDetails, 'directReportTo' => $directReportTo, 'directChapterTo' => $directChapterTo, 'corConfId' => $corConfId,
+        'corIsActive' => $corIsActive, 'userConfId' => $userConfId, 'birthMonthWords' => $birthMonthWords];
 
         return view('coordinators.view')->with($data);
     }

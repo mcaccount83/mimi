@@ -211,13 +211,13 @@ Route::get('/coordreports/reportingtree', [CoordinatorReportController::class, '
 
 // International Controller Routes...
 Route::get('/international/chapter', [InternationalController::class, 'showIntChapter'])->name('international.intchapter');
-Route::get('/international/chapterview/{id}', [InternationalController::class, 'showIntChapterView'])->name('international.intchapterview');
+// Route::get('/international/chapterview/{id}', [InternationalController::class, 'showIntChapterView'])->name('international.intchapterview');
 Route::get('/international/chapterzapped', [InternationalController::class, 'showIntZappedChapter'])->name('international.intchapterzapped');
-Route::get('/international/chapterzappedview/{id}', [InternationalController::class, 'showIntZappedChapterView'])->name('international.intchapterzappedview');
+// Route::get('/international/chapterzappedview/{id}', [InternationalController::class, 'showIntZappedChapterView'])->name('international.intchapterzappedview');
 Route::get('/international/coordinator', [InternationalController::class, 'showIntCoordinator'])->name('international.intcoord');
-Route::get('/international/coordinatorview/{id}', [InternationalController::class, 'showIntCoordinatorView'])->name('international.intcoordview');
+// Route::get('/international/coordinatorview/{id}', [InternationalController::class, 'showIntCoordinatorView'])->name('international.intcoordview');
 Route::get('/international/coordinatorretired', [InternationalController::class, 'showIntCoordinatorRetired'])->name('international.intcoordretired');
-Route::get('/iternational/coordinatorretiredview/{id}', [InternationalController::class, 'showIntCoordinatorRetiredView'])->name('international.intcoordretiredview');
+// Route::get('/iternational/coordinatorretiredview/{id}', [InternationalController::class, 'showIntCoordinatorRetiredView'])->name('international.intcoordretiredview');
 Route::get('/international/coordinatortodo', [InternationalController::class, 'showIntCoordinatorToDo'])->name('international.intcoordtodo');
 Route::get('/international/einstatus', [InternationalController::class, 'showIntEINstatus'])->name('international.inteinstatus');
 Route::get('/international/einstatusview/{id}', [InternationalController::class, 'showIntEINstatusView'])->name('international.inteinstatusview');

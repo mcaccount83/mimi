@@ -22,8 +22,8 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
-          <div class="card">
-            <div class="card-header">
+            <div class="card card-outline card-primary">
+                <div class="card-header">
                 <div class="dropdown">
                     <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Social Media Report

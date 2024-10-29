@@ -22,8 +22,8 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
-          <div class="card">
-            <div class="card-header">
+            <div class="card card-outline card-primary">
+                <div class="card-header">
                 <div class="dropdown">
                     <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Active Coordinator List
@@ -61,7 +61,7 @@
                 <tbody>
                   @foreach($coordinatorList as $list)
                     <tr>
-                        <td class="text-center align-middle"><a href="{{ url("/coordinator/coordinatorview/{$list->cor_id}") }}"><i class="fas fa-edit"></i></a></td>
+                        <td class="text-center align-middle"><a href="{{ url("/coorddetails/{$list->cor_id}") }}"><i class="fas fa-eye"></i></a></td>
                     <td>
                         @if ($list->reg != "None")
                             {{ $list->conf }} / {{ $list->reg }}
