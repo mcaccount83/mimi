@@ -30,12 +30,12 @@
                     </h3>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         @if ($coordinatorCondition)
-                            <a class="dropdown-item" href="/coordinator/coordlist">Active Coordinator List</a>
-                            <a class="dropdown-item" href="/coordinator/retired">Retired Coordinator List</a>
+                            <a class="dropdown-item" href="{{ route('coordinators.coordlist') }}">Active Coordinator List</a>
+                            <a class="dropdown-item" href="{{ route('coordinators.coordretired') }}">Retired Coordinator List</a>
                         @endif
                         @if (($einCondition) || ($adminReportCondition))
-                            <a class="dropdown-item" href="/international/coordinator">International Active Coordinator List</a>
-                            <a class="dropdown-item" href="/international/coordinatorretired">International Retired Coordinator List</a>
+                            <a class="dropdown-item" href="{{ route('international.intcoord') }}">International Active Coordinator List</a>
+                            <a class="dropdown-item" href="{{ route('international.intcoordretired') }}">International Retired Coordinator List</a>
                         @endif
                     </div>
                 </div>
@@ -120,13 +120,13 @@ document.addEventListener("DOMContentLoaded", function() {
     const currentPath = window.location.pathname;
 
     dropdownItems.forEach(item => {
-        // Check if the item's href matches the current path
-        if (item.getAttribute("href") === currentPath) {
+        const itemPath = new URL(item.href).pathname;
+
+        if (itemPath === currentPath) {
             item.classList.add("active");
         }
     });
 });
-
 
 function showPrimary() {
     var base_url = '{{ url("/coordinator/coordlist") }}';

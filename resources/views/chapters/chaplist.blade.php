@@ -30,12 +30,12 @@
                         </h3>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             @if ($coordinatorCondition)
-                                <a class="dropdown-item" href="/chapter/chapterlist">Active Chapter List</a>
-                                <a class="dropdown-item" href="/chapter/zapped">Zapped Chapter List</a>
+                                <a class="dropdown-item" href="{{ route('chapters.chaplist') }}">Active Chapter List</a>
+                                <a class="dropdown-item" href="{{ route('chapters.chapzapped') }}">Zapped Chapter List</a>
                             @endif
                             @if (($einCondition) || ($adminReportCondition))
-                                <a class="dropdown-item" href="/international/chapter">International Active Chapter List</a>
-                                <a class="dropdown-item" href="/international/chapterzapped">International Zapped Chapter List</a>
+                                <a class="dropdown-item" href="{{ route('international.intchapter') }}">International Active Chapter List</a>
+                                <a class="dropdown-item" href="{{ route('international.intchapterzapped') }}">International Zapped Chapter List</a>
                             @endif
                         </div>
                     </div>
@@ -127,13 +127,14 @@
 
 @section('customscript')
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() {
     const dropdownItems = document.querySelectorAll(".dropdown-item");
     const currentPath = window.location.pathname;
 
     dropdownItems.forEach(item => {
-        // Check if the item's href matches the current path
-        if (item.getAttribute("href") === currentPath) {
+        const itemPath = new URL(item.href).pathname;
+
+        if (itemPath === currentPath) {
             item.classList.add("active");
         }
     });
