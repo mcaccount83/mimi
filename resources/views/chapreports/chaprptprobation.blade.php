@@ -29,14 +29,14 @@
                             Chapter Probation Report
                         </h3>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="/chapterreports/chapterstatus">Chapter Status Report</a>
-                            <a class="dropdown-item" href="/chapterreports/einstatus">EIN Status Report</a>
-                            <a class="dropdown-item" href="/chapterreports/newchapters">New Chapter Report</a>
-                            <a class="dropdown-item" href="/chapterreports/largechapters">Large Chapter Report</a>
-                            <a class="dropdown-item" href="/chapterreports/probation">Chapter Probation Report</a>
-                            <a class="dropdown-item" href="/chapterreports/donations">Chapter Donation Report</a>
-                            <a class="dropdown-item" href="/chapterreports/socialmedia">Social Media Report</a>
-                            <a class="dropdown-item" href="/chapterreports/coordinators">Chapter Coordinators Report</a>
+                            <a class="dropdown-item" href="{{ route('chapreports.chaprptchapterstatus') }}">Chapter Status Report</a>
+                            <a class="dropdown-item" href="{{ route('chapreports.chaprpteinstatus') }}">EIN Status Report</a>
+                            <a class="dropdown-item" href="{{ route('chapreports.chaprptnewchapters') }}">New Chapter Report</a>
+                            <a class="dropdown-item" href="{{ route('chapreports.chaprptlargechapters') }}">Large Chapter Report</a>
+                            <a class="dropdown-item" href="{{ route('chapreports.chaprptprobation') }}">Chapter Probation Report</a>
+                            <a class="dropdown-item" href="{{ route('chapreports.chaprptdonations') }}">Chapter Donation Report</a>
+                            <a class="dropdown-item" href="{{ route('chapreports.chaprptsocialmedia') }}">Social Media Report</a>
+                            <a class="dropdown-item" href="{{ route('chapreports.chaprptcoordinators') }}">Chapter Coordinators Report</a>
                         </div>
                     </div>
                 </div>
@@ -121,8 +121,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const currentPath = window.location.pathname;
 
     dropdownItems.forEach(item => {
-        // Check if the item's href matches the current path
-        if (item.getAttribute("href") === currentPath) {
+        const itemPath = new URL(item.href).pathname;
+
+        if (itemPath === currentPath) {
             item.classList.add("active");
         }
     });
