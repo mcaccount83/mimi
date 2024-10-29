@@ -30,12 +30,12 @@
                     </h3>
                     <span class="ml-2">Chapters that were added after June 30, <?php echo date('Y');?> will not be listed</span>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="/eoy/status">Report Status</a>
-                        <a class="dropdown-item" href="/eoy/boardreport">Board Election Reports</a>
-                        <a class="dropdown-item" href="/eoy/financialreport">Financial Reports</a>
-                        <a class="dropdown-item" href="/eoy/attachments">Financial Report Attachments</a>
-                        <a class="dropdown-item" href="/eoy/boundaries">Boundary Issues</a>
-                        <a class="dropdown-item" href="/eoy/awards">Chapter Awards</a>
+                        <a class="dropdown-item" href="{{ route('eoyreports.eoystatus') }}">Report Status</a>
+                        <a class="dropdown-item" href="{{ route('eoyreports.eoyboardreport') }}">Board Election Reports</a>
+                        <a class="dropdown-item" href="{{ route('eoyreports.eoyfinancialreport') }}">Financial Reports</a>
+                        <a class="dropdown-item" href="{{ route('eoyreports.eoyattachments') }}">Financial Report Attachments</a>
+                        <a class="dropdown-item" href="{{ route('eoyreports.eoyboundaries') }}">Boundary Issues</a>
+                        <a class="dropdown-item" href="{{ route('eoyreports.eoyawards') }}">Chapter Awards</a>
                     </div>
                 </div>
             </div>
@@ -120,8 +120,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const currentPath = window.location.pathname;
 
     dropdownItems.forEach(item => {
-        // Check if the item's href matches the current path
-        if (item.getAttribute("href") === currentPath) {
+        const itemPath = new URL(item.href).pathname;
+
+        if (itemPath === currentPath) {
             item.classList.add("active");
         }
     });
