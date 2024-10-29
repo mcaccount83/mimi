@@ -1590,4 +1590,70 @@ class CoordinatorController extends Controller
         return redirect()->to('/coordinator/profile')->with('success', 'Coordinator profile updated successfully');
     }
 
+
+
+     /**
+     * Edit Coordiantor
+     */
+    public function viewCoordDetails(Request $request, $id): View
+    {
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
+        $corConfId = $corDetails['conference_id'];
+        $coordinatorDetails = DB::table('coordinators as cd')
+            ->select('cd.*')
+            ->where('cd.is_active', '=', '1')
+            ->where('cd.id', '=', $id)
+            ->get();
+        $stateArr = DB::table('state')
+            ->select('state.*')
+            ->orderBy('id')
+            ->get();
+        $countryArr = DB::table('country')
+            ->select('country.*')
+            ->orderBy('id')
+            ->get();
+        $regionList = DB::table('region')
+            ->select('id', 'long_name')
+            ->orderBy('long_name')
+            ->get();
+        $confList = DB::table('conference')
+            ->select('id', 'conference_name')
+            ->orderBy('conference_name')
+            ->get();
+        $positionList = DB::table('coordinator_position')
+            ->select('id', 'long_title')
+            ->orderBy('long_title')
+            ->get();
+
+        $primaryCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+            ->where('cd.is_active', '=', '1')
+            ->orderBy('cd.first_name')
+            ->get();
+        $directReportTo = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+            ->where('cd.report_id', '=', $id)
+            ->where('cd.is_active', '=', '1')
+            ->get();
+
+        $directChapterTo = DB::table('chapters as ch')
+            ->select('ch.id as ch_id', 'ch.name as ch_name', 'st.state_short_name as st_name')
+            ->join('state as st', 'ch.state', '=', 'st.id')
+            ->where('ch.primary_coordinator_id', '=', $id)
+            ->where('ch.is_active', '=', '1')
+            ->get();
+        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG',
+            '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
+        $currentMonth = $coordinatorDetails[0]->birthday_month_id;
+
+        $data = ['directChapterTo' => $directChapterTo, 'directReportTo' => $directReportTo, 'primaryCoordinatorList' => $primaryCoordinatorList,
+            'positionList' => $positionList, 'confList' => $confList, 'currentMonth' => $currentMonth, 'coordinatorDetails' => $coordinatorDetails,
+            'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth, 'cor_id' => $corId];
+
+        return view('coordinators.view')->with($data);
+    }
+
 }

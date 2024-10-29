@@ -301,4 +301,7 @@ Route::post('/chapterdetailsupdate/{id}', [ChapterController::class, 'updateChap
 Route::post('/chapter/updateEIN/{id}', [ChapterController::class, 'updateEIN'])->name('chapters.updateein');
 Route::get('/chapterreports', [ChapterReportController::class, 'viewChaperReports'])->name('chapreports.view');
 
+Route::get('/coorddetails/{id}', [CoordinatorController::class, 'viewCoordDetails'])->name('coordinators.view');
+
+
 
