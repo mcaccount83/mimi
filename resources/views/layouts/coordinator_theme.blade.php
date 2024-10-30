@@ -228,15 +228,15 @@
 
                         <!-- Inquiries Menu Item -->
                         @php
-                            if ($inquiriesCondition) {
+                            if ($inquiriesCondition && !$coordinatorCondition) {
                                 $inquiriesRoute = route('chapters.chapinquiries');
                                 $activeInquiriesRoutes = [
-                                    'chapter/inquiries', 'chapterdetails/*'
+                                    'chapter/inquiries', 'chapterdetails/*', 'chapter/inquirieszapped'
                                 ];
-                            } elseif ($regionalCoordinatorCondition) {
+                            } elseif ($coordinatorCondition) {
                                 $inquiriesRoute = route('chapters.chapinquiries');
                                 $activeInquiriesRoutes = [
-                                    'chapter/inquiries'
+                                    'chapter/inquiries', 'chapter/inquirieszapped'
                                 ];
                             }
                         @endphp

@@ -357,15 +357,23 @@
                     <br>
                     @if ($corConfId == $chConfId)
                         @if ($chIsActive == 1)
-                            <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'">Back to Chapter List</button>
+                            @if ($inquiriesCondition  && ($coordId != $chPCid))
+                                <button id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries') }}'">Back to Inquiries Chapter List</button>
+                            @else
+                                <button id="back" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'">Back to Chapter List</button>
+                            @endif
                         @else
-                            <button id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapzapped') }}'">Back to Zapped Chapter List</button>
+                            @if ($inquiriesCondition  && ($coordId != $chPCid))
+                                <button id="back-inquiries-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries') }}'">Back to Inquiries Zapped Chapter List</button>
+                            @else
+                                <button id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapzapped') }}'">Back to Zapped Chapter List</button>
+                            @endif
                         @endif
                     @elseif ($einCondition && ($corConfId != $chConfId) || $inquiriesCondition  && ($corConfId != $chConfId) || $adminReportCondition  && ($corConfId != $chConfId))
                         @if ($chIsActive == 1)
-                            <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapter') }}'">Back to International Chapter List</button>
+                            <button id="back-international"class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapter') }}'">Back to International Chapter List</button>
                         @else
-                            <button id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapterzapped') }}'">Back to International Zapped Chapter List</button>
+                            <button id="back-international-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapterzapped') }}'">Back to International Zapped Chapter List</button>
                         @endif
                     @endif
                 @endif
@@ -380,11 +388,16 @@
 @endsection
 @section('customscript')
 <script>
-var $chIsActive = {{ $chIsActive }};
+    var $chIsActive = @json($chIsActive);
+    var $einCondition = @json($einCondition);
+    var $inquiriesCondition = @json($inquiriesCondition);
+    var $chPCid = @json($chPCid);
+    var $coordId = @json($coordId);
+    var $corConfId = @json($corConfId);
 
 $(document).ready(function () {
-    // Disable fields for chapters that are not active
-    if ($chIsActive != 1)
+    // Disable fields for chapters that are not active or EIN & Inquiries Coordinators who are not PC for the Chapter
+    if (($chIsActive != 1) || ($inquiriesCondition && ($coordId != $chPCid)) || ($einCondition && ($coordId != $chPCid))) {
         $('input, select, textarea, button').prop('disabled', true);
 
         $('a[href^="mailto:"]').each(function() {
@@ -395,10 +408,14 @@ $(document).ready(function () {
             });
         });
 
-        $('#back-zapped').prop('disabled', false); // Enable Back-Zapped Button
-
+        // Re-enable the specific "Back" buttons
+        $('#back-zapped').prop('disabled', false);
+        $('#back-inquiries').prop('disabled', false);
+        $('#back-inquiries-zapped').prop('disabled', false);
+        $('#back-international').prop('disabled', false);
+        $('#back-international-zapped').prop('disabled', false);
+    }
 });
-
 
 $(document).ready(function() {
     function loadCoordinatorList(corId) {

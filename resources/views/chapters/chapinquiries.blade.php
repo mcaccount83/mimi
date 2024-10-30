@@ -10,12 +10,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Inquiries Chapter List</h1>
+          <h1>Inquiries</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">Inquiries Chapter List</li>
+            <li class="breadcrumb-item active">Inquiries Active Chapter List</li>
           </ol>
         </div>
       </div>
@@ -29,7 +29,15 @@
             <div class="col-12">
                 <div class="card card-outline card-primary">
                     <div class="card-header">
-                  <h3 class="card-title">List of Inquiries Chapters</h3>
+                    <div class="dropdown">
+                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Inquiries Active Chapter List
+                        </h3>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="{{ route('chapters.chapinquiries') }}">Inquiries Active Chapter List</a>
+                                <a class="dropdown-item" href="{{ route('chapters.chapinquirieszapped') }}">Inquiries Zapped Chapter List</a>
+                        </div>
+                    </div>
                 </div>
                 <!-- /.card-header -->
             <div class="card-body">
@@ -119,6 +127,20 @@
 @endsection
 @section('customscript')
 <script>
+
+document.addEventListener("DOMContentLoaded", function() {
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    const currentPath = window.location.pathname;
+
+    dropdownItems.forEach(item => {
+        const itemPath = new URL(item.href).pathname;
+
+        if (itemPath === currentPath) {
+            item.classList.add("active");
+        }
+    });
+});
+
 function test() {
 alert('test');
 return false;

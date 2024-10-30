@@ -2680,7 +2680,7 @@ class ChapterController extends Controller
         $inQryArr = $coordinatorData['inQryArr'];
 
         $inquiriesList = DB::table('chapters')
-            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.territory as terry', 'chapters.zap_date as zap_date', 'st.state_short_name as state')
+            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.territory as terry', 'chapters.inquiries_note as inq_note','chapters.inquiries_contact as inq_con', 'chapters.zap_date as zap_date', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -3524,11 +3524,20 @@ class ChapterController extends Controller
 
     public function viewChapterDetails(Request $request, $id)
         {
-            $corDetails = User::find($request->user()->id)->Coordinators;
-            $corId = $corDetails['id'];
-            $corConfId = $corDetails['conference_id'];
-            $corRegId = $corDetails['region_id'];
-            $positionid = $corDetails['position_id'];
+
+            $user = User::find($request->user()->id);
+            $userId = $user->id;
+
+            // $corDetails = User::find($request->user()->id)->Coordinators;
+            $corDetails = DB::table('coordinators as cd')
+                ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
+                ->where('cd.user_id', '=', $userId)
+                ->get();
+
+            $coordId = $corDetails[0]->id;
+            $corConfId = $corDetails[0]->conference_id;
+            $corRegId = $corDetails[0]->region_id;
+            $positionid = $corDetails[0]->position_id;
 
             $financial_report_array = FinancialReport::find($id);
             if ($financial_report_array) {
@@ -3635,9 +3644,9 @@ class ChapterController extends Controller
             $chapterStatus = $chapterList[0]->status;
             $chapterStatusinWords = $statusbWords[$chapterStatus] ?? 'Status Unknown';
 
-            $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'corId' => $corId, 'reviewComplete' => $reviewComplete, 'emailListCoord' => $emailListCoord, 'emailListChap' => $emailListChap, 'currentMonth' => $currentMonth,
+            $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete, 'emailListCoord' => $emailListCoord, 'emailListChap' => $emailListChap, 'currentMonth' => $currentMonth,
                 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'chapterList' => $chapterList, 'webStatusinWords' => $webStatusinWords, 'chapterStatusinWords' => $chapterStatusinWords,
-                'primaryCoordinatorList' => $primaryCoordinatorList, 'foundedMonth' => $foundedMonth, 'corConfId' => $corConfId, 'chConfId' => $chConfId];
+                'primaryCoordinatorList' => $primaryCoordinatorList, 'foundedMonth' => $foundedMonth, 'corConfId' => $corConfId, 'chConfId' => $chConfId, 'chPCid' => $chPCid];
 
             return view('chapters.view')->with($data);
     }

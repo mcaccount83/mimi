@@ -1598,7 +1598,7 @@ class CoordinatorController extends Controller
     public function viewCoordDetails(Request $request, $id): View
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
-        $corId = $corDetails['id'];
+        $userId = $corDetails['id'];
         $userConfId = $corDetails['conference_id'];
         $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*','st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'cp.long_title as position',
@@ -1636,7 +1636,7 @@ class CoordinatorController extends Controller
         $birthMonthWords = $month[$birthMonth] ?? 'Status Unknown';
 
         $data = ['coordinatorDetails' => $coordinatorDetails, 'directReportTo' => $directReportTo, 'directChapterTo' => $directChapterTo, 'corConfId' => $corConfId,
-        'corIsActive' => $corIsActive, 'userConfId' => $userConfId, 'birthMonthWords' => $birthMonthWords];
+        'corIsActive' => $corIsActive, 'userConfId' => $userConfId, 'userId' => $userId , 'birthMonthWords' => $birthMonthWords];
 
         return view('coordinators.view')->with($data);
     }
