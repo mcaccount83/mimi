@@ -5,12 +5,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Chapter Reports</h1>
+          <h1>Payments/Donations</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">Chapter Donation Report</li>
+            <li class="breadcrumb-item active">M2M & Sustaining Donations</li>
           </ol>
         </div>
       </div>
@@ -26,17 +26,16 @@
                     <div class="card-header">
                     <div class="dropdown">
                         <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Chapter Donation Report
+                            M2M & Sustaining Donations
                         </h3>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="{{ route('chapreports.chaprptchapterstatus') }}">Chapter Status Report</a>
-                            <a class="dropdown-item" href="{{ route('chapreports.chaprpteinstatus') }}">EIN Status Report</a>
-                            <a class="dropdown-item" href="{{ route('chapreports.chaprptnewchapters') }}">New Chapter Report</a>
-                            <a class="dropdown-item" href="{{ route('chapreports.chaprptlargechapters') }}">Large Chapter Report</a>
-                            <a class="dropdown-item" href="{{ route('chapreports.chaprptprobation') }}">Chapter Probation Report</a>
-                            <a class="dropdown-item" href="{{ route('chapreports.chaprptdonations') }}">Chapter Donation Report</a>
-                            <a class="dropdown-item" href="{{ route('chapreports.chaprptsocialmedia') }}">Social Media Report</a>
-                            <a class="dropdown-item" href="{{ route('chapreports.chaprptcoordinators') }}">Chapter Coordinators Report</a>
+                            @if ($coordinatorCondition)
+                                <a class="dropdown-item" href="{{ route('chapters.chapreregistration') }}">Re-Registration Payments</a>
+                                <a class="dropdown-item" href="{{ route('chapreports.chaprptdonations') }}">M2M & Sustaining Donations</a>
+                            @endif
+                            @if ($m2mCondition || $adminReportCondition)
+                                <a class="dropdown-item" href="{{ route('international.intdonation') }}">International M2M & Sustaining Donations</a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -60,7 +59,7 @@
                   <tr>
                             <td class="text-center align-middle">
                                 @if ($conferenceCoordinatorCondition)
-	                                <a href="{{ url("/chapterreports/donationsview/{$list->id}") }}"><i class="far fa-credit-card "></i></a>
+	                                <a href="{{ url("/chapter/donationsview/{$list->id}") }}"><i class="far fa-credit-card "></i></a>
                                 @endif
                             </td>
                                 <td>

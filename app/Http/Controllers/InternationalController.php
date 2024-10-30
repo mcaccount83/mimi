@@ -506,7 +506,7 @@ class InternationalController extends Controller
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
             ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
-            ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
+            ->leftJoin('month as db', 'chapters.start_month_id', '=', 'db.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->orderBy('st.state_short_name')

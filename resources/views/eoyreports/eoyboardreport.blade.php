@@ -30,12 +30,12 @@
                     </h3>
                     <span class="ml-2">Chapters that were added after June 30, <?php echo date('Y');?> will not be listed</span>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="{{ route('eoyreports.eoystatus') }}">Report Status</a>
+                        <a class="dropdown-item" href="{{ route('eoyreports.eoystatus') }}">EOY Status Report</a>
                         <a class="dropdown-item" href="{{ route('eoyreports.eoyboardreport') }}">Board Election Reports</a>
                         <a class="dropdown-item" href="{{ route('eoyreports.eoyfinancialreport') }}">Financial Reports</a>
                         <a class="dropdown-item" href="{{ route('eoyreports.eoyattachments') }}">Financial Report Attachments</a>
-                        <a class="dropdown-item" href="{{ route('eoyreports.eoyboundaries') }}">Boundary Issues</a>
-                        <a class="dropdown-item" href="{{ route('eoyreports.eoyawards') }}">Chapter Awards</a>
+                        <a class="dropdown-item" href="{{ route('eoyreports.eoyboundaries') }}">Boundary Issues Report</a>
+                        <a class="dropdown-item" href="{{ route('eoyreports.eoyawards') }}">Chapter Awards Report</a>
                     </div>
                 </div>
             </div>

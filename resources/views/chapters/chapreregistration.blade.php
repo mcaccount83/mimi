@@ -5,12 +5,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Chapter Re-Registrations</h1>
+          <h1>Payments/Donations</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">Chapter Re-Registrations</li>
+            <li class="breadcrumb-item active">Re-Registration Payments</li>
           </ol>
         </div>
       </div>
@@ -20,12 +20,25 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-        <div class="row">
+          <div class="row">
             <div class="col-12">
                 <div class="card card-outline card-primary">
                     <div class="card-header">
-                <h3 class="card-title">List of Chapter Re-Registrations</h3>
+                    <div class="dropdown">
+                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Re-Registration Payments
+                    </h3>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        @if ($coordinatorCondition)
+                            <a class="dropdown-item" href="{{ route('chapters.chapreregistration') }}">Re-Registration Payments</a>
+                            <a class="dropdown-item" href="{{ route('chapreports.chaprptdonations') }}">M2M & Sustaining Donations</a>
+                        @endif
+                        @if ($m2mCondition || $adminReportCondition)
+                            <a class="dropdown-item" href="{{ route('international.intdonation') }}">International M2M & Sustaining Donations</a>
+                        @endif
+                    </div>
                 </div>
+            </div>
                 <!-- /.card-header -->
             <div class="card-body">
                 <table id="chapterlist" class="table table-sm table-hover">
@@ -118,6 +131,20 @@
 
 @section('customscript')
 <script>
+
+document.addEventListener("DOMContentLoaded", function() {
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    const currentPath = window.location.pathname;
+
+    dropdownItems.forEach(item => {
+        const itemPath = new URL(item.href).pathname;
+
+        if (itemPath === currentPath) {
+            item.classList.add("active");
+        }
+    });
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     // Iterate through each email link
     document.querySelectorAll('.email-link').forEach(function(emailLink) {

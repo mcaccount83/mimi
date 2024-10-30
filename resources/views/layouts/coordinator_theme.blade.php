@@ -168,12 +168,14 @@
                         @php
                             if ($coordinatorCondition) {
                                 $chaptersRoute = route('chapters.chaplist');
+                            } elseif ($inquiriesCondition) {
+                                $chaptersRoute = route('chapters.chapinquiries');
                             } elseif ($einCondition || $adminReportCondition) {
                                 $chaptersRoute = route('international.intchapter');
                             }
                             $activeChpaterRoutes = [
-                                'chapter/chapterlist', 'chapterdetails/*','chapter/chapterview/*', 'chapter/chapternew', 'chapter/zapped', 'chapter/zappedview/*',
-                                'international/chapter', 'international/chapterview/*', 'international/chapterzapped', 'international/chapterzappedview/*'
+                                'chapter/chapterlist', 'chapterdetails/*', 'chapter/chapternew', 'chapter/zapped',
+                                'chapter/inquiries', 'chapter/inquirieszapped', 'international/chapter', 'international/chapterzapped'
                             ];
                         @endphp
                         @if (isset($chaptersRoute))
@@ -214,7 +216,8 @@
                                 $paymentsRoute = route('international.intdonation');
                             }
                             $activePaymentsRoutes = [
-                                'chapter/reregistration', 'chapter/reregistrationpayment/*', 'chapter/reregistrationnotes/*', 'international/donation'
+                                'chapter/reregistration', 'chapter/reregistrationpayment/*', 'chapter/reregistrationnotes/*', 'international/donation',
+                                'chapter/donations', 'chapter/donationsview/*'
                             ];
                         @endphp
                         @if (isset($paymentsRoute))
@@ -222,29 +225,6 @@
                                 <a href="{{ $paymentsRoute }}" class="nav-link {{ isActiveRoute($activePaymentsRoutes) }}">
                                     <i class="nav-icon fas fa-dollar-sign"></i>
                                     <p>Payments/Donations</p>
-                                </a>
-                            </li>
-                        @endif
-
-                        <!-- Inquiries Menu Item -->
-                        @php
-                            if ($inquiriesCondition && !$coordinatorCondition) {
-                                $inquiriesRoute = route('chapters.chapinquiries');
-                                $activeInquiriesRoutes = [
-                                    'chapter/inquiries', 'chapterdetails/*', 'chapter/inquirieszapped'
-                                ];
-                            } elseif ($coordinatorCondition) {
-                                $inquiriesRoute = route('chapters.chapinquiries');
-                                $activeInquiriesRoutes = [
-                                    'chapter/inquiries', 'chapter/inquirieszapped'
-                                ];
-                            }
-                        @endphp
-                        @if (isset($inquiriesRoute))
-                            <li class="nav-item">
-                                <a href="{{ $inquiriesRoute }}" class="nav-link {{ isActiveRoute($activeInquiriesRoutes) }}">
-                                    <i class="nav-icon fas fa-map-marker-alt"></i>
-                                    <p>Inquiries</p>
                                 </a>
                             </li>
                         @endif
@@ -392,7 +372,7 @@
                         @endif
 
                         <li class="nav-item">
-                            <a href="{{ route('coordinators.coordprofile') }}" class="nav-link {{ Request::is('coordinator/profile') ? 'active' : '' }}">
+                            <a href="{{ route('coordinators.profile') }}" class="nav-link {{ Request::is('coordprofile') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-user-edit"></i>
                             <p>Update Profile</p>
                             </a>

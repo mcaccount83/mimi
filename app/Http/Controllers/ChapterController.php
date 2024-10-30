@@ -2053,7 +2053,7 @@ class ChapterController extends Controller
             ->join('state as st', 'ch.state', '=', 'st.id')
             ->join('conference as cf', 'ch.conference', '=', 'cf.id')
             ->join('region as rg', 'ch.region', '=', 'rg.id')
-            ->leftJoin('db_month as db', 'ch.start_month_id', '=', 'db.id')
+            ->leftJoin('month as db', 'ch.start_month_id', '=', 'db.id')
             ->where('ch.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1');
 

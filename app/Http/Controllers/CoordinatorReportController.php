@@ -366,7 +366,7 @@ class CoordinatorReportController extends Controller
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
-            ->join('db_month as db', 'cd.birthday_month_id', '=', 'db.id')
+            ->join('month as db', 'cd.birthday_month_id', '=', 'db.id')
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.birthday_month_id')
             ->orderBy('cd.birthday_day');

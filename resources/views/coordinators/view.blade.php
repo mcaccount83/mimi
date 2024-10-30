@@ -194,7 +194,9 @@
                             <div class="col-md-6">
                                 Birthday: {{$birthMonthWords}} {{$coordinatorDetails[0]->birthday_day}}<br>
                                 Card Sent: <span class="date-mask">{{ $coordinatorDetails[0]->card_sent }}</span><br>
-                                <button class="btn bg-gradient-primary btn-sm" onclick="window.location.href='{{ route('coordreports.coordrptbirthdaysview', ['id' => $coordinatorDetails[0]->id]) }}'">Update Birthday Card Sent</button>
+                                @if ($assistConferenceCoordinatorCondition)
+                                    <button class="btn bg-gradient-primary btn-sm" onclick="window.location.href='{{ route('coordreports.coordrptbirthdaysview', ['id' => $coordinatorDetails[0]->id]) }}'">Update Birthday Card Sent</button>
+                                @endif
                             </div>
                         </div>
 
@@ -235,7 +237,9 @@
                             <dt class="col-sm-2">MC Necklace</dt>
                             <dd class="col-sm-10">{{$coordinatorDetails[0]->recognition_necklace == 1 ? 'YES' : 'NO' }}</dd>
                           </dl>
-                          <button class="btn bg-gradient-primary btn-sm" onclick="window.location.href='{{ route('coordreports.coordrptappreciationview', ['id' => $coordinatorDetails[0]->id]) }}'">Update Recognition Gifts</button>
+                          @if ($assistConferenceCoordinatorCondition)
+                            <button class="btn bg-gradient-primary btn-sm" onclick="window.location.href='{{ route('coordreports.coordrptappreciationview', ['id' => $coordinatorDetails[0]->id]) }}'">Update Recognition Gifts</button>
+                          @endif
                     </div>
                   </div>
                  <!-- /.tab-pane -->
@@ -259,7 +263,7 @@
                         @else
                             <button id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordretired') }}'">Back to Retired Coordinator List</button>
                         @endif
-                    @elseif ($einCondition && ($corConfId != $userConfId) || $inquiriesCondition  && ($corConfId != $userConfId) || $adminReportCondition  && ($corConfId != $userConfId))
+                    @elseif ($adminReportCondition  && ($corConfId != $userConfId))
                         @if ($corIsActive == 1)
                             <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoord') }}'">Back to International Coordinator List</button>
                         @else

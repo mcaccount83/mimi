@@ -186,7 +186,7 @@ class AdminController extends Controller
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->leftJoin('db_month as db', 'chapters.start_month_id', '=', 'db.id')
+            ->leftJoin('month as db', 'chapters.start_month_id', '=', 'db.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1');
 
@@ -497,7 +497,7 @@ class AdminController extends Controller
             ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->leftJoin('conference as cf', 'ch.conference', '=', 'cf.id')
             ->leftJoin('region as rg', 'ch.region', '=', 'rg.id')
-            ->leftJoin('db_month as db', 'ch.start_month_id', '=', 'db.id')
+            ->leftJoin('month as db', 'ch.start_month_id', '=', 'db.id')
             ->where('ch.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->orderBy('st.state_short_name')

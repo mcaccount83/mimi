@@ -10,7 +10,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Inquiries</h1>
+          <h1>Chapters</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -34,8 +34,18 @@
                             Inquiries Zapped Chapter List
                         </h3>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            @if ($coordinatorCondition)
+                                <a class="dropdown-item" href="{{ route('chapters.chaplist') }}">Active Chapter List</a>
+                                <a class="dropdown-item" href="{{ route('chapters.chapzapped') }}">Zapped Chapter List</a>
+                            @endif
+                            @if (($inquiriesCondition) || ($regionalCoordinatorCondition) || ($adminReportCondition))
                                 <a class="dropdown-item" href="{{ route('chapters.chapinquiries') }}">Inquiries Active Chapter List</a>
                                 <a class="dropdown-item" href="{{ route('chapters.chapinquirieszapped') }}">Inquiries Zapped Chapter List</a>
+                            @endif
+                            @if (($einCondition) || ($adminReportCondition))
+                                <a class="dropdown-item" href="{{ route('international.intchapter') }}">International Active Chapter List</a>
+                                <a class="dropdown-item" href="{{ route('international.intchapterzapped') }}">International Zapped Chapter List</a>
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -1641,4 +1641,100 @@ class CoordinatorController extends Controller
         return view('coordinators.view')->with($data);
     }
 
+
+    public function viewCoordProfile(Request $request): View
+    {
+        $corDetails = $request->user()->Coordinators;
+        $corId = $corDetails['id'];
+        $corConfId = $corDetails['conference_id'];
+        $corReportId = $corDetails['report_id'];
+        $coordinatorDetails = DB::table('coordinators as cd')
+            ->select('cd.*','st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'cp.long_title as position',
+                'cp3.long_title as display_position', 'cp2.long_title as sec_position', 'cd2.first_name as report_fname', 'cd2.email as report_email', 'cd2.last_name as report_lname',
+                'mo.month_short_name as birthday_month')
+            ->leftJoin('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')  // Primary Position
+            ->leftJoin('coordinator_position as cp2', 'cd.sec_position_id', '=', 'cp2.id')  //Secondary Position
+            ->leftJoin('coordinator_position as cp3', 'cd.display_position_id', '=', 'cp3.id')  //Display Position
+            ->leftJoin('coordinators as cd2', 'cd.report_id', '=', 'cd2.id') //Supervising Coordinator
+            ->leftJoin('month as mo', 'cd.birthday_month_id', '=', 'mo.id')
+            ->leftJoin('state as st', 'cd.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
+            ->leftJoin('region as rg', 'cd.region_id', '=', 'rg.id')
+            ->where('cd.is_active', '=', '1')
+            ->where('cd.id', '=', $corId)
+            ->get();
+
+        $stateArr = DB::table('state')
+            ->select('state.*')
+            ->orderBy('id')
+            ->get();
+
+        $monthArr = DB::table('month')
+        ->select('month.*')
+        ->orderBy('id')
+        ->get();
+
+        $data = ['coordinatorDetails' => $coordinatorDetails, 'corConfId' => $corConfId, 'stateArr' => $stateArr, 'monthArr' => $monthArr];
+
+        return view('coordinators.profile')->with($data);
+    }
+
+
+    public function updateCoordProfile(Request $request): RedirectResponse
+    {
+        $corDetails = $request->user()->Coordinators;
+        $corId = $corDetails->id;
+        $lastUpdatedBy = $corDetails->first_name . ' ' . $corDetails->last_name;
+
+        if ($request->input('cord_fname') != '' && $request->input('cord_lname') != '' && $request->input('cord_email') != '') {
+            $corDetail = DB::table('coordinators')
+                ->select('id', 'user_id')
+                ->where('id', '=', $corId)
+                ->first(); // Use first() to get a single result
+
+                try {
+                    $userId = $corDetail->user_id;
+
+                    $user = User::find($userId);
+                        $user->first_name = $request->input('cord_fname');
+                        $user->last_name = $request->input('cord_lname');
+                        $user->email = $request->input('cord_email');
+                        $user->updated_at = now();
+                        $user->save();
+
+                    DB::table('coordinators')
+                        ->where('id', $corId)
+                        ->update([
+                            'first_name' => $request->input('cord_fname'),
+                            'last_name' => $request->input('cord_lname'),
+                            'email' => $request->input('cord_email'),
+                            'sec_email' => $request->input('cord_sec_email'),
+                            'address' => $request->input('cord_addr'),
+                            'city' => $request->input('cord_city'),
+                            'state' => $request->input('cord_state'),
+                            'zip' => $request->input('cord_zip'),
+                            'phone' => $request->input('cord_phone'),
+                            'alt_phone' => $request->input('cord_altphone'),
+                            'birthday_month_id' => $request->input('cord_month'),
+                            'birthday_day' => $request->input('cord_day'),
+                            'home_chapter' => $request->input('cord_chapter'),
+                            'last_updated_by' => $lastUpdatedBy,
+                            'last_updated_date' => now()
+                        ]);
+
+                    // Commit transaction
+                    DB::commit();
+                } catch (\Exception $e) {
+                    // Rollback Transaction
+                    DB::rollback();
+                    // Log the error
+                    Log::error($e);
+
+                    return redirect()->to('/coordprofile')->with('fail', 'Something went wrong, Please try again.');
+                }
+        }
+        return redirect()->to('/coordprofile')->with('success', 'Coordinator profile updated successfully');
+    }
+
+
 }

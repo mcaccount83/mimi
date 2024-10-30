@@ -5,12 +5,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>International Donations Report</h1>
+          <h1>Payments/Donations</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">International Donations Report</li>
+            <li class="breadcrumb-item active">International International Donations Report</li>
           </ol>
         </div>
       </div>
@@ -22,9 +22,22 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">List of International Chapter Donations</h3>
+            <div class="card card-outline card-primary">
+                <div class="card-header">
+                <div class="dropdown">
+                    <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        International M2M & Sustaining Donations
+                    </h3>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        @if ($coordinatorCondition)
+                            <a class="dropdown-item" href="{{ route('chapters.chapreregistration') }}">Re-Registration Payments</a>
+                            <a class="dropdown-item" href="{{ route('chapreports.chaprptdonations') }}">M2M & Sustaining Donations</a>
+                        @endif
+                        @if ($m2mCondition || $adminReportCondition)
+                            <a class="dropdown-item" href="{{ route('international.intdonation') }}">International M2M & Sustaining Donations</a>
+                        @endif
+                    </div>
+                </div>
             </div>
             <!-- /.card-header -->
         <div class="card-body">
