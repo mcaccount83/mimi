@@ -15,7 +15,7 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Coordinator Profile&nbsp;<small>(Update)</small></h1>
+          <h1>Coordinator Profile</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
@@ -61,7 +61,7 @@
                         <br>
                         <b>Last Promotion Date:</b> <span class="float-right date-mask">{{ $coordinatorDetails[0]->last_promoted }}</span>
                         <br>
-                        <label>Home Chapter:</label><input type="text" name="cord_chapter" id="cord_chapter" class="form-control float-right col-sm-6" value="{{ $coordinatorDetails[0]->home_chapter }}"  required placeholder="Home Chapter"  >
+                        <label>Home Chapter:</label><input type="text" name="cord_chapter" id="cord_chapter" class="form-control float-right col-sm-6 text-right" value="{{ $coordinatorDetails[0]->home_chapter }}" required placeholder="Home Chapter">
                         <br>
                     </li>
                 </ul>
@@ -122,7 +122,7 @@
                                     <div class="col-sm-5">
                                     <input type="text" name="cord_city" id="cord_city" class="form-control" value="{{ $coordinatorDetails[0]->city }}"  required >
                                     </div>
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-3">
                                         <select name="cord_state" class="form-control" style="width: 100%;" required>
                                             <option value="">Select State</option>
                                                 @foreach($stateArr as $state)
@@ -130,14 +130,14 @@
                                                 @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-2">
                                         <input type="text" name="cord_zip" id="cord_zip" class="form-control" value="{{ $coordinatorDetails[0]->zip }}"  required >
                                     </div>
                                 </div>
                                  <!-- /.form group -->
                                  <div class="form-group row">
                                     <label class="col-sm-2 col-form-label">Birthday:</label>
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-3">
                                         <select name="cord_month" class="form-control" style="width: 100%;" required>
                                             <option value="">Select Month</option>
                                                 @foreach($monthArr as $month)
@@ -145,7 +145,7 @@
                                                 @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-2">
                                     <input type="text" name="cord_day" id="cord_day" class="form-control" value="{{ $coordinatorDetails[0]->birthday_day }}" required>
                                     </div>
                                 </div>
@@ -161,7 +161,6 @@
             <div class="card-body text-center">
                 <button type="submit" class="btn bg-gradient-primary" onclick="return PreSaveValidate();"><i class="fas fa-save" ></i>&nbsp;&nbsp;&nbsp;Save</button>
                 <button type="button" class="btn btn-primary" onclick="showChangePasswordAlert()"><i class="fas fa-lock" ></i>&nbsp; Change Password</button>
-                <a href="{{ route('home') }}" class="btn bg-gradient-primary"><i class="fa fa-reply" ></i>&nbsp;&nbsp;&nbsp;Back</a>
             </div>
         </div>
         </div>
