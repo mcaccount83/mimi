@@ -1593,7 +1593,7 @@ class CoordinatorController extends Controller
 
 
      /**
-     * Edit Coordiantor
+     * View Coordiantor Detais
      */
     public function viewCoordDetails(Request $request, $id): View
     {
@@ -1602,15 +1602,15 @@ class CoordinatorController extends Controller
         $userConfId = $corDetails['conference_id'];
         $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*','st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'cp.long_title as position',
-                'cp3.long_title as display_position', 'cp2.long_title as sec_position', 'cd2.first_name as report_fname', 'cd2.last_name as report_lname')
+                'mo.month_long_name as birthday_month', 'cp3.long_title as display_position', 'cp2.long_title as sec_position', 'cd2.first_name as report_fname', 'cd2.last_name as report_lname')
             ->leftJoin('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')  // Primary Position
             ->leftJoin('coordinator_position as cp2', 'cd.sec_position_id', '=', 'cp2.id')  //Secondary Position
             ->leftJoin('coordinator_position as cp3', 'cd.display_position_id', '=', 'cp3.id')  //Display Position
             ->leftJoin('coordinators as cd2', 'cd.report_id', '=', 'cd2.id') //Supervising Coordinator
+            ->leftJoin('month as mo', 'cd.birthday_month_id', '=', 'mo.id')
             ->leftJoin('state as st', 'cd.state', '=', 'st.id')
             ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
             ->leftJoin('region as rg', 'cd.region_id', '=', 'rg.id')
-            // ->where('cd.is_active', '=', '1')
             ->where('cd.id', '=', $id)
             ->get();
 
@@ -1631,27 +1631,22 @@ class CoordinatorController extends Controller
             ->where('ch.is_active', '=', '1')
             ->get();
 
-        $month = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
-        $birthMonth = $coordinatorDetails[0]->birthday_month_id;
-        $birthMonthWords = $month[$birthMonth] ?? 'Status Unknown';
-
         $data = ['coordinatorDetails' => $coordinatorDetails, 'directReportTo' => $directReportTo, 'directChapterTo' => $directChapterTo, 'corConfId' => $corConfId,
-        'corIsActive' => $corIsActive, 'userConfId' => $userConfId, 'userId' => $userId , 'birthMonthWords' => $birthMonthWords];
+        'corIsActive' => $corIsActive, 'userConfId' => $userConfId, 'userId' => $userId];
 
         return view('coordinators.view')->with($data);
     }
 
-
+    /**
+     * Edit Coordiantor Profile
+     */
     public function viewCoordProfile(Request $request): View
     {
         $corDetails = $request->user()->Coordinators;
         $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corReportId = $corDetails['report_id'];
         $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*','st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'cp.long_title as position',
-                'cp3.long_title as display_position', 'cp2.long_title as sec_position', 'cd2.first_name as report_fname', 'cd2.email as report_email', 'cd2.last_name as report_lname',
-                'mo.month_short_name as birthday_month')
+                'cp3.long_title as display_position', 'cp2.long_title as sec_position', 'cd2.first_name as report_fname', 'cd2.email as report_email', 'cd2.last_name as report_lname')
             ->leftJoin('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')  // Primary Position
             ->leftJoin('coordinator_position as cp2', 'cd.sec_position_id', '=', 'cp2.id')  //Secondary Position
             ->leftJoin('coordinator_position as cp3', 'cd.display_position_id', '=', 'cp3.id')  //Display Position
@@ -1674,12 +1669,14 @@ class CoordinatorController extends Controller
         ->orderBy('id')
         ->get();
 
-        $data = ['coordinatorDetails' => $coordinatorDetails, 'corConfId' => $corConfId, 'stateArr' => $stateArr, 'monthArr' => $monthArr];
+        $data = ['coordinatorDetails' => $coordinatorDetails, 'stateArr' => $stateArr, 'monthArr' => $monthArr];
 
         return view('coordinators.profile')->with($data);
     }
 
-
+    /**
+     * Save Coordiantor Profile
+     */
     public function updateCoordProfile(Request $request): RedirectResponse
     {
         $corDetails = $request->user()->Coordinators;

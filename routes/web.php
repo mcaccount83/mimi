@@ -147,7 +147,7 @@ Route::post('/chapter/updatedisband', [ChapterController::class, 'updateChapterD
 Route::get('/chapter/zapped', [ChapterController::class, 'showZappedChapter'])->name('chapters.chapzapped');
 // Route::get('/chapter/zappedview/{id}', [ChapterController::class, 'showZappedChapterView'])->name('chapters.chapzappedview');
 // Route::post('/chapter/updatezapped/{id}', [ChapterController::class, 'updateZappedChapter'])->name('chapters.updatechapzapped');
-Route::get('/chapter/unzap/{id}', [ChapterController::class, 'updateChapterUnZap']);
+Route::post('/chapter/unzap/{id}', [ChapterController::class, 'updateChapterUnZap'])->name('unzap');
 Route::get('/chapter/reregistration', [ChapterController::class, 'showChapterReRegistration'])->name('chapters.chapreregistration');
 Route::get('/chapter/reregistrationpayment/{id}', [ChapterController::class, 'showChapterReRegistrationPayment'])->name('chapters.chapreregpayment');
 Route::post('/chapter/updatereregistrtionpayment/{id}', [ChapterController::class, 'updateChapterReRegistrationPayment'])->name('chapters.updatechapreregpayment');
@@ -196,8 +196,8 @@ Route::get('/getchapterprimary', [CoordinatorController::class, 'getChapterPrima
 Route::get('/coordinator/retired', [CoordinatorController::class, 'showRetiredCoordinator'])->name('coordinators.coordretired');
 // Route::get('/coordinator/retiredview/{id}', [CoordinatorController::class, 'showRetiredCoordinatorView'])->name('coordinators.coordretiredview');
 Route::get('/coordinator/updateunretire/{id}', [CoordinatorController::class, 'updateUnretireCoordinator'])->name('coordinators.updatecoordunretire');
-Route::get('/coordinator/profile', [CoordinatorController::class, 'showCoordinatorProfile'])->name('coordinators.coordprofile');
-Route::post('/coordinator/updateprofile/{id}', [CoordinatorController::class, 'updateCoordinatorProfile'])->name('coordinators.updatecoordprofile');
+// Route::get('/coordinator/profile', [CoordinatorController::class, 'showCoordinatorProfile'])->name('coordinators.coordprofile');
+// Route::post('/coordinator/updateprofile/{id}', [CoordinatorController::class, 'updateCoordinatorProfile'])->name('coordinators.updatecoordprofile');
 // CoordinatorReport Controller Routes...
 Route::get('/coordreports/volunteerutilization', [CoordinatorReportController::class, 'showRptVolUtilization'])->name('coordreports.coordrptvolutilization');
 Route::get('/coordreports/coordinatortodo', [CoordinatorReportController::class, 'showRptCoordToDo'])->name('coordreports.coordrpttodo');
@@ -296,10 +296,18 @@ Route::get('/board/resources', [BoardController::class, 'showResources'])->name(
 // Add routes for other methods as needed
 
 Route::get('/chapterdetails/{id}', [ChapterController::class, 'viewChapterDetails'])->name('chapters.view');
+Route::post('/chapterdetails/updateEIN/{id}', [ChapterController::class, 'updateEIN'])->name('chapters.updateein');
+
+
+
 Route::get('/chapterdetailsedit/{id}', [ChapterController::class, 'editChapterDetails'])->name('chapters.edit');
 Route::post('/chapterdetailsupdate/{id}', [ChapterController::class, 'updateChapterDetails'])->name('chapters.update');
-Route::post('/chapter/updateEIN/{id}', [ChapterController::class, 'updateEIN'])->name('chapters.updateein');
-Route::get('/chapterreports', [ChapterReportController::class, 'viewChaperReports'])->name('chapreports.view');
+Route::get('/chapterboardedit/{id}', [ChapterController::class, 'editChapterBoard'])->name('chapters.editboard');
+Route::post('/chapterboardupdate/{id}', [ChapterController::class, 'updateChapterBoard'])->name('chapters.updateboard');
+
+
+
+
 
 Route::get('/coorddetails/{id}', [CoordinatorController::class, 'viewCoordDetails'])->name('coordinators.view');
 Route::get('/coordprofile', [CoordinatorController::class, 'viewCoordProfile'])->name('coordinators.profile');

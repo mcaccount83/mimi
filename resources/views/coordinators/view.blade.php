@@ -192,7 +192,7 @@
                                 {{$coordinatorDetails[0]->city}},{{$coordinatorDetails[0]->state}}&nbsp;{{$coordinatorDetails[0]->zip}}
                             </div>
                             <div class="col-md-6">
-                                Birthday: {{$birthMonthWords}} {{$coordinatorDetails[0]->birthday_day}}<br>
+                                Birthday: {{$coordinatorDetails[0]->birthday_month}} {{$coordinatorDetails[0]->birthday_day}}<br>
                                 Card Sent: <span class="date-mask">{{ $coordinatorDetails[0]->card_sent }}</span><br>
                                 @if ($assistConferenceCoordinatorCondition)
                                     <button class="btn bg-gradient-primary btn-sm" onclick="window.location.href='{{ route('coordreports.coordrptbirthdaysview', ['id' => $coordinatorDetails[0]->id]) }}'">Update Birthday Card Sent</button>

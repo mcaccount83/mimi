@@ -158,7 +158,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                        Website: <a href="{{$chapterList[0]->website_url}}">{{$chapterList[0]->website_url}}</a>
+                        Website: <a href="{{$chapterList[0]->website_url}}" target="_blank">{{$chapterList[0]->website_url}}</a>
                         <br>
                         Webiste Link Status: {{$webStatusinWords}}
                         <br>
@@ -352,32 +352,31 @@
             <div class="card-body text-center">
                 @if ($coordinatorCondition)
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='mailto:{{ $emailListChap }}?cc={{ $emailListCoord }}&subject=MOMS Club of {{ $chapterList[0]->name }}, {{ $chapterList[0]->statename }}'">E-mail Board</button>
-                    <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapview', ['id' => $chapterList[0]->id]) }}'">Update Chapter Information</button>
-                    <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapview', ['id' => $chapterList[0]->id]) }}'">Update Board Information</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chapterList[0]->id]) }}'">Update Chapter Information</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chapterList[0]->id]) }}'">Update Board Information</button>
                     <br>
                     @if ($corConfId == $chConfId)
                         @if ($chIsActive == 1)
                             @if ($inquiriesCondition  && ($coordId != $chPCid))
-                                <button id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries') }}'">Back to Inquiries Chapter List</button>
+                                <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries') }}'">Back to Inquiries Chapter List</button>
                             @else
-                                <button id="back" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'">Back to Chapter List</button>
+                                <button type="button" id="back" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'">Back to Chapter List</button>
                             @endif
                         @else
                             @if ($inquiriesCondition  && ($coordId != $chPCid))
-                                <button id="back-inquiries-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries') }}'">Back to Inquiries Zapped Chapter List</button>
+                                <button type="button" id="back-inquiries-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries') }}'">Back to Inquiries Zapped Chapter List</button>
                             @else
-                                <button id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapzapped') }}'">Back to Zapped Chapter List</button>
+                                <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapzapped') }}'">Back to Zapped Chapter List</button>
                             @endif
                         @endif
                     @elseif ($einCondition && ($corConfId != $chConfId) || $inquiriesCondition  && ($corConfId != $chConfId) || $adminReportCondition  && ($corConfId != $chConfId))
                         @if ($chIsActive == 1)
-                            <button id="back-international"class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapter') }}'">Back to International Chapter List</button>
+                            <button type="button" id="back-international"class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapter') }}'">Back to International Chapter List</button>
                         @else
-                            <button id="back-international-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapterzapped') }}'">Back to International Zapped Chapter List</button>
+                            <button type="button" id="back-international-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapterzapped') }}'">Back to International Zapped Chapter List</button>
                         @endif
                     @endif
                 @endif
-
             </div>
         </div>
         </div>
@@ -414,6 +413,8 @@ $(document).ready(function () {
         $('#back-inquiries-zapped').prop('disabled', false);
         $('#back-international').prop('disabled', false);
         $('#back-international-zapped').prop('disabled', false);
+        $('#unZapButton').prop('disabled', false);
+
     }
 });
 
@@ -547,7 +548,7 @@ document.addEventListener("DOMContentLoaded", function() {
 // Function to submit EIN via AJAX
 function submitEIN(ein, chapterId) {
     $.ajax({
-        url: `/chapter/updateEIN/${chapterId}`, // Ensure the correct URL is being used
+        url: `/chapterdetails/updateEIN/${chapterId}`, // Ensure the correct URL is being used
         type: 'POST', // Change PUT to POST
         data: {
             ch_ein: ein,
@@ -556,7 +557,7 @@ function submitEIN(ein, chapterId) {
         success: function(response) {
             Swal.fire({
                 title: 'Success!',
-                text: response.message || 'Chapter updated successfully.',
+                text: response.message || 'EIN updated successfully.',
                 icon: 'success',
                 confirmButtonText: 'OK',
                 customClass: {
@@ -580,7 +581,6 @@ function submitEIN(ein, chapterId) {
         }
     });
 }
-
 
 document.addEventListener("DOMContentLoaded", function() {
     document.querySelector('.showFileUploadModal').addEventListener('click', function(e) {
@@ -647,6 +647,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
 
 </script>
 @endsection

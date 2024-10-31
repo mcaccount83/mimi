@@ -156,7 +156,7 @@ class UserController extends Controller
             ->where('chapters.id', '=', $chId)
             ->first();
 
-            $chapEmail = $chapterList->chap_email ?? null;
+        $chapEmail = $chapterList->chap_email;
 
         $chapterEmailList = DB::table('boards as bd')
             ->select('bd.email as bor_email')

@@ -139,8 +139,8 @@
         </nav>
         <!-- /.navbar -->
 
-                            <!-- Menu for Logged In Users -->
-                            @auth
+        <!-- Menu for Logged In Users -->
+        @auth
 
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar main-sidebar-custom sidebar-dark-primary elevation-4">
@@ -153,8 +153,6 @@
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="true">
-
-
 
                         <!-- Coordinator Dashboard Menu Item -->
                         <li class="nav-item">
@@ -390,9 +388,6 @@
                         </li>
 
                     </ul>
-
-
-
                 </nav>
                 <!-- /.sidebar-menu -->
             </div>
@@ -400,6 +395,7 @@
         </aside>
 
         @endauth
+        <!-- /.menu -->
 
         <!-- Main content -->
         <section class="content">
@@ -706,6 +702,10 @@ function customErrorAlert(message) {
         Inputmask({"mask": "(999) 999-9999"}).mask(".phone-mask");
     }
 
+    function applyHttpMask() {
+        Inputmask({"mask": "http://*{1,50}.*{2,6}"}).mask(".http-mask");
+    }
+
     $(document).ready(function() {
         var table = $('#chapterlist').DataTable();
 
@@ -721,7 +721,14 @@ function customErrorAlert(message) {
             applyDateMask();
         });
 
+        applyHttpMask();
+
+        table.on('draw', function() {
+            applyHttpMask();
+        });
+
     });
+
 
  </script>
  @yield('customscript')
