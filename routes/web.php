@@ -147,7 +147,7 @@ Route::post('/chapter/updatedisband', [ChapterController::class, 'updateChapterD
 Route::get('/chapter/zapped', [ChapterController::class, 'showZappedChapter'])->name('chapters.chapzapped');
 // Route::get('/chapter/zappedview/{id}', [ChapterController::class, 'showZappedChapterView'])->name('chapters.chapzappedview');
 // Route::post('/chapter/updatezapped/{id}', [ChapterController::class, 'updateZappedChapter'])->name('chapters.updatechapzapped');
-Route::post('/chapter/unzap/{id}', [ChapterController::class, 'updateChapterUnZap'])->name('unzap');
+Route::post('/chapter/unzap/{id}', [ChapterController::class, 'updateChapterUnZap'])->name('chapters.updatechapterunzap');
 Route::get('/chapter/reregistration', [ChapterController::class, 'showChapterReRegistration'])->name('chapters.chapreregistration');
 Route::get('/chapter/reregistrationpayment/{id}', [ChapterController::class, 'showChapterReRegistrationPayment'])->name('chapters.chapreregpayment');
 Route::post('/chapter/updatereregistrtionpayment/{id}', [ChapterController::class, 'updateChapterReRegistrationPayment'])->name('chapters.updatechapreregpayment');
@@ -298,15 +298,10 @@ Route::get('/board/resources', [BoardController::class, 'showResources'])->name(
 Route::get('/chapterdetails/{id}', [ChapterController::class, 'viewChapterDetails'])->name('chapters.view');
 Route::post('/chapterdetails/updateEIN/{id}', [ChapterController::class, 'updateEIN'])->name('chapters.updateein');
 
-
-
 Route::get('/chapterdetailsedit/{id}', [ChapterController::class, 'editChapterDetails'])->name('chapters.edit');
 Route::post('/chapterdetailsupdate/{id}', [ChapterController::class, 'updateChapterDetails'])->name('chapters.update');
 Route::get('/chapterboardedit/{id}', [ChapterController::class, 'editChapterBoard'])->name('chapters.editboard');
 Route::post('/chapterboardupdate/{id}', [ChapterController::class, 'updateChapterBoard'])->name('chapters.updateboard');
-
-
-
 
 
 Route::get('/coorddetails/{id}', [CoordinatorController::class, 'viewCoordDetails'])->name('coordinators.view');

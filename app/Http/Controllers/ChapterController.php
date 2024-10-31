@@ -1851,30 +1851,207 @@ class ChapterController extends Controller
     /**
      * Function for unZapping a Chapter (store)
      */
-    public function updateChapterUnZap($id)
-    {
-        try {
-            DB::beginTransaction();
-            $chapterid = $id;
-            DB::table('chapters')
-                ->where('id', $chapterid)
-                ->update(['is_active' => 1, 'disband_reason' => '', 'disband_letter' => null, 'zap_date' => null]);
+    // public function updateChapterUnZap($id)
+    // {
+    //     try {
+    //         DB::beginTransaction();
+    //         $chapterid = $id;
+    //         DB::table('chapters')
+    //             ->where('id', $chapterid)
+    //             ->update(['is_active' => 1, 'disband_reason' => '', 'disband_letter' => null, 'zap_date' => null]);
 
-            $userRelatedChpaterList = DB::table('boards as bd')
-                ->select('bd.user_id')
-                ->where('bd.chapter_id', '=', $chapterid)
-                ->get();
-            if (count($userRelatedChpaterList) > 0) {
-                foreach ($userRelatedChpaterList as $list) {
-                    $userId = $list->user_id;
-                    DB::table('users')
-                        ->where('id', $userId)
-                        ->update(['is_active' => 1]);
-                }
+    //         $userRelatedChpaterList = DB::table('boards as bd')
+    //             ->select('bd.user_id')
+    //             ->where('bd.chapter_id', '=', $chapterid)
+    //             ->get();
+    //         if (count($userRelatedChpaterList) > 0) {
+    //             foreach ($userRelatedChpaterList as $list) {
+    //                 $userId = $list->user_id;
+    //                 DB::table('users')
+    //                     ->where('id', $userId)
+    //                     ->update(['is_active' => 1]);
+    //             }
+    //         }
+    //         DB::table('boards')
+    //             ->where('chapter_id', $chapterid)
+    //             ->update(['is_active' => 1]);
+
+    //         $chapterList = DB::table('chapters')
+    //             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+    //             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
+    //             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+    //             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+    //             ->where('chapters.is_Active', '=', '1')
+    //             ->where('bd.board_position_id', '=', '1')
+    //             ->where('chapters.id', $chapterid)
+    //             ->orderByDesc('chapters.id')
+    //             ->get();
+
+    //         $chapterName = $chapterList[0]->name;
+    //         $chapterState = $chapterList[0]->state;
+    //         $chapterEmail = $chapterList[0]->email;
+    //         $chapterStatus = $chapterList[0]->status;
+    //         //President Info
+    //         $preinfo = DB::table('boards')
+    //             ->select('first_name', 'last_name', 'email')
+    //             ->where('chapter_id', $chapterid)
+    //             ->where('board_position_id', '=', '1')
+    //             ->get();
+
+    //         if (count($preinfo) > 0) {
+    //             $prefirst = $preinfo[0]->first_name;
+    //             $presecond = $preinfo[0]->last_name;
+    //             $preemail = $preinfo[0]->email;
+    //         } else {
+    //             $prefirst = '';
+    //             $presecond = '';
+    //             $preemail = '';
+    //         }
+    //         //Avp info
+    //         $avpinfo = DB::table('boards')
+    //             ->select('first_name', 'last_name', 'email')
+    //             ->where('chapter_id', $chapterid)
+    //             ->where('board_position_id', '=', '2')
+    //             ->get();
+    //         if (count($avpinfo) > 0) {
+    //             $avpfirst = $avpinfo[0]->first_name;
+    //             $avpsecond = $avpinfo[0]->last_name;
+    //             $avpemail = $avpinfo[0]->email;
+    //         } else {
+    //             $avpfirst = '';
+    //             $avpsecond = '';
+    //             $avpemail = '';
+    //         }
+    //         //Mvp info
+
+    //         $mvpinfo = DB::table('boards')
+    //             ->select('first_name', 'last_name', 'email')
+    //             ->where('chapter_id', $chapterid)
+    //             ->where('board_position_id', '=', '3')
+    //             ->get();
+    //         if (count($mvpinfo) > 0) {
+    //             $mvpfirst = $mvpinfo[0]->first_name;
+    //             $mvpsecond = $mvpinfo[0]->last_name;
+    //             $mvpemail = $mvpinfo[0]->email;
+    //         } else {
+    //             $mvpfirst = '';
+    //             $mvpsecond = '';
+    //             $mvpemail = '';
+    //         }
+    //         //Treasurere info
+    //         $triinfo = DB::table('boards')
+    //             ->select('first_name', 'last_name', 'email')
+    //             ->where('chapter_id', $chapterid)
+    //             ->where('board_position_id', '=', '4')
+    //             ->get();
+    //         if (count($triinfo) > 0) {
+    //             $trifirst = $triinfo[0]->first_name;
+    //             $trisecond = $triinfo[0]->last_name;
+    //             $triemail = $triinfo[0]->email;
+    //         } else {
+    //             $trifirst = '';
+    //             $trisecond = '';
+    //             $triemail = '';
+    //         }
+    //         //secretary info
+    //         $secinfo = DB::table('boards')
+    //             ->select('first_name', 'last_name', 'email')
+    //             ->where('chapter_id', $chapterid)
+    //             ->where('board_position_id', '=', '5')
+    //             ->get();
+    //         if (count($secinfo) > 0) {
+    //             $secfirst = $secinfo[0]->first_name;
+    //             $secscond = $secinfo[0]->last_name;
+    //             $secemail = $secinfo[0]->email;
+    //         } else {
+    //             $secfirst = '';
+    //             $secscond = '';
+    //             $secemail = '';
+    //         }
+    //         //conference info
+    //         $coninfo = DB::table('chapters')
+    //             ->select('chapters.*', 'conference')
+    //             ->where('id', $chapterid)
+    //             ->get();
+    //         $conf = $coninfo[0]->conference;
+
+    //         $mailData = [
+    //             'chapterName' => $chapterName,
+    //             'chapterEmail' => $chapterEmail,
+    //             'chapterState' => $chapterState,
+    //             'pfirst' => $prefirst,
+    //             'plast' => $presecond,
+    //             'pemail' => $preemail,
+    //             'afirst' => $avpfirst,
+    //             'alast' => $avpsecond,
+    //             'aemail' => $avpemail,
+    //             'mfirst' => $mvpfirst,
+    //             'mlast' => $mvpsecond,
+    //             'memail' => $mvpemail,
+    //             'tfirst' => $trifirst,
+    //             'tlast' => $trisecond,
+    //             'temail' => $triemail,
+    //             'sfirst' => $secfirst,
+    //             'slast' => $secscond,
+    //             'semail' => $secemail,
+    //             'conf' => $conf,
+    //         ];
+
+    //         //Primary Coordinator Notification//
+    //         $to_email = 'listadmin@momsclub.org';
+
+    //         Mail::to($to_email)
+    //             ->queue(new ChapterReAddListAdmin($mailData));
+
+    //         DB::commit();
+    //     } catch (\Exception $e) {
+    //                 // Rollback Transaction
+    //                 DB::rollback();
+    //                 // Log the error
+    //                 Log::error($e);
+    //         return response()->json(['message' => 'Chapter was successfully unzapped']);
+    //     }
+
+    //     return response()->json(['error' => 'Something went wrong, Please try again']);
+    // }
+    //     } catch (\Exception $e) {
+    //         // Rollback Transaction
+    //         DB::rollback();
+    //         // Log the error
+    //         Log::error($e);
+
+    //         return redirect()->to('/chapterdetails')->with('fail', 'Something went wrong, Please try again..');
+    //     }
+
+    //     return redirect()->to('/chapterdetails')->with('success', 'Chapter was successfully unzapped');
+    // }
+
+
+
+    public function updateChapterUnZap($id)
+{
+    try {
+        DB::beginTransaction();
+        $chapterid = $id;
+        DB::table('chapters')
+            ->where('id', $chapterid)
+            ->update(['is_active' => 1, 'disband_reason' => '', 'disband_letter' => null, 'zap_date' => null]);
+
+        $userRelatedChpaterList = DB::table('boards as bd')
+            ->select('bd.user_id')
+            ->where('bd.chapter_id', '=', $chapterid)
+            ->get();
+        if (count($userRelatedChpaterList) > 0) {
+            foreach ($userRelatedChpaterList as $list) {
+                $userId = $list->user_id;
+                DB::table('users')
+                    ->where('id', $userId)
+                    ->update(['is_active' => 1]);
             }
-            DB::table('boards')
-                ->where('chapter_id', $chapterid)
-                ->update(['is_active' => 1]);
+        }
+        DB::table('boards')
+            ->where('chapter_id', $chapterid)
+            ->update(['is_active' => 1]);
 
             $chapterList = DB::table('chapters')
                 ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
@@ -1998,33 +2175,23 @@ class ChapterController extends Controller
             ];
 
             //Primary Coordinator Notification//
-            $to_email = 'listadmin@momsclub.org';
+            Mail::to('listadmin@momsclub.org')
+            ->queue(new ChapterReAddListAdmin($mailData));
 
-            Mail::to($to_email)
-                ->queue(new ChapterReAddListAdmin($mailData));
+        DB::commit();
 
-            DB::commit();
-        } catch (\Exception $e) {
-                    // Rollback Transaction
-                    DB::rollback();
-                    // Log the error
-                    Log::error($e);
-            return response()->json(['message' => 'Chapter was successfully unzapped']);
-        }
+        // Return success response here
+        return response()->json(['message' => 'Chapter was successfully unzapped']);
+    } catch (\Exception $e) {
+        // Rollback Transaction
+        DB::rollback();
+        // Log the error
+        Log::error($e);
 
+        // Return an error response here
         return response()->json(['error' => 'Something went wrong, Please try again']);
     }
-    //     } catch (\Exception $e) {
-    //         // Rollback Transaction
-    //         DB::rollback();
-    //         // Log the error
-    //         Log::error($e);
-
-    //         return redirect()->to('/chapterdetails')->with('fail', 'Something went wrong, Please try again..');
-    //     }
-
-    //     return redirect()->to('/chapterdetails')->with('success', 'Chapter was successfully unzapped');
-    // }
+}
 
    /**
      * ReRegistration List
