@@ -752,40 +752,112 @@ function showDisbandChapterModal() {
     }
 
    // Function to unzap Chapter via AJAX
-function unZapChapter(chapterId) {
-    $.ajax({
-        url: `/chapter/unzap/${chapterId}`, // Ensure the correct URL is being used
-        type: 'POST', // Change PUT to POST
-        data: {
-            _token: '{{ csrf_token() }}' // Pass the CSRF token
-        },
-        success: function(response) {
-            Swal.fire({
-                title: 'Success!',
-                text: response.message || 'Chapter Unzapped successfully.',
-                icon: 'success',
-                confirmButtonText: 'OK',
-                customClass: {
-                    confirmButton: 'btn-sm btn-success my-custom-btn' // Add your custom button class here
-                }
-            }).then(() => {
-                location.reload(); // Reload the page to reflect changes
-            });
-        },
-        error: function(jqXHR, exception) {
-            console.log(jqXHR.responseText); // Log error response
-            Swal.fire({
-                title: 'Error!',
-                text: 'Something went wrong. Please try again.',
-                icon: 'error',
-                confirmButtonText: 'OK',
-                customClass: {
-                    confirmButton: 'btn-sm btn-danger my-custom-btn' // Add your custom button class here
-                }
-            });
-        }
-    });
-}
+function unZapChapter(chapterid) {
+        Swal.fire({
+            title: 'Chapter Disband Reason',
+            html: `
+                <p>Unzapping a chapter will reactivate the logins for all board members and readd the chapter.</p>
+
+                <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chapterList[0]->id }}">
+
+            `,
+            showCancelButton: true,
+            confirmButtonText: 'OK',
+            cancelButtonText: 'Close',
+            customClass: {
+                confirmButton: 'btn-sm btn-success',
+                cancelButton: 'btn-sm btn-danger'
+            },
+            preConfirm: () => {
+                const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+
+                return {
+                    chapter_id: chapterId,
+                };
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const data = result.value;
+
+               // Perform the AJAX request
+                        $.ajax({
+                            url: '{{ route('chapters.updatechapterunzap') }}',
+                            type: 'POST',
+                            data: {
+                                chapterid: data.chapter_id,
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(response) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: response.message,
+                                    icon: 'success',
+                                    showConfirmButton: false,  // Automatically close without "OK" button
+                                    timer: 1500,
+                                    customClass: {
+                                        confirmButton: 'btn-sm btn-success'
+                                    }
+                                }).then(() => {
+                                    if (response.redirect) {
+                                        window.location.href = response.redirect;
+                                    }
+                                });
+                            },
+                            error: function(jqXHR, exception) {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Something went wrong, Please try again.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'btn-sm btn-success'
+                                    }
+                                });
+                            }
+                        });
+
+            }
+        });
+    }
+
+
+
+
+
+
+//     $.ajax({
+//         url: `/chapter/unzap/${chapterid}`,
+//         type: 'POST',
+//         data: {
+//             _token: '{{ csrf_token() }}' // Pass the CSRF token
+//         },
+//         success: function(response) {
+//             Swal.fire({
+//                 title: 'Success!',
+//                 text: response.message || 'Chapter Unzapped successfully.',
+//                 icon: 'success',
+//                 // confirmButtonText: 'OK',
+//                 // customClass: {
+//                 //     confirmButton: 'btn-sm btn-success my-custom-btn' // Add your custom button class here
+//                 // }
+//             }).then(() => {
+//                 location.reload(); // Reload the page to reflect changes
+//             });
+//         },
+//         error: function(jqXHR, exception) {
+//             console.log(jqXHR.responseText); // Log error response
+//             Swal.fire({
+//                 title: 'Error!',
+//                 text: 'Something went wrong. Please try again.',
+//                 icon: 'error',
+//                 // confirmButtonText: 'OK',
+//                 // customClass: {
+//                 //     confirmButton: 'btn-sm btn-danger my-custom-btn' // Add your custom button class here
+//                 // }
+//             });
+//         }
+//     });
+// }
 
 
 

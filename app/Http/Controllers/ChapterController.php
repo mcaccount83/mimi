@@ -1524,39 +1524,32 @@ class ChapterController extends Controller
                     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
             }
 
-            // Commit the transaction
-            DB::commit();
+          // Commit the transaction
+          DB::commit();
 
-            $message = 'Chapter disbanded successfully';
+          $message = 'Chapter successfully unzapped';
 
-            // Determine response based on request type
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'status' => 'success',
-                    'message' => $message,
-                    'redirect' => url('/chapter/zapped'),
-                ]);
-            } else {
-                return redirect()->to('/chapter/zapped')->with('success', $message);
-            }
-        } catch (\Exception $e) {
-            // Rollback transaction on exception
-            DB::rollback();
-            Log::error($e);
+          // Return JSON response
+          return response()->json([
+              'status' => 'success',
+              'message' => $message,
+              'redirect' => route('chapters.view', ['id' => $chapterid]),
+          ]);
 
-            $message = 'Something went wrong, Please try again.';
+      } catch (\Exception $e) {
+          // Rollback transaction on exception
+          DB::rollback();
+          Log::error($e);
 
-            // Determine response based on request type
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => $message,
-                    'redirect' => url('/chapter/zapped'),
-                ]);
-            } else {
-                return redirect()->to('/chapter/zapped')->with('error', $message);
-            }
-        }
+          $message = 'Something went wrong, Please try again.';
+
+          // Return JSON error response
+          return response()->json([
+              'status' => 'error',
+              'message' => $message,
+              'redirect' => route('chapters.view', ['id' => $chapterid]),
+          ]);
+      }
     }
 
     public function generateAndSaveDisbandLetter($chapterid)
@@ -2028,33 +2021,42 @@ class ChapterController extends Controller
 
 
 
-    public function updateChapterUnZap($id)
-{
-    try {
-        DB::beginTransaction();
-        $chapterid = $id;
-        DB::table('chapters')
-            ->where('id', $chapterid)
-            ->update(['is_active' => 1, 'disband_reason' => '', 'disband_letter' => null, 'zap_date' => null]);
+    public function updateChapterUnZap(Request $request)
+    {
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
+        $corConfId = $corDetails['conference_id'];
+        $corRegId = $corDetails['region_id'];
 
-        $userRelatedChpaterList = DB::table('boards as bd')
-            ->select('bd.user_id')
-            ->where('bd.chapter_id', '=', $chapterid)
-            ->get();
-        if (count($userRelatedChpaterList) > 0) {
-            foreach ($userRelatedChpaterList as $list) {
-                $userId = $list->user_id;
-                DB::table('users')
-                    ->where('id', $userId)
-                    ->update(['is_active' => 1]);
+        $input = $request->all();
+        $chapterid = $input['chapterid'];
+
+        try {
+            DB::beginTransaction();
+
+            DB::table('chapters')
+                ->where('id', $chapterid)
+                ->update(['is_active' => 1, 'disband_reason' => null, 'zap_date' => null]);
+
+            $userRelatedChpaterList = DB::table('boards as bd')
+                ->select('bd.user_id')
+                ->where('bd.chapter_id', '=', $chapterid)
+                ->get();
+            if (count($userRelatedChpaterList) > 0) {
+                foreach ($userRelatedChpaterList as $list) {
+                    $userId = $list->user_id;
+                    DB::table('users')
+                        ->where('id', $userId)
+                        ->update(['is_active' => 1]);
+                }
             }
-        }
-        DB::table('boards')
-            ->where('chapter_id', $chapterid)
-            ->update(['is_active' => 1]);
+            DB::table('boards')
+                ->where('chapter_id', $chapterid)
+                ->update(['is_active' => 1]);
 
             $chapterList = DB::table('chapters')
-                ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+                ->select('chapters.*', 'chapters.primary_coordinator_id as pcid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+                    'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'chapters.conference as conf')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -2063,6 +2065,8 @@ class ChapterController extends Controller
                 ->where('chapters.id', $chapterid)
                 ->orderByDesc('chapters.id')
                 ->get();
+
+            $chPcid = $chapterList[0]->pcid;
 
             $chapterName = $chapterList[0]->name;
             $chapterState = $chapterList[0]->state;
@@ -2152,6 +2156,25 @@ class ChapterController extends Controller
                 ->get();
             $conf = $coninfo[0]->conference;
 
+            // Load Board and Coordinators for Sending Email
+            $chId = $chapterList[0]->id;
+
+            $emailData = $this->userController->loadEmailDetails($chId);
+            $emailListChap = $emailData['emailListChap'];
+            $emailListCoord = $emailData['emailListCoord'];
+
+            // Load Conference Coordinators information for signing email
+            $chConf = $chapterList[0]->conf;
+            $chPcid = $chapterList[0]->pcid;
+
+            $coordinatorData = $this->userController->loadConferenceCoord($chConf, $chPcid);
+            $cc_fname = $coordinatorData['cc_fname'];
+            $cc_lname = $coordinatorData['cc_lname'];
+            $cc_pos = $coordinatorData['cc_pos'];
+            $cc_conf = $coordinatorData['cc_conf'];
+            $cc_conf_desc = $coordinatorData['cc_conf_desc'];
+            $cc_email = $coordinatorData['cc_email'];
+
             $mailData = [
                 'chapterName' => $chapterName,
                 'chapterEmail' => $chapterEmail,
@@ -2172,26 +2195,47 @@ class ChapterController extends Controller
                 'slast' => $secscond,
                 'semail' => $secemail,
                 'conf' => $conf,
+                'cc_fname' => $cc_fname,
+                'cc_lname' => $cc_lname,
+                'cc_pos' => $cc_pos,
+                'cc_conf' => $cc_conf,
+                'cc_conf_desc' => $cc_conf_desc,
+                'cc_email' => $cc_email,
             ];
 
             //Primary Coordinator Notification//
-            Mail::to('listadmin@momsclub.org')
-            ->queue(new ChapterReAddListAdmin($mailData));
+            $to_email = 'listadmin@momsclub.org';
+            Mail::to($to_email)
+                ->queue(new ChapterReAddListAdmin($mailData));
 
-        DB::commit();
+            // Commit the transaction
+            DB::commit();
 
-        // Return success response here
-        return response()->json(['message' => 'Chapter was successfully unzapped']);
-    } catch (\Exception $e) {
-        // Rollback Transaction
-        DB::rollback();
-        // Log the error
-        Log::error($e);
+            $message = 'Chapter successfully unzapped';
 
-        // Return an error response here
-        return response()->json(['error' => 'Something went wrong, Please try again']);
+            // Return JSON response
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterid]),
+            ]);
+
+        } catch (\Exception $e) {
+            // Rollback transaction on exception
+            DB::rollback();
+            Log::error($e);
+
+            $message = 'Something went wrong, Please try again.';
+
+            // Return JSON error response
+            return response()->json([
+                'status' => 'error',
+                'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterid]),
+            ]);
+        }
+
     }
-}
 
    /**
      * ReRegistration List
