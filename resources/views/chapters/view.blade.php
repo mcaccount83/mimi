@@ -754,7 +754,7 @@ function showDisbandChapterModal() {
    // Function to unzap Chapter via AJAX
 function unZapChapter(chapterid) {
         Swal.fire({
-            title: 'Chapter Disband Reason',
+            title: 'UnZap Chapter',
             html: `
                 <p>Unzapping a chapter will reactivate the logins for all board members and readd the chapter.</p>
 
