@@ -260,9 +260,11 @@
                     <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordreports.coordrptappreciationview', ['id' => $coordinatorDetails[0]->id]) }}'">Update Appreciation & Recognition</button>
                         <br>
                         @if($corIsLeave != 1)
-                            <button class="btn bg-gradient-primary mb-3 coordOnLeave" data-onleave="{{ $coordinatorDetails[0]->on_leave }}" data-coordId="{{ $coordinatorDetails[0]->id }}">Put Coordinator On Leave</button>
+                            <button type="button" class="btn bg-gradient-primary mb-3" onclick="onLeaveCoordinator()">Put Coordinator On Leave</button>
+                            {{-- <button class="btn bg-gradient-primary mb-3 coordOnLeave" data-onleave="{{ $coordinatorDetails[0]->on_leave }}" data-coordId="{{ $coordinatorDetails[0]->id }}">Put Coordinator On Leave</button> --}}
                         @elseif($corIsLeave == 1)
-                            <button type="button" class="btn bg-gradient-primary mb-3 coordRemoveLeave" data-onleave="{{ $coordinatorDetails[0]->on_leave }}" data-coordId="{{ $coordinatorDetails[0]->id }}">Remove Coordinator From Leave</button>
+                            <button type="button" id="unretire" class="btn bg-gradient-primary mb-3" onclick="removeLeaveCoordinator()">Remove Coordinator From Leave</button>
+                            {{-- <button type="button" class="btn bg-gradient-primary mb-3 coordRemoveLeave" data-onleave="{{ $coordinatorDetails[0]->on_leave }}" data-coordId="{{ $coordinatorDetails[0]->id }}">Remove Coordinator From Leave</button> --}}
                         @endif
                         @if($corIsActive == 1)
                             <button type="button" class="btn bg-gradient-primary mb-3" onclick="retireCoordinator()">Retire Coordinator</button>
@@ -350,97 +352,229 @@ document.querySelectorAll('.reset-password-btn').forEach(button => {
 });
 
 // Function to Put Coordinator on Leave
-document.addEventListener("DOMContentLoaded", function() {
-    document.querySelector('.coordOnLeave').addEventListener('click', function(e) {
-        e.preventDefault();
+// document.addEventListener("DOMContentLoaded", function() {
+//     document.querySelector('.coordOnLeave').addEventListener('click', function(e) {
+//         e.preventDefault();
 
-        const onleave = this.getAttribute('data-onleave');
-        const id = this.getAttribute('data-coordId');
+//         const onleave = this.getAttribute('data-onleave');
+//         const id = this.getAttribute('data-coordId');
 
-        Swal.fire({
-            title: 'Coordinator Leave',
-            text: 'Are you REALLY sure you want to put this coordinator on leave?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'Cancel',
-            customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
-            },
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const newOnLeaveValue = "1";
-                const newOnLeaveDate = new Date().toISOString().split('T')[0]; // Formats the date as 'YYYY-MM-DD'
-                console.log('onleave:', newOnLeaveValue);
-                submitOnLeave(newOnLeaveValue, newOnLeaveDate, id);
-            }
-        });
+//         Swal.fire({
+//             title: 'Coordinator Leave',
+//             text: 'Are you REALLY sure you want to put this coordinator on leave?',
+//             icon: 'warning',
+//             showCancelButton: true,
+//             confirmButtonText: 'Yes',
+//             cancelButtonText: 'Cancel',
+//             customClass: {
+//                 confirmButton: 'btn-sm btn-success',
+//                 cancelButton: 'btn-sm btn-danger'
+//             },
+//         }).then((result) => {
+//             if (result.isConfirmed) {
+//                 const newOnLeaveValue = "1";
+//                 const newOnLeaveDate = new Date().toISOString().split('T')[0]; // Formats the date as 'YYYY-MM-DD'
+//                 console.log('onleave:', newOnLeaveValue);
+//                 submitOnLeave(newOnLeaveValue, newOnLeaveDate, id);
+//             }
+//         });
 
-    });
-});
+//     });
+// });
 
-// Function to Remove Coordinator from Leave
-document.addEventListener("DOMContentLoaded", function() {
-    document.querySelector('.coordRemoveLeave').addEventListener('click', function(e) {
-        e.preventDefault();
+// // Function to Remove Coordinator from Leave
+// document.addEventListener("DOMContentLoaded", function() {
+//     document.querySelector('.coordRemoveLeave').addEventListener('click', function(e) {
+//         e.preventDefault();
 
-        const onleave = this.getAttribute('data-onleave');
-        const id = this.getAttribute('data-coordId');
+//         const onleave = this.getAttribute('data-onleave');
+//         const id = this.getAttribute('data-coordId');
 
-        Swal.fire({
-            title: 'Remove Coordinator Leave',
-            text: 'Are you REALLY sure you want to remove this coordinator from leave?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'Cancel',
-            customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
-            },
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const newOnLeaveValue = "0";
-                const newOnLeaveDate = null;
-                console.log('onleave:', newOnLeaveValue);
-                submitOnLeave(newOnLeaveValue, newOnLeaveDate, id);
-            }
-        });
+//         Swal.fire({
+//             title: 'Remove Coordinator Leave',
+//             text: 'Are you REALLY sure you want to remove this coordinator from leave?',
+//             icon: 'warning',
+//             showCancelButton: true,
+//             confirmButtonText: 'Yes',
+//             cancelButtonText: 'Cancel',
+//             customClass: {
+//                 confirmButton: 'btn-sm btn-success',
+//                 cancelButton: 'btn-sm btn-danger'
+//             },
+//         }).then((result) => {
+//             if (result.isConfirmed) {
+//                 const newOnLeaveValue = "0";
+//                 const newOnLeaveDate = null;
+//                 console.log('onleave:', newOnLeaveValue);
+//                 submitOnLeave(newOnLeaveValue, newOnLeaveDate, id);
+//             }
+//         });
 
-    });
-});
+//     });
+// });
 
-// Function to submit Leave Status via AJAX
-function submitOnLeave(onleave, leavedate, coordId) {
-    $.ajax({
-        url: `/coorddetails/updateOnLeave/${coordId}`,
-        type: 'POST',
-        data: {
-            cd_onleave: onleave,
-            cd_leavedate: leavedate,
-            _token: '{{ csrf_token() }}'
+// // Function to submit Leave Status via AJAX
+// function submitOnLeave(onleave, leavedate, coordId) {
+//     $.ajax({
+//         url: `/coorddetails/updateOnLeave/${coordId}`,
+//         type: 'POST',
+//         data: {
+//             cd_onleave: onleave,
+//             cd_leavedate: leavedate,
+//             _token: '{{ csrf_token() }}'
+//         },
+//         success: function(response) {
+//             Swal.fire({
+//                 title: 'Success!',
+//                 text: response.message || 'Coordinator leave status successfully changed.',
+//                 icon: 'success',
+//                 showConfirmButton: false,
+//                 timer: 1500
+//             }).then(() => {
+//                 location.reload();
+//             });
+//         },
+//         error: function(jqXHR, exception) {
+//             console.log(jqXHR.responseText); // Log error response
+//             Swal.fire({
+//                 title: 'Error!',
+//                 text: 'Something went wrong. Please try again.',
+//                 icon: 'error',
+//                 confirmButtonText: 'OK',
+//                 customClass: {
+//                     confirmButton: 'btn-sm btn-danger'
+//                 }
+//             });
+//         }
+//     });
+// }
+
+function onLeaveCoordinator(coordId) {
+    Swal.fire({
+        title: 'Coordinator On Leave',
+        html: `
+            <p>This will mark the coordinator On Leave. Please confirm by pressing OK.</p>
+
+            <input type="hidden" id="coord_id" name="coord_id" value="{{ $coordinatorDetails[0]->id }}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
         },
-        success: function(response) {
-            Swal.fire({
-                title: 'Success!',
-                text: response.message || 'Coordinator leave status successfully changed.',
-                icon: 'success',
-                showConfirmButton: false,
-                timer: 1500
-            }).then(() => {
-                location.reload();
+        preConfirm: () => {
+            const coordId = Swal.getPopup().querySelector('#coord_id').value;
+
+            return {
+                coord_id: coordId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            // Perform the AJAX request
+            $.ajax({
+                url: '{{ route('coordinators.updateonleave') }}',
+                type: 'POST',
+                data: {
+                        coord_id: data.coord_id,
+                        _token: '{{ csrf_token() }}'
+                    },
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: response.message,
+                        icon: 'success',
+                        showConfirmButton: false,  // Automatically close without "OK" button
+                        timer: 1500,
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    }).then(() => {
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
+                        }
+                    });
+                },
+                error: function(jqXHR, exception) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Something went wrong, Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    });
+                }
             });
+        }
+    });
+}
+
+function removeLeaveCoordinator(coordId) {
+    Swal.fire({
+        title: 'Coordinator Remove from Leave',
+        html: `
+            <p>This will remove the coordinator from Leave. Please confirm by pressing OK.</p>
+
+            <input type="hidden" id="coord_id" name="coord_id" value="{{ $coordinatorDetails[0]->id }}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
         },
-        error: function(jqXHR, exception) {
-            console.log(jqXHR.responseText); // Log error response
-            Swal.fire({
-                title: 'Error!',
-                text: 'Something went wrong. Please try again.',
-                icon: 'error',
-                confirmButtonText: 'OK',
-                customClass: {
-                    confirmButton: 'btn-sm btn-danger'
+        preConfirm: () => {
+            const coordId = Swal.getPopup().querySelector('#coord_id').value;
+
+            return {
+                coord_id: coordId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            // Perform the AJAX request
+            $.ajax({
+                url: '{{ route('coordinators.updateremoveleave') }}',
+                type: 'POST',
+                data: {
+                        coord_id: data.coord_id,
+                        _token: '{{ csrf_token() }}'
+                    },
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: response.message,
+                        icon: 'success',
+                        showConfirmButton: false,  // Automatically close without "OK" button
+                        timer: 1500,
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    }).then(() => {
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
+                        }
+                    });
+                },
+                error: function(jqXHR, exception) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Something went wrong, Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    });
                 }
             });
         }

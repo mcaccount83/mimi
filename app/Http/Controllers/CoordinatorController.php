@@ -1643,35 +1643,137 @@ class CoordinatorController extends Controller
      /**
      * Update Coordiantor Leave Status
      */
-    public function updateOnLeave(Request $request, $id)
+    // public function updateOnLeave(Request $request, $id)
+    // {
+    //     $userDetails = User::find($request->user()->id)->Coordinators;
+    //     $lastUpdatedBy = $userDetails['first_name'].' '.$userDetails['last_name'];
+
+    //     $coorId = $id;
+    //     $corDetails = Coordinators::find($coorId);
+
+    //     DB::beginTransaction();
+    //     try {
+    //         $corDetails->on_leave = $request->input('cd_onleave');
+    //         $corDetails->leave_date = $request->input('cd_leavedate');
+    //         $corDetails->last_updated_by = $lastUpdatedBy;
+    //         $corDetails->last_updated_date = date('Y-m-d H:i:s');
+
+    //         $corDetails->save();
+
+    //         DB::commit();
+
+    //         return response()->json(['success' => true, 'message' => 'Coordinator leave status successfully changed.']);
+    //     } catch (\Exception $e) {
+    //         DB::rollback();
+    //         // Log the error
+    //         Log::error($e);
+    //         // Return error response for AJAX
+    //         return response()->json(['success' => false, 'message' => 'Something went wrong, please try again.'], 500);
+    //     }
+
+    // }
+
+    /**
+     * Function for Retiring a Coordinator (store)
+     */
+    public function updateOnLeave(Request $request)
     {
         $userDetails = User::find($request->user()->id)->Coordinators;
         $lastUpdatedBy = $userDetails['first_name'].' '.$userDetails['last_name'];
 
-        $coorId = $id;
-        $corDetails = Coordinators::find($coorId);
+        $input = $request->all();
+        $coordId = $input['coord_id'];
 
-        DB::beginTransaction();
         try {
-            $corDetails->on_leave = $request->input('cd_onleave');
-            $corDetails->leave_date = $request->input('cd_leavedate');
-            $corDetails->last_updated_by = $lastUpdatedBy;
-            $corDetails->last_updated_date = date('Y-m-d H:i:s');
+            DB::beginTransaction();
 
-            $corDetails->save();
+            DB::table('coordinators')
+                ->where('id', $coordId)
+                ->update(['on_leave' => 1,
+                        'leave_date' => date('Y-m-d'),
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => date('Y-m-d'),
+                    ]);
 
-            DB::commit();
+          // Commit the transaction
+          DB::commit();
 
-            return response()->json(['success' => true, 'message' => 'Coordinator leave status successfully changed.']);
-        } catch (\Exception $e) {
-            DB::rollback();
-            // Log the error
-            Log::error($e);
-            // Return error response for AJAX
-            return response()->json(['success' => false, 'message' => 'Something went wrong, please try again.'], 500);
-        }
+          $message = 'Coordinator successfully on leave';
 
+          // Return JSON response
+          return response()->json([
+              'status' => 'success',
+              'message' => $message,
+              'redirect' => route('coordinators.view', ['id' => $coordId]),
+          ]);
+
+      } catch (\Exception $e) {
+          // Rollback transaction on exception
+          DB::rollback();
+          Log::error($e);
+
+          $message = 'Something went wrong, Please try again.';
+
+          // Return JSON error response
+          return response()->json([
+              'status' => 'error',
+              'message' => $message,
+              'redirect' => route('coordinators.view', ['id' => $coordId]),
+          ]);
+      }
     }
+
+    /**
+     * Function for Retiring a Coordinator (store)
+     */
+    public function updateRemoveLeave(Request $request)
+    {
+        $userDetails = User::find($request->user()->id)->Coordinators;
+        $lastUpdatedBy = $userDetails['first_name'].' '.$userDetails['last_name'];
+
+        $input = $request->all();
+        $coordId = $input['coord_id'];
+
+        try {
+            DB::beginTransaction();
+
+            DB::table('coordinators')
+                ->where('id', $coordId)
+                ->update(['on_leave' => 0,
+                        'leave_date' => null,
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => date('Y-m-d'),
+                    ]);
+
+          // Commit the transaction
+          DB::commit();
+
+          $message = 'Coordinator successfully removed from leave';
+
+          // Return JSON response
+          return response()->json([
+              'status' => 'success',
+              'message' => $message,
+              'redirect' => route('coordinators.view', ['id' => $coordId]),
+          ]);
+
+      } catch (\Exception $e) {
+          // Rollback transaction on exception
+          DB::rollback();
+          Log::error($e);
+
+          $message = 'Something went wrong, Please try again.';
+
+          // Return JSON error response
+          return response()->json([
+              'status' => 'error',
+              'message' => $message,
+              'redirect' => route('coordinators.view', ['id' => $coordId]),
+          ]);
+      }
+    }
+
+
 
      /**
      * Function for Retiring a Coordinator (store)
