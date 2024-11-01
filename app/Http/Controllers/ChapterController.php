@@ -1466,8 +1466,16 @@ class ChapterController extends Controller
             $chId = $chapterList[0]->id;
 
             $emailData = $this->userController->loadEmailDetails($chId);
+            $chapEmail = $emailData['chapEmail'];
             $emailListChap = $emailData['emailListChap'];
             $emailListCoord = $emailData['emailListCoord'];
+
+            $chapterEmails = $emailListChap; // Start with the chapter emails
+            if (!empty($chapEmail)) {
+                $chapterEmails[] = $chapEmail; // Add chapEmail if it's not empty
+            }
+
+            $coordEmails = $emailListCoord;
 
             // Load Conference Coordinators information for signing email
             $chConf = $chapterList[0]->conf;
@@ -1515,12 +1523,10 @@ class ChapterController extends Controller
                 ->queue(new ChapterRemoveListAdmin($mailData));
 
             //Standard Disbanding Letter Send to Board & Coordinators//
-            $to_email2 = explode(',', $emailListChap);
-            $cc_email2 = explode(',', $emailListCoord);
             if ($disbandLetter == 1) {
                 $pdfPath = $this->generateAndSaveDisbandLetter($chapterid);   // Generate and save the PDF
-                Mail::to($to_email2)
-                    ->cc($cc_email2)
+                Mail::to($chapterEmails)
+                    ->cc($coordEmails)
                     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
             }
 
@@ -2613,9 +2619,6 @@ class ChapterController extends Controller
 
                     $cc_email = $emailListCoord;
                     $coordinatorEmails[$chapter->name] = $cc_email;
-
-                    $cc_email = $emailListCoord;
-                    $coordinatorEmails[$chapter->name] = $cc_email;
                 }
 
                 $chapterState = $chapter->chapter_state;
@@ -2745,9 +2748,6 @@ class ChapterController extends Controller
                     if (!empty($chapEmail)) {
                         $chapterEmails[$chapter->name][] = $chapEmail; // Add chapEmail if it's not empty
                     }
-
-                    $cc_email = $emailListCoord;
-                    $coordinatorEmails[$chapter->name] = $cc_email;
 
                     $cc_email = $emailListCoord;
                     $coordinatorEmails[$chapter->name] = $cc_email;

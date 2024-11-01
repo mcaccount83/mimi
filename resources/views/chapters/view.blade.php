@@ -351,7 +351,9 @@
           <div class="col-md-12">
             <div class="card-body text-center">
                 @if ($coordinatorCondition)
-                    {{-- <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='mailto:{{ $emailListChap }}?cc={{ $emailListCoord }}&subject=MOMS Club of {{ $chapterList[0]->name }}, {{ $chapterList[0]->statename }}'">E-mail Board</button> --}}
+                <button type="button" class="btn bg-gradient-primary mb-3 email-button" data-chapter="{{ $chapterList[0]->id }}">
+                    E-mail Board
+                </button>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chapterList[0]->id]) }}'">Update Chapter Information</button>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chapterList[0]->id]) }}'">Update Board Information</button>
                     @if($assistConferenceCoordinatorCondition && $chIsActive == 1)
@@ -423,6 +425,33 @@ $(document).ready(function () {
 
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+        // Loop through each email button
+        document.querySelectorAll('.email-button').forEach(function(emailButton) {
+            emailButton.addEventListener('click', function() {
+                const chapterId = emailButton.getAttribute('data-chapter');
+
+                fetch('/load-email-details/' + chapterId)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Build the mailto link with email and cc string
+                        const emailListCoord = data.emailListCoord;
+                        const emailListChap = data.emailListChap;
+                        const subject = 'MOMS Club of ' + data.name + ', ' + data.state;
+
+                        // Construct the mailto link
+                        const mailtoLink = 'mailto:' + emailListChap + '?cc=' + emailListCoord + '&subject=' + encodeURIComponent(subject);
+
+                        // Open the mailto link
+                        window.location.href = mailtoLink;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching email details:', error);
+                    });
+            });
+        });
+    });
 
 $(document).ready(function() {
     function loadCoordinatorList(corId) {
