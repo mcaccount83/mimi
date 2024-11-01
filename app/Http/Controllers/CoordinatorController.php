@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Mail\BigSisterWelcome;
 use App\Mail\CoordinatorRetireAdmin;
+use App\Models\Coordinators;
 use App\Models\CoordinatorPosition;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
+use Google\Service\BeyondCorp\Resource\V;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -1615,6 +1617,7 @@ class CoordinatorController extends Controller
             ->get();
 
         $corIsActive = $coordinatorDetails[0]->is_active;
+        $corIsLeave = $coordinatorDetails[0]->on_leave;
         $corConfId = $coordinatorDetails[0]->conference_id;
 
         $directReportTo = DB::table('coordinators as cd')
@@ -1632,12 +1635,477 @@ class CoordinatorController extends Controller
             ->get();
 
         $data = ['coordinatorDetails' => $coordinatorDetails, 'directReportTo' => $directReportTo, 'directChapterTo' => $directChapterTo, 'corConfId' => $corConfId,
-        'corIsActive' => $corIsActive, 'userConfId' => $userConfId, 'userId' => $userId];
+        'corIsActive' => $corIsActive, 'userConfId' => $userConfId, 'userId' => $userId, 'corIsLeave' => $corIsLeave];
 
         return view('coordinators.view')->with($data);
     }
 
+     /**
+     * Update Coordiantor Leave Status
+     */
+    public function updateOnLeave(Request $request, $id)
+    {
+        $userDetails = User::find($request->user()->id)->Coordinators;
+        $lastUpdatedBy = $userDetails['first_name'].' '.$userDetails['last_name'];
+
+        $coorId = $id;
+        $corDetails = Coordinators::find($coorId);
+
+        DB::beginTransaction();
+        try {
+            $corDetails->on_leave = $request->input('cd_onleave');
+            $corDetails->leave_date = $request->input('cd_leavedate');
+            $corDetails->last_updated_by = $lastUpdatedBy;
+            $corDetails->last_updated_date = date('Y-m-d H:i:s');
+
+            $corDetails->save();
+
+            DB::commit();
+
+            return response()->json(['success' => true, 'message' => 'Coordinator leave status successfully changed.']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            // Log the error
+            Log::error($e);
+            // Return error response for AJAX
+            return response()->json(['success' => false, 'message' => 'Something went wrong, please try again.'], 500);
+        }
+
+    }
+
+     /**
+     * Function for Retiring a Coordinator (store)
+     */
+    public function updateRetire(Request $request)
+    {
+        $userDetails = User::find($request->user()->id)->Coordinators;
+        $lastUpdatedBy = $userDetails['first_name'].' '.$userDetails['last_name'];
+
+        $input = $request->all();
+        $coordId = $input['coord_id'];
+        $retireReason = $input['reason_retired'];
+
+        $coordinatorDetails = DB::table('coordinators as cd')
+            ->select('cd.first_name as fname', 'cd.last_name as lname', 'cd.conference_id as conference', 'cd.email as email')
+            ->where('cd.id', '=', $coordId)
+            ->get();
+
+        $coordName = $coordinatorDetails[0]->fname . ' ' . $coordinatorDetails[0]->lname;
+        $coordConf = $coordinatorDetails[0]->conference;
+        $email = $coordinatorDetails[0]->email;
+
+        try {
+            DB::beginTransaction();
+
+            DB::table('coordinators')
+                ->where('id', $coordId)
+                ->update(['is_active' => 0,
+                        'reason_retired' => $retireReason,
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => date('Y-m-d'),
+                        'zapped_date' => date('Y-m-d')
+                    ]);
+
+            $userRelatedCoordinatorDetails = DB::table('coordinators as cd')
+                ->select('cd.user_id')
+                ->where('cd.id', '=', $coordId)
+                ->get();
+                foreach ($userRelatedCoordinatorDetails as $list) {
+                    $userId = $list->user_id;
+                    DB::table('users')
+                        ->where('id', $userId)
+                        ->update(['is_active' =>0]);
+                }
+
+                $mailData = [
+                    'coordName' => $coordName,
+                    'confNumber' => $coordConf,
+                    'email' => $email,
+                ];
+
+                $to_email = 'jackie.mchenry@momsclub.org';
+
+                Mail::to($to_email, 'MOMS Club')
+                    ->queue(new CoordinatorRetireAdmin($mailData));
+
+          // Commit the transaction
+          DB::commit();
+
+          $message = 'Coordinator successfully retired';
+
+          // Return JSON response
+          return response()->json([
+              'status' => 'success',
+              'message' => $message,
+              'redirect' => route('coordinators.view', ['id' => $coordId]),
+          ]);
+
+      } catch (\Exception $e) {
+          // Rollback transaction on exception
+          DB::rollback();
+          Log::error($e);
+
+          $message = 'Something went wrong, Please try again.';
+
+          // Return JSON error response
+          return response()->json([
+              'status' => 'error',
+              'message' => $message,
+              'redirect' => route('coordinators.view', ['id' => $coordId]),
+          ]);
+      }
+    }
+
+     /**
+     * Function for Retiring a Coordinator (store)
+     */
+    public function updateUnRetire(Request $request)
+    {
+        $userDetails = User::find($request->user()->id)->Coordinators;
+        $lastUpdatedBy = $userDetails['first_name'].' '.$userDetails['last_name'];
+
+        $input = $request->all();
+        $coordId = $input['coord_id'];
+
+        $coordinatorDetails = DB::table('coordinators as cd')
+            ->select('cd.first_name as fname', 'cd.last_name as lname', 'cd.conference_id as conference', 'cd.email as email')
+            ->where('cd.id', '=', $coordId)
+            ->get();
+
+        $coordName = $coordinatorDetails[0]->fname . ' ' . $coordinatorDetails[0]->lname;
+        $coordConf = $coordinatorDetails[0]->conference;
+        $email = $coordinatorDetails[0]->email;
+
+        try {
+            DB::beginTransaction();
+
+            DB::table('coordinators')
+                ->where('id', $coordId)
+                ->update(['is_active' => 1,
+                        'reason_retired' => null,
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => date('Y-m-d'),
+                        'zapped_date' => null
+                    ]);
+
+            $userRelatedCoordinatorDetails = DB::table('coordinators as cd')
+                ->select('cd.user_id')
+                ->where('cd.id', '=', $coordId)
+                ->get();
+                foreach ($userRelatedCoordinatorDetails as $list) {
+                    $userId = $list->user_id;
+                    DB::table('users')
+                        ->where('id', $userId)
+                        ->update(['is_active' =>1]);
+                }
+
+                // $mailData = [
+                //     'coordName' => $coordName,
+                //     'confNumber' => $coordConf,
+                //     'email' => $email,
+                // ];
+
+                // $to_email = 'jackie.mchenry@momsclub.org';
+
+                // Mail::to($to_email, 'MOMS Club')
+                //     ->queue(new CoordinatorRetireAdmin($mailData));
+
+          // Commit the transaction
+          DB::commit();
+
+          $message = 'Coordinator successfully reactivated';
+
+          // Return JSON response
+          return response()->json([
+              'status' => 'success',
+              'message' => $message,
+              'redirect' => route('coordinators.view', ['id' => $coordId]),
+          ]);
+
+      } catch (\Exception $e) {
+          // Rollback transaction on exception
+          DB::rollback();
+          Log::error($e);
+
+          $message = 'Something went wrong, Please try again.';
+
+          // Return JSON error response
+          return response()->json([
+              'status' => 'error',
+              'message' => $message,
+              'redirect' => route('coordinators.view', ['id' => $coordId]),
+          ]);
+      }
+    }
+
+     /**
+     * Edit Coordiantor Role
+     */
+    public function editCoordRole(Request $request, $id): View
+    {
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $userId = $corDetails['id'];
+        $userConfId = $corDetails['conference_id'];
+        $coordinatorDetails = DB::table('coordinators as cd')
+            ->select('cd.*','st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'cp.long_title as position',
+                'cp3.long_title as display_position', 'cp2.long_title as sec_position', 'cd2.first_name as report_fname', 'cd2.email as report_email', 'cd2.last_name as report_lname')
+            ->leftJoin('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')  // Primary Position
+            ->leftJoin('coordinator_position as cp2', 'cd.sec_position_id', '=', 'cp2.id')  //Secondary Position
+            ->leftJoin('coordinator_position as cp3', 'cd.display_position_id', '=', 'cp3.id')  //Display Position
+            ->leftJoin('coordinators as cd2', 'cd.report_id', '=', 'cd2.id') //Supervising Coordinator
+            ->leftJoin('month as mo', 'cd.birthday_month_id', '=', 'mo.id')
+            ->leftJoin('state as st', 'cd.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
+            ->leftJoin('region as rg', 'cd.region_id', '=', 'rg.id')
+            ->where('cd.is_active', '=', '1')
+            ->where('cd.id', '=', $id)
+            ->get();
+
+        $conid = $coordinatorDetails[0]->id;
+        $corIsActive = $coordinatorDetails[0]->is_active;
+        $corIsLeave = $coordinatorDetails[0]->on_leave;
+        $position_id = $coordinatorDetails[0]->position_id;
+        $conference_id = $corConfId = $coordinatorDetails[0]->conference_id;
+        $region_id = $coordinatorDetails[0]->region_id;
+
+        $coordinator_list = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+            ->join('region', 'cd.region_id', '=', 'region.id')
+            ->where('cd.report_id', $coordinatorDetails[0]->id)
+            ->where('cd.is_active', 1)
+            ->get();
+
+        $coordinator_options = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+            ->where(function ($query) use ($coordinatorDetails) {
+                $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
+                    ->where('cd.position_id', '>=', 1)
+                    ->where('cd.position_id', '<=', 7)
+                    ->where('cd.is_active', 1);
+            })
+            ->orderBy('cd.first_name')
+            ->orderBy('cd.last_name')
+            ->get();
+
+        $row_count = count($coordinator_list);
+
+        $chapter_list = DB::table('chapters')
+                ->select('chapters.id', 'state.state_short_name as state', 'chapters.name as name')
+                ->join('state', 'chapters.state', '=', 'state.id')
+                ->where('primary_coordinator_id', $coordinatorDetails[0]->id)
+                ->where('chapters.is_active', 1)
+                ->orderBy('state.state_short_name')
+                ->orderBy('chapters.name')
+                ->get();
+
+        if($coordinatorDetails[0]->region_id == 0){
+            $coordinator_options = DB::table('coordinators as cd')
+                ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+                ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                ->where(function ($query) use ($coordinatorDetails) {
+                    $query->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
+                        ->where('cd.position_id', '>=', 1)
+                        ->where('cd.position_id', '<=', 7)
+                        ->where('cd.is_active', 1);
+                })
+                ->orderBy('cd.first_name')
+                ->orderBy('cd.last_name')
+                ->get();
+        } else {
+            $coordinator_options = DB::table('coordinators as cd')
+                ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+                ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                ->where(function ($query) use ($coordinatorDetails) {
+                    $query->where('cd.region_id', $coordinatorDetails[0]->region_id)
+                        ->where(function ($query) {
+                            $query->where('cd.position_id', '>=', 1)
+                                ->where('cd.position_id', '<=', 7)
+                                ->where('cd.is_active', 1);
+                        });
+                })
+                ->orWhere(function ($query) use ($coordinatorDetails) {
+                    $query->where('cd.position_id', 7)
+                        ->where('cd.conference_id', $coordinatorDetails[0]->conference_id)
+                        ->where('cd.is_active', 1);
+                })
+                ->orderBy('cd.first_name')
+                ->orderBy('cd.last_name')
+                ->get();
+        }
+
+        $chapter_count = count($coordinator_options);
+
+        /***Query For Report To in Frst Section */
+        $primaryCoordinatorList = DB::table('coordinators as cd')
+        ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+        ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+        ->where('cd.conference_id', $conference_id)
+        ->where('cd.position_id', '>', $position_id)
+        ->where('cd.position_id', '>', 1)
+        ->where(function($query) use ($region_id) {
+            $query->where('cd.region_id', $region_id)
+                ->orWhereIn('cd.position_id', [6, 7]);
+        })
+        ->where('cd.is_active', 1)
+        ->orderBy('cd.position_id')
+        ->orderBy('cd.first_name')
+        ->orderBy('cd.last_name')
+        ->get();
+
+        /***Query For Direct Report Dropdown in Bottom Section */
+        $directReportTo = DB::table('coordinators as cd')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos')
+            ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+            ->where('cd.conference_id', $conference_id)
+            ->where('cd.position_id', '<', $position_id)
+            ->where(function($query) use ($region_id) {
+                $query->where('cd.region_id', $region_id)
+                    ->orWhereIn('cd.position_id', [6, 7]);
+            })
+            ->where('cd.report_id', '!=', $coordinatorDetails[0]->id)
+            ->where('cd.is_active', 1)
+            ->orderBy('cd.position_id')
+            ->orderBy('cd.first_name')
+            ->orderBy('cd.last_name')
+            ->get();
+
+        /***Query For Primary For Dropdown in Bottom Section */
+        if ($region_id == 0) {
+        $primaryChapterList = DB::table('chapters')
+            ->select('chapters.id as id', 'chapters.name as chapter_name', 'st.state_short_name as state')
+            ->join('state as st', 'chapters.state', '=', 'st.id')
+            ->where('chapters.conference', '=', $conference_id)
+            ->where('primary_coordinator_id', "!=", $coordinatorDetails[0]->id)
+            ->where('chapters.is_active', '=', '1')
+            ->orderBy('st.state_short_name')
+            ->get();
+        } else {
+        $primaryChapterList = DB::table('chapters')
+            ->select('chapters.id as id', 'chapters.name as chapter_name', 'st.state_short_name as state')
+            ->join('state as st', 'chapters.state', '=', 'st.id')
+            ->where('chapters.region', '=', $region_id)
+            ->where('primary_coordinator_id', "!=", $coordinatorDetails[0]->id)
+            ->where('chapters.is_active', '=', '1')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
+            ->get();
+        }
+
+        $positionList = DB::table('coordinator_position')
+            ->select('id', 'long_title', 'level_id')
+            ->orderBy('id')
+            ->get();
+
+        $regionList = DB::table('region')
+            ->select('id', 'long_name')
+            ->where('conference_id', '=', $conference_id)
+            ->orderBy('long_name')
+            ->get();
+
+        $stateArr = DB::table('state')
+            ->select('state.*')
+            ->orderBy('id')
+            ->get();
+
+        $monthArr = DB::table('month')
+        ->select('month.*')
+        ->orderBy('id')
+        ->get();
+
+        $data = ['coordinatorDetails' => $coordinatorDetails, 'corConfId' => $corConfId, 'chapter_count' => $chapter_count, 'row_count' => $row_count, 'coordinator_options' => $coordinator_options,
+        'chapter_list' => $chapter_list, 'coordinator_list' => $coordinator_list, 'corIsActive' => $corIsActive, 'userConfId' => $userConfId, 'userId' => $userId, 'corIsLeave' => $corIsLeave,
+        'directReportTo' => $directReportTo, 'primaryChapterList' => $primaryChapterList, 'stateArr' => $stateArr, 'monthArr' => $monthArr, 'conid' => $conid, 'positionList' => $positionList,
+        'primaryCoordinatorList' => $primaryCoordinatorList, 'regionList' => $regionList
+        ];
+
+        return view('coordinators.editrole')->with($data);
+    }
+
+
     /**
+     * Update Role, Chapters and Coordinators
+     */
+    public function updateCoordRole(Request $request, $id)
+    {
+        $userDetails = User::find($request->user()->id)->Coordinators;
+        $userId = $userDetails['id'];
+        $userName = $userDetails['first_name'].' '.$userDetails['last_name'];
+        $userEmail = $userDetails['email'];
+        $userpositionId = $userDetails['position_id'];
+        $userposition = CoordinatorPosition::find($userpositionId);
+        $userpositionTitle = $userposition['long_title'];
+        $lastUpdatedBy = $userName;
+
+        $cordinatorId = $id;
+
+        ///Reassign Direct Report Coordinators that Changed
+        $rowcountCord = $_POST['CoordinatorCount'];
+        for ($i = 0; $i < $rowcountCord; $i++) {
+            $new_coordinator_field = 'Report'.$i;
+            $new_coordinator_id = $_POST[$new_coordinator_field];
+
+            $coordinator_field = 'CoordinatorIDRow'.$i;
+            $coordinator_id = $_POST[$coordinator_field];
+
+            $this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
+        }
+
+        //Reassign Primary Coordinatory Chapters that Changed
+        $rowcountChapter = $_POST['ChapterCount'];
+        for ($i = 0; $i < $rowcountChapter; $i++) {
+            $coordinator_field = 'PCID' . $i;
+            $chapter_field = 'ChapterIDRow' . $i;
+
+            if (!isset($_POST[$coordinator_field]) || !isset($_POST[$chapter_field])) {
+                continue; // Skip if the field doesn't exist
+            }
+
+            $coordinator_id = $_POST[$coordinator_field];
+            $chapter_id = $_POST[$chapter_field];
+
+            $this->ReassignChapter($request, $chapter_id, $coordinator_id, true);
+        }
+
+        //Reassign Report To / Direct Supervisor that Changed
+        $coordinator_id = $request->input('coordinator_id');
+        $new_coordinator_id = $request->input('cord_report_pc');
+        $this->ReassignCoordinator($request, $coordinator_id, $new_coordinator_id, true);
+
+        //Save other changes
+        $coordinator = Coordinators::find($cordinatorId);
+        DB::beginTransaction();
+        try {
+            $coordinator->position_id = $request->filled('cord_pos') ? $request->input('cord_pos') : $request->input('OldPosition');
+            $coordinator->display_position_id = $request->filled('cord_disp_pos') ? $request->input('cord_disp_pos') : $request->input('OldDisplayPosition');
+            $coordinator->sec_position_id = $request->filled('cord_sec_pos') ? $request->input('cord_sec_pos') : $request->input('OldSecPosition');
+            $coordinator->last_promoted = $request->input('CoordinatorPromoteDate');
+            $coordinator->last_updated_by = $lastUpdatedBy;
+            $coordinator->last_updated_date = date('Y-m-d H:i:s');
+
+            $coordinator->save();
+
+         //Insert any notifications here
+
+            DB::commit();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            echo $e->getMessage();
+            exit();
+            DB::rollback();
+            // Log the error
+            Log::error($e);
+
+            return redirect()->route('coordinators.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
+        }
+
+        return redirect()->route('coordinators.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
+}
+
+
+
+   /**
      * Edit Coordiantor Profile
      */
     public function viewCoordProfile(Request $request): View

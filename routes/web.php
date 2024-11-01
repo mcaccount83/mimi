@@ -305,6 +305,13 @@ Route::post('/chapterboardupdate/{id}', [ChapterController::class, 'updateChapte
 
 
 Route::get('/coorddetails/{id}', [CoordinatorController::class, 'viewCoordDetails'])->name('coordinators.view');
+Route::post('/coorddetails/updateOnLeave/{id}', [CoordinatorController::class, 'updateOnLeave'])->name('coordinators.updateonleave');
+Route::post('/coorddetails/updateretire', [CoordinatorController::class, 'updateRetire'])->name('coordinators.updateretire');
+Route::post('/coorddetails/updateunretire', [CoordinatorController::class, 'updateUnRetire'])->name('coordinators.updateunretire');
+Route::get('/coorddetailseditrole/{id}', [CoordinatorController::class, 'editCoordRole'])->name('coordinators.editrole');
+Route::post('/coorddetailsupdaterole/{id}', [CoordinatorController::class, 'updateCoordRole'])->name('coordinators.updaterole');
+
+
 Route::get('/coordprofile', [CoordinatorController::class, 'viewCoordProfile'])->name('coordinators.profile');
 Route::post('/coordprofileupdate', [CoordinatorController::class, 'updateCoordProfile'])->name('coordinators.profileupdate');
 

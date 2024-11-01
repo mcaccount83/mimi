@@ -482,7 +482,6 @@ document.querySelectorAll('.reset-password-btn').forEach(button => {
     });
 });
 
-
 document.addEventListener("DOMContentLoaded", function() {
     document.querySelector('.updateEINBtn').addEventListener('click', function(e) {
         e.preventDefault();
@@ -550,15 +549,14 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-
 // Function to submit EIN via AJAX
 function submitEIN(ein, chapterId) {
     $.ajax({
-        url: `/chapterdetails/updateEIN/${chapterId}`, // Ensure the correct URL is being used
-        type: 'POST', // Change PUT to POST
+        url: `/chapterdetails/updateEIN/${chapterId}`,
+        type: 'POST',
         data: {
             ch_ein: ein,
-            _token: '{{ csrf_token() }}' // Pass the CSRF token
+            _token: '{{ csrf_token() }}'
         },
         success: function(response) {
             Swal.fire({
@@ -567,7 +565,7 @@ function submitEIN(ein, chapterId) {
                 icon: 'success',
                 confirmButtonText: 'OK',
                 customClass: {
-                    confirmButton: 'btn-sm btn-success my-custom-btn' // Add your custom button class here
+                    confirmButton: 'btn-sm btn-success my-custom-btn'
                 }
             }).then(() => {
                 location.reload(); // Reload the page to reflect changes
@@ -655,211 +653,169 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function showDisbandChapterModal() {
-        Swal.fire({
-            title: 'Chapter Disband Reason',
-            html: `
-                <p>Marking a chapter as disbanded will remove the logins for all board members and remove the chapter. Please enter the reason for disbanding and press OK.</p>
-                <div style="display: flex; align-items: center; ">
-                    <input type="text" id="disband_reason" name="disband_reason" class="swal2-input" placeholder ="Enter Reason" required style="width: 100%;">
-                </div>
-                <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chapterList[0]->id }}">
-                <br>
-                <div class="custom-control custom-switch">
-                    <input type="checkbox" id="disband_letter" class="custom-control-input">
-                    <label class="custom-control-label" for="disband_letter">Send Standard Disband Letter to Chapter</label>
-                </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Close',
-            customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
-            },
-            preConfirm: () => {
-                const disbandReason = Swal.getPopup().querySelector('#disband_reason').value;
-                const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-                const disbandLetter = Swal.getPopup().querySelector('#disband_letter').checked;
+    Swal.fire({
+        title: 'Chapter Disband Reason',
+        html: `
+            <p>Marking a chapter as disbanded will remove the logins for all board members and remove the chapter. Please enter the reason for disbanding and press OK.</p>
+            <div style="display: flex; align-items: center; ">
+                <input type="text" id="disband_reason" name="disband_reason" class="swal2-input" placeholder ="Enter Reason" required style="width: 100%;">
+            </div>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chapterList[0]->id }}">
+            <br>
+            <div class="custom-control custom-switch">
+                <input type="checkbox" id="disband_letter" class="custom-control-input">
+                <label class="custom-control-label" for="disband_letter">Send Standard Disband Letter to Chapter</label>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const disbandReason = Swal.getPopup().querySelector('#disband_reason').value;
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+            const disbandLetter = Swal.getPopup().querySelector('#disband_letter').checked;
 
-                if (!disbandReason) {
-                    Swal.showValidationMessage('Please enter the reason for disbanding.');
-                    return false;
+            if (!disbandReason) {
+                Swal.showValidationMessage('Please enter the reason for disbanding.');
+                return false;
+            }
+
+            return {
+                disband_reason: disbandReason,
+                chapter_id: chapterId,
+                disband_letter: disbandLetter
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('chapters.updatechapdisband') }}',
+                        type: 'POST',
+                        data: {
+                            reason: data.disband_reason,
+                            letter: data.disband_letter ? '1' : '0',
+                            chapterid: data.chapter_id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,  // Automatically close without "OK" button
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                if (response.redirect) {
+                                    window.location.href = response.redirect;
+                                }
+                            });
+                        },
+                        error: function(jqXHR, exception) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong, Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
                 }
+            });
+        }
+    });
+}
 
-                return {
-                    disband_reason: disbandReason,
-                    chapter_id: chapterId,
-                    disband_letter: disbandLetter
-                };
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
-
-                Swal.fire({
-                    title: 'Processing...',
-                    text: 'Please wait while we process your request.',
-                    allowOutsideClick: false,
-                    customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
-                    },
-                    didOpen: () => {
-                        Swal.showLoading();
-
-                        // Perform the AJAX request
-                        $.ajax({
-                            url: '{{ route('chapters.updatechapdisband') }}',
-                            type: 'POST',
-                            data: {
-                                reason: data.disband_reason,
-                                letter: data.disband_letter ? '1' : '0',
-                                chapterid: data.chapter_id,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,  // Automatically close without "OK" button
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                }).then(() => {
-                                    if (response.redirect) {
-                                        window.location.href = response.redirect;
-                                    }
-                                });
-                            },
-                            error: function(jqXHR, exception) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong, Please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                });
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
-
-   // Function to unzap Chapter via AJAX
+// Function to unzap Chapter via AJAX
 function unZapChapter(chapterid) {
-        Swal.fire({
-            title: 'UnZap Chapter',
-            html: `
-                <p>Unzapping a chapter will reactivate the logins for all board members and readd the chapter.</p>
+    Swal.fire({
+        title: 'UnZap Chapter',
+        html: `
+            <p>Unzapping a chapter will reactivate the logins for all board members and readd the chapter.</p>
 
-                <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chapterList[0]->id }}">
+            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chapterList[0]->id }}">
 
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'OK',
-            cancelButtonText: 'Close',
-            customClass: {
-                confirmButton: 'btn-sm btn-success',
-                cancelButton: 'btn-sm btn-danger'
-            },
-            preConfirm: () => {
-                const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
 
-                return {
-                    chapter_id: chapterId,
-                };
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const data = result.value;
+            return {
+                chapter_id: chapterId,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
 
-               // Perform the AJAX request
-                        $.ajax({
-                            url: '{{ route('chapters.updatechapterunzap') }}',
-                            type: 'POST',
-                            data: {
-                                chapterid: data.chapter_id,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: response.message,
-                                    icon: 'success',
-                                    showConfirmButton: false,  // Automatically close without "OK" button
-                                    timer: 1500,
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                }).then(() => {
-                                    if (response.redirect) {
-                                        window.location.href = response.redirect;
-                                    }
-                                });
-                            },
-                            error: function(jqXHR, exception) {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Something went wrong, Please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    customClass: {
-                                        confirmButton: 'btn-sm btn-success'
-                                    }
-                                });
-                            }
-                        });
-
-            }
-        });
-    }
-
-
-
-
-
-
-//     $.ajax({
-//         url: `/chapter/unzap/${chapterid}`,
-//         type: 'POST',
-//         data: {
-//             _token: '{{ csrf_token() }}' // Pass the CSRF token
-//         },
-//         success: function(response) {
-//             Swal.fire({
-//                 title: 'Success!',
-//                 text: response.message || 'Chapter Unzapped successfully.',
-//                 icon: 'success',
-//                 // confirmButtonText: 'OK',
-//                 // customClass: {
-//                 //     confirmButton: 'btn-sm btn-success my-custom-btn' // Add your custom button class here
-//                 // }
-//             }).then(() => {
-//                 location.reload(); // Reload the page to reflect changes
-//             });
-//         },
-//         error: function(jqXHR, exception) {
-//             console.log(jqXHR.responseText); // Log error response
-//             Swal.fire({
-//                 title: 'Error!',
-//                 text: 'Something went wrong. Please try again.',
-//                 icon: 'error',
-//                 // confirmButtonText: 'OK',
-//                 // customClass: {
-//                 //     confirmButton: 'btn-sm btn-danger my-custom-btn' // Add your custom button class here
-//                 // }
-//             });
-//         }
-//     });
-// }
-
-
+            // Perform the AJAX request
+            $.ajax({
+                url: '{{ route('chapters.updatechapterunzap') }}',
+                type: 'POST',
+                data: {
+                    chapterid: data.chapter_id,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: response.message,
+                        icon: 'success',
+                        showConfirmButton: false,  // Automatically close without "OK" button
+                        timer: 1500,
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    }).then(() => {
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
+                        }
+                    });
+                },
+                error: function(jqXHR, exception) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Something went wrong, Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
 
 </script>
 @endsection

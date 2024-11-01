@@ -193,7 +193,7 @@
                                 $coordinatorsRoute = route('international.intcoord');
                             }
                             $activeCoordinatorsRoutes = [
-                                'coordinator/coordlist', 'coorddetails/*', 'coordinator/coordinatorview/*', 'coordinator/roleview/*', 'coordinator/coordinatornew', 'coordinator/retired', 'coordinator/retiredview/*',
+                                'coordinator/coordlist', 'coorddetails/*', 'coorddetailseditrole/*', 'coordinator/coordinatorview/*',  'coordinator/coordinatornew',
                                 'international/coordinator', 'international/coordinatorview/*', 'international/coordinatorretired', 'international/coordinatorretiredview/*'
                             ];
                         @endphp

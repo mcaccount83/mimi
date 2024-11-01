@@ -150,47 +150,43 @@ class UserController extends Controller
     public function loadEmailDetails($chId)
     {
         $chapterList = DB::table('chapters')
-            ->select('chapters.id as id', 'chapters.email as chap_email', 'chapters.primary_coordinator_id as primary_coordinator_id', 'chapters.financial_report_received as report_received',
-                'chapters.new_board_submitted as board_submitted', 'chapters.ein_letter as ein_letter', 'chapters.name as name', 'st.state_short_name as state')
+            ->select('chapters.id as id', 'chapters.email as chap_email', 'chapters.primary_coordinator_id as primary_coordinator_id',
+                     'chapters.financial_report_received as report_received', 'chapters.new_board_submitted as board_submitted',
+                     'chapters.ein_letter as ein_letter', 'chapters.name as name', 'st.state_short_name as state')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.id', '=', $chId)
             ->first();
 
-        $chapEmail = $chapterList->chap_email;
+        $chapEmail = trim($chapterList->chap_email); // Trim spaces from chapter email
 
         $chapterEmailList = DB::table('boards as bd')
             ->select('bd.email as bor_email')
             ->where('bd.chapter_id', '=', $chId)
             ->get();
 
-        $emailListChap = '';
+        $emailListChap = [];
         foreach ($chapterEmailList as $val) {
-            $email = $val->bor_email;
-            $escaped_email = str_replace("'", "\\'", $email);
-            if ($emailListChap == '') {
-                $emailListChap = $escaped_email;
-            } else {
-                $emailListChap .= ','.$escaped_email;
+            $email = trim($val->bor_email); // Trim spaces from each email
+            if (!empty($email)) { // Check for non-empty email
+                $escaped_email = str_replace("'", "\\'", $email);
+                $emailListChap[] = $escaped_email; // Add to the array
             }
         }
 
         $coordinatorEmailList = DB::table('coordinator_reporting_tree')
             ->select('*')
-            ->where('id', '=', $chapterList->primary_coordinator_id )
+            ->where('id', '=', $chapterList->primary_coordinator_id)
             ->get();
 
+        $coordinatorList = [];
         foreach ($coordinatorEmailList as $key => $value) {
             $coordinatorList[$key] = (array) $value;
         }
         $filterCoordinatorList = array_filter($coordinatorList[0]);
-        unset($filterCoordinatorList['id']);
-        unset($filterCoordinatorList['layer0']);
+        unset($filterCoordinatorList['id'], $filterCoordinatorList['layer0']);
         $filterCoordinatorList = array_reverse($filterCoordinatorList);
-        $str = '';
-        $array_rows = count($filterCoordinatorList);
-        $i = 0;
 
-        $emailListCoord = '';
+        $emailListCoord = [];
         foreach ($filterCoordinatorList as $key => $val) {
             if ($val > 1) {
                 $corList = DB::table('coordinators as cd')
@@ -199,18 +195,36 @@ class UserController extends Controller
                     ->where('cd.is_active', '=', 1)
                     ->get();
                 if (count($corList) > 0) {
-                    if ($emailListCoord == '') {
-                        $emailListCoord = $corList[0]->cord_email;
-                    } else {
-                        $emailListCoord .= ','.$corList[0]->cord_email;
+                    $emailCoord = trim($corList[0]->cord_email); // Trim spaces
+                    if (!empty($emailCoord)) {
+                        $emailListCoord[] = $emailCoord; // Add to the array
                     }
                 }
             }
         }
 
-        return ['chapEmail' => $chapEmail, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'board_submitted' => $chapterList->board_submitted,'report_received' => $chapterList->report_received,
-            'ein_letter' => $chapterList->ein_letter, 'name' => $chapterList->name, 'state' => $chapterList->state ];
+        // Join email lists with ", " for proper formatting
+        $emailListChapString = implode(', ', $emailListChap);
+        $emailListCoordString = implode(', ', $emailListCoord);
+
+        // Debug output to check final email strings
+        Log::info("Chapter Email: $chapEmail");
+        Log::info("Chapter Email List: $emailListChapString");
+        Log::info("Coordinator Email List: $emailListCoordString");
+
+        return [
+            'chapEmail' => $chapEmail,
+            'emailListChap' => $emailListChapString,
+            'emailListCoord' => $emailListCoordString,
+            'board_submitted' => $chapterList->board_submitted,
+            'report_received' => $chapterList->report_received,
+            'ein_letter' => $chapterList->ein_letter,
+            'name' => $chapterList->name,
+            'state' => $chapterList->state
+        ];
     }
+
+
 
     /**
      * Coordinators of Chapter -- Used for displaying Coordinator List on Chapter Detail Pages
