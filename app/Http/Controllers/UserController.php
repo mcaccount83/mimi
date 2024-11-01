@@ -204,9 +204,9 @@ class UserController extends Controller
         }
 
         // Debug output to check final email strings
-        Log::info("Chapter Email: $chapEmail");
-        Log::info("Chapter Email List: " . implode(', ', $emailListChap)); // log for debug
-        Log::info("Coordinator Email List: " . implode(', ', $emailListCoord)); // log for debug
+        // Log::info("Chapter Email: $chapEmail");
+        // Log::info("Chapter Email List: " . implode(', ', $emailListChap)); // log for debug
+        // Log::info("Coordinator Email List: " . implode(', ', $emailListCoord)); // log for debug
 
         return [
             'chapEmail' => $chapEmail,
