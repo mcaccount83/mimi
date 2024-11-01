@@ -203,19 +203,15 @@ class UserController extends Controller
             }
         }
 
-        // Join email lists with ", " for proper formatting
-        $emailListChapString = implode(', ', $emailListChap);
-        $emailListCoordString = implode(', ', $emailListCoord);
-
         // Debug output to check final email strings
         Log::info("Chapter Email: $chapEmail");
-        Log::info("Chapter Email List: $emailListChapString");
-        Log::info("Coordinator Email List: $emailListCoordString");
+        Log::info("Chapter Email List: " . implode(', ', $emailListChap)); // log for debug
+        Log::info("Coordinator Email List: " . implode(', ', $emailListCoord)); // log for debug
 
         return [
             'chapEmail' => $chapEmail,
-            'emailListChap' => $emailListChapString,
-            'emailListCoord' => $emailListCoordString,
+            'emailListChap' => $emailListChap, // Return as an array
+            'emailListCoord' => $emailListCoord, // Return as an array
             'board_submitted' => $chapterList->board_submitted,
             'report_received' => $chapterList->report_received,
             'ein_letter' => $chapterList->ein_letter,
@@ -223,7 +219,6 @@ class UserController extends Controller
             'state' => $chapterList->state
         ];
     }
-
 
 
     /**
