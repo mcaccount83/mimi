@@ -152,9 +152,10 @@ class EOYReportController extends Controller
                     $emailListChap = $emailData['emailListChap'];
                     $emailListCoord = $emailData['emailListCoord'];
 
-                    $to_email1 = $emailListChap;
-                    $to_email2 = $chapEmail;
-                    $chapterEmails[$chapter->name] = array_merge((array)$to_email1, (array)$to_email2);
+                    $chapterEmails[$chapter->name] = $emailListChap; // Start with the chapter emails
+                    if (!empty($chapEmail)) {
+                        $chapterEmails[$chapter->name][] = $chapEmail; // Add chapEmail if it's not empty
+                    }
 
                     $cc_email = $emailListCoord;
                     $coordinatorEmails[$chapter->name] = $cc_email;
@@ -435,9 +436,10 @@ class EOYReportController extends Controller
                     $emailListChap = $emailData['emailListChap'];
                     $emailListCoord = $emailData['emailListCoord'];
 
-                    $to_email1 = $emailListChap;
-                    $to_email2 = $chapEmail;
-                    $chapterEmails[$chapter->name] = array_merge((array)$to_email1, (array)$to_email2);
+                    $chapterEmails[$chapter->name] = $emailListChap; // Start with the chapter emails
+                    if (!empty($chapEmail)) {
+                        $chapterEmails[$chapter->name][] = $chapEmail; // Add chapEmail if it's not empty
+                    }
 
                     $cc_email = $emailListCoord;
                     $coordinatorEmails[$chapter->name] = $cc_email;
@@ -992,9 +994,10 @@ class EOYReportController extends Controller
             $emailListChap = $emailData['emailListChap'];
             $emailListCoord = $emailData['emailListCoord'];
 
-            $to_email1 = $emailListChap;
-            $to_email2 = $chapEmail;
-            $chapterEmails[$chapter->name] = array_merge((array)$to_email1, (array)$to_email2);
+            $chapterEmails[$chapter->name] = $emailListChap; // Start with the chapter emails
+            if (!empty($chapEmail)) {
+                $chapterEmails[$chapter->name][] = $chapEmail; // Add chapEmail if it's not empty
+            }
 
             $cc_email = $emailListCoord;
             $coordinatorEmails[$chapter->name] = $cc_email;
