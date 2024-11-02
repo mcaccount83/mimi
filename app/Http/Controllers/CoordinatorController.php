@@ -1641,40 +1641,7 @@ class CoordinatorController extends Controller
     }
 
      /**
-     * Update Coordiantor Leave Status
-     */
-    // public function updateOnLeave(Request $request, $id)
-    // {
-    //     $userDetails = User::find($request->user()->id)->Coordinators;
-    //     $lastUpdatedBy = $userDetails['first_name'].' '.$userDetails['last_name'];
-
-    //     $coorId = $id;
-    //     $corDetails = Coordinators::find($coorId);
-
-    //     DB::beginTransaction();
-    //     try {
-    //         $corDetails->on_leave = $request->input('cd_onleave');
-    //         $corDetails->leave_date = $request->input('cd_leavedate');
-    //         $corDetails->last_updated_by = $lastUpdatedBy;
-    //         $corDetails->last_updated_date = date('Y-m-d H:i:s');
-
-    //         $corDetails->save();
-
-    //         DB::commit();
-
-    //         return response()->json(['success' => true, 'message' => 'Coordinator leave status successfully changed.']);
-    //     } catch (\Exception $e) {
-    //         DB::rollback();
-    //         // Log the error
-    //         Log::error($e);
-    //         // Return error response for AJAX
-    //         return response()->json(['success' => false, 'message' => 'Something went wrong, please try again.'], 500);
-    //     }
-
-    // }
-
-    /**
-     * Function for Retiring a Coordinator (store)
+     * Update Putting a Coordinator on Leave
      */
     public function updateOnLeave(Request $request)
     {
@@ -1724,7 +1691,7 @@ class CoordinatorController extends Controller
     }
 
     /**
-     * Function for Retiring a Coordinator (store)
+     * Update Removing a Coordinator from Leave
      */
     public function updateRemoveLeave(Request $request)
     {
@@ -1773,10 +1740,8 @@ class CoordinatorController extends Controller
       }
     }
 
-
-
      /**
-     * Function for Retiring a Coordinator (store)
+     * Function for Retiring a Coordinator
      */
     public function updateRetire(Request $request)
     {
@@ -1859,7 +1824,7 @@ class CoordinatorController extends Controller
     }
 
      /**
-     * Function for Retiring a Coordinator (store)
+     * Function for Retiring a Coordinator
      */
     public function updateUnRetire(Request $request)
     {

@@ -49,7 +49,9 @@
                 @endif
                 </p>
                 <p class="text-center">
-                    <button class="btn bg-gradient-primary btn-sm updateEINBtn" data-ein="{{ $chapterList[0]->ein }}" data-chapter-id="{{ $id }}">Update EIN Number</button>
+                    <button type="button" class="btn bg-gradient-primary btn-sm" onclick="updateEIN()">Update EIN Number</button>
+
+                    {{-- <button class="btn bg-gradient-primary btn-sm updateEINBtn" data-ein="{{ $chapterList[0]->ein }}" data-chapter-id="{{ $id }}">Update EIN Number</button> --}}
                     <button class="btn bg-gradient-primary btn-sm showFileUploadModal" data-ein-letter="{{ $chapterList[0]->ein_letter_path }}">Update EIN Letter</button>
                 </p>
                 <ul class="list-group list-group-unbordered mb-3">
@@ -511,104 +513,72 @@ document.querySelectorAll('.reset-password-btn').forEach(button => {
     });
 });
 
-document.addEventListener("DOMContentLoaded", function() {
-    document.querySelector('.updateEINBtn').addEventListener('click', function(e) {
-        e.preventDefault();
+function updateEIN(coordId) {
+    Swal.fire({
+        title: 'Enter EIN',
+        html: `
+            <p>Please enter the EIN for the chapter.</p>
+                <div style="display: flex; align-items: center; ">
+                    <input type="text" id="ein" name="ein" class="swal2-input" placeholder ="Enter EIN" required style="width: 100%;">
+                </div>
+                <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chapterList[0]->id }}">
+                <br>
+             `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+            const newein = Swal.getPopup().querySelector('#ein').value;
 
-        const ein = this.getAttribute('data-ein');
-        const id = this.getAttribute('data-chapter-id');
+            return {
+                chapter_id: chapterId,
+                ein: newein,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
 
-        if (!ein) {
-            // Prompt for EIN if not already filled
-            Swal.fire({
-                title: 'Enter EIN',
-                input: 'text',
-                inputLabel: 'Please enter the EIN for the chapter',
-                inputPlaceholder: 'Enter EIN',
-                showCancelButton: true,
-                confirmButtonText: 'Submit',
-                cancelButtonText: 'Cancel',
-                customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
-                },
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const einValue = result.value;
-                    console.log('Entered EIN:', einValue);
-                    submitEIN(einValue, id);
-                }
-            });
-        } else {
-            Swal.fire({
-                title: 'Confirm EIN Change',
-                text: 'This chapter already has an assigned EIN. Are you REALLY sure you want to change it?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, Change EIN',
-                cancelButtonText: 'Cancel',
-                customClass: {
-                    confirmButton: 'btn-sm btn-success',
-                    cancelButton: 'btn-sm btn-danger'
-                },
-            }).then((result) => {
-                if (result.isConfirmed) {
+            // Perform the AJAX request
+            $.ajax({
+                url: '{{ route('chapters.updateein') }}',
+                type: 'POST',
+                data: {
+                        chapter_id: data.chapter_id,
+                        ein: data.ein,
+                        _token: '{{ csrf_token() }}'
+                    },
+                success: function(response) {
                     Swal.fire({
-                        title: 'Enter New EIN',
-                        input: 'text',
-                        inputLabel: 'Please enter the new EIN for the chapter',
-                        inputPlaceholder: 'Enter New EIN',
-                        showCancelButton: true,
-                        confirmButtonText: 'Submit',
-                        cancelButtonText: 'Cancel',
+                        title: 'Success!',
+                        text: response.message,
+                        icon: 'success',
+                        showConfirmButton: false,  // Automatically close without "OK" button
+                        timer: 1500,
                         customClass: {
-                            confirmButton: 'btn-sm btn-success',
-                            cancelButton: 'btn-sm btn-danger'
-                        },
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            const newEinValue = result.value;
-                            console.log('New EIN:', newEinValue);
-                            submitEIN(newEinValue, id);
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    }).then(() => {
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
                         }
                     });
-                }
-            });
-        }
-    });
-});
-
-// Function to submit EIN via AJAX
-function submitEIN(ein, chapterId) {
-    $.ajax({
-        url: `/chapterdetails/updateEIN/${chapterId}`,
-        type: 'POST',
-        data: {
-            ch_ein: ein,
-            _token: '{{ csrf_token() }}'
-        },
-        success: function(response) {
-            Swal.fire({
-                title: 'Success!',
-                text: response.message || 'EIN updated successfully.',
-                icon: 'success',
-                confirmButtonText: 'OK',
-                customClass: {
-                    confirmButton: 'btn-sm btn-success my-custom-btn'
-                }
-            }).then(() => {
-                location.reload(); // Reload the page to reflect changes
-            });
-        },
-        error: function(jqXHR, exception) {
-            console.log(jqXHR.responseText); // Log error response
-            Swal.fire({
-                title: 'Error!',
-                text: 'Something went wrong. Please try again.',
-                icon: 'error',
-                confirmButtonText: 'OK',
-                customClass: {
-                    confirmButton: 'btn-sm btn-danger my-custom-btn' // Add your custom button class here
+                },
+                error: function(jqXHR, exception) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Something went wrong, Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    });
                 }
             });
         }

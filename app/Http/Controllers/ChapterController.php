@@ -3708,34 +3708,81 @@ class ChapterController extends Controller
             return view('chapters.view')->with($data);
     }
 
-    public function updateEIN(Request $request, $id)
+    public function updateEIN(Request $request)
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
-        $chapterId = $id;
-        $chapter = Chapter::find($chapterId);
+        $ein = $request->input('ein');
+        $chapterId = $request->input('chapter_id');
 
-        DB::beginTransaction();
         try {
-            $chapter->ein = $request->input('ch_ein');
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');
+            DB::beginTransaction();
 
-            $chapter->save();
+            DB::table('chapters')
+                ->where('id', $chapterId)
+                ->update(['ein' => $ein,
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => date('Y-m-d'),
+                    ]);
 
-            DB::commit();
+          // Commit the transaction
+          DB::commit();
 
-            return response()->json(['success' => true, 'message' => 'EIN has been updated.']);
-        } catch (\Exception $e) {
-            DB::rollback();
-            // Log the error
-            Log::error($e);
-            // Return error response for AJAX
-            return response()->json(['success' => false, 'message' => 'Something went wrong, please try again.'], 500);
-        }
+          $message = 'Chapter EIN successfully updated';
 
+          // Return JSON response
+          return response()->json([
+              'status' => 'success',
+              'message' => $message,
+            'redirect' => route('chapters.view', ['id' => $chapterId])
+          ]);
+
+      } catch (\Exception $e) {
+          // Rollback transaction on exception
+          DB::rollback();
+          Log::error($e);
+
+          $message = 'Something went wrong, Please try again.';
+
+          // Return JSON error response
+          return response()->json([
+              'status' => 'error',
+              'message' => $message,
+                'redirect' => route('chapters.view', ['id' => $chapterId])
+          ]);
+      }
     }
+
+
+    // {
+    //     $corDetails = User::find($request->user()->id)->Coordinators;
+    //     $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+
+    //     $chapterId = $id;
+    //     $chapter = Chapter::find($chapterId);
+
+    //     DB::beginTransaction();
+    //     try {
+    //         $chapter->ein = $request->input('ch_ein');
+    //         $chapter->last_updated_by = $lastUpdatedBy;
+    //         $chapter->last_updated_date = date('Y-m-d H:i:s');
+
+    //         $chapter->save();
+
+    //         DB::commit();
+
+    //         return response()->json(['success' => true, 'message' => 'EIN has been updated.']);
+    //     } catch (\Exception $e) {
+    //         DB::rollback();
+    //         // Log the error
+    //         Log::error($e);
+    //         // Return error response for AJAX
+    //         return response()->json(['success' => false, 'message' => 'Something went wrong, please try again.'], 500);
+    //     }
+
+    // }
 
     /**
      *Edit Chapter Information
