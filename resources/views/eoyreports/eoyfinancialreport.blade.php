@@ -62,6 +62,27 @@
                 </thead>
                 <tbody>
                     @foreach($chapterList as $list)
+                    @php
+                        $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->chap_id);
+                        $chapEmail = $emailDetails['chapEmail'];
+                        $emailListChap = $emailDetails['emailListChap'];
+                        $emailListCoord = $emailDetails['emailListCoord'];
+                        $emailListChap = is_array($emailListChap) ? implode(', ', $emailListChap) : $emailListChap;
+                        $emailListCoord = is_array($emailListCoord) ? implode(', ', $emailListCoord) : $emailListCoord;
+
+                        if (!empty($chapEmail)) {
+                            $emailListChap .= (empty($emailListChap) ? '' : ', ') . $chapEmail;
+                        }
+
+                        // Define the message body with a link
+                        $mimiUrl = 'https://example.com/mimi';
+                        $mailMessage = "Don't forget to complete the Financial Report for your chapter! This report is available now and is due no later than July 10th at 11:59pm.\n\n";
+                        $mailMessage .= "After receiving your completed reports, your Coordinator Team will review the report and reach out if they have any questions.\n\n";
+                        $mailMessage .= "The Financial Report (as well as the Board Election Report) can be accessed by logging into your MIMI account: $mimiUrl and selecting the buttons at the top of your screen.";
+
+                        // URL-encode the message
+                        $encodedMailMessage = urlencode($mailMessage);
+                    @endphp
                     <tr>
                         <td class="text-center align-middle">
                             <a href="{{ url("/eoy/financialreportview/{$list->chap_id}") }}"><i class="fas fa-edit"></i></a>
@@ -74,7 +95,7 @@
                         <!-- Email link to be dynamically populated via AJAX -->
                         <td class="text-center align-middle">
                             @if($list->financial_report_received == null || $list->financial_report_received == 0)
-                                <a href="#" class="email-link" data-chapter="{{ $list->chap_id }}"><i class="far fa-envelope"></i></a>
+                                <a href="mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=MOMS Club of {{ $list->name }}, {{ $list->state }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a>
                             @endif
                         </td>
                         <td>{{ $list->state }}</td>
@@ -144,40 +165,6 @@ document.addEventListener("DOMContentLoaded", function() {
         if (itemPath === currentPath) {
             item.classList.add("active");
         }
-    });
-});
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Iterate through each email link
-    document.querySelectorAll('.email-link').forEach(function(emailLink) {
-        const chapterId = emailLink.getAttribute('data-chapter');
-
-        // Make an AJAX call to fetch the email details for the chapter
-        fetch('/load-email-details/' + chapterId)
-            .then(response => response.json())
-            .then(data => {
-                // Email details from the response
-                const emailListCoord = data.emailListCoord;
-                const emailListChap = data.emailListChap;
-                const name = data.name;
-                const state = data.state;
-                const mimiUrl = "https://momsclub.org/mimi";
-
-                // Construct the mail message
-                let mailMessage = `Don't forget to complete the Financial Report for your chapter! This report is available now and is due no later than July 10th at 11:59pm.
-
-                After receiving your completed reports, your Coordinator Team will review the report and reach out if they have any questions.
-
-                The Financial Report (as well as the Board Election Report) can be accessed by logging into your MIMI account: ${mimiUrl} and selecting the buttons at the top of your screen.`;
-
-                // Create the mailto link with the message
-                const subject = 'Financial Report Reminder | ' + name + ', ' + state;
-                emailLink.setAttribute('href', 'mailto:' + emailListChap + '?cc=' + emailListCoord + '&subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(mailMessage));
-            })
-            .catch(error => {
-                console.error('Error fetching email details:', error);
-            });
     });
 });
 
