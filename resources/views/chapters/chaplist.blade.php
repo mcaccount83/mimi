@@ -64,23 +64,18 @@
                 </thead>
                 <tbody>
                     @foreach($chapterList as $list)
-
                     @php
                         $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
                         $chapEmail = $emailDetails['chapEmail'];
                         $emailListChap = $emailDetails['emailListChap'];
                         $emailListCoord = $emailDetails['emailListCoord'];
-
-                        // Ensure email lists are strings
                         $emailListChap = is_array($emailListChap) ? implode(', ', $emailListChap) : $emailListChap;
                         $emailListCoord = is_array($emailListCoord) ? implode(', ', $emailListCoord) : $emailListCoord;
 
-                        // Add chapEmail if it's not empty
                         if (!empty($chapEmail)) {
                             $emailListChap .= (empty($emailListChap) ? '' : ', ') . $chapEmail;
                         }
                     @endphp
-
 
                         <tr id="chapter-{{ $list->id }}">
                             <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>

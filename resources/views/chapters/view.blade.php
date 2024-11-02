@@ -351,9 +351,21 @@
           <div class="col-md-12">
             <div class="card-body text-center">
                 @if ($coordinatorCondition)
-                <button type="button" class="btn bg-gradient-primary mb-3 email-button" data-chapter="{{ $chapterList[0]->id }}">
-                    E-mail Board
-                </button>
+                @php
+                        $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($id);
+                        $chapEmail = $emailDetails['chapEmail'];
+                        $emailListChap = $emailDetails['emailListChap'];
+                        $emailListCoord = $emailDetails['emailListCoord'];
+                        $emailListChap = is_array($emailListChap) ? implode(', ', $emailListChap) : $emailListChap;
+                        $emailListCoord = is_array($emailListCoord) ? implode(', ', $emailListCoord) : $emailListCoord;
+
+                        if (!empty($chapEmail)) {
+                            $emailListChap .= (empty($emailListChap) ? '' : ', ') . $chapEmail;
+                        }
+                    @endphp
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=MOMS Club of {{ $chapterList[0]->name }}, {{ $chapterList[0]->statename }}'">
+                        Email Board
+                    </button>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chapterList[0]->id]) }}'">Update Chapter Information</button>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chapterList[0]->id]) }}'">Update Board Information</button>
                     @if($assistConferenceCoordinatorCondition && $chIsActive == 1)
@@ -366,7 +378,7 @@
                     @if ($corConfId == $chConfId)
                         @if ($chIsActive == 1)
                             @if ($inquiriesCondition  && ($coordId != $chPCid))
-                                <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries') }}'">Back to Inquiries Chapter List</button>
+                                <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.window.location.href='{{ route('chapters.chapinquiries') }}'">Back to Inquiries Chapter List</button>
                             @else
                                 <button type="button" id="back" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'">Back to Chapter List</button>
                             @endif
@@ -425,33 +437,6 @@ $(document).ready(function () {
 
     }
 });
-
-document.addEventListener('DOMContentLoaded', function() {
-        // Loop through each email button
-        document.querySelectorAll('.email-button').forEach(function(emailButton) {
-            emailButton.addEventListener('click', function() {
-                const chapterId = emailButton.getAttribute('data-chapter');
-
-                fetch('/load-email-details/' + chapterId)
-                    .then(response => response.json())
-                    .then(data => {
-                        // Build the mailto link with email and cc string
-                        const emailListCoord = data.emailListCoord;
-                        const emailListChap = data.emailListChap;
-                        const subject = 'MOMS Club of ' + data.name + ', ' + data.state;
-
-                        // Construct the mailto link
-                        const mailtoLink = 'mailto:' + emailListChap + '?cc=' + emailListCoord + '&subject=' + encodeURIComponent(subject);
-
-                        // Open the mailto link
-                        window.location.href = mailtoLink;
-                    })
-                    .catch(error => {
-                        console.error('Error fetching email details:', error);
-                    });
-            });
-        });
-    });
 
 $(document).ready(function() {
     function loadCoordinatorList(corId) {
