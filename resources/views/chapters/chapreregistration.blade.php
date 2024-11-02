@@ -98,7 +98,7 @@
                                 @endif
                             </td>
                             <td class="text-center align-middle">
-                                <a href="mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=Re-Registration Payment Reminder | MOMS Club of {{ $list->name }}, {{ $list->state }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a>
+                                <a href="mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=Re-Registration Payment Reminder | MOMS Club of {{ $list->name }}, {{ $list->state_short_name }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a>
                             </td>
                             <td>
                                 @if ($list->reg != "None")
