@@ -3708,6 +3708,16 @@ class ChapterController extends Controller
             return view('chapters.view')->with($data);
     }
 
+    public function checkEIN(Request $request)
+{
+    $chapterId = $request->input('chapter_id');
+    $chapter = DB::table('chapters')->where('id', $chapterId)->first();
+
+    return response()->json([
+        'ein' => $chapter->ein ?? null,
+    ]);
+}
+
     public function updateEIN(Request $request)
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
@@ -3754,35 +3764,6 @@ class ChapterController extends Controller
           ]);
       }
     }
-
-
-    // {
-    //     $corDetails = User::find($request->user()->id)->Coordinators;
-    //     $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
-
-    //     $chapterId = $id;
-    //     $chapter = Chapter::find($chapterId);
-
-    //     DB::beginTransaction();
-    //     try {
-    //         $chapter->ein = $request->input('ch_ein');
-    //         $chapter->last_updated_by = $lastUpdatedBy;
-    //         $chapter->last_updated_date = date('Y-m-d H:i:s');
-
-    //         $chapter->save();
-
-    //         DB::commit();
-
-    //         return response()->json(['success' => true, 'message' => 'EIN has been updated.']);
-    //     } catch (\Exception $e) {
-    //         DB::rollback();
-    //         // Log the error
-    //         Log::error($e);
-    //         // Return error response for AJAX
-    //         return response()->json(['success' => false, 'message' => 'Something went wrong, please try again.'], 500);
-    //     }
-
-    // }
 
     /**
      *Edit Chapter Information

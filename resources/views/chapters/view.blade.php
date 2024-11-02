@@ -50,8 +50,6 @@
                 </p>
                 <p class="text-center">
                     <button type="button" class="btn bg-gradient-primary btn-sm" onclick="updateEIN()">Update EIN Number</button>
-
-                    {{-- <button class="btn bg-gradient-primary btn-sm updateEINBtn" data-ein="{{ $chapterList[0]->ein }}" data-chapter-id="{{ $id }}">Update EIN Number</button> --}}
                     <button class="btn bg-gradient-primary btn-sm showFileUploadModal" data-ein-letter="{{ $chapterList[0]->ein_letter_path }}">Update EIN Letter</button>
                 </p>
                 <ul class="list-group list-group-unbordered mb-3">
@@ -513,17 +511,68 @@ document.querySelectorAll('.reset-password-btn').forEach(button => {
     });
 });
 
-function updateEIN(coordId) {
+
+function updateEIN() {
+    const chapterId = '{{ $chapterList[0]->id }}'; // Get the chapter ID from the Blade variable
+
+    // Check if the chapter already has an EIN
+    $.ajax({
+        url: '{{ route('chapters.checkein') }}',
+        type: 'GET',
+        data: {
+            chapter_id: chapterId
+        },
+        success: function(response) {
+            if (response.ein) {
+                // Show a warning if an EIN already exists
+                Swal.fire({
+                    title: 'Warning!',
+                    text: 'This chapter already has an EIN. Do you want to replace it?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, replace it',
+                    cancelButtonText: 'No',
+                    customClass: {
+                        confirmButton: 'btn-sm btn-success',
+                        cancelButton: 'btn-sm btn-danger'
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Proceed to input the new EIN
+                        promptForNewEIN(chapterId);
+                    }
+                });
+            } else {
+                // No existing EIN, proceed directly
+                promptForNewEIN(chapterId);
+            }
+        },
+        error: function() {
+            Swal.fire({
+                title: 'Error!',
+                text: 'Unable to check the existing EIN. Please try again later.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                customClass: {
+                    confirmButton: 'btn-sm btn-success'
+                }
+            });
+        }
+    });
+}
+
+// Function to prompt the user for a new EIN
+function promptForNewEIN(chapterId) {
     Swal.fire({
         title: 'Enter EIN',
         html: `
             <p>Please enter the EIN for the chapter.</p>
-                <div style="display: flex; align-items: center; ">
-                    <input type="text" id="ein" name="ein" class="swal2-input" placeholder ="Enter EIN" required style="width: 100%;">
-                </div>
-                <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chapterList[0]->id }}">
-                <br>
-             `,
+            <div style="display: flex; align-items: center;">
+                <input type="text" id="ein" name="ein" class="swal2-input" placeholder="Enter EIN" required style="width: 100%;">
+            </div>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="${chapterId}">
+            <br>
+        `,
         showCancelButton: true,
         confirmButtonText: 'OK',
         cancelButtonText: 'Close',
@@ -532,33 +581,32 @@ function updateEIN(coordId) {
             cancelButton: 'btn-sm btn-danger'
         },
         preConfirm: () => {
-            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
-            const newein = Swal.getPopup().querySelector('#ein').value;
+            const ein = Swal.getPopup().querySelector('#ein').value;
 
             return {
                 chapter_id: chapterId,
-                ein: newein,
+                ein: ein,
             };
         }
     }).then((result) => {
         if (result.isConfirmed) {
             const data = result.value;
 
-            // Perform the AJAX request
+            // Perform the AJAX request to update the EIN
             $.ajax({
                 url: '{{ route('chapters.updateein') }}',
                 type: 'POST',
                 data: {
-                        chapter_id: data.chapter_id,
-                        ein: data.ein,
-                        _token: '{{ csrf_token() }}'
-                    },
+                    chapter_id: data.chapter_id,
+                    ein: data.ein,
+                    _token: '{{ csrf_token() }}'
+                },
                 success: function(response) {
                     Swal.fire({
                         title: 'Success!',
                         text: response.message,
                         icon: 'success',
-                        showConfirmButton: false,  // Automatically close without "OK" button
+                        showConfirmButton: false,
                         timer: 1500,
                         customClass: {
                             confirmButton: 'btn-sm btn-success'

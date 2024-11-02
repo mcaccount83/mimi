@@ -296,6 +296,7 @@ Route::get('/board/resources', [BoardController::class, 'showResources'])->name(
 // Add routes for other methods as needed
 
 Route::get('/chapterdetails/{id}', [ChapterController::class, 'viewChapterDetails'])->name('chapters.view');
+Route::get('/chapters/check-ein', [ChapterController::class, 'checkEIN'])->name('chapters.checkein');
 Route::post('/chapterdetails/updateEIN', [ChapterController::class, 'updateEIN'])->name('chapters.updateein');
 
 Route::get('/chapterdetailsedit/{id}', [ChapterController::class, 'editChapterDetails'])->name('chapters.edit');
