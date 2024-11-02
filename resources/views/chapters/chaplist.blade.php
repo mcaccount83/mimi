@@ -64,11 +64,20 @@
                 </thead>
                 <tbody>
                     @foreach($chapterList as $list)
+
+                    @php
+                        $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
+                        $emailListChap = $emailDetails['emailListChap'];
+                        $emailListCoord = $emailDetails['emailListCoord'];
+                        $emailListChap = is_array($emailListChap) ? implode(', ', $emailListChap) : $emailListChap;
+                        $emailListCoord = is_array($emailListCoord) ? implode(', ', $emailListCoord) : $emailListCoord;
+                    @endphp
+
                         <tr id="chapter-{{ $list->id }}">
                             <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                             <td class="text-center align-middle">
-                                <a href="#" class="email-link" data-chapter="{{ $list->id }}"><i class="far fa-envelope"></i></a>
-                            </td>
+                                <a href="mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=MOMS Club of {{ $list->name }}, {{ $list->state }}"><i class="far fa-envelope"></i></a></td>
+                           </td>
                             <td>
                                 @if ($list->reg != "None")
                                     {{ $list->conf }} / {{ $list->reg }}
@@ -139,27 +148,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        // Loop through each chapter and fetch the email details
-        document.querySelectorAll('.email-link').forEach(function(emailLink) {
-            const chapterId = emailLink.getAttribute('data-chapter');
-
-            fetch('/load-email-details/' + chapterId)
-                .then(response => response.json())
-                .then(data => {
-                    // Build the mailto link with email and cc string
-                    const emailListCoord = data.emailListCoord;
-                    const emailListChap = data.emailListChap;
-                    const subject = 'MOMS Club of ' + data.name + ', ' + data.state;
-
-                    emailLink.setAttribute('href', 'mailto:' + emailListChap + '?cc=' + emailListCoord + '&subject=' + encodeURIComponent(subject));
-                })
-                .catch(error => {
-                    console.error('Error fetching email details:', error);
-                });
-        });
-    });
 
 function showPrimary() {
 var base_url = '{{ url("/chapter/chapterlist") }}';
