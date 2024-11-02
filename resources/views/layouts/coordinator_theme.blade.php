@@ -172,8 +172,8 @@
                                 $chaptersRoute = route('international.intchapter');
                             }
                             $activeChpaterRoutes = [
-                                'chapter/chapterlist', 'chapterdetails/*', 'chapter/chapternew', 'chapter/zapped',
-                                'chapter/inquiries', 'chapter/inquirieszapped', 'international/chapter', 'international/chapterzapped'
+                                'chapter/chapterlist', 'chapterdetails/*', 'chapterdetailsedit/*', 'chapterboardedit/*', 'chapter/chapternew',
+                                'chapter/zapped', 'chapter/inquiries', 'chapter/inquirieszapped', 'international/chapter', 'international/chapterzapped'
                             ];
                         @endphp
                         @if (isset($chaptersRoute))

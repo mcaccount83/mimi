@@ -3605,12 +3605,13 @@ class ChapterController extends Controller
 
             $chapterList = DB::table('chapters as ch')
                 ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id',
-                    'ct.name as countryname', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname')
+                    'ct.name as countryname', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth')
                 ->join('country as ct', 'ch.country', '=', 'ct.short_name')
                 ->join('state as st', 'ch.state', '=', 'st.id')
                 ->join('conference as cf', 'ch.conference', '=', 'cf.id')
                 ->join('region as rg', 'ch.region', '=', 'rg.id')
                 ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
+                ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
                 // ->where('ch.is_active', '=', '1')
                 ->where('ch.id', '=', $id)
                 ->where('bd.board_position_id', '=', '1')

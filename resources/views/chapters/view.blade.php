@@ -83,7 +83,7 @@
                         @endif
                     </li>
                     <li class="list-group-item">
-                        <b>Founded:</b> <span class="float-right">{{ $chapterList[0]->start_month_id }} {{ $chapterList[0]->start_year }}</span>
+                        <b>Founded:</b> <span class="float-right">{{ $chapterList[0]->startmonth }} {{ $chapterList[0]->start_year }}</span>
                         <br>
                         <b>Formerly Known As:</b> <span class="float-right">{{ $chapterList[0]->former_name }}</span>
                         <br>
