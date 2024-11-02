@@ -57,6 +57,41 @@
                 </thead>
                 <tbody>
                     @foreach($chapterList as $list)
+                    @php
+                        $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
+                        $chapEmail = $emailDetails['chapEmail'];
+                        $emailListChap = $emailDetails['emailListChap'];
+                        $emailListCoord = $emailDetails['emailListCoord'];
+                        $emailListChap = is_array($emailListChap) ? implode(', ', $emailListChap) : $emailListChap;
+                        $emailListCoord = is_array($emailListCoord) ? implode(', ', $emailListCoord) : $emailListCoord;
+
+                        if (!empty($chapEmail)) {
+                            $emailListChap .= (empty($emailListChap) ? '' : ', ') . $chapEmail;
+                        }
+
+                        $boardSubmitted = $emailDetails['boardSubmitted'] ?? null;
+                        $reportReceived = $emailDetails['reportReceived'] ?? null;
+                        $einLetter = $emailDetails['einLetter'] ?? null;
+
+                        // Define the message body with a link
+                        $mimiUrl = 'https://example.com/mimi';
+                        $mailMessage = "At this time, we have not received one or more of your chapter's End of Year Reports. They are now considered PAST DUE.\n\n";
+                        $mailMessage .= "The following items are missing:<ul>";
+                            if ($boardSubmitted === null || $boardSubmitted == 0) {
+                                $mailMessage .= "<li>Board Election Report</li>";
+                            }
+                            if ($reportReceived === null || $reportReceived == 0) {
+                                $mailMessage .= "<li>Financial Report</li>";
+                            }
+                            if ($einLetter === null || $einLetter == 0) {
+                                $mailMessage .= "<li>Copy of EIN Letter</li>";
+                            }
+                        $mailMessage .= "</ul>";
+                        $mailMessage .= "<br>Please submit these reports as soon as possible to ensure compliance and access to resources. The reports can be accessed by logging into your MIMI account: $mimiUrl.";
+
+                        // URL-encode the message for use in the `mailto` link
+                        $encodedMailMessage = urlencode($mailMessage);
+                    @endphp
                         <tr>
                             {{-- <tr id="chapter-{{ $list->id }}"> --}}
                                 <td class="text-center align-middle">
@@ -127,59 +162,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Iterate through each email link
-    document.querySelectorAll('.email-link').forEach(function(emailLink) {
-        const chapterId = emailLink.getAttribute('data-chapter');
-
-        // Make an AJAX call to fetch the email details for the chapter
-        fetch('/load-email-details/' + chapterId)
-            .then(response => response.json())
-            .then(data => {
-                // Email details from the response
-                const emailListCoord = data.emailListCoord;
-                const emailListChap = data.emailListChap;
-                const name = data.name;
-                const state = data.state;
-                const mimiUrl = "https://momsclub.org/mimi";
-
-                // Construct the mail message
-                let mailMessage = "At this time, we have not received one or more of your chapter's End of Year Reports. They are now considered PAST DUE.<br>" +
-                                  "The following items are missing:<ul>";
-
-                // Conditional checks for missing items
-                const boardSubmitted = data.board_submitted;
-                const reportReceived = data.report_received;
-                const einLetter = data.ein_letter;
-
-                if (boardSubmitted == null || boardSubmitted == 0) {
-                    mailMessage += "<li>Board Election Report</li>";
-                }
-                if (reportReceived == null || reportReceived == 0) {
-                    mailMessage += "<li>Financial Report</li>";
-                }
-                if (einLetter == null || einLetter == 0) {
-                    mailMessage += "<li>Copy of EIN Letter</li>";
-                }
-
-                // Close the list
-                mailMessage += "</ul>";
-
-                // Add closing remarks
-                mailMessage += `Please submit these reports as soon as possible to ensure compliance and access to resources. The reports can be accessed by logging into your MIMI account: ${mimiUrl}.`;
-
-                // Create the mailto link with the message
-                const subject = 'End of Year Report Reminder | ' + name + ', ' + state;
-                emailLink.setAttribute('href', 'mailto:' +  emailListChap + '?cc=' + emailListCoord + '&subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(mailMessage));
-            })
-            .catch(error => {
-                console.error('Error fetching email details:', error);
-            });
-    });
-});
-
 
 function showPrimary() {
     var base_url = '{{ url("/eoy/status") }}';

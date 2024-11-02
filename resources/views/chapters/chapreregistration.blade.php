@@ -57,19 +57,49 @@
                     </thead>
                     <tbody>
                         @foreach($reChapterList as $list)
+                        @php
+                            $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
+                            $chapEmail = $emailDetails['chapEmail'];
+                            $emailListChap = $emailDetails['emailListChap'];
+                            $emailListCoord = $emailDetails['emailListCoord'];
+                            $emailListChap = is_array($emailListChap) ? implode(', ', $emailListChap) : $emailListChap;
+                            $emailListCoord = is_array($emailListCoord) ? implode(', ', $emailListCoord) : $emailListCoord;
+
+                            if (!empty($chapEmail)) {
+                                $emailListChap .= (empty($emailListChap) ? '' : ', ') . $chapEmail;
+                            }
+
+                            // Define the message body with a link
+                            $mimiUrl = 'https://example.com/mimi';
+                            $mailMessage = "Your chapter's re-registration payment is due at this time and has not yet been received.\n\n";
+                            $mailMessage .= "Calculate your payment:<ul>";
+                            $mailMessage .= "<li>Determine how many people paid dues to your chapter since your last re-registration payment through today.</li>";
+                            $mailMessage .= "<li>Add in any people who paid reduced dues or had their dues waived due to financial hardship</li>";
+                            $mailMessage .= "<li>If this total amount of members is less than 10, make your check for the amount of $50</li>";
+                            $mailMessage .= "<li>If this total amount of members is 10 or more, multiply the number by $5.00 to get your total amount due</li>";
+                            $mailMessage .= "<li>Payments received after the last day of your renewal month should include a late fee of $10</li>";
+                            $mailMessage .= "</ul>";
+                            $mailMessage .= "Make your payment:<ul>";
+                            $mailMessage .= "<li>Pay Online: $mimiUrl </li>";
+                            $mailMessage .= "<li>Pay via Mail to: Chapter Re-Registration, 208 Hewitt Dr. Ste 103 #328, Waco, TX 76712</li>";
+                            $mailMessage .= "</ul>";
+                            // URL-encode the message
+                            $encodedMailMessage = urlencode($mailMessage);
+                        @endphp
                         <tr>
-                            <td>
+                            <td class="text-center align-middle">
                                 @if ($conferenceCoordinatorCondition)
-                                    <center><a href="{{ url("/chapter/reregistrationpayment/{$list->id}") }}"><i class="far fa-credit-card"></i></a></center>
+                                    <a href="{{ url("/chapter/reregistrationpayment/{$list->id}") }}"><i class="far fa-credit-card"></i></a>
                                 @endif
                             </td>
-                            <td>
+                            <td class="text-center align-middle">
                                 @if ($conferenceCoordinatorCondition)
-                                    <center><a href="{{ url("/chapter/reregistrationnotes/{$list->id}") }}"><i class="fas fa-pencil-alt"></i></a></center>
+                                    <a href="{{ url("/chapter/reregistrationnotes/{$list->id}") }}"><i class="fas fa-pencil-alt"></i></a>
                                 @endif
                             </td>
-                            <!-- Here the email link will be dynamically populated via AJAX -->
-                            <td><center><a href="#" class="email-link" data-chapter="{{ $list->id }}"><i class="far fa-envelope"></i></a></center></td>
+                            <td class="text-center align-middle">
+                                <a href="mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=Re-Registration Payment Reminder | MOMS Club of {{ $list->name }}, {{ $list->state }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a>
+                            </td>
                             <td>
                                 @if ($list->reg != "None")
                                     {{ $list->conf }} / {{ $list->reg }}
@@ -142,46 +172,6 @@ document.addEventListener("DOMContentLoaded", function() {
         if (itemPath === currentPath) {
             item.classList.add("active");
         }
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Iterate through each email link
-    document.querySelectorAll('.email-link').forEach(function(emailLink) {
-        const chapterId = emailLink.getAttribute('data-chapter');
-
-        // Make an AJAX call to fetch the email details for the chapter
-        fetch('/load-email-details/' + chapterId)
-            .then(response => response.json())
-            .then(data => {
-                // Email details from the response
-                const emailListCoord = data.emailListCoord;
-                const emailListChap = data.emailListChap;
-                const name = data.name;
-                const state = data.state;
-                const mimiUrl = "https://momsclub.org/mimi";
-
-                // The embedded message with text-based list formatting
-                let mailMessage = "Your chapter's re-registration payment is due at this time and has not yet been received.<br>" +
-                                  "Calculate your payment:<ul>" +
-                                  "<li>Determine how many people paid dues to your chapter since your last re-registration payment through today.</li>" +
-                                  "<li>Add in any people who paid reduced dues or had their dues waived due to financial hardship</li>" +
-                                  "<li>If this total amount of members is less than 10, make your check for the amount of $50</li>" +
-                                  "<li>If this total amount of members is 10 or more, multiply the number by $5.00 to get your total amount due</li>" +
-                                  "<li>Payments received after the last day of your renewal month should include a late fee of $10</li>" +
-                                  "</ul>" +
-                                  "Make your payment:<ul>" +
-                                  "<li>Pay Online: " + mimiUrl + " </li>" +
-                                  "<li>Pay via Mail to: Chapter Re-Registration, 208 Hewitt Dr. Ste 103 #328, Waco, TX 76712</li>" +
-                                  "</ul>" ;
-
-                // Create the mailto link with the message
-                const subject = 'Re-Registration Payment Reminder | ' + name + ', ' + state;
-                emailLink.setAttribute('href', 'mailto:' + emailListChap + '?cc=' + emailListCoord + '&subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(mailMessage));
-            })
-            .catch(error => {
-                console.error('Error fetching email details:', error);
-            });
     });
 });
 

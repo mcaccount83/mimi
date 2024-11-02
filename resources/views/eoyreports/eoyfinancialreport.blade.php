@@ -95,7 +95,7 @@
                         <!-- Email link to be dynamically populated via AJAX -->
                         <td class="text-center align-middle">
                             @if($list->financial_report_received == null || $list->financial_report_received == 0)
-                                <a href="mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=MOMS Club of {{ $list->name }}, {{ $list->state }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a>
+                                <a href="mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=Financial Report Reminder | MOMS Club of {{ $list->name }}, {{ $list->state }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a>
                             @endif
                         </td>
                         <td>{{ $list->state }}</td>
