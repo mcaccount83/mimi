@@ -1630,7 +1630,7 @@ class EOYReportController extends Controller
     /**
      * Update Boundary Details
      */
-    public function updateEOYBoundaries(Request $request, $id): RedirectResponse
+    public function updateEOYBoundaries5(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
@@ -1791,7 +1791,7 @@ class EOYReportController extends Controller
     /**
      * Upate Awards (store)
      */
-    public function updateEOYAwards(Request $request, $id): RedirectResponse
+    public function updateEOYAwards5(Request $request, $id): RedirectResponse
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
@@ -1967,5 +1967,397 @@ class EOYReportController extends Controller
 
         return $status;
     }
+
+    public function viewEOYDetails(Request $request, $id)
+    {
+
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+
+        // $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = DB::table('coordinators as cd')
+            ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
+            ->where('cd.user_id', '=', $userId)
+            ->get();
+
+        $coordId = $corDetails[0]->id;
+        $corConfId = $corDetails[0]->conference_id;
+        $corRegId = $corDetails[0]->region_id;
+        $positionid = $corDetails[0]->position_id;
+
+        $financial_report_array = FinancialReport::find($id);
+        if ($financial_report_array) {
+            $reviewComplete = $financial_report_array['review_complete'];
+        } else {
+            $reviewComplete = null;
+        }
+
+        $financial_report_array = FinancialReport::find($id);
+
+        $chapterList = DB::table('chapters as ch')
+            ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id',
+                'ct.name as countryname', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth',
+                'fr.check_current_990N_verified_IRS as irs_verified', 'fr.check_current_990N_notes as irs_notes',
+                'fr.file_irs_path as file_irs_path')
+            ->join('country as ct', 'ch.country', '=', 'ct.short_name')
+            ->join('state as st', 'ch.state', '=', 'st.id')
+            ->join('conference as cf', 'ch.conference', '=', 'cf.id')
+            ->join('region as rg', 'ch.region', '=', 'rg.id')
+            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
+            ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
+            ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->where('bd.board_position_id', '=', '1')
+            ->get();
+
+        $chConfId = $chapterList[0]->conference;
+        $chRegId = $chapterList[0]->region;
+        $chPCid = $chapterList[0]->primary_coordinator_id;
+
+        // Load Active Status for Active/Zapped Visibility
+        $chIsActive = $chapterList[0]->is_active;
+
+        // Load Board and Coordinators for Sending Email
+        $chId = $chapterList[0]->id;
+
+        $emailData = $this->userController->loadEmailDetails($chId);
+        $emailListChap = $emailData['emailListChap'];
+        $emailListCoord = $emailData['emailListCoord'];
+
+        $reportReviewerList = DB::table('chapters as ch')
+            ->select('cd.id as cid', 'cd.first_name as rfname', 'cd.last_name as rlname', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
+            ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
+            ->leftJoin('coordinators as cd', 'fr.reviewer_id', '=', 'cd.id')
+            ->leftJoin('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
+            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
+            ->where(function($query) use ($chRegId, $chConfId) {
+                $query->where('cd.region_id', '=', $chRegId)
+                    ->orWhere(function($subQuery) use ($chConfId) {
+                        $subQuery->where('cd.region_id', '=', 0)
+                            ->where('cd.conference_id', $chConfId);
+                    });
+            })
+            ->where('cd.position_id', '<=', '7')
+            ->where('cd.position_id', '>=', '1')
+            ->where('cd.is_active', '=', '1')
+            ->groupBy('cd.id', 'cd.first_name', 'cd.last_name', 'cp.short_title', 'pos2.short_title')
+            ->orderBy('cd.position_id')
+            ->orderBy('cd.first_name')
+            ->get();
+
+
+
+        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete, 'emailListCoord' => $emailListCoord, 'emailListChap' => $emailListChap,
+            'chapterList' => $chapterList, 'reportReviewerList' => $reportReviewerList, 'corConfId' => $corConfId, 'chConfId' => $chConfId, 'chPCid' => $chPCid, 'financial_report_array' => $financial_report_array
+            ];
+
+        return view('eoyreports.view')->with($data);
+}
+
+public function updateEOYDetails(Request $request, $id): RedirectResponse
+    {
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $userId = $corDetails['user_id'];
+        $corId = $corDetails['id'];
+        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+
+        $chapter = Chapter::find($id);
+        DB::beginTransaction();
+        try {
+            $chapter->new_board_submitted = (int) $request->has('new_board_submitted');
+            $chapter->new_board_active = (int) $request->has('new_board_active');
+            $chapter->financial_report_received = (int) $request->has('financial_report_received');
+            $chapter->financial_report_complete = (int) $request->has('financial_report_complete');
+            $chapter->report_extension = (int) $request->has('report_extension');
+            $chapter->extension_notes = $request->input('extension_notes');
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = now();
+            $chapter->save();
+
+            $report = FinancialReport::find($id);
+            $report->reviewer_id = $request->input('ch_reportrev') ?? $userId;
+            $report->check_current_990N_verified_IRS = (int) $request->has('irs_verified');
+            $report->check_current_990N_notes = $request->input('irs_notes');
+
+            if ($request->has('financial_report_received') != null) {
+                $report->submitted = now();
+                $report->reviewer_id = $report->reviewer_id ?? $userId; // Ensures reviewer_id is set to $userId if not already set
+            }
+            if ($request->has('financial_report_received') == null) {
+                $report->submitted = null;
+                // $report->reviewer_id = null; // Keep or remove depending on your requirements
+            }
+            if ($request->has('financial_report_complete') != null) {
+                $report->review_complete = now();
+            }
+            if ($request->has('financial_report_complete') == null) {
+                $report->review_complete = null;
+            }
+
+            $report->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            DB::rollback();
+
+            // Log the error
+            Log::error($e);
+
+            return redirect()->route('eoyreports.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+    }
+
+        return redirect()->route('eoyreports.view', ['id' => $id])->with('success', 'EOY Information successfully updated.');
+    }
+
+    public function editEOYBoundaries(Request $request, $id)
+    {
+
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+
+        // $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = DB::table('coordinators as cd')
+            ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
+            ->where('cd.user_id', '=', $userId)
+            ->get();
+
+        $coordId = $corDetails[0]->id;
+        $corConfId = $corDetails[0]->conference_id;
+        $corRegId = $corDetails[0]->region_id;
+        $positionid = $corDetails[0]->position_id;
+
+        $financial_report_array = FinancialReport::find($id);
+        if ($financial_report_array) {
+            $reviewComplete = $financial_report_array['review_complete'];
+        } else {
+            $reviewComplete = null;
+        }
+
+        $financial_report_array = FinancialReport::find($id);
+
+        $chapterList = DB::table('chapters as ch')
+            ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id',
+                'ct.name as countryname', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth',
+                'fr.check_current_990N_verified_IRS as irs_verified', 'fr.check_current_990N_notes as irs_notes', 'cd.first_name as rfname', 'cd.last_name as rlname',
+                'fr.file_irs_path as file_irs_path')
+            ->join('country as ct', 'ch.country', '=', 'ct.short_name')
+            ->join('state as st', 'ch.state', '=', 'st.id')
+            ->join('conference as cf', 'ch.conference', '=', 'cf.id')
+            ->join('region as rg', 'ch.region', '=', 'rg.id')
+            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
+            ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
+            ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
+            ->leftJoin('coordinators as cd', 'fr.reviewer_id', '=', 'cd.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->where('bd.board_position_id', '=', '1')
+            ->get();
+
+        $chConfId = $chapterList[0]->conference;
+        $chRegId = $chapterList[0]->region;
+        $chPCid = $chapterList[0]->primary_coordinator_id;
+
+        // Load Active Status for Active/Zapped Visibility
+        $chIsActive = $chapterList[0]->is_active;
+
+        // Load Board and Coordinators for Sending Email
+        $chId = $chapterList[0]->id;
+
+        $emailData = $this->userController->loadEmailDetails($chId);
+        $emailListChap = $emailData['emailListChap'];
+        $emailListCoord = $emailData['emailListCoord'];
+
+        $reportReviewerList = DB::table('chapters as ch')
+            ->select('cd.id as cid', 'cd.first_name as rfname', 'cd.last_name as rlname', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
+            ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
+            ->leftJoin('coordinators as cd', 'fr.reviewer_id', '=', 'cd.id')
+            ->leftJoin('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
+            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
+            ->where(function($query) use ($chRegId, $chConfId) {
+                $query->where('cd.region_id', '=', $chRegId)
+                    ->orWhere(function($subQuery) use ($chConfId) {
+                        $subQuery->where('cd.region_id', '=', 0)
+                            ->where('cd.conference_id', $chConfId);
+                    });
+            })
+            ->where('cd.position_id', '<=', '7')
+            ->where('cd.position_id', '>=', '1')
+            ->where('cd.is_active', '=', '1')
+            ->groupBy('cd.id', 'cd.first_name', 'cd.last_name', 'cp.short_title', 'pos2.short_title')
+            ->orderBy('cd.position_id')
+            ->orderBy('cd.first_name')
+            ->get();
+
+
+
+        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete, 'emailListCoord' => $emailListCoord, 'emailListChap' => $emailListChap,
+            'chapterList' => $chapterList, 'reportReviewerList' => $reportReviewerList, 'corConfId' => $corConfId, 'chConfId' => $chConfId, 'chPCid' => $chPCid, 'financial_report_array' => $financial_report_array
+            ];
+
+        return view('eoyreports.editboundaries')->with($data);
+}
+
+public function updateEOYBoundaries(Request $request, $id): RedirectResponse
+    {
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $userId = $corDetails['user_id'];
+        $corId = $corDetails['id'];
+        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+
+        $chapter = Chapter::find($id);
+        DB::beginTransaction();
+        try {
+            $chapter->territory = $request->filled('ch_territory') ? $request->input('ch_territory') : $request->input('ch_old_territory');
+            $chapter->boundary_issue_resolved = (int) $request->has('ch_resolved');
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = now();
+            $chapter->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            DB::rollback();
+
+            // Log the error
+            Log::error($e);
+
+            return redirect()->route('eoyreports.editboundaries', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+        }
+
+        return redirect()->route('eoyreports.editboundaries', ['id' => $id])->with('success', 'EOY Information successfully updated.');
+    }
+
+public function editEOYAwards(Request $request, $id)
+    {
+
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+
+        // $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = DB::table('coordinators as cd')
+            ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
+            ->where('cd.user_id', '=', $userId)
+            ->get();
+
+        $coordId = $corDetails[0]->id;
+        $corConfId = $corDetails[0]->conference_id;
+        $corRegId = $corDetails[0]->region_id;
+        $positionid = $corDetails[0]->position_id;
+
+        $financial_report_array = FinancialReport::find($id);
+        if ($financial_report_array) {
+            $reviewComplete = $financial_report_array['review_complete'];
+        } else {
+            $reviewComplete = null;
+        }
+
+        $financial_report_array = FinancialReport::find($id);
+
+        $chapterList = DB::table('chapters as ch')
+            ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id',
+                'ct.name as countryname', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth',
+                'fr.check_current_990N_verified_IRS as irs_verified', 'fr.check_current_990N_notes as irs_notes', 'cd.first_name as rfname', 'cd.last_name as rlname',
+                'fr.file_irs_path as file_irs_path')
+            ->join('country as ct', 'ch.country', '=', 'ct.short_name')
+            ->join('state as st', 'ch.state', '=', 'st.id')
+            ->join('conference as cf', 'ch.conference', '=', 'cf.id')
+            ->join('region as rg', 'ch.region', '=', 'rg.id')
+            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
+            ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
+            ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
+            ->leftJoin('coordinators as cd', 'fr.reviewer_id', '=', 'cd.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->where('bd.board_position_id', '=', '1')
+            ->get();
+
+        $chConfId = $chapterList[0]->conference;
+        $chRegId = $chapterList[0]->region;
+        $chPCid = $chapterList[0]->primary_coordinator_id;
+
+        // Load Active Status for Active/Zapped Visibility
+        $chIsActive = $chapterList[0]->is_active;
+
+        // Load Board and Coordinators for Sending Email
+        $chId = $chapterList[0]->id;
+
+        $emailData = $this->userController->loadEmailDetails($chId);
+        $emailListChap = $emailData['emailListChap'];
+        $emailListCoord = $emailData['emailListCoord'];
+
+        $reportReviewerList = DB::table('chapters as ch')
+            ->select('cd.id as cid', 'cd.first_name as rfname', 'cd.last_name as rlname', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
+            ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
+            ->leftJoin('coordinators as cd', 'fr.reviewer_id', '=', 'cd.id')
+            ->leftJoin('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
+            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
+            ->where(function($query) use ($chRegId, $chConfId) {
+                $query->where('cd.region_id', '=', $chRegId)
+                    ->orWhere(function($subQuery) use ($chConfId) {
+                        $subQuery->where('cd.region_id', '=', 0)
+                            ->where('cd.conference_id', $chConfId);
+                    });
+            })
+            ->where('cd.position_id', '<=', '7')
+            ->where('cd.position_id', '>=', '1')
+            ->where('cd.is_active', '=', '1')
+            ->groupBy('cd.id', 'cd.first_name', 'cd.last_name', 'cp.short_title', 'pos2.short_title')
+            ->orderBy('cd.position_id')
+            ->orderBy('cd.first_name')
+            ->get();
+
+
+
+        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete, 'emailListCoord' => $emailListCoord, 'emailListChap' => $emailListChap,
+            'chapterList' => $chapterList, 'reportReviewerList' => $reportReviewerList, 'corConfId' => $corConfId, 'chConfId' => $chConfId, 'chPCid' => $chPCid, 'financial_report_array' => $financial_report_array
+            ];
+
+        return view('eoyreports.editawards')->with($data);
+}
+
+public function updateEOYAwards(Request $request, $id): RedirectResponse
+    {
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $userId = $corDetails['user_id'];
+        $corId = $corDetails['id'];
+        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+
+        $report = FinancialReport::find($id);
+        DB::beginTransaction();
+        try {
+            $report->award_1_nomination_type = $request->input('checkNominationType1');
+            $report->award_1_outstanding_project_desc = $request->input('AwardDesc1');
+            $report->check_award_1_approved = (int) $request->has('checkAward1Approved');
+            $report->award_2_nomination_type = $request->input('checkNominationType2');
+            $report->award_2_outstanding_project_desc = $request->input('AwardDesc2');
+            $report->check_award_2_approved = (int) $request->has('checkAward2Approved');
+            $report->award_3_nomination_type = $request->input('checkNominationType3');
+            $report->award_3_outstanding_project_desc = $request->input('AwardDesc3');
+            $report->check_award_3_approved = (int) $request->has('checkAward3Approved');
+            $report->award_4_nomination_type = $request->input('checkNominationType4');
+            $report->award_4_outstanding_project_desc = $request->input('AwardDesc4');
+            $report->check_award_4_approved = (int) $request->has('checkAward4Approved');
+            $report->award_5_nomination_type = $request->input('checkNominationType5');
+            $report->award_5_outstanding_project_desc = $request->input('AwardDesc5');
+            $report->check_award_5_approved = (int) $request->has('checkAward5Approved');
+
+            $report->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            DB::rollback();
+
+            // Log the error
+            Log::error($e);
+
+            return redirect()->route('eoyreports.editawards', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+        }
+
+        return redirect()->route('eoyreports.editawards', ['id' => $id])->with('success', 'EOY Information successfully updated.');
+    }
+
 
 }

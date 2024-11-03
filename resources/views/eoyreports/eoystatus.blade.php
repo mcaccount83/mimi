@@ -44,7 +44,7 @@
                 <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-				<th>Edit</th>
+				<th>Details</th>
                 <th>Email</th>
 				<th>State</th>
                 <th>Name</th>
@@ -96,9 +96,9 @@
                             {{-- <tr id="chapter-{{ $list->id }}"> --}}
                                 <td class="text-center align-middle">
                                     @if($regionalCoordinatorCondition)
-                                        @if($list->new_board_active != '1')
-                                            <a href="{{ url("/eoy/statusview/{$list->id}") }}"><i class="fas fa-edit"></i></a>
-                                        @endif
+                                        {{-- @if($list->new_board_active != '1') --}}
+                                            <a href="{{ url("/eoydetails/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                                        {{-- @endif --}}
                                     @endif
                                 </td>
                             <td class="text-center align-middle">

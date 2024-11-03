@@ -84,9 +84,7 @@
                         <tr id="chapter-{{ $list->id }}">
                             <td class="text-center align-middle">
                                 @if($regionalCoordinatorCondition)
-                                    @if($list->new_board_active == '1')
-                                        <a href="#" disabled></a>
-                                    @else
+                                    @if($list->new_board_active == null || $list->new_board_active == 0 )
                                         <a href="{{ url("/eoy/boardreportview/{$list->id}") }}"><i class="fas fa-edit"></i></a>
                                     @endif
                                 @endif

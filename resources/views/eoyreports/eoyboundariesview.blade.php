@@ -87,8 +87,9 @@
 
             <div class="col-sm-12">
                 <div class="custom-control custom-switch">
-                    <input type="checkbox" name="ch_resolved" id="ch_resolved" class="custom-control-input" {{$chapterList[0]->boundary_issue_resolved ? 'checked' : '' }} />
                     <label class="custom-control-label" for="ch_resolved">Boundary Issues Resolved</label>
+                    <input type="checkbox" name="ch_resolved" id="ch_resolved" class="custom-control-input" {{$chapterList[0]->boundary_issue_resolved ? 'checked' : '' }} />
+
                     </div>
                 </div>
 

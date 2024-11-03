@@ -2170,6 +2170,201 @@ class CoordinatorController extends Controller
         return redirect()->route('coordinators.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
 }
 
+    /**
+     * Edit Coordiantor Details
+     */
+    public function editCoordDetails(Request $request, $id): View
+    {
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $userId = $corDetails['id'];
+        $userConfId = $corDetails['conference_id'];
+        $coordinatorDetails = DB::table('coordinators as cd')
+            ->select('cd.*','st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'cp.long_title as position',
+                'cp3.long_title as display_position', 'cp2.long_title as sec_position', 'cd2.first_name as report_fname', 'cd2.email as report_email', 'cd2.last_name as report_lname')
+            ->leftJoin('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')  // Primary Position
+            ->leftJoin('coordinator_position as cp2', 'cd.sec_position_id', '=', 'cp2.id')  //Secondary Position
+            ->leftJoin('coordinator_position as cp3', 'cd.display_position_id', '=', 'cp3.id')  //Display Position
+            ->leftJoin('coordinators as cd2', 'cd.report_id', '=', 'cd2.id') //Supervising Coordinator
+            ->leftJoin('month as mo', 'cd.birthday_month_id', '=', 'mo.id')
+            ->leftJoin('state as st', 'cd.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
+            ->leftJoin('region as rg', 'cd.region_id', '=', 'rg.id')
+            ->where('cd.is_active', '=', '1')
+            ->where('cd.id', '=', $id)
+            ->get();
+
+        $conid = $coordinatorDetails[0]->id;
+        $corIsActive = $coordinatorDetails[0]->is_active;
+        $corIsLeave = $coordinatorDetails[0]->on_leave;
+        $position_id = $coordinatorDetails[0]->position_id;
+        $conference_id = $corConfId = $coordinatorDetails[0]->conference_id;
+        $region_id = $coordinatorDetails[0]->region_id;
+
+        $stateArr = DB::table('state')
+            ->select('state.*')
+            ->orderBy('id')
+            ->get();
+
+        $monthArr = DB::table('month')
+        ->select('month.*')
+        ->orderBy('id')
+        ->get();
+
+        $data = ['coordinatorDetails' => $coordinatorDetails, 'stateArr' => $stateArr, 'monthArr' => $monthArr];
+
+        return view('coordinators.editdetails')->with($data);
+    }
+
+    /**
+     * Save Coordiantor Details
+     */
+    public function updateCoordDetails(Request $request, $id)
+    {
+        $userDetails = User::find($request->user()->id)->Coordinators;
+        $userId = $userDetails['id'];
+        $userName = $userDetails['first_name'].' '.$userDetails['last_name'];
+        $userEmail = $userDetails['email'];
+        $userpositionId = $userDetails['position_id'];
+        $userposition = CoordinatorPosition::find($userpositionId);
+        $userpositionTitle = $userposition['long_title'];
+        $lastUpdatedBy = $userName;
+
+        if ($request->input('cord_fname') != '' && $request->input('cord_lname') != '' && $request->input('cord_email') != '') {
+            $corDetail = DB::table('coordinators')
+                ->select('id', 'user_id')
+                ->where('id', '=', $id)
+                ->first(); // Use first() to get a single result
+
+                try {
+                    $userId = $corDetail->user_id;
+
+                    $user = User::find($userId);
+                        $user->first_name = $request->input('cord_fname');
+                        $user->last_name = $request->input('cord_lname');
+                        $user->email = $request->input('cord_email');
+                        $user->updated_at = now();
+                        $user->save();
+
+                    DB::table('coordinators')
+                        ->where('id', $id)
+                        ->update([
+                            'first_name' => $request->input('cord_fname'),
+                            'last_name' => $request->input('cord_lname'),
+                            'email' => $request->input('cord_email'),
+                            'sec_email' => $request->input('cord_sec_email'),
+                            'address' => $request->input('cord_addr'),
+                            'city' => $request->input('cord_city'),
+                            'state' => $request->input('cord_state'),
+                            'zip' => $request->input('cord_zip'),
+                            'phone' => $request->input('cord_phone'),
+                            'alt_phone' => $request->input('cord_altphone'),
+                            'birthday_month_id' => $request->input('cord_month'),
+                            'birthday_day' => $request->input('cord_day'),
+                            'home_chapter' => $request->input('cord_chapter'),
+                            'last_updated_by' => $lastUpdatedBy,
+                            'last_updated_date' => now()
+                        ]);
+
+                    // Commit transaction
+                    DB::commit();
+                } catch (\Exception $e) {
+                    // Rollback Transaction
+                    DB::rollback();
+                    // Log the error
+                    Log::error($e);
+
+                    return redirect()->route('coordinators.editdetails', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+               }
+        }
+        return redirect()->route('coordinators.editdetails', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
+    }
+
+     /**
+     * Edit Coordiantor Details
+     */
+    public function editCoordRecognition(Request $request, $id): View
+    {
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $userId = $corDetails['id'];
+        $userConfId = $corDetails['conference_id'];
+        $coordinatorDetails = DB::table('coordinators as cd')
+            ->select('cd.*','st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'cp.long_title as position',
+                'cp3.long_title as display_position', 'cp2.long_title as sec_position', 'cd2.first_name as report_fname', 'cd2.email as report_email', 'cd2.last_name as report_lname')
+            ->leftJoin('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')  // Primary Position
+            ->leftJoin('coordinator_position as cp2', 'cd.sec_position_id', '=', 'cp2.id')  //Secondary Position
+            ->leftJoin('coordinator_position as cp3', 'cd.display_position_id', '=', 'cp3.id')  //Display Position
+            ->leftJoin('coordinators as cd2', 'cd.report_id', '=', 'cd2.id') //Supervising Coordinator
+            ->leftJoin('month as mo', 'cd.birthday_month_id', '=', 'mo.id')
+            ->leftJoin('state as st', 'cd.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
+            ->leftJoin('region as rg', 'cd.region_id', '=', 'rg.id')
+            ->where('cd.is_active', '=', '1')
+            ->where('cd.id', '=', $id)
+            ->get();
+
+        $conid = $coordinatorDetails[0]->id;
+        $corIsActive = $coordinatorDetails[0]->is_active;
+        $corIsLeave = $coordinatorDetails[0]->on_leave;
+        $position_id = $coordinatorDetails[0]->position_id;
+        $conference_id = $corConfId = $coordinatorDetails[0]->conference_id;
+        $region_id = $coordinatorDetails[0]->region_id;
+
+        $stateArr = DB::table('state')
+            ->select('state.*')
+            ->orderBy('id')
+            ->get();
+
+        $monthArr = DB::table('month')
+        ->select('month.*')
+        ->orderBy('id')
+        ->get();
+
+        $data = ['coordinatorDetails' => $coordinatorDetails, 'stateArr' => $stateArr, 'monthArr' => $monthArr];
+
+        return view('coordinators.editrecognition')->with($data);
+    }
+
+    /**
+     * Save Coordiantor Details
+     */
+    public function updateCoordRecognition(Request $request, $id)
+    {
+        $userDetails = User::find($request->user()->id)->Coordinators;
+        $userId = $userDetails['id'];
+        $userName = $userDetails['first_name'].' '.$userDetails['last_name'];
+        $lastUpdatedBy = $userName;
+
+            $coorDetails = Coordinators::find($id);
+                try {
+                    $coorDetails->recognition_year0 = $request->input('recognition_year0');
+                    $coorDetails->recognition_year1 = $request->input('recognition_year1');
+                    $coorDetails->recognition_year2 = $request->input('recognition_year2');
+                    $coorDetails->recognition_year3 = $request->input('recognition_year3');
+                    $coorDetails->recognition_year4 = $request->input('recognition_year4');
+                    $coorDetails->recognition_year5 = $request->input('recognition_year5');
+                    $coorDetails->recognition_year6 = $request->input('recognition_year6');
+                    $coorDetails->recognition_year7 = $request->input('recognition_year7');
+                    $coorDetails->recognition_year8 = $request->input('recognition_year8');
+                    $coorDetails->recognition_year9 = $request->input('recognition_year9');
+                    $coorDetails->recognition_toptier = $request->input('recognition_toptier');
+                    $coorDetails->recognition_necklace = (int) $request->has('recognition_necklace');
+                    $coorDetails->last_updated_by = $lastUpdatedBy;
+                    $coorDetails->last_updated_date = now();
+
+                    $coorDetails->save();
+
+                    // Commit transaction
+                    DB::commit();
+                } catch (\Exception $e) {
+                    // Rollback Transaction
+                    DB::rollback();
+                    // Log the error
+                    Log::error($e);
+
+                    return redirect()->route('coordinators.editrecognition', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+               }
+        return redirect()->route('coordinators.editrecognition', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
+    }
 
 
    /**

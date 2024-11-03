@@ -44,7 +44,7 @@
                 <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-					<th>Review</th>
+					<th>Details</th>
 				  <th>State</th>
                   <th>Name</th>
                  <th>Reported Issue</th>
@@ -57,7 +57,7 @@
                 @if($list->boundary_issue_notes != '')
                   <tr>
 						<td class="text-center align-middle">
-                            <a href="{{ url("/eoy/boundariesview/{$list->id}") }}"><i class="fas fa-edit"></i></a></td>
+                            <a href="{{ url("/eoydetailseditboundaries/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
 						<td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
                         <td>{{ $list->boundary_issue_notes}}</td>

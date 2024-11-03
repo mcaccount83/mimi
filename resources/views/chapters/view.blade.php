@@ -130,48 +130,48 @@
                     </h3>
                     <div class="row">
                             <div class="col-md-12">
-                        Boundaries: {{ $chapterList[0]->territory}}
+                                <label>Boundaries:</label> {{ $chapterList[0]->territory}}
                         <br>
-                        Status: {{$chapterStatusinWords}}
+                        <label>Status:</label> {{$chapterStatusinWords}}
                         <br>
-                        Status Notes (not visible to board members): {{ $chapterList[0]->notes}}
+                        <label>Status Notes (not visible to board members):</label> {{ $chapterList[0]->notes}}
                         <br><br>
                         </div>
                     </div>
                         <div class="row">
                             <div class="col-md-6">
-                        Chpater Email Address: <a href="mailto:{{ $chapterList[0]->email}}">{{ $chapterList[0]->email}}</a>
+                                <label>Chpater Email Address:</label> <a href="mailto:{{ $chapterList[0]->email}}">{{ $chapterList[0]->email}}</a>
                         <br>
-                        Email used for Inquiries: <a href="mailto:{{ $chapterList[0]->inquiries_contact}}">{{ $chapterList[0]->inquiries_contact}}</a>
+                        <label>Email used for Inquiries:</label> <a href="mailto:{{ $chapterList[0]->inquiries_contact}}">{{ $chapterList[0]->inquiries_contact}}</a>
                         <br>
-                        Inquiries Notes (not visible to board members):<br>
+                        <label>Inquiries Notes (not visible to board members):</label><br>
                         {{ $chapterList[0]->inquiries_note}}
                         <br><br>
                     </div>
 
                         <div class="col-md-6">
-                        PO Box/Mailing Address: {{ $chapterList[0]->po_box }}
+                            <label>PO Box/Mailing Address:</label> {{ $chapterList[0]->po_box }}
                         <br>
-                        Additional Information (not visible to board members):<br>
+                        <label>Additional Information (not visible to board members):</label><br>
                         {!! nl2br(e($chapterList[0]->additional_info)) !!}
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                        Website: <a href="{{$chapterList[0]->website_url}}" target="_blank">{{$chapterList[0]->website_url}}</a>
+                            <label>Website:</label> <a href="{{$chapterList[0]->website_url}}" target="_blank">{{$chapterList[0]->website_url}}</a>
                         <br>
-                        Webiste Link Status: {{$webStatusinWords}}
+                        <label>Webiste Link Status:</label> {{$webStatusinWords}}
                         <br>
                         <button class="btn bg-gradient-primary btn-sm" onclick="window.location.href='{{ route('chapters.chapwebsiteview', ['id' => $chapterList[0]->id]) }}'">Update Website Link Status</button>
                     </div>
                     <div class="col-md-6">
-                        Forum/Group/App: {{ $chapterList[0]->egroup}}
+                        <label>Forum/Group/App:</label> {{ $chapterList[0]->egroup}}
                         <br>
-                        Facebook: {{ $chapterList[0]->social1}}
+                        <label>Facebook:</label> {{ $chapterList[0]->social1}}
                         <br>
-                        Twitter: {{ $chapterList[0]->social2}}
+                        <label>Twitter:</label> {{ $chapterList[0]->social2}}
                         <br>
-                        Instagram: {{ $chapterList[0]->social3}}
+                        <label>Instagram:</label> {{ $chapterList[0]->social3}}
                         <br><br>
                     </div>
                 </div>
@@ -182,38 +182,150 @@
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="eoy">
                     <div class="eoy-field">
-                        <h3 class="profile-username">End of Year Information</h3>
+                        <h3 class="profile-username">{{ (date('Y') - 1) . '-' . date('Y') }} End of Year Information</h3>
                         @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes))
-                        <div class="row">
-                            <div class="col-md-12">
-                                Extenstion Given: {{ $chapterList[0]->report_extension == 1 ? 'YES' : 'NO' }}
-                                <br>
-                                Extension Notes: {{ $chapterList[0]->extension_notes}}
-                                @if (($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes && $regionalCoordinatorCondition))
-                                <br>
-                                    <button class="btn bg-gradient-primary btn-sm" onclick="window.location.href='{{ route('eoyreports.eoystatusview', ['id' => $chapterList[0]->id]) }}'">Update EOY Report Status</button>
-                                @endif
-                                <br><br>
-                            </div>
-                            <div class="col-md-6">
-                                {{ date('Y') . '-' . (date('Y') + 1) }} Board Info Received: {{ $chapterList[0]->new_board_submitted == 1 ? 'YES' : 'NO' }}
-                                <br>
-                                {{ date('Y') . '-' . (date('Y') + 1) }} Board Activated: {{ $chapterList[0]->new_board_active == 1 ? 'YES' : 'NO' }}
-                                <br>
-                                @if($chapterList[0]->new_board_active != '1')
-                                    <button class="btn bg-gradient-primary btn-sm" onclick="window.location.href='{{ route('eoyreports.eoyboardreportview', ['id' => $chapterList[0]->id]) }}'">View Board Election Report</button>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>Boundary Issues:</label>
+                                </div>
+                                @if ($chapterList[0]->boundary_issues != null)
+                                    <div class="col-sm-5">
+                                        Chapter has reported boundary issues.
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="mr-2">Resolved:</label>{{ $chapterList[0]->boundary_issue_resolved == 1 ? 'YES' : 'NO' }}
+                                    </div>
                                 @else
-                                    <button class="btn bg-gradient-primary btn-sm disabled">Election Report Not Available</button>
+                                    <div class="col-sm-9">
+                                        Chapter has not reported any boundary issues.
+                                    </div>
                                 @endif
                             </div>
-                            <div class="col-md-6">
-                                {{ (date('Y') - 1) . '-' . date('Y') }} Financial Report Received: {{ $chapterList[0]->financial_report_received == 1 ? 'YES' : 'NO' }}
-                                <br>
-                                {{ (date('Y') - 1) . '-' . date('Y') }} Financial Review Completed: {{ $chapterList[0]->financial_report_complete == 1 ? 'YES' : 'NO' }}
-                                <br>
-                                    <button class="btn bg-gradient-primary btn-sm" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreportview', ['id' => $chapterList[0]->id]) }}'">View Financial Report</button>
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>Board Report:</label>
+                                </div>
+                                @if ($chapterList[0]->new_board_submitted == 1)
+                                    <div class="col-sm-5">
+                                        Board Election Report has been received.
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="mr-2">Activated:</label>{{ $chapterList[0]->new_board_active == 1 ? 'YES' : 'NO' }}
+                                    </div>
+                                @else
+                                    <div class="col-sm-9">
+                                        Board Election Report has not been submitted.
+                                    </div>
+                                @endif
                             </div>
-                        </div>
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>Financial Report:</label>
+                                </div>
+                                @if ($chapterList[0]->financial_report_received == 1)
+                                    <div class="col-sm-5">
+                                        Financial Report has been received.
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <label class="mr-2">Review Complete:</label>{{ $chapterList[0]->financial_report_complete == 1 ? 'YES' : 'NO' }}
+                                    </div>
+                                @else
+                                    <div class="col-sm-9">
+                                        Financial Report has not been submitted.
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>Attachments:</label>
+                                </div>
+                                <div class="col-sm-9">
+                                    @php
+                                        $attachments = [
+                                            'Roster' => $financial_report_array->roster_path,
+                                            'Statement' => $financial_report_array->bank_statement_included_path,
+                                            'Additional Statement' => $financial_report_array->bank_statement_2_included_path,
+                                            '990N Confirmation' => $financial_report_array->file_irs_path,
+                                        ];
+
+                                        $included = array_keys(array_filter($attachments, fn($path) => $path !== null));
+                                        $excluded = array_keys(array_filter($attachments, fn($path, $label) => $path === null && $label !== 'Additional Statement', ARRAY_FILTER_USE_BOTH));
+
+                                        // Helper function to format the list with "and"
+                                        function formatListWithAnd($items) {
+                                            if (count($items) > 1) {
+                                                return implode(', ', array_slice($items, 0, -1)) . ' and ' . end($items);
+                                            }
+                                            return implode('', $items);
+                                        }
+                                    @endphp
+
+                                    @if(count($included) > 0)
+                                        {{ formatListWithAnd($included) }} are attached.
+                                        @if(count($excluded) > 0)
+                                        <br>
+                                        @endif
+                                    {{-- @else
+                                        No attachments --}}
+                                    @endif
+
+                                    @if(count($excluded) > 0)
+                                        {{ formatListWithAnd($excluded) }} are not attached.
+                                    @endif
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>Extension:</label>
+                                </div>
+                                @if ($chapterList[0]->report_extension == 1)
+                                    <div class="col-sm-9">
+                                        Extension was granted. {{ $chapterList[0]->extension_notes}}
+                                    </div>
+                                @else
+                                    <div class="col-sm-9">
+                                        No extension has been granted at this time.
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <label>990N Filing:</label>
+                                </div>
+                                @if ($financial_report_array->check_current_990N_verified_IRS == 1)
+                                    <div class="col-sm-9">
+                                        990N Filing was verified on the IRS website.
+                                    </div>
+                                @else
+                                    <div class="col-sm-9">
+                                        990N Filing has not been verified on the IRS website. {{ $financial_report_array->check_current_990N_notes }}
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="row ">
+                                <div class="col-sm-3">
+                                    <label>Chapter Awards:</label>
+                                </div>
+                                    @if(($financial_report_array->award_1_nomination_type != null)  || ($financial_report_array->award_2_nomination_type != null) || ($financial_report_array->award_3_nomination_type != null)
+                                        || ($financial_report_array->award_4_nomination_type != null) || ($financial_report_array->award_5_nomination_type != null))
+                                 <div class="col-sm-9">
+                                    Chapter was nominated for one or more awards.
+                                </div>
+                                    @else
+                                <div class="col-sm-9">
+                                    Chatper was not nominated for any awards.
+                                </div>
+                                    @endif
+                            </div>
+
+
+
                         @else
                         <h3><strong>{{ (date('Y') - 1) . '-' . date('Y') }} Report Status/Links are not available at this time.</strong></h3>
                         @endif
@@ -368,6 +480,7 @@
                     </button>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chapterList[0]->id]) }}'">Update Chapter Information</button>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chapterList[0]->id]) }}'">Update Board Information</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chapterList[0]->id]) }}'">Update EOY Information</button>
                     @if($assistConferenceCoordinatorCondition && $chIsActive == 1)
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="showDisbandChapterModal()">Disband Chapter</button>
                     @endif

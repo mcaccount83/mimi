@@ -44,7 +44,7 @@
             <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-				<th>Edit</th>
+				<th>Details</th>
 				<th>State</th>
                 <th>Name</th>
                 <th>Chapter Roster</th>
@@ -60,7 +60,7 @@
                     <tr>
                         <td class="text-center align-middle">
                             @if ($assistConferenceCoordinatorCondition)
-                               <a href="{{ url("/eoy/attachmentsview/{$list->id}") }}"><i class="fas fa-edit"></i></a>
+                               <a href="{{ url("/eoydetails/{$list->id}") }}"><i class="fas fa-eye"></i></a>
                            @endif
                         </td>
                         <td>{{ $list->state }}</td>

@@ -193,8 +193,9 @@
                                 $coordinatorsRoute = route('international.intcoord');
                             }
                             $activeCoordinatorsRoutes = [
-                                'coordinator/coordlist', 'coorddetails/*', 'coorddetailseditrole/*', 'coordinator/coordinatorview/*',  'coordinator/coordinatornew',
-                                'international/coordinator', 'international/coordinatorview/*', 'international/coordinatorretired', 'international/coordinatorretiredview/*'
+                                'coordinator/coordlist', 'coordinator/retired', 'coordinator/coordinatornew', 'coorddetails/*',
+                                'coorddetailsedit/*', 'coorddetailseditrole/*', 'coorddetailseditrecognition/*',
+                                'international/coordinator', 'international/coordinatorretired'
                             ];
                         @endphp
                         @if (isset($coordinatorsRoute))
@@ -323,7 +324,7 @@
                                 $eoyReportsRoute = route('eoyreports.eoystatus');
                             }
                             $activeEOYReportsRoutes = [
-                                'eoy/*'
+                                'eoy/*', 'eoydetails/*', 'eoydetailseditboundaries/*', 'eoydetailseditawards/*'
                             ];
                         @endphp
                         @if (isset($eoyReportsRoute))
