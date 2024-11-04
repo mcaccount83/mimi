@@ -41,43 +41,51 @@
             <!-- /.card-header -->
         <div class="card-body">
             <table id="chapterlist" class="table table-sm table-hover" >
-              {{-- <table id="chapterlist_einStatus" class="table table-bordered table-hover"> --}}
               <thead>
 			    <tr>
+                    <th>Letter</th>
                     <th>Notes</th>
                     <th>Conf/Reg</th>
-				  <th>State</th>
-                  <th>Name</th>
-                  <th>Start Date</th>
+                    <th>State</th>
+                    <th>Name</th>
+                    <th>Start Date</th>
                     <th>EIN</th>
                     <th>Letter On File</th>
-                    <!--<th>Letter On File</th>-->
-                    <th>Letter Link</th>
                     <th>EIN/IRS Notes</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($chapterList as $list)
-                  <tr>
-                    <td>
-                        @if ($conferenceCoordinatorCondition)
-                        <center><a href="{{ url("/chapterreports/einstatusview/{$list->id}") }}"><i class="fas fa-pencil-alt"></i></a></center>
-                        @endif
-                    </td>
-                    <td>
-                        @if ($list->reg != "None")
-                            {{ $list->conf }} / {{ $list->reg }}
-                        @else
-                            {{ $list->conf }}
-                        @endif
-                    </td>
+                    <tr >
+                        <td class="text-center align-middle">
+                            @if ($list->ein_letter_path != null)
+                                <a href="{{ $list->ein_letter_path }}"><i class="fas fa-eye"></i></a>
+                            @else
+                                &nbsp; <!-- Placeholder to ensure the cell isn't completely empty -->
+                            @endif
+                        </td>
+
+                        <td class="text-center align-middle">
+                            @if ($conferenceCoordinatorCondition)
+                                <a href="{{ url("/chapterreports/einstatusview/{$list->id}") }}"><i class="fas fa-pencil-alt"></i></a>
+                            @else
+                                &nbsp; <!-- Placeholder to ensure the cell isn't completely empty -->
+                            @endif
+                        </td>
+                        <td>
+                            @if ($list->reg != "None")
+                                {{ $list->conf }} / {{ $list->reg }}
+                            @else
+                                {{ $list->conf }}
+                            @endif
+                        </td>
 						<td>{{ $list->state }}</td>
                         <td>{{ $list->name }}</td>
                         <td data-sort="{{ $list->start_year . '-' . str_pad($list->start_month, 2, '0', STR_PAD_LEFT) }}">
                             {{ $list->start_month }} {{ $list->start_year }}
                         </td>
 						<td>{{ $list->ein }}</td>
-                        <td  @if($list->ein_letter_path != null)style="background-color: transparent;"
+                        <td @if($list->ein_letter_path != null)style="background-color: transparent;"
                             @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->ein_letter_path != null)
                                 YES
@@ -85,14 +93,7 @@
                                 NO
                             @endif
                         </td>
-						<td>
-						    @if(empty($list->ein_letter_path))
-
-						    @else
-						    <a href="{{ $list->ein_letter_path }}" target="blank">{{ $list->name }} EIN Letter</a>
-						    @endif</td>
-                            <td>{{ $list->ein_notes }}</td>
-
+                        <td>{{ $list->ein_notes }}</td>
 			        </tr>
                   @endforeach
                   </tbody>

@@ -170,6 +170,9 @@ Route::post('/chapterwebsiteupdate/{id}', [ChapterController::class, 'updateChap
 Route::get('/chapter/boardlist', [ChapterController::class, 'showChapterBoardlist'])->name('chapters.chapboardlist');
 // ChapterReport Controller Routes...
 Route::get('/chapterreports/chapterstatus', [ChapterReportController::class, 'showRptChapterStatus'])->name('chapreports.chaprptchapterstatus');
+Route::get('/chaptereinedit/{id}', [ChapterController::class, 'editChapterEIN'])->name('chapters.editein');
+Route::post('/chaptereinupdate/{id}', [ChapterController::class, 'updateChapterEIN'])->name('chapters.updateein');
+
 Route::get('/chapterreports/einstatus', [ChapterReportController::class, 'showRptEINstatus'])->name('chapreports.chaprpteinstatus');
 Route::get('/chapterreports/einstatusview/{id}', [ChapterReportController::class, 'showRptEINstatusView'])->name('chapreports.chaprpteinstatusview');
 Route::post('/chapterreports/updateeinstatus/{id}', [ChapterReportController::class, 'updateRptEINstatus'])->name('chapreports.updatechaprpteinstatus');

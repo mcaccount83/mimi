@@ -181,14 +181,14 @@ class ChapterReportController extends Controller
             ->orderBy('chapters.name');
 
             if ($conditions['founderCondition']) {
-                $baseQuery;
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-                 $baseQuery->where('chapters.conference', '=', $corConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region', '=', $corRegId);
-        } else {
-            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
-        }
+                    $baseQuery;
+            } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+                    $baseQuery->where('chapters.conference', '=', $corConfId);
+            } elseif ($conditions['regionalCoordinatorCondition']) {
+                $baseQuery->where('chapters.region', '=', $corRegId);
+            } else {
+                $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
+            }
 
         $chapterList = $baseQuery->get();
 

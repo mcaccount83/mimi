@@ -267,16 +267,6 @@ $(document).ready(function () {
     }
 });
 
-//If Chapter Name Change Warning
-function PreviousNameReminder(){
-    customWarningAlert("If you are changing the chapter name, please be sure to note the old name in the 'Previously Known As' field.");
-}
-
-//If Website URL Changes for Website Status Change
-function updateWebsiteStatus() {
-    customWarningAlert("If you are changing the chapter website url, please be sure to update the 'Link Status' accordingly.");
-}
-
 $(document).ready(function() {
     // Function to load the coordinator list based on the selected value
     function loadCoordinatorList(corId) {

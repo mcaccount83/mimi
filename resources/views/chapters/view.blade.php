@@ -52,8 +52,11 @@
                         {{-- <button class="btn bg-gradient-primary btn-sm showFileUploadModal" data-ein-letter="{{ $chapterList[0]->ein_letter_path }}">Update EIN Letter</button> --}}
                     @endif
                 </p>
-
                 <ul class="list-group list-group-unbordered mb-3">
+                    <li class="list-group-item">
+
+                <b>IRS Notes:</b> {{$chapterList[0]->ein_notes}}
+                    </li>
                     <li class="list-group-item">
                         <b>Re-Registration Dues:</b><span class="float-right">
                             @if ($chapterList[0]->members_paid_for)
