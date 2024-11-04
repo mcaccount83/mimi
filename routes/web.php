@@ -145,8 +145,8 @@ Route::get('/chapter/inquirieszapped', [ChapterController::class, 'showZappedCha
 Route::get('/international/chapter', [InternationalController::class, 'showIntChapter'])->name('international.intchapter');
 Route::get('/international/chapterzapped', [InternationalController::class, 'showIntZappedChapter'])->name('international.intchapterzapped');
 Route::get('/chapterdetails/{id}', [ChapterController::class, 'viewChapterDetails'])->name('chapters.view');
-Route::get('/chapters/check-ein', [ChapterController::class, 'checkEIN'])->name('chapters.checkein');
-Route::post('/chapterdetails/updateEIN', [ChapterController::class, 'updateEIN'])->name('chapters.updateein');
+Route::get('/chapters/check-ein', [ChapterController::class, 'checkEIN'])->name('chapters.checkeinnumber');
+Route::post('/chapterdetails/updateEIN', [ChapterController::class, 'updateEINNumber'])->name('chapters.updateeinnumber');
 Route::post('/chapter/updatedisband', [ChapterController::class, 'updateChapterDisband'])->name('chapters.updatechapdisband');
 Route::post('/chapter/unzap', [ChapterController::class, 'updateChapterUnZap'])->name('chapters.updatechapterunzap');
 Route::get('/chapterdetailsedit/{id}', [ChapterController::class, 'editChapterDetails'])->name('chapters.edit');

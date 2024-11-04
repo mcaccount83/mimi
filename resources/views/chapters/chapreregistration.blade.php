@@ -64,19 +64,18 @@
                             // Define the message body with a link
                             $mimiUrl = 'https://example.com/mimi';
                             $mailMessage = "Your chapter's re-registration payment is due at this time and has not yet been received.\n\n";
-                            $mailMessage .= "Calculate your payment:<ul>";
-                            $mailMessage .= "<li>Determine how many people paid dues to your chapter since your last re-registration payment through today.</li>";
-                            $mailMessage .= "<li>Add in any people who paid reduced dues or had their dues waived due to financial hardship</li>";
-                            $mailMessage .= "<li>If this total amount of members is less than 10, make your check for the amount of $50</li>";
-                            $mailMessage .= "<li>If this total amount of members is 10 or more, multiply the number by $5.00 to get your total amount due</li>";
-                            $mailMessage .= "<li>Payments received after the last day of your renewal month should include a late fee of $10</li>";
-                            $mailMessage .= "</ul>";
-                            $mailMessage .= "Make your payment:<ul>";
-                            $mailMessage .= "<li>Pay Online: $mimiUrl </li>";
-                            $mailMessage .= "<li>Pay via Mail to: Chapter Re-Registration, 208 Hewitt Dr. Ste 103 #328, Waco, TX 76712</li>";
-                            $mailMessage .= "</ul>";
-                            // URL-encode the message
-                            $encodedMailMessage = urlencode($mailMessage);
+                            $mailMessage .= "Calculate your payment:\n";
+                            $mailMessage .= "- Determine how many people paid dues to your chapter since your last re-registration payment through today.\n";
+                            $mailMessage .= "- Add in any people who paid reduced dues or had their dues waived due to financial hardship.\n";
+                            $mailMessage .= "- If this total amount of members is less than 10, make your check for the amount of $50.\n";
+                            $mailMessage .= "- If this total amount of members is 10 or more, multiply the number by $5.00 to get your total amount due.\n";
+                            $mailMessage .= "- Payments received after the last day of your renewal month should include a late fee of $10.\n\n";
+                            $mailMessage .= "Make your payment:\n";
+                            $mailMessage .= "- Pay Online: $mimiUrl\n";
+                            $mailMessage .= "- Pay via Mail to: Chapter Re-Registration, 208 Hewitt Dr. Ste 103 #328, Waco, TX 76712\n";
+
+                            // URL-encode the message for the href attribute
+                            $encodedMailMessage = rawurlencode($mailMessage);
                         @endphp
                         <tr>
                             <td class="text-center align-middle">
@@ -86,9 +85,7 @@
                             </td>
 
                             <td class="text-center align-middle">
-                                <a href="mailto:{{ urlencode($emailListChap) }}&cc={{ urlencode($emailListCoord) }}&subject={{ urlencode('Re-Registration Payment Reminder | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a></td>
-
-                                {{-- <a href="mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=Re-Registration Payment Reminder | MOMS Club of {{ $list->name }}, {{ $list->state_short_name }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a> --}}
+                                <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Re-Registration Payment Reminder | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a></td>
                             </td>
                             <td>
                                 @if ($list->reg != "None")

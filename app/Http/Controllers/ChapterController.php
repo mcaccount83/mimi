@@ -548,7 +548,7 @@ class ChapterController extends Controller
         return view('chapters.view')->with($data);
 }
 
-public function checkEIN(Request $request)
+public function checkEINnumber(Request $request)
 {
 $chapterId = $request->input('chapter_id');
 $chapter = DB::table('chapters')->where('id', $chapterId)->first();
@@ -558,7 +558,7 @@ return response()->json([
 ]);
 }
 
-public function updateEIN(Request $request)
+public function updateEINNumber(Request $request)
 {
     $corDetails = User::find($request->user()->id)->Coordinators;
     $corId = $corDetails['id'];
@@ -932,7 +932,6 @@ public function updateEIN(Request $request)
             return $pdfPath;  // Return the full local stored path
         }
     }
-
 
     /**
      * Function for unZapping a Chapter (store)

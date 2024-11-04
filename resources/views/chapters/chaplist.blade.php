@@ -73,8 +73,7 @@
                         <tr id="chapter-{{ $list->id }}">
                             <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                             <td class="text-center align-middle">
-                                <a href="mailto:{{ urlencode($emailListChap) }}&cc={{ urlencode($emailListCoord) }}&subject={{ urlencode('MOMS Club of ' . $list->name . ', ' . $list->state) }}"><i class="far fa-envelope"></i></a></td>
-                                {{-- <a href="mailto:{{ $emailListChap  }}&cc={{ $emailListCoord }}&subject=MOMS Club of {{ $list->name }}, {{ $list->state }}"><i class="far fa-envelope"></i></a></td> --}}
+                                <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $list->name . ', ' . $list->state) }}"><i class="far fa-envelope"></i></a></td>
                            </td>
                             <td>
                                 @if ($list->reg != "None")

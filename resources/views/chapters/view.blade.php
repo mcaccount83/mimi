@@ -465,9 +465,8 @@
           <div class="col-md-12">
             <div class="card-body text-center">
                 @if ($coordinatorCondition)
-                        {{-- <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=MOMS Club of {{ $chapterList[0]->name }}, {{ $chapterList[0]->statename }}'">Email Board</button> --}}
                         <button type="button" class="btn bg-gradient-primary mb-3"
-                            onclick="window.location.href='mailto:{{ urlencode($emailListChap) }}?cc={{ urlencode($emailListCoord) }}&subject={{ urlencode('MOMS Club of ' . $chapterList[0]->name . ', ' . $chapterList[0]->statename) }}'">
+                            onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chapterList[0]->name . ', ' . $chapterList[0]->statename) }}'">
                             Email Board</button>
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chapterList[0]->id]) }}'">Update Chapter Information</button>
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chapterList[0]->id]) }}'">Update Board Information</button>
@@ -617,7 +616,7 @@ function updateEIN() {
 
     // Check if the chapter already has an EIN
     $.ajax({
-        url: '{{ route('chapters.checkein') }}',
+        url: '{{ route('chapters.checkeinnumber') }}',
         type: 'GET',
         data: {
             chapter_id: chapterId
@@ -694,7 +693,7 @@ function promptForNewEIN(chapterId) {
 
             // Perform the AJAX request to update the EIN
             $.ajax({
-                url: '{{ route('chapters.updateein') }}',
+                url: '{{ route('chapters.updateeinnumber') }}',
                 type: 'POST',
                 data: {
                     chapter_id: data.chapter_id,
