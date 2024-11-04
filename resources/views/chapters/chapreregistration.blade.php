@@ -45,7 +45,6 @@
                     <thead>
                         <tr>
                             <th>Payment</th>
-                            <th>Notes</th>
                             <th>Email</th>
                             <th>Conf/Reg</th>
                             <th>State</th>
@@ -85,11 +84,7 @@
                                     <a href="{{ url("/chapter/reregistrationpayment/{$list->id}") }}"><i class="far fa-credit-card"></i></a>
                                 @endif
                             </td>
-                            <td class="text-center align-middle">
-                                @if ($conferenceCoordinatorCondition)
-                                    <a href="{{ url("/chapter/reregistrationnotes/{$list->id}") }}"><i class="fas fa-pencil-alt"></i></a>
-                                @endif
-                            </td>
+
                             <td class="text-center align-middle">
                                 <a href="mailto:{{ urlencode($emailListChap) }}&cc={{ urlencode($emailListCoord) }}&subject={{ urlencode('Re-Registration Payment Reminder | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a></td>
 

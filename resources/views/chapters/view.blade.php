@@ -109,8 +109,8 @@
           <!-- /.col -->
 
           <div class="col-md-8">
-            <div class="card">
-              <div class="card-header p-2">
+            <div class="card card-primary card-outline">
+                <div class="card-header p-2">
                 <ul class="nav nav-pills">
                   <li class="nav-item"><a class="nav-link active" href="#general" data-toggle="tab">General</a></li>
                   <li class="nav-item"><a class="nav-link" href="#eoy" data-toggle="tab">End of Year</a></li>
