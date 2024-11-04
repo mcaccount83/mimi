@@ -81,7 +81,7 @@
                         <tr>
                             <td class="text-center align-middle">
                                 @if ($conferenceCoordinatorCondition)
-                                    <a href="{{ url("/chapter/reregistrationpayment/{$list->id}") }}"><i class="far fa-credit-card"></i></a>
+                                    <a href="{{ url("/chapterpaymentedit/{$list->id}") }}"><i class="far fa-credit-card"></i></a>
                                 @endif
                             </td>
 
