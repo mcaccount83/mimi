@@ -148,17 +148,11 @@ class EOYReportController extends Controller
 
                 if ($chapter->name) {
                     $emailData = $this->userController->loadEmailDetails($chapter->id);
-                    $chapEmail = $emailData['chapEmail'];
                     $emailListChap = $emailData['emailListChap'];
                     $emailListCoord = $emailData['emailListCoord'];
 
-                    $chapterEmails[$chapter->name] = $emailListChap; // Start with the chapter emails
-                    if (!empty($chapEmail)) {
-                        $chapterEmails[$chapter->name][] = $chapEmail; // Add chapEmail if it's not empty
-                    }
-
-                    $cc_email = $emailListCoord;
-                    $coordinatorEmails[$chapter->name] = $cc_email;
+                    $chapterEmails[$chapter->name] = $emailListChap;
+                    $coordinatorEmails[$chapter->name] = $emailListCoord;
                 }
 
                 $chapterState = $chapter->state;
@@ -432,17 +426,11 @@ class EOYReportController extends Controller
 
                 if ($chapter->name) {
                     $emailData = $this->userController->loadEmailDetails($chapter->id);
-                    $chapEmail = $emailData['chapEmail'];
                     $emailListChap = $emailData['emailListChap'];
                     $emailListCoord = $emailData['emailListCoord'];
 
-                    $chapterEmails[$chapter->name] = $emailListChap; // Start with the chapter emails
-                    if (!empty($chapEmail)) {
-                        $chapterEmails[$chapter->name][] = $chapEmail; // Add chapEmail if it's not empty
-                    }
-
-                    $cc_email = $emailListCoord;
-                    $coordinatorEmails[$chapter->name] = $cc_email;
+                    $chapterEmails[$chapter->name] = $emailListChap;
+                    $coordinatorEmails[$chapter->name] = $emailListCoord;
                 }
 
                 $chapterState = $chapter->state;
@@ -990,17 +978,11 @@ class EOYReportController extends Controller
 
         if ($chapter->name) {
             $emailData = $this->userController->loadEmailDetails($chapter->id);
-            $chapEmail = $emailData['chapEmail'];
             $emailListChap = $emailData['emailListChap'];
             $emailListCoord = $emailData['emailListCoord'];
 
-            $chapterEmails[$chapter->name] = $emailListChap; // Start with the chapter emails
-            if (!empty($chapEmail)) {
-                $chapterEmails[$chapter->name][] = $chapEmail; // Add chapEmail if it's not empty
-            }
-
-            $cc_email = $emailListCoord;
-            $coordinatorEmails[$chapter->name] = $cc_email;
+            $chapterEmails[$chapter->name] = $emailListChap;
+            $coordinatorEmails[$chapter->name] = $emailListCoord;
         }
 
         $chapterState = $chapter->state;
@@ -2018,13 +2000,6 @@ class EOYReportController extends Controller
         // Load Active Status for Active/Zapped Visibility
         $chIsActive = $chapterList[0]->is_active;
 
-        // Load Board and Coordinators for Sending Email
-        $chId = $chapterList[0]->id;
-
-        $emailData = $this->userController->loadEmailDetails($chId);
-        $emailListChap = $emailData['emailListChap'];
-        $emailListCoord = $emailData['emailListCoord'];
-
         $reportReviewerList = DB::table('chapters as ch')
             ->select('cd.id as cid', 'cd.first_name as rfname', 'cd.last_name as rlname', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
@@ -2048,7 +2023,7 @@ class EOYReportController extends Controller
 
 
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete, 'emailListCoord' => $emailListCoord, 'emailListChap' => $emailListChap,
+        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete,
             'chapterList' => $chapterList, 'reportReviewerList' => $reportReviewerList, 'corConfId' => $corConfId, 'chConfId' => $chConfId, 'chPCid' => $chPCid, 'financial_report_array' => $financial_report_array
             ];
 
@@ -2162,13 +2137,6 @@ public function updateEOYDetails(Request $request, $id): RedirectResponse
         // Load Active Status for Active/Zapped Visibility
         $chIsActive = $chapterList[0]->is_active;
 
-        // Load Board and Coordinators for Sending Email
-        $chId = $chapterList[0]->id;
-
-        $emailData = $this->userController->loadEmailDetails($chId);
-        $emailListChap = $emailData['emailListChap'];
-        $emailListCoord = $emailData['emailListCoord'];
-
         $reportReviewerList = DB::table('chapters as ch')
             ->select('cd.id as cid', 'cd.first_name as rfname', 'cd.last_name as rlname', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
@@ -2192,7 +2160,7 @@ public function updateEOYDetails(Request $request, $id): RedirectResponse
 
 
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete, 'emailListCoord' => $emailListCoord, 'emailListChap' => $emailListChap,
+        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete,
             'chapterList' => $chapterList, 'reportReviewerList' => $reportReviewerList, 'corConfId' => $corConfId, 'chConfId' => $chConfId, 'chPCid' => $chPCid, 'financial_report_array' => $financial_report_array
             ];
 
@@ -2280,13 +2248,6 @@ public function editEOYAwards(Request $request, $id)
         // Load Active Status for Active/Zapped Visibility
         $chIsActive = $chapterList[0]->is_active;
 
-        // Load Board and Coordinators for Sending Email
-        $chId = $chapterList[0]->id;
-
-        $emailData = $this->userController->loadEmailDetails($chId);
-        $emailListChap = $emailData['emailListChap'];
-        $emailListCoord = $emailData['emailListCoord'];
-
         $reportReviewerList = DB::table('chapters as ch')
             ->select('cd.id as cid', 'cd.first_name as rfname', 'cd.last_name as rlname', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
@@ -2310,7 +2271,7 @@ public function editEOYAwards(Request $request, $id)
 
 
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete, 'emailListCoord' => $emailListCoord, 'emailListChap' => $emailListChap,
+        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete,
             'chapterList' => $chapterList, 'reportReviewerList' => $reportReviewerList, 'corConfId' => $corConfId, 'chConfId' => $chConfId, 'chPCid' => $chPCid, 'financial_report_array' => $financial_report_array
             ];
 

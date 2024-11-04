@@ -254,29 +254,28 @@
                                         $included = array_keys(array_filter($attachments, fn($path) => $path !== null));
                                         $excluded = array_keys(array_filter($attachments, fn($path, $label) => $path === null && $label !== 'Additional Statement', ARRAY_FILTER_USE_BOTH));
 
-                                        // Helper function to format the list with "and"
-                                        function formatListWithAnd($items) {
+                                        // Anonymous function to format the list with "and"
+                                        $formatListWithAnd = function($items) {
                                             if (count($items) > 1) {
                                                 return implode(', ', array_slice($items, 0, -1)) . ' and ' . end($items);
                                             }
                                             return implode('', $items);
-                                        }
+                                        };
                                     @endphp
 
                                     @if(count($included) > 0)
-                                        {{ formatListWithAnd($included) }} are attached.
+                                        {{ $formatListWithAnd($included) }} are attached.
                                         @if(count($excluded) > 0)
                                         <br>
                                         @endif
-                                    {{-- @else
-                                        No attachments --}}
                                     @endif
 
                                     @if(count($excluded) > 0)
-                                        {{ formatListWithAnd($excluded) }} are not attached.
+                                        {{ $formatListWithAnd($excluded) }} are not attached.
                                     @endif
                                 </div>
                             </div>
+
 
                             <div class="row">
                                 <div class="col-sm-3">
@@ -463,31 +462,25 @@
           <div class="col-md-12">
             <div class="card-body text-center">
                 @if ($coordinatorCondition)
-                @php
-                        $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($id);
-                        $chapEmail = $emailDetails['chapEmail'];
-                        $emailListChap = $emailDetails['emailListChap'];
-                        $emailListCoord = $emailDetails['emailListCoord'];
-                        $emailListChap = is_array($emailListChap) ? implode(', ', $emailListChap) : $emailListChap;
-                        $emailListCoord = is_array($emailListCoord) ? implode(', ', $emailListCoord) : $emailListCoord;
-
-                        if (!empty($chapEmail)) {
-                            $emailListChap .= (empty($emailListChap) ? '' : ', ') . $chapEmail;
-                        }
-                    @endphp
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=MOMS Club of {{ $chapterList[0]->name }}, {{ $chapterList[0]->statename }}'">
-                        Email Board
-                    </button>
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chapterList[0]->id]) }}'">Update Chapter Information</button>
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chapterList[0]->id]) }}'">Update Board Information</button>
+                        {{-- <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=MOMS Club of {{ $chapterList[0]->name }}, {{ $chapterList[0]->statename }}'">Email Board</button> --}}
+                        <button type="button" class="btn bg-gradient-primary mb-3"
+                            onclick="window.location.href='mailto:{{ urlencode($emailListChap) }}?cc={{ urlencode($emailListCoord) }}&subject={{ urlencode('MOMS Club of ' . $chapterList[0]->name . ', ' . $chapterList[0]->statename) }}'">
+                            Email Board</button>
+                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chapterList[0]->id]) }}'">Update Chapter Information</button>
+                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chapterList[0]->id]) }}'">Update Board Information</button>
+                @endif
+                @if($regionalCoordinatorCondition)
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chapterList[0]->id]) }}'">Update EOY Information</button>
-                    @if($assistConferenceCoordinatorCondition && $chIsActive == 1)
+                @endif
+                @if($assistConferenceCoordinatorCondition)
+                    @if($chIsActive == 1)
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="showDisbandChapterModal()">Disband Chapter</button>
-                    @endif
-                    @if($assistConferenceCoordinatorCondition && $chIsActive != 1)
+                    @elseif($chIsActive != 1)
                         <button type="button" id="unzap" class="btn bg-gradient-primary mb-3" onclick="unZapChapter()">UnZap Chapter</button>
                     @endif
-                    <br>
+                @endif
+                <br>
+                @if($coordinatorCondition)
                     @if ($corConfId == $chConfId)
                         @if ($chIsActive == 1)
                             @if ($inquiriesCondition  && ($coordId != $chPCid))

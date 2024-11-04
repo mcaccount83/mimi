@@ -64,15 +64,8 @@
                     @foreach($chapterList as $list)
                     @php
                         $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->chap_id);
-                        $chapEmail = $emailDetails['chapEmail'];
-                        $emailListChap = $emailDetails['emailListChap'];
-                        $emailListCoord = $emailDetails['emailListCoord'];
-                        $emailListChap = is_array($emailListChap) ? implode(', ', $emailListChap) : $emailListChap;
-                        $emailListCoord = is_array($emailListCoord) ? implode(', ', $emailListCoord) : $emailListCoord;
-
-                        if (!empty($chapEmail)) {
-                            $emailListChap .= (empty($emailListChap) ? '' : ', ') . $chapEmail;
-                        }
+                        $emailListChap = $emailDetails['emailListChapString'];
+                        $emailListCoord = $emailDetails['emailListCoordString'];
 
                         // Define the message body with a link
                         $mimiUrl = 'https://example.com/mimi';
@@ -95,7 +88,9 @@
                         <!-- Email link to be dynamically populated via AJAX -->
                         <td class="text-center align-middle">
                             @if($list->financial_report_received == null || $list->financial_report_received == 0)
-                                <a href="mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=Financial Report Reminder | MOMS Club of {{ $list->name }}, {{ $list->state }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a>
+                            <a href="mailto:{{ urlencode($emailListChap) }}&cc={{ urlencode($emailListCoord) }}&subject={{ urlencode('Financial Report Reminder | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a></td>
+
+                                {{-- <a href="mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=Financial Report Reminder | MOMS Club of {{ $list->name }}, {{ $list->state }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a> --}}
                             @endif
                         </td>
                         <td>{{ $list->state }}</td>

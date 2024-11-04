@@ -49,9 +49,7 @@
                     <li class="list-group-item">
                         <b>Supervising Coordinator:</b> <span class="float-right"><a href="mailto:{{ $coordinatorDetails[0]->report_email }}">{{ $coordinatorDetails[0]->report_fname }} {{ $coordinatorDetails[0]->report_lname }}</a></span>
                         <br>
-                        <b>Display Position:</b> <span class="float-right">{{ $coordinatorDetails[0]->display_position }}</span>
-                        <br>
-                        <b>Primary Positon for MIMI Purposes:</b> <span class="float-right">{{ $coordinatorDetails[0]->position }}</span>
+                        <b>Primary Position:</b> <span class="float-right">{{ $coordinatorDetails[0]->display_position }}</span>
                         <br>
                         <b>Secondary Position:</b> <span class="float-right">{{ $coordinatorDetails[0]->sec_position }}</span>
 

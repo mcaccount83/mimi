@@ -156,7 +156,7 @@
 
                         <!-- Coordinator Dashboard Menu Item -->
                         <li class="nav-item">
-                            <a href="{{ route('coordinators.coorddashboard') }}" class="nav-link {{ Request::is('coordinator/dashboard') ? 'active' : '' }}">
+                            <a href="{{ route('coordinators.viewprofile') }}" class="nav-link {{ Request::is('coordviewprofile') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>Dashboard</p>
                             </a>

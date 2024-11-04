@@ -56,16 +56,9 @@
                 <tbody>
                     @foreach($chapterList as $list)
                     @php
-                        $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
-                        $chapEmail = $emailDetails['chapEmail'];
-                        $emailListChap = $emailDetails['emailListChap'];
-                        $emailListCoord = $emailDetails['emailListCoord'];
-                        $emailListChap = is_array($emailListChap) ? implode(', ', $emailListChap) : $emailListChap;
-                        $emailListCoord = is_array($emailListCoord) ? implode(', ', $emailListCoord) : $emailListCoord;
-
-                        if (!empty($chapEmail)) {
-                            $emailListChap .= (empty($emailListChap) ? '' : ', ') . $chapEmail;
-                        }
+                         $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
+                        $emailListChap = $emailDetails['emailListChapString'];
+                        $emailListCoord = $emailDetails['emailListCoordString'];
 
                         // Define the message body with a link
                         $mimiUrl = 'https://example.com/mimi';
@@ -91,7 +84,9 @@
                             </td>
                             <td class="text-center align-middle">
                                 @if ($list->new_board_submitted == null || $list->new_board_submitted == 0)
-                                    <a href="mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=Board Report Reminder | MOMS Club of {{ $list->name }}, {{ $list->state }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a>
+                                    <a href="mailto:{{ urlencode($emailListChap) }}&cc={{ urlencode($emailListCoord) }}&subject={{ urlencode('Board Report Reminder | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a></td>
+
+                                    {{-- <a href="mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=Board Report Reminder | MOMS Club of {{ $list->name }}, {{ $list->state }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a> --}}
                                 @endif
                             </td>
                             <td>{{ $list->state }}</td>

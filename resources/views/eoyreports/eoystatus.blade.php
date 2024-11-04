@@ -59,15 +59,8 @@
                     @foreach($chapterList as $list)
                     @php
                         $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
-                        $chapEmail = $emailDetails['chapEmail'];
-                        $emailListChap = $emailDetails['emailListChap'];
-                        $emailListCoord = $emailDetails['emailListCoord'];
-                        $emailListChap = is_array($emailListChap) ? implode(', ', $emailListChap) : $emailListChap;
-                        $emailListCoord = is_array($emailListCoord) ? implode(', ', $emailListCoord) : $emailListCoord;
-
-                        if (!empty($chapEmail)) {
-                            $emailListChap .= (empty($emailListChap) ? '' : ', ') . $chapEmail;
-                        }
+                        $emailListChap = $emailDetails['emailListChapString'];
+                        $emailListCoord = $emailDetails['emailListCoordString'];
 
                         $boardSubmitted = $emailDetails['boardSubmitted'] ?? null;
                         $reportReceived = $emailDetails['reportReceived'] ?? null;
@@ -103,7 +96,7 @@
                                 </td>
                             <td class="text-center align-middle">
                                     @if ($list->new_board_submitted == null || $list->financial_report_received == null || $list->new_board_submitted == 0 || $list->financial_report_received == 0)
-                                        <a href="#" class="email-link" data-chapter="{{ $list->id }}"><i class="far fa-envelope"></i></a>
+                                        <a href="mailto:{{ urlencode($emailListChap) }}&cc={{ urlencode($emailListCoord) }}&subject={{ urlencode('EOY Status Report | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a></td>
                                     @endif
                             </td>
                             <td>{{ $list->state }}</td>

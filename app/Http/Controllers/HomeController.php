@@ -41,7 +41,7 @@ class HomeController extends Controller
 
         if ($user_type == 'coordinator') {
             //Send to Coordinator Dashboard
-            return redirect()->to('coordinator/dashboard');
+            return redirect()->to('coordviewprofile');
         }
 
         if ($user_type == 'board') {

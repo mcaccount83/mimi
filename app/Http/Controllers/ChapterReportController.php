@@ -591,15 +591,11 @@ class ChapterReportController extends Controller
 
         $chapter = Chapter::find($id);
         $chId = $chapter['id'];
-
         $emailData = $this->userController->loadEmailDetails($chId);
-        $chapEmail = $emailData['chapEmail'];
         $emailListChap = $emailData['emailListChap'];
         $emailListCoord = $emailData['emailListCoord'];
 
-        $to_email1 = $emailListChap;
-        $to_email2 = $chapEmail;
-        $to_email = array_merge((array)$to_email1, (array)$to_email2);
+        $to_email = $emailListChap;
         $cc_email = $primaryCordEmail;
 
         DB::beginTransaction();

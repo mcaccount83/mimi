@@ -159,19 +159,24 @@ class UserController extends Controller
 
         $chapEmail = trim($chapterList->chap_email); // Trim spaces from chapter email
 
-        $chapterEmailList = DB::table('boards as bd')
+        $boardEmailList = DB::table('boards as bd')
             ->select('bd.email as bor_email')
             ->where('bd.chapter_id', '=', $chId)
             ->get();
 
-        $emailListChap = [];
-        foreach ($chapterEmailList as $val) {
+        $emailListBoard = [];
+        foreach ($boardEmailList as $val) {
             $email = trim($val->bor_email); // Trim spaces from each email
             if (!empty($email)) { // Check for non-empty email
                 $escaped_email = str_replace("'", "\\'", $email);
-                $emailListChap[] = $escaped_email; // Add to the array
+                $emailListBoard[] = $escaped_email; // Add to the array
             }
         }
+
+        $emailListChap = $emailListBoard; // Copy the board emails to the chapter email list
+            if (!empty($chapEmail)) {
+                $emailListChap[] = $chapEmail; // Add the chapter email if it's not empty
+            }
 
         $coordinatorEmailList = DB::table('coordinator_reporting_tree')
             ->select('*')
@@ -211,7 +216,9 @@ class UserController extends Controller
         return [
             'chapEmail' => $chapEmail,
             'emailListChap' => $emailListChap, // Return as an array
+            'emailListChapString' => implode(',', $emailListChap), // Return as a comma-separated string
             'emailListCoord' => $emailListCoord, // Return as an array
+            'emailListCoordString' => implode(',', $emailListCoord), // Return as a comma-separated string
             'board_submitted' => $chapterList->board_submitted,
             'report_received' => $chapterList->report_received,
             'ein_letter' => $chapterList->ein_letter,

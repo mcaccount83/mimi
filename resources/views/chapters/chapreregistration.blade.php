@@ -59,15 +59,8 @@
                         @foreach($reChapterList as $list)
                         @php
                             $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
-                            $chapEmail = $emailDetails['chapEmail'];
-                            $emailListChap = $emailDetails['emailListChap'];
-                            $emailListCoord = $emailDetails['emailListCoord'];
-                            $emailListChap = is_array($emailListChap) ? implode(', ', $emailListChap) : $emailListChap;
-                            $emailListCoord = is_array($emailListCoord) ? implode(', ', $emailListCoord) : $emailListCoord;
-
-                            if (!empty($chapEmail)) {
-                                $emailListChap .= (empty($emailListChap) ? '' : ', ') . $chapEmail;
-                            }
+                            $emailListChap = $emailDetails['emailListChapString'];
+                            $emailListCoord = $emailDetails['emailListCoordString'];
 
                             // Define the message body with a link
                             $mimiUrl = 'https://example.com/mimi';
@@ -98,7 +91,9 @@
                                 @endif
                             </td>
                             <td class="text-center align-middle">
-                                <a href="mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=Re-Registration Payment Reminder | MOMS Club of {{ $list->name }}, {{ $list->state_short_name }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a>
+                                <a href="mailto:{{ urlencode($emailListChap) }}&cc={{ urlencode($emailListCoord) }}&subject={{ urlencode('Re-Registration Payment Reminder | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a></td>
+
+                                {{-- <a href="mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=Re-Registration Payment Reminder | MOMS Club of {{ $list->name }}, {{ $list->state_short_name }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a> --}}
                             </td>
                             <td>
                                 @if ($list->reg != "None")

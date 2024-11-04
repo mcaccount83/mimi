@@ -504,7 +504,6 @@ class ChapterController extends Controller
 
         // Load Board and Coordinators for Sending Email
         $chId = $chapterList[0]->id;
-
         $emailData = $this->userController->loadEmailDetails($chId);
         $emailListChap = $emailData['emailListChap'];
         $emailListCoord = $emailData['emailListCoord'];
@@ -1464,17 +1463,11 @@ class ChapterController extends Controller
 
             // Load Board and Coordinators for Sending Email
             $chId = $chapterList[0]->id;
-
             $emailData = $this->userController->loadEmailDetails($chId);
-            $chapEmail = $emailData['chapEmail'];
             $emailListChap = $emailData['emailListChap'];
             $emailListCoord = $emailData['emailListCoord'];
 
-            $chapterEmails = $emailListChap; // Start with the chapter emails
-            if (!empty($chapEmail)) {
-                $chapterEmails[] = $chapEmail; // Add chapEmail if it's not empty
-            }
-
+            $chapterEmails = $emailListChap;
             $coordEmails = $emailListCoord;
 
             // Load Conference Coordinators information for signing email
@@ -1987,7 +1980,6 @@ class ChapterController extends Controller
 
             // Load Board and Coordinators for Sending Email
             $chId = $chapterList[0]->id;
-
             $emailData = $this->userController->loadEmailDetails($chId);
             $emailListChap = $emailData['emailListChap'];
             $emailListCoord = $emailData['emailListCoord'];
@@ -2229,16 +2221,11 @@ class ChapterController extends Controller
 
         $chapter = Chapter::find($id);
         $chId = $chapter['id'];
-
         $emailData = $this->userController->loadEmailDetails($chId);
-        $chapEmail = $emailData['chapEmail'];
         $emailListChap = $emailData['emailListChap'];
         $emailListCoord = $emailData['emailListCoord'];
 
-        $chapterEmails = $emailListChap; // Start with the chapter emails
-        if (!empty($chapEmail)) {
-            $chapterEmails[] = $chapEmail; // Add chapEmail if it's not empty
-        }
+        $chapterEmails = $emailListChap;
 
         $to_email = $chapterEmails;
         $cc_email = $primaryCordEmail;
@@ -2434,17 +2421,11 @@ class ChapterController extends Controller
 
                 if ($chapter->name) {
                     $emailData = $this->userController->loadEmailDetails($chapter->id);
-                    $chapEmail = $emailData['chapEmail'];
                     $emailListChap = $emailData['emailListChap'];
                     $emailListCoord = $emailData['emailListCoord'];
 
-                    $chapterEmails[$chapter->name] = $emailListChap; // Start with the chapter emails
-                    if (!empty($chapEmail)) {
-                        $chapterEmails[$chapter->name][] = $chapEmail; // Add chapEmail if it's not empty
-                    }
-
-                    $cc_email = $emailListCoord;
-                    $coordinatorEmails[$chapter->name] = $cc_email;
+                    $chapterEmails[$chapter->name] = $emailListChap;
+                    $coordinatorEmails[$chapter->name] = $emailListCoord;
                 }
 
                 $chapterState = $chapter->chapter_state;
@@ -2566,17 +2547,11 @@ class ChapterController extends Controller
 
                 if ($chapter->name) {
                     $emailData = $this->userController->loadEmailDetails($chapter->id);
-                    $chapEmail = $emailData['chapEmail'];
                     $emailListChap = $emailData['emailListChap'];
                     $emailListCoord = $emailData['emailListCoord'];
 
-                    $chapterEmails[$chapter->name] = $emailListChap; // Start with the chapter emails
-                    if (!empty($chapEmail)) {
-                        $chapterEmails[$chapter->name][] = $chapEmail; // Add chapEmail if it's not empty
-                    }
-
-                    $cc_email = $emailListCoord;
-                    $coordinatorEmails[$chapter->name] = $cc_email;
+                    $chapterEmails[$chapter->name] = $emailListChap;
+                    $coordinatorEmails[$chapter->name] = $emailListCoord;
                 }
 
                 $chapterState = $chapter->chapter_state;
@@ -3668,10 +3643,9 @@ class ChapterController extends Controller
 
             // Load Board and Coordinators for Sending Email
             $chId = $chapterList[0]->id;
-
             $emailData = $this->userController->loadEmailDetails($chId);
-            $emailListChap = $emailData['emailListChap'];
-            $emailListCoord = $emailData['emailListCoord'];
+            $emailListChap = $emailData['emailListChapString'];
+            $emailListCoord = $emailData['emailListCoordString'];
 
             $primaryCoordinatorList = DB::table('chapters as ch')
                 ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
@@ -3817,13 +3791,6 @@ class ChapterController extends Controller
              // Load Active Status for Active/Zapped Visibility
              $chIsActive = $chapterList[0]->is_active;
 
-             // Load Board and Coordinators for Sending Email
-             $chId = $chapterList[0]->id;
-
-             $emailData = $this->userController->loadEmailDetails($chId);
-             $emailListChap = $emailData['emailListChap'];
-             $emailListCoord = $emailData['emailListCoord'];
-
              $primaryCoordinatorList = DB::table('chapters as ch')
                 ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
                 ->join('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
@@ -3851,7 +3818,7 @@ class ChapterController extends Controller
         $webStatusArr = ['0' => 'Website Not Linked', '1' => 'Website Linked', '2' => 'Add Link Requested', '3' => 'Do Not Link'];
         $chapterStatusArr = ['1' => 'Operating OK', '4' => 'On Hold Do not Refer', '5' => 'Probation', '6' => 'Probation Do Not Refer'];
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete, 'emailListCoord' => $emailListCoord, 'emailListChap' => $emailListChap,
+        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete,
              'chapterList' => $chapterList, 'webStatusArr' => $webStatusArr, 'chapterStatusArr' => $chapterStatusArr,
             'primaryCoordinatorList' => $primaryCoordinatorList, 'corConfId' => $corConfId, 'chConfId' => $chConfId, 'chPCid' => $chPCid];
 
@@ -3920,12 +3887,9 @@ class ChapterController extends Controller
 
             //Change Primary Coordinator Notifications//
             $chId = $chapter['id'];
-
             $emailData = $this->userController->loadEmailDetails($chId);
-            $chapEmail = $emailData['chapEmail'];  // Chapter Email
             $emailListChap = $emailData['emailListChap'];  // Full Board
             $emailListCoord = $emailData['emailListCoord'];  // Full Coordinaor List
-            $chapterEmails = array_filter([$chapEmail, $emailListChap]); //Full Board & Chapter Email
 
             $pcDetails = DB::table('coordinators')
                 ->select('email', 'first_name', 'last_name')
@@ -3948,7 +3912,7 @@ class ChapterController extends Controller
                 ];
 
                 //Chapter Notification//
-                $to_email5 = $chapterEmails;
+                $to_email5 = $emailListChap;
                 Mail::to($to_email5)
                     ->queue(new ChaptersPrimaryCoordinatorChange($mailData));
 
@@ -4154,13 +4118,6 @@ class ChapterController extends Controller
              // Load Active Status for Active/Zapped Visibility
              $chIsActive = $chapterList[0]->is_active;
 
-             // Load Board and Coordinators for Sending Email
-             $chId = $chapterList[0]->id;
-
-             $emailData = $this->userController->loadEmailDetails($chId);
-             $emailListChap = $emailData['emailListChap'];
-             $emailListCoord = $emailData['emailListCoord'];
-
              $primaryCoordinatorList = DB::table('chapters as ch')
                 ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
                 ->join('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
@@ -4193,7 +4150,7 @@ class ChapterController extends Controller
         $webStatusArr = ['0' => 'Website Not Linked', '1' => 'Website Linked', '2' => 'Add Link Requested', '3' => 'Do Not Link'];
         $chapterStatusArr = ['1' => 'Operating OK', '4' => 'On Hold Do not Refer', '5' => 'Probation', '6' => 'Probation Do Not Refer'];
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete, 'emailListCoord' => $emailListCoord, 'emailListChap' => $emailListChap,
+        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete,
              'chapterList' => $chapterList, 'webStatusArr' => $webStatusArr, 'chapterStatusArr' => $chapterStatusArr, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
             'primaryCoordinatorList' => $primaryCoordinatorList, 'corConfId' => $corConfId, 'chConfId' => $chConfId, 'chPCid' => $chPCid, 'stateArr' => $stateArr, ];
 
