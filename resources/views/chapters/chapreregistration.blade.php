@@ -73,9 +73,6 @@
                             $mailMessage .= "Make your payment:\n";
                             $mailMessage .= "- Pay Online: $mimiUrl\n";
                             $mailMessage .= "- Pay via Mail to: Chapter Re-Registration, 208 Hewitt Dr. Ste 103 #328, Waco, TX 76712\n";
-
-                            // URL-encode the message for the href attribute
-                            $encodedMailMessage = rawurlencode($mailMessage);
                         @endphp
                         <tr>
                             <td class="text-center align-middle">
@@ -85,7 +82,7 @@
                             </td>
 
                             <td class="text-center align-middle">
-                                <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Re-Registration Payment Reminder | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a></td>
+                                <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Re-Registration Payment Reminder | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ rawurlencode($mailMessage) }}"><i class="far fa-envelope"></i></a>
                             </td>
                             <td>
                                 @if ($list->reg != "None")
