@@ -49,7 +49,7 @@
                     @endif
 
                     @if($conferenceCoordinatorCondition)
-                        <button class="btn bg-gradient-primary btn-sm showFileUploadModal" data-ein-letter="{{ $chapterList[0]->ein_letter_path }}">Update EIN Letter</button>
+                        {{-- <button class="btn bg-gradient-primary btn-sm showFileUploadModal" data-ein-letter="{{ $chapterList[0]->ein_letter_path }}">Update EIN Letter</button> --}}
                     @endif
                 </p>
 
@@ -470,13 +470,14 @@
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chapterList[0]->id]) }}'">Update Board Information</button>
                 @endif
                 @if($regionalCoordinatorCondition)
-                <br>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chapterList[0]->id]) }}'">Update EOY Information</button>
                 @endif
                 @if($conferenceCoordinatorCondition)
+                <br>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapreregpayment', ['id' => $chapterList[0]->id]) }}'">Enter Payment/Donation</button>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateEIN()">Update EIN Number</button>
-                @endif
+                    <button class="btn bg-gradient-primary mb-3 showFileUploadModal" data-ein-letter="{{ $chapterList[0]->ein_letter_path }}">Update EIN Letter</button>
+                    @endif
                 @if($assistConferenceCoordinatorCondition)
                     @if($chIsActive == 1)
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="showDisbandChapterModal()">Disband Chapter</button>
