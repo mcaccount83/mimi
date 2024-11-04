@@ -42,16 +42,17 @@
                 <br>
                 EIN: {{$chapterList[0]->ein}}
                 <br>
-                @if($chapterList[0]->ein_letter_path != null)
-                    <button class="btn bg-gradient-primary btn-sm" onclick="window.open('{{ $chapterList[0]->ein_letter_path }}', '_blank')">View/Download EIN Letter</button>
-                @else
-                    <button class="btn bg-gradient-primary btn-sm disabled">No EIN Letter on File</button>
-                @endif
+                    @if($chapterList[0]->ein_letter_path != null)
+                        <button class="btn bg-gradient-primary btn-sm" onclick="window.open('{{ $chapterList[0]->ein_letter_path }}', '_blank')">View/Download EIN Letter</button>
+                    @else
+                        <button class="btn bg-gradient-primary btn-sm disabled">No EIN Letter on File</button>
+                    @endif
+
+                    @if($conferenceCoordinatorCondition)
+                        <button class="btn bg-gradient-primary btn-sm showFileUploadModal" data-ein-letter="{{ $chapterList[0]->ein_letter_path }}">Update EIN Letter</button>
+                    @endif
                 </p>
-                <p class="text-center">
-                    <button type="button" class="btn bg-gradient-primary btn-sm" onclick="updateEIN()">Update EIN Number</button>
-                    <button class="btn bg-gradient-primary btn-sm showFileUploadModal" data-ein-letter="{{ $chapterList[0]->ein_letter_path }}">Update EIN Letter</button>
-                </p>
+
                 <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
                         <b>Re-Registration Dues:</b><span class="float-right">
@@ -75,12 +76,12 @@
                                 No Donation Recorded
                             @endif
                         </span><br>
-                        @if ($conferenceCoordinatorCondition)
+                        {{-- @if ($conferenceCoordinatorCondition)
                             <div class="col-md-12 text-center">
                                 <button class="btn bg-gradient-primary btn-sm" onclick="window.location.href='{{ route('chapters.chapreregpayment', ['id' => $chapterList[0]->id]) }}'">Enter Payment</button>
                                 <button class="btn bg-gradient-primary btn-sm" onclick="window.location.href='{{ route('chapreports.chaprptdonationsview', ['id' => $chapterList[0]->id]) }}'">Enter Donation</button>
                             </div>
-                        @endif
+                        @endif --}}
                     </li>
                     <li class="list-group-item">
                         <b>Founded:</b> <span class="float-right">{{ $chapterList[0]->startmonth }} {{ $chapterList[0]->start_year }}</span>
@@ -162,11 +163,10 @@
                         <br>
                         <label>Webiste Link Status:</label> {{$webStatusinWords}}
                         <br>
-                        <button class="btn bg-gradient-primary btn-sm" onclick="window.location.href='{{ route('chapters.chapwebsiteview', ['id' => $chapterList[0]->id]) }}'">Update Website Link Status</button>
+                        <label>Forum/Group/App:</label> {{ $chapterList[0]->egroup}}
+                        {{-- <button class="btn bg-gradient-primary btn-sm" onclick="window.location.href='{{ route('chapters.chapwebsiteview', ['id' => $chapterList[0]->id]) }}'">Update Website Link Status</button> --}}
                     </div>
                     <div class="col-md-6">
-                        <label>Forum/Group/App:</label> {{ $chapterList[0]->egroup}}
-                        <br>
                         <label>Facebook:</label> {{ $chapterList[0]->social1}}
                         <br>
                         <label>Twitter:</label> {{ $chapterList[0]->social2}}
@@ -470,7 +470,12 @@
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chapterList[0]->id]) }}'">Update Board Information</button>
                 @endif
                 @if($regionalCoordinatorCondition)
+                <br>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chapterList[0]->id]) }}'">Update EOY Information</button>
+                @endif
+                @if($conferenceCoordinatorCondition)
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapreregpayment', ['id' => $chapterList[0]->id]) }}'">Enter Payment/Donation</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateEIN()">Update EIN Number</button>
                 @endif
                 @if($assistConferenceCoordinatorCondition)
                     @if($chIsActive == 1)
