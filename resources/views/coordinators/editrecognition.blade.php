@@ -159,8 +159,8 @@
                     </div>
 
                     <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">MC Necklace:</label>
-                            <div class="col-sm-4 d-flex align-items-center">
+                        <div class="col-md-12 d-flex align-items-center">
+                            <label class="ml-2 col-form-label mr-2">MC Necklace:</label>
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" name="recognition_necklace" id="recognition_necklace" class="custom-control-input"
                                     {{$coordinatorDetails[0]->recognition_necklace == 1 ? 'checked' : ''}}>

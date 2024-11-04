@@ -474,7 +474,7 @@
                 @endif
                 @if($conferenceCoordinatorCondition)
                     <br>
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapreregpayment', ['id' => $chapterList[0]->id]) }}'">Enter Payment/Donation</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editpayment', ['id' => $chapterList[0]->id]) }}'">Enter Payment/Donation</button>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateEIN()">Update EIN Number</button>
                     <button class="btn bg-gradient-primary mb-3 showFileUploadModal" data-ein-letter="{{ $chapterList[0]->ein_letter_path }}">Update EIN Letter</button>
                 @endif
