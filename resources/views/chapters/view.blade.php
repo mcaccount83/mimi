@@ -127,7 +127,7 @@
                   <div class="active tab-pane" id="general">
                     <div class="general-field">
                         <h3 class="profile-username">General Information
-                        <button class="btn bg-gradient-primary btn-xs" onclick="window.location.href='{{ route('viewas.viewchapterpresident', ['id' => $chapterList[0]->id]) }}'">View Chapter Profile As President</button>
+                        <button class="btn bg-gradient-primary btn-xs ml-2" onclick="window.location.href='{{ route('viewas.viewchapterpresident', ['id' => $chapterList[0]->id]) }}'">View Chapter Profile As President</button>
                     </h3>
                     <div class="row">
                             <div class="col-md-12">
@@ -473,11 +473,11 @@
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chapterList[0]->id]) }}'">Update EOY Information</button>
                 @endif
                 @if($conferenceCoordinatorCondition)
-                <br>
+                    <br>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapreregpayment', ['id' => $chapterList[0]->id]) }}'">Enter Payment/Donation</button>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateEIN()">Update EIN Number</button>
                     <button class="btn bg-gradient-primary mb-3 showFileUploadModal" data-ein-letter="{{ $chapterList[0]->ein_letter_path }}">Update EIN Letter</button>
-                    @endif
+                @endif
                 @if($assistConferenceCoordinatorCondition)
                     @if($chIsActive == 1)
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="showDisbandChapterModal()">Disband Chapter</button>
