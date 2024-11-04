@@ -423,39 +423,63 @@ $(document).ready(function() {
     });
 });
 
-// Check to see if Board Members have an email already in system
-function checkDuplicateEmail(email, id) {
-    $.ajax({
-        url: '{{ url("/checkemail/") }}' + '/' + email,
-        type: "GET",
-        success: function(result) {
-            if (result.exists) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Duplicate Email',
-                    html: 'This email is already used in the system.<br>Please try a new one.',
-                    confirmButtonText: 'OK',
-                    customClass: {
-                        confirmButton: 'btn-sm btn-success',
-                        cancelButton: 'btn-sm btn-danger'
-                    }
-                }).then(() => {
-                    $("#" + id).val('');
-                    $("#" + id).focus();
-                });
-            }
-        },
-        error: function(jqXHR, exception) {
-            console.error("Error checking email: ", exception);
-        }
-    });
-}
+// function validateEmailsBeforeSubmit() {
+//     var errMessage = "";
+
+//     // Get email values and trim whitespace
+//     var preEmail = $("#ch_pre_email").val().trim();
+//     var avpEmail = $("#ch_avp_email").val().trim();
+//     var mvpEmail = $("#ch_mvp_email").val().trim();
+//     var trsEmail = $("#ch_trs_email").val().trim();
+//     var secEmail = $("#ch_sec_email").val().trim();
+
+//     // Create an array of emails
+//     var emails = [preEmail, avpEmail, mvpEmail, trsEmail, secEmail];
+
+//     // Use a Set to identify duplicates
+//     var uniqueEmails = new Set(emails.filter(email => email !== "")); // filter out empty values
+
+//     // Check for duplicates
+//     if (uniqueEmails.size !== emails.filter(email => email !== "").length) {
+//         errMessage = "You entered the same email address for more than one board member. Please enter a unique e-mail address for each board member or mark the position as vacant.";
+//     }
+
+//     if (errMessage.length > 0) {
+//         customErrorAlert(errMessage);
+//         return false;
+//     }
+
+//     return true;
+// }
 
 function validateEmailsBeforeSubmit() {
-    const emails = [$('#preEmail').val(), $('#avpEmail').val(), $('#mvpEmail').val(), $('#trsEmail').val(), $('#secEmail').val()];
-    const uniqueEmails = emails.filter(email => email !== '');
-    const duplicateEmails = uniqueEmails.filter((email, index) => uniqueEmails.indexOf(email) !== index);
+    // Get the values from the input fields
+    const emails = [
+        $('#ch_pre_email').val().trim(),
+        $('#ch_avp_email').val().trim(),
+        $('#ch_mvp_email').val().trim(),
+        $('#ch_trs_email').val().trim(),
+        $('#ch_sec_email').val().trim()
+    ];
 
+    // Filter out empty emails and check for duplicates
+    const emailSet = new Set();
+    const duplicateEmails = [];
+
+    emails.forEach(email => {
+        if (email !== '') {
+            if (emailSet.has(email)) {
+                // Check if the duplicate email is already in the array to avoid listing it multiple times
+                if (!duplicateEmails.includes(email)) {
+                    duplicateEmails.push(email);
+                }
+            } else {
+                emailSet.add(email);
+            }
+        }
+    });
+
+    // If duplicates are found, show an alert
     if (duplicateEmails.length > 0) {
         Swal.fire({
             icon: 'error',
@@ -470,6 +494,8 @@ function validateEmailsBeforeSubmit() {
     }
     return true;
 }
+
+
 
 </script>
 @endsection
