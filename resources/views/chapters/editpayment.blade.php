@@ -226,6 +226,9 @@
                 @if ($coordinatorCondition)
                     <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return PreSaveValidate();">Save Payment Information</button>
                 @endif
+                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapreregistration') }}'">Back to Re-Registration Report</button>
+                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapreports.chaprptdonations') }}'">Back to Donations Report</button>
+
                 <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chapterList[0]->id]) }}'">Back to Chapter Details</button>
         </div>
         </div>

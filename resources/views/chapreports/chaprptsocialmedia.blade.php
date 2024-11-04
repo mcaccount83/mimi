@@ -5,12 +5,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Chapter Report</h1>
+          <h1>Chapter Website/Social Media</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">Social Media Report</li>
+            <li class="breadcrumb-item active">Chapter Website/Social Media</li>
           </ol>
         </div>
       </div>
@@ -26,16 +26,11 @@
                 <div class="card-header">
                 <div class="dropdown">
                     <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Social Media Report
+                        Social Media List
                     </h3>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item" href="{{ route('chapreports.chaprptchapterstatus') }}">Chapter Status Report</a>
-                        <a class="dropdown-item" href="{{ route('chapreports.chaprpteinstatus') }}">EIN Status Report</a>
-                        <a class="dropdown-item" href="{{ route('chapreports.chaprptnewchapters') }}">New Chapter Report</a>
-                        <a class="dropdown-item" href="{{ route('chapreports.chaprptlargechapters') }}">Large Chapter Report</a>
-                        <a class="dropdown-item" href="{{ route('chapreports.chaprptprobation') }}">Chapter Probation Report</a>
-                        <a class="dropdown-item" href="{{ route('chapreports.chaprptsocialmedia') }}">Social Media Report</a>
-                        <a class="dropdown-item" href="{{ route('chapreports.chaprptcoordinators') }}">Chapter Coordinators Report</a>
+                        <a class="dropdown-item" href="{{ route('chapters.chapwebsite') }}">Website List</a>
+                        <a class="dropdown-item" href="{{ route('chapreports.chaprptsocialmedia') }}">Social Media List</a>
                     </div>
                 </div>
             </div>
@@ -44,7 +39,7 @@
             <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-                    <th></th>
+                    <th>Details</th>
                     <th>Conf/Reg>
                   <th>State</th>
                   <th>Name</th>
@@ -56,7 +51,7 @@
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
-                    <td></td>
+                    <td class="text-center align-middle"><a href="{{ url("/chapterwebsiteedit/{$list->id}") }}"><i class="fas fa-eye "></i></a></td>
                     <td>
                         @if ($list->reg != "None")
                             {{ $list->conf }} / {{ $list->reg }}

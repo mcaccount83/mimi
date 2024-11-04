@@ -215,8 +215,7 @@
                                 $paymentsRoute = route('international.intdonation');
                             }
                             $activePaymentsRoutes = [
-                                'chapter/reregistration', 'chapter/reregistrationpayment/*', 'chapter/reregistrationnotes/*', 'international/donation',
-                                'chapter/donations', 'chapter/donationsview/*'
+                                'chapter/reregistration', 'chapter/donations', 'international/donation','chapterpaymentedit/*'
                             ];
                         @endphp
                         @if (isset($paymentsRoute))
@@ -238,7 +237,7 @@
                             } elseif ($regionalCoordinatorCondition) {
                                 $websiteRoute = route('chapters.chapwebsite');
                                 $activeWebsiteRoutes = [
-                                    'chapter/website'
+                                    'chapter/website', 'chapter/socialmedia', 'chapterwebsiteedit/*'
                                 ];
                             }
                         @endphp
@@ -246,7 +245,7 @@
                             <li class="nav-item">
                                 <a href="{{ $websiteRoute }}" class="nav-link {{ isActiveRoute($activeWebsiteRoutes) }}">
                                     <i class="nav-icon fas fa-laptop"></i>
-                                    <p>Website Review</p>
+                                    <p>Website/Social Media</p>
                                 </a>
                             </li>
                         @endif
@@ -268,8 +267,6 @@
                                 </a>
                             </li>
                         @endif
-
-
 
                         @if ($einCondition || $adminReportCondition)
                         <li class="nav-item">
