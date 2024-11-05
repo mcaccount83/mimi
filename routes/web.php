@@ -149,16 +149,15 @@ Route::get('/chapters/check-ein', [ChapterController::class, 'checkEIN'])->name(
 Route::post('/chapterdetails/updateEIN', [ChapterController::class, 'updateEINNumber'])->name('chapters.updateeinnumber');
 Route::post('/chapter/updatedisband', [ChapterController::class, 'updateChapterDisband'])->name('chapters.updatechapdisband');
 Route::post('/chapter/unzap', [ChapterController::class, 'updateChapterUnZap'])->name('chapters.updatechapterunzap');
+Route::get('/chapternew', [ChapterController::class, 'editChapterNew'])->name('chapters.editnew');
+Route::post('/chapternewupdate', [ChapterController::class, 'updateChapterNew'])->name('chapters.updatenew');
 Route::get('/chapterdetailsedit/{id}', [ChapterController::class, 'editChapterDetails'])->name('chapters.edit');
 Route::post('/chapterdetailsupdate/{id}', [ChapterController::class, 'updateChapterDetails'])->name('chapters.update');
 Route::get('/chapterboardedit/{id}', [ChapterController::class, 'editChapterBoard'])->name('chapters.editboard');
 Route::post('/chapterboardupdate/{id}', [ChapterController::class, 'updateChapterBoard'])->name('chapters.updateboard');
-
-Route::get('/chapter/chapternew', [ChapterController::class, 'showChapterNew'])->name('chapters.chapnew');
-Route::post('/chapter/updatechapternew', [ChapterController::class, 'updateChapterNew'])->name('chapters.updatechapnew');
-
 Route::get('/chapter/reregistration', [ChapterController::class, 'showChapterReRegistration'])->name('chapters.chapreregistration');
 Route::get('/chapter/donations', [ChapterReportController::class, 'showRptDonations'])->name('chapreports.chaprptdonations');
+Route::get('/international/donation', [InternationalController::class, 'showIntdonation'])->name('international.intdonation');
 Route::get('/chapterpaymentedit/{id}', [ChapterController::class, 'editChapterPayment'])->name('chapters.editpayment');
 Route::post('/chapterpaymentupdate/{id}', [ChapterController::class, 'updateChapterPayment'])->name('chapters.updatepayment');
 Route::get('/chapter/reregistrationreminder', [ChapterController::class, 'createChapterReRegistrationReminder'])->name('chapters.chapreregreminder');
@@ -168,14 +167,11 @@ Route::get('/chapter/socialmedia', [ChapterReportController::class, 'showRptSoci
 Route::get('/chapterwebsiteedit/{id}', [ChapterController::class, 'editChapterWebsite'])->name('chapters.editwebsite');
 Route::post('/chapterwebsiteupdate/{id}', [ChapterController::class, 'updateChapterWebsite'])->name('chapters.updatewebsite');
 Route::get('/chapter/boardlist', [ChapterController::class, 'showChapterBoardlist'])->name('chapters.chapboardlist');
-// ChapterReport Controller Routes...
 Route::get('/chapterreports/chapterstatus', [ChapterReportController::class, 'showRptChapterStatus'])->name('chapreports.chaprptchapterstatus');
-Route::get('/chaptereinedit/{id}', [ChapterController::class, 'editChapterEIN'])->name('chapters.editein');
-Route::post('/chaptereinupdate/{id}', [ChapterController::class, 'updateChapterEIN'])->name('chapters.updateein');
-
 Route::get('/chapterreports/einstatus', [ChapterReportController::class, 'showRptEINstatus'])->name('chapreports.chaprpteinstatus');
-Route::get('/chapterreports/einstatusview/{id}', [ChapterReportController::class, 'showRptEINstatusView'])->name('chapreports.chaprpteinstatusview');
-Route::post('/chapterreports/updateeinstatus/{id}', [ChapterReportController::class, 'updateRptEINstatus'])->name('chapreports.updatechaprpteinstatus');
+Route::get('/chapterreports/inteinstatus', [InternationalController::class, 'showIntEINstatus'])->name('international.inteinstatus');
+Route::get('/chapterirsedit/{id}', [ChapterController::class, 'editChapterIRS'])->name('chapters.editirs');
+Route::post('/chapterirsupdate/{id}', [ChapterController::class, 'updateChapterIRS'])->name('chapters.updateirs');
 Route::get('/chapterreports/newchapters', [ChapterReportController::class, 'showRptNewChapters'])->name('chapreports.chaprptnewchapters');
 Route::get('/chapterreports/largechapters', [ChapterReportController::class, 'showRptLargeChapters'])->name('chapreports.chaprptlargechapters');
 Route::get('/chapterreports/probation', [ChapterReportController::class, 'showRptProbation'])->name('chapreports.chaprptprobation');
@@ -187,6 +183,8 @@ Route::get('/chapterreports/coordinators', [ChapterReportController::class, 'sho
 // Route::post('/chapter/updatereregistrtionpaymentnotes/{id}', [ChapterController::class, 'updateChapterReRegistrationNotes'])->name('chapters.updatechapreregnotes');
 // Route::get('/chapter/donationsview/{id}', [ChapterReportController::class, 'showRptDonationsView'])->name('chapreports.chaprptdonationsview');
 // Route::post('/chapter/updatedonations/{id}', [ChapterReportController::class, 'updateRptDonations'])->name('chapreports.updatechaprptdonations');
+// Route::get('/chapter/chapternew', [ChapterController::class, 'showChapterNew'])->name('chapters.chapnew');
+// Route::post('/chapter/updatechapternew', [ChapterController::class, 'updateChapterNew'])->name('chapters.updatechapnew');
 // Route::get('/chapter/chapterview/{id}', [ChapterController::class, 'showChapterView'])->name('chapters.chapview');;
 // Route::post('/chapter/updatechapter/{id}', [ChapterController::class, 'updateChapter'])->name('chapters.updatechap');
 // Route::get('/chapter/zappedview/{id}', [ChapterController::class, 'showZappedChapterView'])->name('chapters.chapzappedview');
@@ -197,6 +195,8 @@ Route::get('/chapterreports/coordinators', [ChapterReportController::class, 'sho
 // Route::get('/chapter/getEmail{id}', [ChapterController::class, 'getEmailDetails'])->name('get.emaildetails');
 // Route::get('/chapter/websiteview/{id}', [ChapterController::class, 'showChapterWebsiteView'])->name('chapters.chapwebsiteview');
 // Route::post('/chapter/updatewebsite/{id}', [ChapterController::class, 'updateChapterWebsite'])->name('chapters.updatechapwebsite');
+// Route::get('/chapterreports/einstatusview/{id}', [ChapterReportController::class, 'showRptEINstatusView'])->name('chapreports.chaprpteinstatusview');
+// Route::post('/chapterreports/updateeinstatus/{id}', [ChapterReportController::class, 'updateRptEINstatus'])->name('chapreports.updatechaprpteinstatus');
 
 // Coordinator Controller Routes...
 Route::get('/coordinator/coordlist', [CoordinatorController::class, 'showCoordinators'])->name('coordinators.coordlist');
@@ -225,12 +225,13 @@ Route::get('/coordviewprofile', [CoordinatorController::class, 'viewCoordProfile
 Route::get('/coordprofile', [CoordinatorController::class, 'editCoordProfile'])->name('coordinators.profile');
 Route::post('/coordprofileupdate', [CoordinatorController::class, 'updateCoordProfile'])->name('coordinators.profileupdate');
 
-Route::get('/coordinator/dashboard', [CoordinatorController::class, 'showCoordinatorDashboard'])->name('coordinators.coorddashboard');
-Route::post('/coordinator/updatedashboard/{id}', [CoordinatorController::class, 'updateCoordinatorDashboard'])->name('coordinators.updatecoorddashboard');
 Route::get('/coordinator/coordinatornew', [CoordinatorController::class, 'showCoordinatorNew'])->name('coordinators.coordnew');
 Route::post('/coordinator/updatecoordinatornew', [CoordinatorController::class, 'updateCoordinatorNew'])->name('coordinators.updatecoordnew');
-// CoordinatorReport Controller Routes...
+
+Route::get('/coordinator/dashboard', [CoordinatorController::class, 'showCoordinatorDashboard'])->name('coordinators.coorddashboard');
+Route::post('/coordinator/updatedashboard/{id}', [CoordinatorController::class, 'updateCoordinatorDashboard'])->name('coordinators.updatecoorddashboard');
 Route::get('/coordreports/coordinatortodo', [CoordinatorReportController::class, 'showRptCoordToDo'])->name('coordreports.coordrpttodo');
+Route::get('/international/coordinatortodo', [InternationalController::class, 'showIntCoordinatorToDo'])->name('international.intcoordtodo');
 Route::get('/coordreports/birthdays', [CoordinatorReportController::class, 'showRptBirthdays'])->name('coordreports.coordrptbirthdays');
 Route::get('/coordreports/birthdaysview/{id}', [CoordinatorReportController::class, 'showRptBirthdaysView'])->name('coordreports.coordrptbirthdaysview');
 Route::post('/coordreports/updatebirthdays/{id}', [CoordinatorReportController::class, 'updateRptBirthdays'])->name('coordreports.updatecoordrptbirthdays');
@@ -251,11 +252,8 @@ Route::post('/coordreports/updatebirthdays/{id}', [CoordinatorReportController::
 // Route::get('/international/chapterzappedview/{id}', [InternationalController::class, 'showIntZappedChapterView'])->name('international.intchapterzappedview');
 // Route::get('/international/coordinatorview/{id}', [InternationalController::class, 'showIntCoordinatorView'])->name('international.intcoordview');
 // Route::get('/iternational/coordinatorretiredview/{id}', [InternationalController::class, 'showIntCoordinatorRetiredView'])->name('international.intcoordretiredview');
-Route::get('/international/coordinatortodo', [InternationalController::class, 'showIntCoordinatorToDo'])->name('international.intcoordtodo');
-Route::get('/international/einstatus', [InternationalController::class, 'showIntEINstatus'])->name('international.inteinstatus');
-Route::get('/international/einstatusview/{id}', [InternationalController::class, 'showIntEINstatusView'])->name('international.inteinstatusview');
-Route::post('/international/updateeinstatus/{id}', [InternationalController::class, 'updateIntEINstatus'])->name('international.updateinteinstatus');
-Route::get('/international/donation', [InternationalController::class, 'showIntdonation'])->name('international.intdonation');
+// Route::get('/international/einstatusview/{id}', [InternationalController::class, 'showIntEINstatusView'])->name('international.inteinstatusview');
+// Route::post('/international/updateeinstatus/{id}', [InternationalController::class, 'updateIntEINstatus'])->name('international.updateinteinstatus');
 
 // EOYReports Controller Routes...
 Route::get('/eoy/status', [EOYReportController::class, 'showEOYStatus'])->name('eoyreports.eoystatus');

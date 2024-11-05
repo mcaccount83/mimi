@@ -44,7 +44,7 @@
             <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
-				<th>Review</th>
+				<th>Details</th>
                 <th>Email</th>
 				<th>State</th>
                 <th>Name</th>
@@ -72,13 +72,18 @@
                         $mailMessage .= "The Board Election Report can be accessed by logging into your MIMI account: $mimiUrl and selecting the buttons at the top of your screen.\n";
                     @endphp
                         <tr id="chapter-{{ $list->id }}">
-                            <td class="text-center align-middle">
+                            {{-- <td class="text-center align-middle">
                                 @if($regionalCoordinatorCondition)
                                     @if($list->new_board_active == null || $list->new_board_active == 0 )
                                         <a href="{{ url("/eoy/boardreportview/{$list->id}") }}"><i class="fas fa-edit"></i></a>
                                     @endif
                                 @endif
-                            </td>
+                            </td> --}}
+                            <td class="text-center align-middle">
+                            @if ($assistConferenceCoordinatorCondition)
+                               <a href="{{ url("/eoydetails/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                           @endif
+                        </td>
                             <td class="text-center align-middle">
                                 @if ($list->new_board_submitted == null || $list->new_board_submitted == 0)
                                     <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Board Report Reminder | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ rawurlencode($mailMessage) }}"><i class="far fa-envelope"></i></a>

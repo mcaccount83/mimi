@@ -10,7 +10,7 @@
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">EIN Status Report</li>
+            <li class="breadcrumb-item active">IRS Status Report</li>
           </ol>
         </div>
       </div>
@@ -26,11 +26,14 @@
                 <div class="card-header">
                 <div class="dropdown">
                     <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        EIN Status Report
+                        IRS Status Report
                     </h3>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="{{ route('chapreports.chaprptchapterstatus') }}">Chapter Status Report</a>
-                        <a class="dropdown-item" href="{{ route('chapreports.chaprpteinstatus') }}">EIN Status Report</a>
+                        <a class="dropdown-item" href="{{ route('chapreports.chaprpteinstatus') }}">IRS Status Report</a>
+                        @if ($adminReportCondition)
+                            <a class="dropdown-item" href="{{ route('international.inteinstatus') }}">International IRS Status Report</a>
+                        @endif
                         <a class="dropdown-item" href="{{ route('chapreports.chaprptnewchapters') }}">New Chapter Report</a>
                         <a class="dropdown-item" href="{{ route('chapreports.chaprptlargechapters') }}">Large Chapter Report</a>
                         <a class="dropdown-item" href="{{ route('chapreports.chaprptprobation') }}">Chapter Probation Report</a>
@@ -43,8 +46,8 @@
             <table id="chapterlist" class="table table-sm table-hover" >
               <thead>
 			    <tr>
+                    <th>Details</th>
                     <th>Letter</th>
-                    <th>Notes</th>
                     <th>Conf/Reg</th>
                     <th>State</th>
                     <th>Name</th>
@@ -58,16 +61,15 @@
                 @foreach($chapterList as $list)
                     <tr >
                         <td class="text-center align-middle">
-                            @if ($list->ein_letter_path != null)
-                                <a href="{{ $list->ein_letter_path }}"><i class="fas fa-eye"></i></a>
+                            @if ($conferenceCoordinatorCondition)
+                                <a href="{{ url("/chapterirsedit/{$list->id}") }}"><i class="fas fa-eye"></i></a>
                             @else
                                 &nbsp; <!-- Placeholder to ensure the cell isn't completely empty -->
                             @endif
                         </td>
-
                         <td class="text-center align-middle">
-                            @if ($conferenceCoordinatorCondition)
-                                <a href="{{ url("/chapterreports/einstatusview/{$list->id}") }}"><i class="fas fa-pencil-alt"></i></a>
+                            @if ($list->ein_letter_path != null)
+                                <a href="{{ $list->ein_letter_path }}"><i class="far fa-file-pdf"></i></a>
                             @else
                                 &nbsp; <!-- Placeholder to ensure the cell isn't completely empty -->
                             @endif

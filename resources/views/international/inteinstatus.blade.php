@@ -5,12 +5,12 @@
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>International EIN Status Report</h1>
+          <h1>Chapter Reports</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">International EIN Status Report</li>
+            <li class="breadcrumb-item active">International IRS Status Report</li>
           </ol>
         </div>
       </div>
@@ -24,16 +24,31 @@
         <div class="col-12">
             <div class="card card-outline card-primary">
                 <div class="card-header">
-              <h3 class="card-title">International EIN Status</h3>
-            </div>
+                    <div class="dropdown">
+                        <h3 class="card-title dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            International IRS Status Report
+                        </h3>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" href="{{ route('chapreports.chaprptchapterstatus') }}">Chapter Status Report</a>
+                            <a class="dropdown-item" href="{{ route('chapreports.chaprpteinstatus') }}">IRS Status Report</a>
+                            @if ($adminReportCondition)
+                                <a class="dropdown-item" href="{{ route('international.intchapter') }}">International IRS Status Report</a>
+                            @endif
+                            <a class="dropdown-item" href="{{ route('chapreports.chaprptnewchapters') }}">New Chapter Report</a>
+                            <a class="dropdown-item" href="{{ route('chapreports.chaprptlargechapters') }}">Large Chapter Report</a>
+                            <a class="dropdown-item" href="{{ route('chapreports.chaprptprobation') }}">Chapter Probation Report</a>
+                            <a class="dropdown-item" href="{{ route('chapreports.chaprptcoordinators') }}">Chapter Coordinators Report</a>
+                        </div>
+                    </div>
+                </div>
             <!-- /.card-header -->
         <div class="card-body">
               {{-- <table id="chapterlist_inteinStatus" class="table table-bordered table-hover"> --}}
                 <table id="chapterlist"  class="table table-sm table-hover">
               <thead>
 			    <tr>
+                    <th>Details</th>
                     <th>Letter</th>
-                    <th>Notes</th>
                     <th>Conference</th>
                     <th>State</th>
                     <th>Name</th>
@@ -46,16 +61,17 @@
                 <tbody>
                 @foreach($chapterList as $list)
                   <tr>
+                    <td class="text-center align-middle">
+                        <a href="{{ url("/chapterirsedit/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                    </td>
                         <td class="text-center align-middle">
                             @if($list->ein_letter_path != null)
-                                <a href="{{ $list->ein_letter_path }}" target="_blank"><i class="fas fa-eye"></i></a>
+                                <a href="{{ $list->ein_letter_path }}" target="_blank"><i class="far fa-file-pdf"></i></a>
                             @else
                                 &nbsp; <!-- Placeholder to ensure the cell isn't completely empty -->
                             @endif
                         </td>
-                        <td class="text-center align-middle">
-                            <a href="{{ url("/international/einstatusview/{$list->id}") }}"><i class="fas fa-pencil-alt"></i></a>
-                        </td>
+
                         <td>
                         @if ($list->reg != "None")
                                 {{ $list->conf }} / {{ $list->reg }}
@@ -100,5 +116,18 @@
    @endsection
 
 @section('customscript')
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+    const currentPath = window.location.pathname;
 
+    dropdownItems.forEach(item => {
+        const itemPath = new URL(item.href).pathname;
+
+        if (itemPath === currentPath) {
+            item.classList.add("active");
+        }
+    });
+});
+</script>
 @endsection

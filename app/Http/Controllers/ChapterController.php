@@ -115,307 +115,6 @@ class ChapterController extends Controller
         return view('chapters.chaplist')->with($data);
     }
 
-    /**
-     * Add New chapter list (View)
-     */
-    public function showChapterNew(Request $request)
-    {
-        $corDetails = User::find($request->user()->id)->Coordinators;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-
-        $stateArr = DB::table('state')
-            ->select('state.*')
-            ->orderBy('id')
-            ->get();
-        $countryArr = DB::table('country')
-            ->select('country.*')
-            ->orderBy('id')
-            ->get();
-        $regionList = DB::table('region')
-            ->select('id', 'long_name')
-            ->where('conference_id', '=', $corConfId)
-            ->orderBy('long_name')
-            ->get();
-        $primaryCoordinatorList = DB::table('coordinators as cd')
-            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
-            ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
-            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
-            ->where('cd.conference_id', '=', $corConfId)
-            ->where('cd.position_id', '<=', '7')
-            ->where('cd.position_id', '>=', '1')
-            ->where('cd.is_active', '=', '1')
-            ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name')
-            ->get();
-
-        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
-        $currentMonth = date('m');
-        $firstCharacter = $currentMonth[0];
-        if ($firstCharacter == '0') {
-            $currentMonth = $currentMonth[1];
-        }
-
-        $currentYear = date('Y');
-        $data = ['currentMonth' => $currentMonth, 'currentYear' => $currentYear, 'regionList' => $regionList, 'primaryCoordinatorList' => $primaryCoordinatorList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, 'foundedMonth' => $foundedMonth];
-
-        return view('chapters.chapnew')->with($data);
-    }
-
-    /**
-     * Add New chapter list (Store)
-     */
-    public function updateChapterNew(Request $request): RedirectResponse
-    {
-        $corDetails = User::find($request->user()->id)->Coordinators;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $corlayerId = $corDetails['layer_id'];
-        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
-        $input = $request->all();
-
-        DB::beginTransaction();
-        try {
-            $chapterId = DB::table('chapters')->insertGetId(
-                ['conference' => $corConfId,
-                    'name' => $input['ch_name'],
-                    'state' => $input['ch_state'],
-                    'country' => $input['ch_country'],
-                    'region' => $input['ch_region'],
-                    'ein' => $input['ch_ein'],
-                    'status' => $input['ch_status'],
-                    'territory' => $input['ch_boundariesterry'],
-                    'additional_info' => $input['ch_addinfo'],
-                    'email' => $input['ch_email'],
-                    'inquiries_contact' => $input['ch_inqemailcontact'],
-                    'inquiries_note' => $input['ch_inqnote'],
-                    'po_box' => $input['ch_pobox'],
-                    'notes' => $input['ch_notes'],
-                    'start_month_id' => $input['ch_founddate'],
-                    'start_year' => $input['ch_foundyear'],
-                    'next_renewal_year' => $input['ch_foundyear'] + 1,
-                    'primary_coordinator_id' => $input['ch_primarycor'],
-                    'founders_name' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
-                    'last_updated_by' => $lastUpdatedBy,
-                    'last_updated_date' => date('Y-m-d H:i:s'),
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'is_active' => 1]
-            );
-
-            $financial = DB::table('financial_report')->insert(
-                ['chapter_id' => $chapterId]
-            );
-
-            //President Info
-            if (isset($input['ch_pre_fname']) && isset($input['ch_pre_lname']) && isset($input['ch_pre_email'])) {
-                $userId = DB::table('users')->insertGetId(
-                    ['first_name' => $input['ch_pre_fname'],
-                        'last_name' => $input['ch_pre_lname'],
-                        'email' => $input['ch_pre_email'],
-                        'password' => Hash::make('TempPass4You'),
-                        'user_type' => 'board',
-                        'is_active' => 1]
-                );
-
-                $boardId = DB::table('boards')->insertGetId(
-                    ['user_id' => $userId,
-                        'first_name' => $input['ch_pre_fname'],
-                        'last_name' => $input['ch_pre_lname'],
-                        'email' => $input['ch_pre_email'],
-                        'board_position_id' => 1,
-                        'chapter_id' => $chapterId,
-                        'street_address' => $input['ch_pre_street'],
-                        'city' => $input['ch_pre_city'],
-                        'state' => $input['ch_pre_state'],
-                        'zip' => $input['ch_pre_zip'],
-                        'country' => 'USA',
-                        'phone' => $input['ch_pre_phone'],
-                        'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => date('Y-m-d H:i:s'),
-                        'is_active' => 1]
-                );
-            }
-
-            //AVP Info
-            if (isset($input['ch_avp_fname']) && isset($input['ch_avp_lname']) && isset($input['ch_avp_email'])) {
-                $userId = DB::table('users')->insertGetId(
-                    ['first_name' => $input['ch_avp_fname'],
-                        'last_name' => $input['ch_avp_lname'],
-                        'email' => $input['required|ch_avp_email'],
-                        'password' => Hash::make('TempPass4You'),
-                        'user_type' => 'board',
-                        'is_active' => 1]
-                );
-
-                $boardId = DB::table('boards')->insertGetId(
-                    ['user_id' => $userId,
-                        'first_name' => $input['ch_avp_fname'],
-                        'last_name' => $input['ch_avp_lname'],
-                        'email' => $input['required|ch_avp_email'],
-                        'board_position_id' => 2,
-                        'chapter_id' => $chapterId,
-                        'street_address' => $input['ch_avp_street'],
-                        'city' => $input['ch_avp_city'],
-                        'state' => $input['ch_avp_state'],
-                        'zip' => $input['ch_avp_zip'],
-                        'country' => 'USA',
-                        'phone' => $input['ch_avp_phone'],
-                        'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => date('Y-m-d H:i:s'),
-                        'is_active' => 1]
-                );
-            }
-            //MVP Info
-            if (isset($input['ch_mvp_fname']) && isset($input['ch_mvp_lname']) && isset($input['ch_mvp_email'])) {
-                $userId = DB::table('users')->insertGetId(
-                    ['first_name' => $input['ch_mvp_fname'],
-                        'last_name' => $input['ch_mvp_lname'],
-                        'email' => $input['ch_mvp_email'],
-                        'password' => Hash::make('TempPass4You'),
-                        'user_type' => 'board',
-                        'is_active' => 1]
-                );
-
-                $boardId = DB::table('boards')->insertGetId(
-                    ['user_id' => $userId,
-                        'first_name' => $input['ch_mvp_fname'],
-                        'last_name' => $input['ch_mvp_lname'],
-                        'email' => $input['ch_mvp_email'],
-                        'board_position_id' => 3,
-                        'chapter_id' => $chapterId,
-                        'street_address' => $input['ch_mvp_street'],
-                        'city' => $input['ch_mvp_city'],
-                        'state' => $input['ch_mvp_state'],
-                        'zip' => $input['ch_mvp_zip'],
-                        'country' => 'USA',
-                        'phone' => $input['ch_mvp_phone'],
-                        'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => date('Y-m-d H:i:s'),
-                        'is_active' => 1]
-                );
-            }
-            //TREASURER Info
-            if (isset($input['ch_trs_fname']) && isset($input['ch_trs_lname']) && isset($input['ch_trs_email'])) {
-                $userId = DB::table('users')->insertGetId(
-                    ['first_name' => $input['ch_trs_fname'],
-                        'last_name' => $input['ch_trs_lname'],
-                        'email' => $input['ch_trs_email'],
-                        'password' => Hash::make('TempPass4You'),
-                        'user_type' => 'board',
-                        'is_active' => 1]
-                );
-
-                $boardId = DB::table('boards')->insertGetId(
-                    ['user_id' => $userId,
-                        'first_name' => $input['ch_trs_fname'],
-                        'last_name' => $input['ch_trs_lname'],
-                        'email' => $input['ch_trs_email'],
-                        'board_position_id' => 4,
-                        'chapter_id' => $chapterId,
-                        'street_address' => $input['ch_trs_street'],
-                        'city' => $input['ch_trs_city'],
-                        'state' => $input['ch_trs_state'],
-                        'zip' => $input['ch_trs_zip'],
-                        'country' => 'USA',
-                        'phone' => $input['ch_trs_phone'],
-                        'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => date('Y-m-d H:i:s'),
-                        'is_active' => 1]
-                );
-            }
-            //Secretary Info
-            if (isset($input['ch_sec_fname']) && isset($input['ch_sec_lname']) && isset($input['ch_sec_email'])) {
-                $userId = DB::table('users')->insertGetId(
-                    ['first_name' => $input['ch_sec_fname'],
-                        'last_name' => $input['ch_sec_lname'],
-                        'email' => $input['ch_sec_email'],
-                        'password' => Hash::make('TempPass4You'),
-                        'user_type' => 'board',
-                        'is_active' => 1]
-                );
-
-                $boardId = DB::table('boards')->insertGetId(
-                    ['user_id' => $userId,
-                        'first_name' => $input['ch_sec_fname'],
-                        'last_name' => $input['ch_sec_lname'],
-                        'email' => $input['ch_sec_email'],
-                        'board_position_id' => 5,
-                        'chapter_id' => $chapterId,
-                        'street_address' => $input['ch_sec_street'],
-                        'city' => $input['ch_sec_city'],
-                        'state' => $input['ch_sec_state'],
-                        'zip' => $input['ch_sec_zip'],
-                        'country' => 'USA',
-                        'phone' => $input['ch_sec_phone'],
-                        'last_updated_by' => $lastUpdatedBy,
-                        'last_updated_date' => date('Y-m-d H:i:s'),
-                        'is_active' => 1]
-                );
-
-            }
-
-            $cordInfo = DB::table('coordinators')
-                ->select('first_name', 'last_name', 'email')
-                ->where('is_active', '=', '1')
-                ->where('id', $input['ch_primarycor'])
-                ->get();
-            $state = DB::table('state')
-                ->select('state_short_name')
-                ->where('id', $input['ch_state'])
-                ->get();
-
-            $mailData = [
-                'chapter_name' => $input['ch_name'],
-                'chapter_state' => $state[0]->state_short_name,
-                'cor_fname' => $cordInfo[0]->first_name,
-                'cor_lname' => $cordInfo[0]->last_name,
-                'updated_by' => date('Y-m-d H:i:s'),
-                'email' => $input['ch_email'],
-                'pfirst' => $input['ch_pre_fname'],
-                'plast' => $input['ch_pre_lname'],
-                'pemail' => $input['ch_pre_email'],
-                'afirst' => $input['ch_avp_fname'],
-                'alast' => $input['ch_avp_lname'],
-                'aemail' => $input['ch_avp_email'],
-                'mfirst' => $input['ch_mvp_fname'],
-                'mlast' => $input['ch_mvp_lname'],
-                'memail' => $input['ch_mvp_email'],
-                'tfirst' => $input['ch_trs_fname'],
-                'tlast' => $input['ch_trs_lname'],
-                'temail' => $input['ch_trs_email'],
-                'sfirst' => $input['ch_sec_fname'],
-                'slast' => $input['ch_sec_lname'],
-                'semail' => $input['ch_sec_email'],
-                'conf' => $corConfId,
-            ];
-
-            //Primary Coordinator Notification//
-            $to_email = $cordInfo[0]->email;
-
-            Mail::to($to_email)
-                ->queue(new ChapterAddPrimaryCoor($mailData));
-
-            //List Admin Notification//
-            $to_email2 = 'listadmin@momsclub.org';
-
-            Mail::to($to_email2)
-                ->queue(new ChapterAddListAdmin($mailData));
-
-            DB::commit();
-        } catch (\Exception $e) {
-            // Rollback Transaction
-            DB::rollback();
-            // Log the error
-            Log::error($e);
-
-            return redirect()->to('/chapter/chapterlist')->with('fail', 'Something went wrong, Please try again...');
-        }
-
-        return redirect()->to('/chapter/chapterlist')->with('success', 'Chapter created successfully');
-    }
-
     public function viewChapterDetails(Request $request, $id)
     {
 
@@ -1152,6 +851,316 @@ public function updateEINNumber(Request $request)
 
     }
 
+    /**
+     *Add New Chapter
+     */
+    public function editChapterNew(Request $request)
+    {
+        $user = User::find($request->user()->id);
+            $userId = $user->id;
+
+            // $corDetails = User::find($request->user()->id)->Coordinators;
+            $corDetails = DB::table('coordinators as cd')
+                ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
+                ->where('cd.user_id', '=', $userId)
+                ->get();
+
+            $coordId = $corDetails[0]->id;
+            $corConfId = $corDetails[0]->conference_id;
+            $corRegId = $corDetails[0]->region_id;
+            $positionid = $corDetails[0]->position_id;
+
+             $primaryCoordinatorList = DB::table('chapters as ch')
+                ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
+                ->join('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
+                ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
+                ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
+                ->where('cd.conference_id', '=', $corConfId)
+                ->where('cd.position_id', '<=', '7')
+                ->where('cd.position_id', '>=', '1')
+                ->where('cd.is_active', '=', '1')
+                ->groupBy('cd.id', 'cd.first_name', 'cd.last_name', 'cp.short_title', 'pos2.short_title')
+                ->orderBy('cd.position_id')
+                ->orderBy('cd.first_name')
+                ->get();
+
+                $stateArr = DB::table('state')
+                ->select('state.*')
+                ->orderBy('id')
+                ->get();
+
+                $regionList = DB::table('region')
+                ->select('id', 'long_name')
+                ->where('conference_id', '=', $corConfId)
+                ->orderBy('long_name')
+                ->get();
+
+        $webStatusArr = ['0' => 'Website Not Linked', '1' => 'Website Linked', '2' => 'Add Link Requested', '3' => 'Do Not Link'];
+        $chapterStatusArr = ['1' => 'Operating OK', '4' => 'On Hold Do not Refer', '5' => 'Probation', '6' => 'Probation Do Not Refer'];
+
+        $data = ['positionid' => $positionid, 'coordId' => $coordId, 'regionList' => $regionList,
+              'webStatusArr' => $webStatusArr, 'chapterStatusArr' => $chapterStatusArr,
+            'primaryCoordinatorList' => $primaryCoordinatorList, 'corConfId' => $corConfId, 'stateArr' => $stateArr, ];
+
+        return view('chapters.editnew')->with($data);
+    }
+
+    public function updateChapterNew(Request $request): RedirectResponse
+    {
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
+        $corConfId = $corDetails['conference_id'];
+        $corRegId = $corDetails['region_id'];
+        $corlayerId = $corDetails['layer_id'];
+        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+        $input = $request->all();
+
+        $conference = $corConfId;
+        $country = 'USA';
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+
+        DB::beginTransaction();
+        try {
+            $chapterId = DB::table('chapters')->insertGetId(
+                [
+                    'name' => $input['ch_name'],
+                    'state' => $input['ch_state'],
+                    'country' => $country,
+                    'conference' => $conference,
+                    'region' => $input['ch_region'],
+                    'ein' => $input['ch_ein'],
+                    'status' => $input['ch_status'],
+                    'territory' => $input['ch_boundariesterry'],
+                    // 'additional_info' => $input['ch_addinfo'],
+                    // 'email' => $input['ch_email'],
+                    'inquiries_contact' => $input['ch_inqemailcontact'],
+                    // 'inquiries_note' => $input['ch_inqnote'],
+                    // 'po_box' => $input['ch_pobox'],
+                    // 'notes' => $input['ch_notes'],
+                    'start_month_id' => $currentMonth,
+                    'start_year' => $currentYear,
+                    'next_renewal_year' => $currentYear + 1,
+                    'primary_coordinator_id' => $input['ch_primarycor'],
+                    'founders_name' => $input['ch_pre_fname'].' '.$input['ch_pre_lname'],
+                    'last_updated_by' => $lastUpdatedBy,
+                    'last_updated_date' => date('Y-m-d H:i:s'),
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'is_active' => 1]
+            );
+
+            $financial = DB::table('financial_report')->insert(
+                ['chapter_id' => $chapterId]
+            );
+
+            //President Info
+            if (isset($input['ch_pre_fname']) && isset($input['ch_pre_lname']) && isset($input['ch_pre_email'])) {
+                $userId = DB::table('users')->insertGetId(
+                    ['first_name' => $input['ch_pre_fname'],
+                        'last_name' => $input['ch_pre_lname'],
+                        'email' => $input['ch_pre_email'],
+                        'password' => Hash::make('TempPass4You'),
+                        'user_type' => 'board',
+                        'is_active' => 1]
+                );
+
+                $boardId = DB::table('boards')->insertGetId(
+                    ['user_id' => $userId,
+                        'first_name' => $input['ch_pre_fname'],
+                        'last_name' => $input['ch_pre_lname'],
+                        'email' => $input['ch_pre_email'],
+                        'board_position_id' => 1,
+                        'chapter_id' => $chapterId,
+                        'street_address' => $input['ch_pre_street'],
+                        'city' => $input['ch_pre_city'],
+                        'state' => $input['ch_pre_state'],
+                        'zip' => $input['ch_pre_zip'],
+                        'country' => $country,
+                        'phone' => $input['ch_pre_phone'],
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => date('Y-m-d H:i:s'),
+                        'is_active' => 1]
+                );
+            }
+
+            //AVP Info
+            if (isset($input['ch_avp_fname']) && isset($input['ch_avp_lname']) && isset($input['ch_avp_email'])) {
+                $userId = DB::table('users')->insertGetId(
+                    ['first_name' => $input['ch_avp_fname'],
+                        'last_name' => $input['ch_avp_lname'],
+                        'email' => $input['required|ch_avp_email'],
+                        'password' => Hash::make('TempPass4You'),
+                        'user_type' => 'board',
+                        'is_active' => 1]
+                );
+
+                $boardId = DB::table('boards')->insertGetId(
+                    ['user_id' => $userId,
+                        'first_name' => $input['ch_avp_fname'],
+                        'last_name' => $input['ch_avp_lname'],
+                        'email' => $input['required|ch_avp_email'],
+                        'board_position_id' => 2,
+                        'chapter_id' => $chapterId,
+                        'street_address' => $input['ch_avp_street'],
+                        'city' => $input['ch_avp_city'],
+                        'state' => $input['ch_avp_state'],
+                        'zip' => $input['ch_avp_zip'],
+                        'country' => $country,
+                        'phone' => $input['ch_avp_phone'],
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => date('Y-m-d H:i:s'),
+                        'is_active' => 1]
+                );
+            }
+            //MVP Info
+            if (isset($input['ch_mvp_fname']) && isset($input['ch_mvp_lname']) && isset($input['ch_mvp_email'])) {
+                $userId = DB::table('users')->insertGetId(
+                    ['first_name' => $input['ch_mvp_fname'],
+                        'last_name' => $input['ch_mvp_lname'],
+                        'email' => $input['ch_mvp_email'],
+                        'password' => Hash::make('TempPass4You'),
+                        'user_type' => 'board',
+                        'is_active' => 1]
+                );
+
+                $boardId = DB::table('boards')->insertGetId(
+                    ['user_id' => $userId,
+                        'first_name' => $input['ch_mvp_fname'],
+                        'last_name' => $input['ch_mvp_lname'],
+                        'email' => $input['ch_mvp_email'],
+                        'board_position_id' => 3,
+                        'chapter_id' => $chapterId,
+                        'street_address' => $input['ch_mvp_street'],
+                        'city' => $input['ch_mvp_city'],
+                        'state' => $input['ch_mvp_state'],
+                        'zip' => $input['ch_mvp_zip'],
+                        'country' => $country,
+                        'phone' => $input['ch_mvp_phone'],
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => date('Y-m-d H:i:s'),
+                        'is_active' => 1]
+                );
+            }
+            //TREASURER Info
+            if (isset($input['ch_trs_fname']) && isset($input['ch_trs_lname']) && isset($input['ch_trs_email'])) {
+                $userId = DB::table('users')->insertGetId(
+                    ['first_name' => $input['ch_trs_fname'],
+                        'last_name' => $input['ch_trs_lname'],
+                        'email' => $input['ch_trs_email'],
+                        'password' => Hash::make('TempPass4You'),
+                        'user_type' => 'board',
+                        'is_active' => 1]
+                );
+
+                $boardId = DB::table('boards')->insertGetId(
+                    ['user_id' => $userId,
+                        'first_name' => $input['ch_trs_fname'],
+                        'last_name' => $input['ch_trs_lname'],
+                        'email' => $input['ch_trs_email'],
+                        'board_position_id' => 4,
+                        'chapter_id' => $chapterId,
+                        'street_address' => $input['ch_trs_street'],
+                        'city' => $input['ch_trs_city'],
+                        'state' => $input['ch_trs_state'],
+                        'zip' => $input['ch_trs_zip'],
+                        'country' => $country,
+                        'phone' => $input['ch_trs_phone'],
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => date('Y-m-d H:i:s'),
+                        'is_active' => 1]
+                );
+            }
+            //Secretary Info
+            if (isset($input['ch_sec_fname']) && isset($input['ch_sec_lname']) && isset($input['ch_sec_email'])) {
+                $userId = DB::table('users')->insertGetId(
+                    ['first_name' => $input['ch_sec_fname'],
+                        'last_name' => $input['ch_sec_lname'],
+                        'email' => $input['ch_sec_email'],
+                        'password' => Hash::make('TempPass4You'),
+                        'user_type' => 'board',
+                        'is_active' => 1]
+                );
+
+                $boardId = DB::table('boards')->insertGetId(
+                    ['user_id' => $userId,
+                        'first_name' => $input['ch_sec_fname'],
+                        'last_name' => $input['ch_sec_lname'],
+                        'email' => $input['ch_sec_email'],
+                        'board_position_id' => 5,
+                        'chapter_id' => $chapterId,
+                        'street_address' => $input['ch_sec_street'],
+                        'city' => $input['ch_sec_city'],
+                        'state' => $input['ch_sec_state'],
+                        'zip' => $input['ch_sec_zip'],
+                        'country' => $country,
+                        'phone' => $input['ch_sec_phone'],
+                        'last_updated_by' => $lastUpdatedBy,
+                        'last_updated_date' => date('Y-m-d H:i:s'),
+                        'is_active' => 1]
+                );
+
+            }
+
+            $cordInfo = DB::table('coordinators')
+                ->select('first_name', 'last_name', 'email')
+                ->where('is_active', '=', '1')
+                ->where('id', $input['ch_primarycor'])
+                ->get();
+            $state = DB::table('state')
+                ->select('state_short_name')
+                ->where('id', $input['ch_state'])
+                ->get();
+
+            $mailData = [
+                'chapter_name' => $input['ch_name'],
+                'chapter_state' => $state[0]->state_short_name,
+                'cor_fname' => $cordInfo[0]->first_name,
+                'cor_lname' => $cordInfo[0]->last_name,
+                'updated_by' => date('Y-m-d H:i:s'),
+                // 'email' => $input['ch_email'],
+                'pfirst' => $input['ch_pre_fname'],
+                'plast' => $input['ch_pre_lname'],
+                'pemail' => $input['ch_pre_email'],
+                'afirst' => $input['ch_avp_fname'],
+                'alast' => $input['ch_avp_lname'],
+                'aemail' => $input['ch_avp_email'],
+                'mfirst' => $input['ch_mvp_fname'],
+                'mlast' => $input['ch_mvp_lname'],
+                'memail' => $input['ch_mvp_email'],
+                'tfirst' => $input['ch_trs_fname'],
+                'tlast' => $input['ch_trs_lname'],
+                'temail' => $input['ch_trs_email'],
+                'sfirst' => $input['ch_sec_fname'],
+                'slast' => $input['ch_sec_lname'],
+                'semail' => $input['ch_sec_email'],
+                'conf' => $conference,
+            ];
+
+            //Primary Coordinator Notification//
+            $to_email = $cordInfo[0]->email;
+
+            Mail::to($to_email)
+                ->queue(new ChapterAddPrimaryCoor($mailData));
+
+            //List Admin Notification//
+            $to_email2 = 'listadmin@momsclub.org';
+
+            Mail::to($to_email2)
+                ->queue(new ChapterAddListAdmin($mailData));
+
+            DB::commit();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            DB::rollback();
+            // Log the error
+            Log::error($e);
+
+            return redirect()->to('/chapter/chapterlist')->with('fail', 'Something went wrong, Please try again...');
+        }
+
+        return redirect()->to('/chapter/chapterlist')->with('success', 'Chapter created successfully');
+    }
+
 /**
  *Edit Chapter Information
  */
@@ -1271,6 +1280,7 @@ public function editChapterDetails(Request $request, $id)
         DB::beginTransaction();
         try {
             $chapter->name = $request->filled('ch_name') ? $request->input('ch_name') : $request->input('ch_hid_name');
+            $chapter->notes = $request->input('ch_einnotes');
             $chapter->former_name = $request->filled('ch_preknown') ? $request->input('ch_preknown') : $request->input('ch_hid_preknown');
             $chapter->sistered_by = $request->filled('ch_sistered') ? $request->input('ch_sistered') : $request->input('ch_hid_sistered');
             $chapter->territory = $request->filled('ch_boundariesterry') ? $request->input('ch_boundariesterry') : $request->input('ch_hid_boundariesterry');
@@ -2149,6 +2159,124 @@ public function editChapterDetails(Request $request, $id)
         }
 
         return redirect()->route('chapters.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
+}
+
+/**
+ *Edit Chapter EIN Notes
+ */
+public function editChapterIRS(Request $request, $id)
+{
+    $user = User::find($request->user()->id);
+        $userId = $user->id;
+
+        // $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = DB::table('coordinators as cd')
+            ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
+            ->where('cd.user_id', '=', $userId)
+            ->get();
+
+        $coordId = $corDetails[0]->id;
+        $corConfId = $corDetails[0]->conference_id;
+        $corRegId = $corDetails[0]->region_id;
+        $positionid = $corDetails[0]->position_id;
+
+        $financial_report_array = FinancialReport::find($id);
+
+
+    $chapterList = DB::table('chapters as ch')
+        ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id',
+            'ct.name as countryname', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth')
+        ->join('country as ct', 'ch.country', '=', 'ct.short_name')
+        ->join('state as st', 'ch.state', '=', 'st.id')
+        ->join('conference as cf', 'ch.conference', '=', 'cf.id')
+        ->join('region as rg', 'ch.region', '=', 'rg.id')
+        ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
+        ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
+        // ->where('ch.is_active', '=', '1')
+        ->where('ch.id', '=', $id)
+        ->where('bd.board_position_id', '=', '1')
+        ->get();
+
+        $chConfId = $chapterList[0]->conference;
+        $chRegId = $chapterList[0]->region;
+        $chPCid = $chapterList[0]->primary_coordinator_id;
+
+         // Load Active Status for Active/Zapped Visibility
+         $chIsActive = $chapterList[0]->is_active;
+
+         $primaryCoordinatorList = DB::table('chapters as ch')
+            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
+            ->join('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
+            ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
+            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
+            ->where(function($query) use ($chRegId, $chConfId) {
+                $query->where('cd.region_id', '=', $chRegId)
+                    ->orWhere(function($subQuery) use ($chConfId) {
+                        $subQuery->where('cd.region_id', '=', 0)
+                            ->where('cd.conference_id', $chConfId);
+                    });
+            })
+            ->where('cd.position_id', '<=', '7')
+            ->where('cd.position_id', '>=', '1')
+            ->where('cd.is_active', '=', '1')
+            ->groupBy('cd.id', 'cd.first_name', 'cd.last_name', 'cp.short_title', 'pos2.short_title')
+            ->orderBy('cd.position_id')
+            ->orderBy('cd.first_name')
+            ->get();
+
+    $chConfId = $chapterList[0]->conference;
+    $chRegId = $chapterList[0]->region;
+    $chPCid = $chapterList[0]->primary_coordinator_id;
+
+    $webStatusArr = ['0' => 'Website Not Linked', '1' => 'Website Linked', '2' => 'Add Link Requested', '3' => 'Do Not Link'];
+    $chapterStatusArr = ['1' => 'Operating OK', '4' => 'On Hold Do not Refer', '5' => 'Probation', '6' => 'Probation Do Not Refer'];
+
+    $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'financial_report_array' => $financial_report_array,
+         'chapterList' => $chapterList, 'webStatusArr' => $webStatusArr, 'chapterStatusArr' => $chapterStatusArr,
+        'primaryCoordinatorList' => $primaryCoordinatorList, 'corConfId' => $corConfId, 'chConfId' => $chConfId, 'chPCid' => $chPCid];
+
+    return view('chapters.editirs')->with($data);
+}
+
+    /**
+     *Update Chapter EIN Notes
+     */
+    public function updateChapterIRS(Request $request, $id): RedirectResponse
+    {
+        $chapterId = $id;
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corId = $corDetails['id'];
+        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+
+        $chapter = Chapter::find($chapterId);
+        DB::beginTransaction();
+        try {
+            $chapter->ein_letter = $request->has('ch_ein_letter') ? 1 : 0;
+            $chapter->ein_notes = $request->input('ch_einnotes');
+            $chapter->last_updated_by = $lastUpdatedBy;
+            $chapter->last_updated_date = date('Y-m-d H:i:s');
+
+            $chapter->save();
+
+            $financial = FinancialReport::find($chapterId);
+            $financial->check_current_990N_verified_IRS = $request->has('check_current_990N_verified_IRS') ? 1 : 0;
+            $financial->check_current_990N_notes = $request->input('check_current_990N_notes');
+
+            $financial->save();
+
+            DB::commit();
+        } catch (\Exception $e) {
+            // Rollback Transaction
+            echo $e->getMessage();
+            exit();
+            DB::rollback();
+            // Log the error
+            Log::error($e);
+
+            return redirect()->route('chapters.editirs', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
+        }
+
+        return redirect()->route('chapters.editirs', ['id' => $id])->with('success', 'Chapter IRS Information has been updated');
 }
 
 /**

@@ -106,7 +106,7 @@
                 </div>
                 <div class="card-body text-center">
                     <?php if($regionalCoordinatorCondition){ ?>
-                        <a class="btn bg-gradient-primary" href="{{ route('chapters.chapnew') }}"><i class="fas fa-plus" ></i>&nbsp;&nbsp;&nbsp;Add New Chapter</a>
+                        <a class="btn bg-gradient-primary" href="{{ route('chapters.editnew') }}"><i class="fas fa-plus" ></i>&nbsp;&nbsp;&nbsp;Add New Chapter</a>
                         <?php }?>
                         <?php
                         if($checkBoxStatus){ ?>

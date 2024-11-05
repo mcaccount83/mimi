@@ -46,8 +46,7 @@
               <thead>
 			    <tr>
 			      <th>Details</th>
-			      <th>Conference</th>
-                  <th>Region</th>
+			      <th>Conf/Reg</th>
 				  <th>First Name</th>
                   <th>Last Name</th>
                   <th>Retired Date</th>
@@ -58,8 +57,13 @@
                 @foreach($intCoordinatorList as $list)
                   <tr>
                         <td class="text-center align-middle"><a href="{{ url("/coorddetails/{$list->cor_id}") }}"><i class="fas fa-eye"></i></a></td>
-                        <td>{{ $list->cor_cid }}</td>
-                        <td>{{ $list->reg_name }}</td>
+                        <td>
+                            @if ($list->reg != "None")
+                            {{ $list->conf }} / {{ $list->reg }}
+                        @else
+                            {{ $list->conf }}
+                        @endif
+                        </td>
                         <td>{{ $list->cor_fname }}</td>
                         <td>{{ $list->cor_lname }}</td>
                         <td><span class="date-mask">{{ $list->zapdate }}</span></td>

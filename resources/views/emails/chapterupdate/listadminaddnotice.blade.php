@@ -13,14 +13,6 @@ International MOMS Club
         <tbody>
             <tr>
                 <td></td>
-                <td colspan="2" style="background-color: #D0D0D0;"><center><strong>Chapter Information</strong></center></td>
-            </tr>
-            <tr>
-                <td>Chapter Email</td>
-                <td>{{$mailData['email']}}</td>
-            </tr>
-            <tr>
-                <td></td>
                 <td colspan="2" style="background-color: #D0D0D0;"><center><b>Board Information</b></center></td>
             </tr>
             <tr>

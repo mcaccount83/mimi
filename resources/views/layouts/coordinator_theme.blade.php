@@ -268,9 +268,9 @@
                             </li>
                         @endif
 
-                        @if ($einCondition || $adminReportCondition)
+                        @if ($einCondition)
                         <li class="nav-item">
-                            <a href="{{ route('international.inteinstatus') }}" class="nav-link {{ Request::is('international/einstatus') ? 'active' : '' }}">
+                            <a href="{{ route('international.inteinstatus') }}" class="nav-link {{ Request::is('chapterreports/inteinstatus') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-university"></i>
                                 <p>International EIN Status</p>
                             </a>
