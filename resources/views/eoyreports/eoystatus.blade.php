@@ -57,47 +57,40 @@
                 </thead>
                 <tbody>
                     @foreach($chapterList as $list)
-                    @php
-                        $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
-                        $emailListChap = $emailDetails['emailListChapString'];
-                        $emailListCoord = $emailDetails['emailListCoordString'];
+                        @php
+                            $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
+                            $emailListChap = $emailDetails['emailListChapString'];
+                            $emailListCoord = $emailDetails['emailListCoordString'];
 
-                        $boardSubmitted = $emailDetails['boardSubmitted'] ?? null;
-                        $reportReceived = $emailDetails['reportReceived'] ?? null;
-                        $einLetter = $emailDetails['einLetter'] ?? null;
+                            $boardSubmitted = $emailDetails['boardSubmitted'] ?? null;
+                            $reportReceived = $emailDetails['reportReceived'] ?? null;
+                            $einLetter = $emailDetails['einLetter'] ?? null;
 
-                        // Define the message body with a link
-                        $mimiUrl = 'https://example.com/mimi';
-                        $mailMessage = "At this time, we have not received one or more of your chapter's End of Year Reports. They are now considered PAST DUE.\n\n";
-                        $mailMessage .= "The following items are missing:<ul>";
-                            if ($boardSubmitted === null || $boardSubmitted == 0) {
-                                $mailMessage .= "<li>Board Election Report</li>";
-                            }
-                            if ($reportReceived === null || $reportReceived == 0) {
-                                $mailMessage .= "<li>Financial Report</li>";
-                            }
-                            if ($einLetter === null || $einLetter == 0) {
-                                $mailMessage .= "<li>Copy of EIN Letter</li>";
-                            }
-                        $mailMessage .= "</ul>";
-                        $mailMessage .= "<br>Please submit these reports as soon as possible to ensure compliance and access to resources. The reports can be accessed by logging into your MIMI account: $mimiUrl.";
+                            $mimiUrl = 'https://example.com/mimi';
+                            $mailMessage = "At this time, we have not received one or more of your chapter's End of Year Reports. They are now considered PAST DUE.\n\n";
+                            $mailMessage .= "The following items are missing:\n";
+                                if (is_null($list->new_board_submitted) || $list->new_board_submitted == 0) {
+                                    $mailMessage .= "- Board Election Report\n";
+                                }
+                                if (is_null($list->financial_report_received) || $list->financial_report_received == 0) {
+                                    $mailMessage .= "- Financial Report\n";
+                                }
+                                if (is_null($einLetter) || $einLetter == 0) { // `einLetter` is still used if its value directly reflects the EIN letter status
+                                    $mailMessage .= "- Copy of EIN Letter\n";
+                                }
+                            $mailMessage .= "\nPlease submit these reports as soon as possible to ensure compliance and access to resources. The reports can be accessed by logging into your MIMI account: $mimiUrl.\n";
+                        @endphp
 
-                        // URL-encode the message for use in the `mailto` link
-                        $encodedMailMessage = urlencode($mailMessage);
-                    @endphp
                         <tr>
-                            {{-- <tr id="chapter-{{ $list->id }}"> --}}
-                                <td class="text-center align-middle">
-                                    @if($regionalCoordinatorCondition)
-                                        {{-- @if($list->new_board_active != '1') --}}
-                                            <a href="{{ url("/eoydetails/{$list->id}") }}"><i class="fas fa-eye"></i></a>
-                                        {{-- @endif --}}
-                                    @endif
-                                </td>
                             <td class="text-center align-middle">
-                                    @if ($list->new_board_submitted == null || $list->financial_report_received == null || $list->new_board_submitted == 0 || $list->financial_report_received == 0)
-                                        <a href="mailto:{{ urlencode($emailListChap) }}&cc={{ urlencode($emailListCoord) }}&subject={{ urlencode('EOY Status Report | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a></td>
-                                    @endif
+                                @if($regionalCoordinatorCondition)
+                                    <a href="{{ url("/eoydetails/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                                @endif
+                            </td>
+                            <td class="text-center align-middle">
+                                @if ($list->new_board_submitted == null || $list->financial_report_received == null || $list->new_board_submitted == 0 || $list->financial_report_received == 0)
+                                    <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('EOY Status Report | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ rawurlencode($mailMessage) }}"><i class="far fa-envelope"></i></a>
+                                @endif
                             </td>
                             <td>{{ $list->state }}</td>
                             <td>{{ $list->name }}</td>

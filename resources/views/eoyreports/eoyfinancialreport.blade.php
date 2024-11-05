@@ -72,9 +72,6 @@
                         $mailMessage = "Don't forget to complete the Financial Report for your chapter! This report is available now and is due no later than July 10th at 11:59pm.\n\n";
                         $mailMessage .= "After receiving your completed reports, your Coordinator Team will review the report and reach out if they have any questions.\n\n";
                         $mailMessage .= "The Financial Report (as well as the Board Election Report) can be accessed by logging into your MIMI account: $mimiUrl and selecting the buttons at the top of your screen.";
-
-                        // URL-encode the message
-                        $encodedMailMessage = urlencode($mailMessage);
                     @endphp
                     <tr>
                         <td class="text-center align-middle">
@@ -88,9 +85,7 @@
                         <!-- Email link to be dynamically populated via AJAX -->
                         <td class="text-center align-middle">
                             @if($list->financial_report_received == null || $list->financial_report_received == 0)
-                            <a href="mailto:{{ urlencode($emailListChap) }}&cc={{ urlencode($emailListCoord) }}&subject={{ urlencode('Financial Report Reminder | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a></td>
-
-                                {{-- <a href="mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=Financial Report Reminder | MOMS Club of {{ $list->name }}, {{ $list->state }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a> --}}
+                            <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Financial Report Reminder | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ rawurlencode($mailMessage) }}"><i class="far fa-envelope"></i></a>
                             @endif
                         </td>
                         <td>{{ $list->state }}</td>

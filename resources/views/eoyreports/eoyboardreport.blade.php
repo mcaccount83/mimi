@@ -56,23 +56,20 @@
                 <tbody>
                     @foreach($chapterList as $list)
                     @php
-                         $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
+                        $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
                         $emailListChap = $emailDetails['emailListChapString'];
                         $emailListCoord = $emailDetails['emailListCoordString'];
 
                         // Define the message body with a link
                         $mimiUrl = 'https://example.com/mimi';
                         $mailMessage = "Don't forget to complete the Board Election Report for your chapter! This report is available now and should be filled out as soon as your chapter has held its election but is due no later than June 30th at 11:59pm.\n\n";
-                        $mailMessage .= "Please submit your report as soon as possible to ensure that your incoming board members have access to all the tools they need to be successful. The information from the report is used for:<ul>";
-                        $mailMessage .= "<li>Chapter Contacts for your Coordinator Team</li>";
-                        $mailMessage .= "<li>Access to MIMI</li>";
-                        $mailMessage .= "<li>Inclusion in the Board Discussion Group</li>";
-                        $mailMessage .= "<li>Receipt of Conference Newsletter</li>";
-                        $mailMessage .= "<li>Automated Messages from MIMI, including Re-Registration payment reminders.</li>";
-                        $mailMessage .= "</ul>";
-                        $mailMessage .= "The Board Election Report can be accessed by logging into your MIMI account: $mimiUrl and selecting the buttons at the top of your screen.";
-                        // URL-encode the message
-                        $encodedMailMessage = urlencode($mailMessage);
+                        $mailMessage .= "Please submit your report as soon as possible to ensure that your incoming board members have access to all the tools they need to be successful. The information from the report is used for:\n";
+                        $mailMessage .= "- Chapter Contacts for your Coordinator Team\n";
+                        $mailMessage .= "- Access to MIMI\n";
+                        $mailMessage .= "- Inclusion in the Board Discussion Group\n";
+                        $mailMessage .= "- Receipt of Conference Newsletter\n";
+                        $mailMessage .= "- Automated Messages from MIMI, including Re-Registration payment reminders.\n\n";
+                        $mailMessage .= "The Board Election Report can be accessed by logging into your MIMI account: $mimiUrl and selecting the buttons at the top of your screen.\n";
                     @endphp
                         <tr id="chapter-{{ $list->id }}">
                             <td class="text-center align-middle">
@@ -84,9 +81,7 @@
                             </td>
                             <td class="text-center align-middle">
                                 @if ($list->new_board_submitted == null || $list->new_board_submitted == 0)
-                                    <a href="mailto:{{ urlencode($emailListChap) }}&cc={{ urlencode($emailListCoord) }}&subject={{ urlencode('Board Report Reminder | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a></td>
-
-                                    {{-- <a href="mailto:{{ $emailListChap }}&cc={{ $emailListCoord }}&subject=Board Report Reminder | MOMS Club of {{ $list->name }}, {{ $list->state }}&body={{ $encodedMailMessage }}"><i class="far fa-envelope"></i></a> --}}
+                                    <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Board Report Reminder | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ rawurlencode($mailMessage) }}"><i class="far fa-envelope"></i></a>
                                 @endif
                             </td>
                             <td>{{ $list->state }}</td>

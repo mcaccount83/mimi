@@ -21,6 +21,7 @@ use App\Mail\PaymentsReRegLate;
 use App\Mail\PaymentsReRegReminder;
 use App\Mail\WebsiteAddNoticeAdmin;
 use App\Mail\WebsiteReviewNotice;
+use App\Mail\WebsiteUpdatePrimaryCoor;
 use App\Models\Chapter;
 use App\Models\FinancialReport;
 use App\Models\User;
@@ -3028,24 +3029,6 @@ public function editChapterWebsite(Request $request, $id)
              $emailData = $this->userController->loadConferenceCoord($chConf, $chPcid);
              $to_CCemail = $emailData['cc_email'];
 
-             if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
-                $mailData = [
-                    'chapter_name' => $request->input('ch_name'),
-                    'chapter_state' => $request->input('ch_state'),
-                    'ch_website_url' => $request->input('ch_website'),
-                ];
-
-                if ($request->input('ch_webstatus') == 1) {
-                    Mail::to($to_CCemail)
-                        ->queue(new WebsiteAddNoticeAdmin($mailData));
-                }
-
-                if ($request->input('ch_webstatus') == 2) {
-                    Mail::to($to_CCemail)
-                        ->queue(new WebsiteReviewNotice($mailData));
-                }
-            }
-
             //Update Chapter MailData//
             $chaperInfoUpd = DB::table('chapters')
                 ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email','st.state_short_name as state',
@@ -3057,22 +3040,42 @@ public function editChapterWebsite(Request $request, $id)
                 ->orderByDesc('chapters.id')
                 ->get();
 
+                if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
+                    $mailData = [
+                        'chapter_name' => $chaperInfoUpd[0]->name,
+                        'chapter_state' => $chaperInfoUpd[0]->state,
+                        'ch_website_url' => $request->input('ch_website'),
+                    ];
+
+                    if ($request->input('ch_webstatus') == 1) {
+                        Mail::to($to_CCemail)
+                            ->queue(new WebsiteAddNoticeAdmin($mailData));
+                    }
+
+                    if ($request->input('ch_webstatus') == 2) {
+                        Mail::to($to_CCemail)
+                            ->queue(new WebsiteReviewNotice($mailData));
+                    }
+                }
+
+
             $mailData = [
+                'chapter_name' => $chaperInfoUpd[0]->name,
+                'chapter_state' => $chaperInfoUpd[0]->state,
+                'webUrlUpd' => $chaperInfoUpd[0]->website_url,
+                'webStatusUpd' => $chaperInfoUpd[0]->website_status,
                 'webUrlPre' => $chapterInfoPre[0]->website_url,
                 'webStatusPre' => $chapterInfoPre[0]->website_status,
-                'egroupPre' => $chapterInfoPre[0]->egroup,
-                'cor_fnamePre' => $chapterInfoPre[0]->cor_f_name,
-                'cor_lnamePre' => $chapterInfoPre[0]->cor_l_name,
                 'updated_byUpd' => $chaperInfoUpd[0]->last_updated_date,
             ];
 
             //Primary Coordinator Notification//
             $to_email = $pc_email;
 
-            if ($chaperInfoUpd[0]->website_url != $chapterInfoPre[0]->website_url || $chaperInfoUpd[0]->website_status != $chapterInfoPre[0]->website_status || $chaperInfoUpd[0]->egroup != $chapterInfoPre[0]->egroup )
+            if ($chaperInfoUpd[0]->website_url != $chapterInfoPre[0]->website_url || $chaperInfoUpd[0]->website_status != $chapterInfoPre[0]->website_status )
                 {
                 Mail::to($to_email)
-                    ->queue(new ChaptersUpdatePrimaryCoorChapter($mailData));
+                    ->queue(new WebsiteUpdatePrimaryCoor($mailData));
             }
 
             DB::commit();
