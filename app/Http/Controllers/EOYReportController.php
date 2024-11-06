@@ -58,10 +58,12 @@ class EOYReportController extends Controller
         $year = date('Y');
 
         $baseQuery = DB::table('chapters')
-            ->select('chapters.*', 'rg.short_name as region', 'st.state_short_name as state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname')
+            ->select('chapters.*', 'rg.short_name as region', 'st.state_short_name as state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname',
+                'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->join('region as rg', 'rg.id', '=', 'cd.region_id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->join('region as rg', 'rg.id', '=', 'chapters.region')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
@@ -322,10 +324,12 @@ class EOYReportController extends Controller
         $year = date('Y');
 
         $baseQuery = DB::table('chapters')
-            ->select('chapters.*', 'rg.short_name as region', 'st.state_short_name as state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname')
+            ->select('chapters.*', 'rg.short_name as region', 'st.state_short_name as state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname',
+                'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->join('region as rg', 'rg.id', '=', 'cd.region_id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->join('region as rg', 'rg.id', '=', 'chapters.region')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
@@ -882,8 +886,11 @@ class EOYReportController extends Controller
         $baseQuery = DB::table('chapters as ch')
             ->select('ch.id as chap_id', 'ch.primary_coordinator_id as primary_coordinator_id', 'ch.name as name', 'ch.financial_report_received as financial_report_received',
                 'ch.financial_report_complete as report_complete', 'ch.report_extension as report_extension', 'ch.extension_notes as extension_notes', 'cd.id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state',
-                'fr.submitted as report_received', 'fr.review_complete as review_complete', 'fr.post_balance as post_balance', 'fr.financial_pdf_path as financial_pdf_path', 'cd_reviewer.first_name as pcfname', 'cd_reviewer.last_name as pclname')
+                'fr.submitted as report_received', 'fr.review_complete as review_complete', 'fr.post_balance as post_balance', 'fr.financial_pdf_path as financial_pdf_path', 'cd_reviewer.first_name as pcfname', 'cd_reviewer.last_name as pclname',
+                'rg.short_name as reg', 'cf.short_name as conf')
             ->join('state as st', 'ch.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'ch.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'rg.id', '=', 'ch.region')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('coordinators as cd_reviewer', 'cd_reviewer.id', '=', 'fr.reviewer_id')
@@ -1382,11 +1389,12 @@ class EOYReportController extends Controller
             ->select('chapters.*', 'rg.short_name as region', 'st.state_short_name as state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname',
                 'fr.roster_path as roster_path', 'fr.file_irs_path as file_irs_path', 'fr.bank_statement_included_path as bank_statement_included_path',
                 'fr.bank_statement_2_included_path as bank_statement_2_included_path', 'fr.check_current_990N_verified_IRS as check_current_990N_verified_IRS',
-                'fr.check_current_990N_notes as check_current_990N_notes')
+                'fr.check_current_990N_notes as check_current_990N_notes', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'chapters.id')
-            ->join('region as rg', 'rg.id', '=', 'cd.region_id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'rg.id', '=', 'chapters.region')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
@@ -1527,9 +1535,12 @@ class EOYReportController extends Controller
         }
 
         $baseQuery = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state')
+            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'rg.id', '=', 'chapters.region')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('chapters.boundary_issues', '=', '1')
@@ -1666,60 +1677,60 @@ class EOYReportController extends Controller
         }
 
         $baseQuery = DB::table('chapters as ch')
-            ->select(
-                'ch.id as id', 'ch.name as name', 'ch.primary_coordinator_id as pc_id', 'fr.reviewer_id as reviewer_id',
-                'cd.id as cord_id', 'cd.first_name as reviewer_first_name', 'cd.last_name as reviewer_last_name',
-                'st.state_short_name as state', 'fr.award_1_nomination_type', 'fr.award_2_nomination_type',
-                'fr.award_3_nomination_type', 'fr.award_4_nomination_type', 'fr.award_5_nomination_type',
-                'fr.check_award_1_approved as award_1_approved', 'fr.check_award_2_approved as award_2_approved',
-                'fr.check_award_3_approved as award_3_approved', 'fr.check_award_4_approved as award_4_approved',
-                'fr.check_award_5_approved as award_5_approved'
-            )
+            ->select('ch.id as id', 'ch.primary_coordinator_id as primary_coordinator_id', 'ch.name as name',
+            'cd.id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state',
+            'fr.award_1_nomination_type', 'fr.award_2_nomination_type',
+            'fr.award_3_nomination_type', 'fr.award_4_nomination_type', 'fr.award_5_nomination_type',
+            'fr.check_award_1_approved as award_1_approved', 'fr.check_award_2_approved as award_2_approved',
+            'fr.check_award_3_approved as award_3_approved', 'fr.check_award_4_approved as award_4_approved',
+            'fr.check_award_5_approved as award_5_approved',
+                'rg.short_name as reg', 'cf.short_name as conf')
             ->join('state as st', 'ch.state', '=', 'st.id')
-            ->leftJoin('financial_report as fr', function ($join) {
-                $join->on('fr.chapter_id', '=', 'ch.id');
-            })
-            ->leftJoin('coordinators as cd', function ($join) {
-                $join->on('cd.id', '=', 'fr.reviewer_id');
-            })
-            ->where('ch.is_active', 1);
-
-
-            if ($conditions['founderCondition']) {
-                $baseQuery;
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('ch.conference', '=', $corConfId);
-        } elseif ($conditions['assistRegionalCoordinatorCondition']) {
-            $baseQuery->where('ch.region', '=', $corRegId);
-        } else {
-            $baseQuery->whereIn('ch.primary_coordinator_id', $inQryArr);
-            // $baseQuery->whereIn('ch.primary_coordinator_id', $reportIds);
-        }
-
-        if (! isset($_GET['check']) || $_GET['check'] !== 'yes') {
-            $baseQuery->where(function ($query) {
+            ->leftJoin('conference as cf', 'ch.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'rg.id', '=', 'ch.region')
+            ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
+            ->leftJoin('coordinators as cd_reviewer', 'cd_reviewer.id', '=', 'fr.reviewer_id')
+            ->where(function ($query) {
                 $query->whereNotNull('fr.award_1_nomination_type')
                     ->orWhereNotNull('fr.award_2_nomination_type')
                     ->orWhereNotNull('fr.award_3_nomination_type')
                     ->orWhereNotNull('fr.award_4_nomination_type')
                     ->orWhereNotNull('fr.award_5_nomination_type');
-            });
-        }
+            })
+            ->where(function ($query) {
+                $query->where('created_at', '<=', date('Y-06-30'))
+                    ->orWhereNull('created_at');
+            })
+            ->where('ch.is_active', 1);
 
-        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-            $checkBoxStatus = 'checked';
-            $baseQuery;
-        } else {
-            $checkBoxStatus = '';
-            $baseQuery;
-        }
+            if ($conditions['founderCondition']) {
+                $baseQuery;
+            } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+                    $baseQuery->where('ch.conference', '=', $corConfId);
+                } elseif ($conditions['regionalCoordinatorCondition']) {
+                    $baseQuery->where('ch.region', '=', $corRegId);
+            } else {
+                $baseQuery->whereIn('ch.primary_coordinator_id', $inQryArr);
+            }
+
+            if (isset($_GET['check']) && $_GET['check'] == 'yes') {
+                $checkBoxStatus = 'checked';
+                $baseQuery->where('ch.primary_coordinator_id', '=', $corId)
+                    ->orderBy('st.state_short_name')
+                    ->orderBy('ch.name');
+            } else {
+                $checkBoxStatus = '';
+                $baseQuery->orderBy('st.state_short_name')
+                    ->orderBy('ch.name');
+            }
 
         $chapterList = $baseQuery->get();
 
         $chapterList = $chapterList->toArray();
         $countList = count($chapterList);
 
-        $data = ['corId' => $corId, 'countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
 
         return view('eoyreports.eoyawards', $data);
     }
@@ -2020,8 +2031,6 @@ class EOYReportController extends Controller
             ->orderBy('cd.position_id')
             ->orderBy('cd.first_name')
             ->get();
-
-
 
         $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete,
             'chapterList' => $chapterList, 'reportReviewerList' => $reportReviewerList, 'corConfId' => $corConfId, 'chConfId' => $chConfId, 'chPCid' => $chPCid, 'financial_report_array' => $financial_report_array

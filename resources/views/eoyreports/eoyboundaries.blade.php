@@ -45,6 +45,7 @@
               <thead>
 			    <tr>
 					<th>Details</th>
+                    <th>Conf/Reg>
 				  <th>State</th>
                   <th>Name</th>
                  <th>Reported Issue</th>
@@ -58,7 +59,14 @@
                   <tr>
 						<td class="text-center align-middle">
                             <a href="{{ url("/eoydetailseditboundaries/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
-						<td>{{ $list->state }}</td>
+                        <td>
+                            @if ($list->reg != "None")
+                                {{ $list->conf }} / {{ $list->reg }}
+                            @else
+                                {{ $list->conf }}
+                            @endif
+                        </td>
+                        <td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>
                         <td>{{ $list->boundary_issue_notes}}</td>
                         <td>{{ $list->territory}}</td>

@@ -45,6 +45,7 @@
               <thead>
 			    <tr>
 				<th>Details</th>
+                <th>Conf/Reg</th>
 				<th>State</th>
                 <th>Name</th>
                 <th>Chapter Roster</th>
@@ -62,6 +63,13 @@
                             @if ($assistConferenceCoordinatorCondition)
                                <a href="{{ url("/eoydetails/{$list->id}") }}"><i class="fas fa-eye"></i></a>
                            @endif
+                        </td>
+                        <td>
+                            @if ($list->reg != "None")
+                                {{ $list->conf }} / {{ $list->reg }}
+                            @else
+                                {{ $list->conf }}
+                            @endif
                         </td>
                         <td>{{ $list->state }}</td>
 						<td>{{ $list->name }}</td>

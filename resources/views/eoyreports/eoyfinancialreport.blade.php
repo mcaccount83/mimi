@@ -48,6 +48,7 @@
 					<th>Review</th>
                     <th>PDF</th>
 					<th>Email</th>
+                    <th>Conf/Reg</th>
 				  <th>State</th>
                   <th>Name</th>
                  <th>Primary Coordinator</th>
@@ -86,6 +87,13 @@
                         <td class="text-center align-middle">
                             @if($list->financial_report_received == null || $list->financial_report_received == 0)
                             <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Financial Report Reminder | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ rawurlencode($mailMessage) }}"><i class="far fa-envelope"></i></a>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($list->reg != "None")
+                                {{ $list->conf }} / {{ $list->reg }}
+                            @else
+                                {{ $list->conf }}
                             @endif
                         </td>
                         <td>{{ $list->state }}</td>

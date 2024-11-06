@@ -45,6 +45,7 @@
                 <thead>
                   <tr>
                   <th>Details</th>
+                  <th>Conf/Reg</th>
                   <th>State</th>
                   <th>Name</th>
                   <th>Award 1</th>
@@ -61,6 +62,13 @@
                             @if ($assistConferenceCoordinatorCondition)
                                 <a href="{{ url("/eoydetailseditawards/{$list->id}") }}"><i class="fas fa-eye"></i></a>
                           @endif
+                        </td>
+                        <td>
+                            @if ($list->reg != "None")
+                                {{ $list->conf }} / {{ $list->reg }}
+                            @else
+                                {{ $list->conf }}
+                            @endif
                         </td>
                         <td>{{ $list->state }}</td>
                             <td>{{ $list->name }}</td>
@@ -196,7 +204,7 @@
                         <div class="custom-control custom-switch">
                             <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input"
                                    {{ $checkBoxStatus }} onchange="showPrimary()" />
-                            <label class="custom-control-label" for="showPrimary">Show All Chapters</label>
+                            <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
                         </div>
                     </div>
                     <div class="card-body text-center">
