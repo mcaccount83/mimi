@@ -92,7 +92,7 @@
             </div>
 
                 <div class="card-body text-center">
-              <a class="btn bg-gradient-primary" href="{{ route('coordinators.coordnew') }}"><i class="fas fa-plus" ></i>&nbsp;&nbsp;&nbsp;Add New Coordinator</a>
+              <a class="btn bg-gradient-primary" href="{{ route('coordinators.editnew') }}"><i class="fas fa-plus" ></i>&nbsp;&nbsp;&nbsp;Add New Coordinator</a>
               <?php
             if($checkBoxStatus){ ?>
 				 <button class="btn bg-gradient-primary" disabled><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export Coordinator List</button></a>

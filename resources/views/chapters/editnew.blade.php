@@ -350,9 +350,7 @@
           <!-- /.col -->
           <div class="col-md-12">
             <div class="card-body text-center">
-                @if ($coordinatorCondition)
-                    <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return validateEmailsBeforeSubmit();">Save New Chapter</button>
-                @endif
+                <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return validateEmailsBeforeSubmit();">Save New Chapter</button>
                 <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'">Back to Chapter List</button>
         </div>
         </div>
