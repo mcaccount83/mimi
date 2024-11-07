@@ -145,8 +145,8 @@
           <!-- /.col -->
           <div class="col-md-12">
             <div class="card-body text-center">
-                <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save" ></i>&nbsp;&nbsp;&nbsp;Save</button>
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.view', ['id' => $coordinatorDetails[0]->id]) }}'">Back to Coordinator Details</button>
+                <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2" ></i>Save</button>
+                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.view', ['id' => $coordinatorDetails[0]->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Coordinator Details</button>
             </div>
         </div>
         </div>

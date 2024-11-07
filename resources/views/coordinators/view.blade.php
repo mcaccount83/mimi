@@ -235,37 +235,37 @@
           <div class="col-md-12">
             <div class="card-body text-center">
                 @if ($regionalCoordinatorCondition)
-                    <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.editrole', ['id' => $coordinatorDetails[0]->id]) }}'">Update Role, Chapters & Coordinators</button>
-                    <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.editdetails', ['id' => $coordinatorDetails[0]->id]) }}'">Update Contact Information</button>
+                    <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.editrole', ['id' => $coordinatorDetails[0]->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Role, Chapters & Coordinators</button>
+                    <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.editdetails', ['id' => $coordinatorDetails[0]->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Contact Information</button>
                 @endif
                 @if($assistConferenceCoordinatorCondition)
-                    <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.editrecognition', ['id' => $coordinatorDetails[0]->id]) }}'">Update Appreciation & Recognition</button>
+                    <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.editrecognition', ['id' => $coordinatorDetails[0]->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Appreciation & Recognition</button>
                     <br>
                     @if($corIsLeave != 1)
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="onLeaveCoordinator()">Put Coordinator On Leave</button>
+                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="onLeaveCoordinator()"><i class="fas fa-ban mr-2"></i>Put Coordinator On Leave</button>
                         {{-- <button class="btn bg-gradient-primary mb-3 coordOnLeave" data-onleave="{{ $coordinatorDetails[0]->on_leave }}" data-coordId="{{ $coordinatorDetails[0]->id }}">Put Coordinator On Leave</button> --}}
                     @elseif($corIsLeave == 1)
-                        <button type="button" id="unretire" class="btn bg-gradient-primary mb-3" onclick="removeLeaveCoordinator()">Remove Coordinator From Leave</button>
+                        <button type="button" id="unretire" class="btn bg-gradient-primary mb-3" onclick="removeLeaveCoordinator()"><i class="fas fa-undo mr-2"></i>Remove Coordinator From Leave</button>
                         {{-- <button type="button" class="btn bg-gradient-primary mb-3 coordRemoveLeave" data-onleave="{{ $coordinatorDetails[0]->on_leave }}" data-coordId="{{ $coordinatorDetails[0]->id }}">Remove Coordinator From Leave</button> --}}
                     @endif
                     @if($corIsActive == 1)
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="retireCoordinator()">Retire Coordinator</button>
+                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="retireCoordinator()"><i class="fas fa-ban mr-2"></i>Retire Coordinator</button>
                     @elseif($corIsActive != 1)
-                        <button type="button" id="unretire" class="btn bg-gradient-primary mb-3" onclick="unRetireCoordinator()">UnRetire Coordinator</button>
+                        <button type="button" id="unretire" class="btn bg-gradient-primary mb-3" onclick="unRetireCoordinator()"><i class="fas fa-undo mr-2"></i>UnRetire Coordinator</button>
                     @endif
                 @endif
                 <br>
                 @if ($corConfId == $userConfId)
                     @if ($corIsActive == 1)
-                        <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist') }}'">Back to Coordinator List</button>
+                        <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-reply mr-2"></i>Back to Coordinator List</button>
                     @else
-                        <button id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordretired') }}'">Back to Retired Coordinator List</button>
+                        <button id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to Retired Coordinator List</button>
                     @endif
                 @elseif ($adminReportCondition  && ($corConfId != $userConfId))
                     @if ($corIsActive == 1)
-                        <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoord') }}'">Back to International Coordinator List</button>
+                        <button class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoord') }}'"><i class="fas fa-reply mr-2"></i>Back to International Coordinator List</button>
                     @else
-                        <button id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoordretired') }}'">Back to International Retired Coordinator List</button>
+                        <button id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoordretired') }}'"><i class="fas fa-reply mr-2"></i>Back to International Retired Coordinator List</button>
                     @endif
                 @endif
             </div>
