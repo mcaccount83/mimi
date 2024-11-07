@@ -594,13 +594,12 @@ document.querySelectorAll('.reset-password-btn').forEach(button => {
     });
 });
 
-
 function updateEIN() {
     const chapterId = '{{ $chapterList[0]->id }}'; // Get the chapter ID from the Blade variable
 
     // Check if the chapter already has an EIN
     $.ajax({
-        url: '{{ route('chapters.checkeinnumber') }}',
+        url: '{{ route('chapters.checkein') }}',
         type: 'GET',
         data: {
             chapter_id: chapterId
@@ -677,7 +676,7 @@ function promptForNewEIN(chapterId) {
 
             // Perform the AJAX request to update the EIN
             $.ajax({
-                url: '{{ route('chapters.updateeinnumber') }}',
+                url: '{{ route('chapters.updateein') }}',
                 type: 'POST',
                 data: {
                     chapter_id: data.chapter_id,

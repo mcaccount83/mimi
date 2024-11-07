@@ -248,7 +248,7 @@ class ChapterController extends Controller
         return view('chapters.view')->with($data);
 }
 
-public function checkEINnumber(Request $request)
+public function checkEIN(Request $request)
 {
 $chapterId = $request->input('chapter_id');
 $chapter = DB::table('chapters')->where('id', $chapterId)->first();
@@ -258,7 +258,7 @@ return response()->json([
 ]);
 }
 
-public function updateEINNumber(Request $request)
+public function updateEIN(Request $request)
 {
     $corDetails = User::find($request->user()->id)->Coordinators;
     $corId = $corDetails['id'];
