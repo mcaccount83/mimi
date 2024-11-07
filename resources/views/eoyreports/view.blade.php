@@ -1,6 +1,9 @@
 @extends('layouts.coordinator_theme')
-<style>
 
+@section('page_title', 'EOY Details')
+@section('breadcrumb', 'EOY Details')
+
+<style>
 .disabled-link {
     pointer-events: none; /* Prevent click events */
     cursor: default; /* Change cursor to default */
@@ -9,25 +12,6 @@
 
 </style>
 @section('content')
-
-
-  <!-- Contains page content -->
-    <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>EOY Details</h1>
-          </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-              <li class="breadcrumb-item active">EOY Details</li>
-            </ol>
-          </div>
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
-
     <!-- Main content -->
     <form class="form-horizontal" method="POST" action='{{ route("eoyreports.update", $chapterList[0]->id) }}'>
         @csrf

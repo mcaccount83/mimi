@@ -1302,7 +1302,7 @@ class EOYReportController extends Controller
             $chapter->save();
 
             $report = FinancialReport::find($chapter_id);
-            $report->farthest_step_visited_coord = '13';
+            // $report->farthest_step_visited_coord = '13';
             $report->submitted = null;
             $report->save();
 
@@ -1339,7 +1339,7 @@ class EOYReportController extends Controller
             $chapter->save();
 
             $report = FinancialReport::find($chapter_id);
-            $report->farthest_step_visited_coord = '13';
+            // $report->farthest_step_visited_coord = '13';
             $report->review_complete = null;
             $report->save();
 
@@ -2327,6 +2327,73 @@ public function updateEOYAwards(Request $request, $id): RedirectResponse
         }
 
         return redirect()->route('eoyreports.editawards', ['id' => $id])->with('success', 'EOY Information successfully updated.');
+    }
+
+    /**
+     * Financial Report for Coordinator side for Reviewing of Chapters
+     */
+    public function reviewFinancialReport(Request $request, $chapterId)
+    {
+        //$corDetails = User::find($request->user()->id)->Coordinators;
+        $user = User::find($request->user()->id);
+        // Check if user is not found
+        if (! $user) {
+            return redirect()->route('home');
+        }
+
+        $corDetails = $user->Coordinators;
+        // Check if BoardDetails is not found for the user
+        if (! $corDetails) {
+            return redirect()->route('home');
+        }
+
+        $loggedInName = $corDetails['first_name'].' '.$corDetails['last_name'];
+        $positionId = $corDetails['position_id'];
+        $request->session()->put('positionid', $positionId);
+
+        $financial_report_array = FinancialReport::find($chapterId);
+        $chapterDetails = DB::table('chapters')
+            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'chapters.primary_coordinator_id as pcid', 'chapters.balance as balance', 'st.state_short_name as state',
+                'chapters.financial_report_complete as financial_report_complete', 'chapters.financial_pdf_path as financial_pdf_path')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->where('chapters.is_active', '=', '1')
+            ->where('chapters.id', '=', $chapterId)
+            ->get();
+
+        $submitted = $chapterDetails[0]->financial_report_received;
+        $balance = $chapterDetails[0]->balance;
+        $pcid = $chapterDetails[0]->pcid;
+
+        $reportingList = DB::table('coordinator_reporting_tree')
+            ->select('*')
+            ->where('id', '=', $pcid)
+            ->get();
+
+        foreach ($reportingList as $key => $value) {
+            $reportingList[$key] = (array) $value;
+        }
+        $filterReportingList = array_filter($reportingList[0]);
+        unset($filterReportingList['id']);
+        unset($filterReportingList['layer0']);
+        $filterReportingList = array_reverse($filterReportingList);
+        $filterReportingList = array_reverse($filterReportingList);
+        $array_rows = count($filterReportingList);
+
+        foreach ($filterReportingList as $key => $val) {
+            $corList = DB::table('coordinators as cd')
+                ->select('cd.id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.short_title as pos')
+                ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                ->where('cd.id', '=', $val)
+                ->where('cd.is_active', '=', 1)
+                ->get();
+            if (count($corList) != 0) {
+                $reviewerList[] = ['cid' => $corList[0]->cid, 'cname' => $corList[0]->fname.' '.$corList[0]->lname.' ('.$corList[0]->pos.')'];
+            }
+        }
+
+        $data = ['reviewerList' => $reviewerList, 'chapterid' => $chapterId, 'financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'balance' => $balance, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails];
+
+        return view('eoyreports.reviewfinancialreport')->with($data);
     }
 
 

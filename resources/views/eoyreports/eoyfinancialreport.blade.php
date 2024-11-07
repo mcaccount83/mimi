@@ -1,22 +1,9 @@
 @extends('layouts.coordinator_theme')
 
-@section('content')
-<section class="content-header">
-    <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1>End of Year Reports</h1>
-        </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">Financial Reports</li>
-          </ol>
-        </div>
-      </div>
-    </div><!-- /.container-fluid -->
-  </section>
+@section('page_title', 'End of Year Reports')
+@section('breadcrumb', 'Financial Reports')
 
+@section('content')
 <!-- Main content -->
 <section class="content">
     <div class="container-fluid">
@@ -76,7 +63,8 @@
                     @endphp
                     <tr>
                         <td class="text-center align-middle">
-                            <a href="{{ url("/eoy/financialreportview/{$list->chap_id}") }}"><i class="fas fa-edit"></i></a>
+                            <a href="{{ url("/eoy/financialreportreview/{$list->chap_id}") }}"><i class="fas fa-edit"></i></a>
+                            {{-- <a href="{{ url("/eoy/financialreportview/{$list->chap_id}") }}"><i class="fas fa-edit"></i></a> --}}
                         </td>
                         <td class="text-center align-middle">
                             @if($list->financial_report_received == '1' && $list->financial_pdf_path != null)

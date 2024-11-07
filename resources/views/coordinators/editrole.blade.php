@@ -1,6 +1,9 @@
 @extends('layouts.coordinator_theme')
-<style>
 
+@section('page_title', 'Coordinator Details')
+@section('breadcrumb', 'Chapters & Coordinators')
+
+<style>
 .disabled-link {
     pointer-events: none; /* Prevent click events */
     cursor: default; /* Change cursor to default */
@@ -9,24 +12,6 @@
 
 </style>
 @section('content')
-
- <!-- Content Wrapper. Contains page content -->
- <section class="content-header">
-    <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1>Coordinator Details</h1>
-        </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">Coordinator Details</li>
-          </ol>
-        </div>
-      </div>
-    </div><!-- /.container-fluid -->
-  </section>
-
     <!-- Main content -->
     <form class="form-horizontal" method="POST" action='{{ route("coordinators.updaterole",$coordinatorDetails[0]->id) }}'>
     @csrf

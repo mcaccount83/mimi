@@ -1,22 +1,9 @@
 @extends('layouts.coordinator_theme')
 
-@section('content')
-<section class="content-header">
-    <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1>Chapter Reports</h1>
-        </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">Chapter Coordinator Report</li>
-          </ol>
-        </div>
-      </div>
-    </div><!-- /.container-fluid -->
-  </section>
+@section('page_title', 'Chapter Reports')
+@section('breadcrumb', 'Chapter Coordinator Report')
 
+@section('content')
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
@@ -132,7 +119,7 @@
                     </div>
                 </div>
                 <div class="card-body text-center">
-              <a href="{{ route('export.chaptercoordinator') }}"><button class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export Chapter Coordinator List</button></a>
+              <a href="{{ route('export.chaptercoordinator') }}"><button class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-download mr-2"></i>Export Chapter Coordinator List</button></a>
              </div>
 
            </div>

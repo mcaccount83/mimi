@@ -1,22 +1,9 @@
 @extends('layouts.coordinator_theme')
 
-@section('content')
-<section class="content-header">
-    <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1>Payments/Donations</h1>
-        </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">Re-Registration Payments</li>
-          </ol>
-        </div>
-      </div>
-    </div><!-- /.container-fluid -->
-  </section>
+@section('page_title', 'Payments/Donations')
+@section('breadcrumb', 'Re-Registration Payments')
 
+@section('content')
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
@@ -122,12 +109,12 @@
                 </div>
                 <div class="card-body text-center">
                 <?php if($conferenceCoordinatorCondition){ ?>
-                <a title="Re-registration reminders will be sent to all unpaid chapters in your conference with renewal dates this month." href="{{ route('chapters.chapreregreminder') }}"><button class="btn bg-gradient-primary"   <?php if($checkBoxStatus) echo "disabled";?>><i class="fas fa-envelope" ></i>&nbsp; Send Current Month Reminders</button></a>
+                <a title="Re-registration reminders will be sent to all unpaid chapters in your conference with renewal dates this month." href="{{ route('chapters.chapreregreminder') }}"><button class="btn bg-gradient-primary"   <?php if($checkBoxStatus) echo "disabled";?>><i class="fas fa-envelope mr-2" ></i>Send Current Month Reminders</button></a>
                 <?php }?>
                 <?php if($conferenceCoordinatorCondition){ ?>
-                    <a href="{{route('chapters.chaprereglatereminder')}}" class="btn bg-gradient-primary" <?php if($checkBoxStatus) echo "disabled";?>><i class="fas fa-envelope" ></i>&nbsp; Send One Month Late Notices</a>
+                    <a href="{{route('chapters.chaprereglatereminder')}}" class="btn bg-gradient-primary" <?php if($checkBoxStatus) echo "disabled";?>><i class="fas fa-envelope mr-2" ></i>end One Month Late Notices</a>
                 <?php }?>
-					<a href="{{ route('export.rereg')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download" ></i>&nbsp; Export Overdue Chapter List</button></a>
+					<a href="{{ route('export.rereg')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download mr-2" ></i>Export Overdue Chapter List</button></a>
             </div>
         </div>
     </div>

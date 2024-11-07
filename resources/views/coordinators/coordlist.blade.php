@@ -1,22 +1,9 @@
 @extends('layouts.coordinator_theme')
 
-@section('content')
-<section class="content-header">
-    <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1>Coordinators</h1>
-        </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">Active Coordinator List</li>
-          </ol>
-        </div>
-      </div>
-    </div><!-- /.container-fluid -->
-  </section>
+@section('page_title', 'Coordinators')
+@section('breadcrumb', 'Active Coordinator List')
 
+@section('content')
    <!-- Main content -->
    <section class="content">
     <div class="container-fluid">
@@ -92,16 +79,16 @@
             </div>
 
                 <div class="card-body text-center">
-              <a class="btn bg-gradient-primary" href="{{ route('coordinators.editnew') }}"><i class="fas fa-plus" ></i>&nbsp;&nbsp;&nbsp;Add New Coordinator</a>
+              <a class="btn bg-gradient-primary" href="{{ route('coordinators.editnew') }}"><i class="fas fa-plus mr-2" ></i>Add New Coordinator</a>
               <?php
             if($checkBoxStatus){ ?>
-				 <button class="btn bg-gradient-primary" disabled><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export Coordinator List</button></a>
+				 <button class="btn bg-gradient-primary" disabled><i class="fas fa-download mr-2" ></i>Export Coordinator List</button></a>
 			<?php
 			 }
 			 else{ ?>
-				<a href="{{ route('export.coordinator','0') }}"><button class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export Coordinator List</button></a>
+				<a href="{{ route('export.coordinator','0') }}"><button class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-download mr-2" ></i>Export Coordinator List</button></a>
 			 <?php } ?>
-              <a class="btn bg-gradient-primary" href="mailto:{{ $emailListCord }}"><i class="fas fa-envelope" ></i>&nbsp;&nbsp;&nbsp;E-mail Listed Coordinators</a>
+              <a class="btn bg-gradient-primary" href="mailto:{{ $emailListCord }}"><i class="fas fa-envelope mr-2" ></i>E-mail Listed Coordinators</a>
             </div>
          </div>
           <!-- /.box -->

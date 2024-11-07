@@ -1,4 +1,8 @@
 @extends('layouts.coordinator_theme')
+
+@section('page_title', 'Chapters')
+@section('breadcrumb', 'Zapped Inquiries Chapter List')
+
 <style>
     .hidden-column {
         display: none !important;
@@ -6,22 +10,6 @@
     </style>
 
 @section('content')
-<section class="content-header">
-    <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1>Chapters</h1>
-        </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">Zapped Inquiries Chapter List</li>
-          </ol>
-        </div>
-      </div>
-    </div><!-- /.container-fluid -->
-  </section>
-
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">

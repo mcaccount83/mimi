@@ -1,22 +1,9 @@
 @extends('layouts.coordinator_theme')
 
-@section('content')
-<section class="content-header">
-    <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1>Chapter Website/Social Media</h1>
-        </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">Chapter Website/Social Media</li>
-          </ol>
-        </div>
-      </div>
-    </div><!-- /.container-fluid -->
-  </section>
+@section('page_title', 'Chapter Website/Social Media')
+@section('breadcrumb', 'Social Media List')
 
+@section('content')
    <!-- Main content -->
    <section class="content">
     <div class="container-fluid">

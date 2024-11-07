@@ -1,22 +1,9 @@
 @extends('layouts.coordinator_theme')
 
-@section('content')
-    <section class="content-header">
-        <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-            <h1>Coordinators</h1>
-            </div>
-            <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li class="breadcrumb-item active">Retired Coordinator List</li>
-            </ol>
-            </div>
-        </div>
-        </div><!-- /.container-fluid -->
-    </section>
+@section('page_title', 'Coordinators')
+@section('breadcrumb', 'Retired Coordinator List')
 
+@section('content')
     <!-- Main content -->
    <section class="content">
     <div class="container-fluid">
@@ -78,7 +65,7 @@
             </div>
               <!-- /.card-body -->
               <div class="card-body text-center">
-                <a href="{{ route('export.retiredcoordinator')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download " ></i>&nbsp;&nbsp;&nbsp;Export Retired Coordinator List</button></a>
+                <a href="{{ route('export.retiredcoordinator')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download mr-2" ></i>Export Retired Coordinator List</button></a>
             </div>
             </div>
 

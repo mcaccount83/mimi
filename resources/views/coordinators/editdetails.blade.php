@@ -1,4 +1,8 @@
 @extends('layouts.coordinator_theme')
+
+@section('page_title', 'Coordinator Details')
+@section('breadcrumb', 'Coordinator Details')
+
 <style>
 
 .disabled-link {
@@ -9,24 +13,6 @@
 
 </style>
 @section('content')
-
- <!-- Content Wrapper. Contains page content -->
- <section class="content-header">
-    <div class="container-fluid">
-      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1>Coordinator Profile</h1>
-        </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="breadcrumb-item active">Coordinator Profile</li>
-          </ol>
-        </div>
-      </div>
-    </div><!-- /.container-fluid -->
-  </section>
-
     <!-- Main content -->
     <form class="form-horizontal" method="POST" action='{{ route("coordinators.updatedetails",$coordinatorDetails[0]->id) }}'>
     @csrf

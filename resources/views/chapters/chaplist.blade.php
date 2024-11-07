@@ -1,22 +1,9 @@
 @extends('layouts.coordinator_theme')
 
-@section('content')
-    <section class="content-header">
-        <div class="container-fluid">
-          <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1>Chapters</h1>
-            </div>
-            <div class="col-sm-6">
-              <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-                <li class="breadcrumb-item active">Active Chapter List</li>
-              </ol>
-            </div>
-          </div>
-        </div><!-- /.container-fluid -->
-      </section>
+@section('page_title', 'Chapters')
+@section('breadcrumb', 'Active Chapter List')
 
+@section('content')
      <!-- Main content -->
      <section class="content">
         <div class="container-fluid">
@@ -106,11 +93,11 @@
                 </div>
                 <div class="card-body text-center">
                     <?php if($regionalCoordinatorCondition){ ?>
-                        <a class="btn bg-gradient-primary" href="{{ route('chapters.editnew') }}"><i class="fas fa-plus" ></i>&nbsp;&nbsp;&nbsp;Add New Chapter</a>
+                        <a class="btn bg-gradient-primary" href="{{ route('chapters.editnew') }}"><i class="fas fa-plus mr-2" ></i>Add New Chapter</a>
                         <?php }?>
                         <?php
                         if($checkBoxStatus){ ?>
-                            <button class="btn bg-gradient-primary" disabled><i class="fas fa-download" ></i>&nbsp;&nbsp;&nbsp;Export Chapter List</button>
+                            <button class="btn bg-gradient-primary" disabled><i class="fas fa-download mr-2" ></i>Export Chapter List</button>
                         <?php
                         }
                         else{ ?>
