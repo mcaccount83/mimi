@@ -207,6 +207,8 @@ Route::get('/getregion/{id}', [CoordinatorController::class, 'getRegionList'])->
 Route::get('/getreporting', [CoordinatorController::class, 'getReportingList'])->name('get.reporting');
 Route::get('/getdirectreport', [CoordinatorController::class, 'getDirectReportingList'])->name('get.directreport');
 Route::get('/getchapterprimary', [CoordinatorController::class, 'getChapterPrimaryFor'])->name('get.chapterprimary');
+Route::post('/coorddetails/updatecardsent', [CoordinatorController::class, 'updateCardSent'])->name('coordinators.updatecardsent');
+Route::get('/coordreports/birthdays', [CoordinatorReportController::class, 'showRptBirthdays'])->name('coordreports.coordrptbirthdays');
 Route::post('/coorddetails/updateonleave', [CoordinatorController::class, 'updateOnLeave'])->name('coordinators.updateonleave');
 Route::post('/coorddetails/updateremoveleave', [CoordinatorController::class, 'updateRemoveLeave'])->name('coordinators.updateremoveleave');
 Route::get('/coordinator/retired', [CoordinatorController::class, 'showRetiredCoordinator'])->name('coordinators.coordretired');
@@ -226,18 +228,15 @@ Route::get('/coordreports/reportingtree', [CoordinatorReportController::class, '
 Route::get('/coordviewprofile', [CoordinatorController::class, 'viewCoordProfile'])->name('coordinators.viewprofile');
 Route::get('/coordprofile', [CoordinatorController::class, 'editCoordProfile'])->name('coordinators.profile');
 Route::post('/coordprofileupdate', [CoordinatorController::class, 'updateCoordProfile'])->name('coordinators.profileupdate');
-
-Route::get('/coordinator/coordinatornew', [CoordinatorController::class, 'showCoordinatorNew'])->name('coordinators.coordnew');
-Route::post('/coordinator/updatecoordinatornew', [CoordinatorController::class, 'updateCoordinatorNew'])->name('coordinators.updatecoordnew');
-
 Route::get('/coordinator/dashboard', [CoordinatorController::class, 'showCoordinatorDashboard'])->name('coordinators.coorddashboard');
 Route::post('/coordinator/updatedashboard/{id}', [CoordinatorController::class, 'updateCoordinatorDashboard'])->name('coordinators.updatecoorddashboard');
 Route::get('/coordreports/coordinatortodo', [CoordinatorReportController::class, 'showRptCoordToDo'])->name('coordreports.coordrpttodo');
 Route::get('/international/coordinatortodo', [InternationalController::class, 'showIntCoordinatorToDo'])->name('international.intcoordtodo');
-Route::get('/coordreports/birthdays', [CoordinatorReportController::class, 'showRptBirthdays'])->name('coordreports.coordrptbirthdays');
-Route::get('/coordreports/birthdaysview/{id}', [CoordinatorReportController::class, 'showRptBirthdaysView'])->name('coordreports.coordrptbirthdaysview');
-Route::post('/coordreports/updatebirthdays/{id}', [CoordinatorReportController::class, 'updateRptBirthdays'])->name('coordreports.updatecoordrptbirthdays');
 
+// Route::get('/coordinator/coordinatornew', [CoordinatorController::class, 'showCoordinatorNew'])->name('coordinators.coordnew');
+// Route::post('/coordinator/updatecoordinatornew', [CoordinatorController::class, 'updateCoordinatorNew'])->name('coordinators.updatecoordnew');
+// Route::get('/coordreports/birthdaysview/{id}', [CoordinatorReportController::class, 'showRptBirthdaysView'])->name('coordreports.coordrptbirthdaysview');
+// Route::post('/coordreports/updatebirthdays/{id}', [CoordinatorReportController::class, 'updateRptBirthdays'])->name('coordreports.updatecoordrptbirthdays');
 // Route::get('/coordinator/coordinatorview/{id}', [CoordinatorController::class, 'showCoordinatorView'])->name('coordinators.coordview');
 // Route::post('/coordinator/updatecoordinator/{id}', [CoordinatorController::class, 'updateCoordinator'])->name('coordinators.updatecoord');
 // Route::get('/coordinator/roleview/{id}', [CoordinatorController::class, 'showCoordinatorRoleView'])->name('coordinators.coordroleview');

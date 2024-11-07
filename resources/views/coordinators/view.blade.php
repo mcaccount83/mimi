@@ -179,7 +179,7 @@
                                 Birthday: {{$coordinatorDetails[0]->birthday_month}} {{$coordinatorDetails[0]->birthday_day}}<br>
                                 Card Sent: <span class="date-mask">{{ $coordinatorDetails[0]->card_sent }}</span><br>
                                 @if ($assistConferenceCoordinatorCondition)
-                                    <button class="btn bg-gradient-primary btn-sm" onclick="window.location.href='{{ route('coordreports.coordrptbirthdaysview', ['id' => $coordinatorDetails[0]->id]) }}'">Update Birthday Card Sent</button>
+                                    <button class="btn bg-gradient-primary btn-sm" onclick="updateCardSent()">Update Birthday Card Sent</button>
                                 @endif
                             </div>
                         </div>
@@ -331,6 +331,85 @@ document.querySelectorAll('.reset-password-btn').forEach(button => {
         });
     });
 });
+
+function updateCardSent() {
+    const coordId = '{{ $coordinatorDetails[0]->id ?? '' }}'; // Use a fallback if `id` is null or undefined
+
+    Swal.fire({
+        title: 'Enter Date',
+        html: `
+            <p>Please enter the Date that the Birthday card was sent.</p>
+            <div style="display: flex; align-items: center;">
+                <input type="date" id="card_sent" name="card_sent" class="swal2-input" placeholder="Enter Date" required style="width: 100%;">
+            </div>
+            <input type="hidden" id="coord_id" name="coord_id" value="${coordId}">
+            <br>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const card_sent = Swal.getPopup().querySelector('#card_sent').value;
+            const coord_id = Swal.getPopup().querySelector('#coord_id').value;
+
+            if (!card_sent) {
+                Swal.showValidationMessage(`Please enter a date.`);
+            }
+
+            return {
+                id: coord_id,
+                card_sent: card_sent,
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            // Perform the AJAX request to update the coordinator info
+            $.ajax({
+                url: '{{ route('coordinators.updatecardsent') }}',
+                type: 'POST',
+                data: {
+                    id: data.id,
+                    card_sent: data.card_sent,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    Swal.fire({
+                        title: 'Success!',
+                        text: response.message,
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    }).then(() => {
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
+                        }
+                    });
+                },
+                error: function(jqXHR, exception) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Something went wrong, Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn-sm btn-success'
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
 
 function onLeaveCoordinator(coordId) {
     Swal.fire({

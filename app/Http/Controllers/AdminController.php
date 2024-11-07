@@ -525,7 +525,11 @@ class AdminController extends Controller
         }
 
         $chapterList = DB::table('chapters as ch')
-            ->select('ch.*')
+            ->select('ch.*', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth')
+            ->join('state as st', 'ch.state', '=', 'st.id')
+            ->join('conference as cf', 'ch.conference', '=', 'cf.id')
+            ->join('region as rg', 'ch.region', '=', 'rg.id')
+            ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $id)
             ->get();
@@ -535,10 +539,16 @@ class AdminController extends Controller
             ->orderBy('id')
             ->get();
 
+        $monthArr = DB::table('month')
+            ->select('month.*')
+            ->orderBy('id')
+            ->get();
+
+
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
         $currentMonth = $chapterList[0]->start_month_id;
 
-        $data = ['id' => $id, 'currentMonth' => $currentMonth, 'chapterList' => $chapterList, 'stateArr' => $stateArr, 'foundedMonth' => $foundedMonth];
+        $data = ['id' => $id, 'chapterList' => $chapterList, 'stateArr' => $stateArr, 'monthArr' => $monthArr];
 
         return view('admin.editreregdate')->with($data);
     }
@@ -554,6 +564,7 @@ class AdminController extends Controller
             $chapter->start_month_id = $request->input('ch_founddate');
             $chapter->next_renewal_year = $request->input('ch_renewyear');
             $chapter->dues_last_paid = $request->input('ch_duespaid');
+            $chapter->members_paid_for = $request->input('ch_members');
             $chapter->last_updated_by = $lastUpdatedBy;
             $chapter->last_updated_date = date('Y-m-d H:i:s');
 
@@ -570,8 +581,6 @@ class AdminController extends Controller
             return redirect()->to('/admin/reregdate')->with('error', 'Failed to update Re-Reg Date.');
         }
     }
-
-
 
       /**
      * error logs

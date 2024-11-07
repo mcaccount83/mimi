@@ -1598,6 +1598,53 @@ class CoordinatorController extends Controller
         return view('coordinators.view')->with($data);
     }
 
+    public function updateCardSent(Request $request)
+    {
+        $corDetails = User::find($request->user()->id)->Coordinators;
+        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+
+        // Get the `id` directly from the request
+        $coordId = $request->input('id');
+        $cardSent = $request->input('card_sent');
+
+
+
+        try {
+            DB::beginTransaction();
+
+            // Update the database using the `id` field instead of `coord_id`
+            DB::table('coordinators')
+                ->where('id', $coordId)
+                ->update([
+                    'card_sent' => $cardSent,
+                    'last_updated_by' => $lastUpdatedBy,
+                    'last_updated_date' => now()
+                ]);
+
+            DB::commit();
+
+            $message = 'Coordinator Birthday Card Sent date successfully updated';
+
+            // Return JSON response with correct route, using `id`
+            return response()->json([
+                'status' => 'success',
+                'message' => $message,
+                'redirect' => route('coordinators.view', ['id' => $coordId])
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollback();
+            Log::error($e);
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something went wrong, please try again.',
+                'redirect' => route('coordinators.view', ['id' => $coordId])
+            ]);
+        }
+    }
+
+
      /**
      * Update Putting a Coordinator on Leave
      */

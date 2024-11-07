@@ -34,7 +34,7 @@
                 <table id="coordinatorlist" class="table table-sm table-hover" >
 				<thead>
 			    <tr>
-			        <th>Edit</th>
+			        <th>Details</th>
 			        <th>Conf/Reg</th>
 					<th>First Name</th>
 					<th>Last Name</th>
@@ -47,7 +47,7 @@
                 @foreach($coordinatorList as $list)
                   <tr>
                       <td class="text-center align-middle">
-                        <a href="{{ url("/coordreports/birthdaysview/{$list->cor_id}") }}"><i class="fas fa-edit"></i></a></td>
+                        <a href="{{ url("/coorddetails/{$list->cor_id}") }}"><i class="fas fa-eye"></i></a></td>
                         <td>
                             @if ($list->reg != "None")
                                 {{ $list->conf }} / {{ $list->reg }}
