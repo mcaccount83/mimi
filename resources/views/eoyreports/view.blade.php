@@ -160,7 +160,7 @@
                             <label>Financial Report:</label>
                         </div>
                         <div class="col-sm-9">
-                            <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreportview', ['id' => $chapterList[0]->id]) }}'">View Financial Report</button>
+                            <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='{{ route('eoyreports.reviewfinancialreport', ['id' => $chapterList[0]->id]) }}'">View Financial Report</button>
                         </div>
                     </div>
 
@@ -313,17 +313,17 @@
           <div class="col-md-12">
             <div class="card-body text-center">
                 @if ($coordinatorCondition)
-                    <button type="submit" class="btn bg-gradient-primary mb-3" >Save EOY Information</button>
+                    <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save EOY Information</button>
                     @if ($chapterList[0]->boundary_issues != null)
-                        <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.editboundaries', ['id' => $chapterList[0]->id]) }}'">Update Boundary Issues</button>
+                        <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.editboundaries', ['id' => $chapterList[0]->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Boundary Issues</button>
                     @else
-                        <button class="btn bg-gradient-primary mb-3 disabled">Update Boundary Issues</button>
+                        <button class="btn bg-gradient-primary mb-3 disabled"><i class="fas fa-edit mr-2"></i>Update Boundary Issues</button>
                     @endif
-                        <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.editawards', ['id' => $chapterList[0]->id]) }}'">Update Award Information</button>
+                        <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.editawards', ['id' => $chapterList[0]->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Award Information</button>
                     <br>
                     @endif
-                    <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoystatus') }}'">Back to EOY Status Report</button>
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chapterList[0]->id]) }}'">Back to Chapter Details</button>
+                    <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoystatus') }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Status Report</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chapterList[0]->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
 
             </div>
         </div>

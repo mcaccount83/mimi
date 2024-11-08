@@ -142,8 +142,8 @@
           <!-- /.col -->
           <div class="col-md-12">
             <div class="card-body text-center">
-                <button type="submit" class="btn bg-gradient-primary" onclick="return PreSaveValidate();"><i class="fas fa-save" ></i>&nbsp;&nbsp;&nbsp;Save</button>
-                <button type="button" class="btn btn-primary" onclick="showChangePasswordAlert()"><i class="fas fa-lock" ></i>&nbsp; Change Password</button>
+                <button type="submit" class="btn bg-gradient-primary" onclick="return PreSaveValidate();"><i class="fas fa-save mr-2" ></i>Save</button>
+                <button type="button" class="btn btn-primary" onclick="showChangePasswordAlert()"><i class="fas fa-lock mr-2" ></i>Change Password</button>
             </div>
         </div>
         </div>

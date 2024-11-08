@@ -320,18 +320,18 @@
 
     <div class="card-body text-center">
         <br>
-        <button type="submit" id="btn-step-14" class="btn bg-gradient-primary mb-2">Save Report Review</button>
+        <button type="submit" id="btn-step-14" class="btn bg-gradient-primary mb-2"><i class="fas fa-save mr-2"></i>Save Report Review</button>
         <br>
         @if ($financial_report_array['review_complete'] != "" && $submitted)
             @if ($regionalCoordinatorCondition)
-                <button type="button" class="btn bg-gradient-success" id="review-clear">Clear Review Complete</button>
+                <button type="button" class="btn bg-gradient-success" id="review-clear"><i class="fas fa-minus-circle mr-2"></i>Clear Review Complete</button>
             @else
-                <button type="button" class="btn bg-gradient-success disabled">Clear Review Complete</button>
+                <button type="button" class="btn bg-gradient-success disabled"><i class="fas fa-minus-circle mr-2"></i>Clear Review Complete</button>
             @endif
         @else
-            <button type="button" class="btn bg-gradient-success" id="review-complete">Mark as Review Complete</button>
+            <button type="button" class="btn bg-gradient-success" id="review-complete"><i class="fas fa-check mr-2"></i>Mark as Review Complete</button>
         @endif
-            <button type="button" class="btn bg-gradient-danger" id="unsubmit">UnSubmit Report</button>
+            <button type="button" class="btn bg-gradient-danger" id="unsubmit"><i class="fas fa-undo mr-2"></i>UnSubmit Report</button>
         <br>
         <span style="color:red;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></span>
     </div>
@@ -623,7 +623,7 @@
 
                             <!-- end:report_review -->
                             <div class="col-12 text-center">
-								  <button type="submit" id="btn-step-1" class="btn bg-gradient-primary" >Save Report Review</button>
+								  <button type="submit" id="btn-step-1" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
 							</div>
                         </div>
                     </div>
@@ -741,7 +741,7 @@
 								<!-- end:report_review -->
 
                                 <div class="col-12 text-center">
-									<button type="submit" id="btn-step-2" class="btn bg-gradient-primary" >Save Report Review</button>
+									<button type="submit" id="btn-step-2" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
                                 </div>
                             </div>
                         </div>
@@ -885,7 +885,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
 						<!-- end:report_review -->
                         <div class="col-12 text-center">
-						  <button type="submit" id="btn-step-3" class="btn bg-gradient-primary" >Save Report Review</button>
+						  <button type="submit" id="btn-step-3" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
 					    </div>
                     </div>
                 </div>
@@ -1023,7 +1023,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
 					<!-- end:report_review -->
                     <div class="col-12 text-center">
-                        <button type="submit" id="btn-step-4" class="btn bg-gradient-primary" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>>Save Report Review</button>
+                        <button type="submit" id="btn-step-4" class="btn bg-gradient-primary" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fas fa-save mr-2"></i>Save Report Review</button>
                     </div>
                 </div>
             </div>
@@ -1129,7 +1129,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
                     <!-- end:report_review -->
                     <div class="col-12 text-center">
-                        <button type="submit" id="btn-step-5" class="btn bg-gradient-primary" >Save Report Review</button>
+                        <button type="submit" id="btn-step-5" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
                     </div>
                 </div>
             </div>
@@ -1245,7 +1245,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
                     <!-- end:report_review -->
                     <div class="col-12 text-center">
-                          <button type="submit" id="btn-step-6" class="btn bg-gradient-primary" >Save Report Review</button>
+                          <button type="submit" id="btn-step-6" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
                     </div>
                 </div>
             </div>
@@ -1405,7 +1405,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
 						<!-- end:report_review -->
                         <div class="col-12 text-center">
-							  <button type="submit" id="btn-step-7" class="btn bg-gradient-primary" >Save Report Review</button>
+							  <button type="submit" id="btn-step-7" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
                         <div>
                         </div>
                     </div>
@@ -1518,7 +1518,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
 					<!-- end:report_review -->
                     <div class="col-12 text-center">
-							  <button type="submit" id="btn-step-8" class="btn bg-gradient-primary" >Save Report Review</button>
+							  <button type="submit" id="btn-step-8" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
 					</div>
                 </div>
             </div>
@@ -1667,7 +1667,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                             <div class="col-12"><br></div>
 		    <!-- end:report_review -->
                     <div class="col-12 text-center">
-                        <button type="submit" id="btn-step-9" class="btn bg-gradient-primary" >Save Report Review</button>
+                        <button type="submit" id="btn-step-9" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
                         </div>
                     </div>
                 </div>
@@ -1928,7 +1928,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
                     <!-- end:report_review -->
                     <div class="col-12 text-center">
-                        <button type="submit" id="btn-step-10" class="btn bg-gradient-primary" >Save Report Review</button>
+                        <button type="submit" id="btn-step-10" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
                     </div>
                 </div>
             </div>
@@ -2019,7 +2019,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
                 <!-- end:report_review -->
                 <div class="col-12 text-center">
-                    <button type="submit" id="btn-step-11" class="btn bg-gradient-primary" >Save Report Review</button>
+                    <button type="submit" id="btn-step-11" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
                 </div>
             </div>
         </div>
@@ -2348,7 +2348,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
 				<!-- end:report_review -->
                 <div class="col-12 text-center">
-						<button type="submit" id="btn-step-12" class="btn bg-gradient-primary" >Save Report Review</button>
+						<button type="submit" id="btn-step-12" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
 					</div>
                 </div>
             </div>
@@ -2911,7 +2911,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
 							<!-- end:report_review -->
                         <div class="col-12 text-center">
-							 <button type="submit" id="btn-step-13" class="btn bg-gradient-primary" >Save Report Review</button>
+							 <button type="submit" id="btn-step-13" class="btn bg-gradient-primary" ><i class="fas fa-save mr-2"></i>Save Report Review</button>
 						</div>
                     </div>
                 </div>
@@ -3292,13 +3292,13 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 
 <div class="card-body text-center">
     @if ($submitted)
-        <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn bg-gradient-primary mb-2" >Download PDF Report</a>
+        <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn bg-gradient-primary mb-2" ><i class="fas fa-download mr-2"></i>Download PDF Report</a>
     @else
         <a id="downloadPdfLink" href="#" class="btn bg-gradient-primary mb-2 disabled">Download PDF Report</a>
     @endif
     <br>
-    <button type="button" id="back-list" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport') }}'">Back to Financial Report List</button>
-    <button type="button" id="back-details" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chapterid]) }}'">Back to EOY Details</button>
+    <button type="button" id="back-list" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport') }}'"><i class="fas fa-reply mr-2"></i>Back to Financial Report List</button>
+    <button type="button" id="back-details" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chapterid]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
 </div>
 
             {{-- <div class="card-body text-center">

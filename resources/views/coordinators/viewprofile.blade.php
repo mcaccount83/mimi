@@ -147,20 +147,20 @@
           <div class="col-md-12">
             <div class="card-body text-center">
 
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.profile') }}'">Update Profile</button>
+                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.profile') }}'"><i class="fas fa-edit mr-2"></i>Update Profile</button>
 
                 @if ($coordinatorCondition)
-                    <button type="button" id="back" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'">View Chapter List</button>
+                    <button type="button" id="back" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="fas fa-eye mr-2"></i>View Chapter List</button>
                 @elseif($inquiriesCondition)
-                    <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.window.location.href='{{ route('chapters.chapinquiries') }}'">View Inquiries Chapter List</button>
+                    <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.window.location.href='{{ route('chapters.chapinquiries') }}'"><i class="fas fa-eye mr-2"></i>View Inquiries Chapter List</button>
                 @elseif($einCondition || $inquiriesCondition || $adminReportCondition)
-                    <button type="button" id="back-international"class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapter') }}'">View International Chapter List</button>
+                    <button type="button" id="back-international"class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapter') }}'"><i class="fas fa-eye mr-2"></i>View International Chapter List</button>
                 @endif
 
                 @if ($coordinatorCondition)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist') }}'">View Coordinator List</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('coordinators.coordlist') }}'"><i class="fas fa-eye mr-2"></i>View Coordinator List</button>
                 @elseif($adminReportCondition)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoord') }}'">View International Coordinator List</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intcoord') }}'"><i class="fas fa-eye mr-2"></i>View International Coordinator List</button>
                 @endif
 
         </div>

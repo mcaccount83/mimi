@@ -56,7 +56,7 @@
               {{-- <table id="chapterlist_reRegDate" class="table table-bordered table-hover"> --}}
               <thead>
       			    <tr>
-          			<th>Edit Date</th>
+          			<th>Details</th>
                     <th>Conf/Reg</th>
           			<th>State</th>
                     <th>Name</th>
@@ -67,7 +67,7 @@
                 <tbody>
                     @foreach($reChapterList as $list)
                   <tr>
-                        <td class="text-center align-middle"><a href="{{ url("/admin/reregdate/{$list->id}") }}"><i class="fas fa-edit"></i></a></td>
+                        <td class="text-center align-middle"><a href="{{ url("/admin/reregdate/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                         <td>
                             @if ($list->reg != "None")
                                 {{ $list->conf }} / {{ $list->reg }}

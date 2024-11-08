@@ -112,7 +112,7 @@
                 <a title="Re-registration reminders will be sent to all unpaid chapters in your conference with renewal dates this month." href="{{ route('chapters.chapreregreminder') }}"><button class="btn bg-gradient-primary"   <?php if($checkBoxStatus) echo "disabled";?>><i class="fas fa-envelope mr-2" ></i>Send Current Month Reminders</button></a>
                 <?php }?>
                 <?php if($conferenceCoordinatorCondition){ ?>
-                    <a href="{{route('chapters.chaprereglatereminder')}}" class="btn bg-gradient-primary" <?php if($checkBoxStatus) echo "disabled";?>><i class="fas fa-envelope mr-2" ></i>end One Month Late Notices</a>
+                    <a href="{{route('chapters.chaprereglatereminder')}}" class="btn bg-gradient-primary" <?php if($checkBoxStatus) echo "disabled";?>><i class="fas fa-envelope mr-2" ></i>Send One Month Late Notices</a>
                 <?php }?>
 					<a href="{{ route('export.rereg')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download mr-2" ></i>Export Overdue Chapter List</button></a>
             </div>
