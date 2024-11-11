@@ -28,6 +28,21 @@
 <section class="content">
     <div class="container">
         <div class="row">
+
+            <form method="POST" action='{{ route("board.update",$chapterList[0]->id) }}' autocomplete="off">
+				@csrf
+
+                <input  type="hidden" id="ch_pre_email_chk" value="{{ $chapterList[0]->bd_email }}">
+                <input  type="hidden" id="ch_avp_email_chk" value="{{ $AVPDetails[0]->avp_email }}" >
+                <input  type="hidden" id="ch_mvp_email_chk" value="{{ $MVPDetails[0]->mvp_email }}">
+                <input  type="hidden" id="ch_trs_email_chk" value="{{ $TRSDetails[0]->trs_email }}">
+                <input  type="hidden" id="ch_sec_email_chk" value="{{ $SECDetails[0]->sec_email }}">
+
+
+
+
+
+
             <div class="col-md-12">
          <!-- Widget: user widget style 1 -->
          <div class="card card-widget widget-user">
@@ -42,8 +57,8 @@
                     $thisDate = \Illuminate\Support\Carbon::now();
                 @endphp
                 <div class="col-md-12"><br><br></div>
-                    <h2 class="text-center"> MOMS Club of {{ $chapterList[0]->name }}, {{$chapterState}} </h2>
-                    <h4 class="text-center"> {{$chapterList[0]->first_name}} {{$chapterList[0]->last_name}}, {{$boardPositionAbbreviation}}</h4>
+                    {{-- <h2 class="text-center"> MOMS Club of {{ $chapterList[0]->name }}, {{$chapterState}} </h2> --}}
+                    <h2 class="text-center"> {{$chapterList[0]->first_name}} {{$chapterList[0]->last_name}}, {{$boardPositionAbbreviation}}</h2>
                     <p class="description text-center">
                             Welcome to the MOMS information Management Interface, affectionately called MIMI!
                             </br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
@@ -136,83 +151,83 @@
                         <div class="form-group row">
                             <label class="col-sm-2 mb-1 col-form-label">AVP:</label>
                             <div class="col-sm-10 mt-1 custom-control custom-switch">
-                                <input type="checkbox" name="AVPVacant" id="AVPVacant" class="custom-control-input" onchange="ConfirmVacant(this.id)" checked>
+                                <input type="checkbox" name="AVPVacant" id="AVPVacant" class="custom-control-input" {{$AVPDetails[0]->avp_fname == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
                                 <label class="custom-control-label" for="AVPVacant">Vacant</label>
                             </div>
                             <label class="avp-field col-sm-2 mb-1 col-form-label"></label>
                             <div class="avp-field col-sm-5 mb-1">
-                                <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control" required placeholder="First Name">
-                            </div>
-                            <div class="avp-field col-sm-5 mb-1">
-                                <input type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control" required placeholder="Last Name">
-                            </div>
-                            <label class="avp-field col-sm-2 mb-1 col-form-label"></label>
-                            <div class="avp-field col-sm-5 mb-1">
-                            <input type="text" name="ch_avp_email" id="ch_avp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" required placeholder="Email Address" >
-                            </div>
-                            <div class="avp-field col-sm-5 mb-1">
-                            <input type="text" name="ch_avp_phone" id="ch_avp_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask required placeholder="Phone Number" >
-                            </div>
-                            <label class="avp-field col-sm-2 mb-1 col-form-label"></label>
-                            <div class="avp-field col-sm-10 mb-1">
-                            <input type="text" name="ch_avp_street" id="ch_avp_street" class="form-control" placeholder="Address" required >
-                            </div>
-                            <label class="avp-field col-sm-2 mb-1 col-form-label"><br></label>
-                            <div class="avp-field col-sm-5 mb-1">
-                            <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control" placeholder="City" required >
-                            </div>
-                            <div class="avp-field col-sm-3 mb-1">
-                                <select name="ch_avp_state" class="form-control" style="width: 100%;" required>
-                                    <option value="">Select State</option>
-                                        @foreach($stateArr as $state)
-                                            <option value="{{$state->state_short_name}}"></option>
-                                        @endforeach
-                                </select>
-                            </div>
-                            <div class="avp-field col-sm-2 mb-1">
-                                <input type="text" name="ch_avp_zip" id="ch_avp_zip" class="form-control" placeholder="Zip" required >
-                            </div>
+                                <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control" value="{{$AVPDetails[0]->avp_fname != ''  ? $AVPDetails[0]->avp_fname : ''}}" required placeholder="First Name" >
+                                </div>
+                                <div class="avp-field col-sm-5 mb-1">
+                                <input type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control" value="{{$AVPDetails[0]->avp_lname != ''  ? $AVPDetails[0]->avp_lname : ''}}" required placeholder="Last Name" >
+                                </div>
+                                <label class="avp-field col-sm-2 mb-1 col-form-label"></label>
+                                <div class="avp-field col-sm-5 mb-1">
+                                <input type="text" name="ch_avp_email" id="ch_avp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$AVPDetails[0]->avp_email != ''  ? $AVPDetails[0]->avp_email : ''}}" required placeholder="Email Address" >
+                                </div>
+                                <div class="avp-field col-sm-5 mb-1">
+                                <input type="text" name="ch_avp_phone" id="ch_avp_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$AVPDetails[0]->avp_phone != ''  ? $AVPDetails[0]->avp_phone : ''}}" required placeholder="Phone Number" >
+                                </div>
+                                <label class="avp-field col-sm-2 mb-1 col-form-label"></label>
+                                <div class="avp-field col-sm-10 mb-1">
+                                <input type="text" name="ch_avp_street" id="ch_avp_street" class="form-control" value="{{$AVPDetails[0]->avp_addr != ''  ? $AVPDetails[0]->avp_addr : ''}}"  required >
+                                </div>
+                                <label class="avp-field col-sm-2 mb-1 col-form-label"><br></label>
+                                <div class="avp-field col-sm-5 mb-1">
+                                <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control" value="{{$AVPDetails[0]->avp_city != ''  ? $AVPDetails[0]->avp_city : ''}}"  required >
+                                </div>
+                                <div class="avp-field col-sm-3 mb-1">
+                                    <select name="ch_avp_state" class="form-control" style="width: 100%;" required>
+                                        <option value="">Select State</option>
+                                            @foreach($stateArr as $state)
+                                                <option value="{{$state->state_short_name}}" {{$AVPDetails[0]->avp_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
+                                            @endforeach
+                                    </select>
+                                </div>
+                                <div class="avp-field col-sm-2 mb-1">
+                                    <input type="text" name="ch_avp_zip" id="ch_avp_zip" class="form-control" value="{{$AVPDetails[0]->avp_zip != ''  ? $AVPDetails[0]->avp_zip : ''}}"  required >
+                                </div>
                         </div>
 
                          <!-- /.form group -->
                          <div class="form-group row">
                             <label class="col-sm-2 mb-1 col-form-label">MVP:</label>
                             <div class="col-sm-10 mt-1 custom-control custom-switch">
-                                    <input type="checkbox" name="MVPVacant" id="MVPVacant" class="custom-control-input"onchange="ConfirmVacant(this.id)" checked>
+                                    <input type="checkbox" name="MVPVacant" id="MVPVacant" class="custom-control-input" {{$MVPDetails[0]->mvp_fname == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
                                     <label class="custom-control-label" for="MVPVacant">Vacant</label>
                             </div>
                             <label class="mvp-field col-sm-2 mb-1 col-form-label"></label>
                             <div class="mvp-field col-sm-5 mb-1">
-                            <input type="text" name="ch_mvp_fname" id="ch_mvp_fname" class="form-control" required placeholder="First Name" >
+                            <input type="text" name="ch_mvp_fname" id="ch_mvp_fname" class="form-control" value="{{$MVPDetails[0]->mvp_fname != ''  ? $MVPDetails[0]->mvp_fname : ''}}" required placeholder="First Name" >
                             </div>
                             <div class="mvp-field col-sm-5 mb-1">
-                            <input type="text" name="ch_mvp_lname" id="ch_mvp_lname" class="form-control" required placeholder="Last Name" >
+                            <input type="text" name="ch_mvp_lname" id="ch_mvp_lname" class="form-control" value="{{$MVPDetails[0]->mvp_lname != ''  ? $MVPDetails[0]->mvp_lname : ''}}" required placeholder="Last Name" >
                             </div>
                             <label class="mvp-field col-sm-2 mb-1 col-form-label"></label>
                             <div class="mvp-field col-sm-5 mb-1">
-                            <input type="text" name="ch_mvp_email" id="ch_mvp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" required placeholder="Email Address" >
+                            <input type="text" name="ch_mvp_email" id="ch_mvp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$MVPDetails[0]->mvp_email != ''  ? $MVPDetails[0]->mvp_email : ''}}" required placeholder="Email Address" >
                             </div>
                             <div class="mvp-field col-sm-5 mb-1">
-                            <input type="text" name="ch_mvp_phone" id="ch_mvp_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask required placeholder="Phone Number" >
+                            <input type="text" name="ch_mvp_phone" id="ch_mvp_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$MVPDetails[0]->mvp_phone != ''  ? $MVPDetails[0]->mvp_phone : ''}}" required placeholder="Phone Number" >
                             </div>
                             <label class="mvp-field col-sm-2 mb-1 col-form-label"></label>
                             <div class="mvp-field col-sm-10 mb-1">
-                            <input type="text" name="ch_mvp_street" id="ch_mvp_street" class="form-control" placeholder="Address" required >
+                            <input type="text" name="ch_mvp_street" id="ch_mvp_street" class="form-control" placeholder="Address" value="{{$MVPDetails[0]->mvp_addr != ''  ? $MVPDetails[0]->mvp_addr : ''}}" required >
                             </div>
                             <label class="mvp-field col-sm-2 mb-1 col-form-label"><br></label>
                             <div class="mvp-field col-sm-5 mb-1">
-                            <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control" placeholder="City" required >
+                            <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control" placeholder="City" value="{{$MVPDetails[0]->mvp_city != ''  ? $MVPDetails[0]->mvp_city : ''}}" required >
                             </div>
                             <div class="mvp-field col-sm-3 mb-1">
                                 <select name="ch_mvp_state" class="form-control" style="width: 100%;" required>
                                     <option value="">Select State</option>
                                         @foreach($stateArr as $state)
-                                            <option value="{{$state->state_short_name}}" ></option>
+                                        <option value="{{$state->state_short_name}}" {{$MVPDetails[0]->mvp_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
                                         @endforeach
                                 </select>
                             </div>
                             <div class="mvp-field col-sm-2 mb-1">
-                                <input type="text" name="ch_mvp_zip" id="ch_mvp_zip" class="form-control" placeholder="Zip" required >
+                                <input type="text" name="ch_mvp_zip" id="ch_mvp_zip" class="form-control" placeholder="Zip" value="{{$MVPDetails[0]->mvp_zip != ''  ? $MVPDetails[0]->mvp_zip : ''}}" required >
                             </div>
                         </div>
 
@@ -220,41 +235,41 @@
                         <div class="form-group row">
                             <label class="col-sm-2 mb-1 col-form-label">Treasurer:</label>
                             <div class="col-sm-10 mt-1 custom-control custom-switch">
-                                    <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input" onchange="ConfirmVacant(this.id)" checked>
+                                    <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input" {{$TRSDetails[0]->trs_fname == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
                                     <label class="custom-control-label" for="TreasVacant">Vacant</label>
                             </div>
                             <label class="treas-field col-sm-2 mb-1 col-form-label"></label>
                             <div class="treas-field col-sm-5 mb-1">
-                            <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control"  required placeholder="First Name" >
+                            <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control"  value="{{$TRSDetails[0]->trs_fname != ''  ? $TRSDetails[0]->trs_fname : ''}}" required placeholder="First Name" >
                             </div>
                             <div class="treas-field col-sm-5 mb-1">
-                            <input type="text" name="ch_trs_lname" id="ch_trs_lname" class="form-control"  required placeholder="Last Name" >
+                            <input type="text" name="ch_trs_lname" id="ch_trs_lname" class="form-control" value="{{$TRSDetails[0]->trs_lname != ''  ? $TRSDetails[0]->trs_lname : ''}}" required placeholder="Last Name" >
                             </div>
                             <label class="treas-field col-sm-2 mb-1 col-form-label"></label>
                             <div class="treas-field col-sm-5 mb-1">
-                            <input type="text" name="ch_trs_email" id="ch_trs_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)"  required placeholder="Email Address" >
+                            <input type="text" name="ch_trs_email" id="ch_trs_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$TRSDetails[0]->trs_email != ''  ? $TRSDetails[0]->trs_email : ''}}" required placeholder="Email Address" >
                             </div>
                             <div class="treas-field col-sm-5 mb-1">
-                            <input type="text" name="ch_trs_phone" id="ch_trs_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask  required placeholder="Phone Number" >
+                            <input type="text" name="ch_trs_phone" id="ch_trs_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$TRSDetails[0]->trs_phone != ''  ? $TRSDetails[0]->trs_phone : ''}}" required placeholder="Phone Number" >
                             </div>
                             <label class="treas-field col-sm-2 mb-1 col-form-label"></label>
                             <div class="treas-field col-sm-10 mb-1">
-                            <input type="text" name="ch_trs_street" id="ch_trs_street" class="form-control" placeholder="Address" required >
+                            <input type="text" name="ch_trs_street" id="ch_trs_street" class="form-control" placeholder="Address" value="{{$TRSDetails[0]->trs_addr != ''  ? $TRSDetails[0]->trs_addr : ''}}" required >
                             </div>
                             <label class="treas-field col-sm-2 mb-1 col-form-label"><br></label>
                             <div class="treas-field col-sm-5 mb-1">
-                            <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control" placeholder="City" required >
+                            <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control" placeholder="City" value="{{$TRSDetails[0]->trs_city != ''  ? $TRSDetails[0]->trs_city : ''}}" required >
                             </div>
                             <div class="treas-field col-sm-3 mb-1">
                                 <select name="ch_trs_state" class="form-control" style="width: 100%;" required>
                                     <option value="">Select State</option>
                                         @foreach($stateArr as $state)
-                                            <option value="{{$state->state_short_name}}"></option>
+                                        <option value="{{$state->state_short_name}}" {{$TRSDetails[0]->trs_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
                                         @endforeach
                                 </select>
                             </div>
                             <div class="treas-field col-sm-2 mb-1">
-                                <input type="text" name="ch_trs_zip" id="ch_trs_zip" class="form-control" placeholder="Zip" required >
+                                <input type="text" name="ch_trs_zip" id="ch_trs_zip" class="form-control" placeholder="Zip" value="{{$TRSDetails[0]->trs_zip != ''  ? $TRSDetails[0]->trs_zip : ''}}" required >
                             </div>
                         </div>
 
@@ -262,41 +277,41 @@
                         <div class="form-group row">
                             <label class="col-sm-2 mb-1 col-form-label">Secretary:</label>
                             <div class="col-sm-10 mt-1 custom-control custom-switch">
-                                    <input type="checkbox" name="SecVacant" id="SecVacant" class="custom-control-input" onchange="ConfirmVacant(this.id)" checked>
+                                    <input type="checkbox" name="SecVacant" id="SecVacant" class="custom-control-input" {{$SECDetails[0]->sec_fname == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
                                     <label class="custom-control-label" for="SecVacant">Vacant</label>
                             </div>
                             <label class="sec-field col-sm-2 mb-1 col-form-label"></label>
                             <div class="sec-field col-sm-5 mb-1">
-                            <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control"  required placeholder="First Name" >
+                            <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control" value="{{$SECDetails[0]->sec_fname != ''  ? $SECDetails[0]->sec_fname : ''}}" required placeholder="First Name" >
                             </div>
                             <div class="sec-field col-sm-5 mb-1">
-                            <input type="text" name="ch_sec_lname" id="ch_sec_lname" class="form-control"  required placeholder="Last Name" >
+                            <input type="text" name="ch_sec_lname" id="ch_sec_lname" class="form-control" value="{{$SECDetails[0]->sec_lname != ''  ? $SECDetails[0]->sec_lname : ''}}" required placeholder="Last Name" >
                             </div>
                             <label class="sec-field col-sm-2 mb-1 col-form-label"></label>
                             <div class="sec-field col-sm-5 mb-1">
-                            <input type="text" name="ch_sec_email" id="ch_sec_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)"  required placeholder="Email Address" >
+                            <input type="text" name="ch_sec_email" id="ch_sec_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$SECDetails[0]->sec_email != ''  ? $SECDetails[0]->sec_email : ''}}" required placeholder="Email Address" >
                             </div>
                             <div class="sec-field col-sm-5 mb-1">
-                            <input type="text" name="ch_sec_phone" id="ch_sec_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask required placeholder="Phone Number" >
+                            <input type="text" name="ch_sec_phone" id="ch_sec_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$SECDetails[0]->sec_phone != ''  ? $SECDetails[0]->sec_phone : ''}}" required placeholder="Phone Number" >
                             </div>
                             <label class="sec-field col-sm-2 mb-1 col-form-label"></label>
                             <div class="sec-field col-sm-10 mb-1">
-                            <input type="text" name="ch_sec_street" id="ch_sec_street" class="form-control" placeholder="Address" required >
+                            <input type="text" name="ch_sec_street" id="ch_sec_street" class="form-control" placeholder="Address" value="{{$SECDetails[0]->sec_addr != ''  ? $SECDetails[0]->sec_addr : ''}}" required >
                             </div>
                             <label class="sec-field col-sm-2 mb-1 col-form-label"><br></label>
                             <div class="sec-field col-sm-5 mb-1">
-                            <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control" placeholder="City" required >
+                            <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control" placeholder="City" value="{{$SECDetails[0]->sec_city != ''  ? $SECDetails[0]->sec_city : ''}}" required >
                             </div>
                             <div class="sec-field col-sm-3 mb-1">
                                 <select name="ch_sec_state" class="form-control" style="width: 100%;" required>
                                     <option value="">Select State</option>
                                         @foreach($stateArr as $state)
-                                            <option value="{{$state->state_short_name}}"></option>
+                                            <option value="{{$state->state_short_name}}" {{$SECDetails[0]->sec_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
                                         @endforeach
                                 </select>
                             </div>
                             <div class="sec-field col-sm-2 mb-1">
-                                <input type="text" name="ch_sec_zip" id="ch_sec_zip" class="form-control" placeholder="Zip" required >
+                                <input type="text" name="ch_sec_zip" id="ch_sec_zip" class="form-control" value="{{$SECDetails[0]->sec_zip != ''  ? $SECDetails[0]->sec_zip : ''}}" placeholder="Zip" required >
                             </div>
                         </div>
                         <hr>
@@ -336,14 +351,14 @@
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label"></label>
                             <div class="col-sm-5">
-                                <select name="ch_webstatus" id="ch_webstatus"class="form-control" style="width: 100%;" required>
+                                {{-- <select name="ch_webstatus" id="ch_webstatus"class="form-control" style="width: 100%;" required>
                                     <option value="">Select Status</option>
-                                    {{-- @foreach($webStatusArr as $webstatusKey => $webstatusText)
+                                    @foreach($webStatusArr as $webstatusKey => $webstatusText)
                                         <option value="{{ $webstatusKey }}" {{ $chapterList[0]->website_status == $webstatusKey ? 'selected' : '' }} >
                                             {{ $webstatusText }}
                                         </option>
-                                    @endforeach --}}
-                                </select>
+                                    @endforeach
+                                </select> --}}
                             </div>
                         </div>
 
@@ -395,7 +410,7 @@
                 <!-- Profile Image -->
                 <div class="card card-primary card-outline">
                     <div class="card-body box-profile">
-                        <h5>Chapter Info</h5>
+                        <h5 class="text-center"> MOMS Club of {{ $chapterList[0]->name }}, {{$chapterState}} </h5>
                         <b>EIN:</b><span class="float-right">{{ $chapterList[0]->ein}}</span>
                         <br>
                         <b>Founded:</b> <span class="float-right">{{ $startMonth }} {{ $chapterList[0]->start_year }}</span>

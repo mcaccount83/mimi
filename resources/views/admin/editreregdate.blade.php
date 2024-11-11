@@ -104,7 +104,7 @@
                 <div class="form-group row">
                     <label class="col-sm-4 mb-1 col-form-label">Number of Members:</label>
                     <div class="col-sm-3 mb-1">
-                        <input type="text" name="ch_memers" class="form-control" value="{{ $chapterList[0]->members_paid_for}}">
+                        <input type="text" name="ch_members" class="form-control" value="{{ $chapterList[0]->members_paid_for}}">
                     </div>
                 </div>
 

@@ -61,6 +61,7 @@
           			<th>State</th>
                     <th>Name</th>
                     <th class="nosort" id="due_sort">Renewal Date</th>
+                    <th>Members</th>
                     <th>Last Paid</th>
                 </tr>
                 </thead>
@@ -90,6 +91,7 @@
                                 " data-sort="{{ $list->next_renewal_year . '-' . str_pad($list->start_month_id, 2, '0', STR_PAD_LEFT) }}">
                                 {{ $due }}
                         </td>
+                        	<td>{{ $list->members_paid_for }}</td>
 						<td><span class="date-mask">{{ $list->dues_last_paid }}</span></td>
                     </tr>
                   @endforeach
