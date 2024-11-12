@@ -109,7 +109,7 @@
 
 
           <li class="{{ Request::is('coordinator/dashboard') ? 'active' : '' }}  ">
-            <a href="{{ route('coordinators.coorddashboard') }}">
+            <a href="{{ route('home') }}">
               <i class="fa fa-home"></i> <span>MIMI (Chapter Profile)</span>
             </a>
           </li>

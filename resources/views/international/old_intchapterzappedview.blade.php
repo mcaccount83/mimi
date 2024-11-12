@@ -7,7 +7,7 @@
         <small>View</small>
       </h1>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
         <li class="active">International Zapped Chapter List</li>
       </ol>
     </section>

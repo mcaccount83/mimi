@@ -7,7 +7,7 @@
        <small>Edit</small>
        </h1>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{ route('coordinators.coorddashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('home') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
         <li class="active">Coordinator List</li>
       </ol>
     </section>
