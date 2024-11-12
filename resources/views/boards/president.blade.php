@@ -24,61 +24,56 @@
 </style>
 
 @section('content')
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <form method="POST" action='{{ route("board.update", $chapterList[0]->id) }}' autocomplete="off">
+                        @csrf
 
-<section class="content">
-    <div class="container">
-        <div class="row">
+                        <input type="hidden" id="ch_pre_email_chk" value="{{ $chapterList[0]->bd_email }}">
+                        <input type="hidden" id="ch_avp_email_chk" value="{{ $AVPDetails[0]->avp_email }}">
+                        <input type="hidden" id="ch_mvp_email_chk" value="{{ $MVPDetails[0]->mvp_email }}">
+                        <input type="hidden" id="ch_trs_email_chk" value="{{ $TRSDetails[0]->trs_email }}">
+                        <input type="hidden" id="ch_sec_email_chk" value="{{ $SECDetails[0]->sec_email }}">
 
-            <form method="POST" action='{{ route("board.update",$chapterList[0]->id) }}' autocomplete="off">
-				@csrf
-
-                <input  type="hidden" id="ch_pre_email_chk" value="{{ $chapterList[0]->bd_email }}">
-                <input  type="hidden" id="ch_avp_email_chk" value="{{ $AVPDetails[0]->avp_email }}" >
-                <input  type="hidden" id="ch_mvp_email_chk" value="{{ $MVPDetails[0]->mvp_email }}">
-                <input  type="hidden" id="ch_trs_email_chk" value="{{ $TRSDetails[0]->trs_email }}">
-                <input  type="hidden" id="ch_sec_email_chk" value="{{ $SECDetails[0]->sec_email }}">
-
-
-
-
-
-
-            <div class="col-md-12">
-         <!-- Widget: user widget style 1 -->
-         <div class="card card-widget widget-user">
-            <!-- Add the bg color to the header using any of the bg-* classes -->
-            <div class="widget-user-header bg-primary">
-                <div class="widget-user-image">
-                    <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC" style="width: 115px; height: 115px;">
+                        <div class="col-md-12">
+                            <div class="card card-widget widget-user">
+                                <div class="widget-user-header bg-primary">
+                                    <div class="widget-user-image">
+                                        <img class="img-circle elevation-2" src="{{ config('settings.base_url') }}theme/dist/img/logo.png" alt="MC" style="width: 115px; height: 115px;">
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    @php
+                                        $thisDate = \Illuminate\Support\Carbon::now();
+                                    @endphp
+                                    <div class="col-md-12"><br><br></div>
+                                    <h2 class="text-center">MOMS Club of {{ $chapterList[0]->name }}, {{$chapterState}}</h2>
+                                    <h2 class="text-center">{{$chapterList[0]->first_name}} {{$chapterList[0]->last_name}}, {{$boardPositionAbbreviation}}</h2>
+                                    <p class="description text-center">
+                                        Welcome to the MOMS information Management Interface, affectionately called MIMI!
+                                        <br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
+                                    </p>
+                                    <div id="readOnlyText" class="description text-center">
+                                        @if($thisDate->month >= 5 && $thisDate->month <= 7)
+                                            <p><span style="color: red;">All Board Member Information is <strong>READ ONLY</strong> at this time.<br>
+                                                @if($chapterList[0]->new_board_active != '1')
+                                                    In order to add new board members to MIMI, please complete the Board Election Report.<br>
+                                                @endif
+                                                @if($chapterList[0]->new_board_active == '1')
+                                                    If you need to make updates to your listed officers, please contact your Primary Coordinator.</span></p>
+                                                <p>Incoming Board Members have been activated and have full MIMI access.<br>
+                                                    Outgoing Board Members can still log in and access Financial Reports Only.</p>
+                                                @endif
+                                            @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    </div>
                 </div>
-            </div>
-            <div class="card-body">
-                @php
-                    $thisDate = \Illuminate\Support\Carbon::now();
-                @endphp
-                <div class="col-md-12"><br><br></div>
-                    {{-- <h2 class="text-center"> MOMS Club of {{ $chapterList[0]->name }}, {{$chapterState}} </h2> --}}
-                    <h2 class="text-center"> {{$chapterList[0]->first_name}} {{$chapterList[0]->last_name}}, {{$boardPositionAbbreviation}}</h2>
-                    <p class="description text-center">
-                            Welcome to the MOMS information Management Interface, affectionately called MIMI!
-                            </br>Here you can view your chapter's information, update your profile, complete End of Year Reports, etc.
-                        </p>
-                <div id="readOnlyText" class="description text-center">
-                        @if($thisDate->month >= 5 && $thisDate->month <= 7)
-                            <p><span style="color: red;">All Board Member Information is <strong>READ ONLY</strong> at this time.<br>
-                                @if($chapterList[0]->new_board_active != '1')
-                                In order to add new board members to MIMI, please complete the Board Election Report.<br>
-                            @endif
-                            @if($chapterList[0]->new_board_active == '1')
-                                If you need to make updates to your listed officers, please contact your Primary Coordinator.</span></p>
-                            @endif
-                            @if($chapterList[0]->new_board_active == '1')
-                                <p>Incoming Board Members have been activated and have full MIMI access.<br>
-                                    Outgoing Board Members can still log in and access Financial Reports Only.</p>
-                            @endif
-                        @endif
-                </div>
-            </div>
+
 
             @php
                 $admin = DB::table('admin')
@@ -94,15 +89,9 @@
                 $financialreport_yes = ($eoy_financialreport == 1);
             @endphp
 
-        </div>
-<!-- /.card-body -->
-    </div>
-<!-- /.card -->
 
-
-
-
-            <div class="col-sm-8">
+    <div class="row">
+            <div class="col-md-8">
                 <div class="card card-primary card-outline">
                     <div class="card-body box-profile">
                          <!-- /.card-header -->
@@ -386,66 +375,97 @@
                 </div>
 
 
-                <div class="card-body text-center">
-                <button id="Save" type="submit" class="btn btn-primary" onclick="return PreSaveValidate()"><i class="fas fa-save" ></i>&nbsp; Save</button>
-            </form>
-
-                <button id="Password" type="button" class="btn btn-primary" onclick="showChangePasswordAlert()"><i class="fas fa-lock" ></i>&nbsp; Change Password</button>
-                <button id="logout-btn" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-undo" ></i>&nbsp; Logout</button>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
-                </div>
 
             </div>
             <!-- /.card-body -->
-                </div>
+            </div>
             <!-- /.card -->
         </div>
         <!-- /.col -->
 
 
 
-            <div class="col-sm-4">
+            <div class="col-md-4">
                 <!-- Profile Image -->
                 <div class="card card-primary card-outline">
                     <div class="card-body box-profile">
-                        <h5 class="text-center"> MOMS Club of {{ $chapterList[0]->name }}, {{$chapterState}} </h5>
-                        <b>EIN:</b><span class="float-right">{{ $chapterList[0]->ein}}</span>
-                        <br>
-                        <b>Founded:</b> <span class="float-right">{{ $startMonth }} {{ $chapterList[0]->start_year }}</span>
-                        <br>
-                        <b>Boundaries:</b><span class="float-right">{{ $chapterList[0]->territory}}</span>
-                        <br>
-                        <b>Dues Paid:</b><span class="float-right">
-                            @if ($chapterList[0]->members_paid_for)
-                                <b>{{ $chapterList[0]->members_paid_for }} Members</b> on <b><span class="date-mask">{{ $chapterList[0]->dues_last_paid }}</span></b>
-                            @else
-                                N/A
-                            @endif
-                        </span><br>
-                        <b>M2M Donation:</b><span class="float-right">
-                            @if ($chapterList[0]->m2m_payment)
-                                <b>${{ $chapterList[0]->m2m_payment }}</b> on <b><span class="date-mask">{{ $chapterList[0]->m2m_date }}</span></b>
-                            @else
-                                N/A
-                            @endif
-                        </span><br>
-                        <b>Sustaining Donation: </b><span class="float-right">
-                            @if ($chapterList[0]->sustaining_donation)
-                                <b>${{ $chapterList[0]->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chapterList[0]->sustaining_date }}</span></b>
-                            @else
-                                N/A
-                            @endif
-                        </span><br>
+
+
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">EIN:</label>
+                            <div class="col-sm-8">
+                                <span class="float-right">{{ $chapterList[0]->ein}}</span>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Founded:</label>
+                            <div class="col-sm-8">
+                                <span class="float-right">{{ $startMonth }} {{ $chapterList[0]->start_year }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Boundaries:</label>
+                            <div class="col-sm-8">
+                                <span class="float-right">{{ $chapterList[0]->territory}}</span>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Dues Paid:</label>
+                            <div class="col-sm-8">
+                                <span class="float-right">
+                                    @if ($chapterList[0]->members_paid_for)
+                                        <b>{{ $chapterList[0]->members_paid_for }} Members</b> on <b><span class="date-mask">{{ $chapterList[0]->dues_last_paid }}</span></b>
+                                    @else
+                                        N/A
+                                    @endif
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">M2M Donation:</label>
+                            <div class="col-sm-8">
+                                <span class="float-right">
+                                    @if ($chapterList[0]->m2m_payment)
+                                        <b>${{ $chapterList[0]->m2m_payment }}</b> on <b><span class="date-mask">{{ $chapterList[0]->m2m_date }}</span></b>
+                                    @else
+                                        N/A
+                                    @endif
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Sustaining Donation:</label>
+                            <div class="col-sm-8">
+                                <span class="float-right">
+                                    @if ($chapterList[0]->sustaining_donation)
+                                        <b>${{ $chapterList[0]->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chapterList[0]->sustaining_date }}</span></b>
+                                    @else
+                                        N/A
+                                    @endif
+                                </span>
+                            </div>
+                        </div>
+
+
                         <span style="color: red;">If anything in this section needs to be updated, please contact your Primary Coordinator.</span><br>
 
                         <ul class="list-group list-group-unbordered mt-2 mb-3">
                             <li class="list-group-item">
 
                         <h5>Re-Registration Dues</h5>
-                        <b>Anniversary Month:</b> <span class="float-right">{{ $startMonth }}</span>
-                        <br>
+
+                        <div class="row align-items-center">
+                            <label class="col-sm-4 col-form-label">Anniversary Month</label>
+                            <div class="col-sm-8">
+                                <span class="float-right">{{ $startMonth }}</span>
+                            </div>
+                        </div>
+
                         @if ($thisDate->gte($due_date))
                             @if ($due_date->month === $thisDate->month)
                                 <span style="color: green;">Your Re-registration payment is due now.<br>
@@ -525,13 +545,21 @@
                 <!-- /.card -->
             </div>
             <!-- /.col -->
-
-
         </div>
-        <!-- /.row -->
-    </div>
-    <!-- /.col -->
 
+
+
+
+    <div class="card-body text-center">
+        <button id="Save" type="submit" class="btn btn-primary" onclick="return PreSaveValidate()"><i class="fas fa-save" ></i>&nbsp; Save</button>
+
+    </form>
+        <button id="Password" type="button" class="btn btn-primary" onclick="showChangePasswordAlert()"><i class="fas fa-lock" ></i>&nbsp; Change Password</button>
+        <button id="logout-btn" class="btn btn-primary" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-undo" ></i>&nbsp; Logout</button>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                @csrf
+            </form>
+        </div>
 
     </div>
     <!-- /.container- -->
@@ -1242,10 +1270,9 @@
                     <button id="Resources" class="btn btn-primary" onclick="window.location='{{ route('board.resources') }}'">
                         <i class="fas fa-briefcase"></i>&nbsp; Chapter Resources
                     </button>
-                                    </div>
                 </div>
-
-            </div>
+        </div>
+    </div>
 @endsection
 @section('customscript')
 <script>
