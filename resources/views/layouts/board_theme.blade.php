@@ -19,10 +19,8 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
 
-
   <!-- SweetAlert2 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
 
     <!-- daterange picker -->
     <link rel="stylesheet" href="{{ config('settings.base_url') }}theme/plugins/daterangepicker/daterangepicker.css">
@@ -43,10 +41,11 @@
                 };
             }
         };
+
     </script>
 </head>
 
-<body class="hold-transition layout-top-nav">
+<body style="background-color: #f0f0f0 !important;" class="hold-transition layout-top-nav">
     <div class="wrapper">
         @php
             $user = Auth::user();
@@ -140,46 +139,60 @@
     <!-- Main content -->
     <div class="content">
         @if ($message = Session::get('success'))
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: @json($message),
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: @json($message),
+                    showConfirmButton: false,
+                    timer: 1500
                 });
-            </script>
-        @endif
+            });
+        </script>
+    @endif
 
-        @if ($message = Session::get('info'))
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'info',
-                        title: @json($message),
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+    @if ($message = Session::get('info'))
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'info',
+                    title: @json($message),
+                    showConfirmButton: false,
+                    timer: 1500
                 });
-            </script>
-        @endif
+            });
+        </script>
+    @endif
 
-        @if ($message = Session::get('fail'))
-            <script>
-                document.addEventListener("DOMContentLoaded", function() {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'error',
-                        title: @json($message),
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
+    @if ($message = Session::get('warning'))
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'warning',
+                    title: @json($message),
+                    showConfirmButton: false,
+                    timer: 1500
                 });
-            </script>
-        @endif
+            });
+        </script>
+    @endif
+
+    @if ($message = Session::get('fail'))
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'error',
+                    title: @json($message),
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            });
+        </script>
+    @endif
 
         @if ($errors->any())
             <script>

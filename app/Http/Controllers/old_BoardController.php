@@ -5,13 +5,11 @@ namespace App\Http\Controllers;
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdateListAdminMember;
 use App\Mail\ChapersUpdatePrimaryCoor;
-use App\Mail\ChaptersUpdatePrimaryCoorPresident;
 use App\Mail\ChapersUpdatePrimaryCoorMember;
 use App\Mail\EOYElectionReportSubmitted;
 use App\Mail\EOYElectionReportThankYou;
 use App\Mail\EOYFinancialReportThankYou;
 use App\Mail\EOYFinancialSubmitted;
-use App\Mail\WebsiteAddNoticeAdmin;
 use App\Mail\WebsiteReviewNotice;
 use App\Models\Boards;
 use App\Models\Chapter;
@@ -349,48 +347,17 @@ class BoardController extends Controller
      */
     public function updatePresident(Request $request, $id): RedirectResponse
     {
-        $chapterId = $id;
-        $user = $request->user();
-        $user_type = $user->user_type;
-        $userStatus = $user->is_active;
-        if ($userStatus != 1) {
-            Auth::logout();
-            $request->session()->flush();
-
-            return redirect()->to('/login');
-        }
-        $lastUpdatedBy = $user->first_name.' '.$user->last_name;
-
-        $chapterInfoPre = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email','st.state_short_name as statename',
-                'chapters.conference as conference', 'chapters.primary_coordinator_id as cor_id', 'bd.first_name as ch_pre_fname', 'bd.last_name as ch_pre_lname',
-                'bd.email as ch_pre_email', 'cd.email as cor_email')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            // ->where('chapters.is_Active', '=', '1')
-            ->where('chapters.id', $id)
-            ->orderByDesc('chapters.id')
-            ->get();
-
-        $chState = $chapterInfoPre[0]->statename;
-        $chConfId = $chapterInfoPre[0]->conference;
-        $chPCId = $chapterInfoPre[0]->cor_id;
-        $pc_email = $chapterInfoPre[0]->cor_email;
-
-        $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
-        if (empty(trim($ch_webstatus))) {
-            $ch_webstatus = 0; // Set it to 0 if it's blank
-        }
-
         $presInfoPre = DB::table('chapters')
-            ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street',
-                'bd.city as city', 'bd.zip as zip', 'st.state_short_name as state')
+            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name',
+                'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city', 'bd.zip as zip',
+                'st.state_short_name as state')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'bd.state', '=', 'st.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_Active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->where('chapters.id', $id)
+            ->orderByDesc('chapters.id')
             ->get();
 
         $AVPInfoPre = DB::table('chapters')
@@ -425,13 +392,28 @@ class BoardController extends Controller
             ->where('chapters.id', $id)
             ->get();
 
+        $chapterId = $id;
+        $user = $request->user();
+        $user_type = $user->user_type;
+        $userStatus = $user->is_active;
+        if ($userStatus != 1) {
+            Auth::logout();
+            $request->session()->flush();
+
+            return redirect()->to('/login');
+        }
+        $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         $chapter = Chapter::find($chapterId);
         DB::beginTransaction();
         try {
+            $chapter->name = $request->input('ch_name');
+            $chapter->state = $request->input('ch_state');
+            $chapter->additional_info = $request->input('ch_addinfo');
             $chapter->website_url = $request->input('ch_website');
             $chapter->website_status = $request->input('ch_webstatus');
             $chapter->email = $request->input('ch_email');
             $chapter->inquiries_contact = $request->input('ch_inqemailcontact');
+            $chapter->inquiries_note = $request->input('ch_inqnote');
             $chapter->egroup = $request->input('ch_onlinediss');
             $chapter->social1 = $request->input('ch_social1');
             $chapter->social2 = $request->input('ch_social2');
@@ -441,7 +423,6 @@ class BoardController extends Controller
             $chapter->last_updated_date = date('Y-m-d H:i:s');
 
             $chapter->save();
-
             //President Info
             if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
                 $PREDetails = DB::table('boards')
@@ -756,49 +737,50 @@ class BoardController extends Controller
                 }
             }
 
-           //Website Notifications//
-           $chId = $chapter['id'];
-           $chPcid = $chPCId;
-           $chConf = $chConfId;
+            //Website Notifications//
+            $ConfId = $presInfoPre[0]->conference;
+            $corId = $presInfoPre[0]->primary_coordinator_id;
+            $chapterState = $presInfoPre[0]->state;
+            $cor_details = db::table('coordinators')
+                ->select('email')
+                ->where('conference_id', $ConfId)
+                ->where('position_id', 9)
+                ->where('is_active', 1)
+                ->get();
+            $row_count = count($cor_details);
+            if ($row_count == 0) {
+                $cc_details = db::table('coordinators')
+                    ->select('email')
+                    ->where('conference_id', $ConfId)
+                    ->where('position_id', 7)
+                    ->where('is_active', 1)
+                    ->get();
+                $to_email4 = $cc_details[0]->email;    //conference coordinator
+            } else {
+                $to_email4 = $cor_details[0]->email;   //website reviewer if conf has one
+            }
 
-           $emailData = $this->userController->loadConferenceCoord($chConf, $chPcid);
-           $to_CCemail = $emailData['cc_email'];
+            if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
+                $mailData = [
+                    'chapter_name' => $request->input('ch_name'),
+                    'chapter_state' => $request->input('ch_state'),
+                    'ch_website_url' => $request->input('ch_website'),
+                ];
 
-           if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
-
-              $mailData = [
-                  'chapter_name' => $request->input('ch_name'),
-                  'chapter_state' => $request->input('ch_state'),
-                  'ch_website_url' => $request->input('ch_website'),
-              ];
-
-              if ($request->input('ch_webstatus') == 1) {
-                  Mail::to($to_CCemail)
-                      ->queue(new WebsiteAddNoticeAdmin($mailData));
-              }
-
-              if ($request->input('ch_webstatus') == 2) {
-                  Mail::to($to_CCemail)
-                      ->queue(new WebsiteReviewNotice($mailData));
-              }
-          }
+                if ($request->input('ch_webstatus') == 2) {
+                    Mail::to($to_email4, 'MOMS Club')
+                        ->queue(new WebsiteReviewNotice($mailData));
+                }
+            }
 
             //Update Chapter MailData//
-            $chapterInfoUpd = DB::table('chapters')
-                ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email','st.state_short_name as state',
-                    'chapters.conference as conference', 'chapters.primary_coordinator_id as cor_id')
-                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-                ->where('chapters.is_Active', '=', '1')
-                ->where('chapters.id', $chapterId)
-                ->orderByDesc('chapters.id')
-                ->get();
-
             $presInfoUpd = DB::table('chapters')
-                ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street',
-                    'bd.city as city', 'bd.zip as zip', 'st.state_short_name as state')
+                ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name',
+                    'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city',
+                    'bd.zip as zip', 'st.state_short_name as state')
+                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->leftJoin('state as st', 'bd.state', '=', 'st.id')
+                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
                 ->where('chapters.is_Active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.id', $chapterId)
@@ -838,13 +820,11 @@ class BoardController extends Controller
                 ->get();
 
             $mailDataPres = [
-                'chapter_name' => $request->input('ch_name'),
-                'chapter_state' => $request->input('ch_state'),
-                'chapterNameUpd' => $chapterInfoUpd[0]->name,
-                'chapterStateUpd' => $chapterInfoUpd[0]->state,
-                'cor_fnameUpd' => $chapterInfoUpd[0]->cor_f_name,
-                'cor_lnameUpd' => $chapterInfoUpd[0]->cor_l_name,
-                'updated_byUpd' => $chapterInfoUpd[0]->last_updated_date,
+                'chapterNameUpd' => $presInfoUpd[0]->name,
+                'chapterStateUpd' => $presInfoUpd[0]->state,
+                'cor_fnameUpd' => $presInfoUpd[0]->cor_f_name,
+                'cor_lnameUpd' => $presInfoUpd[0]->cor_l_name,
+                'updated_byUpd' => $presInfoUpd[0]->last_updated_date,
                 'chapfnameUpd' => $presInfoUpd[0]->bor_f_name,
                 'chaplnameUpd' => $presInfoUpd[0]->bor_l_name,
                 'chapteremailUpd' => $presInfoUpd[0]->bor_email,
@@ -852,13 +832,26 @@ class BoardController extends Controller
                 'cityUpd' => $presInfoUpd[0]->city,
                 'stateUpd' => $presInfoUpd[0]->state,
                 'zipUpd' => $presInfoUpd[0]->zip,
+                'countryUpd' => $presInfoUpd[0]->country,
                 'phoneUpd' => $presInfoUpd[0]->phone,
-                'inConUpd' => $chapterInfoUpd[0]->inquiries_contact,
-                'chapemailUpd' => $chapterInfoUpd[0]->email,
-                'poBoxUpd' => $chapterInfoUpd[0]->po_box,
-                'webUrlUpd' => $chapterInfoUpd[0]->website_url,
-                'webStatusUpd' => $chapterInfoUpd[0]->website_status,
-                'egroupUpd' => $chapterInfoUpd[0]->egroup,
+                'inConUpd' => $presInfoUpd[0]->inquiries_contact,
+                'einUpd' => $presInfoUpd[0]->ein,
+                'einLetterUpd' => $presInfoUpd[0]->ein_letter_path,
+                'inNoteUpd' => $presInfoUpd[0]->inquiries_note,
+                'chapemailUpd' => $presInfoUpd[0]->email,
+                'poBoxUpd' => $presInfoUpd[0]->po_box,
+                'webUrlUpd' => $presInfoUpd[0]->website_url,
+                'webStatusUpd' => $presInfoUpd[0]->website_status,
+                'egroupUpd' => $presInfoUpd[0]->egroup,
+                'boundUpd' => $presInfoUpd[0]->territory,
+                'addInfoUpd' => $presInfoUpd[0]->additional_info,
+                'chapstatusUpd' => $presInfoUpd[0]->status,
+                'chapNoteUpd' => $presInfoUpd[0]->notes,
+                'chapterNamePre' => $presInfoPre[0]->name,
+                'chapterStatePre' => $presInfoPre[0]->state,
+                'cor_fnamePre' => $presInfoPre[0]->cor_f_name,
+                'cor_lnamePre' => $presInfoPre[0]->cor_l_name,
+                'updated_byPre' => $presInfoPre[0]->last_updated_date,
                 'chapfnamePre' => $presInfoPre[0]->bor_f_name,
                 'chaplnamePre' => $presInfoPre[0]->bor_l_name,
                 'chapteremailPre' => $presInfoPre[0]->bor_email,
@@ -866,13 +859,22 @@ class BoardController extends Controller
                 'cityPre' => $presInfoPre[0]->city,
                 'statePre' => $presInfoPre[0]->state,
                 'zipPre' => $presInfoPre[0]->zip,
+                'countryPre' => $presInfoPre[0]->country,
                 'phonePre' => $presInfoPre[0]->phone,
-                'inConPre' => $chapterInfoPre[0]->inquiries_contact,
-                'chapemailPre' => $chapterInfoPre[0]->email,
-                'poBoxPre' => $chapterInfoPre[0]->po_box,
-                'webUrlPre' => $chapterInfoPre[0]->website_url,
-                'webStatusPre' => $chapterInfoPre[0]->website_status,
-                'egroupPre' => $chapterInfoPre[0]->egroup,
+                'inConPre' => $presInfoPre[0]->inquiries_contact,
+                'einPre' => $presInfoPre[0]->ein,
+                'einLetterPre' => $presInfoPre[0]->ein_letter_path,
+                'inNotePre' => $presInfoPre[0]->inquiries_note,
+                'chapemailPre' => $presInfoPre[0]->email,
+                'poBoxPre' => $presInfoPre[0]->po_box,
+                'webUrlPre' => $presInfoPre[0]->website_url,
+                'webStatusPre' => $presInfoPre[0]->website_status,
+                'egroupPre' => $presInfoPre[0]->egroup,
+                'boundPre' => $presInfoPre[0]->territory,
+                'addInfoPre' => $presInfoPre[0]->additional_info,
+                'chapstatusPre' => $presInfoPre[0]->status,
+                'chapNotePre' => $presInfoPre[0]->notes,
+
             ];
             $mailData = array_merge($mailDataPres);
             if ($AVPInfoUpd !== null && count($AVPInfoUpd) > 0) {
@@ -965,26 +967,28 @@ class BoardController extends Controller
             }
 
             //Primary Coordinator Notification//
-            $to_email = $chapterInfoUpd[0]->cor_email;
+            $to_email = $presInfoUpd[0]->cor_email;
 
             if ($presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email || $presInfoUpd[0]->street != $presInfoPre[0]->street || $presInfoUpd[0]->city != $presInfoPre[0]->city ||
                 $presInfoUpd[0]->state != $presInfoPre[0]->state || $presInfoUpd[0]->bor_f_name != $presInfoPre[0]->bor_f_name || $presInfoUpd[0]->bor_l_name != $presInfoPre[0]->bor_l_name ||
-                    $presInfoUpd[0]->zip != $presInfoPre[0]->zip || $presInfoUpd[0]->phone != $presInfoPre[0]->phone || $chapterInfoUpd[0]->inquiries_contact != $chapterInfoPre[0]->inquiries_contact ||
-                    $chapterInfoUpd[0]->email != $chapterInfoPre[0]->email || $chapterInfoUpd[0]->po_box != $chapterInfoPre[0]->po_box || $chapterInfoUpd[0]->website_url != $chapterInfoPre[0]->website_url ||
-                    $chapterInfoUpd[0]->website_status != $chapterInfoPre[0]->website_status || $chapterInfoUpd[0]->egroup != $chapterInfoPre[0]->egroup ||
+                    $presInfoUpd[0]->zip != $presInfoPre[0]->zip || $presInfoUpd[0]->phone != $presInfoPre[0]->phone || $presInfoUpd[0]->inquiries_contact != $presInfoPre[0]->inquiries_contact ||
+                    $presInfoUpd[0]->ein != $presInfoPre[0]->ein || $presInfoUpd[0]->ein_letter_path != $presInfoPre[0]->ein_letter_path || $presInfoUpd[0]->inquiries_note != $presInfoPre[0]->inquiries_note ||
+                    $presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->po_box != $presInfoPre[0]->po_box || $presInfoUpd[0]->website_url != $presInfoPre[0]->website_url ||
+                    $presInfoUpd[0]->website_status != $presInfoPre[0]->website_status || $presInfoUpd[0]->egroup != $presInfoPre[0]->egroup || $presInfoUpd[0]->territory != $presInfoPre[0]->territory ||
+                    $presInfoUpd[0]->additional_info != $presInfoPre[0]->additional_info || $presInfoUpd[0]->status != $presInfoPre[0]->status || $presInfoUpd[0]->notes != $presInfoPre[0]->notes ||
                     $mailDataAvpp['avpfnamePre'] != $mailDataAvp['avpfnameUpd'] || $mailDataAvpp['avplnamePre'] != $mailDataAvp['avplnameUpd'] || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] ||
                     $mailDataMvpp['mvpfnamePre'] != $mailDataMvp['mvpfnameUpd'] || $mailDataMvpp['mvplnamePre'] != $mailDataMvp['mvplnameUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] ||
                     $mailDatatresp['tresfnamePre'] != $mailDatatres['tresfnameUpd'] || $mailDatatresp['treslnamePre'] != $mailDatatres['treslnameUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] ||
                     $mailDataSecp['secfnamePre'] != $mailDataSec['secfnameUpd'] || $mailDataSecp['seclnamePre'] != $mailDataSec['seclnameUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
 
                 Mail::to($to_email)
-                    ->queue(new ChaptersUpdatePrimaryCoorPresident($mailData));
+                    ->queue(new ChapersUpdatePrimaryCoor($mailData));
             }
 
             //List Admin Notification//
             $to_email2 = 'listadmin@momsclub.org';
 
-            if ($chapterInfoUpd[0]->email != $chapterInfoPre[0]->email || $presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email ||
+            if ($presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->bor_email != $presInfoPre[0]->bor_email ||
             $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] ||
             $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
                 Mail::to($to_email2)
@@ -994,8 +998,6 @@ class BoardController extends Controller
             DB::commit();
         } catch (\Exception $e) {
             // Rollback Transaction
-            echo $e->getMessage();
-            exit();
             DB::rollback();
             // Log the error
             Log::error($e);
@@ -1005,7 +1007,6 @@ class BoardController extends Controller
 
         return redirect()->back()->with('success', 'Chapter has successfully updated');
     }
-
 
     /**
      * Update Board Details Board Member Login

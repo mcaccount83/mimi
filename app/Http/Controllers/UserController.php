@@ -216,9 +216,9 @@ class UserController extends Controller
         return [
             'chapEmail' => $chapEmail,
             'emailListChap' => $emailListChap, // Return as an array
-            'emailListChapString' => implode(',', $emailListChap), // Return as a comma-separated string
+            'emailListChapString' => implode(';', $emailListChap), // Return as a comma-separated string
             'emailListCoord' => $emailListCoord, // Return as an array
-            'emailListCoordString' => implode(',', $emailListCoord), // Return as a comma-separated string
+            'emailListCoordString' => implode(';', $emailListCoord), // Return as a comma-separated string
             'board_submitted' => $chapterList->board_submitted,
             'report_received' => $chapterList->report_received,
             'ein_letter' => $chapterList->ein_letter,
