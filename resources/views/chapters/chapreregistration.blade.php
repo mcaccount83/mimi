@@ -39,6 +39,7 @@
                             <th>Re-Registration Notes</th>
                             <th>Due</th>
                             <th>Last Paid</th>
+                            <th>Members</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -95,6 +96,7 @@
                                 {{ $due }}
                             </td>
                             <td><span class="date-mask">{{ $list->dues_last_paid }}</span></td>
+                            <td>{{ $list->members_paid_for }}</td>
                         </tr>
                         @endforeach
                     </tbody>
