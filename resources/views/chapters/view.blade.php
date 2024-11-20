@@ -464,7 +464,7 @@
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateEIN()"><i class="fas fa-university mr-2"></i>Update EIN Number</button>
                     <button class="btn bg-gradient-primary mb-3 showFileUploadModal" data-ein-letter="{{ $chapterList[0]->ein_letter_path }}"><i class="fas fa-upload mr-2"></i>Update EIN Letter</button>
                 @endif
-                @if($assistConferenceCoordinatorCondition)
+                @if($regionalCoordinatorCondition)
                     @if($chIsActive == 1)
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="showDisbandChapterModal()"><i class="fas fa-ban mr-2"></i>Disband Chapter</button>
                     @elseif($chIsActive != 1)
