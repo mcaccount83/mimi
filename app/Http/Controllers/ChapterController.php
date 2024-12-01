@@ -2398,7 +2398,8 @@ public function editChapterPayment(Request $request, $id)
         try {
             $chapter->dues_last_paid = $request->filled('PaymentDate') ? $request->input('PaymentDate') : $chapter->dues_last_paid;
             $chapter->members_paid_for = $request->filled('MembersPaidFor') ? $request->input('MembersPaidFor') : $chapter->members_paid_for;
-            $chapter->reg_notes = $request->filled('ch_regnotes') ? $request->input('ch_regnotes') : $chapter->reg_notes;
+            // $chapter->reg_notes = $request->filled('ch_regnotes') ? $request->input('ch_regnotes') : $chapter->reg_notes;
+            $chapter->reg_notes = $request->has('ch_regnotes') ? $request->input('ch_regnotes') : $chapter->reg_notes;
             $chapter->m2m_date = $request->filled('M2MPaymentDate') ? $request->input('M2MPaymentDate') : $chapter->m2m_date;
             $chapter->m2m_payment = $request->filled('M2MPayment') ? $request->input('M2MPayment') : $chapter->m2m_payment;
             $chapter->sustaining_date = $request->filled('SustainingPaymentDate') ? $request->input('SustainingPaymentDate') : $chapter->sustaining_date;
