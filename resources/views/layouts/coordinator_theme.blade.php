@@ -719,7 +719,7 @@ function customErrorAlert(message) {
     }
 
     function applyHttpMask() {
-        Inputmask({"mask": "http://*{1,50}.*{2,6}"}).mask(".http-mask");
+        Inputmask({"mask": "http://*{1,250}.*{2,6}"}).mask(".http-mask");
     }
 
     $(document).ready(function() {
