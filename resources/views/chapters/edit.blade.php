@@ -180,8 +180,14 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Website:</label>
                                 <div class="col-sm-7">
+                                    <input type="text" name="ch_website" id="ch_website" class="form-control"
+                                           data-inputmask='"mask": "http://*{1,250}.*{2,6}"' data-mask
+                                           value="{{ strpos($chapterList[0]->website_url, 'http://') === 0 ? substr($chapterList[0]->website_url, 7) : $chapterList[0]->website_url }}"
+                                           onchange="updateWebsiteStatus()" placeholder="Chapter Website">
+                                </div>
+                                {{-- <div class="col-sm-7">
                                     <input type="text" name="ch_website" id="ch_website" class="form-control" data-inputmask='"mask": "http://*{1,250}.*{2,6}"' data-mask  value="{{ strpos($chapterList[0]->website_url, 'http://') === 0 ? substr($chapterList[0]->website_url, 7) : $chapterList[0]->website_url }}"
-                                        onchange="updateWebsiteStatus()" placeholder="Chapter Website">                                </div>
+                                        onchange="updateWebsiteStatus()" placeholder="Chapter Website">                                </div> --}}
                                 <div class="col-sm-3">
                                     <select name="ch_webstatus" id="ch_webstatus"class="form-control" style="width: 100%;" required>
                                         <option value="">Select Status</option>
