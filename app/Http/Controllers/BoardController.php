@@ -383,6 +383,12 @@ class BoardController extends Controller
             $ch_webstatus = 0; // Set it to 0 if it's blank
         }
 
+        $website = $request->input('ch_website');
+        // Ensure it starts with "http://" or "https://"
+        if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
+            $website = 'http://' . $website;
+        }
+
         $presInfoPre = DB::table('chapters')
             ->select('bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street',
                 'bd.city as city', 'bd.zip as zip', 'st.state_short_name as state')
@@ -428,7 +434,7 @@ class BoardController extends Controller
         $chapter = Chapter::find($chapterId);
         DB::beginTransaction();
         try {
-            $chapter->website_url = $request->input('ch_website');
+            $chapter->website_url = $website;
             $chapter->website_status = $request->input('ch_webstatus');
             $chapter->email = $request->input('ch_email');
             $chapter->inquiries_contact = $request->input('ch_inqemailcontact');
@@ -769,7 +775,7 @@ class BoardController extends Controller
               $mailData = [
                   'chapter_name' => $request->input('ch_name'),
                   'chapter_state' => $request->input('ch_state'),
-                  'ch_website_url' => $request->input('ch_website'),
+                  'ch_website_url' => $website,
               ];
 
               if ($request->input('ch_webstatus') == 1) {

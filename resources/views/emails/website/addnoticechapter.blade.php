@@ -3,9 +3,9 @@
 
 Thank you for submitting your new website for linking.  The site has been reviewed and has been added to the main MOMS Club website.<br>
 <br>
-Your linnked site is: {{$mailData['ch_website_url']}}.<br>
+Your linked site is: {{$mailData['ch_website_url']}}.<br>
 <br>
-List of linked chapters can be found here:<br>
+List of linked chapters can be found here: https://momsclub.org/chapters/chapter-links/<br>
 <br>
 <strong>MCL,</strong><br>
 International MOMS Club

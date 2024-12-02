@@ -20,6 +20,7 @@ use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Mail\PaymentsReRegLate;
 use App\Mail\PaymentsReRegReminder;
 use App\Mail\WebsiteAddNoticeAdmin;
+use App\Mail\WebsiteAddNoticeChapter;
 use App\Mail\WebsiteReviewNotice;
 use App\Mail\WebsiteUpdatePrimaryCoor;
 use App\Models\Chapter;
@@ -1365,6 +1366,10 @@ public function editChapterDetails(Request $request, $id)
                 if ($request->input('ch_webstatus') == 1) {
                     Mail::to($to_CCemail)
                         ->queue(new WebsiteAddNoticeAdmin($mailData));
+
+                    Mail::to($emailListChap)
+                        ->cc($emailListCoord)
+                        ->queue(new WebsiteAddNoticeChapter($mailData));
                 }
 
                 if ($request->input('ch_webstatus') == 2) {
@@ -3162,6 +3167,12 @@ public function editChapterWebsite(Request $request, $id)
 
             $chapter->save();
 
+            //Change Primary Coordinator Notifications//
+            $chId = $chapter['id'];
+            $emailData = $this->userController->loadEmailDetails($chId);
+            $emailListChap = $emailData['emailListChap'];  // Full Board
+            $emailListCoord = $emailData['emailListCoord'];  // Full Coordinaor List
+
             //Website Notifications//
              $chId = $chapter['id'];
              $chPcid = $chPCId;
@@ -3191,6 +3202,10 @@ public function editChapterWebsite(Request $request, $id)
                     if ($request->input('ch_webstatus') == 1) {
                         Mail::to($to_CCemail)
                             ->queue(new WebsiteAddNoticeAdmin($mailData));
+
+                        Mail::to($emailListChap)
+                            ->cc($emailListCoord)
+                            ->queue(new WebsiteAddNoticeChapter($mailData));
                     }
 
                     if ($request->input('ch_webstatus') == 2) {
