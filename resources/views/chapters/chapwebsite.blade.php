@@ -60,7 +60,7 @@
 
                             @endif
                         </td>
-                        <td>{{ $list->web }}</td>
+                        <td><a href="{{ url("{$list->web}") }}" target="_blank">{{ $list->web }}</a></td>
                         <td>{{ $list->egroup }}</td>
                         <td>{{ $list->web_notes }}</td>
                     </tr>
