@@ -47,6 +47,7 @@ class ChapterController extends Controller
     public function __construct(UserController $userController)
     {
         $this->middleware('auth')->except('logout');
+        $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
         $this->userController = $userController;
     }
 

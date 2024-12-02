@@ -21,6 +21,7 @@ class InternationalController extends Controller
     public function __construct(UserController $userController)
         {
             $this->middleware('auth')->except('logout');
+            $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
             $this->userController = $userController;
             }
 
@@ -30,9 +31,6 @@ class InternationalController extends Controller
     public function showIntChapter(Request $request)
     {
         $user = User::find($request->user()->id);
-        if (! $user) {
-            return redirect()->route('home');
-        }
 
         $corDetails = $user->Coordinators;
         if (! $corDetails) {
@@ -179,9 +177,6 @@ class InternationalController extends Controller
     public function showIntZappedChapter(Request $request)
     {
         $user = User::find($request->user()->id);
-        if (! $user) {
-            return redirect()->route('home');
-        }
 
         $corDetails = $user->Coordinators;
         if (! $corDetails) {

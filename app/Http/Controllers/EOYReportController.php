@@ -25,6 +25,7 @@ class EOYReportController extends Controller
     public function __construct(UserController $userController)
     {
         $this->middleware('auth')->except('logout');
+        $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
         $this->userController = $userController;
     }
 
@@ -202,9 +203,6 @@ class EOYReportController extends Controller
     public function showEOYStatusView(Request $request, $id)
     {
         $user = User::find($request->user()->id);
-        if (! $user) {
-            return redirect()->route('home');
-        }
 
         $corDetails = $user->Coordinators;
         if (! $corDetails) {
@@ -479,10 +477,6 @@ class EOYReportController extends Controller
     {
         //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
-        if (! $user) {
-            return redirect()->route('home');
-        }
 
         $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
@@ -1033,10 +1027,6 @@ class EOYReportController extends Controller
     {
         //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
-        if (! $user) {
-            return redirect()->route('home');
-        }
 
         $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
@@ -1062,20 +1052,17 @@ class EOYReportController extends Controller
         $pcid = $chapterDetails[0]->pcid;
 
         $reportingList = DB::table('coordinator_reporting_tree')
-            ->select('*')
-            ->where('id', '=', $pcid)
-            ->get();
+        ->select('*')
+        ->where('id', '=', $pcid)
+        ->get();
 
-        foreach ($reportingList as $key => $value) {
-            $reportingList[$key] = (array) $value;
-        }
-        $filterReportingList = array_filter($reportingList[0]);
-        unset($filterReportingList['id']);
-        unset($filterReportingList['layer0']);
+    if ($reportingList->isNotEmpty()) {
+        $reportingList = (array) $reportingList[0];
+        $filterReportingList = array_filter($reportingList);
+        unset($filterReportingList['id'], $filterReportingList['layer0']);
         $filterReportingList = array_reverse($filterReportingList);
-        $filterReportingList = array_reverse($filterReportingList);
-        $array_rows = count($filterReportingList);
 
+        $i = 0;
         foreach ($filterReportingList as $key => $val) {
             $corList = DB::table('coordinators as cd')
                 ->select('cd.id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.short_title as pos')
@@ -1083,10 +1070,13 @@ class EOYReportController extends Controller
                 ->where('cd.id', '=', $val)
                 ->where('cd.is_active', '=', 1)
                 ->get();
-            if (count($corList) != 0) {
-                $reviewerList[] = ['cid' => $corList[0]->cid, 'cname' => $corList[0]->fname.' '.$corList[0]->lname.' ('.$corList[0]->pos.')'];
+
+            if ($corList->isNotEmpty()) {
+            $reviewerList[$i] = ['cid' => $corList[0]->cid, 'cname' => $corList[0]->fname.' '.$corList[0]->lname.' ('.$corList[0]->pos.')'];
+                $i++;
             }
         }
+    }
 
         $data = ['reviewerList' => $reviewerList, 'chapterid' => $chapterId, 'financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'balance' => $balance, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails];
 
@@ -1440,9 +1430,6 @@ class EOYReportController extends Controller
     public function showEOYAttachmentsView(Request $request, $id)
     {
         $user = User::find($request->user()->id);
-        if (! $user) {
-            return redirect()->route('home');
-        }
 
         $corDetails = $user->Coordinators;
         if (! $corDetails) {
@@ -1582,10 +1569,6 @@ class EOYReportController extends Controller
     {
         //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
-        if (! $user) {
-            return redirect()->route('home');
-        }
 
         $corDetails = $user->Coordinators;
         // Check if CorDetails is not found for the user
@@ -1742,10 +1725,6 @@ class EOYReportController extends Controller
     {
         //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
-        if (! $user) {
-            return redirect()->route('home');
-        }
 
         $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
@@ -2336,10 +2315,6 @@ public function updateEOYAwards(Request $request, $id): RedirectResponse
     {
         //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
-        if (! $user) {
-            return redirect()->route('home');
-        }
 
         $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
@@ -2369,25 +2344,25 @@ public function updateEOYAwards(Request $request, $id): RedirectResponse
             ->where('id', '=', $pcid)
             ->get();
 
-        foreach ($reportingList as $key => $value) {
-            $reportingList[$key] = (array) $value;
-        }
-        $filterReportingList = array_filter($reportingList[0]);
-        unset($filterReportingList['id']);
-        unset($filterReportingList['layer0']);
-        $filterReportingList = array_reverse($filterReportingList);
-        $filterReportingList = array_reverse($filterReportingList);
-        $array_rows = count($filterReportingList);
+        if ($reportingList->isNotEmpty()) {
+            $reportingList = (array) $reportingList[0];
+            $filterReportingList = array_filter($reportingList);
+            unset($filterReportingList['id'], $filterReportingList['layer0']);
+            $filterReportingList = array_reverse($filterReportingList);
 
-        foreach ($filterReportingList as $key => $val) {
-            $corList = DB::table('coordinators as cd')
-                ->select('cd.id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.short_title as pos')
-                ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                ->where('cd.id', '=', $val)
-                ->where('cd.is_active', '=', 1)
-                ->get();
-            if (count($corList) != 0) {
-                $reviewerList[] = ['cid' => $corList[0]->cid, 'cname' => $corList[0]->fname.' '.$corList[0]->lname.' ('.$corList[0]->pos.')'];
+            $i = 0;
+            foreach ($filterReportingList as $key => $val) {
+                $corList = DB::table('coordinators as cd')
+                    ->select('cd.id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.short_title as pos')
+                    ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                    ->where('cd.id', '=', $val)
+                    ->where('cd.is_active', '=', 1)
+                    ->get();
+
+                if ($corList->isNotEmpty()) {
+                $reviewerList[$i] = ['cid' => $corList[0]->cid, 'cname' => $corList[0]->fname.' '.$corList[0]->lname.' ('.$corList[0]->pos.')'];
+                    $i++;
+                }
             }
         }
 
@@ -2395,6 +2370,5 @@ public function updateEOYAwards(Request $request, $id): RedirectResponse
 
         return view('eoyreports.reviewfinancialreport')->with($data);
     }
-
 
 }

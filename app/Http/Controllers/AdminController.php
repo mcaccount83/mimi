@@ -31,9 +31,13 @@ use Illuminate\View\View;
 
 class AdminController extends Controller
 {
-    public function __construct()
+    protected $userController;
+
+    public function __construct(UserController $userController)
     {
         $this->middleware('auth')->except('logout');
+        $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
+        $this->userController = $userController;
     }
 
     /**
@@ -42,10 +46,6 @@ class AdminController extends Controller
     public function showBugs(Request $request): View
     {
         $user = User::find($request->user()->id);
-        // Check if user is not found
-        if (! $user) {
-            return redirect()->route('home');
-        }
 
         $corDetails = $user->Coordinators;
         // Check if CordDetails is not found for the user
@@ -212,10 +212,6 @@ class AdminController extends Controller
     public function showResources(Request $request): View
     {
         $user = User::find($request->user()->id);
-        // Check if user is not found
-        if (! $user) {
-            return redirect()->route('home');
-        }
 
         $corDetails = $user->Coordinators;
         // Check if CordDetails is not found for the user
@@ -348,10 +344,6 @@ class AdminController extends Controller
     public function showToolkit(Request $request): View
     {
         $user = User::find($request->user()->id);
-        // Check if user is not found
-        if (! $user) {
-            return redirect()->route('home');
-        }
 
         $corDetails = $user->Coordinators;
         // Check if CordDetails is not found for the user
@@ -477,10 +469,6 @@ class AdminController extends Controller
      public function showReRegDate(Request $request)
     {
         $user = User::find($request->user()->id);
-        // Check if user is not found
-        if (! $user) {
-            return redirect()->route('home');
-        }
 
         $corDetails = $user->Coordinators;
         // Check if CordDetails is not found for the user
@@ -513,10 +501,6 @@ class AdminController extends Controller
     {
         //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        // Check if user is not found
-        if (! $user) {
-            return redirect()->route('home');
-        }
 
         $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
@@ -731,10 +715,6 @@ class AdminController extends Controller
     public function showEOY(Request $request): View
     {
         $user = User::find($request->user()->id);
-        // Check if user is not found
-        if (! $user) {
-            return redirect()->route('home');
-        }
 
         $corDetails = $user->Coordinators;
         // Check if CordDetails is not found for the user

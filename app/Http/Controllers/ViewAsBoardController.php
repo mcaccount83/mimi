@@ -10,12 +10,14 @@ use Illuminate\Support\Facades\DB;
 
 class ViewAsBoardController extends Controller
 {
+    protected $userController;
 
     public function __construct(UserController $userController)
     {
         $this->middleware('auth')->except('logout');
+        $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
+        $this->userController = $userController;
     }
-
 
 /**
      * View the President Profile View

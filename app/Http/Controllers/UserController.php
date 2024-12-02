@@ -208,11 +208,6 @@ class UserController extends Controller
             }
         }
 
-        // Debug output to check final email strings
-        // Log::info("Chapter Email: $chapEmail");
-        // Log::info("Chapter Email List: " . implode(', ', $emailListChap)); // log for debug
-        // Log::info("Coordinator Email List: " . implode(', ', $emailListCoord)); // log for debug
-
         return [
             'chapEmail' => $chapEmail,
             'emailListChap' => $emailListChap, // Return as an array
@@ -227,133 +222,58 @@ class UserController extends Controller
         ];
     }
 
-
-    /**
-     * Coordinators of Chapter -- Used for displaying Coordinator List on Chapter Detail Pages
-     */
-    // public function loadCoordinatorList($id)
-    // {
-    //     $reportingList = DB::table('coordinator_reporting_tree')
-    //         ->select('*')
-    //         ->where('id', '=', $id)
-    //         ->get();
-
-    //     if ($reportingList->isNotEmpty()) {
-    //         $reportingList = (array) $reportingList[0];
-    //         $filterReportingList = array_filter($reportingList);
-    //         unset($filterReportingList['id']);
-    //         unset($filterReportingList['layer0']);
-    //         $filterReportingList = array_reverse($filterReportingList);
-
-    //         $str = '<table>';
-    //         $i = 0;
-    //         foreach ($filterReportingList as $key => $val) {
-    //             $corList = DB::table('coordinators as cd')
-    //                 ->select('cd.first_name as fname', 'cd.last_name as lname', 'cd.email as email', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
-    //                 ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
-    //                 ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
-    //                 ->where('cd.id', '=', $val)
-    //                 ->where('cd.is_active', '=', 1)
-    //                 ->get();
-
-    //             if (count($corList) > 0) {
-    //                 $name = $corList[0]->fname.' '.$corList[0]->lname;
-    //                 $email = $corList[0]->email;
-    //                 if (!empty($corList[0]->sec_pos)) {
-    //                     $pos = '('.$corList[0]->pos.'/'.$corList[0]->sec_pos.')';
-    //                 } else {
-    //                     $pos = '('.$corList[0]->pos.')';
-    //                 }
-
-    //                 if ($i == 0) {
-    //                     $str .= "<tr>
-    //                     <td><b>Primary Coordinator &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: </b></td>
-    //                     <td><b><a href='mailto:$email' target='_top'>$name </a>$pos</b></td>
-    //                     </tr>";
-    //                 } elseif ($i == 1) {
-    //                     $str .= "<tr>
-    //                     <td><b>Secondary Coordinator : </b></td>
-    //                     <td><b><a href='mailto:$email' target='_top'>$name </a>$pos</b></td>
-    //                     </tr>";
-    //                 } elseif ($i >= 2) {
-    //                     if ($i == 2) {
-    //                         $str .= "<tr>
-    //                         <td><b>Additional Coordinator : </b></td>
-    //                         <td><b><a href='mailto:$email' target='_top'>$name </a>$pos</b></td>
-    //                         </tr>";
-    //                     } else {
-    //                         $str .= "<tr>
-    //                         <td></td>
-    //                         <td><b><a href='mailto:$email' target='_top'>$name </a>$pos</b></td>
-    //                         </tr>";
-    //                     }
-    //                 } else {
-    //                     $str .= '<tr><td></td></tr>';
-    //                 }
-
-    //                 $i++;
-    //             }
-    //         }
-
-    //         $str .= '</table>';
-    //         echo $str;
-    //     } else {
-    //         echo 'No reporting data found for the given ID.';
-    //     }
-    // }
-
     public function loadCoordinatorList($id)
-{
-    $reportingList = DB::table('coordinator_reporting_tree')
-        ->select('*')
-        ->where('id', '=', $id)
-        ->get();
+    {
+        $reportingList = DB::table('coordinator_reporting_tree')
+            ->select('*')
+            ->where('id', '=', $id)
+            ->get();
 
-    if ($reportingList->isNotEmpty()) {
-        $reportingList = (array) $reportingList[0];
-        $filterReportingList = array_filter($reportingList);
-        unset($filterReportingList['id'], $filterReportingList['layer0']);
-        $filterReportingList = array_reverse($filterReportingList);
+        if ($reportingList->isNotEmpty()) {
+            $reportingList = (array) $reportingList[0];
+            $filterReportingList = array_filter($reportingList);
+            unset($filterReportingList['id'], $filterReportingList['layer0']);
+            $filterReportingList = array_reverse($filterReportingList);
 
-       // Inside your loadCoordinatorList method
-       $str = ""; // Initialize with an empty string
+        // Inside your loadCoordinatorList method
+        $str = ""; // Initialize with an empty string
 
-       $i = 0;
-       foreach ($filterReportingList as $key => $val) {
-           $corList = DB::table('coordinators as cd')
-               ->select('cd.first_name as fname', 'cd.last_name as lname', 'cd.email as email', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
-               ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
-               ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
-               ->where('cd.id', '=', $val)
-               ->where('cd.is_active', '=', 1)
-               ->get();
+        $i = 0;
+        foreach ($filterReportingList as $key => $val) {
+            $corList = DB::table('coordinators as cd')
+                ->select('cd.first_name as fname', 'cd.last_name as lname', 'cd.email as email', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
+                ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
+                ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
+                ->where('cd.id', '=', $val)
+                ->where('cd.is_active', '=', 1)
+                ->get();
 
-           if ($corList->isNotEmpty()) {
-               $name = $corList[0]->fname . ' ' . $corList[0]->lname;
-               $email = $corList[0]->email;
-               $position = !empty($corList[0]->sec_pos) ? "({$corList[0]->pos}/{$corList[0]->sec_pos})" : "({$corList[0]->pos})";
+            if ($corList->isNotEmpty()) {
+                $name = $corList[0]->fname . ' ' . $corList[0]->lname;
+                $email = $corList[0]->email;
+                $position = !empty($corList[0]->sec_pos) ? "({$corList[0]->pos}/{$corList[0]->sec_pos})" : "({$corList[0]->pos})";
 
-               $title = match ($i) {
-                   0 => 'Primary Coordinator:',
-                   1 => 'Secondary Coordinator:',
-                   2 => 'Additional Coordinator:',
-                   default => ''
-               };
+                $title = match ($i) {
+                    0 => 'Primary Coordinator:',
+                    1 => 'Secondary Coordinator:',
+                    2 => 'Additional Coordinator:',
+                    default => ''
+                };
 
-               $str .= "<b>{$title}</b><span class='float-right'><a href='mailto:{$email}' target='_top'>{$name}</a> {$position}</span><br>";
-               $i++;
-           }
-       }
+                $str .= "<b>{$title}</b><span class='float-right'><a href='mailto:{$email}' target='_top'>{$name}</a> {$position}</span><br>";
+                $i++;
+            }
+        }
 
-       if ($str == "") {
-           $str = "No coordinators found for the given ID.";
-       }
+        if ($str == "") {
+            $str = "No coordinators found for the given ID.";
+        }
 
-       return response()->json($str);
-    } else {
-        return response()->json("<li class='list-group-item'>No reporting data found for the given ID.</li>");
+        return response()->json($str);
+        } else {
+            return response()->json("<li class='list-group-item'>No reporting data found for the given ID.</li>");
+        }
     }
-}
 
 
     /**
@@ -366,44 +286,49 @@ class UserController extends Controller
             ->where('id', '=', $chPcid)
             ->get();
 
-        foreach ($reportingList as $key => $value) {
-            $reportingList[$key] = (array) $value;
-        }
-        $filterReportingList = array_filter($reportingList[0]);
-        unset($filterReportingList['id']);
-        unset($filterReportingList['layer0']);
-        $filterReportingList = array_reverse($filterReportingList);
-        $str = '';
-        $array_rows = count($filterReportingList);
+        if ($reportingList->isNotEmpty()) {
+            $reportingList = (array) $reportingList[0];
+            $filterReportingList = array_filter($reportingList);
+            unset($filterReportingList['id'], $filterReportingList['layer0']);
+            $filterReportingList = array_reverse($filterReportingList);
+
+        // Inside your loadCoordinatorList method
+        $str = ""; // Initialize with an empty string
+
         $i = 0;
-        $coordinator_array = [];
         foreach ($filterReportingList as $key => $val) {
             $corList = DB::table('coordinators as cd')
-                ->select('cd.id as cid', 'cd.conference_id as conf', 'cd.first_name as fname', 'cd.last_name as lname', 'cd.email as email', 'cp.long_title as pos',
+            ->select('cd.id as cid', 'cd.conference_id as conf', 'cd.first_name as fname', 'cd.last_name as lname', 'cd.email as email', 'cp.long_title as pos',
                     'cf.conference_description as conf_desc')
-                ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
+                ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
                 ->join('conference as cf', 'cd.conference_id', '=', 'cf.id')
                 ->where('cd.id', '=', $val)
+                ->where('cd.is_active', '=', 1)
                 ->get();
-            $coordinator_array[$i] = ['id' => $corList[0]->cid,
-                'first_name' => $corList[0]->fname,
-                'last_name' => $corList[0]->lname,
-                'pos' => $corList[0]->pos,
-                'conf' => $corList[0]->conf,
-                'conf_desc' => $corList[0]->conf_desc,
-                'email' => $corList[0]->email];
-            $i++;
-        }
-        $coordinator_count = count($coordinator_array);
 
-        for ($i = 0; $i < $coordinator_count; $i++) {
-            $cc_id = $coordinator_array[$i]['id'];
-            $cc_fname = $coordinator_array[$i]['first_name'];
-            $cc_lname = $coordinator_array[$i]['last_name'];
-            $cc_pos = $coordinator_array[$i]['pos'];
-            $cc_conf = $coordinator_array[$i]['conf'];
-            $cc_conf_desc = $coordinator_array[$i]['conf_desc'];
-            $cc_email = $coordinator_array[$i]['email'];
+            if ($corList->isNotEmpty()) {
+                    $coordinator_array[$i] = ['id' => $corList[0]->cid,
+                    'first_name' => $corList[0]->fname,
+                    'last_name' => $corList[0]->lname,
+                    'pos' => $corList[0]->pos,
+                    'conf' => $corList[0]->conf,
+                    'conf_desc' => $corList[0]->conf_desc,
+                    'email' => $corList[0]->email];
+                    $i++;
+                }
+                $coordinator_count = count($coordinator_array);
+
+                for ($i = 0; $i < $coordinator_count; $i++) {
+                    $cc_id = $coordinator_array[$i]['id'];
+                    $cc_fname = $coordinator_array[$i]['first_name'];
+                    $cc_lname = $coordinator_array[$i]['last_name'];
+                    $cc_pos = $coordinator_array[$i]['pos'];
+                    $cc_conf = $coordinator_array[$i]['conf'];
+                    $cc_conf_desc = $coordinator_array[$i]['conf_desc'];
+                    $cc_email = $coordinator_array[$i]['email'];
+                }
+            }
         }
 
         switch ($chConf) {

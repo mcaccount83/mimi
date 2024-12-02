@@ -41,6 +41,7 @@ class BoardController extends Controller
     public function __construct(UserController $userController)
         {
             $this->middleware('auth')->except('logout');
+            $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndBoard::class);
             $this->userController = $userController;
         }
 
@@ -351,14 +352,6 @@ class BoardController extends Controller
     {
         $chapterId = $id;
         $user = $request->user();
-        $user_type = $user->user_type;
-        $userStatus = $user->is_active;
-        if ($userStatus != 1) {
-            Auth::logout();
-            $request->session()->flush();
-
-            return redirect()->to('/login');
-        }
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
 
         $chapterInfoPre = DB::table('chapters')
@@ -1128,13 +1121,6 @@ class BoardController extends Controller
     {
         $user = $request->user();
         $user_type = $user->user_type;
-        $userStatus = $user->is_active;
-        if ($userStatus != 1) {
-            Auth::logout();
-            $request->session()->flush();
-
-            return redirect()->to('/login');
-        }
 
         // $borDetails = $user->BoardDetails;
         $borDetails = $request->user()->BoardDetails;
@@ -1222,14 +1208,6 @@ class BoardController extends Controller
     public function showM2MDonationForm(Request $request)
     {
         $user = $request->user();
-        $user_type = $user->user_type;
-        $userStatus = $user->is_active;
-        if ($userStatus != 1) {
-            Auth::logout();
-            $request->session()->flush();
-
-            return redirect()->to('/login');
-        }
 
         $borDetails = $user->BoardDetails;
         // Check if BoardDetails is not found for the user
@@ -1277,14 +1255,6 @@ class BoardController extends Controller
     public function showResources(Request $request)
     {
         $user = $request->user();
-        $user_type = $user->user_type;
-        $userStatus = $user->is_active;
-        if ($userStatus != 1) {
-            Auth::logout();
-            $request->session()->flush();
-
-            return redirect()->to('/login');
-        }
 
         // $borDetails = $user->BoardDetails;
         $borDetails = $request->user()->BoardDetails;
@@ -1348,13 +1318,6 @@ class BoardController extends Controller
     {
         $user = $request->user();
         $user_type = $user->user_type;
-        $userStatus = $user->is_active;
-        if ($userStatus != 1) {
-            Auth::logout();
-            $request->session()->flush();
-
-            return redirect()->to('/login');
-        }
 
         // $borDetails = $user->BoardDetails;
         $borDetails = $request->user()->BoardDetails;
@@ -1466,15 +1429,8 @@ class BoardController extends Controller
     public function createBoardInfo(Request $request, $chapter_id): RedirectResponse
     {
         $user = $request->user();
-        $user_type = $user->user_type;
-        $userStatus = $user->is_active;
-        if ($userStatus != 1) {
-            Auth::logout();
-            $request->session()->flush();
-
-            return redirect()->to('/login');
-        }
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
+
         $chapter = Chapter::find($chapter_id);
 
         $chapterDetails = DB::table('chapters')
