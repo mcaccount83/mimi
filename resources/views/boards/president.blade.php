@@ -335,7 +335,7 @@
     <label class="col-sm-2 col-form-label">Website:</label>
     <div class="col-sm-10">
         <input type="text" name="ch_website" id="ch_website" class="form-control"
-               data-inputmask='"mask": "http://*{1,250}.*{2,6}"' data-mask
+               data-inputmask='"mask": "http://*{1,250}.*{2,25}"' data-mask
                value="{{ strpos($chapterList[0]->website_url, 'http://') === 0 ? substr($chapterList[0]->website_url, 7) : $chapterList[0]->website_url }}"
                placeholder="Chapter Website">
     </div>
