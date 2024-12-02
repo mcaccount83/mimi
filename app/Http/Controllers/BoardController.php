@@ -342,7 +342,7 @@ class BoardController extends Controller
                     'startMonth' => $start_monthInWords, 'thisMonth' => $month, 'due_date' => $due_date, 'late_date' => $late_date, 'user_type' => $user_type,
                     'webStatusArr' => $webStatusArr];
 
-        return view('boards.members')->with($data);
+        return view('boards.member')->with($data);
     }
 
     /**
