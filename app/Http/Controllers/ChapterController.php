@@ -1276,6 +1276,12 @@ public function editChapterDetails(Request $request, $id)
             $ch_webstatus = 0; // Set it to 0 if it's blank
         }
 
+        $website = $request->input('ch_website');
+        // Ensure it starts with "http://" or "https://"
+        if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
+            $website = 'http://' . $website;
+        }
+
         $chapter = Chapter::find($chapterId);
         DB::beginTransaction();
         try {
@@ -1291,7 +1297,7 @@ public function editChapterDetails(Request $request, $id)
             $chapter->email = $request->input('ch_email');
             $chapter->po_box = $request->input('ch_pobox');
             $chapter->additional_info = $request->input('ch_addinfo');
-            $chapter->website_url = $request->input('ch_website');
+            $chapter->website_url = $website;
             $chapter->website_status = $request->input('ch_webstatus');
             $chapter->egroup = $request->input('ch_onlinediss');
             $chapter->social1 = $request->input('ch_social1');
@@ -1351,9 +1357,9 @@ public function editChapterDetails(Request $request, $id)
              if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
 
                 $mailData = [
-                    'chapter_name' => $request->input('ch_name'),
-                    'chapter_state' => $request->input('ch_state'),
-                    'ch_website_url' => $request->input('ch_website'),
+                    'chapter_name' => $chapterInfoPre[0]->name,
+                    'chapter_state' => $chState,
+                    'ch_website_url' => $website,
                 ];
 
                 if ($request->input('ch_webstatus') == 1) {
@@ -3145,7 +3151,7 @@ public function editChapterWebsite(Request $request, $id)
         $chapter = Chapter::find($chapterId);
         DB::beginTransaction();
         try {
-            $chapter->website_url = $request->input('ch_website');
+            $chapter->website_url = $website;
             $chapter->website_status = $request->input('ch_webstatus');
             $chapter->egroup = $request->input('ch_onlinediss');
             $chapter->social1 = $request->input('ch_social1');
@@ -3179,7 +3185,7 @@ public function editChapterWebsite(Request $request, $id)
                     $mailData = [
                         'chapter_name' => $chaperInfoUpd[0]->name,
                         'chapter_state' => $chaperInfoUpd[0]->state,
-                        'ch_website_url' => $request->input('ch_website'),
+                        'ch_website_url' => $website,
                     ];
 
                     if ($request->input('ch_webstatus') == 1) {
