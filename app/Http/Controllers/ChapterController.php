@@ -3136,6 +3136,12 @@ public function editChapterWebsite(Request $request, $id)
             $ch_webstatus = 0; // Set it to 0 if it's blank
         }
 
+        $website = $request->input('ch_website');
+        // Ensure it starts with "http://" or "https://"
+        if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
+            $website = 'http://' . $website;
+        }
+
         $chapter = Chapter::find($chapterId);
         DB::beginTransaction();
         try {
