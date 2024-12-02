@@ -31,7 +31,7 @@
                         @csrf
 
                         <input  type="hidden" id="bor_email_chk" value="{{ $borDetails->email }}">
-
+                        <input  type="hidden" class="form-control" name="bor_positionid" value="{{$borPositionId}}">
 
                         <div class="col-md-12">
                             <div class="card card-widget widget-user">
@@ -70,7 +70,6 @@
                         <!-- /.card -->
                     </div>
                 </div>
-
 
             @php
                 $admin = DB::table('admin')
@@ -118,13 +117,13 @@
                             </div>
                             <label class="col-sm-2 mb-1 col-form-label"><br></label>
                             <div class="col-sm-5 mb-1">
-                            <input type="text" name="ch_pre_city" id="ch_pre_city" class="form-control" placeholder="City" value="{{ $borDetails->city }}" required >
+                            <input type="text" name="bor_city" id="bor_city" class="form-control" placeholder="City" value="{{ $borDetails->city }}" required >
                             </div>
                             <div class="col-sm-3 mb-1">
-                                <select name="bor_city" id="bor_city" class="form-control select2" style="width: 100%;" required >
+                                <select name="bor_state" id="bor_state" class="form-control select2" style="width: 100%;" required >
                                     <option value="">Select State</option>
                                         @foreach($stateArr as $state)
-                                          <option value="{{$state->state_short_name}}" {{$borDetails->bd_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
+                                          <option value="{{$state->state_short_name}}" {{$borDetails->state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
                                         @endforeach
                                     </select>
                             </div>
@@ -150,38 +149,37 @@
                             <div class="col-sm-10">
                             <input type="text" name="ch_pobox" id="ch_pobox" class="form-control" value="{{ $chapterDetails->po_box }}" placeholder="Chapter PO Box/Mailing Address" >
                             </div>
-
                         </div>
 
                         <hr>
                         <h5>Website & Social Media</h5>
                          <!-- URL Field -->
-<div class="form-group row">
-    <label class="col-sm-2 col-form-label">Website:</label>
-    <div class="col-sm-10">
-        <input type="text" name="ch_website" id="ch_website" class="form-control"
-               {{-- data-inputmask='"mask": "http://*{1,250}"' data-mask --}}
-               {{-- value="{{ strpos($chapterList[0]->website_url, 'http://') === 0 ? substr($chapterList[0]->website_url, 7) : $chapterList[0]->website_url }}" --}}
-               value="{{$chapterDetails->website_url}}"
-               placeholder="Chapter Website">
-    </div>
-</div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Website:</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="ch_website" id="ch_website" class="form-control"
+                                    {{-- data-inputmask='"mask": "http://*{1,250}"' data-mask --}}
+                                    {{-- value="{{ strpos($chapterList[0]->website_url, 'http://') === 0 ? substr($chapterList[0]->website_url, 7) : $chapterList[0]->website_url }}" --}}
+                                    value="{{$chapterDetails->website_url}}"
+                                    placeholder="Chapter Website">
+                            </div>
+                        </div>
 
-<!-- Web Status Field -->
-<div class="form-group row">
-    <label class="col-sm-2 col-form-label">Web Status</label>
-    <div class="col-sm-5">
-        <select name="ch_webstatus" id="ch_webstatus" class="form-control" style="width: 100%;" required>
-            <option value="">Select Status</option>
-            @foreach($webStatusArr as $webstatusKey => $webstatusText)
-                <option value="{{ $webstatusKey }}" {{ $chapterDetails->website_status == $webstatusKey ? 'selected' : '' }}
-                    {{ in_array($webstatusKey, [0, 1]) ? 'disabled' : '' }}>
-                    {{ $webstatusText }}
-                </option>
-            @endforeach
-        </select>
-    </div>
-</div>
+                        <!-- Web Status Field -->
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Web Status</label>
+                            <div class="col-sm-5">
+                                <select name="ch_webstatus" id="ch_webstatus" class="form-control" style="width: 100%;" required>
+                                    <option value="">Select Status</option>
+                                    @foreach($webStatusArr as $webstatusKey => $webstatusText)
+                                        <option value="{{ $webstatusKey }}" {{ $chapterDetails->website_status == $webstatusKey ? 'selected' : '' }}
+                                            {{ in_array($webstatusKey, [0, 1]) ? 'disabled' : '' }}>
+                                            {{ $webstatusText }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                         <!-- /.form group -->
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Social Media:</label>
@@ -204,9 +202,6 @@
 
                     </div>
                 </div>
-
-
-
             </div>
             <!-- /.card-body -->
             </div>
@@ -214,13 +209,10 @@
         </div>
         <!-- /.col -->
 
-
-
             <div class="col-md-4">
                 <!-- Profile Image -->
                 <div class="card card-primary card-outline">
                     <div class="card-body box-profile">
-
 
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">EIN:</label>
@@ -281,7 +273,6 @@
                                 </span>
                             </div>
                         </div>
-
 
                         <span style="color: red;">If anything in this section needs to be updated, please contact your Primary Coordinator.</span><br>
 
@@ -465,33 +456,14 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
 
-    // function is_url() {
-    //     var str = $("#validate_url").val().trim(); // Trim leading and trailing whitespace
-    //     var chWebStatusSelect = document.querySelector('select[name="ch_webstatus"]');
-
-    //     if (str === "") {
-    //         chWebStatusSelect.value = '0'; // Set to 0 if the input is blank
-    //         chWebStatusSelect.disabled = true; // Disable the select field
-    //         return true; // Field is empty, so no validation needed
-    //     }
-
-    //     var regexp = /^(https?:\/\/)([a-z0-9-]+\.(com|org))$/;
-
-    //     if (regexp.test(str)) {
-    //         chWebStatusSelect.disabled = false; // Enable the select field if a valid URL is entered
-    //         return true;
-    //     } else {
-    //         alert("Please Enter URL, Should be http://xxxxxxxx.xxx format");
-    //         chWebStatusSelect.value = '0'; // Set to 0 if an invalid URL is entered
-    //         chWebStatusSelect.disabled = true; // Disable the select field
-    //         return false;
-    //     }
-    // }
-
 function PreSaveValidate(){
     var errMessage="";
           if($("#bor_email").val() == ""){
               errMessage = "Email is required, please enter a valid email address.";
+            }
+
+            if($("#ch_inqemailcontact").val() == ""){
+              errMessage = "Inquiries Email is required, please enter a valid email address.";
             }
 
           if(errMessage.length > 0){

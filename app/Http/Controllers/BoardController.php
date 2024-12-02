@@ -1036,6 +1036,17 @@ class BoardController extends Controller
                 ->where('chapters.id', '=', $chapterId)
                 ->get();
 
+            $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
+                if (empty(trim($ch_webstatus))) {
+                    $ch_webstatus = 0; // Set it to 0 if it's blank
+                }
+
+            $website = $request->input('ch_website');
+                // Ensure it starts with "http://" or "https://"
+                if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
+                    $website = 'http://' . $website;
+                }
+
             if (count($boardDetails) != 0) {
                 $userId = $boardDetails[0]->user_id;
                 $boardId = $boardDetails[0]->board_id;
@@ -1053,15 +1064,31 @@ class BoardController extends Controller
                 $board->first_name = $request->input('bor_fname');
                 $board->last_name = $request->input('bor_lname');
                 $board->email = $request->input('bor_email');
+                $board->phone = $request->input('bor_phone');
                 $board->street_address = $request->input('bor_addr');
                 $board->city = $request->input('bor_city');
                 $board->state = $request->input('bor_state');
                 $board->zip = $request->input('bor_zip');
                 $board->country = 'USA';
-                $board->phone = $request->input('bor_phone');
                 $board->last_updated_by = $lastUpdatedBy;
                 $board->last_updated_date = now();
                 $board->save();
+
+                // Update Chapter Details
+                $chapter = Chapter::find($chapterId);
+                $chapter->website_url = $website;
+                $chapter->website_status = $request->input('ch_webstatus');
+                $chapter->email = $request->input('ch_email');
+                $chapter->inquiries_contact = $request->input('ch_inqemailcontact');
+                $chapter->egroup = $request->input('ch_onlinediss');
+                $chapter->social1 = $request->input('ch_social1');
+                $chapter->social2 = $request->input('ch_social2');
+                $chapter->social3 = $request->input('ch_social3');
+                $chapter->po_box = $request->input('ch_pobox');
+                $chapter->last_updated_by = $lastUpdatedBy;
+                $chapter->last_updated_date = date('Y-m-d H:i:s');
+
+                $chapter->save();
             }
 
             // Fetch Updated Board Details
