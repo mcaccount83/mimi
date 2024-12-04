@@ -150,10 +150,15 @@
                         <br>
                         <label>Webiste Link Status:</label> {{$webStatusinWords}}
                         <br>
-                        <label>Forum/Group/App:</label> {{ $chapterList[0]->egroup}}
+                        <label>Webiste Notes (not visible to board members):</label><br>
+                        {{ $chapterList[0]->website_notes }}
+                        {{-- <br>
+                        <label>Forum/Group/App:</label> {{ $chapterList[0]->egroup}} --}}
                         {{-- <button class="btn bg-gradient-primary btn-sm" onclick="window.location.href='{{ route('chapters.chapwebsiteview', ['id' => $chapterList[0]->id]) }}'">Update Website Link Status</button> --}}
                     </div>
                     <div class="col-md-6">
+                        <label>Forum/Group/App:</label> {{ $chapterList[0]->egroup}}
+                        <br>
                         <label>Facebook:</label> {{ $chapterList[0]->social1}}
                         <br>
                         <label>Twitter:</label> {{ $chapterList[0]->social2}}

@@ -1301,6 +1301,7 @@ public function editChapterDetails(Request $request, $id)
             $chapter->additional_info = $request->input('ch_addinfo');
             $chapter->website_url = $website;
             $chapter->website_status = $request->input('ch_webstatus');
+            $chapter->website_notes = $request->input('ch_webnotes');
             $chapter->egroup = $request->input('ch_onlinediss');
             $chapter->social1 = $request->input('ch_social1');
             $chapter->social2 = $request->input('ch_social2');

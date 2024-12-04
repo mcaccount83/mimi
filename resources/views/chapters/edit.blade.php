@@ -200,6 +200,13 @@
                                     </select>
                                 </div>
                             </div>
+                            <!-- /.form group -->
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Website Notes:</label>
+                                <div class="col-sm-10">
+                                <input type="text" name="ch_webnotes" id="ch_webnotes" class="form-control" value="{{ $chapterList[0]->website_notes }}" placeholder="Website Linking Notes"  >
+                                </div>
+                            </div>
 
                             <!-- /.form group -->
                             <div class="form-group row">
