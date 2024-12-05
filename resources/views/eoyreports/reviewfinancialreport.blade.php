@@ -243,9 +243,9 @@
 
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Award #2 Status:</b> <span class="float-right" style="background-color: {{ is_null($financial_report_array['check_award_2_approved']) ? '#FFFFFF' : ($financial_report_array['check_award_2_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($financial_report_array['check_award_2_approved']) ? '#000000' : '#FFFFFF' }};">
-                    {{ is_null($financial_report_array['award_1_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_1_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                        : ($financial_report_array['award_1_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_1_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_1_nomination_type'] == 4 ? 'Outstanding Spirit'
-                        : ($financial_report_array['award_1_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_1_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_1_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                    {{ is_null($financial_report_array['award_2_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_2_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                        : ($financial_report_array['award_2_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_2_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_2_nomination_type'] == 4 ? 'Outstanding Spirit'
+                        : ($financial_report_array['award_2_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_2_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_2_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                 </span>
             </div>
 
