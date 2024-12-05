@@ -2885,7 +2885,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
 									<div class="col-12" >
                                             <strong style="color:red">Please Note</strong><br>
                                             This will take you to a new screen - be sure to save all work before clicking button to Add Additional Awards.<br>
-                                            <a id="addAwardsLink" href="{{ url("/chapter/awardsview/{$chapterid}") }}" class="btn btn-sm bg-gradient-primary" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fas fa-trophy" ></i>&nbsp; Add/Edit Awards</a>
+                                            <a id="addAwardsLink" href="{{ url("/eoydetailseditawards/{$chapterid}") }}" class="btn btn-sm bg-gradient-primary" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fas fa-trophy" ></i>&nbsp; Add/Edit Awards</a>
 									<div class="clearfix"></div>
                                     <div class="col-12"><br></div>
 
