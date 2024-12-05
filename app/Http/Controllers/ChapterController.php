@@ -3081,6 +3081,12 @@ public function editChapterWebsite(Request $request, $id)
          // Load Active Status for Active/Zapped Visibility
          $chIsActive = $chapterList[0]->is_active;
 
+         // Load Board and Coordinators for Sending Email
+        $chId = $chapterList[0]->id;
+        $emailData = $this->userController->loadEmailDetails($chId);
+        $emailListChap = $emailData['emailListChapString'];
+        $emailListCoord = $emailData['emailListCoordString'];
+
          $primaryCoordinatorList = DB::table('chapters as ch')
             ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
             ->join('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
@@ -3109,7 +3115,7 @@ public function editChapterWebsite(Request $request, $id)
     $chapterStatusArr = ['1' => 'Operating OK', '4' => 'On Hold Do not Refer', '5' => 'Probation', '6' => 'Probation Do Not Refer'];
 
     $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete,
-         'chapterList' => $chapterList, 'webStatusArr' => $webStatusArr, 'chapterStatusArr' => $chapterStatusArr,
+         'chapterList' => $chapterList, 'webStatusArr' => $webStatusArr, 'chapterStatusArr' => $chapterStatusArr, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord,
         'primaryCoordinatorList' => $primaryCoordinatorList, 'corConfId' => $corConfId, 'chConfId' => $chConfId, 'chPCid' => $chPCid];
 
     return view('chapters.editwebsite')->with($data);

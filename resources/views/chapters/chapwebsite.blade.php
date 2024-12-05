@@ -27,6 +27,7 @@
               <thead>
 			    <tr>
 					<th>Details</th>
+                    <th>Email</th>
                     <th>Conf/Reg</th>
 					<th>State</th>
 					<th>Name</th>
@@ -38,8 +39,17 @@
                 </thead>
                 <tbody>
                 @foreach($websiteList as $list)
+                @php
+                        $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
+                        $emailListChap = $emailDetails['emailListChapString'];
+                        $emailListCoord = $emailDetails['emailListCoordString'];
+                    @endphp
+
                   <tr>
                     <td class="text-center align-middle"><a href="{{ url("/chapterwebsiteedit/{$list->id}") }}"><i class="fas fa-eye "></i></a></td>
+                    <td class="text-center align-middle">
+                        <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $list->chapter_name . ', ' . $list->state) }} | Website Review"><i class="far fa-envelope"></i></a></td>
+                   </td>
                         <td>
                             @if ($list->reg != "None")
                                 {{ $list->conf }} / {{ $list->reg }}
