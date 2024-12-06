@@ -157,7 +157,7 @@
                                 <div class="d-flex align-items-center mb-1">
                                     <label class="col-form-label mr-2">AVP:</label>
                                     <div class="custom-control custom-switch mr-5">
-                                        <input type="checkbox" name="AVPVacant" id="AVPVacant" class="custom-control-input" onchange="ConfirmVacant(this.id)" checked>
+                                        <input type="checkbox" name="AVPVacant" id="AVPVacant" class="custom-control-input" checked>
                                         <label class="custom-control-label" for="AVPVacant">Vacant</label>
                                     </div>
                                 </div>
@@ -201,7 +201,7 @@
                                 <div class="d-flex align-items-center mb-1">
                                     <label class="col-form-label mr-2">MVP:</label>
                                     <div class="custom-control custom-switch mr-5">
-                                        <input type="checkbox" name="MVPVacant" id="MVPVacant" class="custom-control-input"onchange="ConfirmVacant(this.id)" checked>
+                                        <input type="checkbox" name="MVPVacant" id="MVPVacant" class="custom-control-input"checked>
                                         <label class="custom-control-label" for="MVPVacant">Vacant</label>
                                     </div>
                                 </div>
@@ -244,7 +244,7 @@
                                 <div class="d-flex align-items-center mb-1">
                                     <label class="col-form-label mr-2">Treasurer:</label>
                                     <div class="custom-control custom-switch mr-2">
-                                        <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input" onchange="ConfirmVacant(this.id)" checked>
+                                        <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input" checked>
                                         <label class="custom-control-label" for="TreasVacant">Vacant</label>
                                     </div>
                                 </div>
@@ -287,7 +287,7 @@
                                 <div class="d-flex align-items-center mb-1">
                                     <label class="col-form-label mr-2">Secretary:</label>
                                     <div class="custom-control custom-switch mr-2">
-                                        <input type="checkbox" name="SecVacant" id="SecVacant" class="custom-control-input" onchange="ConfirmVacant(this.id)" checked>
+                                        <input type="checkbox" name="SecVacant" id="SecVacant" class="custom-control-input" checked>
                                         <label class="custom-control-label" for="SecVacant">Vacant</label>
                                     </div>
                                 </div>

@@ -145,7 +145,7 @@
                         </div>
                         <div class="col-sm-9">
                             @if($chapterList[0]->new_board_active != '1')
-                                <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='{{ route('eoyreports.eoyboardreportview', ['id' => $chapterList[0]->id]) }}'">View Board Election Report</button>
+                                <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='{{ route('eoyreports.editboardreport', ['id' => $chapterList[0]->id]) }}'">View Board Election Report</button>
                                 <button type="button" class="btn bg-gradient-primary" onclick="return PreSaveValidate(false)" ><i class="fas fa-user-plus" ></i>&nbsp; Activate Board</button>
                                 @else
                                 Board Report is no longer available after activation.

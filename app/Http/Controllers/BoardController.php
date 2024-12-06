@@ -1498,10 +1498,15 @@ class BoardController extends Controller
             $issue_note = '';
         }
 
-        $ch_webstatus = $request->input('ch_webstatus');
-
+        $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
         if (empty(trim($ch_webstatus))) {
             $ch_webstatus = 0; // Set it to 0 if it's blank
+        }
+
+        $website = $request->input('ch_website');
+        // Ensure it starts with "http://" or "https://"
+        if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
+            $website = 'http://' . $website;
         }
 
         DB::beginTransaction();
@@ -1509,7 +1514,7 @@ class BoardController extends Controller
             $chapter->inquiries_contact = $request->input('InquiriesContact');
             $chapter->boundary_issues = $request->input('BoundaryStatus');
             $chapter->boundary_issue_notes = $issue_note;
-            $chapter->website_url = $request->input('ch_website');
+            $chapter->website_url = $website;
             // $chapter->website_status = $request->input('ch_webstatus');
             $chapter->website_status = $ch_webstatus;
             $chapter->egroup = $request->input('ch_onlinediss');
@@ -1519,8 +1524,8 @@ class BoardController extends Controller
             $chapter->new_board_submitted = 1;
             $chapter->last_updated_by = $lastUpdatedBy;
             $chapter->last_updated_date = date('Y-m-d H:i:s');
-
             $chapter->save();
+
             //President Info
             if ($request->input('ch_pre_fname') != '' && $request->input('ch_pre_lname') != '' && $request->input('ch_pre_email') != '') {
                 $PREDetails = DB::table('incoming_board_member')
@@ -1790,12 +1795,12 @@ class BoardController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect()->to('/home')->with('fail', 'Something went wrong, Please try again');
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
 
-        return redirect()->to('/home')->with('success', 'Board Info has been Submitted');
-
+        return redirect()->back()->with('success', 'Board Info has been Submitted');
     }
+
 
     /**
      * Show EOY Financial Report All Board Members

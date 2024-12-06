@@ -562,6 +562,107 @@ class EOYReportController extends Controller
         return view('eoyreports.eoyboardreportview')->with($data);
     }
 
+/**
+     * Board Info Report Details
+     */
+    public function editBoardReport(Request $request, $chapterId)
+    {
+        //$corDetails = User::find($request->user()->id)->Coordinators;
+        $user = User::find($request->user()->id);
+
+        $corDetails = $user->Coordinators;
+        // Check if BoardDetails is not found for the user
+        if (! $corDetails) {
+            return redirect()->route('home');
+        }
+
+        $loggedInName = $corDetails['first_name'].' '.$corDetails['last_name'];
+        $positionId = $corDetails['position_id'];
+        $request->session()->put('positionid', $positionId);
+
+        $financial_report_array = FinancialReport::find($chapterId);
+
+        $corId = $corDetails['id'];
+        $corConfId = $corDetails['conference_id'];
+        $chapterDetails = Chapter::find($chapterId);
+        $stateArr = DB::table('state')
+            ->select('state.*')
+            ->orderBy('id')
+            ->get();
+
+        $chapterState = DB::table('state')
+            ->select('state_short_name')
+            ->where('id', '=', $chapterDetails->state)
+            ->get();
+        $chapterState = $chapterState[0]->state_short_name;
+
+        $webStatusArr = ['0' => 'Website Not Linked', '1' => 'Website Linked', '2' => 'Add Link Requested', '3' => 'Do Not Link'];
+
+        $chapterList = DB::table('chapters as ch')
+            ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address',
+                'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
+            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '1')
+            ->get();
+
+        $PREDetails = DB::table('incoming_board_member as bd')
+            ->select('bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.board_position_id', 'bd.street_address as pre_addr', 'bd.city as pre_city', 'bd.zip as pre_zip', 'bd.phone as pre_phone', 'bd.state as pre_state', 'bd.id as ibd_id')
+            ->where('bd.chapter_id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '1')
+            ->get();
+        if (count($PREDetails) == 0) {
+            $PREDetails[0] = ['pre_fname' => '', 'pre_lname' => '', 'pre_email' => '', 'pre_addr' => '', 'pre_city' => '', 'pre_zip' => '', 'pre_phone' => '', 'pre_state' => '', 'ibd_id' => ''];
+            $PREDetails = json_decode(json_encode($PREDetails));
+        }
+
+        $AVPDetails = DB::table('incoming_board_member as bd')
+            ->select('bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.board_position_id', 'bd.street_address as avp_addr', 'bd.city as avp_city', 'bd.zip as avp_zip', 'bd.phone as avp_phone', 'bd.state as avp_state', 'bd.id as ibd_id')
+            ->where('bd.chapter_id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '2')
+            ->get();
+        if (count($AVPDetails) == 0) {
+            $AVPDetails[0] = ['avp_fname' => '', 'avp_lname' => '', 'avp_email' => '', 'avp_addr' => '', 'avp_city' => '', 'avp_zip' => '', 'avp_phone' => '', 'avp_state' => '', 'ibd_id' => ''];
+            $AVPDetails = json_decode(json_encode($AVPDetails));
+        }
+
+        $MVPDetails = DB::table('incoming_board_member as bd')
+            ->select('bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.board_position_id', 'bd.street_address as mvp_addr', 'bd.city as mvp_city', 'bd.zip as mvp_zip', 'bd.phone as mvp_phone', 'bd.state as mvp_state', 'bd.id as ibd_id')
+            ->where('bd.chapter_id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '3')
+            ->get();
+        if (count($MVPDetails) == 0) {
+            $MVPDetails[0] = ['mvp_fname' => '', 'mvp_lname' => '', 'mvp_email' => '', 'mvp_addr' => '', 'mvp_city' => '', 'mvp_zip' => '', 'mvp_phone' => '', 'mvp_state' => '', 'ibd_id' => ''];
+            $MVPDetails = json_decode(json_encode($MVPDetails));
+        }
+
+        $TRSDetails = DB::table('incoming_board_member as bd')
+            ->select('bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.board_position_id', 'bd.street_address as trs_addr', 'bd.city as trs_city', 'bd.zip as trs_zip', 'bd.phone as trs_phone', 'bd.state as trs_state', 'bd.id as ibd_id')
+            ->where('bd.chapter_id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '4')
+            ->get();
+        if (count($TRSDetails) == 0) {
+            $TRSDetails[0] = ['trs_fname' => '', 'trs_lname' => '', 'trs_email' => '', 'trs_addr' => '', 'trs_city' => '', 'trs_zip' => '', 'trs_phone' => '', 'trs_state' => '', 'ibd_id' => ''];
+            $TRSDetails = json_decode(json_encode($TRSDetails));
+        }
+
+        $SECDetails = DB::table('incoming_board_member as bd')
+            ->select('bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.board_position_id', 'bd.street_address as sec_addr', 'bd.city as sec_city', 'bd.zip as sec_zip', 'bd.phone as sec_phone', 'bd.state as sec_state', 'bd.id as ibd_id')
+            ->where('bd.chapter_id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '5')
+            ->get();
+        if (count($SECDetails) == 0) {
+            $SECDetails[0] = ['sec_fname' => '', 'sec_lname' => '', 'sec_email' => '', 'sec_addr' => '', 'sec_city' => '', 'sec_zip' => '', 'sec_phone' => '', 'sec_state' => '', 'ibd_id' => ''];
+            $SECDetails = json_decode(json_encode($SECDetails));
+        }
+
+        $data = ['chapterState' => $chapterState, 'stateArr' => $stateArr, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PREDetails' => $PREDetails, 'chapterList' => $chapterList,
+        'webStatusArr' => $webStatusArr];
+
+        return view('eoyreports.editboardreport')->with($data);
+    }
+
     /**
      * Update Board Report (store)
      */
@@ -569,6 +670,7 @@ class EOYReportController extends Controller
     {
         $user = $request->user();
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
+
         if ($request->input('submit_type') == 'activate_board') {
             $status = $this->activateBoard($chapter_id, $lastUpdatedBy);
             if ($status == 'success') {
@@ -586,13 +688,28 @@ class EOYReportController extends Controller
             $issue_note = '';
         }
 
+        $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
+        if (empty(trim($ch_webstatus))) {
+            $ch_webstatus = 0; // Set it to 0 if it's blank
+        }
+
+        $website = $request->input('ch_website');
+        // Ensure it starts with "http://" or "https://"
+        if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
+            $website = 'http://' . $website;
+        }
+
         DB::beginTransaction();
         try {
             $chapter->inquiries_contact = $request->input('InquiriesContact');
-            $chapter->website_url = $request->input('ch_website');
-            $chapter->website_status = $request->input('ch_webstatus');
             $chapter->boundary_issues = $request->input('BoundaryStatus');
             $chapter->boundary_issue_notes = $issue_note;
+            $chapter->website_url = $website;
+            $chapter->website_status = $ch_webstatus;
+            $chapter->egroup = $request->input('ch_onlinediss');
+            $chapter->social1 = $request->input('ch_social1');
+            $chapter->social2 = $request->input('ch_social2');
+            $chapter->social3 = $request->input('ch_social3');
             $chapter->new_board_submitted = 1;
             $chapter->last_updated_by = $lastUpdatedBy;
             $chapter->last_updated_date = date('Y-m-d H:i:s');
@@ -843,10 +960,10 @@ class EOYReportController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect()->to('/eoy/boardreport')->with('fail', 'Something went wrong, Please try again.');
+            return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
 
-        return redirect()->to('/eoy/boardreport')->with('success', 'Board Info has been Saved');
+        return redirect()->back()->with('success', 'Board Info has been Saved');
     }
 
      /**
@@ -1023,7 +1140,70 @@ class EOYReportController extends Controller
     /**
      * Financial Report for Coordinator side for Reviewing of Chapters
      */
-    public function showEOYFinancialReportView(Request $request, $chapterId)
+    // public function showEOYFinancialReportView(Request $request, $chapterId)
+    // {
+    //     //$corDetails = User::find($request->user()->id)->Coordinators;
+    //     $user = User::find($request->user()->id);
+
+    //     $corDetails = $user->Coordinators;
+    //     // Check if BoardDetails is not found for the user
+    //     if (! $corDetails) {
+    //         return redirect()->route('home');
+    //     }
+
+    //     $loggedInName = $corDetails['first_name'].' '.$corDetails['last_name'];
+    //     $positionId = $corDetails['position_id'];
+    //     $request->session()->put('positionid', $positionId);
+
+    //     $financial_report_array = FinancialReport::find($chapterId);
+    //     $chapterDetails = DB::table('chapters')
+    //         ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'chapters.primary_coordinator_id as pcid', 'chapters.balance as balance', 'st.state_short_name as state',
+    //             'chapters.financial_report_complete as financial_report_complete', 'chapters.financial_pdf_path as financial_pdf_path')
+    //         ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+    //         ->where('chapters.is_active', '=', '1')
+    //         ->where('chapters.id', '=', $chapterId)
+    //         ->get();
+
+    //     $submitted = $chapterDetails[0]->financial_report_received;
+    //     $balance = $chapterDetails[0]->balance;
+    //     $pcid = $chapterDetails[0]->pcid;
+
+    //     $reportingList = DB::table('coordinator_reporting_tree')
+    //     ->select('*')
+    //     ->where('id', '=', $pcid)
+    //     ->get();
+
+    // if ($reportingList->isNotEmpty()) {
+    //     $reportingList = (array) $reportingList[0];
+    //     $filterReportingList = array_filter($reportingList);
+    //     unset($filterReportingList['id'], $filterReportingList['layer0']);
+    //     $filterReportingList = array_reverse($filterReportingList);
+
+    //     $i = 0;
+    //     foreach ($filterReportingList as $key => $val) {
+    //         $corList = DB::table('coordinators as cd')
+    //             ->select('cd.id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.short_title as pos')
+    //             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+    //             ->where('cd.id', '=', $val)
+    //             ->where('cd.is_active', '=', 1)
+    //             ->get();
+
+    //         if ($corList->isNotEmpty()) {
+    //         $reviewerList[$i] = ['cid' => $corList[0]->cid, 'cname' => $corList[0]->fname.' '.$corList[0]->lname.' ('.$corList[0]->pos.')'];
+    //             $i++;
+    //         }
+    //     }
+    // }
+
+    //     $data = ['reviewerList' => $reviewerList, 'chapterid' => $chapterId, 'financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'balance' => $balance, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails];
+
+    //     return view('eoyreports.eoyfinancialreportview')->with($data);
+    // }
+
+    /**
+     * Financial Report for Coordinator side for Reviewing of Chapters
+     */
+    public function reviewFinancialReport(Request $request, $chapterId)
     {
         //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
@@ -1052,35 +1232,35 @@ class EOYReportController extends Controller
         $pcid = $chapterDetails[0]->pcid;
 
         $reportingList = DB::table('coordinator_reporting_tree')
-        ->select('*')
-        ->where('id', '=', $pcid)
-        ->get();
+            ->select('*')
+            ->where('id', '=', $pcid)
+            ->get();
 
-    if ($reportingList->isNotEmpty()) {
-        $reportingList = (array) $reportingList[0];
-        $filterReportingList = array_filter($reportingList);
-        unset($filterReportingList['id'], $filterReportingList['layer0']);
-        $filterReportingList = array_reverse($filterReportingList);
+        if ($reportingList->isNotEmpty()) {
+            $reportingList = (array) $reportingList[0];
+            $filterReportingList = array_filter($reportingList);
+            unset($filterReportingList['id'], $filterReportingList['layer0']);
+            $filterReportingList = array_reverse($filterReportingList);
 
-        $i = 0;
-        foreach ($filterReportingList as $key => $val) {
-            $corList = DB::table('coordinators as cd')
-                ->select('cd.id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.short_title as pos')
-                ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                ->where('cd.id', '=', $val)
-                ->where('cd.is_active', '=', 1)
-                ->get();
+            $i = 0;
+            foreach ($filterReportingList as $key => $val) {
+                $corList = DB::table('coordinators as cd')
+                    ->select('cd.id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.short_title as pos')
+                    ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                    ->where('cd.id', '=', $val)
+                    ->where('cd.is_active', '=', 1)
+                    ->get();
 
-            if ($corList->isNotEmpty()) {
-            $reviewerList[$i] = ['cid' => $corList[0]->cid, 'cname' => $corList[0]->fname.' '.$corList[0]->lname.' ('.$corList[0]->pos.')'];
-                $i++;
+                if ($corList->isNotEmpty()) {
+                $reviewerList[$i] = ['cid' => $corList[0]->cid, 'cname' => $corList[0]->fname.' '.$corList[0]->lname.' ('.$corList[0]->pos.')'];
+                    $i++;
+                }
             }
         }
-    }
 
         $data = ['reviewerList' => $reviewerList, 'chapterid' => $chapterId, 'financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'balance' => $balance, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails];
 
-        return view('eoyreports.eoyfinancialreportview')->with($data);
+        return view('eoyreports.reviewfinancialreport')->with($data);
     }
 
     /**
@@ -2308,67 +2488,5 @@ public function updateEOYAwards(Request $request, $id): RedirectResponse
         return redirect()->route('eoyreports.editawards', ['id' => $id])->with('success', 'EOY Information successfully updated.');
     }
 
-    /**
-     * Financial Report for Coordinator side for Reviewing of Chapters
-     */
-    public function reviewFinancialReport(Request $request, $chapterId)
-    {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
-        $user = User::find($request->user()->id);
-
-        $corDetails = $user->Coordinators;
-        // Check if BoardDetails is not found for the user
-        if (! $corDetails) {
-            return redirect()->route('home');
-        }
-
-        $loggedInName = $corDetails['first_name'].' '.$corDetails['last_name'];
-        $positionId = $corDetails['position_id'];
-        $request->session()->put('positionid', $positionId);
-
-        $financial_report_array = FinancialReport::find($chapterId);
-        $chapterDetails = DB::table('chapters')
-            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'chapters.primary_coordinator_id as pcid', 'chapters.balance as balance', 'st.state_short_name as state',
-                'chapters.financial_report_complete as financial_report_complete', 'chapters.financial_pdf_path as financial_pdf_path')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->where('chapters.is_active', '=', '1')
-            ->where('chapters.id', '=', $chapterId)
-            ->get();
-
-        $submitted = $chapterDetails[0]->financial_report_received;
-        $balance = $chapterDetails[0]->balance;
-        $pcid = $chapterDetails[0]->pcid;
-
-        $reportingList = DB::table('coordinator_reporting_tree')
-            ->select('*')
-            ->where('id', '=', $pcid)
-            ->get();
-
-        if ($reportingList->isNotEmpty()) {
-            $reportingList = (array) $reportingList[0];
-            $filterReportingList = array_filter($reportingList);
-            unset($filterReportingList['id'], $filterReportingList['layer0']);
-            $filterReportingList = array_reverse($filterReportingList);
-
-            $i = 0;
-            foreach ($filterReportingList as $key => $val) {
-                $corList = DB::table('coordinators as cd')
-                    ->select('cd.id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.short_title as pos')
-                    ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                    ->where('cd.id', '=', $val)
-                    ->where('cd.is_active', '=', 1)
-                    ->get();
-
-                if ($corList->isNotEmpty()) {
-                $reviewerList[$i] = ['cid' => $corList[0]->cid, 'cname' => $corList[0]->fname.' '.$corList[0]->lname.' ('.$corList[0]->pos.')'];
-                    $i++;
-                }
-            }
-        }
-
-        $data = ['reviewerList' => $reviewerList, 'chapterid' => $chapterId, 'financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'balance' => $balance, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails];
-
-        return view('eoyreports.reviewfinancialreport')->with($data);
-    }
 
 }
