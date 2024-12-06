@@ -60,12 +60,13 @@
                 @if ($chapterList[0]->new_board_submitted == '1' && $chapterList[0]->new_board_active !='1')
                     <p><span style="color:#28a745;">Board Election Report HAS been submitted Submitted.</span><br>
                         <br>Changes can be made by a Coordinator <strong>HERE</strong> Prior to Activation.<br>
+                        <br><span style="color:#dc3545;">Board Election Report has NOT been activated.</span><br>
                         <br>New Board Members will need to be activated by a Coordinator after July 1st! Once activated, they will have full MIMI Access.<br>
                         <br>Outgoing board members will have access to Financial Reports Only.<br>
                     </p>
                 @endif
                 @if ($chapterList[0]->new_board_active =='1')
-                    <p><span style="color:#28a745;">Board Election Report HAS been activated!</span><br>
+                    <p><span style="color:#28a745;">Board Election Report HAS been Submitted and Activated!</span><br>
                         <br>New board members now have full MIMI Access.<br>
                         <br>Outgoing board members have access to Financial Reports Only.<br>
                         <br>Future board member changes can be made on the Chapter Details pages.<br>
@@ -466,8 +467,6 @@ function ShowBoundaryError() {
     }
 }
 
-
-
 // $(document).ready(function() {
 // 	var check = <?php echo "\"" . $chapterList[0]->boundary_issues . "\""; ?>;
 //   });
@@ -495,6 +494,9 @@ var errMessage="";
         errMessage = "The e-mail address provided for the Chapter Treasurer was provided for a different position.  Please enter a unique e-mail address for each board member or mark the position as vacant.";
     }
     }
+    if(!document.getElementById("BoundaryStatus1").checked && !document.getElementById("BoundaryStatus2").checked){
+					errMessage = "Please review the chapters boundaries and verify they are what the chapter has in their records."; document.getElementById("BoundaryStatus1").focus();
+				}
 
     if (errMessage.length > 0) {
         alert(errMessage);
@@ -515,9 +517,6 @@ var errMessage="";
 
     return true;
 }
-
-
-
 
 </script>
 @endsection
