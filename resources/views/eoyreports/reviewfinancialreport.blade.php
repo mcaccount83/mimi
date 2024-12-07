@@ -26,7 +26,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-4">
-            <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("eoyreports.eoyupdatefinancialreport", $chapterid) }}' novalidate>
+            <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("eoyreports.updatefinancialreport", $chapterid) }}' novalidate>
                 @csrf
                 <input type="hidden" name="submitted" id="submitted" value="{{ $submitted }}" />
                 <input type="hidden" name="FurthestStep" id="FurthestStep" value="<?php if($financial_report_array['farthest_step_visited_coord'] != null) echo $financial_report_array['farthest_step_visited_coord']; else echo '14'; ?>" />

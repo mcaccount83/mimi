@@ -268,7 +268,7 @@ Route::post('eoy/updateboardreport/{id}', [EOYReportController::class, 'updateEO
 Route::get('/eoy/financialreport', [EOYReportController::class, 'showEOYFinancialReport'])->name('eoyreports.eoyfinancialreport');
 Route::get('/eoy/financialreportreview/{id}', [EOYReportController::class, 'reviewFinancialReport'])->name('eoyreports.reviewfinancialreport');
 Route::get('/eoy/financialreport/reminder', [EOYReportController::class, 'showEOYFinancialReportReminder'])->name('eoyreports.eoyfinancialreportreminder');
-Route::post('/eoy/updatefinancialreport/{id}', [EOYReportController::class, 'updateEOYFinancialReport'])->name('eoyreports.eoyupdatefinancialreport');
+Route::post('/eoy/updatefinancialreport/{id}', [EOYReportController::class, 'updateEOYFinancialReport'])->name('eoyreports.updatefinancialreport');
 Route::get('/eoy/unsubmit/{id}', [EOYReportController::class, 'updateUnsubmit']);
 Route::get('/eoy/clearreview/{id}', [EOYReportController::class, 'updateClearReview']);
 Route::get('/eoy/attachments', [EOYReportController::class, 'showEOYAttachments'])->name('eoyreports.eoyattachments');
