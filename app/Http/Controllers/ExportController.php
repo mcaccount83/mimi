@@ -23,6 +23,57 @@ class ExportController extends Controller
             $this->userController = $userController;
             }
 
+/**
+ * Get Active Chapter List
+ */
+
+/**
+ * Get Zapped Chapter List
+ */
+
+ /**
+ * Get Active International Chapter List
+ */
+
+  /**
+ * Get Zapped International Chapter List
+ */
+
+/**
+ * Get Active Coordinator List
+ */
+
+ /**
+ * Get Retired Coordinator List
+ */
+
+  /**
+ * Get Active International Coordinaror List
+ */
+
+  /**
+ * Get Retired International Coordinaor List
+ */
+
+
+  /**
+ * Export Chapter csv
+ */
+
+ /**
+ * Export Zapped Chapter csv
+ */
+
+ /**
+ * Export Coordinator csv
+ */
+
+ /**
+ * Export Retired Coordinator csv
+ */
+
+
+
     /**
      * Export Chapter List
      */
@@ -1898,60 +1949,6 @@ class ExportController extends Controller
         return redirect()->to('/home');
     }
 
-
-
-    //     $exportCoordinatorList = Coordinators::select('*')
-    //         ->where([
-    //             ['is_active', '=', 1],
-    //             ['conference_id', '=', $corConfId],
-    //         ])
-    //         ->orderBy('coordinators.coordinator_start_date')
-    //         ->get();
-
-
-    //     $_result = DB::table('coordinator_position as p')->select('*')->get();
-    //     $_temp = [];
-    //     foreach ($_result as $_v) {
-    //         $_temp[$_v->id] = $_v->long_title;
-    //     }
-    //     $columns = ['Conference', 'Region', 'First Name', 'Last Name', 'Start Date', 'Position', 'Secondary Position', '<1 Year', '1 Year', '2 Years',
-    //         '3 Years', '4 Years', '5 Years', '6 Years', '7 Years', '8 Years', '9 Years', 'Necklace', 'Top Tier/Other'];
-    //     $callback = function () use ($exportCoordinatorList, $columns) {
-    //         $file = fopen('php://output', 'w');
-    //         fputcsv($file, $columns);
-
-    //         foreach ($exportCoordinatorList as $list) {
-    //             $row['Conference'] = $list->conference_id;
-    //             $row['Region'] = $list->region_id;
-    //             $row['First Name'] = $list->first_name;
-    //             $row['Last Name'] = $list->last_name;
-    //             $row['Start Date'] = $list->coordinator_start_date;
-    //             $row['Position'] = $list->position_id;
-    //             $row['Secondary Position'] = $list->sec_position_id;
-    //             $row['< 1 Year'] = $list->recognition_year0;
-    //             $row['1 Year'] = $list->recognition_year1;
-    //             $row['2 Years'] = $list->recognition_year2;
-    //             $row['3 Years'] = $list->recognition_year3;
-    //             $row['4 Years'] = $list->recognition_year4;
-    //             $row['5 Years'] = $list->recognition_year5;
-    //             $row['6 Years'] = $list->recognition_year6;
-    //             $row['7 Years'] = $list->recognition_year7;
-    //             $row['8 Years'] = $list->recognition_year8;
-    //             $row['9 Years'] = $list->recognition_year9;
-    //             $row['Necklace'] = $list->recognition_necklace;
-    //             $row['Top Tier/Other'] = $list->recognition_toptier;
-
-    //             fputcsv($file, [$row['Conference'], $row['Region'], $row['First Name'], $row['Last Name'], $row['Start Date'], $row['Position'], $row['Secondary Position'],
-    //                 $row['< 1 Year'], $row['1 Year'], $row['2 Years'], $row['3 Years'], $row['4 Years'], $row['5 Years'], $row['6 Years'], $row['7 Years'], $row['8 Years'],
-    //                 $row['9 Years'], $row['Necklace'], $row['Top Tier/Other']]);
-    //         }
-
-    //         fclose($file);
-    //     };
-
-    //     return Response::stream($callback, 200, $headers);
-    // }
-
     /**
      * Export Chapter Coordinator List
      */
@@ -2373,87 +2370,6 @@ class ExportController extends Controller
 
         return redirect()->to('/home');
     }
-
-    /**
-     * Export Chapter Awards List
-     */
-    // public function indexChapterAwardList(Request $request)
-    // {
-    //     // output headers so that the file is downloaded rather than displayed
-    //     header('Content-Type: text/csv; charset=utf-8');
-    //     $today = date('Y-m-d');
-    //     header('Content-Disposition: attachment; filename=chapter_award_export_'.$today.'.csv');
-    //     // create a file pointer connected to the output stream
-    //     $output = fopen('php://output', 'w');
-    //     // output the column headings
-    //     fputcsv($output, ['State', 'Chapter', 'Award', 'Approved']);
-    //     $award_array = null;
-    //     //Get Coordinators Details
-    //     $corDetails = User::find($request->user()->id)->Coordinators;
-
-    //         // Load Reporting Tree
-    //         $coordinatorData = $this->userController->loadReportingTree($corId);
-    //         $inQryArr = $coordinatorData['inQryArr'];
-
-    //     $chapterList = DB::table('chapters as ch')
-    //         ->select('ch.id as id', 'ch.name as name', 'ch.primary_coordinator_id as pc_id', 'fr.reviewer_id as reviewer_id', 'cd.id as cord_id', 'cd.first_name as reviewer_first_name', 'cd.last_name as reviewer_last_name', 'st.state_short_name as state', 'fr.award_1_nomination_type as award_1_type', 'fr.award_2_nomination_type as award_2_type', 'fr.award_3_nomination_type as award_3_type', 'fr.award_4_nomination_type as award_4_type', 'fr.award_5_nomination_type as award_5_type', 'fr.check_award_1_approved as award_1_approved', 'fr.check_award_2_approved as award_2_approved', 'fr.check_award_3_approved as award_3_approved', 'fr.check_award_4_approved as award_4_approved', 'fr.check_award_5_approved as award_5_approved')
-    //         ->join('state as st', 'ch.state', '=', 'st.id')
-    //         ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
-    //         ->leftJoin('coordinators as cd', 'cd.id', '=', 'fr.reviewer_id')
-    //         ->where('ch.is_active', 1)
-    //         ->whereIn('ch.primary_coordinator_id', explode(',', $inQryStr))
-    //         ->orderBy('ch.state')
-    //         ->orderBy('ch.name')
-    //         ->get();
-
-    //     $award_array = json_decode(json_encode($chapterList), true);
-    //     $rowcount = count($award_array);
-    //     // loop over the rows, outputting them
-    //     for ($row = 0; $row < $rowcount; $row++) {
-    //         for ($award = 1; $award <= 5; $award++) {
-    //             if ($award_array[$row]['award_'.$award.'_type'] > 0) {
-    //                 if ($award_array[$row]['award_'.$award.'_approved']) {
-    //                     $award_approved = 'Yes';
-    //                 } else {
-    //                     $award_approved = 'No';
-    //                 }
-
-    //                 switch ($award_array[$row]['award_'.$award.'_type']) {
-    //                     case 1:
-    //                         $award_type = 'Outstanding Specific Service Project';
-    //                         break;
-    //                     case 2:
-    //                         $award_type = 'Outstanding Overall Service Program';
-    //                         break;
-    //                     case 3:
-    //                         $award_type = "Outstanding Children's Activity";
-    //                         break;
-    //                     case 4:
-    //                         $award_type = 'Outstanding Spirit';
-    //                         break;
-    //                     case 5:
-    //                         $award_type = 'Outstanding Chapter';
-    //                         break;
-    //                     case 6:
-    //                         $award_type = 'Outstanding New Chapter';
-    //                         break;
-    //                     case 7:
-    //                         $award_type = 'Other Outstanding Award';
-    //                         break;
-    //                 }
-    //                 fputcsv($output, [
-    //                     $award_array[$row]['state'],
-    //                     $award_array[$row]['name'],
-
-    //                     $award_type,
-    //                     $award_approved,
-    //                 ]);
-    //             }
-    //         }
-    //     }
-    //     fclose($output);
-    //     exit($output);
-    // }
 
     /**
      * Export International Chapter List
