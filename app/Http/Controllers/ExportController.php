@@ -1686,13 +1686,13 @@ class ExportController extends Controller
 
         //Get Coordinator List mapped with login coordinator
         $exportCoordinatorList = DB::table('coordinators as cd')
-            ->select('cd.*', 'cp.long_title as position', 'cd.first_name as reporting_fname', 'cd.last_name as reporting_lname', 'rg.short_name as reg_name')
+            ->select('cd.*', 'cp.long_title as position', 'cds.first_name as reporting_fname', 'cds.last_name as reporting_lname', 'rg.short_name as reg_name',
+                'cp2.long_title as sec_position')
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
+            ->leftjoin('coordinator_position as cp2', 'cp2.id', '=', 'cd.sec_position_id')
             ->join('coordinators as cds', 'cds.id', '=', 'cd.report_id')
             ->join('region as rg', 'rg.id', '=', 'cd.region_id')
             ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.conference_id')
-            ->orderBy('reg_name')
             ->orderBy('cd.first_name')
             ->get();
 
@@ -1709,10 +1709,10 @@ class ExportController extends Controller
                         $list->first_name,
                         $list->last_name,
                         $list->position,
-                        $this->coordinatorPosition($list->sec_position_id),
+                        $list->sec_position,
                         $list->email,
                         $list->sec_email,
-                        $this->get_reporting_coordinator($list->report_id),
+                        $list->reporting_fname.' '.$list->reporting_lname,
                         $list->address,
                         $list->city,
                         $list->state,
