@@ -7,25 +7,14 @@ The MOMS Club of  {{$mailData['chapter_name']}}, {{$mailData['chapter_state']}} 
 MIMI Database Administrator
 <br>
 
-
-{{-- ---
-
-@component('mail::table')
-| Field             | Previous Information     | Updated Information       |
-|--------------------|--------------------------|---------------------------|
-@foreach ($mailData['fields'] as $field => $values)
-| {{ $field }}      | {{ $values['previous'] }} | {{ $values['updated'] }}  |
-@endforeach
-@endcomponent --}}
-
-
-
-@component('mail::table')
+{{-- @component('mail::table') --}}
        <table>
             <thead>
-                <th></th>
-                <th>Previous Information</th>
-                <th>Updated Information</th>
+                <tr>
+                    <th></th>
+                    <th>Previous Information</th>
+                    <th>Updated Information</th>
+                </tr>
             </thead>
             <tbody>
                 <tr>
@@ -206,15 +195,9 @@ MIMI Database Administrator
                         @endif
                     </td>
                 </tr>
-                <tr style="{{$mailData['egroupPre'] != $mailData['egroupUpd'] ? 'background-color: yellow;' : ''}}">
-                    <td>E-Group</td>
-                    <td>{{$mailData['egroupPre']}}</td>
-                    <td>{{$mailData['egroupUpd']}}</td>
-                </tr>
-
             </tbody>
         </table>
-@endcomponent
+{{-- @endcomponent --}}
 <br>
 
 @endcomponent
