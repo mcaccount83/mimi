@@ -160,15 +160,20 @@ MIMI Database Administrator
                 </tr>
                 <tr style="{{$mailData['einLetterPre'] != $mailData['einLetterUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>EIN Letter</td>
-                    <td>@if($mailData['einLetterPre']!=null) Letter on File
-                    @else
-
-                     @endif
+                    <td>
+                        @if($mailData['einLetterPre'] != null)
+                            Letter on File
+                        @else
+                            No Letter on File
+                        @endif
                     </td>
-                    <td>@if($mailData['einLetterUpd']!=null) Letter on File
-                    @else
-
-                     @endif     </td>
+                    <td>
+                        @if($mailData['einLetterUpd'] != null)
+                            Letter on File
+                        @else
+                            No Letter on File
+                        @endif
+                    </td>
                 </tr>
                 <tr style="{{$mailData['chapterNamePre'] != $mailData['chapterNameUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Name</td>
@@ -207,25 +212,27 @@ MIMI Database Administrator
                 </tr>
                 <tr style="{{$mailData['webStatusPre'] != $mailData['webStatusUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Website Link Status</td>
-                    <td>@if($mailData['webStatusPre']==1)
+                    <td>
+                        @if($mailData['webStatusPre'] == 1)
                             Linked
-                            @elseif($mailData['webStatusPre']==2)
+                        @elseif($mailData['webStatusPre'] == 2)
                             Link Requested
-                            @elseif($mailData['webStatusPre']==3)
+                        @elseif($mailData['webStatusPre'] == 3)
                             Do Not Link
-                            @else
-                            Not Linked
-                            @endif</td>
-                    <td>@if($mailData['webStatusUpd']==1)
-                        Linked
-                        @elseif($mailData['webStatusUpd']==2)
-                        Link Requested
-                        @elseif($mailData['webStatusUpd']==3)
-                        Do Not Link
                         @else
-                        Not Linked
-                    @endif</td>
-                </td>
+                            Not Linked
+                        @endif
+                    </td>
+                    <td>
+                        @if($mailData['webStatusUpd'] == 1)
+                            Linked
+                        @elseif($mailData['webStatusUpd'] == 2)
+                            Link Requested
+                        @elseif($mailData['webStatusUpd'] == 3)
+                            Do Not Link
+                        @else
+                            Not Linked
+                        @endif
                     </td>
                 </tr>
                 <tr style="{{$mailData['egroupPre'] != $mailData['egroupUpd'] ? 'background-color: yellow;' : ''}}">
@@ -250,23 +257,28 @@ MIMI Database Administrator
                 </tr>
                 <tr style="{{$mailData['chapstatusPre'] != $mailData['chapstatusUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Chapter Status</td>
-                    <td>@if($mailData['chapstatusPre']==1) Operating Ok
-                    @elseif($mailData['chapstatusPre']==4)
-                    On Hold Do Not Refer
-                    @elseif($mailData['chapstatusPre']==5)
-                    Probation
-                     @elseif($mailData['chapstatusPre']==6)
-                     Probation Do Not Refer
-                     @endif
+                    <td>
+                        @if($mailData['chapstatusPre']==1)
+                            Operating Ok
+                        @elseif($mailData['chapstatusPre']==4)
+                            On Hold Do Not Refer
+                        @elseif($mailData['chapstatusPre']==5)
+                            Probation
+                        @elseif($mailData['chapstatusPre']==6)
+                            Probation Do Not Refer
+                        @endif
                     </td>
-                    <td>@if($mailData['chapstatusUpd']==1) Operating Ok
-                    @elseif($mailData['chapstatusUpd']==4)
-                    On Hold Do Not Refer
-                    @elseif($mailData['chapstatusUpd']==5)
-                    Probation
-                     @elseif($mailData['chapstatusUpd']==6)
-                     Probation Do Not Refer
-                     @endif   </td>
+                    <td>
+                        @if($mailData['chapstatusUpd']==1)
+                            Operating Ok
+                        @elseif($mailData['chapstatusUpd']==4)
+                            On Hold Do Not Refer
+                        @elseif($mailData['chapstatusUpd']==5)
+                            Probation
+                         @elseif($mailData['chapstatusUpd']==6)
+                            Probation Do Not Refer
+                        @endif
+                    </td>
                 </tr>
                 <tr style="{{$mailData['chapNotePre'] != $mailData['chapNoteUpd'] ? 'background-color: yellow;' : ''}}">
                     <td>Status Notes</td>

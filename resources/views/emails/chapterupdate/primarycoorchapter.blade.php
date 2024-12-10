@@ -105,8 +105,6 @@ MIMI Database Administrator
                         @else
                         Not Linked
                     @endif</td>
-                </td>
-                    </td>
                 </tr>
                 <tr style="{{($mailData['cor_fnamePre'] != $mailData['cor_fnameUpd']) && ($mailData['cor_lnamePre'] != $mailData['cor_lnameUpd']) ? 'background-color: yellow;' : ''}}">
                     <td>Primary Coordinator</td>

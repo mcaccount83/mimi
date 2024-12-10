@@ -34,5 +34,6 @@ class ChaptersUpdatePrimaryCoorPresident extends Mailable implements ShouldQueue
         return $this
             ->subject('Chapter Update Notification')
             ->markdown('emails.chapterupdate.primarycoorpresident');
+            // ->markdown('emails.chapterupdate.primarycoordnotification');
     }
 }
