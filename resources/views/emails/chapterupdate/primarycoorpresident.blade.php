@@ -7,7 +7,7 @@ The MOMS Club of  {{$mailData['chapterNameUpd']}}, {{$mailData['chapterStateUpd'
 MIMI Database Administrator
 <br>
 
-{{-- @component('mail::table') --}}
+@component('mail::table')
        <table>
             <thead>
                 <tr>
@@ -197,7 +197,7 @@ MIMI Database Administrator
                 </tr>
             </tbody>
         </table>
-{{-- @endcomponent --}}
+@endcomponent
 <br>
 
 @endcomponent
