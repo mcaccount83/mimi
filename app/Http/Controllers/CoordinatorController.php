@@ -6,6 +6,7 @@ use App\Mail\CoordinatorRetireAdmin;
 use App\Models\CoordinatorPosition;
 use App\Models\Coordinators;
 use App\Models\User;
+use App\Http\Helpers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -40,7 +41,7 @@ class CoordinatorController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
 
         // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
@@ -799,7 +800,7 @@ class CoordinatorController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
 
         // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
 
         $baseQuery = DB::table('coordinators as cd')
             ->select('cd.id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.reason_retired as cor_reason', 'cd.zapped_date as cor_zapdate',

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Coordinators;
 use App\Models\User;
 use Carbon\Carbon;
+use App\Http\Helpers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -132,7 +133,7 @@ class ExportController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
 
         // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
@@ -269,7 +270,7 @@ class ExportController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
 
         // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
@@ -405,7 +406,7 @@ class ExportController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
 
         // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
@@ -891,7 +892,7 @@ class ExportController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
 
         // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
@@ -1064,7 +1065,7 @@ class ExportController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
 
         // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
@@ -1235,7 +1236,7 @@ class ExportController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
 
         // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
@@ -1327,7 +1328,7 @@ class ExportController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
 
         // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
@@ -1571,7 +1572,7 @@ class ExportController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
 
         // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
 
         // Load Reporting Tree
         $coordinatorData = $this->userController->loadReportingTree($corId);
@@ -1662,7 +1663,7 @@ class ExportController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
 
         // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
@@ -1825,7 +1826,7 @@ class ExportController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
 
         // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
