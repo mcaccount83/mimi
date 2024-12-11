@@ -101,6 +101,18 @@ class BoardController extends Controller
 
         $financial_report_array = FinancialReport::find($chapterId);
 
+        $admin = DB::table('admin')
+            ->select('admin.*',
+                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),)
+            ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
+            ->orderBy('admin.id', 'desc') // Assuming 'id' represents the order of insertion
+            ->first();
+
+        $eoy_boardreport = $admin->eoy_boardreport;
+        $eoy_financialreport = $admin->eoy_financialreport;
+        $boardreport_yes = ($eoy_boardreport == 1);
+        $financialreport_yes = ($eoy_financialreport == 1);
+
         $stateArr = DB::table('state')
             ->select('state.*')
             ->orderBy('id')
@@ -215,7 +227,7 @@ class BoardController extends Controller
         $data = ['financial_report_array' => $financial_report_array, 'chapterState' => $chapterState, 'stateArr' => $stateArr, 'boardPositionAbbreviation' => $boardPositionAbbreviation, 'currentMonthAbbreviation' => $currentMonthAbbreviation,
             'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'chapterList' => $chapterList,
             'startMonth' => $start_monthInWords, 'thisMonth' => $month, 'due_date' => $due_date, 'late_date' => $late_date, 'user_type' => $user_type,
-            'webStatusArr' => $webStatusArr];
+            'webStatusArr' => $webStatusArr, 'boardreport_yes' => $boardreport_yes, 'financialreport_yes' => $financialreport_yes];
 
         return view('boards.president')->with($data);
     }
@@ -235,6 +247,18 @@ class BoardController extends Controller
         $request->session()->put('chapterid', $chapterId);
 
         $financial_report_array = FinancialReport::find($chapterId);
+
+        $admin = DB::table('admin')
+            ->select('admin.*',
+                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),)
+            ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
+            ->orderBy('admin.id', 'desc') // Assuming 'id' represents the order of insertion
+            ->first();
+
+        $eoy_boardreport = $admin->eoy_boardreport;
+        $eoy_financialreport = $admin->eoy_financialreport;
+        $boardreport_yes = ($eoy_boardreport == 1);
+        $financialreport_yes = ($eoy_financialreport == 1);
 
         $stateArr = DB::table('state')
             ->select('state.*')
@@ -340,7 +364,7 @@ class BoardController extends Controller
         $data = ['financial_report_array' => $financial_report_array, 'chapterState' => $chapterState, 'chapterDetails' => $chapterDetails, 'boardPositionAbbreviation' => $boardPositionAbbreviation, 'currentMonthAbbreviation' => $currentMonthAbbreviation,
                     'stateArr' => $stateArr, 'borPositionId' => $borPositionId, 'borDetails' => $borDetails,
                     'startMonth' => $start_monthInWords, 'thisMonth' => $month, 'due_date' => $due_date, 'late_date' => $late_date, 'user_type' => $user_type,
-                    'webStatusArr' => $webStatusArr];
+                    'webStatusArr' => $webStatusArr, 'boardreport_yes' => $boardreport_yes, 'financialreport_yes' => $financialreport_yes];
 
         return view('boards.member')->with($data);
     }

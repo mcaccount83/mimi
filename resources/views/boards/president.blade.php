@@ -77,22 +77,6 @@
                     </div>
                 </div>
 
-
-            @php
-                $admin = DB::table('admin')
-                    ->select('admin.*',
-                        DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),)
-                    ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
-                    ->orderBy('admin.id', 'desc') // Assuming 'id' represents the order of insertion
-                    ->first();
-
-                $eoy_boardreport = $admin->eoy_boardreport;
-                $eoy_financialreport = $admin->eoy_financialreport;
-                $boardreport_yes = ($eoy_boardreport == 1);
-                $financialreport_yes = ($eoy_financialreport == 1);
-            @endphp
-
-
     <div class="row">
             <div class="col-md-8">
                 <div class="card card-primary card-outline">
@@ -331,32 +315,32 @@
                         <hr>
                         <h5>Website & Social Media</h5>
                          <!-- URL Field -->
-<div class="form-group row">
-    <label class="col-sm-2 col-form-label">Website:</label>
-    <div class="col-sm-10">
-        <input type="text" name="ch_website" id="ch_website" class="form-control"
-               {{-- data-inputmask='"mask": "http://*{1,250}"' data-mask --}}
-               {{-- value="{{ strpos($chapterList[0]->website_url, 'http://') === 0 ? substr($chapterList[0]->website_url, 7) : $chapterList[0]->website_url }}" --}}
-               value="{{$chapterList[0]->website_url}}"
-               placeholder="Chapter Website">
-    </div>
-</div>
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Website:</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="ch_website" id="ch_website" class="form-control"
+                                    {{-- data-inputmask='"mask": "http://*{1,250}"' data-mask --}}
+                                    {{-- value="{{ strpos($chapterList[0]->website_url, 'http://') === 0 ? substr($chapterList[0]->website_url, 7) : $chapterList[0]->website_url }}" --}}
+                                    value="{{$chapterList[0]->website_url}}"
+                                    placeholder="Chapter Website">
+                            </div>
+                        </div>
 
-<!-- Web Status Field -->
-<div class="form-group row">
-    <label class="col-sm-2 col-form-label">Web Status</label>
-    <div class="col-sm-5">
-        <select name="ch_webstatus" id="ch_webstatus" class="form-control" style="width: 100%;" required>
-            <option value="">Select Status</option>
-            @foreach($webStatusArr as $webstatusKey => $webstatusText)
-                <option value="{{ $webstatusKey }}" {{ $chapterList[0]->website_status == $webstatusKey ? 'selected' : '' }}
-                    {{ in_array($webstatusKey, [0, 1]) ? 'disabled' : '' }}>
-                    {{ $webstatusText }}
-                </option>
-            @endforeach
-        </select>
-    </div>
-</div>
+                        <!-- Web Status Field -->
+                        <div class="form-group row">
+                            <label class="col-sm-2 col-form-label">Web Status</label>
+                            <div class="col-sm-5">
+                                <select name="ch_webstatus" id="ch_webstatus" class="form-control" style="width: 100%;" required>
+                                    <option value="">Select Status</option>
+                                    @foreach($webStatusArr as $webstatusKey => $webstatusText)
+                                        <option value="{{ $webstatusKey }}" {{ $chapterList[0]->website_status == $webstatusKey ? 'selected' : '' }}
+                                            {{ in_array($webstatusKey, [0, 1]) ? 'disabled' : '' }}>
+                                            {{ $webstatusText }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                         <!-- /.form group -->
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Social Media:</label>
@@ -389,14 +373,10 @@
         </div>
         <!-- /.col -->
 
-
-
             <div class="col-md-4">
                 <!-- Profile Image -->
                 <div class="card card-primary card-outline">
                     <div class="card-body box-profile">
-
-
                         <div class="row align-items-center">
                             <label class="col-sm-4 col-form-label">EIN:</label>
                             <div class="col-sm-8">
@@ -501,7 +481,7 @@
                       </li>
                       <li class="list-group-item">
                             <h5>End of year Filing</h5>
-                            @if($thisDate->month >= 6 && $thisDate->month <= 12 && $boardreport_yes)
+                            @if($thisDate->month >= 6 && $thisDate->month <= 12 && ($boardreport_yes))
                                 @if($chapterList[0]->new_board_active!='1')
                                     @if($user_type === 'coordinator')
                                         <button id="BoardReport" type="button" class="btn btn-primary btn-sm mb-1" onclick="window.location.href='{{ route('viewas.viewchapterboardinfo', ['id' => $chapterList[0]->id]) }}'">
@@ -540,7 +520,6 @@
                             @endif
                     </li>
                   </ul>
-
                   <h5>Coordinators</h5>
                   <input type="hidden" id="ch_primarycor" value="{{ $chapterList[0]->primary_coordinator_id }}">
                   <input  type="hidden" id="pcid" value="{{ $chapterList[0]->primary_coordinator_id}}">
@@ -553,7 +532,6 @@
             </div>
             <!-- /.col -->
         </div>
-
 
     <div class="card-body text-center">
         <button id="Save" type="submit" class="btn btn-primary" onclick="return PreSaveValidate()"><i class="fas fa-save" ></i>&nbsp; Save</button>

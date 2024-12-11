@@ -1723,8 +1723,9 @@ class ExportController extends Controller
                         ->where('cd.id', $val)
                         ->get();
 
-                    $coordinator_array[] = $coordinatorDetails->toArray();
-
+                        $coordinator_array = []; // Updated to short syntax
+                        $coordinator_array[] = $coordinatorDetails->toArray();
+                        
                 }
                 $cord_row_count = count($coordinator_array);
                 $stacked_coord_array = null;

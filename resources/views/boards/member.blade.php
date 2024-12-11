@@ -71,21 +71,6 @@
                     </div>
                 </div>
 
-            @php
-                $admin = DB::table('admin')
-                    ->select('admin.*',
-                        DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),)
-                    ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
-                    ->orderBy('admin.id', 'desc') // Assuming 'id' represents the order of insertion
-                    ->first();
-
-                $eoy_boardreport = $admin->eoy_boardreport;
-                $eoy_financialreport = $admin->eoy_financialreport;
-                $boardreport_yes = ($eoy_boardreport == 1);
-                $financialreport_yes = ($eoy_financialreport == 1);
-            @endphp
-
-
     <div class="row">
             <div class="col-md-8">
                 <div class="card card-primary card-outline">
@@ -370,7 +355,6 @@
             <!-- /.col -->
         </div>
 
-
     <div class="card-body text-center">
         <button id="Save" type="submit" class="btn btn-primary" onclick="return PreSaveValidate()"><i class="fas fa-save" ></i>&nbsp; Save</button>
 
@@ -454,7 +438,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
     });
-
 
 function PreSaveValidate(){
     var errMessage="";

@@ -766,8 +766,35 @@ class ChapterReportController extends Controller
 
             $chapterList = $baseQuery->get();
 
+            $chaptersData = $chapterList->map(function ($chapter) {
+                $id = $chapter->primary_coordinator_id;
+                $reportingList = DB::table('coordinator_reporting_tree')
+                    ->select('*')
+                    ->where('id', $id)
+                    ->first();
+
+                $filterReportingList = collect((array)$reportingList)
+                    ->except(['id', 'layer0'])
+                    ->reverse();
+
+                $coordinatorArray = $filterReportingList->map(function ($val) {
+                    return DB::table('coordinators as cd')
+                        ->select('cd.first_name', 'cd.last_name', 'cp.short_title as position')
+                        ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                        ->where('cd.id', $val)
+                        ->first();
+                });
+
+                return [
+                    'chapter' => $chapter,
+                    'coordinatorArray' => $coordinatorArray->toArray(),
+                ];
+            });
+
+
             $countList = count($chapterList);
-            $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $corId];
+            $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $corId, 'chaptersData' => $chaptersData,
+                'positionCodes' => ['BS', 'AC', 'SC', 'ARC', 'RC', 'ACC', 'CC'],];
 
             return view('chapreports.chaprptcoordinators')->with($data);
         } catch (Exception $e) {

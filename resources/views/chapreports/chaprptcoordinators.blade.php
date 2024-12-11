@@ -47,68 +47,34 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <?php
-                    $row_count = count($chapterList);
-
-                    foreach ($chapterList as $row) {
-                        $id = $row->primary_coordinator_id;
-                        $reportingList = DB::table('coordinator_reporting_tree')
-                            ->select('*')
-                            ->where('id', '=', $id)
-                            ->get();
-
-                        $filterReportingList = array_filter((array)$reportingList[0], function ($key) {
-                            return !in_array($key, ['id', 'layer0']);
-                        }, ARRAY_FILTER_USE_KEY);
-
-                        $filterReportingList = array_reverse($filterReportingList);
-                        $coordinator_array = [];
-
-                        foreach ($filterReportingList as $val) {
-                            $coordinator_data = DB::table('coordinators as cd')
-                                ->select('cd.first_name as first_name', 'cd.last_name as last_name', 'cp.short_title as position')
-                                ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                                ->where('cd.id', $val)
-                                ->get();
-
-                            $coordinator_array[] = $coordinator_data;
-                        }
-
-                        $cord_row_count = count($coordinator_array);
-
-                        echo "<tr>";
-                        echo "<td class='text-center align-middle'><a href='/chapterdetails/{$row->id}'><i class='fas fa-eye' ></i></a></td> \n";
-                        echo "<td>{$row->conf} / {$row->reg}</td>\n";
-                        echo "<td>{$row->state}</td>\n";
-                        echo "<td>{$row->name}</td>\n";
-
-                        for ($pos_row = 7; $pos_row > 0; $pos_row--) {
-                            $position_found = false;
-
-                            foreach ($coordinator_array as $cord_row => $cord_data) {
-                                if (isset($cord_data[0]) && $cord_data[0]->position == getPositionCode($pos_row) && !$position_found) {
-                                    echo "<td>{$cord_data[0]->first_name} {$cord_data[0]->last_name}</td> \n";
-                                    $position_found = true;
-                                }
-                            }
-
-                            if (!$position_found) {
-                                echo " <td></td>\n";
-                            }
-                        }
-
-                        unset($coordinator_array);
-                        echo "</tr>";
-                    }
-
-                    function getPositionCode($pos_row)
-                    {
-                        $positionCodes = ['BS', 'AC', 'SC', 'ARC', 'RC', 'ACC', 'CC'];
-                        return $positionCodes[$pos_row - 1];
-                    }
-                    ?>
-
-                  </tbody>
+                    @foreach($chaptersData as $data)
+                        @php
+                            $chapter = $data['chapter'];
+                            $coordinatorArray = $data['coordinatorArray'];
+                        @endphp
+                        <tr>
+                            <td class="text-center align-middle">
+                                <a href="{{ url('/chapterdetails/' . $chapter->id) }}"><i class="fas fa-eye"></i></a>
+                            </td>
+                            <td>{{ $chapter->conf }} / {{ $chapter->reg }}</td>
+                            <td>{{ $chapter->state }}</td>
+                            <td>{{ $chapter->name }}</td>
+                            @for ($posRow = 7; $posRow > 0; $posRow--)
+                                @php $positionFound = false; @endphp
+                                @foreach ($coordinatorArray as $coordinator)
+                                    @if ($coordinator && $coordinator->position === $positionCodes[$posRow - 1])
+                                        <td>{{ $coordinator->first_name }} {{ $coordinator->last_name }}</td>
+                                        @php $positionFound = true; @endphp
+                                        @break
+                                    @endif
+                                @endforeach
+                                @if (!$positionFound)
+                                    <td></td>
+                                @endif
+                            @endfor
+                        </tr>
+                    @endforeach
+                </tbody>
                 </table>
             </div>
             <!-- /.card-body -->
