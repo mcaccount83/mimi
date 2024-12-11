@@ -2872,7 +2872,7 @@ class ChapterController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
 
         // Get the conditions
-        $conditions =  getPositionConditions($positionId, $secPositionId);
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
         // Load Reporting Tree
         $coordinatorData = $this->userController->loadReportingTree($corId);
