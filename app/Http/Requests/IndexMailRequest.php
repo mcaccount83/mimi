@@ -13,23 +13,23 @@ class IndexMailRequest extends FormRequest
     public function rules(): array
     {
         return [
-'status'      => [
-'nullable',
-'numeric',
-Rule::in(MonitorStatus::toArray()),
-],
-'queue'       => [
-'nullable',
-'string',
-],
-'name'        => [
-'nullable',
-'string',
-],
-'custom_data' => [
-'nullable',
-'string',
-],
-];
+            'status' => [
+                'nullable',
+                'numeric',
+                Rule::in(MonitorStatus::toArray()),
+            ],
+            'queue' => [
+                'nullable',
+                'string',
+            ],
+            'name' => [
+                'nullable',
+                'string',
+            ],
+            'custom_data' => [
+                'nullable',
+                'string',
+            ],
+        ];
     }
 }
