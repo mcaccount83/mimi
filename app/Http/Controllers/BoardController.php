@@ -1154,7 +1154,7 @@ class BoardController extends Controller
 
         // Check if BoardDetails is not found for the user
         if (! $borDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $borPositionId = $borDetails->board_position_id;
@@ -1239,7 +1239,7 @@ class BoardController extends Controller
         $borDetails = $user->BoardDetails;
         // Check if BoardDetails is not found for the user
         if (! $borDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $borPositionId = $borDetails['board_position_id'];
@@ -1288,7 +1288,7 @@ class BoardController extends Controller
 
         // Check if BoardDetails is not found for the user
         if (! $borDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $borPositionId = $borDetails->board_position_id;
@@ -1351,7 +1351,7 @@ class BoardController extends Controller
 
         // Check if BoardDetails is not found for the user
         if (! $borDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $borPositionId = $borDetails->board_position_id;

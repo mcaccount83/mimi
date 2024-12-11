@@ -1457,10 +1457,10 @@ public function editChapterDetails(Request $request, $id)
             // Log the error
             Log::error($e);
 
-            return redirect()->route('chapters.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
+            return to_route('chapters.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
         }
 
-        return redirect()->route('chapters.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
+        return to_route('chapters.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
 }
 
     /**
@@ -2168,10 +2168,10 @@ public function editChapterDetails(Request $request, $id)
             // Log the error
             Log::error($e);
 
-            return redirect()->route('chapters.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
+            return to_route('chapters.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
         }
 
-        return redirect()->route('chapters.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
+        return to_route('chapters.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
 }
 
 /**
@@ -2286,10 +2286,10 @@ public function editChapterIRS(Request $request, $id)
             // Log the error
             Log::error($e);
 
-            return redirect()->route('chapters.editirs', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
+            return to_route('chapters.editirs', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
         }
 
-        return redirect()->route('chapters.editirs', ['id' => $id])->with('success', 'Chapter IRS Information has been updated');
+        return to_route('chapters.editirs', ['id' => $id])->with('success', 'Chapter IRS Information has been updated');
 }
 
 /**
@@ -2486,10 +2486,10 @@ public function editChapterPayment(Request $request, $id)
             // Log the error
             Log::error($e);
 
-            return redirect()->route('chapters.editpayment', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
+            return to_route('chapters.editpayment', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
         }
 
-        return redirect()->route('chapters.editpayment', ['id' => $id])->with('success', 'Chapter Payments/Donations have been updated');
+        return to_route('chapters.editpayment', ['id' => $id])->with('success', 'Chapter Payments/Donations have been updated');
 }
 
 
@@ -3252,10 +3252,10 @@ public function editChapterWebsite(Request $request, $id)
             // Log the error
             Log::error($e);
 
-            return redirect()->route('chapters.editwebsite', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
+            return to_route('chapters.editwebsite', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
         }
 
-        return redirect()->route('chapters.editwebsite', ['id' => $id])->with('success', 'Chapter Website & Social Meida has been updated');
+        return to_route('chapters.editwebsite', ['id' => $id])->with('success', 'Chapter Website & Social Meida has been updated');
 }
 
     /**

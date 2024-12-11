@@ -1447,10 +1447,10 @@ class CoordinatorController extends Controller
             // Log the error
             Log::error($e);
 
-            return redirect()->route('coordinators.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
+            return to_route('coordinators.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again..');
         }
 
-        return redirect()->route('coordinators.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
+        return to_route('coordinators.view', ['id' => $id])->with('success', 'Chapter Details have been updated');
 }
 
     /**
@@ -1556,10 +1556,10 @@ class CoordinatorController extends Controller
                     // Log the error
                     Log::error($e);
 
-                    return redirect()->route('coordinators.editdetails', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+                    return to_route('coordinators.editdetails', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
                }
         }
-        return redirect()->route('coordinators.editdetails', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
+        return to_route('coordinators.editdetails', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
     }
 
      /**
@@ -1644,9 +1644,9 @@ class CoordinatorController extends Controller
                     // Log the error
                     Log::error($e);
 
-                    return redirect()->route('coordinators.editrecognition', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+                    return to_route('coordinators.editrecognition', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
                }
-        return redirect()->route('coordinators.editrecognition', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
+        return to_route('coordinators.editrecognition', ['id' => $id])->with('success', 'Coordinator profile updated successfully');
     }
 
     /**
