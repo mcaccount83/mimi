@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdateListAdminMember;
-use App\Mail\ChapersUpdatePrimaryCoor;
-use App\Mail\ChaptersUpdatePrimaryCoorPresident;
 use App\Mail\ChapersUpdatePrimaryCoorMember;
+use App\Mail\ChaptersUpdatePrimaryCoorPresident;
 use App\Mail\EOYElectionReportSubmitted;
 use App\Mail\EOYElectionReportThankYou;
 use App\Mail\EOYFinancialReportThankYou;
@@ -21,55 +19,54 @@ use App\Models\FolderRecord;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
-use App\Http\Controllers\UserController;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class BoardController extends Controller
 {
     protected $userController;
 
     public function __construct(UserController $userController)
-        {
-            $this->middleware('auth')->except('logout');
-            $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndBoard::class);
-            $this->userController = $userController;
-        }
+    {
+        $this->middleware('auth')->except('logout');
+        $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndBoard::class);
+        $this->userController = $userController;
+    }
 
     /**
      * Reset Password
      */
     public function updatePassword(Request $request): JsonResponse
-{
-    $request->validate([
-        'current_password' => ['required'],
-        'new_password' => ['required', 'string', 'min:8', 'confirmed'],
-    ]);
+    {
+        $request->validate([
+            'current_password' => ['required'],
+            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
 
-    $user = $request->user();
+        $user = $request->user();
 
-    // Ensure the current password is correct
-    if (!Hash::check($request->current_password, $user->password)) {
-        return response()->json(['error' => 'Current password is incorrect'], 400);
+        // Ensure the current password is correct
+        if (! Hash::check($request->current_password, $user->password)) {
+            return response()->json(['error' => 'Current password is incorrect'], 400);
+        }
+
+        // Update the user's password
+        $user->password = Hash::make($request->new_password);
+        $user->remember_token = null; // Reset the remember token
+        $user->save();
+
+        return response()->json(['message' => 'Password updated successfully']);
     }
-
-    // Update the user's password
-    $user->password = Hash::make($request->new_password);
-    $user->remember_token = null; // Reset the remember token
-    $user->save();
-
-    return response()->json(['message' => 'Password updated successfully']);
-}
 
     /**
      * Verify Current Passwor for Reset
@@ -104,7 +101,7 @@ class BoardController extends Controller
 
         $admin = DB::table('admin')
             ->select('admin.*',
-                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),)
+                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'), )
             ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
             ->orderBy('admin.id', 'desc') // Assuming 'id' represents the order of insertion
             ->first();
@@ -251,7 +248,7 @@ class BoardController extends Controller
 
         $admin = DB::table('admin')
             ->select('admin.*',
-                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),)
+                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'), )
             ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
             ->orderBy('admin.id', 'desc') // Assuming 'id' represents the order of insertion
             ->first();
@@ -363,9 +360,9 @@ class BoardController extends Controller
         }
 
         $data = ['financial_report_array' => $financial_report_array, 'chapterState' => $chapterState, 'chapterDetails' => $chapterDetails, 'boardPositionAbbreviation' => $boardPositionAbbreviation, 'currentMonthAbbreviation' => $currentMonthAbbreviation,
-                    'stateArr' => $stateArr, 'borPositionId' => $borPositionId, 'borDetails' => $borDetails,
-                    'startMonth' => $start_monthInWords, 'thisMonth' => $month, 'due_date' => $due_date, 'late_date' => $late_date, 'user_type' => $user_type,
-                    'webStatusArr' => $webStatusArr, 'boardreport_yes' => $boardreport_yes, 'financialreport_yes' => $financialreport_yes];
+            'stateArr' => $stateArr, 'borPositionId' => $borPositionId, 'borDetails' => $borDetails,
+            'startMonth' => $start_monthInWords, 'thisMonth' => $month, 'due_date' => $due_date, 'late_date' => $late_date, 'user_type' => $user_type,
+            'webStatusArr' => $webStatusArr, 'boardreport_yes' => $boardreport_yes, 'financialreport_yes' => $financialreport_yes];
 
         return view('boards.member')->with($data);
     }
@@ -380,7 +377,7 @@ class BoardController extends Controller
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
 
         $chapterInfoPre = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email','st.state_short_name as statename',
+            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'st.state_short_name as statename',
                 'chapters.conference as conference', 'chapters.primary_coordinator_id as cor_id', 'bd.first_name as ch_pre_fname', 'bd.last_name as ch_pre_lname',
                 'bd.email as ch_pre_email', 'cd.email as cor_email')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
@@ -403,8 +400,8 @@ class BoardController extends Controller
 
         $website = $request->input('ch_website');
         // Ensure it starts with "http://" or "https://"
-        if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
-            $website = 'http://' . $website;
+        if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+            $website = 'http://'.$website;
         }
 
         $presInfoPre = DB::table('chapters')
@@ -780,36 +777,36 @@ class BoardController extends Controller
                 }
             }
 
-           //Website Notifications//
-           $chId = $chapter['id'];
-           $chPcid = $chPCId;
-           $chConf = $chConfId;
+            //Website Notifications//
+            $chId = $chapter['id'];
+            $chPcid = $chPCId;
+            $chConf = $chConfId;
 
-           $emailData = $this->userController->loadConferenceCoord($chConf, $chPcid);
-           $to_CCemail = $emailData['cc_email'];
+            $emailData = $this->userController->loadConferenceCoord($chConf, $chPcid);
+            $to_CCemail = $emailData['cc_email'];
 
-           if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
+            if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
 
-              $mailData = [
-                  'chapter_name' => $request->input('ch_name'),
-                  'chapter_state' => $request->input('ch_state'),
-                  'ch_website_url' => $website,
-              ];
+                $mailData = [
+                    'chapter_name' => $request->input('ch_name'),
+                    'chapter_state' => $request->input('ch_state'),
+                    'ch_website_url' => $website,
+                ];
 
-              if ($request->input('ch_webstatus') == 1) {
-                  Mail::to($to_CCemail)
-                      ->queue(new WebsiteAddNoticeAdmin($mailData));
-              }
+                if ($request->input('ch_webstatus') == 1) {
+                    Mail::to($to_CCemail)
+                        ->queue(new WebsiteAddNoticeAdmin($mailData));
+                }
 
-              if ($request->input('ch_webstatus') == 2) {
-                  Mail::to($to_CCemail)
-                      ->queue(new WebsiteReviewNotice($mailData));
-              }
-          }
+                if ($request->input('ch_webstatus') == 2) {
+                    Mail::to($to_CCemail)
+                        ->queue(new WebsiteReviewNotice($mailData));
+                }
+            }
 
             //Update Chapter MailData//
             $chapterInfoUpd = DB::table('chapters')
-                ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email','st.state_short_name as state',
+                ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'st.state_short_name as state',
                     'chapters.conference as conference', 'chapters.primary_coordinator_id as cor_id')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
@@ -1030,7 +1027,6 @@ class BoardController extends Controller
         return redirect()->back()->with('success', 'Chapter has successfully updated');
     }
 
-
     /**
      * Update Board Details Board Member Login
      */
@@ -1062,15 +1058,15 @@ class BoardController extends Controller
                 ->get();
 
             $ch_webstatus = $request->input('ch_webstatus') ?: $request->input('ch_hid_webstatus');
-                if (empty(trim($ch_webstatus))) {
-                    $ch_webstatus = 0; // Set it to 0 if it's blank
-                }
+            if (empty(trim($ch_webstatus))) {
+                $ch_webstatus = 0; // Set it to 0 if it's blank
+            }
 
             $website = $request->input('ch_website');
-                // Ensure it starts with "http://" or "https://"
-                if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
-                    $website = 'http://' . $website;
-                }
+            // Ensure it starts with "http://" or "https://"
+            if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+                $website = 'http://'.$website;
+            }
 
             if (count($boardDetails) != 0) {
                 $userId = $boardDetails[0]->user_id;
@@ -1164,7 +1160,6 @@ class BoardController extends Controller
 
         return redirect()->back()->with('success', 'Chapter has successfully updated');
     }
-
 
     /**
      * Show Re-Registrstion Payment Form All Board Members
@@ -1530,8 +1525,8 @@ class BoardController extends Controller
 
         $website = $request->input('ch_website');
         // Ensure it starts with "http://" or "https://"
-        if (!str_starts_with($website, 'http://') && !str_starts_with($website, 'https://')) {
-            $website = 'http://' . $website;
+        if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
+            $website = 'http://'.$website;
         }
 
         DB::beginTransaction();
@@ -1826,7 +1821,6 @@ class BoardController extends Controller
         return redirect()->back()->with('success', 'Board Info has been Submitted');
     }
 
-
     /**
      * Show EOY Financial Report All Board Members
      */
@@ -1844,7 +1838,7 @@ class BoardController extends Controller
             $userEmail = $user['email'];
 
             $borDetails = $request->user()->BoardDetails;
-            $loggedInName = $borDetails->first_name . ' ' . $borDetails->last_name;
+            $loggedInName = $borDetails->first_name.' '.$borDetails->last_name;
             $isActive = $borDetails->is_active;
             $user_type = $user->user_type;
 
@@ -2066,7 +2060,6 @@ class BoardController extends Controller
         $bank_balance_now = $input['BankBalanceNow'];
         $bank_balance_now = str_replace(',', '', $bank_balance_now);
         $bank_balance_now = $bank_balance_now === '' ? null : $bank_balance_now;
-
 
         // $petty_cash = $input['PettyCash'];
 

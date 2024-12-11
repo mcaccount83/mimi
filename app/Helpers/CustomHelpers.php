@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\Request;
 
-
-if (!function_exists('getPositionConditions')) {
-    function getPositionConditions($positionId, $secPositionId) {
+if (! function_exists('getPositionConditions')) {
+    function getPositionConditions($positionId, $secPositionId)
+    {
         return [
             'ITCondition' => ($positionId == 13 || $secPositionId == 13),  // IT Coordinator
             'coordinatorCondition' => ($positionId >= 1 && $positionId <= 8),  // BS-Founder
@@ -21,7 +21,7 @@ if (!function_exists('getPositionConditions')) {
             'eoyReportConditionDISABLED' => ($positionId == 13 || $secPositionId == 13),
             'inquiriesCondition' => ($positionId == 15 || $secPositionId == 15 || $positionId == 18 || $secPositionId == 18),
             'inquiriesInternationalCondition' => ($positionId == 18 || $secPositionId == 18),
-            'inquiriesConferneceCondition' => ($positionId == 15 || $secPositionId == 15 ),
+            'inquiriesConferneceCondition' => ($positionId == 15 || $secPositionId == 15),
             'webReviewCondition' => ($positionId == 9 || $secPositionId == 9),
             'einCondition' => ($positionId == 12 || $secPositionId == 12),
             'adminReportCondition' => ($positionId == 13 || $secPositionId == 13),
@@ -32,13 +32,14 @@ if (!function_exists('getPositionConditions')) {
 }
 
 if (! function_exists('isActiveRoute')) {
-    function isActiveRoute(array $routes) {
+    function isActiveRoute(array $routes)
+    {
         foreach ($routes as $route) {
             if (Request::is($route)) {
                 return 'active';
             }
         }
+
         return '';
     }
 }
-

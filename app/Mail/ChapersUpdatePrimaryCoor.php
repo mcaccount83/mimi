@@ -3,16 +3,16 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
 use romanzipp\QueueMonitor\Traits\IsMonitored;
 
 class ChapersUpdatePrimaryCoor extends Mailable implements ShouldQueue
 {
-    use Queueable, Dispatchable, InteractsWithQueue, IsMonitored, SerializesModels;
+    use Dispatchable, InteractsWithQueue, IsMonitored, Queueable, SerializesModels;
 
     public $mailData;
 

@@ -11,13 +11,13 @@ use App\Http\Requests\UpdateResourcesAdminRequest;
 use App\Http\Requests\UpdateToolkitAdminRequest;
 use App\Mail\AdminNewMIMIBugWish;
 use App\Models\Admin;
-use App\Models\Bugs;
 use App\Models\Boards;
-use App\Models\OutgoingBoardMember;
+use App\Models\Bugs;
 use App\Models\Chapter;
-use App\Models\Resources;
 use App\Models\FinancialReport;
 use App\Models\GoogleDrive;
+use App\Models\OutgoingBoardMember;
+use App\Models\Resources;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -162,15 +162,15 @@ class AdminController extends Controller
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];
 
-          // Get the conditions
+        // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             //Get Coordinator Reporting Tree
-                $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                    ->select('crt.id')
-                    ->where($sqlLayerId, '=', $corId)
-                    ->get();
+            $reportIdList = DB::table('coordinator_reporting_tree as crt')
+                ->select('crt.id')
+                ->where($sqlLayerId, '=', $corId)
+                ->get();
 
             $inQryStr = '';
             foreach ($reportIdList as $key => $val) {
@@ -190,16 +190,16 @@ class AdminController extends Controller
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1');
 
-            if ($conditions['founderCondition']) {
-                $baseQuery;
+        if ($conditions['founderCondition']) {
+
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-                $baseQuery->where('chapters.conference', '=', $corConfId);
-            } elseif ($conditions['regionalCoordinatorCondition']) {
-                $baseQuery->where('chapters.region', '=', $corRegId);
+            $baseQuery->where('chapters.conference', '=', $corConfId);
+        } elseif ($conditions['regionalCoordinatorCondition']) {
+            $baseQuery->where('chapters.region', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
-            $chapterList = $baseQuery->get();
+        $chapterList = $baseQuery->get();
 
         $data = ['chapterList' => $chapterList, 'corId' => $corId, 'positionId' => $positionId, 'secPositionId' => $secPositionId];
 
@@ -466,7 +466,7 @@ class AdminController extends Controller
         $file->save();
     }
 
-     public function showReRegDate(Request $request)
+    public function showReRegDate(Request $request)
     {
         $user = User::find($request->user()->id);
 
@@ -528,7 +528,6 @@ class AdminController extends Controller
             ->orderBy('id')
             ->get();
 
-
         $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
         $currentMonth = $chapterList[0]->start_month_id;
 
@@ -566,7 +565,7 @@ class AdminController extends Controller
         }
     }
 
-      /**
+    /**
      * error logs
      */
     public function showMailQueue(): View
@@ -578,7 +577,6 @@ class AdminController extends Controller
 
         return view('admin.mailqueue')->with($data);
     }
-
 
     /**
      * List of Duplicate Users
@@ -688,7 +686,7 @@ class AdminController extends Controller
         return view('admin.outgoingboard')->with($data);
     }
 
-     /**
+    /**
      * Clear Outgoing Board Member Table (Truncate)
      */
     // public function updateOutgoingBoard()
@@ -824,7 +822,7 @@ class AdminController extends Controller
      */
     public function updateEOYDatabase(Request $request): RedirectResponse
     {
-        try{
+        try {
             $currentYear = Carbon::now()->year;
             $nextYear = $currentYear + 1;
 
@@ -900,12 +898,12 @@ class AdminController extends Controller
                     'first_name' => $boardDetail->first_name,
                     'last_name' => $boardDetail->last_name,
                     'email' => $boardDetail->email,
-                      ]);
+                ]);
             }
 
             // Change Year for Google Drive Financial Report Attachmnets
             DB::table('google_drive')->update([
-                'eoy_uploads_year' => $nextYear
+                'eoy_uploads_year' => $nextYear,
             ]);
 
             // Update admin table: Set specified columns to 1
@@ -918,26 +916,26 @@ class AdminController extends Controller
                 'copy_BDtoOUT' => '1',
                 'update_googleID' => '1',
                 'updated_id' => $corId,
-                'updated_at' => Carbon::today()
+                'updated_at' => Carbon::today(),
             ]);
 
-       // Return success message
-         return redirect()->to('/admin')->with('success', 'Financial data tables successfully updated, copied, and renamed.');
+            // Return success message
+            return redirect()->to('/admin')->with('success', 'Financial data tables successfully updated, copied, and renamed.');
         } catch (Exception $e) {
             // Log the error message
-            Log::error('An error occurred while updating the financial data tables: ' . $e->getMessage());
+            Log::error('An error occurred while updating the financial data tables: '.$e->getMessage());
 
             // Return error message, this is where the error should be flashed
             return redirect()->to('/admin')->with('fail', 'An error occurred while updating the financial data tables.');
         }
     }
 
-     /**
+    /**
      * Udate User Database Tables
      */
     public function updateDataDatabase(Request $request): RedirectResponse
     {
-        try{
+        try {
             $corDetails = User::find($request->user()->id)->Coordinators;
             $corId = $corDetails['id'];
 
@@ -983,92 +981,91 @@ class AdminController extends Controller
                 'delete_outgoing' => '1',
                 'outgoing_inactive' => '1',
                 'updated_id' => $corId,
-                'updated_at' => Carbon::today()
+                'updated_at' => Carbon::today(),
             ]);
 
             // Return success message
-        return redirect()->to('/admin')->with('success', 'User data tables successfully updated, copied, and renamed..');
+            return redirect()->to('/admin')->with('success', 'User data tables successfully updated, copied, and renamed..');
         } catch (Exception $e) {
             // Log the error message
-            Log::error('An error occurred while updating the user data tables: ' . $e->getMessage());
+            Log::error('An error occurred while updating the user data tables: '.$e->getMessage());
 
             // Return error message, this is where the error should be flashed
             return redirect()->to('/admin')->with('fail', 'An error occurred while updating the user data tables.');
         }
     }
 
-
     /**
      * Udate Coordinator EOY Menu Items
      */
     public function updateEOYCoordinator(Request $request): RedirectResponse
     {
-    try{
-        $corDetails = User::find($request->user()->id)->Coordinators;
-        $corId = $corDetails['id'];
+        try {
+            $corDetails = User::find($request->user()->id)->Coordinators;
+            $corId = $corDetails['id'];
 
-        // Update admin table: Set specified columns to 1
-        DB::table('admin')->update([
-            'eoy_testers' => '1',
-            'eoy_coordinators' => '1',
-            'updated_id' => $corId,
-            'updated_at' => Carbon::today()
-        ]);
+            // Update admin table: Set specified columns to 1
+            DB::table('admin')->update([
+                'eoy_testers' => '1',
+                'eoy_coordinators' => '1',
+                'updated_id' => $corId,
+                'updated_at' => Carbon::today(),
+            ]);
 
-          // Return success message
-          return redirect()->to('/admin')->with('success', 'Coordinator Menus have been activated.');
+            // Return success message
+            return redirect()->to('/admin')->with('success', 'Coordinator Menus have been activated.');
         } catch (Exception $e) {
             // Log the error message
-            Log::error('An error occurred while activating coordinator menus: ' . $e->getMessage());
+            Log::error('An error occurred while activating coordinator menus: '.$e->getMessage());
 
             // Return error message, this is where the error should be flashed
             return redirect()->to('/admin')->with('fail', 'An error occurred while activating coordinator menus.');
         }
     }
 
-     /**
+    /**
      * Udate Chapter EOY Buttons
      */
     public function updateEOYChapter(Request $request): RedirectResponse
     {
-    try{
-        $corDetails = User::find($request->user()->id)->Coordinators;
-        $corId = $corDetails['id'];
+        try {
+            $corDetails = User::find($request->user()->id)->Coordinators;
+            $corId = $corDetails['id'];
 
-        // Update admin table: Set specified columns to 1
-        DB::table('admin')->update([
-            'eoy_boardreport' => '1',
-            'eoy_financialreport' => '1',
-            'updated_id' => $corId,
-            'updated_at' => Carbon::today()
-        ]);
+            // Update admin table: Set specified columns to 1
+            DB::table('admin')->update([
+                'eoy_boardreport' => '1',
+                'eoy_financialreport' => '1',
+                'updated_id' => $corId,
+                'updated_at' => Carbon::today(),
+            ]);
 
-         // Return success message
-         return redirect()->to('/admin')->with('success', 'Chapter Buttons have been activated.');
+            // Return success message
+            return redirect()->to('/admin')->with('success', 'Chapter Buttons have been activated.');
         } catch (Exception $e) {
             // Log the error message
-            Log::error('An error occurred while activating chapter buttons: ' . $e->getMessage());
+            Log::error('An error occurred while activating chapter buttons: '.$e->getMessage());
 
             // Return error message, this is where the error should be flashed
             return redirect()->to('/admin')->with('fail', 'An error occurred while activating chapter buttons.');
         }
     }
 
-     /**
+    /**
      * view Google Drive Shared Folder Ids
      */
     public function showGoogleDrive(): View
     {
         $googleDrive = DB::table('google_drive')
-        ->select('google_drive.*')
-        ->get();
+            ->select('google_drive.*')
+            ->get();
 
         $data = ['googleDrive' => $googleDrive];
 
         return view('admin.googledrive')->with($data);
     }
 
-     /**
+    /**
      * Update Google Drive Shared Folder Ids
      */
     public function updateGoogleDrive(Request $request): JsonResponse
@@ -1092,6 +1089,4 @@ class AdminController extends Controller
 
         return response()->json(['success' => true]);
     }
-
-
 }

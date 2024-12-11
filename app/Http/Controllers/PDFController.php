@@ -7,15 +7,14 @@ use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
 
-
 class PDFController extends Controller
 {
     protected $userController;
 
     public function __construct(UserController $userController)
-        {
-            $this->middleware('auth')->except('logout');
-            $this->userController = $userController;
+    {
+        $this->middleware('auth')->except('logout');
+        $this->userController = $userController;
     }
 
     public $pdfData = [];
@@ -131,7 +130,7 @@ class PDFController extends Controller
             'completed_name' => $userName,
             'completed_email' => $userEmail,
             'submitted' => $submittedFormatted,
-            'ch_name'=> $sanitizedChapterName,
+            'ch_name' => $sanitizedChapterName,
         ];
 
         $pdf = Pdf::loadView('pdf.financialreport', compact('pdfData'));
@@ -184,7 +183,7 @@ class PDFController extends Controller
             'cc_fname' => $cc_fname,
             'cc_lname' => $cc_lname,
             'cc_pos' => $cc_pos,
-            'ch_name'=> $sanitizedChapterName,
+            'ch_name' => $sanitizedChapterName,
         ];
 
         $pdf = Pdf::loadView('pdf.chapteringoodstanding', compact('pdfData'));
@@ -240,7 +239,7 @@ class PDFController extends Controller
             'cc_fname' => $cc_fname,
             'cc_lname' => $cc_lname,
             'cc_pos' => $cc_pos,
-            'ch_name'=> $sanitizedChapterName,
+            'ch_name' => $sanitizedChapterName,
         ];
 
         $pdf = Pdf::loadView('pdf.disbandletter', compact('pdfData'));
@@ -250,5 +249,4 @@ class PDFController extends Controller
         return $pdf->stream($filename, ['Attachment' => 0]); // Stream the PDF
 
     }
-
 }

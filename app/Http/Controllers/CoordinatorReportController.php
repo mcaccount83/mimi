@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Http\Controllers\UserController;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class CoordinatorReportController extends Controller
@@ -15,11 +14,11 @@ class CoordinatorReportController extends Controller
     protected $userController;
 
     public function __construct(UserController $userController)
-        {
-            $this->middleware('auth')->except('logout');
-            $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
-            $this->userController = $userController;
-            }
+    {
+        $this->middleware('auth')->except('logout');
+        $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
+        $this->userController = $userController;
+    }
 
     /**
      * View the Volunteer Utilization list
@@ -35,10 +34,10 @@ class CoordinatorReportController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
         $request->session()->put('positionid', $positionId);
 
-       // Get the conditions
-       $conditions = getPositionConditions($positionId, $secPositionId);
+        // Get the conditions
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
-       if ($conditions['coordinatorCondition']) {
+        if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
             $coordinatorData = $this->userController->loadReportingTree($corId);
             $inQryArr = $coordinatorData['inQryArr'];
@@ -55,12 +54,12 @@ class CoordinatorReportController extends Controller
             ->orderBy('cd.region_id')
             ->orderByDesc('cp.id');
 
-            if ($conditions['founderCondition']) {
-                $baseQuery;
+        if ($conditions['founderCondition']) {
+
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-                $baseQuery->where('cd.conference_id', '=', $corConfId);
+            $baseQuery->where('cd.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-                $baseQuery->where('cd.region_id', '=', $corRegId);
+            $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
             $baseQuery->whereIn('cd.id', $inQryArr);
         }
@@ -141,10 +140,10 @@ class CoordinatorReportController extends Controller
         $request->session()->put('positionid', $positionId);
         $request->session()->put('secpositionid', $secPositionId);
 
-       // Get the conditions
-       $conditions = getPositionConditions($positionId, $secPositionId);
+        // Get the conditions
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
-       if ($conditions['coordinatorCondition']) {
+        if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
             $coordinatorData = $this->userController->loadReportingTree($corId);
             $inQryArr = $coordinatorData['inQryArr'];
@@ -159,8 +158,8 @@ class CoordinatorReportController extends Controller
             ->orderBy('rg.short_name')
             ->orderByDesc('cp.id');
 
-            if ($conditions['assistConferenceCoordinatorCondition']) {
-                $baseQuery->where('cd.conference_id', '=', $corConfId);
+        if ($conditions['assistConferenceCoordinatorCondition']) {
+            $baseQuery->where('cd.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
@@ -190,10 +189,10 @@ class CoordinatorReportController extends Controller
         $request->session()->put('positionid', $positionId);
         $request->session()->put('secpositionid', $secPositionId);
 
-         // Get the conditions
-       $conditions = getPositionConditions($positionId, $secPositionId);
+        // Get the conditions
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
-       if ($conditions['coordinatorCondition']) {
+        if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
             $coordinatorData = $this->userController->loadReportingTree($corId);
             $inQryArr = $coordinatorData['inQryArr'];
@@ -211,10 +210,10 @@ class CoordinatorReportController extends Controller
             ->where('cd.is_active', '=', '1')
             ->orderBy('cd.coordinator_start_date');
 
-            if ($conditions['founderCondition']) {
-                $baseQuery;
+        if ($conditions['founderCondition']) {
+
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-                $baseQuery->where('cd.conference_id', '=', $corConfId);
+            $baseQuery->where('cd.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
@@ -275,7 +274,7 @@ class CoordinatorReportController extends Controller
             ->where('cd.is_active', '=', '1')
             ->get();
 
-        $data = ['directReportTo' => $directReportTo, 'primaryCoordinatorList' => $primaryCoordinatorList, 'positionList' => $positionList, 'confList' => $confList, 'coordinatorDetails' => $coordinatorDetails, 'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr, ];
+        $data = ['directReportTo' => $directReportTo, 'primaryCoordinatorList' => $primaryCoordinatorList, 'positionList' => $positionList, 'confList' => $confList, 'coordinatorDetails' => $coordinatorDetails, 'regionList' => $regionList, 'stateArr' => $stateArr, 'countryArr' => $countryArr];
 
         return view('coordreports.coordrptappreciationview')->with($data);
     }
@@ -333,6 +332,7 @@ class CoordinatorReportController extends Controller
                 }
             }
         }
+
         return redirect()->to('/coordreports/appreciation')->with('success', 'Appreciation gifts updated successfully');
 
     }
@@ -352,14 +352,14 @@ class CoordinatorReportController extends Controller
         $request->session()->put('positionid', $positionId);
         $request->session()->put('secpositionid', $secPositionId);
 
-           // Get the conditions
-           $conditions = getPositionConditions($positionId, $secPositionId);
+        // Get the conditions
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
-           if ($conditions['coordinatorCondition']) {
-                // Load Reporting Tree
-                $coordinatorData = $this->userController->loadReportingTree($corId);
-                $inQryArr = $coordinatorData['inQryArr'];
-            }
+        if ($conditions['coordinatorCondition']) {
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
+        }
 
         $baseQuery = DB::table('coordinators as cd')
             ->select('cd.id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.report_id as report_id', 'cd.sec_position_id as sec_position_id', 'cd.card_sent as card_sent',
@@ -372,12 +372,12 @@ class CoordinatorReportController extends Controller
             ->orderBy('cd.birthday_month_id')
             ->orderBy('cd.birthday_day');
 
-            if ($conditions['founderCondition']) {
-                $baseQuery;
+        if ($conditions['founderCondition']) {
+
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-                $baseQuery->where('cd.conference_id', '=', $corConfId);
-            } elseif ($conditions['regionalCoordinatorCondition']) {
-                $baseQuery->where('cd.region_id', '=', $corRegId);
+            $baseQuery->where('cd.conference_id', '=', $corConfId);
+        } elseif ($conditions['regionalCoordinatorCondition']) {
+            $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
             $baseQuery->whereIn('cd.id', $inQryArr);
         }
@@ -502,10 +502,10 @@ class CoordinatorReportController extends Controller
         $request->session()->put('positionid', $positionId);
         $cord_pos_id = $request->session()->get('positionid');
 
-         // Get the conditions
-         $conditions = getPositionConditions($positionId, $secPositionId);
+        // Get the conditions
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
-         if ($conditions['coordinatorCondition']) {
+        if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
             $coordinatorData = $this->userController->loadReportingTree($corId);
             $inQryArr = $coordinatorData['inQryArr'];
@@ -525,8 +525,8 @@ class CoordinatorReportController extends Controller
             ->orderBy('coordinators.region_id')
             ->orderBy('coordinators.conference_id');
 
-            if ($conditions['founderCondition']) {
-                $baseQuery;
+        if ($conditions['founderCondition']) {
+
         } else {
             $baseQuery->where('coordinators.conference_id', '=', $corConfId);
         }
@@ -542,5 +542,4 @@ class CoordinatorReportController extends Controller
             'cord_pos_id' => $cord_pos_id,
         ]);
     }
-
 }

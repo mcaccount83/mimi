@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
-
 
 class UserController extends Controller
 {
@@ -23,6 +22,7 @@ class UserController extends Controller
     public function checkEmail($email): JsonResponse
     {
         $isExists = User::where('email', $email)->first();
+
         return response()->json(['exists' => (bool) $isExists]);
     }
 
@@ -46,6 +46,7 @@ class UserController extends Controller
         }
 
         Log::warning('User not found with ID: ', [$request->user_id]);
+
         return response()->json(['error' => 'User not found'], 404);
     }
 
@@ -68,11 +69,11 @@ class UserController extends Controller
      * Get Reporting Tree -- for chapter display based on chapters reporting to logged in PC
      */
     public function loadReportingTree($corId)
-     {
+    {
         $corDetails = DB::table('coordinators as cd')
-                    ->select('cd.*')
-                    ->where('cd.id', $corId)
-                    ->get();
+            ->select('cd.*')
+            ->where('cd.id', $corId)
+            ->get();
         $corlayerId = $corDetails[0]->layer_id;
         $sqlLayerId = 'crt.layer'.$corlayerId;
 
@@ -96,16 +97,16 @@ class UserController extends Controller
     public function loadCoordEmail($corId)
     {
         $coordinatorDetails = DB::table('coordinators as cd')
-                    ->select('cd.*')
-                    ->where('cd.id', $corId)
-                    ->get();
+            ->select('cd.*')
+            ->where('cd.id', $corId)
+            ->get();
 
         $coordEmail = $coordinatorDetails[0]->email;
         $coordSecEmail = $coordinatorDetails[0]->sec_email;
 
         $coordinatorEmailList = DB::table('coordinator_reporting_tree')
             ->select('*')
-            ->where('id', '=', $corId )
+            ->where('id', '=', $corId)
             ->get();
 
         foreach ($coordinatorEmailList as $key => $value) {
@@ -134,14 +135,14 @@ class UserController extends Controller
                         if ($emailListCoord == '') {
                             $emailListCoord = $cordEmail;
                         } else {
-                            $emailListCoord .= ',' . $cordEmail;
+                            $emailListCoord .= ','.$cordEmail;
                         }
                     }
                 }
             }
         }
 
-        return ['coordEmail' => $coordEmail, 'coordSecEmail' => $coordSecEmail, 'emailListCoord' => $emailListCoord, ];
+        return ['coordEmail' => $coordEmail, 'coordSecEmail' => $coordSecEmail, 'emailListCoord' => $emailListCoord];
     }
 
     /**
@@ -151,8 +152,8 @@ class UserController extends Controller
     {
         $chapterList = DB::table('chapters')
             ->select('chapters.id as id', 'chapters.email as chap_email', 'chapters.primary_coordinator_id as primary_coordinator_id',
-                     'chapters.financial_report_received as report_received', 'chapters.new_board_submitted as board_submitted',
-                     'chapters.ein_letter as ein_letter', 'chapters.name as name', 'st.state_short_name as state')
+                'chapters.financial_report_received as report_received', 'chapters.new_board_submitted as board_submitted',
+                'chapters.ein_letter as ein_letter', 'chapters.name as name', 'st.state_short_name as state')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.id', '=', $chId)
             ->first();
@@ -167,16 +168,16 @@ class UserController extends Controller
         $emailListBoard = [];
         foreach ($boardEmailList as $val) {
             $email = trim($val->bor_email); // Trim spaces from each email
-            if (!empty($email)) { // Check for non-empty email
+            if (! empty($email)) { // Check for non-empty email
                 $escaped_email = str_replace("'", "\\'", $email);
                 $emailListBoard[] = $escaped_email; // Add to the array
             }
         }
 
         $emailListChap = $emailListBoard; // Copy the board emails to the chapter email list
-            if (!empty($chapEmail)) {
-                $emailListChap[] = $chapEmail; // Add the chapter email if it's not empty
-            }
+        if (! empty($chapEmail)) {
+            $emailListChap[] = $chapEmail; // Add the chapter email if it's not empty
+        }
 
         $coordinatorEmailList = DB::table('coordinator_reporting_tree')
             ->select('*')
@@ -201,7 +202,7 @@ class UserController extends Controller
                     ->get();
                 if (count($corList) > 0) {
                     $emailCoord = trim($corList[0]->cord_email); // Trim spaces
-                    if (!empty($emailCoord)) {
+                    if (! empty($emailCoord)) {
                         $emailListCoord[] = $emailCoord; // Add to the array
                     }
                 }
@@ -218,7 +219,7 @@ class UserController extends Controller
             'report_received' => $chapterList->report_received,
             'ein_letter' => $chapterList->ein_letter,
             'name' => $chapterList->name,
-            'state' => $chapterList->state
+            'state' => $chapterList->state,
         ];
     }
 
@@ -235,46 +236,45 @@ class UserController extends Controller
             unset($filterReportingList['id'], $filterReportingList['layer0']);
             $filterReportingList = array_reverse($filterReportingList);
 
-        // Inside your loadCoordinatorList method
-        $str = ""; // Initialize with an empty string
+            // Inside your loadCoordinatorList method
+            $str = ''; // Initialize with an empty string
 
-        $i = 0;
-        foreach ($filterReportingList as $key => $val) {
-            $corList = DB::table('coordinators as cd')
-                ->select('cd.first_name as fname', 'cd.last_name as lname', 'cd.email as email', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
-                ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
-                ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
-                ->where('cd.id', '=', $val)
-                ->where('cd.is_active', '=', 1)
-                ->get();
+            $i = 0;
+            foreach ($filterReportingList as $key => $val) {
+                $corList = DB::table('coordinators as cd')
+                    ->select('cd.first_name as fname', 'cd.last_name as lname', 'cd.email as email', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
+                    ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
+                    ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
+                    ->where('cd.id', '=', $val)
+                    ->where('cd.is_active', '=', 1)
+                    ->get();
 
-            if ($corList->isNotEmpty()) {
-                $name = $corList[0]->fname . ' ' . $corList[0]->lname;
-                $email = $corList[0]->email;
-                $position = !empty($corList[0]->sec_pos) ? "({$corList[0]->pos}/{$corList[0]->sec_pos})" : "({$corList[0]->pos})";
+                if ($corList->isNotEmpty()) {
+                    $name = $corList[0]->fname.' '.$corList[0]->lname;
+                    $email = $corList[0]->email;
+                    $position = ! empty($corList[0]->sec_pos) ? "({$corList[0]->pos}/{$corList[0]->sec_pos})" : "({$corList[0]->pos})";
 
-                $title = match ($i) {
-                    0 => 'Primary Coordinator:',
-                    1 => 'Secondary Coordinator:',
-                    2 => 'Additional Coordinator:',
-                    default => ''
-                };
+                    $title = match ($i) {
+                        0 => 'Primary Coordinator:',
+                        1 => 'Secondary Coordinator:',
+                        2 => 'Additional Coordinator:',
+                        default => ''
+                    };
 
-                $str .= "<b>{$title}</b><span class='float-right'><a href='mailto:{$email}' target='_top'>{$name}</a> {$position}</span><br>";
-                $i++;
+                    $str .= "<b>{$title}</b><span class='float-right'><a href='mailto:{$email}' target='_top'>{$name}</a> {$position}</span><br>";
+                    $i++;
+                }
             }
-        }
 
-        if ($str == "") {
-            $str = "No coordinators found for the given ID.";
-        }
+            if ($str == '') {
+                $str = 'No coordinators found for the given ID.';
+            }
 
-        return response()->json($str);
+            return response()->json($str);
         } else {
             return response()->json("<li class='list-group-item'>No reporting data found for the given ID.</li>");
         }
     }
-
 
     /**
      * Load Conference Coordinators for each Conference
@@ -292,29 +292,29 @@ class UserController extends Controller
             unset($filterReportingList['id'], $filterReportingList['layer0']);
             $filterReportingList = array_reverse($filterReportingList);
 
-        // Inside your loadCoordinatorList method
-        $str = ""; // Initialize with an empty string
+            // Inside your loadCoordinatorList method
+            $str = ''; // Initialize with an empty string
 
-        $i = 0;
-        foreach ($filterReportingList as $key => $val) {
-            $corList = DB::table('coordinators as cd')
-            ->select('cd.id as cid', 'cd.conference_id as conf', 'cd.first_name as fname', 'cd.last_name as lname', 'cd.email as email', 'cp.long_title as pos',
-                    'cf.conference_description as conf_desc')
-                ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
-                ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
-                ->join('conference as cf', 'cd.conference_id', '=', 'cf.id')
-                ->where('cd.id', '=', $val)
-                ->where('cd.is_active', '=', 1)
-                ->get();
+            $i = 0;
+            foreach ($filterReportingList as $key => $val) {
+                $corList = DB::table('coordinators as cd')
+                    ->select('cd.id as cid', 'cd.conference_id as conf', 'cd.first_name as fname', 'cd.last_name as lname', 'cd.email as email', 'cp.long_title as pos',
+                        'cf.conference_description as conf_desc')
+                    ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
+                    ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
+                    ->join('conference as cf', 'cd.conference_id', '=', 'cf.id')
+                    ->where('cd.id', '=', $val)
+                    ->where('cd.is_active', '=', 1)
+                    ->get();
 
-            if ($corList->isNotEmpty()) {
+                if ($corList->isNotEmpty()) {
                     $coordinator_array[$i] = ['id' => $corList[0]->cid,
-                    'first_name' => $corList[0]->fname,
-                    'last_name' => $corList[0]->lname,
-                    'pos' => $corList[0]->pos,
-                    'conf' => $corList[0]->conf,
-                    'conf_desc' => $corList[0]->conf_desc,
-                    'email' => $corList[0]->email];
+                        'first_name' => $corList[0]->fname,
+                        'last_name' => $corList[0]->lname,
+                        'pos' => $corList[0]->pos,
+                        'conf' => $corList[0]->conf,
+                        'conf_desc' => $corList[0]->conf_desc,
+                        'email' => $corList[0]->email];
                     $i++;
                 }
                 $coordinator_count = count($coordinator_array);
@@ -380,7 +380,7 @@ class UserController extends Controller
         }
 
         return ['cc_id' => $cc_id, 'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_email' => $cc_email,
-            'cc_conf' => $cc_conf, 'cc_conf_desc' => $cc_conf_desc, 'coordinator_array' => $coordinator_array ];
+            'cc_conf' => $cc_conf, 'cc_conf_desc' => $cc_conf_desc, 'coordinator_array' => $coordinator_array];
     }
 
     /**
@@ -403,8 +403,6 @@ class UserController extends Controller
         $cor_lname = $corList[0]->lname;
         $cor_pos = $corList[0]->pos;
 
-        return ['corList' => $corList, 'cor_fname' => $cor_fname, 'cor_lname' => $cor_lname, 'cor_pos' => $cor_pos ];
+        return ['corList' => $corList, 'cor_fname' => $cor_fname, 'cor_lname' => $cor_lname, 'cor_pos' => $cor_pos];
     }
-
-
 }
