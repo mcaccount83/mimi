@@ -13,6 +13,8 @@ class CheckCurrentPasswordUserRequest extends FormRequest
      */
     public function rules()
     {
-        return ['current_password' => 'required'];
+        return ['current_password' => [
+                'required',
+            ],];
     }
 }
