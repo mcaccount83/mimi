@@ -12,12 +12,12 @@ class CreateQueueMonitorTable extends Migration
      *
      * @return string|null
      */
-    public function getConnection()
+    public function getConnection(): ?string
     {
         return config('queue-monitor.connection');
     }
 
-    public function up()
+    public function up(): void
     {
         Schema::create(config('queue-monitor.table'), function (Blueprint $table) {
             $table->increments('id');
@@ -48,7 +48,7 @@ class CreateQueueMonitorTable extends Migration
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::drop(config('queue-monitor.table'));
     }

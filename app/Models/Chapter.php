@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,7 +22,7 @@ class Chapter extends Model
     ];
 
     // Define the relationship to the FinancialReport model
-    public function financialReport()
+    public function financialReport(): HasOne
     {
         return $this->hasOne(FinancialReport::class, 'chapter_id', 'id'); // 'chapter_id' in financial_report references 'id' in chapters
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Http\Requests\Store990NGoogleRequest;
 use App\Http\Requests\StoreAward1GoogleRequest;
 use App\Http\Requests\StoreAward2GoogleRequest;
@@ -56,7 +57,7 @@ class GoogleController extends Controller
     /**
      *  Save Chapter EIN Letter
      */
-    public function storeEIN(StoreEINGoogleRequest $request, $id)
+    public function storeEIN(StoreEINGoogleRequest $request, $id): JsonResponse
     {
         try{
             $chapter = DB::table('chapters as ch')
@@ -127,7 +128,7 @@ class GoogleController extends Controller
     /**
      *  Save Chapter Resource Items
      */
-    public function storeResources(StoreResourcesGoogleRequest $request, $id)
+    public function storeResources(StoreResourcesGoogleRequest $request, $id): JsonResponse
     {
         try{
             $resource = Resources::findOrFail($id);
@@ -186,7 +187,7 @@ class GoogleController extends Controller
     /**
      *  Save Coordinator Toolkit Itesm
      */
-    public function storeToolkit(StoreToolkitGoogleRequest $request, $id)
+    public function storeToolkit(StoreToolkitGoogleRequest $request, $id): JsonResponse
     {
         try{
             $resource = Resources::findOrFail($id);
@@ -425,7 +426,7 @@ class GoogleController extends Controller
     /**
      *  Save Roster for EOY Report Attachments
      */
-    public function storeRoster(StoreRosterGoogleRequest $request, $id)
+    public function storeRoster(StoreRosterGoogleRequest $request, $id): JsonResponse
     {
         try{
             $chapter = DB::table('chapters as ch')
@@ -502,7 +503,7 @@ class GoogleController extends Controller
     /**
      *  Save 990N Confirmation for EOY Report Attachments
      */
-    public function store990N(Store990NGoogleRequest $request, $id)
+    public function store990N(Store990NGoogleRequest $request, $id): JsonResponse
     {
         try{
             $chapter = DB::table('chapters as ch')
@@ -579,7 +580,7 @@ class GoogleController extends Controller
     /**
      *  Save BankStatement for EOY Report Attachments
      */
-    public function storeStatement1(StoreStatement1GoogleRequest $request, $id)
+    public function storeStatement1(StoreStatement1GoogleRequest $request, $id): JsonResponse
     {
         try{
             $chapter = DB::table('chapters as ch')
@@ -656,7 +657,7 @@ class GoogleController extends Controller
     /**
      *  Save Additional Bank Statement for EOY Report Attachments
      */
-    public function storeStatement2(StoreStatement2GoogleRequest $request, $id)
+    public function storeStatement2(StoreStatement2GoogleRequest $request, $id): JsonResponse
     {
         try{
             $chapter = DB::table('chapters as ch')
@@ -730,7 +731,7 @@ class GoogleController extends Controller
         }
     }
 
-    public function storeAward1(StoreAward1GoogleRequest $request, $id)
+    public function storeAward1(StoreAward1GoogleRequest $request, $id): JsonResponse
     {
         try{
             $chapter = DB::table('chapters as ch')
@@ -804,7 +805,7 @@ class GoogleController extends Controller
         }
     }
 
-    public function storeAward2(StoreAward2GoogleRequest $request, $id)
+    public function storeAward2(StoreAward2GoogleRequest $request, $id): JsonResponse
     {
         try{
             $chapter = DB::table('chapters as ch')
@@ -878,7 +879,7 @@ class GoogleController extends Controller
         }
     }
 
-    public function storeAward3(StoreAward3GoogleRequest $request, $id)
+    public function storeAward3(StoreAward3GoogleRequest $request, $id): JsonResponse
     {
         try{
             $chapter = DB::table('chapters as ch')
@@ -952,7 +953,7 @@ class GoogleController extends Controller
         }
     }
 
-    public function storeAward4(StoreAward4GoogleRequest $request, $id)
+    public function storeAward4(StoreAward4GoogleRequest $request, $id): JsonResponse
     {
         try{
             $chapter = DB::table('chapters as ch')
@@ -1026,7 +1027,7 @@ class GoogleController extends Controller
         }
     }
 
-    public function storeAward5(StoreAward5GoogleRequest $request, $id)
+    public function storeAward5(StoreAward5GoogleRequest $request, $id): JsonResponse
     {
         try{
             $chapter = DB::table('chapters as ch')

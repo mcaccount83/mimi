@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\View\View;
 use App\Models\Chapter;
 use App\Models\FinancialReport;
 use Illuminate\Support\Carbon;
@@ -22,7 +23,7 @@ class ViewAsBoardController extends Controller
 /**
      * View the President Profile View
      */
-    public function showChapterView(Request $request, $id)
+    public function showChapterView(Request $request, $id): View
     {
         $user = $request->user();
         $user_type = $user->user_type;
@@ -165,7 +166,7 @@ class ViewAsBoardController extends Controller
     /**
      * View the Chapter Financial Report View
      */
-    public function showChapterFinancialView(Request $request, $id)
+    public function showChapterFinancialView(Request $request, $id): View
     {
         $user = $request->user();
         $user_type = $user->user_type;
@@ -211,7 +212,7 @@ class ViewAsBoardController extends Controller
     /**
      * View the Chapter Board Info Report View
      */
-    public function showChapterBoardInfoView(Request $request, $id)
+    public function showChapterBoardInfoView(Request $request, $id): View
     {
         $user = $request->user();
         $user_type = $user->user_type;
@@ -322,7 +323,7 @@ class ViewAsBoardController extends Controller
      /**
      * View the Chapter Board Info Report View
      */
-    public function showChapterReregistrationView(Request $request, $id)
+    public function showChapterReregistrationView(Request $request, $id): View
     {
         $user = $request->user();
         $user_type = $user->user_type;
