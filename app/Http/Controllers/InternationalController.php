@@ -34,7 +34,7 @@ class InternationalController extends Controller
 
         $corDetails = $user->Coordinators;
         if (! $corDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $corId = $corDetails['id'];
@@ -66,12 +66,12 @@ class InternationalController extends Controller
     // {
     //     $user = User::find($request->user()->id);
     //     if (! $user) {
-    //         return redirect()->route('home');
+    //         return to_route('home');
     //     }
 
     //     $corDetails = $user->Coordinators;
     //     if (! $corDetails) {
-    //         return redirect()->route('home');
+    //         return to_route('home');
     //     }
 
     //     $corConfId = $corDetails['conference_id'];
@@ -180,7 +180,7 @@ class InternationalController extends Controller
 
         $corDetails = $user->Coordinators;
         if (! $corDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $corId = $corDetails['id'];
@@ -211,12 +211,12 @@ class InternationalController extends Controller
     // {
     //     $user = User::find($request->user()->id);
     //     if (! $user) {
-    //         return redirect()->route('home');
+    //         return to_route('home');
     //     }
 
     //     $corDetails = $user->Coordinators;
     //     if (! $corDetails) {
-    //         return redirect()->route('home');
+    //         return to_route('home');
     //     }
 
     //     $corId = $corDetails['id'];
@@ -527,13 +527,13 @@ class InternationalController extends Controller
     //     $user = User::find($request->user()->id);
     //     // Check if user is not found
     //     if (! $user) {
-    //         return redirect()->route('home');
+    //         return to_route('home');
     //     }
 
     //     $corDetails = $user->Coordinators;
     //     // Check if BoardDetails is not found for the user
     //     if (! $corDetails) {
-    //         return redirect()->route('home');
+    //         return to_route('home');
     //     }
 
     //     $corId = $corDetails['id'];

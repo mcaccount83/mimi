@@ -50,7 +50,7 @@ class AdminController extends Controller
         $corDetails = $user->Coordinators;
         // Check if CordDetails is not found for the user
         if (! $corDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $corDetails = User::find($request->user()->id)->Coordinators;
@@ -216,7 +216,7 @@ class AdminController extends Controller
         $corDetails = $user->Coordinators;
         // Check if CordDetails is not found for the user
         if (! $corDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $corDetails = User::find($request->user()->id)->Coordinators;
@@ -348,7 +348,7 @@ class AdminController extends Controller
         $corDetails = $user->Coordinators;
         // Check if CordDetails is not found for the user
         if (! $corDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $corDetails = User::find($request->user()->id)->Coordinators;
@@ -473,7 +473,7 @@ class AdminController extends Controller
         $corDetails = $user->Coordinators;
         // Check if CordDetails is not found for the user
         if (! $corDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $reChapterList = DB::table('chapters as ch')
@@ -505,7 +505,7 @@ class AdminController extends Controller
         $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $chapterList = DB::table('chapters as ch')
@@ -719,7 +719,7 @@ class AdminController extends Controller
         $corDetails = $user->Coordinators;
         // Check if CordDetails is not found for the user
         if (! $corDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $corDetails = User::find($request->user()->id)->Coordinators;

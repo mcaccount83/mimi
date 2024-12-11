@@ -206,7 +206,7 @@ class EOYReportController extends Controller
 
         $corDetails = $user->Coordinators;
         if (! $corDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $corId = $corDetails['id'];
@@ -481,7 +481,7 @@ class EOYReportController extends Controller
         $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $corId = $corDetails['id'];
@@ -573,7 +573,7 @@ class EOYReportController extends Controller
         $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $loggedInName = $corDetails['first_name'].' '.$corDetails['last_name'];
@@ -1148,7 +1148,7 @@ class EOYReportController extends Controller
     //     $corDetails = $user->Coordinators;
     //     // Check if BoardDetails is not found for the user
     //     if (! $corDetails) {
-    //         return redirect()->route('home');
+    //         return to_route('home');
     //     }
 
     //     $loggedInName = $corDetails['first_name'].' '.$corDetails['last_name'];
@@ -1211,7 +1211,7 @@ class EOYReportController extends Controller
         $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $loggedInName = $corDetails['first_name'].' '.$corDetails['last_name'];
@@ -1613,7 +1613,7 @@ class EOYReportController extends Controller
 
         $corDetails = $user->Coordinators;
         if (! $corDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $corId = $corDetails['id'];
@@ -1753,7 +1753,7 @@ class EOYReportController extends Controller
         $corDetails = $user->Coordinators;
         // Check if CorDetails is not found for the user
         if (! $corDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $corId = $corDetails['id'];
@@ -1909,7 +1909,7 @@ class EOYReportController extends Controller
         $corDetails = $user->Coordinators;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
-            return redirect()->route('home');
+            return to_route('home');
         }
 
         $corId = $corDetails['id'];
@@ -2248,10 +2248,10 @@ public function updateEOYDetails(Request $request, $id): RedirectResponse
             // Log the error
             Log::error($e);
 
-            return redirect()->route('eoyreports.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+            return to_route('eoyreports.view', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
     }
 
-        return redirect()->route('eoyreports.view', ['id' => $id])->with('success', 'EOY Information successfully updated.');
+        return to_route('eoyreports.view', ['id' => $id])->with('success', 'EOY Information successfully updated.');
     }
 
     public function editEOYBoundaries(Request $request, $id): View
@@ -2359,10 +2359,10 @@ public function updateEOYBoundaries(Request $request, $id): RedirectResponse
             // Log the error
             Log::error($e);
 
-            return redirect()->route('eoyreports.editboundaries', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+            return to_route('eoyreports.editboundaries', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         }
 
-        return redirect()->route('eoyreports.editboundaries', ['id' => $id])->with('success', 'EOY Information successfully updated.');
+        return to_route('eoyreports.editboundaries', ['id' => $id])->with('success', 'EOY Information successfully updated.');
     }
 
 public function editEOYAwards(Request $request, $id): View
@@ -2482,10 +2482,10 @@ public function updateEOYAwards(Request $request, $id): RedirectResponse
             // Log the error
             Log::error($e);
 
-            return redirect()->route('eoyreports.editawards', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
+            return to_route('eoyreports.editawards', ['id' => $id])->with('fail', 'Something went wrong, Please try again.');
         }
 
-        return redirect()->route('eoyreports.editawards', ['id' => $id])->with('success', 'EOY Information successfully updated.');
+        return to_route('eoyreports.editawards', ['id' => $id])->with('success', 'EOY Information successfully updated.');
     }
 
 
