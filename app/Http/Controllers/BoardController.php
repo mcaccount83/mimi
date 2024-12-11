@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdateListAdminMember;
 use App\Mail\ChapersUpdatePrimaryCoor;
@@ -48,7 +49,7 @@ class BoardController extends Controller
     /**
      * Reset Password
      */
-    public function updatePassword(Request $request)
+    public function updatePassword(Request $request): JsonResponse
 {
     $request->validate([
         'current_password' => ['required'],
@@ -73,7 +74,7 @@ class BoardController extends Controller
     /**
      * Verify Current Passwor for Reset
      */
-    public function checkCurrentPassword(Request $request)
+    public function checkCurrentPassword(Request $request): JsonResponse
     {
         $request->validate([
             'current_password' => 'required',

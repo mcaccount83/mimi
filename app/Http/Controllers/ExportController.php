@@ -789,7 +789,7 @@ class ExportController extends Controller
     /**
      * Export International Chapter List
      */
-    public function indexInternationalIRSFiling(Request $request)
+    public function indexInternationalIRSFiling(Request $request): StreamedResponse
     {
         $fileName = 'int_subordinate_'.date('Y-m-d').'.csv';
         $headers = [

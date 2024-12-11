@@ -2120,7 +2120,7 @@ class EOYReportController extends Controller
         return $status;
     }
 
-    public function viewEOYDetails(Request $request, $id)
+    public function viewEOYDetails(Request $request, $id): View
     {
 
         $user = User::find($request->user()->id);
@@ -2254,7 +2254,7 @@ public function updateEOYDetails(Request $request, $id): RedirectResponse
         return redirect()->route('eoyreports.view', ['id' => $id])->with('success', 'EOY Information successfully updated.');
     }
 
-    public function editEOYBoundaries(Request $request, $id)
+    public function editEOYBoundaries(Request $request, $id): View
     {
 
         $user = User::find($request->user()->id);
@@ -2365,7 +2365,7 @@ public function updateEOYBoundaries(Request $request, $id): RedirectResponse
         return redirect()->route('eoyreports.editboundaries', ['id' => $id])->with('success', 'EOY Information successfully updated.');
     }
 
-public function editEOYAwards(Request $request, $id)
+public function editEOYAwards(Request $request, $id): View
     {
 
         $user = User::find($request->user()->id);

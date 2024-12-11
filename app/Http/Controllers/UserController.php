@@ -29,7 +29,7 @@ class UserController extends Controller
     /**
      * Reset Password Button for Board Member or Coordinator -- Triggered by Coordinator
      */
-    public function updatePassword(Request $request)
+    public function updatePassword(Request $request): JsonResponse
     {
         $request->validate([
             'new_password' => ['required', 'string', 'min:8'],
@@ -52,7 +52,7 @@ class UserController extends Controller
     /**
      * Verify Current Password for Reset
      */
-    public function checkCurrentPassword(Request $request)
+    public function checkCurrentPassword(Request $request): JsonResponse
     {
         $request->validate([
             'current_password' => 'required',
@@ -222,7 +222,7 @@ class UserController extends Controller
         ];
     }
 
-    public function loadCoordinatorList($id)
+    public function loadCoordinatorList($id): JsonResponse
     {
         $reportingList = DB::table('coordinator_reporting_tree')
             ->select('*')

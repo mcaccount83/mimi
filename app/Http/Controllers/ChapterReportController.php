@@ -201,7 +201,7 @@ class ChapterReportController extends Controller
      /**
      * View EIN Status Details
      */
-    public function showRptEINstatusView(Request $request, $id)
+    public function showRptEINstatusView(Request $request, $id): View
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
@@ -523,7 +523,7 @@ class ChapterReportController extends Controller
     /**
      * View Donations & Payments Details
      */
-    public function showRptDonationsView(Request $request, $id)
+    public function showRptDonationsView(Request $request, $id): View
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
