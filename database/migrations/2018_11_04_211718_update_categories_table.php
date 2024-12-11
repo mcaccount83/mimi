@@ -11,7 +11,7 @@ class UpdateCategoriesTable extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('forum_categories', function (Blueprint $table) {
             $table->nestedSet();
@@ -24,7 +24,7 @@ class UpdateCategoriesTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('forum_categories', function (Blueprint $table) {
             $table->dropNestedSet();

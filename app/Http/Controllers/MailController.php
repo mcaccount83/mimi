@@ -197,7 +197,7 @@ class MailController extends Controller
     /**
      * New Chapter Welcome Email
      */
-    public function createNewChapterEmail(Request $request, $id)
+    public function createNewChapterEmail(Request $request, $id): RedirectResponse
     {
         // Find the coordinator details for the current user to be signer of letter
         $corDetails = User::find($request->user()->id)->Coordinators;

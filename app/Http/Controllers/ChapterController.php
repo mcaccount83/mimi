@@ -117,7 +117,7 @@ class ChapterController extends Controller
         return view('chapters.chaplist')->with($data);
     }
 
-    public function viewChapterDetails(Request $request, $id)
+    public function viewChapterDetails(Request $request, $id): View
     {
 
         $user = User::find($request->user()->id);
@@ -250,7 +250,7 @@ class ChapterController extends Controller
         return view('chapters.view')->with($data);
 }
 
-public function checkEIN(Request $request)
+public function checkEIN(Request $request): JsonResponse
 {
 $chapterId = $request->input('chapter_id');
 $chapter = DB::table('chapters')->where('id', $chapterId)->first();
@@ -260,7 +260,7 @@ return response()->json([
 ]);
 }
 
-public function updateEIN(Request $request)
+public function updateEIN(Request $request): JsonResponse
 {
     $corDetails = User::find($request->user()->id)->Coordinators;
     $corId = $corDetails['id'];
@@ -310,7 +310,7 @@ public function updateEIN(Request $request)
     /**
      * Function for Zapping a Chapter (store)
      */
-    public function updateChapterDisband(Request $request)
+    public function updateChapterDisband(Request $request): JsonResponse
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
@@ -638,7 +638,7 @@ public function updateEIN(Request $request)
     /**
      * Function for unZapping a Chapter (store)
      */
-    public function updateChapterUnZap(Request $request)
+    public function updateChapterUnZap(Request $request): JsonResponse
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
@@ -856,7 +856,7 @@ public function updateEIN(Request $request)
     /**
      *Add New Chapter
      */
-    public function editChapterNew(Request $request)
+    public function editChapterNew(Request $request): View
     {
         $user = User::find($request->user()->id);
             $userId = $user->id;
@@ -1166,7 +1166,7 @@ public function updateEIN(Request $request)
 /**
  *Edit Chapter Information
  */
-public function editChapterDetails(Request $request, $id)
+public function editChapterDetails(Request $request, $id): View
 {
     $user = User::find($request->user()->id);
         $userId = $user->id;
@@ -1466,7 +1466,7 @@ public function editChapterDetails(Request $request, $id)
     /**
      *Edit Chapter Board Information
      */
-    public function editChapterBoard(Request $request, $id)
+    public function editChapterBoard(Request $request, $id): View
     {
         $user = User::find($request->user()->id);
             $userId = $user->id;
@@ -2177,7 +2177,7 @@ public function editChapterDetails(Request $request, $id)
 /**
  *Edit Chapter EIN Notes
  */
-public function editChapterIRS(Request $request, $id)
+public function editChapterIRS(Request $request, $id): View
 {
     $user = User::find($request->user()->id);
         $userId = $user->id;
@@ -2295,7 +2295,7 @@ public function editChapterIRS(Request $request, $id)
 /**
  *Edit Chapter Information
  */
-public function editChapterPayment(Request $request, $id)
+public function editChapterPayment(Request $request, $id): View
 {
     $user = User::find($request->user()->id);
         $userId = $user->id;
@@ -2496,7 +2496,7 @@ public function editChapterPayment(Request $request, $id)
     /**
      * Display the Zapped chapter list mapped with Conference Region
      */
-    public function showZappedChapter(Request $request)
+    public function showZappedChapter(Request $request): View
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
@@ -2547,7 +2547,7 @@ public function editChapterPayment(Request $request, $id)
    /**
      * ReRegistration List
      */
-    public function showChapterReRegistration(Request $request)
+    public function showChapterReRegistration(Request $request): View
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
@@ -2869,7 +2869,7 @@ public function editChapterPayment(Request $request, $id)
     /**
      * Display the Inquiries Chapter list
      */
-    public function showChapterInquiries(Request $request)
+    public function showChapterInquiries(Request $request): View
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
@@ -2928,7 +2928,7 @@ public function editChapterPayment(Request $request, $id)
      /**
      * Display the Zapped Inquiries list
      */
-    public function showZappedChapterInquiries(Request $request)
+    public function showZappedChapterInquiries(Request $request): View
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
@@ -2988,7 +2988,7 @@ public function editChapterPayment(Request $request, $id)
     /**
      * Display the Website Details
      */
-    public function showChapterWebsite(Request $request)
+    public function showChapterWebsite(Request $request): View
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
@@ -3037,7 +3037,7 @@ public function editChapterPayment(Request $request, $id)
 /**
  *Edit Website & Social Information
  */
-public function editChapterWebsite(Request $request, $id)
+public function editChapterWebsite(Request $request, $id): View
 {
     $user = User::find($request->user()->id);
         $userId = $user->id;

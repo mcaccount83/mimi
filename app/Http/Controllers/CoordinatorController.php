@@ -880,7 +880,7 @@ class CoordinatorController extends Controller
         return view('coordinators.view')->with($data);
     }
 
-    public function updateCardSent(Request $request)
+    public function updateCardSent(Request $request): JsonResponse
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
@@ -927,7 +927,7 @@ class CoordinatorController extends Controller
      /**
      * Update Putting a Coordinator on Leave
      */
-    public function updateOnLeave(Request $request)
+    public function updateOnLeave(Request $request): JsonResponse
     {
         $userDetails = User::find($request->user()->id)->Coordinators;
         $lastUpdatedBy = $userDetails['first_name'].' '.$userDetails['last_name'];
@@ -977,7 +977,7 @@ class CoordinatorController extends Controller
     /**
      * Update Removing a Coordinator from Leave
      */
-    public function updateRemoveLeave(Request $request)
+    public function updateRemoveLeave(Request $request): JsonResponse
     {
         $userDetails = User::find($request->user()->id)->Coordinators;
         $lastUpdatedBy = $userDetails['first_name'].' '.$userDetails['last_name'];
@@ -1027,7 +1027,7 @@ class CoordinatorController extends Controller
      /**
      * Function for Retiring a Coordinator
      */
-    public function updateRetire(Request $request)
+    public function updateRetire(Request $request): JsonResponse
     {
         $userDetails = User::find($request->user()->id)->Coordinators;
         $lastUpdatedBy = $userDetails['first_name'].' '.$userDetails['last_name'];
@@ -1110,7 +1110,7 @@ class CoordinatorController extends Controller
      /**
      * Function for Retiring a Coordinator
      */
-    public function updateUnRetire(Request $request)
+    public function updateUnRetire(Request $request): JsonResponse
     {
         $userDetails = User::find($request->user()->id)->Coordinators;
         $lastUpdatedBy = $userDetails['first_name'].' '.$userDetails['last_name'];

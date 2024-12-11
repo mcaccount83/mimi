@@ -792,7 +792,7 @@ class AdminController extends Controller
     /**
      * Reset EOY Procedurles for New year
      */
-    public function resetYear()
+    public function resetYear(): RedirectResponse
     {
         try {
             // Create a new Admin instance
@@ -822,7 +822,7 @@ class AdminController extends Controller
     /**
      * Udate EOY Database Tables
      */
-    public function updateEOYDatabase(Request $request)
+    public function updateEOYDatabase(Request $request): RedirectResponse
     {
         try{
             $currentYear = Carbon::now()->year;
@@ -935,7 +935,7 @@ class AdminController extends Controller
      /**
      * Udate User Database Tables
      */
-    public function updateDataDatabase(Request $request)
+    public function updateDataDatabase(Request $request): RedirectResponse
     {
         try{
             $corDetails = User::find($request->user()->id)->Coordinators;
@@ -1001,7 +1001,7 @@ class AdminController extends Controller
     /**
      * Udate Coordinator EOY Menu Items
      */
-    public function updateEOYCoordinator(Request $request)
+    public function updateEOYCoordinator(Request $request): RedirectResponse
     {
     try{
         $corDetails = User::find($request->user()->id)->Coordinators;
@@ -1029,7 +1029,7 @@ class AdminController extends Controller
      /**
      * Udate Chapter EOY Buttons
      */
-    public function updateEOYChapter(Request $request)
+    public function updateEOYChapter(Request $request): RedirectResponse
     {
     try{
         $corDetails = User::find($request->user()->id)->Coordinators;
@@ -1057,7 +1057,7 @@ class AdminController extends Controller
      /**
      * view Google Drive Shared Folder Ids
      */
-    public function showGoogleDrive()
+    public function showGoogleDrive(): View
     {
         $googleDrive = DB::table('google_drive')
         ->select('google_drive.*')
@@ -1071,7 +1071,7 @@ class AdminController extends Controller
      /**
      * Update Google Drive Shared Folder Ids
      */
-    public function updateGoogleDrive(Request $request)
+    public function updateGoogleDrive(Request $request): JsonResponse
     {
         $einLetterDrive = $request->input('einLetterDrive');
         $eoyDrive = $request->input('eoyDrive');
