@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\IndexMailRequest;
 use App\Mail\NewChapterWelcome;
 use App\Models\Chapter;
 use App\Models\Conference;
@@ -35,17 +36,12 @@ class MailController extends Controller
         $this->userController = $userController;
     }
 
-    public function index(Request $request)
+    public function index(IndexMailRequest $request)
     {
         // Fetch pending jobs
         $pendingJobs = DB::table('jobs')->get();
 
-        $data = $request->validate([
-            'status' => ['nullable', 'numeric', Rule::in(MonitorStatus::toArray())],
-            'queue' => ['nullable', 'string'],
-            'name' => ['nullable', 'string'],
-            'custom_data' => ['nullable', 'string'],
-        ]);
+        $data = $request->validated();
 
         $filters = [
             'status' => isset($data['status']) ? (int) $data['status'] : null,

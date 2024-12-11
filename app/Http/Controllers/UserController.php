@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CheckCurrentPasswordUserRequest;
+use App\Http\Requests\UpdatePasswordUserRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -29,11 +31,8 @@ class UserController extends Controller
     /**
      * Reset Password Button for Board Member or Coordinator -- Triggered by Coordinator
      */
-    public function updatePassword(Request $request): JsonResponse
+    public function updatePassword(UpdatePasswordUserRequest $request): JsonResponse
     {
-        $request->validate([
-            'new_password' => ['required', 'string', 'min:8'],
-        ]);
 
         $user = User::find($request->user_id);
         if ($user) {
@@ -53,11 +52,8 @@ class UserController extends Controller
     /**
      * Verify Current Password for Reset
      */
-    public function checkCurrentPassword(Request $request): JsonResponse
+    public function checkCurrentPassword(CheckCurrentPasswordUserRequest $request): JsonResponse
     {
-        $request->validate([
-            'current_password' => 'required',
-        ]);
 
         $user = $request->user();
         $isValid = Hash::check($request->current_password, $user->password);

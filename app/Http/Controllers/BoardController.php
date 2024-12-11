@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CheckCurrentPasswordBoardRequest;
+use App\Http\Requests\UpdatePasswordBoardRequest;
 use App\Mail\ChapersUpdateListAdmin;
 use App\Mail\ChapersUpdateListAdminMember;
 use App\Mail\ChapersUpdatePrimaryCoorMember;
@@ -46,12 +48,8 @@ class BoardController extends Controller
     /**
      * Reset Password
      */
-    public function updatePassword(Request $request): JsonResponse
+    public function updatePassword(UpdatePasswordBoardRequest $request): JsonResponse
     {
-        $request->validate([
-            'current_password' => ['required'],
-            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
 
         $user = $request->user();
 
@@ -71,11 +69,8 @@ class BoardController extends Controller
     /**
      * Verify Current Passwor for Reset
      */
-    public function checkCurrentPassword(Request $request): JsonResponse
+    public function checkCurrentPassword(CheckCurrentPasswordBoardRequest $request): JsonResponse
     {
-        $request->validate([
-            'current_password' => 'required',
-        ]);
 
         $user = $request->user();
         $isValid = Hash::check($request->current_password, $user->password);
