@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class EnsureUserIsActiveAndCoordinator
@@ -14,9 +15,9 @@ class EnsureUserIsActiveAndCoordinator
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
-        $user = Auth::user();
+        $user = $request->user();
 
         // Check if the user is active and is of type 'board'
         if (!$user || $user->is_active != 1 || $user->user_type != 'coordinator') {
