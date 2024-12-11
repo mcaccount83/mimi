@@ -31,4 +31,3 @@ class FinancialReport extends Model
 
     protected $table = 'financial_report';
 }
-

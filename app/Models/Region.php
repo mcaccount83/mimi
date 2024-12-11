@@ -38,5 +38,4 @@ class Region extends Model
     {
         return $this->belongsTo(\App\Models\Chapter::class, 'region');
     }
-
 }

@@ -14,10 +14,10 @@ class OutgoingBoardMember extends Model
         'user_id',
         'board_id',
         'first_name',
-        'last_name' ,
+        'last_name',
         'email',
-        'board_position_id' ,
-        'chapter_id'
+        'board_position_id',
+        'chapter_id',
     ];
 
     protected $table = 'outgoing_board_member';

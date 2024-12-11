@@ -9,8 +9,6 @@ class CreateQueueMonitorTable extends Migration
 {
     /**
      * Get the customized connection name.
-     *
-     * @return string|null
      */
     public function getConnection(): ?string
     {

@@ -38,5 +38,4 @@ class Conference extends Model
     {
         return $this->belongsTo(\App\Models\Chapter::class, 'conference');
     }
-
 }

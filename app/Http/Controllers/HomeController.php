@@ -5,9 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Chapter;
 use App\Models\FinancialReport;
 use App\Models\User;
-use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -19,10 +17,10 @@ class HomeController extends Controller
     protected $userController;
 
     public function __construct(UserController $userController)
-        {
-            $this->middleware('auth')->except('logout');
-            $this->userController = $userController;
-        }
+    {
+        $this->middleware('auth')->except('logout');
+        $this->userController = $userController;
+    }
 
     /**
      * Home page for Coordinators & Board Members - logic for login redirect
@@ -78,9 +76,9 @@ class HomeController extends Controller
                 ->get();
 
             $resources = DB::table('resources')
-            ->select('resources.*',
-                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),
-                DB::raw('CASE
+                ->select('resources.*',
+                    DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),
+                    DB::raw('CASE
                     WHEN category = 1 THEN "BYLAWS"
                     WHEN category = 2 THEN "FACT SHEETS"
                     WHEN category = 3 THEN "COPY READY MATERIAL"
@@ -90,9 +88,9 @@ class HomeController extends Controller
                     WHEN category = 7 THEN "END OF YEAR"
                     ELSE "Unknown"
                 END as priority_word'))
-            ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
-            ->orderBy('name')
-            ->get();
+                ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
+                ->orderBy('name')
+                ->get();
 
             $submitted = $chapterDetails[0]->financial_report_received;
 
@@ -108,5 +106,4 @@ class HomeController extends Controller
             return redirect()->to('/login');
         }
     }
-
 }
