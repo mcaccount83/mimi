@@ -9,7 +9,6 @@ use App\Mail\EOYReviewrAssigned;
 use App\Models\Chapter;
 use App\Models\FinancialReport;
 use App\Models\User;
-use App\Http\Helpers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -48,7 +47,7 @@ class EOYReportController extends Controller
         $request->session()->put('corregid', $corRegId);
 
         // Get the conditions
-        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
@@ -311,7 +310,7 @@ class EOYReportController extends Controller
         $request->session()->put('corconfid', $corConfId);
 
         // Get the conditions
-        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
@@ -984,7 +983,7 @@ class EOYReportController extends Controller
         $request->session()->put('corregid', $corRegId);
 
         // Get the conditions
-        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
@@ -1547,7 +1546,7 @@ class EOYReportController extends Controller
         $request->session()->put('corregid', $corRegId);
 
         // Get the conditions
-        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
@@ -1695,7 +1694,7 @@ class EOYReportController extends Controller
         $request->session()->put('corconfid', $corConfId);
 
         // Get the conditions
-        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
@@ -1833,7 +1832,7 @@ class EOYReportController extends Controller
         $request->session()->put('corconfid', $corConfId);
 
         // Get the conditions
-        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree

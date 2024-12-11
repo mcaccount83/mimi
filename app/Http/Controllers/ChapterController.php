@@ -27,7 +27,6 @@ use App\Models\FinancialReport;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
-use App\Http\Helpers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -67,7 +66,7 @@ class ChapterController extends Controller
         $request->session()->put('corregid', $corRegId);
 
         // Get the conditions
-        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
@@ -2500,7 +2499,7 @@ class ChapterController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
 
         // Get the conditions
-        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
@@ -2557,7 +2556,7 @@ class ChapterController extends Controller
         $request->session()->put('corregid', $corRegId);
 
         // Get the conditions
-        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree
@@ -2873,7 +2872,7 @@ class ChapterController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
 
         // Get the conditions
-        $conditions =  Helpers\getPositionConditions($positionId, $secPositionId);
+        $conditions =  getPositionConditions($positionId, $secPositionId);
 
         // Load Reporting Tree
         $coordinatorData = $this->userController->loadReportingTree($corId);
@@ -2933,7 +2932,7 @@ class ChapterController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
 
         // Get the conditions
-        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
         // Load Reporting Tree
         $coordinatorData = $this->userController->loadReportingTree($corId);
@@ -2992,7 +2991,7 @@ class ChapterController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
 
         // Get the conditions
-        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             // Load Reporting Tree

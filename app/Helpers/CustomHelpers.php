@@ -1,7 +1,5 @@
 <?php
 
-namespace App\Http\Helpers;
-
 use Illuminate\Support\Facades\Request;
 
 if (! function_exists('getPositionConditions')) {

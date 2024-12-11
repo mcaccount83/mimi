@@ -20,7 +20,6 @@ use App\Models\OutgoingBoardMember;
 use App\Models\Resources;
 use App\Models\User;
 use Exception;
-use App\Http\Helpers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -164,7 +163,7 @@ class AdminController extends Controller
         $secPositionId = $corDetails['sec_position_id'];
 
         // Get the conditions
-        $conditions = Helpers\getPositionConditions($positionId, $secPositionId);
+        $conditions = getPositionConditions($positionId, $secPositionId);
 
         if ($conditions['coordinatorCondition']) {
             //Get Coordinator Reporting Tree
