@@ -103,7 +103,7 @@ class BoardController extends Controller
             ->select('admin.*',
                 DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'), )
             ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
-            ->orderBy('admin.id', 'desc') // Assuming 'id' represents the order of insertion
+            ->orderByDesc('admin.id') // Assuming 'id' represents the order of insertion
             ->first();
 
         $eoy_boardreport = $admin->eoy_boardreport;
@@ -250,7 +250,7 @@ class BoardController extends Controller
             ->select('admin.*',
                 DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'), )
             ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
-            ->orderBy('admin.id', 'desc') // Assuming 'id' represents the order of insertion
+            ->orderByDesc('admin.id') // Assuming 'id' represents the order of insertion
             ->first();
 
         $eoy_boardreport = $admin->eoy_boardreport;

@@ -90,8 +90,8 @@ class MailController extends Controller
         }
 
         $jobsQuery
-            ->orderBy('started_at', 'desc')
-            ->orderBy('started_at_exact', 'desc');
+            ->orderByDesc('started_at')
+            ->orderByDesc('started_at_exact');
 
         $jobs = $jobsQuery
             ->paginate(config('queue-monitor.ui.per_page'))

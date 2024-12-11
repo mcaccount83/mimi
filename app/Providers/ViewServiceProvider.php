@@ -58,7 +58,7 @@ class ViewServiceProvider extends ServiceProvider
             $admin = DB::table('admin')
                 ->select('admin.*', DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'))
                 ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
-                ->orderBy('admin.id', 'desc')
+                ->orderByDesc('admin.id')
                 ->first();
 
             $eoy_testers = $admin->eoy_testers ?? 0; // Handle null cases
