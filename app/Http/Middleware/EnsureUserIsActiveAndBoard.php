@@ -2,26 +2,22 @@
 
 namespace App\Http\Middleware;
 
-use Symfony\Component\HttpFoundation\Response;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class EnsureUserIsActiveAndBoard
 {
     /**
      * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
      */
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
 
         // Check if the user is active and of type 'board'
-        if (!$user || $user->is_active != 1 || $user->user_type != 'board') {
+        if (! $user || $user->is_active != 1 || $user->user_type != 'board') {
             Auth::logout();
             $request->session()->flush();
 
@@ -31,5 +27,3 @@ class EnsureUserIsActiveAndBoard
         return $next($request);
     }
 }
-
-

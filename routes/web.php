@@ -6,20 +6,20 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\BoardController;
 use App\Http\Controllers\ChapterController;
+use App\Http\Controllers\ChapterReportController;
 use App\Http\Controllers\CoordinatorController;
+use App\Http\Controllers\CoordinatorReportController;
 use App\Http\Controllers\EOYReportController;
 use App\Http\Controllers\ExportController;
 use App\Http\Controllers\GoogleController;
-use App\Http\Controllers\LogViewerController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InternationalController;
+use App\Http\Controllers\LogViewerController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\CoordinatorReportController;
-use App\Http\Controllers\ChapterReportController;
 use App\Http\Controllers\ViewAsBoardController;
 use Illuminate\Support\Facades\Route;
 
@@ -68,12 +68,24 @@ Route::delete('monitors/{monitor}', \romanzipp\QueueMonitor\Controllers\DeleteMo
 Route::patch('monitors/retry/{monitor}', \romanzipp\QueueMonitor\Controllers\RetryMonitorController::class)->name('queue-monitor::retry');
 Route::delete('purge', \romanzipp\QueueMonitor\Controllers\PurgeMonitorsController::class)->name('queue-monitor::purge');
 // Error Pages Test Routes...
-Route::get('/test-500', function () { abort(500); });
-Route::get('/test-404', function () { abort(404); });
-Route::get('/test-403', function () { abort(403); });
-Route::get('/test-401', function () { abort(401); });
-Route::get('/test-419', function () { abort(419); });
-Route::get('/test-429', function () { abort(429); });
+Route::get('/test-500', function () {
+    abort(500);
+});
+Route::get('/test-404', function () {
+    abort(404);
+});
+Route::get('/test-403', function () {
+    abort(403);
+});
+Route::get('/test-401', function () {
+    abort(401);
+});
+Route::get('/test-419', function () {
+    abort(419);
+});
+Route::get('/test-429', function () {
+    abort(429);
+});
 
 // Public Page Routes...
 Route::get('/chapter-links', [PublicController::class, 'chapterLinks'])->name('chapter.links');
@@ -334,17 +346,3 @@ Route::get('/board/resources', [BoardController::class, 'showResources'])->name(
 // Route::get('/boardlist', [BoardListController::class, 'index'])->name('boardlist.index');
 // Route::get('/boardlist/{id}', [BoardListController::class, 'show'])->name('boardlist.show');
 // Add routes for other methods as needed
-
-
-
-
-
-
-
-
-
-
-
-
-
-

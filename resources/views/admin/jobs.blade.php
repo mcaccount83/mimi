@@ -93,12 +93,12 @@
                             <td class="p-4 text-gray-800 dark:text-gray-300 text-sm leading-5 border-b border-gray-200 dark:border-gray-600">
 
                                 <div class="text-xs">
-                                    <span class="text-gray-600 dark:text-gray-400 font-medium">@lang('Queue'):</span>
+                                    <span class="text-gray-600 dark:text-gray-400 font-medium">{{ __('Queue') }}:</span>
                                     <span class="font-semibold">{{ $job->queue }}</span>
                                 </div>
 
                                 <div class="text-xs">
-                                    <span class="text-gray-600 dark:text-gray-400 font-medium">@lang('Attempt'):</span>
+                                    <span class="text-gray-600 dark:text-gray-400 font-medium">{{ __('Attempt') }}:</span>
                                     <span class="font-semibold">{{ $job->attempts }}</span>
                                 </div>
                             </td>
@@ -115,7 +115,7 @@
                                     <div class="my-6">
                                         <div class="text-center">
                                             <div class="text-gray-500 text-lg">
-                                                @lang('No Queued Jobs')
+                                                {{ __('No Queued Jobs') }}
                                             </div>
                                         </div>
                                     </div>
@@ -139,7 +139,7 @@
                         @csrf
                         @method('delete')
                         <button class="py-2 px-4 bg-red-50 dark:bg-red-200 hover:dark:bg-red-300 hover:bg-red-100 text-red-800 text-xs font-medium rounded-md transition-colors duration-150">
-                            @lang('Delete all processed entries')
+                            {{ __('Delete all processed entries') }}
                         </button>
                     </form>
                 </div>

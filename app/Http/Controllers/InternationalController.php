@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chapter;
-
 use App\Models\FinancialReport;
 use App\Models\User;
-use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -19,11 +17,11 @@ class InternationalController extends Controller
     protected $userController;
 
     public function __construct(UserController $userController)
-        {
-            $this->middleware('auth')->except('logout');
-            $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
-            $this->userController = $userController;
-            }
+    {
+        $this->middleware('auth')->except('logout');
+        $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndCoordinator::class);
+        $this->userController = $userController;
+    }
 
     /**
      * Display the International chapter list
@@ -41,7 +39,7 @@ class InternationalController extends Controller
         $corConfId = $corDetails['conference_id'];
         $intChapterList = DB::table('chapters as ch')
             ->select('ch.id', 'ch.name', 'ch.state', 'ch.ein', 'ch.primary_coordinator_id', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name',
-                'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.phone as pre_phone',  'st.state_short_name as state',
+                'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.phone as pre_phone', 'st.state_short_name as state',
                 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'cd.conference_id as cor_cid', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
@@ -187,7 +185,7 @@ class InternationalController extends Controller
         $corConfId = $corDetails['conference_id'];
         $chapterList = DB::table('chapters as ch')
             ->select('ch.id', 'ch.conference', 'ch.state', 'ch.name', 'ch.ein', 'ch.zap_date', 'ch.disband_reason', 'st.state_short_name as state',
-            'rg.short_name as reg', 'cf.short_name as conf')
+                'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
             ->leftJoin('state as st', 'ch.state', '=', 'st.id')
@@ -300,7 +298,7 @@ class InternationalController extends Controller
     //     return view('international.intchapterzappedview')->with($data);
     // }
 
- /**
+    /**
      * International Coordinators List
      */
     public function showIntCoordinator(): View
@@ -453,7 +451,7 @@ class InternationalController extends Controller
     //     return view('international.intcoordretiredview')->with($data);
     // }
 
-     /**
+    /**
      * View the International Coordinator ToDo List
      */
     public function showIntCoordinatorToDo(Request $request): View
@@ -493,9 +491,9 @@ class InternationalController extends Controller
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
 
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
+        // Load Reporting Tree
+        $coordinatorData = $this->userController->loadReportingTree($corId);
+        $inQryArr = $coordinatorData['inQryArr'];
 
         //Get Chapter List mapped with login coordinator
         $chapterList = DB::table('chapters')
@@ -619,9 +617,8 @@ class InternationalController extends Controller
             ->orderBy('chapters.name')
             ->get();
 
-        $data = ['chapterList' => $chapterList ];
+        $data = ['chapterList' => $chapterList];
 
         return view('international.intdonation')->with($data);
     }
-
 }

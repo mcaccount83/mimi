@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\BigSisterWelcome;
+use App\Http\Requests\IndexMailRequest;
 use App\Mail\NewChapterWelcome;
-use App\Mail\PaymentsReRegLate;
-use App\Mail\PaymentsReRegReminder;
 use App\Models\Chapter;
-use App\Models\CoordinatorPosition;
 use App\Models\Conference;
+use App\Models\CoordinatorPosition;
 use App\Models\Region;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
-use App\Http\Controllers\UserController;
 use Illuminate\Database as DatabaseConnections;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -22,13 +19,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Validation\Rule;
 use romanzipp\QueueMonitor\Controllers\Payloads\Metric;
 use romanzipp\QueueMonitor\Controllers\Payloads\Metrics;
 use romanzipp\QueueMonitor\Enums\MonitorStatus;
 use romanzipp\QueueMonitor\Models\Contracts\MonitorContract;
 use romanzipp\QueueMonitor\Services\QueueMonitor;
-
 
 class MailController extends Controller
 {
@@ -40,17 +35,12 @@ class MailController extends Controller
         $this->userController = $userController;
     }
 
-    public function index(Request $request)
+    public function index(IndexMailRequest $request)
     {
         // Fetch pending jobs
         $pendingJobs = DB::table('jobs')->get();
 
-        $data = $request->validate([
-            'status' => ['nullable', 'numeric', Rule::in(MonitorStatus::toArray())],
-            'queue' => ['nullable', 'string'],
-            'name' => ['nullable', 'string'],
-            'custom_data' => ['nullable', 'string'],
-        ]);
+        $data = $request->validated();
 
         $filters = [
             'status' => isset($data['status']) ? (int) $data['status'] : null,
@@ -61,19 +51,19 @@ class MailController extends Controller
 
         $jobsQuery = QueueMonitor::getModel()->newQuery();
 
-        if (null !== $filters['status']) {
+        if ($filters['status'] !== null) {
             $jobsQuery->where('status', $filters['status']);
         }
 
-        if ('all' !== $filters['queue']) {
+        if ($filters['queue'] !== 'all') {
             $jobsQuery->where('queue', $filters['queue']);
         }
 
-        if (null !== $filters['name']) {
+        if ($filters['name'] !== null) {
             $jobsQuery->where('name', 'like', "%{$filters['name']}%");
         }
 
-        if (null !== $filters['custom_data']) {
+        if ($filters['custom_data'] !== null) {
             $jobsQuery->where('data', 'like', "%{$filters['custom_data']}%");
         }
 
@@ -95,8 +85,8 @@ class MailController extends Controller
         }
 
         $jobsQuery
-            ->orderBy('started_at', 'desc')
-            ->orderBy('started_at_exact', 'desc');
+            ->orderByDesc('started_at')
+            ->orderByDesc('started_at_exact');
 
         $jobs = $jobsQuery
             ->paginate(config('queue-monitor.ui.per_page'))
@@ -135,7 +125,7 @@ class MailController extends Controller
     {
         $timeFrame = config('queue-monitor.ui.metrics_time_frame') ?? 2;
 
-        $metrics = new Metrics();
+        $metrics = new Metrics;
 
         $connection = DB::connection();
 
@@ -178,7 +168,7 @@ class MailController extends Controller
             ->where('started_at', '<=', Carbon::now()->subDays($timeFrame))
             ->first();
 
-        if (null === $aggregatedInfo || null === $aggregatedComparisonInfo) {
+        if ($aggregatedInfo === null || $aggregatedComparisonInfo === null) {
             return $metrics;
         }
 
@@ -216,17 +206,17 @@ class MailController extends Controller
 
         DB::beginTransaction();
         try {
-        $chapterDetails = DB::table('chapters')
-            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email',
-                'st.state_short_name as state', 'bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'bd.email as pres_email',
-                'chapters.primary_coordinator_id as pcid')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->where('bd.board_position_id', '=', '1')
-            ->where('chapters.id', '=', $id)
-            ->get();
+            $chapterDetails = DB::table('chapters')
+                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email',
+                    'st.state_short_name as state', 'bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'bd.email as pres_email',
+                    'chapters.primary_coordinator_id as pcid')
+                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
+                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+                ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                ->where('bd.board_position_id', '=', '1')
+                ->where('chapters.id', '=', $id)
+                ->get();
 
             $chapter = $chapterDetails[0]->chapter_name;
             $state = $chapterDetails[0]->state;
@@ -326,7 +316,7 @@ class MailController extends Controller
             'cc_fname' => $cc_fname,
             'cc_lname' => $cc_lname,
             'cc_pos' => $cc_pos,
-            'ch_name'=> $sanitizedChapterName,
+            'ch_name' => $sanitizedChapterName,
         ];
 
         $pdf = Pdf::loadView('pdf.chapteringoodstanding', compact('pdfData'));
@@ -383,5 +373,4 @@ class MailController extends Controller
             return $pdfPath;  // Return the full local stored path
         }
     }
-
 }

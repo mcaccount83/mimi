@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
 use App\Http\Requests\Store990NGoogleRequest;
 use App\Http\Requests\StoreAward1GoogleRequest;
 use App\Http\Requests\StoreAward2GoogleRequest;
@@ -20,7 +19,7 @@ use App\Models\FinancialReport;
 use App\Models\FolderRecord;
 use App\Models\Resources;
 use GuzzleHttp\Client;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -59,7 +58,7 @@ class GoogleController extends Controller
      */
     public function storeEIN(StoreEINGoogleRequest $request, $id): JsonResponse
     {
-        try{
+        try {
             $chapter = DB::table('chapters as ch')
                 ->select('ch.conference', 'ch.state', 'ch.ein', 'ch.name', 'st.state_short_name as state')
                 ->leftJoin('state as st', 'ch.state', '=', 'st.id')
@@ -121,6 +120,7 @@ class GoogleController extends Controller
         } catch (\Exception $e) {
             // Log the exception message
             Log::error('File upload error: '.$e->getMessage());
+
             return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
@@ -130,7 +130,7 @@ class GoogleController extends Controller
      */
     public function storeResources(StoreResourcesGoogleRequest $request, $id): JsonResponse
     {
-        try{
+        try {
             $resource = Resources::findOrFail($id);
 
             $accessToken = $this->token();
@@ -180,6 +180,7 @@ class GoogleController extends Controller
         } catch (\Exception $e) {
             // Log the exception message
             Log::error('File upload error: '.$e->getMessage());
+
             return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
@@ -189,7 +190,7 @@ class GoogleController extends Controller
      */
     public function storeToolkit(StoreToolkitGoogleRequest $request, $id): JsonResponse
     {
-        try{
+        try {
             $resource = Resources::findOrFail($id);
             $accessToken = $this->token();
 
@@ -238,14 +239,15 @@ class GoogleController extends Controller
         } catch (\Exception $e) {
             // Log the exception message
             Log::error('File upload error: '.$e->getMessage());
+
             return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
 
     private function createFolderIfNotExists($year, $conf, $state, $chapterName, $accessToken, $sharedDriveId)
     {
-         // Check if the year folder exists, create it if not
-         $yearFolderId = $this->getOrCreateYearFolder($year, $accessToken, $sharedDriveId);
+        // Check if the year folder exists, create it if not
+        $yearFolderId = $this->getOrCreateYearFolder($year, $accessToken, $sharedDriveId);
 
         // Check if the conference folder exists, create it if not
         $confFolderId = $this->getOrCreateConfFolder($year, $conf, $yearFolderId, $accessToken, $sharedDriveId);
@@ -295,7 +297,6 @@ class GoogleController extends Controller
         }
     }
 
-
     /**
      *  Create Folder Structure for EOY Report Attachments
      */
@@ -343,9 +344,9 @@ class GoogleController extends Controller
     {
         // Check if the state folder exists for the given year and conference
         $stateRecord = FolderRecord::where('state', $state)
-                        ->where('year', $year)
-                        ->where('conf', $conf)
-                        ->first();
+            ->where('year', $year)
+            ->where('conf', $conf)
+            ->first();
 
         if ($stateRecord) {
             // State folder exists, return its ID
@@ -361,7 +362,7 @@ class GoogleController extends Controller
             ];
             $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Authorization' => 'Bearer '.$accessToken,
                     'Content-Type' => 'application/json',
                 ],
                 'json' => $folderMetadata,
@@ -384,10 +385,10 @@ class GoogleController extends Controller
     {
         // Check if the chapter folder exists for the given year, conference, and state
         $chapterRecord = FolderRecord::where('chapter_name', $chapterName)
-                        ->where('year', $year)
-                        ->where('conf', $conf)
-                        ->where('state', $state)
-                        ->first();
+            ->where('year', $year)
+            ->where('conf', $conf)
+            ->where('state', $state)
+            ->first();
 
         if ($chapterRecord) {
             // Chapter folder exists, return its ID
@@ -403,7 +404,7 @@ class GoogleController extends Controller
             ];
             $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
                 'headers' => [
-                    'Authorization' => 'Bearer ' . $accessToken,
+                    'Authorization' => 'Bearer '.$accessToken,
                     'Content-Type' => 'application/json',
                 ],
                 'json' => $folderMetadata,
@@ -428,7 +429,7 @@ class GoogleController extends Controller
      */
     public function storeRoster(StoreRosterGoogleRequest $request, $id): JsonResponse
     {
-        try{
+        try {
             $chapter = DB::table('chapters as ch')
                 ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
                 ->leftJoin('state as st', 'ch.state', '=', 'st.id')
@@ -496,6 +497,7 @@ class GoogleController extends Controller
         } catch (\Exception $e) {
             // Log the exception message
             Log::error('File upload error: '.$e->getMessage());
+
             return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
@@ -505,7 +507,7 @@ class GoogleController extends Controller
      */
     public function store990N(Store990NGoogleRequest $request, $id): JsonResponse
     {
-        try{
+        try {
             $chapter = DB::table('chapters as ch')
                 ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
                 ->leftJoin('state as st', 'ch.state', '=', 'st.id')
@@ -520,8 +522,8 @@ class GoogleController extends Controller
             $accessToken = $this->token();
 
             $googleDrive = DB::table('google_drive')
-            ->select('google_drive.eoy_uploads as eoy_uploads', 'google_drive.eoy_uploads_year as eoy_uploads_year')
-            ->get();
+                ->select('google_drive.eoy_uploads as eoy_uploads', 'google_drive.eoy_uploads_year as eoy_uploads_year')
+                ->get();
 
             $eoyDrive = $googleDrive[0]->eoy_uploads;
             $year = $googleDrive[0]->eoy_uploads_year;
@@ -573,6 +575,7 @@ class GoogleController extends Controller
         } catch (\Exception $e) {
             // Log the exception message
             Log::error('File upload error: '.$e->getMessage());
+
             return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
@@ -582,7 +585,7 @@ class GoogleController extends Controller
      */
     public function storeStatement1(StoreStatement1GoogleRequest $request, $id): JsonResponse
     {
-        try{
+        try {
             $chapter = DB::table('chapters as ch')
                 ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
                 ->leftJoin('state as st', 'ch.state', '=', 'st.id')
@@ -597,8 +600,8 @@ class GoogleController extends Controller
             $accessToken = $this->token();
 
             $googleDrive = DB::table('google_drive')
-            ->select('google_drive.eoy_uploads as eoy_uploads', 'google_drive.eoy_uploads_year as eoy_uploads_year')
-            ->get();
+                ->select('google_drive.eoy_uploads as eoy_uploads', 'google_drive.eoy_uploads_year as eoy_uploads_year')
+                ->get();
 
             $eoyDrive = $googleDrive[0]->eoy_uploads;
             $year = $googleDrive[0]->eoy_uploads_year;
@@ -650,6 +653,7 @@ class GoogleController extends Controller
         } catch (\Exception $e) {
             // Log the exception message
             Log::error('File upload error: '.$e->getMessage());
+
             return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
@@ -659,7 +663,7 @@ class GoogleController extends Controller
      */
     public function storeStatement2(StoreStatement2GoogleRequest $request, $id): JsonResponse
     {
-        try{
+        try {
             $chapter = DB::table('chapters as ch')
                 ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
                 ->leftJoin('state as st', 'ch.state', '=', 'st.id')
@@ -674,8 +678,8 @@ class GoogleController extends Controller
             $accessToken = $this->token();
 
             $googleDrive = DB::table('google_drive')
-            ->select('google_drive.eoy_uploads as eoy_uploads', 'google_drive.eoy_uploads_year as eoy_uploads_year')
-            ->get();
+                ->select('google_drive.eoy_uploads as eoy_uploads', 'google_drive.eoy_uploads_year as eoy_uploads_year')
+                ->get();
 
             $eoyDrive = $googleDrive[0]->eoy_uploads;
             $year = $googleDrive[0]->eoy_uploads_year;
@@ -727,13 +731,14 @@ class GoogleController extends Controller
         } catch (\Exception $e) {
             // Log the exception message
             Log::error('File upload error: '.$e->getMessage());
+
             return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
 
     public function storeAward1(StoreAward1GoogleRequest $request, $id): JsonResponse
     {
-        try{
+        try {
             $chapter = DB::table('chapters as ch')
                 ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
                 ->leftJoin('state as st', 'ch.state', '=', 'st.id')
@@ -748,8 +753,8 @@ class GoogleController extends Controller
             $accessToken = $this->token();
 
             $googleDrive = DB::table('google_drive')
-            ->select('google_drive.eoy_uploads as eoy_uploads', 'google_drive.eoy_uploads_year as eoy_uploads_year')
-            ->get();
+                ->select('google_drive.eoy_uploads as eoy_uploads', 'google_drive.eoy_uploads_year as eoy_uploads_year')
+                ->get();
 
             $eoyDrive = $googleDrive[0]->eoy_uploads;
             $year = $googleDrive[0]->eoy_uploads_year;
@@ -801,13 +806,14 @@ class GoogleController extends Controller
         } catch (\Exception $e) {
             // Log the exception message
             Log::error('File upload error: '.$e->getMessage());
+
             return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
 
     public function storeAward2(StoreAward2GoogleRequest $request, $id): JsonResponse
     {
-        try{
+        try {
             $chapter = DB::table('chapters as ch')
                 ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
                 ->leftJoin('state as st', 'ch.state', '=', 'st.id')
@@ -822,8 +828,8 @@ class GoogleController extends Controller
             $accessToken = $this->token();
 
             $googleDrive = DB::table('google_drive')
-            ->select('google_drive.eoy_uploads as eoy_uploads', 'google_drive.eoy_uploads_year as eoy_uploads_year')
-            ->get();
+                ->select('google_drive.eoy_uploads as eoy_uploads', 'google_drive.eoy_uploads_year as eoy_uploads_year')
+                ->get();
 
             $eoyDrive = $googleDrive[0]->eoy_uploads;
             $year = $googleDrive[0]->eoy_uploads_year;
@@ -875,13 +881,14 @@ class GoogleController extends Controller
         } catch (\Exception $e) {
             // Log the exception message
             Log::error('File upload error: '.$e->getMessage());
+
             return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
 
     public function storeAward3(StoreAward3GoogleRequest $request, $id): JsonResponse
     {
-        try{
+        try {
             $chapter = DB::table('chapters as ch')
                 ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
                 ->leftJoin('state as st', 'ch.state', '=', 'st.id')
@@ -896,8 +903,8 @@ class GoogleController extends Controller
             $accessToken = $this->token();
 
             $googleDrive = DB::table('google_drive')
-            ->select('google_drive.eoy_uploads as eoy_uploads', 'google_drive.eoy_uploads_year as eoy_uploads_year')
-            ->get();
+                ->select('google_drive.eoy_uploads as eoy_uploads', 'google_drive.eoy_uploads_year as eoy_uploads_year')
+                ->get();
 
             $eoyDrive = $googleDrive[0]->eoy_uploads;
             $year = $googleDrive[0]->eoy_uploads_year;
@@ -949,13 +956,14 @@ class GoogleController extends Controller
         } catch (\Exception $e) {
             // Log the exception message
             Log::error('File upload error: '.$e->getMessage());
+
             return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
 
     public function storeAward4(StoreAward4GoogleRequest $request, $id): JsonResponse
     {
-        try{
+        try {
             $chapter = DB::table('chapters as ch')
                 ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
                 ->leftJoin('state as st', 'ch.state', '=', 'st.id')
@@ -970,8 +978,8 @@ class GoogleController extends Controller
             $accessToken = $this->token();
 
             $googleDrive = DB::table('google_drive')
-            ->select('google_drive.eoy_uploads as eoy_uploads', 'google_drive.eoy_uploads_year as eoy_uploads_year')
-            ->get();
+                ->select('google_drive.eoy_uploads as eoy_uploads', 'google_drive.eoy_uploads_year as eoy_uploads_year')
+                ->get();
 
             $eoyDrive = $googleDrive[0]->eoy_uploads;
             $year = $googleDrive[0]->eoy_uploads_year;
@@ -1023,13 +1031,14 @@ class GoogleController extends Controller
         } catch (\Exception $e) {
             // Log the exception message
             Log::error('File upload error: '.$e->getMessage());
+
             return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
 
     public function storeAward5(StoreAward5GoogleRequest $request, $id): JsonResponse
     {
-        try{
+        try {
             $chapter = DB::table('chapters as ch')
                 ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
                 ->leftJoin('state as st', 'ch.state', '=', 'st.id')
@@ -1044,8 +1053,8 @@ class GoogleController extends Controller
             $accessToken = $this->token();
 
             $googleDrive = DB::table('google_drive')
-            ->select('google_drive.eoy_uploads as eoy_uploads', 'google_drive.eoy_uploads_year as eoy_uploads_year')
-            ->get();
+                ->select('google_drive.eoy_uploads as eoy_uploads', 'google_drive.eoy_uploads_year as eoy_uploads_year')
+                ->get();
 
             $eoyDrive = $googleDrive[0]->eoy_uploads;
             $year = $googleDrive[0]->eoy_uploads_year;
@@ -1097,9 +1106,8 @@ class GoogleController extends Controller
         } catch (\Exception $e) {
             // Log the exception message
             Log::error('File upload error: '.$e->getMessage());
+
             return response()->json(['message' => 'An error occurred during the upload'], 500);
         }
     }
-
-
 }
