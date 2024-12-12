@@ -247,16 +247,29 @@
                                     <label>Blank Email:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                        **Coming Soon - In Production
+                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chapterList[0]->name . ', ' . $chapterList[0]->statename) }}'">Email Board</button>
                                 </div>
                             </div>
 
+                            @php
+                                $mimiUrl = 'https://example.com/mimi';
+                                $reRegMessage = "Your chapter's re-registration payment is due at this time and has not yet been received.\n\n";
+                                $reRegMessage .= "Calculate your payment:\n";
+                                $reRegMessage .= "- Determine how many people paid dues to your chapter since your last re-registration payment through today.\n";
+                                $reRegMessage .= "- Add in any people who paid reduced dues or had their dues waived due to financial hardship.\n";
+                                $reRegMessage .= "- If this total amount of members is less than 10, make your check for the amount of $50.\n";
+                                $reRegMessage .= "- If this total amount of members is 10 or more, multiply the number by $5.00 to get your total amount due.\n";
+                                $reRegMessage .= "- Payments received after the last day of your renewal month should include a late fee of $10.\n\n";
+                                $reRegMessage .= "Make your payment:\n";
+                                $reRegMessage .= "- Pay Online: $mimiUrl\n";
+                                $reRegMessage .= "- Pay via Mail to: Chapter Re-Registration, 208 Hewitt Dr. Ste 103 #328, Waco, TX 76712\n";
+                            @endphp
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
                                     <label>Re-Registration Reminder:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                        **Coming Soon - In Production
+                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Re-Registration Payment Reminder | MOMS Club of ' . $chapterList[0]->name . ', ' . $chapterList[0]->statename) }}&body={{ rawurlencode($reRegMessage) }}'">Email Re-Registration</button>
                                 </div>
                             </div>
 
