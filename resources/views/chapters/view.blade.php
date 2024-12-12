@@ -168,20 +168,20 @@
                         <h3 class="profile-username">PDF Letters</h3>
                         @if($chapterList[0]->is_active != '1')
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 mb-2">
                                     <label>Disband Letter:</label>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 mb-2">
                                     **Coming Soon - In Production
                                 </div>
                             </div>
                         @endif
 
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 mb-2">
                                 <label>EIN Letter:</label>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6 mb-2">
                                 @if($chapterList[0]->ein_letter_path != null)
                                     <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="window.open('{{ $chapterList[0]->ein_letter_path }}', '_blank')">EIN Letter from IRS</button>
                                 @else
@@ -192,20 +192,28 @@
 
                         @if($chapterList[0]->is_active == '1')
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 mb-2">
                                     <label>Chaper in Good Standig Letter:</label>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 mb-2">
                                     <button id="GoodStanding" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chapterList[0]->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>
                                 </div>
                             </div>
 
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Probation Letter:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                        **Coming Soon - In Production
+                                </div>
+                            </div>
 
                             <div class="row">
-                                <div class="col-sm-6">
-                                    <label>Chaper in Good Standig Letter:</label>
+                                <div class="col-sm-6 mb-2">
+                                    <label>Probation Release Letter:</label>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 mb-2">
                                         **Coming Soon - In Production
                                 </div>
                             </div>
@@ -218,18 +226,37 @@
                         <div class="col-md-6">
                             <h3 class="profile-username">Preset Emails</h3>
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 mb-2">
                                     <label>Blank Email:</label>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 mb-2">
                                         **Coming Soon - In Production
                                 </div>
                             </div>
+
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 mb-2">
                                     <label>Re-Registration Reminder:</label>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-6 mb-2">
+                                        **Coming Soon - In Production
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Probation Email w/Letter:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                        **Coming Soon - In Production
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label>Probation Release Email w/Letter:</label>
+                                </div>
+                                <div class="col-sm-6 mb-2">
                                         **Coming Soon - In Production
                                 </div>
                             </div>

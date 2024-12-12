@@ -15,6 +15,7 @@ use App\Http\Requests\StoreStatement1GoogleRequest;
 use App\Http\Requests\StoreStatement2GoogleRequest;
 use App\Http\Requests\StoreToolkitGoogleRequest;
 use App\Models\Chapter;
+use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\FolderRecord;
 use App\Models\Resources;
@@ -106,11 +107,17 @@ class GoogleController extends Controller
             if ($response->getStatusCode() === 200) { // Check for a successful status code
                 $file_id = $jsonResponse['id'];
                 $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
-                $existingRecord = Chapter::where('id', $id)->first();
+                $existingChapterRecord = Chapter::where('id', $id)->first();
+
+                $existingChapterRecord->update([
+                    'ein_letter_path' => $path,
+                    'ein_letter' => '1',
+                ]);
+
+                $existingRecord = Documents::where('chapter_id', $id)->first();
 
                 $existingRecord->update([
                     'ein_letter_path' => $path,
-                    'ein_letter' => '1',
                 ]);
 
                 return response()->json(['message' => 'File uploaded successfully!'], 200);
@@ -490,6 +497,12 @@ class GoogleController extends Controller
                     'roster_path' => $file_id,
                 ]);
 
+                $existingDocRecord = Documents::where('chapter_id', $id)->first();
+
+                $existingDocRecord->update([
+                    'roster_path' => $file_id,
+                ]);
+
                 return response()->json(['message' => 'File uploaded successfully!'], 200);
             } else {
                 return response()->json(['message' => 'File failed to upload'], $response->getStatusCode());
@@ -566,6 +579,12 @@ class GoogleController extends Controller
 
                 $existingRecord->update([
                     'file_irs_path' => $file_id,
+                ]);
+
+                $existingDocRecord = Documents::where('chapter_id', $id)->first();
+
+                $existingDocRecord->update([
+                    'irs_path' => $file_id,
                 ]);
 
                 return response()->json(['message' => 'File uploaded successfully!'], 200);
@@ -646,6 +665,12 @@ class GoogleController extends Controller
                     'bank_statement_included_path' => $file_id,
                 ]);
 
+                $existingDocRecord = Documents::where('chapter_id', $id)->first();
+
+                $existingDocRecord->update([
+                    'bank_statement_1_path' => $file_id,
+                ]);
+
                 return response()->json(['message' => 'File uploaded successfully!'], 200);
             } else {
                 return response()->json(['message' => 'File failed to upload'], $response->getStatusCode());
@@ -722,6 +747,12 @@ class GoogleController extends Controller
 
                 $existingRecord->update([
                     'bank_statement_2_included_path' => $file_id,
+                ]);
+
+                $existingDocRecord = Documents::where('chapter_id', $id)->first();
+
+                $existingDocRecord->update([
+                    'bank_statement_2_path' => $file_id,
                 ]);
 
                 return response()->json(['message' => 'File uploaded successfully!'], 200);
