@@ -154,6 +154,12 @@ class ChapterController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->get();
 
+        $documentList = DB::table('documents as doc')
+            ->select('doc.*')
+            ->join('chapters as ch', 'ch.id', '=', 'doc.chapter_id')
+            ->where('ch.id', '=', $id)
+            ->get();
+
         $chConfId = $chapterList[0]->conference;
         $chRegId = $chapterList[0]->region;
         $chPCid = $chapterList[0]->primary_coordinator_id;
@@ -241,7 +247,7 @@ class ChapterController extends Controller
         $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete, 'emailListCoord' => $emailListCoord, 'emailListChap' => $emailListChap, 'currentMonth' => $currentMonth,
             'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'chapterList' => $chapterList, 'webStatusinWords' => $webStatusinWords, 'chapterStatusinWords' => $chapterStatusinWords,
             'primaryCoordinatorList' => $primaryCoordinatorList, 'foundedMonth' => $foundedMonth, 'corConfId' => $corConfId, 'chConfId' => $chConfId, 'chPCid' => $chPCid,
-            'financial_report_array' => $financial_report_array,
+            'financial_report_array' => $financial_report_array, 'documentList' => $documentList
         ];
 
         return view('chapters.view')->with($data);

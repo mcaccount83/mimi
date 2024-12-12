@@ -25,12 +25,12 @@
                 <p class="text-center">{{ $chapterList[0]->confname }} Conference, {{ $chapterList[0]->regname }} Region
                 <br>
                 EIN: {{$chapterList[0]->ein}}
-                <br>
+                {{-- <br>
                     @if($chapterList[0]->ein_letter_path != null)
                         <button class="btn bg-gradient-primary btn-sm" onclick="window.open('{{ $chapterList[0]->ein_letter_path }}', '_blank')">View/Download EIN Letter</button>
                     @else
                         <button class="btn bg-gradient-primary btn-sm disabled">No EIN Letter on File</button>
-                    @endif
+                    @endif --}}
                 </p>
                 <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
@@ -91,7 +91,7 @@
                 <div class="card-header p-2">
                 <ul class="nav nav-pills">
                   <li class="nav-item"><a class="nav-link active" href="#general" data-toggle="tab">General</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#com" data-toggle="tab">Correspondence</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#com" data-toggle="tab">Documents</a></li>
                   <li class="nav-item"><a class="nav-link" href="#eoy" data-toggle="tab">End of Year</a></li>
                   <li class="nav-item"><a class="nav-link" href="#pre" data-toggle="tab">President</a></li>
                   <li class="nav-item"><a class="nav-link" href="#avp" data-toggle="tab">Administrative VP</a></li>
@@ -172,7 +172,11 @@
                                     <label>Disband Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    **Coming Soon - In Production
+                                    @if($documentList[0]->disband_letter_path != null)
+                                        <button class="btn bg-gradient-primary btn-sm" type="button" id="disband-letter" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $documentList[0]->disband_letter_path }}'">Disband Letter</button>
+                                    @else
+                                        <button class="btn bg-gradient-primary btn-sm disabled">No Disband Letter on File</button>
+                                    @endif
                                 </div>
                             </div>
                         @endif
@@ -182,10 +186,23 @@
                                 <label>EIN Letter:</label>
                             </div>
                             <div class="col-sm-6 mb-2">
-                                @if($chapterList[0]->ein_letter_path != null)
-                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="window.open('{{ $chapterList[0]->ein_letter_path }}', '_blank')">EIN Letter from IRS</button>
+                                @if($documentList[0]->ein_letter_path != null)
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="window.open('{{ $documentList[0]->ein_letter_path }}', '_blank')">EIN Letter from IRS</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm disabled">No EIN Letter on File</button>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6 mb-2">
+                                <label>Chapter Roster:</label>
+                            </div>
+                            <div class="col-sm-6 mb-2">
+                                @if($documentList[0]->roster_path != null)
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="roster-file" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $documentList[0]->roster_path }}'">Most Current Roster</button>
+                                @else
+                                    <button class="btn bg-gradient-primary btn-sm disabled">No Roster on File</button>
                                 @endif
                             </div>
                         </div>
@@ -633,7 +650,9 @@ $(document).ready(function () {
         });
 
         // Re-enable the specific "Back" buttons
+        $('#disband-letter').prop('disabled', false);
         $('#ein-letter').prop('disabled', false);
+        $('#roster-file').prop('disabled', false);
         $('#back-zapped').prop('disabled', false);
         $('#back-inquiries').prop('disabled', false);
         $('#back-inquiries-zapped').prop('disabled', false);
