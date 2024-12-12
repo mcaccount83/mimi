@@ -232,10 +232,15 @@
                                     <h3 class="card-title">Done</h3>
                                 </div>
                                     <div class="card-body">
-                                        @if($admin->where('status', 3)->isEmpty())
-                                            <p>No jobs with this status</p>
-                                        @else
-                                            @foreach($admin->where('status', 3) as $adminItem)
+                                        @php
+                                        // Filter and sort the collection
+                                        $doneItems = $admin->where('status', 3)->sortByDesc('completed_date');
+                                    @endphp
+
+                                    @if($doneItems->isEmpty())
+                                        <p>No jobs with this status</p>
+                                    @else
+                                        @foreach($doneItems as $adminItem)
                                             <div class="card card-outline card-success">
                                                 <div class="card-header">
                                                 <h5 class="card-title">{{ $adminItem->task }}</h5>
