@@ -31,10 +31,6 @@
                     @else
                         <button class="btn bg-gradient-primary btn-sm disabled">No EIN Letter on File</button>
                     @endif
-
-                    @if($conferenceCoordinatorCondition)
-                        {{-- <button class="btn bg-gradient-primary btn-sm showFileUploadModal" data-ein-letter="{{ $chapterList[0]->ein_letter_path }}">Update EIN Letter</button> --}}
-                    @endif
                 </p>
                 <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
@@ -63,12 +59,6 @@
                                 No Donation Recorded
                             @endif
                         </span><br>
-                        {{-- @if ($conferenceCoordinatorCondition)
-                            <div class="col-md-12 text-center">
-                                <button class="btn bg-gradient-primary btn-sm" onclick="window.location.href='{{ route('chapters.chapreregpayment', ['id' => $chapterList[0]->id]) }}'">Enter Payment</button>
-                                <button class="btn bg-gradient-primary btn-sm" onclick="window.location.href='{{ route('chapreports.chaprptdonationsview', ['id' => $chapterList[0]->id]) }}'">Enter Donation</button>
-                            </div>
-                        @endif --}}
                     </li>
                     <li class="list-group-item">
                         <b>Founded:</b> <span class="float-right">{{ $chapterList[0]->startmonth }} {{ $chapterList[0]->start_year }}</span>
@@ -101,6 +91,7 @@
                 <div class="card-header p-2">
                 <ul class="nav nav-pills">
                   <li class="nav-item"><a class="nav-link active" href="#general" data-toggle="tab">General</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#com" data-toggle="tab">Correspondence</a></li>
                   <li class="nav-item"><a class="nav-link" href="#eoy" data-toggle="tab">End of Year</a></li>
                   <li class="nav-item"><a class="nav-link" href="#pre" data-toggle="tab">President</a></li>
                   <li class="nav-item"><a class="nav-link" href="#avp" data-toggle="tab">Administrative VP</a></li>
@@ -152,9 +143,6 @@
                         <br>
                         <label>Webiste Notes (not visible to board members):</label><br>
                         {{ $chapterList[0]->website_notes }}
-                        {{-- <br>
-                        <label>Forum/Group/App:</label> {{ $chapterList[0]->egroup}} --}}
-                        {{-- <button class="btn bg-gradient-primary btn-sm" onclick="window.location.href='{{ route('chapters.chapwebsiteview', ['id' => $chapterList[0]->id]) }}'">Update Website Link Status</button> --}}
                     </div>
                     <div class="col-md-6">
                         <label>Forum/Group/App:</label> {{ $chapterList[0]->egroup}}
@@ -171,6 +159,88 @@
                     <br><br>
                     </div>
                   </div>
+                   <!-- /.tab-pane -->
+                   <div class="tab-pane" id="com">
+                    <div class="com-field">
+                        <div class="row">
+                            <div class="col-md-6">
+
+                        <h3 class="profile-username">PDF Letters</h3>
+                        @if($chapterList[0]->is_active != '1')
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Disband Letter:</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    **Coming Soon - In Production
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label>EIN Letter:</label>
+                            </div>
+                            <div class="col-sm-6">
+                                @if($chapterList[0]->ein_letter_path != null)
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="window.open('{{ $chapterList[0]->ein_letter_path }}', '_blank')">EIN Letter from IRS</button>
+                                @else
+                                    <button class="btn bg-gradient-primary btn-sm disabled">No EIN Letter on File</button>
+                                @endif
+                            </div>
+                        </div>
+
+                        @if($chapterList[0]->is_active == '1')
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Chaper in Good Standig Letter:</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <button id="GoodStanding" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chapterList[0]->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Chaper in Good Standig Letter:</label>
+                                </div>
+                                <div class="col-sm-6">
+                                        **Coming Soon - In Production
+                                </div>
+                            </div>
+
+                        @endif
+
+                        </div>
+
+                        @if($chapterList[0]->is_active == '1')
+                        <div class="col-md-6">
+                            <h3 class="profile-username">Preset Emails</h3>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Blank Email:</label>
+                                </div>
+                                <div class="col-sm-6">
+                                        **Coming Soon - In Production
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label>Re-Registration Reminder:</label>
+                                </div>
+                                <div class="col-sm-6">
+                                        **Coming Soon - In Production
+                                </div>
+                            </div>
+
+                        </div>
+                        @endif
+                    </div>
+
+                    </div>
+                </div>
+
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="eoy">
                     <div class="eoy-field">
@@ -236,24 +306,29 @@
                                 </div>
                                 <div class="col-sm-9">
                                     @php
-                                        $attachments = [
-                                            'Roster' => $financial_report_array->roster_path,
-                                            'Statement' => $financial_report_array->bank_statement_included_path,
-                                            'Additional Statement' => $financial_report_array->bank_statement_2_included_path,
-                                            '990N Confirmation' => $financial_report_array->file_irs_path,
-                                        ];
+                                    // Check if $financial_report_array is null before proceeding
+                                    $attachments = $financial_report_array ? [
+                                        'Roster' => $financial_report_array->roster_path ?? null,
+                                        'Statement' => $financial_report_array->bank_statement_included_path ?? null,
+                                        'Additional Statement' => $financial_report_array->bank_statement_2_included_path ?? null,
+                                        '990N Confirmation' => $financial_report_array->file_irs_path ?? null,
+                                    ] : [];
 
-                                        $included = array_keys(array_filter($attachments, fn($path) => $path !== null));
-                                        $excluded = array_keys(array_filter($attachments, fn($path, $label) => $path === null && $label !== 'Additional Statement', ARRAY_FILTER_USE_BOTH));
+                                    $included = array_keys(array_filter($attachments, fn($path) => $path !== null));
+                                    $excluded = array_keys(array_filter(
+                                        $attachments,
+                                        fn($path, $label) => $path === null && $label !== 'Additional Statement',
+                                        ARRAY_FILTER_USE_BOTH
+                                    ));
 
-                                        // Anonymous function to format the list with "and"
-                                        $formatListWithAnd = function($items) {
-                                            if (count($items) > 1) {
-                                                return implode(', ', array_slice($items, 0, -1)) . ' and ' . end($items);
-                                            }
-                                            return implode('', $items);
-                                        };
-                                    @endphp
+                                    // Anonymous function to format the list with "and"
+                                    $formatListWithAnd = function($items) {
+                                        if (count($items) > 1) {
+                                            return implode(', ', array_slice($items, 0, -1)) . ' and ' . end($items);
+                                        }
+                                        return implode('', $items);
+                                    };
+                                @endphp
 
                                     @if(count($included) > 0)
                                         {{ $formatListWithAnd($included) }} are attached.
@@ -288,13 +363,13 @@
                                 <div class="col-sm-3">
                                     <label>990N Filing:</label>
                                 </div>
-                                @if ($financial_report_array->check_current_990N_verified_IRS == 1)
+                                @if ($financial_report_array?->check_current_990N_verified_IRS == 1)
                                     <div class="col-sm-9">
                                         990N Filing was verified on the IRS website.
                                     </div>
                                 @else
                                     <div class="col-sm-9">
-                                        990N Filing has not been verified on the IRS website. {{ $financial_report_array->check_current_990N_notes }}
+                                        990N Filing has not been verified on the IRS website. {{ $financial_report_array?->check_current_990N_notes }}
                                     </div>
                                 @endif
                             </div>
@@ -303,8 +378,8 @@
                                 <div class="col-sm-3">
                                     <label>Chapter Awards:</label>
                                 </div>
-                                    @if(($financial_report_array->award_1_nomination_type != null)  || ($financial_report_array->award_2_nomination_type != null) || ($financial_report_array->award_3_nomination_type != null)
-                                        || ($financial_report_array->award_4_nomination_type != null) || ($financial_report_array->award_5_nomination_type != null))
+                                    @if(($financial_report_array?->award_1_nomination_type != null)  || ($financial_report_array?->award_2_nomination_type != null) || ($financial_report_array?->award_3_nomination_type != null)
+                                        || ($financial_report_array?->award_4_nomination_type != null) || ($financial_report_array?->award_5_nomination_type != null))
                                  <div class="col-sm-9">
                                     Chapter was nominated for one or more awards.
                                 </div>
@@ -531,6 +606,7 @@ $(document).ready(function () {
         });
 
         // Re-enable the specific "Back" buttons
+        $('#ein-letter').prop('disabled', false);
         $('#back-zapped').prop('disabled', false);
         $('#back-inquiries').prop('disabled', false);
         $('#back-inquiries-zapped').prop('disabled', false);
