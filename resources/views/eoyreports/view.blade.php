@@ -13,7 +13,7 @@
 </style>
 @section('content')
     <!-- Main content -->
-    <form class="form-horizontal" method="POST" action='{{ route("eoyreports.update", $chapterList[0]->id) }}'>
+    <form class="form-horizontal" method="POST" action='{{ route("eoyreports.update", $chapterList->id) }}'>
         @csrf
     <section class="content">
       <div class="container-fluid">
@@ -23,8 +23,8 @@
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
-                <h3 class="profile-username text-center">MOMS Club of {{ $chapterList[0]->name }}, {{$chapterList[0]->statename}}</h3>
-                <p class="text-center">{{ $chapterList[0]->confname }} Conference, {{ $chapterList[0]->regname }} Region
+                <h3 class="profile-username text-center">MOMS Club of {{ $chapterList->name }}, {{$stateShortName}}</h3>
+                <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
 
                 <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
@@ -32,7 +32,7 @@
                             <label class="col-form-label mb-0 mr-2">New Board Submitted:</label>
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="new_board_submitted" id="new_board_submitted" class="custom-control-input"
-                                        {{$chapterList[0]->new_board_submitted == 1 ? 'checked' : ''}}>
+                                        {{$allDocuments->new_board_submitted == 1 ? 'checked' : ''}}>
                                 <label class="custom-control-label" for="new_board_submitted"></label>
                             </div>
                           </div>
@@ -41,7 +41,7 @@
                             <label class="col-form-label mb-0 mr-2">New Board Activated:</label>
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="new_board_active" id="new_board_active" class="custom-control-input"
-                                        {{$chapterList[0]->new_board_active == 1 ? 'checked' : ''}}>
+                                        {{$allDocuments->new_board_active == 1 ? 'checked' : ''}}>
                                 <label class="custom-control-label" for="new_board_active"></label>
                             </div>
                           </div>
@@ -50,7 +50,7 @@
                             <label class="col-form-label mb-0 mr-2">Financial Report Received:</label>
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="financial_report_received" id="financial_report_received" class="custom-control-input"
-                                        {{$chapterList[0]->financial_report_received == 1 ? 'checked' : ''}}>
+                                        {{$allDocuments->financial_report_received == 1 ? 'checked' : ''}}>
                                 <label class="custom-control-label" for="financial_report_received"></label>
                             </div>
                           </div>
@@ -59,7 +59,7 @@
                             <label class="col-form-label mb-0 mr-2">Financial Review Complete:</label>
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="financial_report_complete" id="financial_report_complete" class="custom-control-input"
-                                        {{$chapterList[0]->financial_report_complete == 1 ? 'checked' : ''}}>
+                                        {{$allDocuments->financial_report_complete == 1 ? 'checked' : ''}}>
                                 <label class="custom-control-label" for="financial_report_complete"></label>
                             </div>
                           </div>
@@ -69,7 +69,7 @@
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="report_extension" id="report_extension" class="custom-control-input"
                                        onchange="toggleExtensionNotes()"
-                                       {{$chapterList[0]->report_extension == 1 ? 'checked' : ''}}>
+                                       {{$allDocuments->report_extension == 1 ? 'checked' : ''}}>
                                 <label class="custom-control-label" for="report_extension"></label>
                             </div>
                         </div>
@@ -79,7 +79,7 @@
                             <div class="custom-control custom-switch">
                                 <input type="checkbox" name="irs_verified" id="irs_verified" class="custom-control-input"
                                        onchange="toggleIRSVerified()"
-                                       {{$financial_report_array->check_current_990N_verified_IRS == 1 ? 'checked' : ''}}>
+                                       {{$allDocuments->check_current_990N_verified_IRS == 1 ? 'checked' : ''}}>
                                 <label class="custom-control-label" for="irs_verified"></label>
                             </div>
                         </div>
@@ -92,21 +92,21 @@
                         <select name="ch_reportrev" id="ch_reportrev" class="form-control float-right col-sm-6 text-right" style="width: 100%;" >
                             <option value="">Select Coordinator</option>
                             @foreach($reportReviewerList as $revl)
-                                <option value="{{$revl->cid}}" {{$financial_report_array->reviewer_id == $revl->cid ? 'selected' : ''}}>{{$revl->rfname}} {{$revl->rlname}} ({{$revl->pos}})</option>
+                                <option value="{{$revl->cid}}" {{$allFinancialReport->reviewer_id == $revl->cid ? 'selected' : ''}}>{{$revl->rfname}} {{$revl->rlname}} ({{$revl->pos}})</option>
                             @endforeach
                         </select>
                 </li>
 
-                    <input type="hidden" id="ch_primarycor" value="{{ $chapterList[0]->primary_coordinator_id }}">
+                    <input type="hidden" id="ch_primarycor" value="{{ $chapterList->primary_coordinator_id }}">
                     <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
                 </ul>
                 <div class="text-center">
-                    @if ($chapterList[0]->is_active == 1 )
+                    @if ($chapterList->is_active == 1 )
                         <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
                     @else
                         <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                        Disband Date: <span class="date-mask">{{ $chapterList[0]->zap_date }}</span><br>
-                        {{ $chapterList[0]->disband_reason }}
+                        Disband Date: <span class="date-mask">{{ $chapterList->zap_date }}</span><br>
+                        {{ $chapterList->disband_reason }}
                     @endif
                 </div>
               </div>
@@ -125,12 +125,12 @@
                         <div class="col-sm-3">
                             <label>Boundary Issues:</label>
                         </div>
-                        @if ($chapterList[0]->boundary_issues != null)
+                        @if ($chapterList->boundary_issues != null)
                             <div class="col-sm-6">
                                 Chapter has reported boundary issues.
                             </div>
                             <div class="col-sm-3">
-                                <label class="mr-2">Resolved:</label>{{ $chapterList[0]->boundary_issue_resolved == 1 ? 'YES' : 'NO' }}
+                                <label class="mr-2">Resolved:</label>{{ $chapterList->boundary_issue_resolved == 1 ? 'YES' : 'NO' }}
                             </div>
                         @else
                             <div class="col-sm-9">
@@ -144,8 +144,8 @@
                             <label>Board Report:</label>
                         </div>
                         <div class="col-sm-9">
-                            @if($chapterList[0]->new_board_active != '1')
-                                <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='{{ route('eoyreports.editboardreport', ['id' => $chapterList[0]->id]) }}'">View Board Election Report</button>
+                            @if($allDocuments->new_board_active != '1')
+                                <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='{{ route('eoyreports.editboardreport', ['id' => $chapterList->id]) }}'">View Board Election Report</button>
                                 <button type="button" class="btn bg-gradient-primary" onclick="return PreSaveValidate(false)" ><i class="fas fa-user-plus" ></i>&nbsp; Activate Board</button>
                                 @else
                                 Board Report is no longer available after activation.
@@ -160,7 +160,7 @@
                             <label>Financial Report:</label>
                         </div>
                         <div class="col-sm-9">
-                            <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='{{ route('eoyreports.reviewfinancialreport', ['id' => $chapterList[0]->id]) }}'">View Financial Report</button>
+                            <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='{{ route('eoyreports.reviewfinancialreport', ['id' => $chapterList->id]) }}'">View Financial Report</button>
                         </div>
                     </div>
 
@@ -170,7 +170,7 @@
 
                 </div>
                 <div class="col-sm-9">
-                            <input type="text" name="extension_notes" id="extension_notes" class="form-control" value="{{ $chapterList[0]->extension_notes }}" placeholder="Extension Notes">
+                            <input type="text" name="extension_notes" id="extension_notes" class="form-control" value="{{ $allDocuments->extension_notes }}" placeholder="Extension Notes">
                         </div>
                     </div>
 
@@ -179,8 +179,8 @@
                             <label>Chapter Roster File:</label>
                         </div>
                         <div class="col-sm-9">
-                                @if (!empty($financial_report_array->roster_path))
-                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $financial_report_array->roster_path }}'">View Chapter Roster</button>
+                                @if (!empty($allDocuments->roster_path))
+                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $allDocuments->roster_path }}'">View Chapter Roster</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal()">Replace Roster File</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
@@ -194,8 +194,8 @@
                             <label>Primary Bank Statement:</label>
                         </div>
                         <div class="col-sm-9">
-                            @if (!empty($financial_report_array->bank_statement_included_path))
-                                <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $financial_report_array->bank_statement_included_path }}'">View Bank Statement</button>
+                            @if (!empty($allDocuments->statement_1_path))
+                                <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $allDocuments->statement_1_ipath }}'">View Bank Statement</button>
                                 <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()">Replace Bank Statement</button>
                             @else
                                 <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
@@ -209,8 +209,8 @@
                             <label>Primary Bank Statement:</label>
                         </div>
                         <div class="col-sm-9">
-                                @if (!empty($financial_report_array->bank_statement_2_included_path))
-                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $financial_report_array->bank_statement_2_included_path }}'">View Additional Bank Statement</button>
+                                @if (!empty($allDocuments->statement_2_path))
+                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $allDocuments->statement_2_path }}'">View Additional Bank Statement</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()">Replace Additional Bank Statement</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
@@ -224,8 +224,8 @@
                             <label>990N Filing:</label>
                         </div>
                         <div class="col-sm-9">
-                                @if (!empty($financial_report_array->file_irs_path))
-                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $financial_report_array->file_irs_path }}'">View 990N Confirmation</button>
+                                @if (!empty($allDocuments->irs_path))
+                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $allDocuments->irs_path }}'">View 990N Confirmation</button>
                                     <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()">Replace 990N Confirmation</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
@@ -239,7 +239,7 @@
                             <label></label>
                     </div>
                     <div class="col-sm-9">
-                           <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $financial_report_array->check_current_990N_notes }}" placeholder="990N Filing Notes">
+                           <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $allDocuments->check_current_990N_notes }}" placeholder="990N Filing Notes">
                         </div>
                     </div>
 
@@ -249,10 +249,10 @@
                             <label>Award #1 Status:</label>
                         </div>
                         <div class="col-sm-9">
-                            {{ is_null($financial_report_array['check_award_1_approved']) ? 'N/A' : ($financial_report_array['check_award_1_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_1_approved'] == 1 ? 'YES' : 'N/A')) }}
-                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_1_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_1_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                : ($financial_report_array['award_1_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_1_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_1_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                : ($financial_report_array['award_1_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_1_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_1_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                            {{ is_null($allFinancialReport['check_award_1_approved']) ? 'N/A' : ($allFinancialReport['check_award_1_approved'] == 0 ? 'NO' : ($allFinancialReport['check_award_1_approved'] == 1 ? 'YES' : 'N/A')) }}
+                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($allFinancialReport['award_1_nomination_type']) ? 'No Award Selected' : ($allFinancialReport['award_1_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                                : ($allFinancialReport['award_1_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($allFinancialReport['award_1_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($allFinancialReport['award_1_nomination_type'] == 4 ? 'Outstanding Spirit'
+                                : ($allFinancialReport['award_1_nomination_type'] == 5 ? 'Outstanding Chapter' : ($allFinancialReport['award_1_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($allFinancialReport['award_1_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                         </div>
                     </div>
 
@@ -261,10 +261,10 @@
                             <label>Award #2 Status:</label>
                         </div>
                         <div class="col-sm-9">
-                            {{ is_null($financial_report_array['check_award_2_approved']) ? 'N/A' : ($financial_report_array['check_award_2_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_2_approved'] == 1 ? 'YES' : 'N/A')) }}
-                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_2_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_2_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                : ($financial_report_array['award_2_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_2_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_2_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                : ($financial_report_array['award_2_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_2_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_2_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                            {{ is_null($allFinancialReport['check_award_2_approved']) ? 'N/A' : ($allFinancialReport['check_award_2_approved'] == 0 ? 'NO' : ($allFinancialReport['check_award_2_approved'] == 1 ? 'YES' : 'N/A')) }}
+                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($allFinancialReport['award_2_nomination_type']) ? 'No Award Selected' : ($allFinancialReport['award_2_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                                : ($allFinancialReport['award_2_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($allFinancialReport['award_2_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($allFinancialReport['award_2_nomination_type'] == 4 ? 'Outstanding Spirit'
+                                : ($allFinancialReport['award_2_nomination_type'] == 5 ? 'Outstanding Chapter' : ($allFinancialReport['award_2_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($allFinancialReport['award_2_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                         </div>
                     </div>
 
@@ -273,10 +273,10 @@
                             <label>Award #3 Status:</label>
                         </div>
                         <div class="col-sm-9">
-                            {{ is_null($financial_report_array['check_award_3_approved']) ? 'N/A' : ($financial_report_array['check_award_3_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_3_approved'] == 1 ? 'YES' : 'N/A')) }}
-                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_3_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_3_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                : ($financial_report_array['award_3_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_3_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_3_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                : ($financial_report_array['award_3_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_3_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_3_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                            {{ is_null($allFinancialReport['check_award_3_approved']) ? 'N/A' : ($allFinancialReport['check_award_3_approved'] == 0 ? 'NO' : ($allFinancialReport['check_award_3_approved'] == 1 ? 'YES' : 'N/A')) }}
+                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($allFinancialReport['award_3_nomination_type']) ? 'No Award Selected' : ($allFinancialReport['award_3_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                                : ($allFinancialReport['award_3_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($allFinancialReport['award_3_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($allFinancialReport['award_3_nomination_type'] == 4 ? 'Outstanding Spirit'
+                                : ($allFinancialReport['award_3_nomination_type'] == 5 ? 'Outstanding Chapter' : ($allFinancialReport['award_3_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($allFinancialReport['award_3_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                         </div>
                     </div>
 
@@ -285,10 +285,10 @@
                             <label>Award #4 Status:</label>
                         </div>
                         <div class="col-sm-9">
-                            {{ is_null($financial_report_array['check_award_4_approved']) ? 'N/A' : ($financial_report_array['check_award_4_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_4_approved'] == 1 ? 'YES' : 'N/A')) }}
-                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_4_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_4_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                : ($financial_report_array['award_4_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_4_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_4_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                : ($financial_report_array['award_4_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_4_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_4_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                            {{ is_null($allFinancialReport['check_award_4_approved']) ? 'N/A' : ($allFinancialReport['check_award_4_approved'] == 0 ? 'NO' : ($allFinancialReport['check_award_4_approved'] == 1 ? 'YES' : 'N/A')) }}
+                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($allFinancialReport['award_4_nomination_type']) ? 'No Award Selected' : ($allFinancialReport['award_4_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                                : ($allFinancialReport['award_4_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($allFinancialReport['award_4_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($allFinancialReport['award_4_nomination_type'] == 4 ? 'Outstanding Spirit'
+                                : ($allFinancialReport['award_4_nomination_type'] == 5 ? 'Outstanding Chapter' : ($allFinancialReport['award_4_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($allFinancialReport['award_4_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                          </div>
                         </div>
 
@@ -297,10 +297,10 @@
                             <label> Award #5 Status:</label>
                         </div>
                         <div class="col-sm-9">
-                            {{ is_null($financial_report_array['check_award_5_approved']) ? 'N/A' : ($financial_report_array['check_award_5_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_5_approved'] == 1 ? 'YES' : 'N/A')) }}
-                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_5_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_5_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                : ($financial_report_array['award_5_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_5_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_5_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                : ($financial_report_array['award_5_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_5_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_5_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                            {{ is_null($allFinancialReport['check_award_5_approved']) ? 'N/A' : ($allFinancialReport['check_award_5_approved'] == 0 ? 'NO' : ($allFinancialReport['check_award_5_approved'] == 1 ? 'YES' : 'N/A')) }}
+                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($allFinancialReport['award_5_nomination_type']) ? 'No Award Selected' : ($allFinancialReport['award_5_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                                : ($allFinancialReport['award_5_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($allFinancialReport['award_5_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($allFinancialReport['award_5_nomination_type'] == 4 ? 'Outstanding Spirit'
+                                : ($allFinancialReport['award_5_nomination_type'] == 5 ? 'Outstanding Chapter' : ($allFinancialReport['award_5_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($allFinancialReport['award_5_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                          </div>
                         </div>
 
@@ -314,16 +314,16 @@
             <div class="card-body text-center">
                 @if ($coordinatorCondition)
                     <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save EOY Information</button>
-                    @if ($chapterList[0]->boundary_issues != null)
-                        <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.editboundaries', ['id' => $chapterList[0]->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Boundary Issues</button>
+                    @if ($chapterList->boundary_issues != null)
+                        <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.editboundaries', ['id' => $chapterList->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Boundary Issues</button>
                     @else
                         <button class="btn bg-gradient-primary mb-3 disabled"><i class="fas fa-edit mr-2"></i>Update Boundary Issues</button>
                     @endif
-                        <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.editawards', ['id' => $chapterList[0]->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Award Information</button>
+                        <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.editawards', ['id' => $chapterList->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Award Information</button>
                     <br>
                     @endif
                     <button type="button" id="back-eoy" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.eoystatus') }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Status Report</button>
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chapterList[0]->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chapterList->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
 
             </div>
         </div>
@@ -420,7 +420,7 @@ $(document).ready(function() {
 });
 
 function showRosterUploadModal() {
-    var chapter_id = "{{ $chapterList[0]->id }}";
+    var chapter_id = "{{ $chapterList->id }}";
 
     Swal.fire({
         title: 'Upload Chapter Roster',
@@ -482,7 +482,7 @@ function showRosterUploadModal() {
 }
 
 function showStatement1UploadModal() {
-    var chapter_id = "{{ $chapterList[0]->id }}";
+    var chapter_id = "{{ $chapterList->id }}";
 
     Swal.fire({
         title: 'Upload Statement',
@@ -544,7 +544,7 @@ function showStatement1UploadModal() {
 }
 
 function showStatement2UploadModal() {
-    var chapter_id = "{{ $chapterList[0]->id }}";
+    var chapter_id = "{{ $chapterList->id }}";
 
     Swal.fire({
         title: 'Upload Additional Statement',
@@ -606,7 +606,7 @@ function showStatement2UploadModal() {
 }
 
 function show990NUploadModal() {
-    var chapter_id = "{{ $chapterList[0]->id }}";
+    var chapter_id = "{{ $chapterList->id }}";
 
     Swal.fire({
         title: 'Upload 990N',

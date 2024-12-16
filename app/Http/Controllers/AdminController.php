@@ -477,14 +477,14 @@ class AdminController extends Controller
         }
 
         $reChapterList = DB::table('chapters as ch')
-            ->select('ch.id', 'ch.members_paid_for', 'ch.notes', 'ch.name', 'ch.state', 'ch.reg_notes', 'ch.next_renewal_year', 'ch.dues_last_paid', 'ch.start_month_id',
+            ->select('ch.id', 'ch.members_paid_for', 'ch.notes', 'ch.name', 'ch.state_id', 'ch.reg_notes', 'ch.next_renewal_year', 'ch.dues_last_paid', 'ch.start_month_id',
                 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name', 'cf.short_name as conf', 'rg.short_name as reg')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->leftJoin('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->leftJoin('region as rg', 'ch.region', '=', 'rg.id')
+            ->leftJoin('state as st', 'ch.state_id', '=', 'st.id')
+            ->leftJoin('conference as cf', 'ch.conference_id', '=', 'cf.id')
+            ->leftJoin('region as rg', 'ch.region_id', '=', 'rg.id')
             ->leftJoin('month as db', 'ch.start_month_id', '=', 'db.id')
             ->where('ch.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
@@ -510,9 +510,9 @@ class AdminController extends Controller
 
         $chapterList = DB::table('chapters as ch')
             ->select('ch.*', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth')
-            ->join('state as st', 'ch.state', '=', 'st.id')
-            ->join('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->join('region as rg', 'ch.region', '=', 'rg.id')
+            ->join('state as st', 'ch.state_id', '=', 'st.id')
+            ->join('conference as cf', 'ch.conference_id', '=', 'cf.id')
+            ->join('region as rg', 'ch.region_id', '=', 'rg.id')
             ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $id)
@@ -672,7 +672,7 @@ class AdminController extends Controller
             ->select('ob.chapter_id', 'ob.first_name', 'ob.last_name', 'ob.email', 'users.user_type', 'chapters.name as chapter_name', 'state.state_short_name as chapter_state')
             ->leftJoin('users', 'ob.email', '=', 'users.email')
             ->leftJoin('chapters', 'ob.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state', 'chapters.state', '=', 'state.id')
+            ->leftJoin('state', 'chapters.state_id', '=', 'state.id')
             ->where('users.user_type', 'outgoing')
             ->where('users.is_active', '1')
             ->orderBy('chapters.name')

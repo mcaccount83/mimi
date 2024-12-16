@@ -14,7 +14,7 @@ class User extends Authenticatable
      * The attributes that are mass assignable.
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'first_name', 'last_name', 'email', 'password', 'user_type', 'is_active',
     ];
 
     /**
@@ -29,7 +29,7 @@ class User extends Authenticatable
         return $this->hasOne(\App\Models\Coordinators::class, 'user_id');
     }
 
-    public function BoardDetails(): HasOne
+    public function Boards(): HasOne
     {
         return $this->hasOne(\App\Models\Boards::class, 'user_id');
     }

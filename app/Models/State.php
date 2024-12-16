@@ -4,16 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 
-class Conference extends Model
+class State extends Model
 {
     use HasFactory;
     use Notifiable;
 
     // Specify the table name explicitly
-    protected $table = 'conference';
+    protected $table = 'state';
 
     /**
      * The attributes that are mass assignable.
@@ -29,13 +30,5 @@ class Conference extends Model
 
     ];
 
-    public function coordinators(): BelongsTo
-    {
-        return $this->belongsTo(Coordinators::class, 'conference');
-    }
 
-    // public function chapter(): BelongsTo
-    // {
-    //     return $this->belongsTo(Chapter::class, 'conference');
-    // }
 }

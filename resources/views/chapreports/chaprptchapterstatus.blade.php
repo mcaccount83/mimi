@@ -54,7 +54,7 @@
                             </td>
                             <td>{{ $list->state }}</td>
                             <td>{{ $list->name }}</td>
-                            @switch($list->status)
+                            @switch($list->status_id)
                                 @case(1)
                                     <td>OK</td>
                                     @break

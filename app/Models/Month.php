@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 
-class Conference extends Model
+class Month extends Model
 {
     use HasFactory;
     use Notifiable;
 
     // Specify the table name explicitly
-    protected $table = 'conference';
+    protected $table = 'month';
 
     /**
      * The attributes that are mass assignable.
@@ -29,13 +29,5 @@ class Conference extends Model
 
     ];
 
-    public function coordinators(): BelongsTo
-    {
-        return $this->belongsTo(Coordinators::class, 'conference');
-    }
 
-    // public function chapter(): BelongsTo
-    // {
-    //     return $this->belongsTo(Chapter::class, 'conference');
-    // }
 }
