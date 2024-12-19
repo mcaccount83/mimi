@@ -456,8 +456,6 @@ class ChapterController extends Controller
     {
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
 
         $input = $request->all();
         $chapterid = $input['chapterid'];
@@ -487,110 +485,118 @@ class ChapterController extends Controller
                 ->where('chapter_id', $chapterid)
                 ->update(['is_active' => 0]);
 
-            $chapterList = DB::table('chapters')
-                ->select('chapters.*', 'chapters.primary_coordinator_id as pcid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                    'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'chapters.conference_id as conf')
-                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-                ->where('chapters.is_Active', '=', '0')
-                ->where('bd.board_position_id', '=', '1')
-                ->where('chapters.id', $chapterid)
-                ->orderByDesc('chapters.id')
-                ->get();
+            $chapterList = Chapter::with(['country', 'state', 'conference', 'region', 'boards', 'status'])->find($chapterid);
 
-            $chPcid = $chapterList[0]->pcid;
+            $stateShortName = $chapterList->state->state_short_name;
+            $statusDescription = $chapterList->status->chapter_status;
+            $confDescription = $chapterList->conference->conference_description;
+            $chPcid = $chapterList->primary_coordinator_id;
+            $chapterName = $chapterList->name;
+            $chapterState = $stateShortName;
+            $chapterEmail = $chapterList->email;
+            $chapterStatus = $statusDescription;
 
-            $chapterName = $chapterList[0]->name;
-            $chapterState = $chapterList[0]->state;
-            $chapterEmail = $chapterList[0]->email;
-            $chapterStatus = $chapterList[0]->status_id;
+            $boards = $chapterList->boards()->with('state')->get();
+            $boardDetails = $boards->groupBy('board_position_id');
+            $defaultBoardMember = (object)['first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
+
+            // Fetch board details or fallback to default
+            $PresDetails = $boardDetails->get(1, collect([$defaultBoardMember]))->first(); // President
+            $AVPDetails = $boardDetails->get(2, collect([$defaultBoardMember]))->first(); // AVP
+            $MVPDetails = $boardDetails->get(3, collect([$defaultBoardMember]))->first(); // MVP
+            $TRSDetails = $boardDetails->get(4, collect([$defaultBoardMember]))->first(); // Treasurer
+            $SECDetails = $boardDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
+
             //President Info
-            $preinfo = DB::table('boards')
-                ->select('first_name', 'last_name', 'email')
-                ->where('chapter_id', $chapterid)
-                ->where('board_position_id', '=', '1')
-                ->get();
+            // $preinfo = DB::table('boards')
+            //     ->select('first_name', 'last_name', 'email')
+            //     ->where('chapter_id', $chapterid)
+            //     ->where('board_position_id', '=', '1')
+            //     ->get();
 
-            if (count($preinfo) > 0) {
-                $prefirst = $preinfo[0]->first_name;
-                $presecond = $preinfo[0]->last_name;
-                $preemail = $preinfo[0]->email;
+            if ($PresDetails->user_id != null) {
+                $prefirst = $PresDetails->first_name;
+                $presecond = $PresDetails->last_name;
+                $preemail = $PresDetails->email;
             } else {
                 $prefirst = '';
                 $presecond = '';
                 $preemail = '';
             }
+
             //Avp info
-            $avpinfo = DB::table('boards')
-                ->select('first_name', 'last_name', 'email')
-                ->where('chapter_id', $chapterid)
-                ->where('board_position_id', '=', '2')
-                ->get();
-            if (count($avpinfo) > 0) {
-                $avpfirst = $avpinfo[0]->first_name;
-                $avpsecond = $avpinfo[0]->last_name;
-                $avpemail = $avpinfo[0]->email;
+            // $avpinfo = DB::table('boards')
+            //     ->select('first_name', 'last_name', 'email')
+            //     ->where('chapter_id', $chapterid)
+            //     ->where('board_position_id', '=', '2')
+            //     ->get();
+            if ($AVPDetails->user_id != null) {
+                $avpfirst = $AVPDetails->first_name;
+                $avpsecond = $AVPDetails->last_name;
+                $avpemail = $AVPDetails->email;
             } else {
                 $avpfirst = '';
                 $avpsecond = '';
                 $avpemail = '';
             }
-            //Mvp info
 
-            $mvpinfo = DB::table('boards')
-                ->select('first_name', 'last_name', 'email')
-                ->where('chapter_id', $chapterid)
-                ->where('board_position_id', '=', '3')
-                ->get();
-            if (count($mvpinfo) > 0) {
-                $mvpfirst = $mvpinfo[0]->first_name;
-                $mvpsecond = $mvpinfo[0]->last_name;
-                $mvpemail = $mvpinfo[0]->email;
+            //Mvp info
+            // $mvpinfo = DB::table('boards')
+            //     ->select('first_name', 'last_name', 'email')
+            //     ->where('chapter_id', $chapterid)
+            //     ->where('board_position_id', '=', '3')
+            //     ->get();
+            if ($MVPDetails->user_id != null) {
+                $mvpfirst = $MVPDetails->first_name;
+                $mvpsecond = $MVPDetails->last_name;
+                $mvpemail = $MVPDetails->email;
             } else {
                 $mvpfirst = '';
                 $mvpsecond = '';
                 $mvpemail = '';
             }
+
             //Treasurere info
-            $triinfo = DB::table('boards')
-                ->select('first_name', 'last_name', 'email')
-                ->where('chapter_id', $chapterid)
-                ->where('board_position_id', '=', '4')
-                ->get();
-            if (count($triinfo) > 0) {
-                $trifirst = $triinfo[0]->first_name;
-                $trisecond = $triinfo[0]->last_name;
-                $triemail = $triinfo[0]->email;
+            // $triinfo = DB::table('boards')
+            //     ->select('first_name', 'last_name', 'email')
+            //     ->where('chapter_id', $chapterid)
+            //     ->where('board_position_id', '=', '4')
+            //     ->get();
+            if ($TRSDetails->user_id != null) {
+                $trifirst = $TRSDetails->first_name;
+                $trisecond = $TRSDetails->last_name;
+                $triemail = $TRSDetails->email;
             } else {
                 $trifirst = '';
                 $trisecond = '';
                 $triemail = '';
             }
+
             //secretary info
-            $secinfo = DB::table('boards')
-                ->select('first_name', 'last_name', 'email')
-                ->where('chapter_id', $chapterid)
-                ->where('board_position_id', '=', '5')
-                ->get();
-            if (count($secinfo) > 0) {
-                $secfirst = $secinfo[0]->first_name;
-                $secscond = $secinfo[0]->last_name;
-                $secemail = $secinfo[0]->email;
+            // $secinfo = DB::table('boards')
+            //     ->select('first_name', 'last_name', 'email')
+            //     ->where('chapter_id', $chapterid)
+            //     ->where('board_position_id', '=', '5')
+            //     ->get();
+            if ($SECDetails->user_id !=null) {
+                $secfirst = $SECDetails->first_name;
+                $secscond = $SECDetails->last_name;
+                $secemail = $SECDetails->email;
             } else {
                 $secfirst = '';
                 $secscond = '';
                 $secemail = '';
             }
+
             //conference info
-            $coninfo = DB::table('chapters')
-                ->select('chapters.*', 'conference_id')
-                ->where('id', $chapterid)
-                ->get();
-            $conf = $coninfo[0]->conference_id;
+            // $coninfo = DB::table('chapters')
+            //     ->select('chapters.*', 'conference_id')
+            //     ->where('id', $chapterid)
+            //     ->get();
+            // $conf = $coninfo[0]->conference_id;
 
             // Load Board and Coordinators for Sending Email
-            $chId = $chapterList[0]->id;
+            $chId = $chapterList->id;
             $emailData = $this->userController->loadEmailDetails($chId);
             $emailListChap = $emailData['emailListChap'];
             $emailListCoord = $emailData['emailListCoord'];
@@ -599,14 +605,12 @@ class ChapterController extends Controller
             $coordEmails = $emailListCoord;
 
             // Load Conference Coordinators information for signing email
-            $chConf = $chapterList[0]->conf;
-            $chPcid = $chapterList[0]->pcid;
-
+            $chPcid = $chapterList->primary_coordinator_id;
             $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
             $cc_fname = $coordinatorData['cc_fname'];
             $cc_lname = $coordinatorData['cc_lname'];
             $cc_pos = $coordinatorData['cc_pos'];
-            $cc_conf = $coordinatorData['cc_conf'];
+            $cc_conf_name = $coordinatorData['cc_conf_name'];
             $cc_conf_desc = $coordinatorData['cc_conf_desc'];
             $cc_email = $coordinatorData['cc_email'];
 
@@ -629,11 +633,11 @@ class ChapterController extends Controller
                 'sfirst' => $secfirst,
                 'slast' => $secscond,
                 'semail' => $secemail,
-                'conf' => $conf,
+                'conf' => $confDescription,
                 'cc_fname' => $cc_fname,
                 'cc_lname' => $cc_lname,
                 'cc_pos' => $cc_pos,
-                'cc_conf' => $cc_conf,
+                'cc_conf_name' => $cc_conf_name,
                 'cc_conf_desc' => $cc_conf_desc,
                 'cc_email' => $cc_email,
             ];
@@ -643,10 +647,11 @@ class ChapterController extends Controller
             Mail::to($to_email)
                 ->queue(new ChapterRemoveListAdmin($mailData));
 
-            //Standard Disbanding Letter Send to Board & Coordinators//
+            //Standard Disband Letter Send to Board & Coordinators//
             if ($disbandLetter == 1) {
-                $pdfPath = $this->PDFController->saveDisbandLetter($chapterid);
-                // $pdfPath = $this->generateAndSaveDisbandLetter($chapterid);   // Generate and save the PDF
+                $pdf = $this->PDFController->saveDisbandLetter($chapterid);    // Generate and save the PDF
+                $pdfPath = $pdf['pdfPath'];
+                // $pdfPath = $this->generateAndSaveDisbandLetter($chapterid);
                 Mail::to($chapterEmails)
                     ->cc($coordEmails)
                     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
