@@ -105,9 +105,9 @@
                             <div class="col-md-12">
                                 <label>Boundaries:</label> {{ $chapterList->territory}}
                         <br>
-                        <label>Status:</label> {{$allStatuses[0]->chapter_status}}
+                        <label>Status:</label> {{$allStatuses->chapter_status}}
                         <br>
-                        <label>Status Notes (not visible to board members):</label> {{ $chapterList->notes}}
+                        <label>Status Notes (not visible to board members):</label> {{ $allStatuses->notes}}
                         <br><br>
                         </div>
                     </div>
@@ -133,7 +133,7 @@
                         <div class="col-md-6">
                             <label>Website:</label> <a href="{{$chapterList->website_url}}" target="_blank">{{$chapterList->website_url}}</a>
                         <br>
-                        <label>Webiste Link Status:</label> {{ $allWebLinks[0]->link_status}}
+                        <label>Webiste Link Status:</label> {{ $allWebLinks->link_status ?? ' ' }}
                         <br>
                         <label>Webiste Notes (not visible to board members):</label><br>
                         {{ $chapterList->website_notes }}
@@ -216,8 +216,12 @@
                                     <label>Probation Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                        **Coming Soon - In Production
-                                </div>
+                                    @if($allDocuments->probation_path != null)
+                                        <button class="btn bg-gradient-primary btn-sm" type="button" id="probation-letter" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $allDocuments->probation_path }}'">Probation Letter</button>
+                                    @else
+                                        No Probation Letter on File
+                                    @endif
+                                 </div>
                             </div>
 
                             <div class="row">
@@ -225,7 +229,11 @@
                                     <label>Probation Release Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                        **Coming Soon - In Production
+                                    @if($allDocuments->probation_release_path != null)
+                                        <button class="btn bg-gradient-primary btn-sm" type="button" id="probation-release-letter" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $allDocuments->probation_release_path }}'">Probation Release Letter</button>
+                                    @else
+                                        No Probation Release Letter on File
+                                    @endif
                                 </div>
                             </div>
 
@@ -272,7 +280,7 @@
                                     <label>Probation for No Payment:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                        **Coming Soon - In Production
+                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showProbationNoPmtModal()">Email Probation for No Payment</button>
                                 </div>
                             </div>
 
@@ -281,7 +289,7 @@
                                     <label>Probation for No Reports:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                        **Coming Soon - In Production
+                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showProbationNoRptModal()">Email Probation for No Reports</button>
                                 </div>
                             </div>
 
@@ -290,7 +298,7 @@
                                     <label>Warning for Party Expense:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                        **Coming Soon - In Production
+                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showWarningPartyModal()">Email Warning for Party Expense</button>
                                 </div>
                             </div>
 
@@ -299,7 +307,7 @@
                                     <label>Probation for Party Expense:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                        **Coming Soon - In Production
+                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showProbationPartyModal()">Email Probation for Party Expense</button>
                                 </div>
                             </div>
 
@@ -308,7 +316,7 @@
                                     <label>Probation Release:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                        **Coming Soon - In Production
+                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showProbationReleaseModal()">Email Probation Release</button>
                                 </div>
                             </div>
 
@@ -941,6 +949,406 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+
+
+function showProbationNoRptModal() {
+    Swal.fire({
+        title: 'Probation No Report Letter',
+        html: `
+            <p>This will send a probation for no eoy reports letter to all board members and all coordinators for this chapter.
+                  Are you sure you wish to continue?</p>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chapterList->id }}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Send Letter',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+            return {
+                chapterId: chapterId,  // Change 'chapter_id' to 'chapterId'
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Process the confirmed action
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('pdf.saveprobationreport') }}',
+                        type: 'POST',
+                        data: {
+                            chapterId: data.chapterId,  // Ensure the key matches the controller expectation
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                if (response.redirect) {
+                                    window.location.href = response.redirect;
+                                }
+                            });
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function showProbationNoPmtModal() {
+    Swal.fire({
+        title: 'Probation No Payment Letter',
+        html: `
+            <p>This will send a probation for no re-reg payment letter to all board members and all coordinators for this chapter.
+                  Are you sure you wish to continue?</p>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chapterList->id }}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Send Letter',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+            return {
+                chapterId: chapterId,  // Change 'chapter_id' to 'chapterId'
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Process the confirmed action
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('pdf.saveprobationpayment') }}',
+                        type: 'POST',
+                        data: {
+                            chapterId: data.chapterId,  // Ensure the key matches the controller expectation
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                if (response.redirect) {
+                                    window.location.href = response.redirect;
+                                }
+                            });
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function showProbationPartyModal() {
+    Swal.fire({
+        title: 'Probation Party Expense Letter',
+        html: `
+            <p>This will send a probation for excessive party expenses letter to all board members and all coordinators for this chapter.
+                  Are you sure you wish to continue?</p>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chapterList->id }}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Send Letter',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+            return {
+                chapterId: chapterId,  // Change 'chapter_id' to 'chapterId'
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Process the confirmed action
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('pdf.saveprobationparty') }}',
+                        type: 'POST',
+                        data: {
+                            chapterId: data.chapterId,  // Ensure the key matches the controller expectation
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                if (response.redirect) {
+                                    window.location.href = response.redirect;
+                                }
+                            });
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function showWarningPartyModal() {
+    Swal.fire({
+        title: 'Warning Party Expense Letter',
+        html: `
+            <p>This will send a warning about excessive party expenses letter to all board members and all coordinators for this chapter.
+                  Are you sure you wish to continue?</p>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chapterList->id }}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Send Letter',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+            return {
+                chapterId: chapterId,  // Change 'chapter_id' to 'chapterId'
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Process the confirmed action
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('pdf.savewarningparty') }}',
+                        type: 'POST',
+                        data: {
+                            chapterId: data.chapterId,  // Ensure the key matches the controller expectation
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                if (response.redirect) {
+                                    window.location.href = response.redirect;
+                                }
+                            });
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function showProbationReleaseModal() {
+    Swal.fire({
+        title: 'Probation Release Letter',
+        html: `
+            <p>This will send a probation release letter to all board members and all coordinators for this chapter.
+                  Are you sure you wish to continue?</p>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chapterList->id }}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Send Letter',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+            return {
+                chapterId: chapterId,  // Change 'chapter_id' to 'chapterId'
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Process the confirmed action
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we process your request.',
+                allowOutsideClick: false,
+                customClass: {
+                    confirmButton: 'btn-sm btn-success',
+                    cancelButton: 'btn-sm btn-danger'
+                },
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    // Perform the AJAX request
+                    $.ajax({
+                        url: '{{ route('pdf.saveprobationrelease') }}',
+                        type: 'POST',
+                        data: {
+                            chapterId: data.chapterId,  // Ensure the key matches the controller expectation
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                if (response.redirect) {
+                                    window.location.href = response.redirect;
+                                }
+                            });
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        // } else if (result.dismiss === Swal.DismissReason.cancel) {
+        //     // Redirect to the route when the cancel button is clicked
+        //     const chapterId = document.getElementById('chapter_id').value;
+        //     window.location.href = `/chapter/probationreleaseletter/pdf/${chapterId}?stream=true`;
+        }
+    });
+}
 
 function showDisbandChapterModal() {
     Swal.fire({

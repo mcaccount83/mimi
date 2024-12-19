@@ -19,45 +19,34 @@ class Coordinators extends Model
 
     public function user(): BelongsTo
     {
-        // return $this->belongsTo(\App\Models\User::class, 'user_id');
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function chapter()
-    {
-        return $this->belongsTo(Chapter::class, 'primary_coordinator_id', 'id');
-    }
-
-    public function displayPosition()
+    public function position()
     {
         return $this->belongsTo(CoordinatorPosition::class, 'display_position_id');
     }
 
-    public function secondaryPosition()
+    public function conference()
     {
-        return $this->belongsTo(CoordinatorPosition::class, 'sec_position_id');
+        return $this->belongsTo(Conference::class, 'conference_id');
     }
 
 
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', 1);
-    }
 
-    public function scopeWithinPositionRange($query, $start, $end)
-    {
-        return $query->whereBetween('position_id', [$start, $end]);
-    }
+    // public function chapter()
+    // {
+    //     return $this->belongsTo(Chapter::class, 'primary_coordinator_id', 'id');
+    // }
 
-    public function scopeForRegionOrConference($query, $regionId, $conferenceId)
-    {
-        return $query->where(function ($q) use ($regionId, $conferenceId) {
-            $q->where('region_id', $regionId)
-            ->orWhere(function ($subQ) use ($conferenceId) {
-                $subQ->where('region_id', 0)
-                    ->where('conference_id', $conferenceId);
-            });
-        });
-    }
+    // public function displayPosition()
+    // {
+    //     return $this->belongsTo(CoordinatorPosition::class, 'display_position_id');
+    // }
+
+    // public function secondaryPosition()
+    // {
+    //     return $this->belongsTo(CoordinatorPosition::class, 'sec_position_id');
+    // }
 
 }

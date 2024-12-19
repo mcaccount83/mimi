@@ -298,7 +298,7 @@ class MailController extends Controller
         $chConf = $chapterDetails[0]->conf;
         $chPcid = $chapterDetails[0]->pcid;
 
-        $coordinatorData = $this->userController->loadConferenceCoord($chConf, $chPcid);
+        $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
         $cc_fname = $coordinatorData['cc_fname'];
         $cc_lname = $coordinatorData['cc_lname'];
         $cc_pos = $coordinatorData['cc_pos'];

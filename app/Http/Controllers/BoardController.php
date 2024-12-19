@@ -773,11 +773,11 @@ class BoardController extends Controller
             }
 
             //Website Notifications//
-            $chId = $chapter['id'];
+            // $chId = $chapter['id'];
             $chPcid = $chPCId;
-            $chConf = $chConfId;
+            // $chConf = $chConfId;
 
-            $emailData = $this->userController->loadConferenceCoord($chConf, $chPcid);
+            $emailData = $this->userController->loadConferenceCoord($chPcid);
             $to_CCemail = $emailData['cc_email'];
 
             if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
@@ -1784,7 +1784,7 @@ class BoardController extends Controller
 
             // Load Conference Coordinators
             $chId = $chapter_id;
-            $coordinatorData = $this->userController->loadConferenceCoord($chConf, $chPcid);
+            $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
             $cc_email = $coordinatorData['cc_email'];
             $coordinator_array = $coordinatorData['coordinator_array'];
 
@@ -2235,7 +2235,7 @@ class BoardController extends Controller
 
         // Load Conference Coordinators
         $chId = $chapter_id;
-        $coordinatorData = $this->userController->loadConferenceCoord($chConf, $chPcid);
+        $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
         $coordinator_array = $coordinatorData['coordinator_array'];
         $cc_email = $coordinatorData['cc_email'];
         $cc_id = $coordinatorData['cc_id'];
@@ -2836,92 +2836,4 @@ class BoardController extends Controller
         ]);
     }
 
-    // public function load_coordinators($chConf, $chPcid)
-    // {
-    //     // $financial_report_array = FinancialReport::find($chId);
-
-    //     // $chapterDetails = DB::table('chapters')
-    //     //     ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state',
-    //     //         'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
-    //     //     ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-    //     //     ->where('chapters.is_active', '=', '1')
-    //     //     ->where('chapters.id', '=', $chId)
-    //     //     ->get();
-
-    //     $reportingList = DB::table('coordinator_reporting_tree')
-    //         ->select('*')
-    //         ->where('id', '=', $chPcid)
-    //         ->get();
-
-    //     foreach ($reportingList as $key => $value) {
-    //         $reportingList[$key] = (array) $value;
-    //     }
-    //     $filterReportingList = array_filter($reportingList[0]);
-    //     unset($filterReportingList['id']);
-    //     unset($filterReportingList['layer0']);
-    //     $filterReportingList = array_reverse($filterReportingList);
-    //     $str = '';
-    //     $array_rows = count($filterReportingList);
-    //     $i = 0;
-    //     $coordinator_array = [];
-    //     foreach ($filterReportingList as $key => $val) {
-    //         $corList = DB::table('coordinators as cd')
-    //             ->select('cd.id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cd.email as email', 'cp.short_title as pos')
-    //             ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-    //             ->where('cd.id', '=', $val)
-    //             ->get();
-    //         $coordinator_array[$i] = ['id' => $corList[0]->cid,
-    //             'first_name' => $corList[0]->fname,
-    //             'last_name' => $corList[0]->lname,
-    //             'email' => $corList[0]->email,
-    //             'position' => $corList[0]->pos];
-
-    //         $i++;
-    //     }
-    //     $coordinator_count = count($coordinator_array);
-
-    //     for ($i = 0; $i < $coordinator_count; $i++) {
-    //         $cc_email = $coordinator_array[$i]['email'];
-    //         $cc_id = $coordinator_array[$i]['id'];
-    //     }
-
-    //     // $reviewer_id = 0;
-    //     //Report was submitted, notify those who need to know.
-    //     switch ($chConf) {
-    //         case 1:
-    //             $cc_email = $cc_email;
-    //             $cc_id = $cc_id;
-    //             // $reviewer_id = $cc_id;
-    //             break;
-    //         case 2:
-    //             $cc_email = $cc_email;
-    //             $cc_id = $cc_id;
-    //             // $reviewer_id = $cc_id;
-    //             break;
-    //         case 3:
-    //             $cc_email = $cc_email;
-    //             $cc_id = $cc_id;
-    //             // $reviewer_id = $cc_id;
-    //             break;
-    //         case 4:
-    //             $cc_email = $cc_email;
-    //             $cc_id = $cc_id;
-    //             // $reviewer_id = $cc_id;
-    //             break;
-    //         case 5:
-    //             $cc_email = $cc_email;
-    //             $cc_id = $cc_id;
-    //             // $reviewer_id = $cc_id;
-    //             break;
-    //     }
-
-    //     // DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$reviewer_id, $chId]);
-
-    //     return [
-    //         // 'ReviewerEmail' => $to_email,
-    //         'coordinator_array' => $coordinator_array,
-    //         'cc_email' => $cc_email,
-    //         'cc_id' => $cc_id,
-    //     ];
-    // }
 }

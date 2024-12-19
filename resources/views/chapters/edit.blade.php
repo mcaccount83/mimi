@@ -194,7 +194,7 @@
                                     <select name="ch_webstatus" id="ch_webstatus"class="form-control" style="width: 100%;" required>
                                         <option value="">Select Status</option>
                                         @foreach($allWebLinks as $status)
-                                            <option value="{{$status->id}}"
+                                            <option value="{{$status->id }}"
                                                 @if($chapterList->website_status == $status->id) selected @endif>
                                                 {{$status->link_status}}
                                             </option>

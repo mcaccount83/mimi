@@ -112,41 +112,77 @@
           <div class="col-md-8">
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
-                <h3 class="profile-username">{{ (date('Y') - 1) . '-' . date('Y') }} Boundary Issues</h3>
+                <h3 class="profile-username">{{ (date('Y') - 1) . '-' . date('Y') }} Report Attachments</h3>
                     <!-- /.card-header -->
-                    <div class="form-group row align-middle">
-                        <label class="col-sm-2 col-form-label">Boundary Issues Reported by Chapter:</label>
-                        <div class="col-sm-10">
-                        <input type="text" name="ch_issue" id="ch_issue" class="form-control" value="{{ $chapterList->boundary_issue_notes }}" disabled>
+                    <div class="row mt-2">
+                        <div class="col-sm-3">
+                            <label>Chapter Roster File:</label>
+                        </div>
+                        <div class="col-sm-9">
+                                @if (!empty($allDocuments->roster_path))
+                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $allDocuments->roster_path }}'">View Chapter Roster</button>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal()">Replace Roster File</button>
+                                @else
+                                    <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal()">Upload Roster File</button>
+                                @endif
                         </div>
                     </div>
-                    <!-- /.form group -->
-                    <div class="form-group row align-middle">
-                        <label class="col-sm-2 col-form-label">Current Recorded Boundaries:</label>
-                        <div class="col-sm-10">
-                        <input type="text" name="ch_old_territory" id="ch_old_territory" class="form-control" value="{{ $chapterList->territory }}" disabled>
-                        </div>
-                    </div>
-                    <!-- /.form group -->
-                    <div class="form-group row align-middle">
-                        <label class="col-sm-2 col-form-label">Update Boundaries:</label>
-                        <div class="col-sm-10">
-                        <input type="text" name="ch_territory" id="ch_territory" class="form-control">
-                        </div>
-                    </div>
-                    <!-- /.form group -->
 
-                    <div class="form-group row align-middle">
-                        <label class="col-sm-2 col-form-label">Boundary Issues Resolved:</label>
-                        <div class="col-sm-10">
-                            <div class="custom-control custom-switch">
-                                <input type="checkbox" name="ch_resolved" id="ch_resolved" class="custom-control-input"
-                                {{$chapterList->boundary_issue_resolved == 1 ? 'checked' : ''}}>
-                                <label class="custom-control-label" for="ch_resolved"></label>
-                            </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-3">
+                            <label>Primary Bank Statement:</label>
+                        </div>
+                        <div class="col-sm-9">
+                            @if (!empty($allDocuments->statement_1_path))
+                                <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $allDocuments->statement_1_ipath }}'">View Bank Statement</button>
+                                <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()">Replace Bank Statement</button>
+                            @else
+                                <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
+                                <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()">Upload Bank Statement</button>
+                            @endif
                         </div>
                     </div>
-                    <!-- /.form group -->
+
+                    <div class="row mt-2">
+                        <div class="col-sm-3">
+                            <label>Primary Bank Statement:</label>
+                        </div>
+                        <div class="col-sm-9">
+                                @if (!empty($allDocuments->statement_2_path))
+                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $allDocuments->statement_2_path }}'">View Additional Bank Statement</button>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()">Replace Additional Bank Statement</button>
+                                @else
+                                    <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()">Upload Additional Bank Statement</button>
+                                @endif
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-3">
+                            <label>990N Filing:</label>
+                        </div>
+                        <div class="col-sm-9">
+                                @if (!empty($allDocuments->irs_path))
+                                    <button type="button" class="btn bg-gradient-primary btn-sm mr-2" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $allDocuments->irs_path }}'">View 990N Confirmation</button>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()">Replace 990N Confirmation</button>
+                                @else
+                                    <button class="btn bg-gradient-primary btn-sm mr-2 disabled">No file attached</button>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()">Upload 990N Confirmation</button>
+                                @endif
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-3">
+                            <label></label>
+                    </div>
+                    <div class="col-sm-9">
+                           <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $allDocuments->check_current_990N_notes }}" placeholder="990N Filing Notes">
+                        </div>
+                    </div>
+
 
                   </div>
               <!-- /.card-body -->

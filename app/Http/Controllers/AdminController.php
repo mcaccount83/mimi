@@ -148,7 +148,7 @@ class AdminController extends Controller
     }
 
     /**
-     * View the Downloads List
+     * View the Downloads List for Logged in Coordinator
      */
     public function showDownloads(Request $request): View
     {
@@ -165,27 +165,12 @@ class AdminController extends Controller
         // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
 
-        if ($conditions['coordinatorCondition']) {
-            //Get Coordinator Reporting Tree
-            $reportIdList = DB::table('coordinator_reporting_tree as crt')
-                ->select('crt.id')
-                ->where($sqlLayerId, '=', $corId)
-                ->get();
-
-            $inQryStr = '';
-            foreach ($reportIdList as $key => $val) {
-                $inQryStr .= $val->id.',';
-            }
-            $inQryStr = rtrim($inQryStr, ',');
-            $inQryArr = explode(',', $inQryStr);
-        }
-
         //Get Chapter List mapped with login coordinator
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
             ->leftJoin('month as db', 'chapters.start_month_id', '=', 'db.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1');
@@ -193,11 +178,11 @@ class AdminController extends Controller
         if ($conditions['founderCondition']) {
 
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference', '=', $corConfId);
+            $baseQuery->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region', '=', $corRegId);
+            $baseQuery->where('chapters.region_id', '=', $corRegId);
         } else {
-            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
+            $baseQuery->whereIn('chapters.primary_coordinator_id', $corId);
         }
         $chapterList = $baseQuery->get();
 
@@ -672,7 +657,7 @@ class AdminController extends Controller
             ->select('ob.chapter_id', 'ob.first_name', 'ob.last_name', 'ob.email', 'users.user_type', 'chapters.name as chapter_name', 'state.state_short_name as chapter_state')
             ->leftJoin('users', 'ob.email', '=', 'users.email')
             ->leftJoin('chapters', 'ob.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state', 'chapters.state_id', '=', 'state.id')
+            ->leftJoin('state', 'chapters.state_id_id', '=', 'state.id')
             ->where('users.user_type', 'outgoing')
             ->where('users.is_active', '1')
             ->orderBy('chapters.name')
@@ -1076,6 +1061,7 @@ class AdminController extends Controller
         $resourcesDrive = $request->input('resourcesDrive');
         $disbandDrive = $request->input('disbandDrive');
         $goodStandingDrive = $request->input('goodStandingDrive');
+        $probationDrive = $request->input('probationDrive');
 
         $drive = GoogleDrive::firstOrFail();
         $drive->ein_letter_uploads = $einLetterDrive;
@@ -1084,6 +1070,7 @@ class AdminController extends Controller
         $drive->resources_uploads = $resourcesDrive;
         $drive->disband_letter = $disbandDrive;
         $drive->good_standing_letter = $goodStandingDrive;
+        $drive->probation_letter = $probationDrive;
 
         $drive->save();
 

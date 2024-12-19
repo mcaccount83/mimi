@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Documents extends Model
 {
@@ -26,4 +26,8 @@ class Documents extends Model
 
     ];
     protected $table = 'documents';
+
+    protected $primaryKey = 'chapter_id';
+
+
 }

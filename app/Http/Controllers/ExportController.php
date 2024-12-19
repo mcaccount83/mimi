@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Facades\Log;
+
 
 class ExportController extends Controller
 {
@@ -28,7 +30,7 @@ class ExportController extends Controller
     public function getBaseChapterQuery()
     {
         return DB::table('chapters')
-            ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'bd.first_name as pre_fname',
+            ->select('chapters.*', 'chapters.conference_id as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'bd.first_name as pre_fname',
                 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city', 'bd.state as pre_state', 'bd.zip as pre_zip',
                 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state',
                 'chapters.new_board_submitted as new_board_submitted', 'chapters.new_board_active as new_board_active', 'chapters.financial_report_received as financial_report_received',
@@ -62,7 +64,7 @@ class ExportController extends Controller
                     ->where('sec.board_position_id', '=', 5); // Secretary
             })
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id');
+            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id');
     }
 
     /**
@@ -71,7 +73,7 @@ class ExportController extends Controller
     public function getBaseIncomingChapterQuery()
     {
         return DB::table('chapters')
-            ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'bd.first_name as pre_fname',
+            ->select('chapters.*', 'chapters.conference_id as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'bd.first_name as pre_fname',
                 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city', 'bd.state as pre_state', 'bd.zip as pre_zip',
                 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state',
                 'avp.first_name as avp_fname', 'avp.last_name as avp_lname', 'avp.email as avp_email', 'avp.phone as avp_phone',
@@ -107,7 +109,7 @@ class ExportController extends Controller
                     ->where('sec.board_position_id', '=', 5); // Secretary
             })
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id');
+            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id');
     }
 
     /**
@@ -134,12 +136,6 @@ class ExportController extends Controller
         // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
 
-        if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
-
         // Get the base query
         $baseQuery = $this->getBaseChapterQuery();
 
@@ -151,11 +147,11 @@ class ExportController extends Controller
         if ($conditions['founderCondition']) {
             // No additional condition; proceed with the base query
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.conference', '=', $corConfId);
+            $chapterList = $chapterList->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.region', '=', $corRegId);
+            $chapterList = $chapterList->where('chapters.region_id', '=', $corRegId);
         } else {
-            $chapterList = $chapterList->whereIn('chapters.primary_coordinator_id', $inQryArr);
+            $chapterList = $chapterList->whereIn('chapters.primary_coordinator_id', $corId);
         }
 
         // Execute query
@@ -271,12 +267,6 @@ class ExportController extends Controller
         // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
 
-        if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
-
         // Get the base query
         $baseQuery = $this->getBaseChapterQuery();
 
@@ -288,11 +278,11 @@ class ExportController extends Controller
         if ($conditions['founderCondition']) {
             // No additional condition; proceed with the base query
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.conference', '=', $corConfId);
+            $chapterList = $chapterList->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.region', '=', $corRegId);
+            $chapterList = $chapterList->where('chapters.region_id', '=', $corRegId);
         } else {
-            $chapterList = $chapterList->whereIn('chapters.primary_coordinator_id', $inQryArr);
+            $chapterList = $chapterList->whereIn('chapters.primary_coordinator_id', $corId);
         }
 
         // Execute query
@@ -407,12 +397,6 @@ class ExportController extends Controller
         // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
 
-        if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
-
         $currentYear = date('Y');
         $currentMonth = date('m');
 
@@ -434,11 +418,11 @@ class ExportController extends Controller
         if ($conditions['founderCondition']) {
             // No additional condition; proceed with the base query
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.conference', '=', $corConfId);
+            $chapterList = $chapterList->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.region', '=', $corRegId);
+            $chapterList = $chapterList->where('chapters.region_id', '=', $corRegId);
         } else {
-            $chapterList = $chapterList->whereIn('chapters.primary_coordinator_id', $inQryArr);
+            $chapterList = $chapterList->whereIn('chapters.primary_coordinator_id', $corId);
         }
 
         // Execute query
@@ -804,13 +788,13 @@ class ExportController extends Controller
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $activeChapterList = DB::table('chapters')
-            ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
+            ->select('chapters.*', 'chapters.conference_id as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
                 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
                 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
+            ->leftjoin('region as rg', 'chapters.region_id', '=', 'rg.id')
             // ->where('chapters.is_active', '=', '1')
             ->where(function ($query) use ($previousYear) {
                 $query->where('chapters.is_active', '=', 1)
@@ -893,12 +877,6 @@ class ExportController extends Controller
         // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
 
-        if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
-
         // Get the base query
         $baseQuery = $this->getBaseChapterQuery();
 
@@ -911,11 +889,11 @@ class ExportController extends Controller
         if ($conditions['founderCondition']) {
             // No additional condition; proceed with the base query
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.conference', '=', $corConfId);
+            $chapterList = $chapterList->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.region', '=', $corRegId);
+            $chapterList = $chapterList->where('chapters.region_id', '=', $corRegId);
         } else {
-            $chapterList = $chapterList->whereIn('chapters.primary_coordinator_id', $inQryArr);
+            $chapterList = $chapterList->whereIn('chapters.primary_coordinator_id', $corId);
         }
 
         // Execute query
@@ -1066,12 +1044,6 @@ class ExportController extends Controller
         // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
 
-        if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
-
         // Get the base query
         $baseQuery = $this->getBaseChapterQuery();
 
@@ -1084,11 +1056,11 @@ class ExportController extends Controller
         if ($conditions['founderCondition']) {
             // No additional condition; proceed with the base query
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.conference', '=', $corConfId);
+            $chapterList = $chapterList->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.region', '=', $corRegId);
+            $chapterList = $chapterList->where('chapters.region_id', '=', $corRegId);
         } else {
-            $chapterList = $chapterList->whereIn('chapters.primary_coordinator_id', $inQryArr);
+            $chapterList = $chapterList->whereIn('chapters.primary_coordinator_id', $corId);
         }
 
         // Execute query
@@ -1237,12 +1209,6 @@ class ExportController extends Controller
         // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
 
-        if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
-
         $baseQuery = DB::table('coordinators as cd')
             ->select('cd.*', 'cp.long_title as position', 'cds.first_name as reporting_fname', 'cds.last_name as reporting_lname', 'rg.short_name as reg_name',
                 'cp2.long_title as sec_position')
@@ -1260,7 +1226,7 @@ class ExportController extends Controller
         } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
-            $baseQuery->whereIn('cd.report_id', '=', $inQryArr);
+            $baseQuery->whereIn('cd.report_id', '=', $corId);
         }
 
         $exportCoordinatorList = $baseQuery->get();
@@ -1329,12 +1295,6 @@ class ExportController extends Controller
         // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
 
-        if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
-
         $baseQuery = DB::table('coordinators as cd')
             ->select('cd.*', 'cp.long_title as position', 'cds.first_name as reporting_fname', 'cds.last_name as reporting_lname', 'rg.short_name as reg_name',
                 'cp2.long_title as sec_position')
@@ -1352,7 +1312,7 @@ class ExportController extends Controller
         } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
-            $baseQuery->whereIn('cd.report_id', '=', $inQryArr);
+            $baseQuery->whereIn('cd.report_id', '=', $corId);
         }
 
         $exportCoordinatorList = $baseQuery->get();
@@ -1416,10 +1376,6 @@ class ExportController extends Controller
         //Get Coordinators Details
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
-
-        // Load Reporting Tree
-        $coordinatorData = $this->userController->loadReportingTree($corId);
-        $inQryArr = $coordinatorData['inQryArr'];
 
         //Get Coordinator List mapped with login coordinator
         $exportCoordinatorList = DB::table('coordinators as cd')
@@ -1488,12 +1444,6 @@ class ExportController extends Controller
         //Get Coordinators Details
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
-
-        // Load Reporting Tree
-        $coordinatorData = $this->userController->loadReportingTree($corId);
-        $inQryArr = $coordinatorData['inQryArr'];
-
-        //Get Coordinator List mapped with login coordinator
 
         $exportCoordinatorList = DB::table('coordinators as cd')
             ->select('cd.*', 'cp.long_title as position', 'cds.first_name as reporting_fname', 'cds.last_name as reporting_lname', 'rg.short_name as reg_name',
@@ -1573,10 +1523,6 @@ class ExportController extends Controller
         // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
 
-        // Load Reporting Tree
-        $coordinatorData = $this->userController->loadReportingTree($corId);
-        $inQryArr = $coordinatorData['inQryArr'];
-
         $baseQuery = DB::table('coordinators as cd')
             ->select('cd.*', 'cp.long_title as position', 'cp2.long_title as sec_position')
             ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
@@ -1590,7 +1536,7 @@ class ExportController extends Controller
         } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
-            $baseQuery->whereIn('cd.report_id', '=', $inQryArr);
+            $baseQuery->whereIn('cd.report_id', '=', $corId);
         }
 
         $exportCoordinatorList = $baseQuery->get();
@@ -1637,22 +1583,17 @@ class ExportController extends Controller
     /**
      * Export Chapter Coordinator List
      */
-    public function indexChapterCoordinator(Request $request): RedirectResponse
+    public function indexChapterCoordinator(Request $request)
     {
-        // output headers so that the file is downloaded rather than displayed
-        header('Content-Type: text/csv; charset=utf-8');
+        $fileName = 'chapter_coordinators_' . date('Y-m-d') . '.csv';
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=$fileName",
+            'Pragma' => 'no-cache',
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Expires' => '0',
+        ];
 
-        date_default_timezone_set('America/Los_Angeles');
-        $today = date('Y-m-d');
-
-        header('Content-Disposition: attachment; filename=chapter_coordinator_export_'.$today.'.csv');
-
-        // create a file pointer connected to the output stream
-        $output = fopen('php://output', 'w');
-
-        fputcsv($output, ['Conference', 'Region', 'State', 'Name', 'CC', 'ACC', 'RC', 'ARC', 'SC', 'AC', 'Big']);
-
-        $chapter_array = null;
         //Get Coordinators Details
         $corDetails = User::find($request->user()->id)->Coordinators;
         $corId = $corDetails['id'];
@@ -1664,19 +1605,13 @@ class ExportController extends Controller
         // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
 
-        if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
-
         $baseQuery = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as region')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
+            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->orderBy('chapters.name');
@@ -1684,122 +1619,72 @@ class ExportController extends Controller
         if ($conditions['founderCondition']) {
 
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference', '=', $corConfId);
+            $baseQuery->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region', '=', $corRegId);
+            $baseQuery->where('chapters.region_id', '=', $corRegId);
         } else {
-            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
+            $baseQuery->whereIn('chapters.primary_coordinator_id', $corId);
         }
 
-        $chapter_array = $baseQuery->get();
+        $chapterList = $baseQuery->get();
 
-        if (count($chapter_array) > 0) {
-            $row_count = count($chapter_array);
+        $positionCodes = ['CC', 'ACC', 'RC', 'ARC', 'SC', 'AC', 'BS'];
 
-            for ($row = 0; $row < $row_count; $row++) {
-                $id = $chapter_array[$row]->primary_coordinator_id;
-                $reportingList = DB::table('coordinator_reporting_tree')
-                    ->select('*')
-                    ->where('id', '=', $id)
-                    ->get();
+        $chaptersData = $chapterList->map(function ($chapter) {
+            $id = $chapter->primary_coordinator_id;
+            $reportingList = DB::table('coordinator_reporting_tree')
+                ->select('*')
+                ->where('coordinator_id', $id)
+                ->first();
 
-                foreach ($reportingList as $key => $value) {
-                    $reportingList[$key] = (array) $value;
-                }
-                $filterReportingList = array_filter($reportingList[0]);
-                unset($filterReportingList['id']);
-                unset($filterReportingList['layer0']);
-                $filterReportingList = array_reverse($filterReportingList);
-                foreach ($filterReportingList as $key => $val) {
-                    $coordinatorDetails = DB::table('coordinators as cd')
-                        ->select('cd.first_name as first_name', 'cd.last_name as last_name', 'cp.short_title as position')
-                        ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-                        ->where('cd.id', $val)
-                        ->get();
+            $filterReportingList = collect((array) $reportingList)
+                ->except(['id', 'coordinator_id', 'layer0'])
+                ->reverse();
 
-                    $coordinator_array = []; // Updated to short syntax
-                    $coordinator_array[] = $coordinatorDetails->toArray();
+            $coordinatorArray = $filterReportingList->map(function ($val) {
+                return DB::table('coordinators as cd')
+                    ->select('cd.first_name', 'cd.last_name', 'cp.short_title as position')
+                    ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
+                    ->where('cd.id', $val)
+                    ->first();
+            });
 
-                }
-                $cord_row_count = count($coordinator_array);
-                $stacked_coord_array = null;
+            return [
+                'chapter' => $chapter,
+                'coordinatorArray' => $coordinatorArray->toArray(),
+            ];
+        });
 
-                for ($pos_row = 8; $pos_row > 0; $pos_row--) {
-                    $stacked_coord_array[$pos_row] = '';
-                }
+        $columns = ['Conf', 'Reg', 'State', 'Name', 'CC', 'ACC', 'RC', 'ARC', 'SC', 'AC', 'BS'];
 
-                for ($pos_row = 8; $pos_row > 0; $pos_row--) {
-                    $position_found = false;
+        $callback = function () use ($chaptersData, $columns, $positionCodes) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
 
-                    for ($cord_row = 0; $cord_row < $cord_row_count; $cord_row++) {
-                        switch ($pos_row) {
-                            case 1:
-                                if (isset($coordinator_array[$cord_row][0]) && $coordinator_array[$cord_row][0]->position == 'BS' && ! $position_found) {
-                                    $stacked_coord_array[1] = $coordinator_array[$cord_row][0]->first_name.' '.$coordinator_array[$cord_row][0]->last_name;
-                                    $position_found = true;
-                                }
-                                break;
-                            case 2:
-                                if (isset($coordinator_array[$cord_row][0]) && $coordinator_array[$cord_row][0]->position == 'AC' && ! $position_found) {
-                                    $stacked_coord_array[2] = $coordinator_array[$cord_row][0]->first_name.' '.$coordinator_array[$cord_row][0]->last_name;
-                                    $position_found = true;
-                                }
-                                break;
-                            case 3:
-                                if (isset($coordinator_array[$cord_row][0]) && $coordinator_array[$cord_row][0]->position == 'SC' && ! $position_found) {
-                                    $stacked_coord_array[3] = $coordinator_array[$cord_row][0]->first_name.' '.$coordinator_array[$cord_row][0]->last_name;
-                                    $position_found = true;
-                                }
-                                break;
-                            case 4:
-                                if (isset($coordinator_array[$cord_row][0]) && $coordinator_array[$cord_row][0]->position == 'ARC' && ! $position_found) {
-                                    $stacked_coord_array[4] = $coordinator_array[$cord_row][0]->first_name.' '.$coordinator_array[$cord_row][0]->last_name;
-                                    $position_found = true;
-                                }
-                                break;
-                            case 5:
-                                if (isset($coordinator_array[$cord_row][0]) && $coordinator_array[$cord_row][0]->position == 'RC' && ! $position_found) {
-                                    $stacked_coord_array[5] = $coordinator_array[$cord_row][0]->first_name.' '.$coordinator_array[$cord_row][0]->last_name;
-                                    $position_found = true;
-                                }
-                                break;
-                            case 6:
-                                if (isset($coordinator_array[$cord_row][0]) && $coordinator_array[$cord_row][0]->position == 'ACC' && ! $position_found) {
-                                    $stacked_coord_array[6] = $coordinator_array[$cord_row][0]->first_name.' '.$coordinator_array[$cord_row][0]->last_name;
-                                    $position_found = true;
-                                }
-                                break;
-                            case 7:
-                                if (isset($coordinator_array[$cord_row][0]) && $coordinator_array[$cord_row][0]->position == 'CC' && ! $position_found) {
-                                    $stacked_coord_array[7] = $coordinator_array[$cord_row][0]->first_name.' '.$coordinator_array[$cord_row][0]->last_name;
-                                    $position_found = true;
-                                }
-                                break;
-                        }
-                    }
+            foreach ($chaptersData as $chapter) {
+                // Ensure that coordinators are available for this chapter
+                $coordinators = collect($positionCodes)->mapWithKeys(function ($code) use ($chapter) {
+                    // Find the coordinator with the matching position code
+                    $coordinator = collect($chapter['coordinatorArray'])->firstWhere('position', $code);
+                    return [$code => $coordinator ? "{$coordinator->first_name} {$coordinator->last_name}" : ' '];
+                });
 
-                }
-
-                unset($coordinator_array);
-                fputcsv($output, [
-                    $chapter_array[$row]->conference,
-                    $chapter_array[$row]->region,
-                    $chapter_array[$row]->state,
-                    $chapter_array[$row]->name,
-                    $stacked_coord_array['7'],
-                    $stacked_coord_array['6'],
-                    $stacked_coord_array['5'],
-                    $stacked_coord_array['4'],
-                    $stacked_coord_array['3'],
-                    $stacked_coord_array['2'],
-                    $stacked_coord_array['1']]);
+                fputcsv($file, array_merge(
+                    [
+                        $chapter['chapter']->conference_id,
+                        $chapter['chapter']->region,
+                        $chapter['chapter']->state,
+                        $chapter['chapter']->name,
+                    ],
+                    $coordinators->values()->toArray()
+                ));
             }
 
-            fclose($output);
-            exit($output);
-        }
+            fclose($file);
+        };
 
-        return redirect()->to('/home');
+        return Response::stream($callback, 200, $headers);
+
     }
 
     /**
@@ -1827,12 +1712,6 @@ class ExportController extends Controller
         // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
 
-        if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
-
         // Get the base query
         $baseQuery = $this->getBaseIncomingChapterQuery();
 
@@ -1846,11 +1725,11 @@ class ExportController extends Controller
         if ($conditions['founderCondition']) {
             // No additional condition; proceed with the base query
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.conference', '=', $corConfId);
+            $chapterList = $chapterList->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.region', '=', $corRegId);
+            $chapterList = $chapterList->where('chapters.region_id', '=', $corRegId);
         } else {
-            $chapterList = $chapterList->whereIn('chapters.primary_coordinator_id', $inQryArr);
+            $chapterList = $chapterList->whereIn('chapters.primary_coordinator_id', $corId);
         }
 
         // Execute query
@@ -1957,11 +1836,11 @@ class ExportController extends Controller
         $corlayerId = $corDetails['layer_id'];
 
         $activeChapterList = DB::table('chapters')
-            ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'bd.email as pre_email', 'st.state_short_name as state')
+            ->select('chapters.*', 'chapters.conference_id as conf', 'rg.short_name as reg_name', 'bd.email as pre_email', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
+            ->leftjoin('region as rg', 'chapters.region_id', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->orderBy('st.state_short_name')

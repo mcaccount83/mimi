@@ -54,20 +54,11 @@
                             </td>
                             <td>{{ $list->state }}</td>
                             <td>{{ $list->name }}</td>
-                            @switch($list->status_id)
-                                @case(1)
-                                    <td>OK</td>
-                                    @break
-                                @case(4)
-                                    <td style="background-color: #dc3545; color: #ffffff;">On Hold Do Not Refer</td>
-                                    @break
-                                @case(5)
-                                    <td style="background-color: #ffc107;">Probation</td>
-                                    @break
-                                @case(6)
-                                    <td style="background-color: #dc3545; color: #ffffff;">Probation Do Not Refer</td>
-                                    @break
-                            @endswitch
+                            <td @if($list->status_id == '4' ||$list->status_id == '6' ) style="background-color:#dc3545; color: #ffffff;"
+                                @elseif ($list->status_id == '5') style="background-color:#ffc107;"
+                                @else style="background-color: transparent;" @endif>
+                                {{ $list->status }}
+                            </td>
                             <td>{{ $list->notes }}</td>
                         </tr>
                     @endforeach
