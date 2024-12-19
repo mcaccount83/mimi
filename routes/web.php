@@ -120,6 +120,8 @@ Route::get('/board/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->
 Route::get('/chapter/financial/pdf/{id}', [PDFController::class, 'generatePdf'])->name('pdf.financialreport');
 Route::get('/board/chapteringoodstanding/pdf/{id}', [PDFController::class, 'generateGoodStanding'])->name('pdf.chapteringoodstanding');
 Route::get('/chapter/disbandletter/pdf/{id}', [PDFController::class, 'generateDisbandLetter'])->name('pdf.disbandletter');
+Route::post('/chapter/disbandletter', [PDFController::class, 'saveDisbandLetter'])->name('pdf.savedisbandletter');
+
 
 Route::get('/chapter/probationnopmtletter/pdf/{id}', [PDFController::class, 'generateProbationNoPmtLetter'])->name('pdf.probationpayment');
 Route::post('/chapter/probationnopmtletter', [PDFController::class, 'saveProbationNoPmtLetter'])->name('pdf.saveprobationpayment');

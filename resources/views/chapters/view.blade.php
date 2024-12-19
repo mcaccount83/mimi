@@ -987,7 +987,6 @@ function showProbationNoRptModal() {
                 },
                 didOpen: () => {
                     Swal.showLoading();
-
                     // Perform the AJAX request
                     $.ajax({
                         url: '{{ route('pdf.saveprobationreport') }}',
@@ -1001,7 +1000,7 @@ function showProbationNoRptModal() {
                                 title: 'Success!',
                                 text: response.message,
                                 icon: 'success',
-                                showConfirmButton: false,
+                                showConfirmButton: false,  // Automatically close without "OK" button
                                 timer: 1500,
                                 customClass: {
                                     confirmButton: 'btn-sm btn-success'
@@ -1066,7 +1065,6 @@ function showProbationNoPmtModal() {
                 },
                 didOpen: () => {
                     Swal.showLoading();
-
                     // Perform the AJAX request
                     $.ajax({
                         url: '{{ route('pdf.saveprobationpayment') }}',
@@ -1080,7 +1078,7 @@ function showProbationNoPmtModal() {
                                 title: 'Success!',
                                 text: response.message,
                                 icon: 'success',
-                                showConfirmButton: false,
+                                showConfirmButton: false,  // Automatically close without "OK" button
                                 timer: 1500,
                                 customClass: {
                                     confirmButton: 'btn-sm btn-success'
@@ -1145,7 +1143,6 @@ function showProbationPartyModal() {
                 },
                 didOpen: () => {
                     Swal.showLoading();
-
                     // Perform the AJAX request
                     $.ajax({
                         url: '{{ route('pdf.saveprobationparty') }}',
@@ -1159,7 +1156,7 @@ function showProbationPartyModal() {
                                 title: 'Success!',
                                 text: response.message,
                                 icon: 'success',
-                                showConfirmButton: false,
+                                showConfirmButton: false,  // Automatically close without "OK" button
                                 timer: 1500,
                                 customClass: {
                                     confirmButton: 'btn-sm btn-success'
@@ -1224,7 +1221,6 @@ function showWarningPartyModal() {
                 },
                 didOpen: () => {
                     Swal.showLoading();
-
                     // Perform the AJAX request
                     $.ajax({
                         url: '{{ route('pdf.savewarningparty') }}',
@@ -1238,7 +1234,7 @@ function showWarningPartyModal() {
                                 title: 'Success!',
                                 text: response.message,
                                 icon: 'success',
-                                showConfirmButton: false,
+                                showConfirmButton: false,  // Automatically close without "OK" button
                                 timer: 1500,
                                 customClass: {
                                     confirmButton: 'btn-sm btn-success'
@@ -1303,7 +1299,6 @@ function showProbationReleaseModal() {
                 },
                 didOpen: () => {
                     Swal.showLoading();
-
                     // Perform the AJAX request
                     $.ajax({
                         url: '{{ route('pdf.saveprobationrelease') }}',
@@ -1317,7 +1312,7 @@ function showProbationReleaseModal() {
                                 title: 'Success!',
                                 text: response.message,
                                 icon: 'success',
-                                showConfirmButton: false,
+                                showConfirmButton: false,  // Automatically close without "OK" button
                                 timer: 1500,
                                 customClass: {
                                     confirmButton: 'btn-sm btn-success'
@@ -1342,10 +1337,6 @@ function showProbationReleaseModal() {
                     });
                 }
             });
-        // } else if (result.dismiss === Swal.DismissReason.cancel) {
-        //     // Redirect to the route when the cancel button is clicked
-        //     const chapterId = document.getElementById('chapter_id').value;
-        //     window.location.href = `/chapter/probationreleaseletter/pdf/${chapterId}?stream=true`;
         }
     });
 }

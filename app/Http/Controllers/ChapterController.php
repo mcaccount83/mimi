@@ -489,10 +489,10 @@ class ChapterController extends Controller
 
             $chapterList = DB::table('chapters')
                 ->select('chapters.*', 'chapters.primary_coordinator_id as pcid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                    'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'chapters.conference as conf')
+                    'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'chapters.conference_id as conf')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
                 ->where('chapters.is_Active', '=', '0')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.id', $chapterid)
@@ -504,7 +504,7 @@ class ChapterController extends Controller
             $chapterName = $chapterList[0]->name;
             $chapterState = $chapterList[0]->state;
             $chapterEmail = $chapterList[0]->email;
-            $chapterStatus = $chapterList[0]->status;
+            $chapterStatus = $chapterList[0]->status_id;
             //President Info
             $preinfo = DB::table('boards')
                 ->select('first_name', 'last_name', 'email')
@@ -584,10 +584,10 @@ class ChapterController extends Controller
             }
             //conference info
             $coninfo = DB::table('chapters')
-                ->select('chapters.*', 'conference')
+                ->select('chapters.*', 'conference_id')
                 ->where('id', $chapterid)
                 ->get();
-            $conf = $coninfo[0]->conference;
+            $conf = $coninfo[0]->conference_id;
 
             // Load Board and Coordinators for Sending Email
             $chId = $chapterList[0]->id;
@@ -645,7 +645,8 @@ class ChapterController extends Controller
 
             //Standard Disbanding Letter Send to Board & Coordinators//
             if ($disbandLetter == 1) {
-                $pdfPath = $this->generateAndSaveDisbandLetter($chapterid);   // Generate and save the PDF
+                $pdfPath = $this->PDFController->saveDisbandLetter($chapterid);
+                // $pdfPath = $this->generateAndSaveDisbandLetter($chapterid);   // Generate and save the PDF
                 Mail::to($chapterEmails)
                     ->cc($coordEmails)
                     ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
@@ -679,103 +680,103 @@ class ChapterController extends Controller
         }
     }
 
-    public function generateAndSaveDisbandLetter($chapterid)
-    {
-        $chapterDetails = DB::table('chapters')
-            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name',
-                'st.state_short_name as state', 'bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'bd.street_address as pres_addr', 'bd.city as pres_city', 'bd.state as pres_state',
-                'bd.zip as pres_zip', 'chapters.conference as conf', 'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            // ->where('chapters.is_active', '=', '1')
-            ->where('bd.board_position_id', '=', '1')
-            ->where('chapters.id', '=', $chapterid)
-            ->get();
+    // public function generateAndSaveDisbandLetter($chapterid)
+    // {
+    //     $chapterDetails = DB::table('chapters')
+    //         ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name',
+    //             'st.state_short_name as state', 'bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'bd.street_address as pres_addr', 'bd.city as pres_city', 'bd.state as pres_state',
+    //             'bd.zip as pres_zip', 'chapters.conference as conf', 'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
+    //         ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
+    //         ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+    //         ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
+    //         ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
+    //         // ->where('chapters.is_active', '=', '1')
+    //         ->where('bd.board_position_id', '=', '1')
+    //         ->where('chapters.id', '=', $chapterid)
+    //         ->get();
 
-        // Load Conference Coordinators information for signing letter
-        $chName = $chapterDetails[0]->chapter_name;
-        $chState = $chapterDetails[0]->state;
-        $chConf = $chapterDetails[0]->conf;
-        $chPcid = $chapterDetails[0]->pcid;
+    //     // Load Conference Coordinators information for signing letter
+    //     $chName = $chapterDetails[0]->chapter_name;
+    //     $chState = $chapterDetails[0]->state;
+    //     $chConf = $chapterDetails[0]->conf;
+    //     $chPcid = $chapterDetails[0]->pcid;
 
-        $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
-        $cc_fname = $coordinatorData['cc_fname'];
-        $cc_lname = $coordinatorData['cc_lname'];
-        $cc_pos = $coordinatorData['cc_pos'];
+    //     $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
+    //     $cc_fname = $coordinatorData['cc_fname'];
+    //     $cc_lname = $coordinatorData['cc_lname'];
+    //     $cc_pos = $coordinatorData['cc_pos'];
 
-        $pdfData = [
-            'chapter_name' => $chapterDetails[0]->chapter_name,
-            'state' => $chapterDetails[0]->state,
-            'conf' => $chapterDetails[0]->conf,
-            'conf_name' => $chapterDetails[0]->conf_name,
-            'conf_desc' => $chapterDetails[0]->conf_desc,
-            'ein' => $chapterDetails[0]->ein,
-            'pres_fname' => $chapterDetails[0]->pres_fname,
-            'pres_lname' => $chapterDetails[0]->pres_lname,
-            'pres_addr' => $chapterDetails[0]->pres_addr,
-            'pres_city' => $chapterDetails[0]->pres_city,
-            'pres_state' => $chapterDetails[0]->pres_state,
-            'pres_zip' => $chapterDetails[0]->pres_zip,
-            'cc_fname' => $cc_fname,
-            'cc_lname' => $cc_lname,
-            'cc_pos' => $cc_pos,
-        ];
+    //     $pdfData = [
+    //         'chapter_name' => $chapterDetails[0]->chapter_name,
+    //         'state' => $chapterDetails[0]->state,
+    //         'conf' => $chapterDetails[0]->conf,
+    //         'conf_name' => $chapterDetails[0]->conf_name,
+    //         'conf_desc' => $chapterDetails[0]->conf_desc,
+    //         'ein' => $chapterDetails[0]->ein,
+    //         'pres_fname' => $chapterDetails[0]->pres_fname,
+    //         'pres_lname' => $chapterDetails[0]->pres_lname,
+    //         'pres_addr' => $chapterDetails[0]->pres_addr,
+    //         'pres_city' => $chapterDetails[0]->pres_city,
+    //         'pres_state' => $chapterDetails[0]->pres_state,
+    //         'pres_zip' => $chapterDetails[0]->pres_zip,
+    //         'cc_fname' => $cc_fname,
+    //         'cc_lname' => $cc_lname,
+    //         'cc_pos' => $cc_pos,
+    //     ];
 
-        $pdf = Pdf::loadView('pdf.disbandletter', compact('pdfData'));
+    //     $pdf = Pdf::loadView('pdf.disbandletter', compact('pdfData'));
 
-        $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
-        $filename = $pdfData['state'].'_'.$chapterName.'_Disband_Letter.pdf'; // Use sanitized chapter name
+    //     $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
+    //     $filename = $pdfData['state'].'_'.$chapterName.'_Disband_Letter.pdf'; // Use sanitized chapter name
 
-        $pdfPath = storage_path('app/pdf_reports/'.$filename);
-        $pdf->save($pdfPath);
+    //     $pdfPath = storage_path('app/pdf_reports/'.$filename);
+    //     $pdf->save($pdfPath);
 
-        $googleClient = new Client;
-        $client_id = \config('services.google.client_id');
-        $client_secret = \config('services.google.client_secret');
-        $refresh_token = \config('services.google.refresh_token');
-        $response = Http::post('https://oauth2.googleapis.com/token', [
-            'client_id' => $client_id,
-            'client_secret' => $client_secret,
-            'refresh_token' => $refresh_token,
-            'grant_type' => 'refresh_token',
-        ]);
+    //     $googleClient = new Client;
+    //     $client_id = \config('services.google.client_id');
+    //     $client_secret = \config('services.google.client_secret');
+    //     $refresh_token = \config('services.google.refresh_token');
+    //     $response = Http::post('https://oauth2.googleapis.com/token', [
+    //         'client_id' => $client_id,
+    //         'client_secret' => $client_secret,
+    //         'refresh_token' => $refresh_token,
+    //         'grant_type' => 'refresh_token',
+    //     ]);
 
-        $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
-        $accessToken = json_decode((string) $response->getBody(), true)['access_token'];
+    //     $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
+    //     $accessToken = json_decode((string) $response->getBody(), true)['access_token'];
 
-        $sharedDriveId = '1PlBi8BE2ESqUbLPTkQXzt1dKhwonyU_9';   //Shared Drive -> Disband Letters
+    //     $sharedDriveId = '1PlBi8BE2ESqUbLPTkQXzt1dKhwonyU_9';   //Shared Drive -> Disband Letters
 
-        // Set parent IDs for the file
-        $fileMetadata = [
-            'name' => $filename,
-            'mimeType' => 'application/pdf',
-            'parents' => [$sharedDriveId],
-        ];
+    //     // Set parent IDs for the file
+    //     $fileMetadata = [
+    //         'name' => $filename,
+    //         'mimeType' => 'application/pdf',
+    //         'parents' => [$sharedDriveId],
+    //     ];
 
-        // Upload the file
-        $fileContent = file_get_contents($pdfPath);
-        $fileContentBase64 = base64_encode($fileContent);
-        $metadataJson = json_encode($fileMetadata);
+    //     // Upload the file
+    //     $fileContent = file_get_contents($pdfPath);
+    //     $fileContentBase64 = base64_encode($fileContent);
+    //     $metadataJson = json_encode($fileMetadata);
 
-        $response = $googleClient->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-            'headers' => [
-                'Authorization' => 'Bearer '.$accessToken,
-                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-            ],
-            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-        ]);
+    //     $response = $googleClient->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+    //         'headers' => [
+    //             'Authorization' => 'Bearer '.$accessToken,
+    //             'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+    //         ],
+    //         'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
+    //     ]);
 
-        if ($response->getStatusCode() === 200) { // Check for a successful status code
-            $pdf_file_id = json_decode($response->getBody()->getContents(), true)['id'];
-            $chapter = Chapter::find($chapterid);
-            $chapter->disband_letter_path = $pdf_file_id;
-            $chapter->save();
+    //     if ($response->getStatusCode() === 200) { // Check for a successful status code
+    //         $pdf_file_id = json_decode($response->getBody()->getContents(), true)['id'];
+    //         $chapter = Chapter::find($chapterid);
+    //         $chapter->disband_letter_path = $pdf_file_id;
+    //         $chapter->save();
 
-            return $pdfPath;  // Return the full local stored path
-        }
-    }
+    //         return $pdfPath;  // Return the full local stored path
+    //     }
+    // }
 
     /**
      * Function for unZapping a Chapter (store)
