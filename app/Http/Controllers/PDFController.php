@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ChapterDisbandLetter;
 use App\Mail\ProbationNoRptLetter;
 use App\Mail\ProbationNoPmtLetter;
 use App\Mail\ProbationPartyLetter;
@@ -229,95 +228,48 @@ class PDFController extends Controller
      */
     public function generateDisbandLetter($chapterId)
     {
-        $chapterList = Chapter::with(['country', 'state', 'conference', 'region', 'boards', 'startMonth'])->find($chapterId);
+        $chapterDetails = DB::table('chapters')
+            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name',
+                'st.state_short_name as state', 'bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'bd.street_address as pres_addr', 'bd.city as pres_city', 'bd.state as pres_state',
+                'bd.zip as pres_zip', 'chapters.conference as conf', 'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->where('bd.board_position_id', '=', '1')
+            ->where('chapters.id', '=', $chapterId)
+            ->get();
 
-        $chIsActive = $chapterList->is_active;
-        $stateShortName = $chapterList->state->state_short_name;
-        $regionLongName = $chapterList->region->long_name;
-        $conferenceDescription = $chapterList->conference->conference_description;
-        $startMonthName = $chapterList->startMonth->month_long_name;
+        // Load Conference Coordinators for Signing Letter
+        $chName = $chapterDetails[0]->chapter_name;
+        $chState = $chapterDetails[0]->state;
+        $chConf = $chapterDetails[0]->conf;
+        $chPcid = $chapterDetails[0]->pcid;
 
-        $chConfId = $chapterList->conference_id;
-        $chRegId = $chapterList->region_id;
-        $chState = $stateShortName;
-        $chConf = $conferenceDescription;
-        $chPCid = $chapterList->primary_coordinator_id;
+        $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
+        $cc_fname = $coordinatorData['cc_fname'];
+        $cc_lname = $coordinatorData['cc_lname'];
+        $cc_pos = $coordinatorData['cc_pos'];
 
-        $boards = $chapterList->boards()->with('state')->get();
-        $boardDetails = $boards->groupBy('board_position_id');
-        $PresDetails = $boardDetails->get(1)->first(); // President
-
-        $coordinatorData = $this->userController->loadConferenceCoord($chPCid);
-            $cc_fname = $coordinatorData['cc_fname'];
-            $cc_lname = $coordinatorData['cc_lname'];
-            $cc_pos = $coordinatorData['cc_pos'];
-            $cc_conf_name = $coordinatorData['cc_conf_name'];
-            $cc_conf_desc = $coordinatorData['cc_conf_desc'];
-            $cc_email = $coordinatorData['cc_email'];
-
-        $sanitizedChapterName = str_replace(['/', '\\'], '-', $chapterList->name);
+        $sanitizedChapterName = str_replace(['/', '\\'], '-', $chapterDetails[0]->chapter_name);
 
         $pdfData = [
-            'chapter_name' => $chapterList->name,
-            'state' => $stateShortName,
-            'month' => $startMonthName,
-            'year' => $chapterList->next_renewal_year,
-            'pres_fname' => $PresDetails->first_name,
-            'pres_lname' => $PresDetails->last_name,
-            'pres_addr' => $PresDetails->street_address,
-            'pres_city' => $PresDetails->city,
-            'pres_state' => $PresDetails->state,
-            'pres_zip' => $PresDetails->zip,
+            'chapter_name' => $chapterDetails[0]->chapter_name,
+            'state' => $chapterDetails[0]->state,
+            'conf_name' => $chapterDetails[0]->conf_name,
+            'conf_desc' => $chapterDetails[0]->conf_desc,
+            'ein' => $chapterDetails[0]->ein,
+            'pres_fname' => $chapterDetails[0]->pres_fname,
+            'pres_lname' => $chapterDetails[0]->pres_lname,
+            'pres_addr' => $chapterDetails[0]->pres_addr,
+            'pres_city' => $chapterDetails[0]->pres_city,
+            'pres_state' => $chapterDetails[0]->pres_state,
+            'pres_zip' => $chapterDetails[0]->pres_zip,
             'cc_fname' => $cc_fname,
             'cc_lname' => $cc_lname,
             'cc_pos' => $cc_pos,
-            'cc_conf_name' => $cc_conf_name,
-            'cc_conf_desc' => $cc_conf_desc,
             'ch_name' => $sanitizedChapterName,
         ];
-
-        // $chapterDetails = DB::table('chapters')
-        //     ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name',
-        //         'st.state_short_name as state', 'bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'bd.street_address as pres_addr', 'bd.city as pres_city', 'bd.state as pres_state',
-        //         'bd.zip as pres_zip', 'chapters.conference as conf', 'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
-        //     ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-        //     ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-        //     ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
-        //     ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-        //     ->where('bd.board_position_id', '=', '1')
-        //     ->where('chapters.id', '=', $chapterId)
-        //     ->get();
-
-        // // Load Conference Coordinators for Signing Letter
-        // $chName = $chapterDetails[0]->chapter_name;
-        // $chState = $chapterDetails[0]->state;
-        // $chConf = $chapterDetails[0]->conf;
-        // $chPcid = $chapterDetails[0]->pcid;
-
-        // $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
-        // $cc_fname = $coordinatorData['cc_fname'];
-        // $cc_lname = $coordinatorData['cc_lname'];
-        // $cc_pos = $coordinatorData['cc_pos'];
-
-        // $sanitizedChapterName = str_replace(['/', '\\'], '-', $chapterDetails[0]->chapter_name);
-
-        // $pdfData = [
-        //     'chapter_name' => $chapterDetails[0]->chapter_name,
-        //     'state' => $chapterDetails[0]->state,
-        //     'conf_name' => $chapterDetails[0]->conf_name,
-        //     'conf_desc' => $chapterDetails[0]->conf_desc,
-        //     'ein' => $chapterDetails[0]->ein,
-        //     'pres_fname' => $chapterDetails[0]->pres_fname,
-        //     'pres_lname' => $chapterDetails[0]->pres_lname,
-        //     'pres_addr' => $chapterDetails[0]->pres_addr,
-        //     'pres_city' => $chapterDetails[0]->pres_city,
-        //     'pres_state' => $chapterDetails[0]->pres_state,
-        //     'pres_zip' => $chapterDetails[0]->pres_zip,
-        //     'cc_fname' => $cc_fname,
-        //     'cc_lname' => $cc_lname,
-        //     'cc_pos' => $cc_pos,
-        //     'ch_name' => $sanitizedChapterName,
-        // ];
 
         $pdf = Pdf::loadView('pdf.disbandletter', compact('pdfData'));
 
@@ -333,114 +285,6 @@ class PDFController extends Controller
         ];
 
     }
-
-    /**
-     * Save & Send Disband Letter to Full Board
-     */
-    public function saveDisbandLetter($chapterId)
-    {
-        $result = $this->generateDisbandLetter($chapterId);
-        $pdf = $result['pdf'];
-        $filename = $result['filename'];
-
-        $pdfPath = storage_path('app/pdf_reports/' . $filename);
-        $pdf->save($pdfPath);
-
-        $googleClient = new Client;  // Initialize Google Client
-        $accessToken = $this->token();
-
-        $googleDrive = DB::table('google_drive')
-            ->select('google_drive.disband_letter as disband_letter')
-            ->get();
-        $disbandLetterDrive = $googleDrive[0]->disband_letter;
-        $sharedDriveId = $disbandLetterDrive; // Shared Drive
-
-        $fileMetadata = [
-            'name' => $filename,
-            'mimeType' => 'application/pdf',
-            'parents' => [$sharedDriveId],
-        ];
-        $fileContent = file_get_contents($pdfPath);
-        $fileContentBase64 = base64_encode($fileContent);
-        $metadataJson = json_encode($fileMetadata);
-
-        $response = $googleClient->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $accessToken,
-                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-            ],
-            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-        ]);
-
-        if ($response->getStatusCode() === 200) {
-            $pdfFileId = json_decode($response->getBody()->getContents(), true)['id'];
-
-            // Load Chapter Details for Saving and Email
-            $chapterList = Chapter::with(['state', 'documents'])->find($chapterId);
-            $document = $chapterList->documents;
-            $document->disband_letter_path = $pdfFileId;
-            $document->save();
-
-        }
-
-        return $pdfPath;  // Return the full local stored path
-
-    }
-
-
-    //         // Load Board and Coordinators for Sending Email
-    //         $chId = $chapterList->id;
-    //         $emailData = $this->userController->loadEmailDetails($chId);
-    //         $emailListChap = $emailData['emailListChap'];
-    //         $emailListCoord = $emailData['emailListCoord'];
-    //         $chapterEmails = $emailListChap;
-    //         $coordEmails = $emailListCoord;
-
-    //         // Load Conference Coordinators information for signing email
-    //         $chPcid = $chapterList->primary_coordinator_id;
-    //         $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
-    //         $cc_fname = $coordinatorData['cc_fname'];
-    //         $cc_lname = $coordinatorData['cc_lname'];
-    //         $cc_pos = $coordinatorData['cc_pos'];
-    //         $cc_conf_name = $coordinatorData['cc_conf_name'];
-    //         $cc_conf_desc = $coordinatorData['cc_conf_desc'];
-    //         $cc_email = $coordinatorData['cc_email'];
-
-    //         // Load other MailData
-    //         $stateShortName = $chapterList->state->state_short_name;
-
-    //         $mailData = [
-    //             'chapterName' => $chapterList->name,
-    //             'chapterEmail' => $chapterList->email,
-    //             'chapterState' => $stateShortName,
-    //             'cc_fname' => $cc_fname,
-    //             'cc_lname' => $cc_lname,
-    //             'cc_pos' => $cc_pos,
-    //             'cc_conf_name' => $cc_conf_name,
-    //             'cc_conf_desc' => $cc_conf_desc,
-    //             'cc_email' => $cc_email,
-    //         ];
-
-    //         //Standard Warning for Party Expense Letter Send to Board & Coordinators//
-    //             Mail::to($chapterEmails)
-    //                 ->cc($coordEmails)
-    //                 ->queue(new ChapterDisbandLetter($mailData, $pdfPath));
-
-    //         // Return success response
-    //         return response()->json([
-    //             'status' => 'success',
-    //             'message' => 'PDF emailed successfully.',
-    //             'pdf_path' => $pdfPath,
-    //             'google_drive_id' => $pdfFileId,
-    //         ]);
-    //     }
-
-    //     // Return error response in case of failure
-    //     return response()->json([
-    //         'status' => 'error',
-    //         'message' => 'Failed to upload PDF to Google Drive.',
-    //     ], 500);
-    // }
 
     /**
      * Generate Probation No Payment Letter
