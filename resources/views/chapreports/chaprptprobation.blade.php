@@ -54,7 +54,7 @@
                             </td>
                             <td>{{ $list->state }}</td>
                         <td>{{ $list->name }}</td>
-						@switch($list->status_id)
+						@switch($list->status)
                                 @case(4)
                                     <td style="background-color: #dc3545; color: #ffffff;">On Hold Do Not Refer</td>
                                     @break

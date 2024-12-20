@@ -17,7 +17,7 @@ class PublicController extends Controller
     {
         $international = DB::table('chapters')
             ->select('chapters.*', 'state.state_short_name', 'state.state_long_name')
-            ->join('state', 'chapters.state_id', '=', 'state.id')
+            ->join('state', 'chapters.state', '=', 'state.id')
             ->where('state', '=', '52')
             ->where('is_active', '1')
             ->where('name', 'not like', '%test%')
@@ -26,8 +26,8 @@ class PublicController extends Controller
 
         $chapters = DB::table('chapters')
             ->select('chapters.*', 'state.state_short_name', 'state.state_long_name')
-            ->join('state', 'chapters.state_id', '=', 'state.id')
-            ->where('chapters.state_id', '<>', 52)
+            ->join('state', 'chapters.state', '=', 'state.id')
+            ->where('chapters.state', '<>', 52)
             ->where('is_active', '1')
             ->where('name', 'not like', '%test%')
             ->orderBy('state')

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Faker\Core\Coordinates;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +13,7 @@ class Region extends Model
     use Notifiable;
 
     // Specify the table name explicitly
-    protected $table = 'region';
+    protected $table = 'conference';
 
     /**
      * The attributes that are mass assignable.
@@ -30,4 +29,13 @@ class Region extends Model
 
     ];
 
+    public function coordinators(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Coordinators::class, 'region_id');
+    }
+
+    public function chapters(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Chapter::class, 'region');
+    }
 }

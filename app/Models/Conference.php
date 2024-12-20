@@ -31,11 +31,11 @@ class Conference extends Model
 
     public function coordinators(): BelongsTo
     {
-        return $this->belongsTo(Coordinators::class, 'conference');
+        return $this->belongsTo(\App\Models\Coordinators::class, 'conference_id');
     }
 
-    // public function chapter(): BelongsTo
-    // {
-    //     return $this->belongsTo(Chapter::class, 'conference');
-    // }
+    public function chapters(): BelongsTo
+    {
+        return $this->belongsTo(\App\Models\Chapter::class, 'conference');
+    }
 }

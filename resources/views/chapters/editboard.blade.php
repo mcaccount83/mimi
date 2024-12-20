@@ -13,26 +13,26 @@
 </style>
 @section('content')
     <!-- Main content -->
-    <form class="form-horizontal" method="POST" action='{{ route("chapters.updateboard", $chapterList->id) }}'>
+    <form class="form-horizontal" method="POST" action='{{ route("chapters.updateboard", $chapterList[0]->id) }}'>
     @csrf
     <section class="content">
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-4">
 
-            <input type="hidden" name="ch_name" value="{{$chapterList->name}}">
-            <input type="hidden" name="ch_state" value="{{$stateShortName}}">
-            <input type="hidden" id="ch_pre_email_chk" value="{{ $PresDetails->email }}">
-            <input type="hidden" id="ch_avp_email_chk" value="{{ $AVPDetails->email }}">
-            <input type="hidden" id="ch_mvp_email_chk" value="{{ $MVPDetails->email }}">
-            <input type="hidden" id="ch_trs_email_chk" value="{{ $TRSDetails->email }}">
-            <input type="hidden" id="ch_sec_email_chk" value="{{ $SECDetails->email }}">
+            <input type="hidden" name="ch_name" value="{{$chapterList[0]->name}}">
+            <input type="hidden" name="ch_state" value="{{$chapterList[0]->statename}}">
+            <input type="hidden" id="ch_pre_email_chk" value="{{ $chapterList[0]->bd_email }}">
+            <input type="hidden" id="ch_avp_email_chk" value="{{ $AVPDetails[0]->avp_email }}">
+            <input type="hidden" id="ch_mvp_email_chk" value="{{ $MVPDetails[0]->mvp_email }}">
+            <input type="hidden" id="ch_trs_email_chk" value="{{ $TRSDetails[0]->trs_email }}">
+            <input type="hidden" id="ch_sec_email_chk" value="{{ $SECDetails[0]->sec_email }}">
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
-                  <h3 class="profile-username text-center">MOMS Club of {{ $chapterList->name }}, {{$stateShortName}}</h3>
-                  <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
+                  <h3 class="profile-username text-center">MOMS Club of {{ $chapterList[0]->name }}, {{$chapterList[0]->statename}}</h3>
+                  <p class="text-center">{{ $chapterList[0]->confname }} Conference, {{ $chapterList[0]->regname }} Region
                   </p>
 
                   <ul class="list-group list-group-unbordered mb-3">
@@ -42,7 +42,7 @@
                                 <label class="col-form-label mb-0 mr-2">President:</label>
                             </div>
                             <div class="ml-auto">
-                                <span>{{ $PresDetails->first_name }} {{ $PresDetails->last_name }}</span>
+                                <span>{{ $chapterList[0]->first_name }} {{ $chapterList[0]->last_name }}</span>
                             </div>
                           </div>
 
@@ -51,12 +51,12 @@
                                 <label class="col-form-label mb-0 mr-2">AVP:</label>
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" name="AVPVacant" id="AVPVacant" class="custom-control-input"
-                                           {{$AVPDetails->user_id == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
+                                           {{$AVPDetails[0]->avp_fname == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
                                     <label class="custom-control-label" for="AVPVacant">Vacant</label>
                                 </div>
                             </div>
-                            <div class="avp-field ml-auto" style="display: {{ $AVPDetails->user_id == '' ? 'none' : 'block' }};">
-                                <span>{{ $AVPDetails->first_name }} {{ $AVPDetails->last_name }}</span>
+                            <div class="avp-field ml-auto" style="display: {{ $AVPDetails[0]->avp_fname == '' ? 'none' : 'block' }};">
+                                <span>{{ $AVPDetails[0]->avp_fname }} {{ $AVPDetails[0]->avp_lname }}</span>
                             </div>
                           </div>
 
@@ -65,12 +65,12 @@
                                 <label class="col-form-label mb-0 mr-2">MVP:</label>
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" name="MVPVacant" id="MVPVacant" class="custom-control-input"
-                                           {{$MVPDetails->user_id == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
+                                           {{$MVPDetails[0]->mvp_fname == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
                                     <label class="custom-control-label" for="MVPVacant">Vacant</label>
                                 </div>
                             </div>
-                            <div class="mvp-field ml-auto" style="display: {{ $MVPDetails->user_id == '' ? 'none' : 'block' }};">
-                                <span>{{ $MVPDetails->first_name }} {{ $MVPDetails->last_name }}</span>
+                            <div class="mvp-field ml-auto" style="display: {{ $MVPDetails[0]->mvp_fname == '' ? 'none' : 'block' }};">
+                                <span>{{ $MVPDetails[0]->mvp_fname }} {{ $MVPDetails[0]->mvp_lname }}</span>
                             </div>
                           </div>
 
@@ -79,12 +79,12 @@
                                 <label class="col-form-label mb-0 mr-2">Treasurer:</label>
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" name="TreasVacant" id="TreasVacant" class="custom-control-input"
-                                           {{$TRSDetails->user_id == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
+                                           {{$TRSDetails[0]->trs_fname == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
                                     <label class="custom-control-label" for="TreasVacant">Vacant</label>
                                 </div>
                             </div>
-                            <div class="treas-field ml-auto" style="display: {{ $TRSDetails->user_id == '' ? 'none' : 'block' }};">
-                                <span>{{ $TRSDetails->first_name }} {{ $TRSDetails->last_name }}</span>
+                            <div class="treas-field ml-auto" style="display: {{ $TRSDetails[0]->trs_fname == '' ? 'none' : 'block' }};">
+                                <span>{{ $TRSDetails[0]->trs_fname }} {{ $TRSDetails[0]->trs_lname }}</span>
                             </div>
                           </div>
 
@@ -93,25 +93,25 @@
                                 <label class="col-form-label mb-0 mr-2">Secretary:</label>
                                 <div class="custom-control custom-switch">
                                     <input type="checkbox" name="SecVacant" id="SecVacant" class="custom-control-input"
-                                           {{$SECDetails->user_id == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
+                                           {{$SECDetails[0]->sec_fname == '' ? 'checked' : ''}} onchange="ConfirmVacant(this.id)">
                                     <label class="custom-control-label" for="SecVacant">Vacant</label>
                                 </div>
                             </div>
-                            <div class="sec-field ml-auto" style="display: {{ $SECDetails->user_id == '' ? 'none' : 'block' }};">
-                                <span>{{ $SECDetails->first_name }} {{ $SECDetails->last_name }}</span>
+                            <div class="sec-field ml-auto" style="display: {{ $SECDetails[0]->sec_fname == '' ? 'none' : 'block' }};">
+                                <span>{{ $SECDetails[0]->sec_fname }} {{ $SECDetails[0]->sec_lname }}</span>
                             </div>
                           </div>
 
-                          <input type="hidden" id="ch_primarycor" value="{{ $chapterList->primary_coordinator_id }}">
+                          <input type="hidden" id="ch_primarycor" value="{{ $chapterList[0]->primary_coordinator_id }}">
                           <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
                   </ul>
                   <div class="text-center">
-                      @if ($chapterList->is_active == 1 )
+                      @if ($chapterList[0]->is_active == 1 )
                           <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
                       @else
                           <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                          Disband Date: <span class="date-mask">{{ $chapterList->zap_date }}</span><br>
-                          {{ $chapterList->disband_reason }}
+                          Disband Date: <span class="date-mask">{{ $chapterList[0]->zap_date }}</span><br>
+                          {{ $chapterList[0]->disband_reason }}
                       @endif
                   </div>
                 </div>
@@ -132,39 +132,36 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 mb-1 col-form-label">President:</label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_pre_fname" id="ch_pre_fname" class="form-control" value="{{ $PresDetails->first_name }}" required placeholder="First Name" >
+                                <input type="text" name="ch_pre_fname" id="ch_pre_fname" class="form-control" value="{{ $chapterList[0]->first_name }}" required placeholder="First Name" >
                                 </div>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_pre_lname" id="ch_pre_lname" class="form-control" value="{{ $PresDetails->last_name }}" required placeholder="Last Name" >
+                                <input type="text" name="ch_pre_lname" id="ch_pre_lname" class="form-control" value="{{ $chapterList[0]->last_name }}" required placeholder="Last Name" >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"></label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_pre_email" id="ch_pre_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{ $PresDetails->email }}" required placeholder="Email Address" >
+                                <input type="text" name="ch_pre_email" id="ch_pre_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{ $chapterList[0]->bd_email }}" required placeholder="Email Address" >
                                 </div>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_pre_phone" id="ch_pre_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{ $PresDetails->phone}}" required placeholder="Phone Number" >
+                                <input type="text" name="ch_pre_phone" id="ch_pre_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{ $chapterList[0]->phone}}" required placeholder="Phone Number" >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"></label>
                                 <div class="col-sm-10 mb-1">
-                                <input type="text" name="ch_pre_street" id="ch_pre_street" class="form-control" value="{{ $PresDetails->street_address }}"  required placeholder="Street">
+                                <input type="text" name="ch_pre_street" id="ch_pre_street" class="form-control" value="{{ $chapterList[0]->street_address }}"  required >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"><br></label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_pre_city" id="ch_pre_city" class="form-control" value="{{ $PresDetails->city }}"  required placeholder="City">
+                                <input type="text" name="ch_pre_city" id="ch_pre_city" class="form-control" value="{{ $chapterList[0]->city }}"  required >
                                 </div>
                                 <div class="col-sm-3 mb-1">
                                     <select name="ch_pre_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
-                                        @foreach($allState as $state)
-                                            <option value="{{$state->id}}"
-                                                @if($chapterList->state_id == $state->id) selected @endif>
-                                                {{$state->state_long_name}}
-                                            </option>
-                                        @endforeach
+                                            @foreach($stateArr as $state)
+                                                <option value="{{$state->state_short_name}}" {{$chapterList[0]->bd_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
+                                            @endforeach
                                     </select>
                                 </div>
                                 <div class="col-sm-2 mb-1">
-                                    <input type="text" name="ch_pre_zip" id="ch_pre_zip" class="form-control" value="{{ $PresDetails->zip }}"  required placeholder="Zip">
+                                    <input type="text" name="ch_pre_zip" id="ch_pre_zip" class="form-control" value="{{ $chapterList[0]->zip }}"  required >
                                 </div>
                             </div>
 
@@ -172,39 +169,36 @@
                             <div class="avp-field form-group row">
                                 <label class="col-sm-2 mb-1 col-form-label">AVP:</label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control" value="{{$AVPDetails->first_name != ''  ? $AVPDetails->first_name : ''}}" required placeholder="First Name" >
+                                <input type="text" name="ch_avp_fname" id="ch_avp_fname" class="form-control" value="{{$AVPDetails[0]->avp_fname != ''  ? $AVPDetails[0]->avp_fname : ''}}" required placeholder="First Name" >
                                 </div>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control" value="{{$AVPDetails->last_name != ''  ? $AVPDetails->last_name : ''}}" required placeholder="Last Name" >
+                                <input type="text" name="ch_avp_lname" id="ch_avp_lname" class="form-control" value="{{$AVPDetails[0]->avp_lname != ''  ? $AVPDetails[0]->avp_lname : ''}}" required placeholder="Last Name" >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"></label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_avp_email" id="ch_avp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$AVPDetails->email != ''  ? $AVPDetails->email : ''}}" required placeholder="Email Address" >
+                                <input type="text" name="ch_avp_email" id="ch_avp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$AVPDetails[0]->avp_email != ''  ? $AVPDetails[0]->avp_email : ''}}" required placeholder="Email Address" >
                                 </div>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_avp_phone" id="ch_avp_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$AVPDetails->phone != ''  ? $AVPDetails->phone : ''}}" required placeholder="Phone Number" >
+                                <input type="text" name="ch_avp_phone" id="ch_avp_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$AVPDetails[0]->avp_phone != ''  ? $AVPDetails[0]->avp_phone : ''}}" required placeholder="Phone Number" >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"></label>
                                 <div class="col-sm-10 mb-1">
-                                <input type="text" name="ch_avp_street" id="ch_avp_street" class="form-control" value="{{$AVPDetails->street_address != ''  ? $AVPDetails->street_address : ''}}"  required placeholder="Street">
+                                <input type="text" name="ch_avp_street" id="ch_avp_street" class="form-control" value="{{$AVPDetails[0]->avp_addr != ''  ? $AVPDetails[0]->avp_addr : ''}}"  required >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"><br></label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control" value="{{$AVPDetails->city != ''  ? $AVPDetails->city : ''}}"  required placeholder="City">
+                                <input type="text" name="ch_avp_city" id="ch_avp_city" class="form-control" value="{{$AVPDetails[0]->avp_city != ''  ? $AVPDetails[0]->avp_city : ''}}"  required >
                                 </div>
                                 <div class="col-sm-3 mb-1">
                                     <select name="ch_avp_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
-                                        @foreach($allState as $state)
-                                            <option value="{{$state->id}}"
-                                                @if($chapterList->state_id == $state->id) selected @endif>
-                                                {{$state->state_long_name}}
-                                            </option>
-                                        @endforeach
+                                            @foreach($stateArr as $state)
+                                                <option value="{{$state->state_short_name}}" {{$AVPDetails[0]->avp_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
+                                            @endforeach
                                     </select>
                                 </div>
                                 <div class="col-sm-2 mb-1">
-                                    <input type="text" name="ch_avp_zip" id="ch_avp_zip" class="form-control" value="{{$AVPDetails->zip != ''  ? $AVPDetails->zip : ''}}"  required placeholder="Zip">
+                                    <input type="text" name="ch_avp_zip" id="ch_avp_zip" class="form-control" value="{{$AVPDetails[0]->avp_zip != ''  ? $AVPDetails[0]->avp_zip : ''}}"  required >
                                 </div>
                             </div>
 
@@ -212,39 +206,36 @@
                              <div class="mvp-field form-group row">
                                 <label class="col-sm-2 mb-1 col-form-label">MVP:</label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_mvp_fname" id="ch_mvp_fname" class="form-control" value="{{$MVPDetails->first_name != ''  ? $MVPDetails->first_name : ''}}" required placeholder="First Name" >
+                                <input type="text" name="ch_mvp_fname" id="ch_mvp_fname" class="form-control" value="{{$MVPDetails[0]->mvp_fname != ''  ? $MVPDetails[0]->mvp_fname : ''}}" required placeholder="First Name" >
                                 </div>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_mvp_lname" id="ch_mvp_lname" class="form-control" value="{{$MVPDetails->last_name != ''  ? $MVPDetails->last_name : ''}}" required placeholder="Last Name" >
+                                <input type="text" name="ch_mvp_lname" id="ch_mvp_lname" class="form-control" value="{{$MVPDetails[0]->mvp_lname != ''  ? $MVPDetails[0]->mvp_lname : ''}}" required placeholder="Last Name" >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"></label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_mvp_email" id="ch_mvp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$MVPDetails->email != ''  ? $MVPDetails->email : ''}}" required placeholder="Email Address" >
+                                <input type="text" name="ch_mvp_email" id="ch_mvp_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$MVPDetails[0]->mvp_email != ''  ? $MVPDetails[0]->mvp_email : ''}}" required placeholder="Email Address" >
                                 </div>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_mvp_phone" id="ch_mvp_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$MVPDetails->phone != ''  ? $MVPDetails->phone : ''}}" required placeholder="Phone Number" >
+                                <input type="text" name="ch_mvp_phone" id="ch_mvp_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$MVPDetails[0]->mvp_phone != ''  ? $MVPDetails[0]->mvp_phone : ''}}" required placeholder="Phone Number" >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"></label>
                                 <div class="col-sm-10 mb-1">
-                                <input type="text" name="ch_mvp_street" id="ch_mvp_street" class="form-control" value="{{$MVPDetails->street_address != ''  ? $MVPDetails->street_address : ''}}"  required placeholder="Street">
+                                <input type="text" name="ch_mvp_street" id="ch_mvp_street" class="form-control" value="{{$MVPDetails[0]->mvp_addr != ''  ? $MVPDetails[0]->mvp_addr : ''}}"  required >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"><br></label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control" value="{{$MVPDetails->city != ''  ? $MVPDetails->city : ''}}"  required placeholder="City">
+                                <input type="text" name="ch_mvp_city" id="ch_mvp_city" class="form-control" value="{{$MVPDetails[0]->mvp_city != ''  ? $MVPDetails[0]->mvp_city : ''}}"  required >
                                 </div>
                                 <div class="col-sm-3 mb-1">
                                     <select name="ch_mvp_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
-                                        @foreach($allState as $state)
-                                            <option value="{{$state->id}}"
-                                                @if($chapterList->state_id == $state->id) selected @endif>
-                                                {{$state->state_long_name}}
-                                            </option>
-                                        @endforeach
+                                            @foreach($stateArr as $state)
+                                                <option value="{{$state->state_short_name}}" {{$MVPDetails[0]->mvp_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
+                                            @endforeach
                                     </select>
                                 </div>
                                 <div class="col-sm-2 mb-1">
-                                    <input type="text" name="ch_mvp_zip" id="ch_mvp_zip" class="form-control" value="{{$MVPDetails->zip != ''  ? $MVPDetails->zip : ''}}"  required placeholder="Zip">
+                                    <input type="text" name="ch_mvp_zip" id="ch_mvp_zip" class="form-control" value="{{$MVPDetails[0]->mvp_zip != ''  ? $MVPDetails[0]->mvp_zip : ''}}"  required >
                                 </div>
                             </div>
 
@@ -252,39 +243,36 @@
                             <div class="treas-field form-group row">
                                 <label class="col-sm-2 mb-1 col-form-label">Treasurer:</label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control" value="{{$TRSDetails->first_name != ''  ? $TRSDetails->first_name : ''}}" required placeholder="First Name" >
+                                <input type="text" name="ch_trs_fname" id="ch_trs_fname" class="form-control" value="{{$TRSDetails[0]->trs_fname != ''  ? $TRSDetails[0]->trs_fname : ''}}" required placeholder="First Name" >
                                 </div>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_trs_lname" id="ch_trs_lname" class="form-control" value="{{$TRSDetails->last_name != ''  ? $TRSDetails->last_name : ''}}" required placeholder="Last Name" >
+                                <input type="text" name="ch_trs_lname" id="ch_trs_lname" class="form-control" value="{{$TRSDetails[0]->trs_lname != ''  ? $TRSDetails[0]->trs_lname : ''}}" required placeholder="Last Name" >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"></label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_trs_email" id="ch_trs_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$TRSDetails->email != ''  ? $TRSDetails->email : ''}}" required placeholder="Email Address" >
+                                <input type="text" name="ch_trs_email" id="ch_trs_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$TRSDetails[0]->trs_email != ''  ? $TRSDetails[0]->trs_email : ''}}" required placeholder="Email Address" >
                                 </div>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_trs_phone" id="ch_trs_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$TRSDetails->phone != ''  ? $TRSDetails->phone : ''}}" required placeholder="Phone Number" >
+                                <input type="text" name="ch_trs_phone" id="ch_trs_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$TRSDetails[0]->trs_phone != ''  ? $TRSDetails[0]->trs_phone : ''}}" required placeholder="Phone Number" >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"></label>
                                 <div class="col-sm-10 mb-1">
-                                <input type="text" name="ch_trs_street" id="ch_trs_street" class="form-control" value="{{$TRSDetails->street_address != ''  ? $TRSDetails->street_address : ''}}"  required placeholder="Street">
+                                <input type="text" name="ch_trs_street" id="ch_trs_street" class="form-control" value="{{$TRSDetails[0]->trs_addr != ''  ? $TRSDetails[0]->trs_addr : ''}}"  required >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"><br></label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control" value="{{$TRSDetails->city != ''  ? $TRSDetails->city : ''}}"  required placeholder="City">
+                                <input type="text" name="ch_trs_city" id="ch_trs_city" class="form-control" value="{{$TRSDetails[0]->trs_city != ''  ? $TRSDetails[0]->trs_city : ''}}"  required >
                                 </div>
                                 <div class="col-sm-3 mb-1">
                                     <select name="ch_trs_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
-                                        @foreach($allState as $state)
-                                            <option value="{{$state->id}}"
-                                                @if($chapterList->state_id == $state->id) selected @endif>
-                                                {{$state->state_long_name}}
-                                            </option>
-                                        @endforeach
+                                            @foreach($stateArr as $state)
+                                                <option value="{{$state->state_short_name}}" {{$TRSDetails[0]->trs_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
+                                            @endforeach
                                     </select>
                                 </div>
                                 <div class="col-sm-2 mb-1">
-                                    <input type="text" name="ch_trs_zip" id="ch_trs_zip" class="form-control" value="{{$TRSDetails->zip != ''  ? $TRSDetails->zip : ''}}"  required placeholder="Zip">
+                                    <input type="text" name="ch_trs_zip" id="ch_trs_zip" class="form-control" value="{{$TRSDetails[0]->trs_zip != ''  ? $TRSDetails[0]->trs_zip : ''}}"  required >
                                 </div>
                             </div>
 
@@ -292,39 +280,36 @@
                             <div class="sec-field form-group row">
                                 <label class="col-sm-2 mb-1 col-form-label">Secretary:</label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control" value="{{$SECDetails->first_name != ''  ? $SECDetails->first_name : ''}}" required placeholder="First Name" >
+                                <input type="text" name="ch_sec_fname" id="ch_sec_fname" class="form-control" value="{{$SECDetails[0]->sec_fname != ''  ? $SECDetails[0]->sec_fname : ''}}" required placeholder="First Name" >
                                 </div>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_sec_lname" id="ch_sec_lname" class="form-control" value="{{$SECDetails->last_name != ''  ? $SECDetails->last_name : ''}}" required placeholder="Last Name" >
+                                <input type="text" name="ch_sec_lname" id="ch_sec_lname" class="form-control" value="{{$SECDetails[0]->sec_lname != ''  ? $SECDetails[0]->sec_lname : ''}}" required placeholder="Last Name" >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"></label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_sec_email" id="ch_sec_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$SECDetails->email != ''  ? $SECDetails->email : ''}}" required placeholder="Email Address" >
+                                <input type="text" name="ch_sec_email" id="ch_sec_email" class="form-control" onblur="checkDuplicateEmail(this.value,this.id)" value="{{$SECDetails[0]->sec_email != ''  ? $SECDetails[0]->sec_email : ''}}" required placeholder="Email Address" >
                                 </div>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_sec_phone" id="ch_sec_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$SECDetails->phone != ''  ? $SECDetails->phone : ''}}" required placeholder="Phone Number" >
+                                <input type="text" name="ch_sec_phone" id="ch_sec_phone" class="form-control" data-inputmask='"mask": "(999) 999-9999"' data-mask value="{{$SECDetails[0]->sec_phone != ''  ? $SECDetails[0]->sec_phone : ''}}" required placeholder="Phone Number" >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"></label>
                                 <div class="col-sm-10 mb-1">
-                                <input type="text" name="ch_sec_street" id="ch_sec_street" class="form-control" value="{{$SECDetails->street_address != ''  ? $SECDetails->street_address : ''}}"  required placeholder="Street">
+                                <input type="text" name="ch_sec_street" id="ch_sec_street" class="form-control" value="{{$SECDetails[0]->sec_addr != ''  ? $SECDetails[0]->sec_addr : ''}}"  required >
                                 </div>
                                 <label class="col-sm-2 mb-1 col-form-label"><br></label>
                                 <div class="col-sm-5 mb-1">
-                                <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control" value="{{$SECDetails->city != ''  ? $SECDetails->city : ''}}"  required placeholder="City">
+                                <input type="text" name="ch_sec_city" id="ch_sec_city" class="form-control" value="{{$SECDetails[0]->sec_city != ''  ? $SECDetails[0]->sec_city : ''}}"  required >
                                 </div>
                                 <div class="col-sm-3 mb-1">
                                     <select name="ch_sec_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
-                                        @foreach($allState as $state)
-                                            <option value="{{$state->id}}"
-                                                @if($chapterList->state_id == $state->id) selected @endif>
-                                                {{$state->state_long_name}}
-                                            </option>
-                                        @endforeach
+                                            @foreach($stateArr as $state)
+                                                <option value="{{$state->state_short_name}}" {{$SECDetails[0]->sec_state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
+                                            @endforeach
                                     </select>
                                 </div>
                                 <div class="col-sm-2 mb-1">
-                                    <input type="text" name="ch_sec_zip" id="ch_sec_zip" class="form-control" value="{{$SECDetails->zip != ''  ? $SECDetails->zip : ''}}"  required placeholder="Zip">
+                                    <input type="text" name="ch_sec_zip" id="ch_sec_zip" class="form-control" value="{{$SECDetails[0]->sec_zip != ''  ? $SECDetails[0]->sec_zip : ''}}"  required >
                                 </div>
                             </div>
 
@@ -341,7 +326,7 @@
                 @if ($coordinatorCondition)
                     <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return validateEmailsBeforeSubmit();"><i class="fas fa-save mr-2"></i>Save Board Information</button>
                 @endif
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chapterList->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
+                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chapterList[0]->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
         </div>
         </div>
         <!-- /.row -->

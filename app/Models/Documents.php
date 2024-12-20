@@ -14,9 +14,8 @@ class Documents extends Model
     // public $timestamps = false;
 
     protected $fillable = [
-        'chapter_id',  // Add this if not already present
+
         'ein_letter_path',
-        'ein_notes',
         'disband_letter_path',
         'financial_pdf_path',
         'roster_path',
@@ -25,5 +24,8 @@ class Documents extends Model
         'statement_2_path',
 
     ];
+
+    protected $primaryKey = 'chapter_id';
+
     protected $table = 'documents';
 }

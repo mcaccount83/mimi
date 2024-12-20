@@ -148,15 +148,10 @@ class UserController extends Controller
     {
         $chapterList = DB::table('chapters')
             ->select('chapters.id as id', 'chapters.email as chap_email', 'chapters.primary_coordinator_id as primary_coordinator_id',
-                'chapters.name as name', 'st.state_short_name as state')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
+                'chapters.financial_report_received as report_received', 'chapters.new_board_submitted as board_submitted',
+                'chapters.ein_letter as ein_letter', 'chapters.name as name', 'st.state_short_name as state')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.id', '=', $chId)
-            ->first();
-
-        $documentList = DB::table('documents')
-            ->select('documents.financial_report_received as report_received', 'documents.new_board_submitted as board_submitted',
-                'documents.ein_letter as ein_letter')
-            ->where('documents.chapter_id', '=', $chId)
             ->first();
 
         $chapEmail = trim($chapterList->chap_email); // Trim spaces from chapter email
@@ -216,9 +211,9 @@ class UserController extends Controller
             'emailListChapString' => implode(';', $emailListChap), // Return as a comma-separated string
             'emailListCoord' => $emailListCoord, // Return as an array
             'emailListCoordString' => implode(';', $emailListCoord), // Return as a comma-separated string
-            'board_submitted' => $documentList->board_submitted,
-            'report_received' => $documentList->report_received,
-            'ein_letter' => $documentList->ein_letter,
+            'board_submitted' => $chapterList->board_submitted,
+            'report_received' => $chapterList->report_received,
+            'ein_letter' => $chapterList->ein_letter,
             'name' => $chapterList->name,
             'state' => $chapterList->state,
         ];

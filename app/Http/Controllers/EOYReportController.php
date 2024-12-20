@@ -6,15 +6,9 @@ use App\Mail\EOYElectionReportReminder;
 use App\Mail\EOYFinancialReportReminder;
 use App\Mail\EOYLateReportReminder;
 use App\Mail\EOYReviewrAssigned;
-use App\Models\Boards;
 use App\Models\Chapter;
-use App\Models\Coordinators;
-use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\User;
-use App\Models\State;
-use App\Models\Status;
-use App\Models\Website;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -68,9 +62,9 @@ class EOYReportController extends Controller
                 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
-            ->join('region as rg', 'rg.id', '=', 'chapters.region_id')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->join('region as rg', 'rg.id', '=', 'chapters.region')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->where(function ($query) {
@@ -81,9 +75,9 @@ class EOYReportController extends Controller
         if ($conditions['founderCondition']) {
 
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference_id', '=', $corConfId);
+            $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region_id', '=', $corRegId);
+            $baseQuery->where('chapters.region', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -480,128 +474,89 @@ class EOYReportController extends Controller
      */
     public function showEOYBoardReportView(Request $request, $chapterId)
     {
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        $userId = $user->id;
 
-        $corDetails = $user->coordinators;
-        $coordId = $corDetails->id;
-        $corConfId = $corDetails->conference_id;
-        $corRegId = $corDetails->region_id;
-        $positionid = $corDetails->position_id;
+        $corDetails = $user->Coordinators;
+        // Check if BoardDetails is not found for the user
+        if (! $corDetails) {
+            return to_route('home');
+        }
 
-        $chapterList = Chapter::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'status', 'documents', 'financialReport', 'boards'])->find($chapterId);
+        $corId = $corDetails['id'];
+        $corConfId = $corDetails['conference_id'];
+        $chapterDetails = Chapter::find($chapterId);
+        $stateArr = DB::table('state')
+            ->select('state.*')
+            ->orderBy('id')
+            ->get();
 
-        $chIsActive = $chapterList->is_active;
-        $chapterState = $chapterList->state->state_short_name;
-        $regionLongName = $chapterList->region->long_name;
-        $conferenceDescription = $chapterList->conference->conference_description;
-        $startMonthName = $chapterList->startMonth->month_long_name;
+        $chapterState = DB::table('state')
+            ->select('state_short_name')
+            ->where('id', '=', $chapterDetails->state)
+            ->get();
+        $chapterState = $chapterState[0]->state_short_name;
 
-        $chConfId = $chapterList->conference_id;
-        $chRegId = $chapterList->region_id;
-        $chPCid = $chapterList->primary_coordinator_id;
+        $chapterList = DB::table('chapters as ch')
+            ->select('ch.id', 'ch.name', 'ch.state', 'ch.territory', 'ch.boundary_issues', 'ch.boundary_issue_notes', 'ch.inquiries_contact', 'ch.website_url', 'ch.website_status',
+                'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'ch.new_board_submitted')
+            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '1')
+            ->get();
 
-        $allStatuses = Status::all();
-        $allWebLinks = Website::all();
+        $PREDetails = DB::table('incoming_board_member as bd')
+            ->select('bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.board_position_id', 'bd.street_address as pre_addr', 'bd.city as pre_city', 'bd.zip as pre_zip', 'bd.phone as pre_phone', 'bd.state as pre_state', 'bd.id as ibd_id')
+            ->where('bd.chapter_id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '1')
+            ->get();
+        if (count($PREDetails) == 0) {
+            $PREDetails[0] = ['pre_fname' => '', 'pre_lname' => '', 'pre_email' => '', 'pre_addr' => '', 'pre_city' => '', 'pre_zip' => '', 'pre_phone' => '', 'pre_state' => '', 'ibd_id' => ''];
+            $PREDetails = json_decode(json_encode($PREDetails));
+        }
 
-        $allDocuments = $chapterList->documents;
-        $reviewComplete = $chapterList->documents->review_complete;
-        $allFinancialReport = $chapterList->financialReport;
+        $AVPDetails = DB::table('incoming_board_member as bd')
+            ->select('bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.board_position_id', 'bd.street_address as avp_addr', 'bd.city as avp_city', 'bd.zip as avp_zip', 'bd.phone as avp_phone', 'bd.state as avp_state', 'bd.id as ibd_id')
+            ->where('bd.chapter_id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '2')
+            ->get();
+        if (count($AVPDetails) == 0) {
+            $AVPDetails[0] = ['avp_fname' => '', 'avp_lname' => '', 'avp_email' => '', 'avp_addr' => '', 'avp_city' => '', 'avp_zip' => '', 'avp_phone' => '', 'avp_state' => '', 'ibd_id' => ''];
+            $AVPDetails = json_decode(json_encode($AVPDetails));
+        }
 
-        $boards = $chapterList->boards()->with('state')->get();
-        $boardDetails = $boards->groupBy('board_position_id');
-        $defaultBoardMember = (object)['first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
+        $MVPDetails = DB::table('incoming_board_member as bd')
+            ->select('bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.board_position_id', 'bd.street_address as mvp_addr', 'bd.city as mvp_city', 'bd.zip as mvp_zip', 'bd.phone as mvp_phone', 'bd.state as mvp_state', 'bd.id as ibd_id')
+            ->where('bd.chapter_id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '3')
+            ->get();
+        if (count($MVPDetails) == 0) {
+            $MVPDetails[0] = ['mvp_fname' => '', 'mvp_lname' => '', 'mvp_email' => '', 'mvp_addr' => '', 'mvp_city' => '', 'mvp_zip' => '', 'mvp_phone' => '', 'mvp_state' => '', 'ibd_id' => ''];
+            $MVPDetails = json_decode(json_encode($MVPDetails));
+        }
 
-        // Fetch board details or fallback to default
-        $PresDetails = $boardDetails->get(1, collect([$defaultBoardMember]))->first(); // President
-        $AVPDetails = $boardDetails->get(2, collect([$defaultBoardMember]))->first(); // AVP
-        $MVPDetails = $boardDetails->get(3, collect([$defaultBoardMember]))->first(); // MVP
-        $TRSDetails = $boardDetails->get(4, collect([$defaultBoardMember]))->first(); // Treasurer
-        $SECDetails = $boardDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
+        $TRSDetails = DB::table('incoming_board_member as bd')
+            ->select('bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.board_position_id', 'bd.street_address as trs_addr', 'bd.city as trs_city', 'bd.zip as trs_zip', 'bd.phone as trs_phone', 'bd.state as trs_state', 'bd.id as ibd_id')
+            ->where('bd.chapter_id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '4')
+            ->get();
+        if (count($TRSDetails) == 0) {
+            $TRSDetails[0] = ['trs_fname' => '', 'trs_lname' => '', 'trs_email' => '', 'trs_addr' => '', 'trs_city' => '', 'trs_zip' => '', 'trs_phone' => '', 'trs_state' => '', 'ibd_id' => ''];
+            $TRSDetails = json_decode(json_encode($TRSDetails));
+        }
 
-        // //$corDetails = User::find($request->user()->id)->Coordinators;
-        // $user = User::find($request->user()->id);
+        $SECDetails = DB::table('incoming_board_member as bd')
+            ->select('bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.board_position_id', 'bd.street_address as sec_addr', 'bd.city as sec_city', 'bd.zip as sec_zip', 'bd.phone as sec_phone', 'bd.state as sec_state', 'bd.id as ibd_id')
+            ->where('bd.chapter_id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '5')
+            ->get();
+        if (count($SECDetails) == 0) {
+            $SECDetails[0] = ['sec_fname' => '', 'sec_lname' => '', 'sec_email' => '', 'sec_addr' => '', 'sec_city' => '', 'sec_zip' => '', 'sec_phone' => '', 'sec_state' => '', 'ibd_id' => ''];
+            $SECDetails = json_decode(json_encode($SECDetails));
+        }
 
-        // $corDetails = $user->Coordinators;
-        // // Check if BoardDetails is not found for the user
-        // if (! $corDetails) {
-        //     return to_route('home');
-        // }
-
-        // $corId = $corDetails['id'];
-        // $corConfId = $corDetails['conference_id'];
-        // $chapterDetails = Chapter::find($chapterId);
-        // $stateArr = DB::table('state')
-        //     ->select('state.*')
-        //     ->orderBy('id')
-        //     ->get();
-
-        // $chapterState = DB::table('state')
-        //     ->select('state_short_name')
-        //     ->where('id', '=', $chapterDetails->state)
-        //     ->get();
-        // $chapterState = $chapterState[0]->state_short_name;
-
-        // $chapterList = DB::table('chapters as ch')
-        //     ->select('ch.id', 'ch.name', 'ch.state', 'ch.territory', 'ch.boundary_issues', 'ch.boundary_issue_notes', 'ch.inquiries_contact', 'ch.website_url', 'ch.website_status',
-        //         'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'ch.new_board_submitted')
-        //     ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
-        //     ->where('ch.is_active', '=', '1')
-        //     ->where('ch.id', '=', $chapterId)
-        //     ->where('bd.board_position_id', '=', '1')
-        //     ->get();
-
-        // $PREDetails = DB::table('incoming_board_member as bd')
-        //     ->select('bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.board_position_id', 'bd.street_address as pre_addr', 'bd.city as pre_city', 'bd.zip as pre_zip', 'bd.phone as pre_phone', 'bd.state as pre_state', 'bd.id as ibd_id')
-        //     ->where('bd.chapter_id', '=', $chapterId)
-        //     ->where('bd.board_position_id', '=', '1')
-        //     ->get();
-        // if (count($PREDetails) == 0) {
-        //     $PREDetails[0] = ['pre_fname' => '', 'pre_lname' => '', 'pre_email' => '', 'pre_addr' => '', 'pre_city' => '', 'pre_zip' => '', 'pre_phone' => '', 'pre_state' => '', 'ibd_id' => ''];
-        //     $PREDetails = json_decode(json_encode($PREDetails));
-        // }
-
-        // $AVPDetails = DB::table('incoming_board_member as bd')
-        //     ->select('bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.board_position_id', 'bd.street_address as avp_addr', 'bd.city as avp_city', 'bd.zip as avp_zip', 'bd.phone as avp_phone', 'bd.state as avp_state', 'bd.id as ibd_id')
-        //     ->where('bd.chapter_id', '=', $chapterId)
-        //     ->where('bd.board_position_id', '=', '2')
-        //     ->get();
-        // if (count($AVPDetails) == 0) {
-        //     $AVPDetails[0] = ['avp_fname' => '', 'avp_lname' => '', 'avp_email' => '', 'avp_addr' => '', 'avp_city' => '', 'avp_zip' => '', 'avp_phone' => '', 'avp_state' => '', 'ibd_id' => ''];
-        //     $AVPDetails = json_decode(json_encode($AVPDetails));
-        // }
-
-        // $MVPDetails = DB::table('incoming_board_member as bd')
-        //     ->select('bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.board_position_id', 'bd.street_address as mvp_addr', 'bd.city as mvp_city', 'bd.zip as mvp_zip', 'bd.phone as mvp_phone', 'bd.state as mvp_state', 'bd.id as ibd_id')
-        //     ->where('bd.chapter_id', '=', $chapterId)
-        //     ->where('bd.board_position_id', '=', '3')
-        //     ->get();
-        // if (count($MVPDetails) == 0) {
-        //     $MVPDetails[0] = ['mvp_fname' => '', 'mvp_lname' => '', 'mvp_email' => '', 'mvp_addr' => '', 'mvp_city' => '', 'mvp_zip' => '', 'mvp_phone' => '', 'mvp_state' => '', 'ibd_id' => ''];
-        //     $MVPDetails = json_decode(json_encode($MVPDetails));
-        // }
-
-        // $TRSDetails = DB::table('incoming_board_member as bd')
-        //     ->select('bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.board_position_id', 'bd.street_address as trs_addr', 'bd.city as trs_city', 'bd.zip as trs_zip', 'bd.phone as trs_phone', 'bd.state as trs_state', 'bd.id as ibd_id')
-        //     ->where('bd.chapter_id', '=', $chapterId)
-        //     ->where('bd.board_position_id', '=', '4')
-        //     ->get();
-        // if (count($TRSDetails) == 0) {
-        //     $TRSDetails[0] = ['trs_fname' => '', 'trs_lname' => '', 'trs_email' => '', 'trs_addr' => '', 'trs_city' => '', 'trs_zip' => '', 'trs_phone' => '', 'trs_state' => '', 'ibd_id' => ''];
-        //     $TRSDetails = json_decode(json_encode($TRSDetails));
-        // }
-
-        // $SECDetails = DB::table('incoming_board_member as bd')
-        //     ->select('bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.board_position_id', 'bd.street_address as sec_addr', 'bd.city as sec_city', 'bd.zip as sec_zip', 'bd.phone as sec_phone', 'bd.state as sec_state', 'bd.id as ibd_id')
-        //     ->where('bd.chapter_id', '=', $chapterId)
-        //     ->where('bd.board_position_id', '=', '5')
-        //     ->get();
-        // if (count($SECDetails) == 0) {
-        //     $SECDetails[0] = ['sec_fname' => '', 'sec_lname' => '', 'sec_email' => '', 'sec_addr' => '', 'sec_city' => '', 'sec_zip' => '', 'sec_phone' => '', 'sec_state' => '', 'ibd_id' => ''];
-        //     $SECDetails = json_decode(json_encode($SECDetails));
-        // }
-
-        $data = ['chapterState' => $chapterState, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chapterList' => $chapterList];
+        $data = ['chapterState' => $chapterState, 'stateArr' => $stateArr, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PREDetails' => $PREDetails, 'chapterList' => $chapterList];
 
         return view('eoyreports.eoyboardreportview')->with($data);
     }
@@ -611,139 +566,98 @@ class EOYReportController extends Controller
      */
     public function editBoardReport(Request $request, $chapterId)
     {
+        //$corDetails = User::find($request->user()->id)->Coordinators;
         $user = User::find($request->user()->id);
-        $userId = $user->id;
 
-        $corDetails = $user->coordinators;
-        $coordId = $corDetails->id;
-        $corConfId = $corDetails->conference_id;
-        $corRegId = $corDetails->region_id;
-        $positionid = $corDetails->position_id;
+        $corDetails = $user->Coordinators;
+        // Check if BoardDetails is not found for the user
+        if (! $corDetails) {
+            return to_route('home');
+        }
 
-        $chapterList = Chapter::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'status', 'documents', 'financialReport', 'boards'])->find($chapterId);
+        $loggedInName = $corDetails['first_name'].' '.$corDetails['last_name'];
+        $positionId = $corDetails['position_id'];
+        $request->session()->put('positionid', $positionId);
 
-        $chIsActive = $chapterList->is_active;
-        $chapterState = $chapterList->state->state_short_name;
-        $regionLongName = $chapterList->region->long_name;
-        $conferenceDescription = $chapterList->conference->conference_description;
-        $startMonthName = $chapterList->startMonth->month_long_name;
+        $financial_report_array = FinancialReport::find($chapterId);
 
-        $chConfId = $chapterList->conference_id;
-        $chRegId = $chapterList->region_id;
-        $chPCid = $chapterList->primary_coordinator_id;
+        $corId = $corDetails['id'];
+        $corConfId = $corDetails['conference_id'];
+        $chapterDetails = Chapter::find($chapterId);
+        $stateArr = DB::table('state')
+            ->select('state.*')
+            ->orderBy('id')
+            ->get();
 
-        $allStatuses = Status::all();
-        $allWebLinks = Website::all();
+        $chapterState = DB::table('state')
+            ->select('state_short_name')
+            ->where('id', '=', $chapterDetails->state)
+            ->get();
+        $chapterState = $chapterState[0]->state_short_name;
 
-        $allDocuments = $chapterList->documents;
-        $reviewComplete = $chapterList->documents->review_complete;
-        $allFinancialReport = $chapterList->financialReport;
+        $webStatusArr = ['0' => 'Website Not Linked', '1' => 'Website Linked', '2' => 'Add Link Requested', '3' => 'Do Not Link'];
 
-        $allState = State::all();
+        $chapterList = DB::table('chapters as ch')
+            ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address',
+                'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
+            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '1')
+            ->get();
 
-        $boards = $chapterList->boards()->with('state')->get();
-        $boardDetails = $boards->groupBy('board_position_id');
-        $defaultBoardMember = (object)['first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
+        $PREDetails = DB::table('incoming_board_member as bd')
+            ->select('bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.board_position_id', 'bd.street_address as pre_addr', 'bd.city as pre_city', 'bd.zip as pre_zip', 'bd.phone as pre_phone', 'bd.state as pre_state', 'bd.id as ibd_id')
+            ->where('bd.chapter_id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '1')
+            ->get();
+        if (count($PREDetails) == 0) {
+            $PREDetails[0] = ['pre_fname' => '', 'pre_lname' => '', 'pre_email' => '', 'pre_addr' => '', 'pre_city' => '', 'pre_zip' => '', 'pre_phone' => '', 'pre_state' => '', 'ibd_id' => ''];
+            $PREDetails = json_decode(json_encode($PREDetails));
+        }
 
-        // Fetch board details or fallback to default
-        $PresDetails = $boardDetails->get(1, collect([$defaultBoardMember]))->first(); // President
-        $AVPDetails = $boardDetails->get(2, collect([$defaultBoardMember]))->first(); // AVP
-        $MVPDetails = $boardDetails->get(3, collect([$defaultBoardMember]))->first(); // MVP
-        $TRSDetails = $boardDetails->get(4, collect([$defaultBoardMember]))->first(); // Treasurer
-        $SECDetails = $boardDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
+        $AVPDetails = DB::table('incoming_board_member as bd')
+            ->select('bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.board_position_id', 'bd.street_address as avp_addr', 'bd.city as avp_city', 'bd.zip as avp_zip', 'bd.phone as avp_phone', 'bd.state as avp_state', 'bd.id as ibd_id')
+            ->where('bd.chapter_id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '2')
+            ->get();
+        if (count($AVPDetails) == 0) {
+            $AVPDetails[0] = ['avp_fname' => '', 'avp_lname' => '', 'avp_email' => '', 'avp_addr' => '', 'avp_city' => '', 'avp_zip' => '', 'avp_phone' => '', 'avp_state' => '', 'ibd_id' => ''];
+            $AVPDetails = json_decode(json_encode($AVPDetails));
+        }
 
-        // //$corDetails = User::find($request->user()->id)->Coordinators;
-        // $user = User::find($request->user()->id);
+        $MVPDetails = DB::table('incoming_board_member as bd')
+            ->select('bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.board_position_id', 'bd.street_address as mvp_addr', 'bd.city as mvp_city', 'bd.zip as mvp_zip', 'bd.phone as mvp_phone', 'bd.state as mvp_state', 'bd.id as ibd_id')
+            ->where('bd.chapter_id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '3')
+            ->get();
+        if (count($MVPDetails) == 0) {
+            $MVPDetails[0] = ['mvp_fname' => '', 'mvp_lname' => '', 'mvp_email' => '', 'mvp_addr' => '', 'mvp_city' => '', 'mvp_zip' => '', 'mvp_phone' => '', 'mvp_state' => '', 'ibd_id' => ''];
+            $MVPDetails = json_decode(json_encode($MVPDetails));
+        }
 
-        // $corDetails = $user->Coordinators;
-        // // Check if BoardDetails is not found for the user
-        // if (! $corDetails) {
-        //     return to_route('home');
-        // }
+        $TRSDetails = DB::table('incoming_board_member as bd')
+            ->select('bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.board_position_id', 'bd.street_address as trs_addr', 'bd.city as trs_city', 'bd.zip as trs_zip', 'bd.phone as trs_phone', 'bd.state as trs_state', 'bd.id as ibd_id')
+            ->where('bd.chapter_id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '4')
+            ->get();
+        if (count($TRSDetails) == 0) {
+            $TRSDetails[0] = ['trs_fname' => '', 'trs_lname' => '', 'trs_email' => '', 'trs_addr' => '', 'trs_city' => '', 'trs_zip' => '', 'trs_phone' => '', 'trs_state' => '', 'ibd_id' => ''];
+            $TRSDetails = json_decode(json_encode($TRSDetails));
+        }
 
-        // $loggedInName = $corDetails['first_name'].' '.$corDetails['last_name'];
-        // $positionId = $corDetails['position_id'];
-        // $request->session()->put('positionid', $positionId);
+        $SECDetails = DB::table('incoming_board_member as bd')
+            ->select('bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.board_position_id', 'bd.street_address as sec_addr', 'bd.city as sec_city', 'bd.zip as sec_zip', 'bd.phone as sec_phone', 'bd.state as sec_state', 'bd.id as ibd_id')
+            ->where('bd.chapter_id', '=', $chapterId)
+            ->where('bd.board_position_id', '=', '5')
+            ->get();
+        if (count($SECDetails) == 0) {
+            $SECDetails[0] = ['sec_fname' => '', 'sec_lname' => '', 'sec_email' => '', 'sec_addr' => '', 'sec_city' => '', 'sec_zip' => '', 'sec_phone' => '', 'sec_state' => '', 'ibd_id' => ''];
+            $SECDetails = json_decode(json_encode($SECDetails));
+        }
 
-        // $financial_report_array = FinancialReport::find($chapterId);
-
-        // $corId = $corDetails['id'];
-        // $corConfId = $corDetails['conference_id'];
-        // $chapterDetails = Chapter::find($chapterId);
-        // $stateArr = DB::table('state')
-        //     ->select('state.*')
-        //     ->orderBy('id')
-        //     ->get();
-
-        // $chapterState = DB::table('state')
-        //     ->select('state_short_name')
-        //     ->where('id', '=', $chapterDetails->state)
-        //     ->get();
-        // $chapterState = $chapterState[0]->state_short_name;
-
-        // $webStatusArr = ['0' => 'Website Not Linked', '1' => 'Website Linked', '2' => 'Add Link Requested', '3' => 'Do Not Link'];
-
-        // $chapterList = DB::table('chapters as ch')
-        //     ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address',
-        //         'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
-        //     ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
-        //     ->where('ch.is_active', '=', '1')
-        //     ->where('ch.id', '=', $chapterId)
-        //     ->where('bd.board_position_id', '=', '1')
-        //     ->get();
-
-        // $PREDetails = DB::table('incoming_board_member as bd')
-        //     ->select('bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.board_position_id', 'bd.street_address as pre_addr', 'bd.city as pre_city', 'bd.zip as pre_zip', 'bd.phone as pre_phone', 'bd.state as pre_state', 'bd.id as ibd_id')
-        //     ->where('bd.chapter_id', '=', $chapterId)
-        //     ->where('bd.board_position_id', '=', '1')
-        //     ->get();
-        // if (count($PREDetails) == 0) {
-        //     $PREDetails[0] = ['pre_fname' => '', 'pre_lname' => '', 'pre_email' => '', 'pre_addr' => '', 'pre_city' => '', 'pre_zip' => '', 'pre_phone' => '', 'pre_state' => '', 'ibd_id' => ''];
-        //     $PREDetails = json_decode(json_encode($PREDetails));
-        // }
-
-        // $AVPDetails = DB::table('incoming_board_member as bd')
-        //     ->select('bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.board_position_id', 'bd.street_address as avp_addr', 'bd.city as avp_city', 'bd.zip as avp_zip', 'bd.phone as avp_phone', 'bd.state as avp_state', 'bd.id as ibd_id')
-        //     ->where('bd.chapter_id', '=', $chapterId)
-        //     ->where('bd.board_position_id', '=', '2')
-        //     ->get();
-        // if (count($AVPDetails) == 0) {
-        //     $AVPDetails[0] = ['avp_fname' => '', 'avp_lname' => '', 'avp_email' => '', 'avp_addr' => '', 'avp_city' => '', 'avp_zip' => '', 'avp_phone' => '', 'avp_state' => '', 'ibd_id' => ''];
-        //     $AVPDetails = json_decode(json_encode($AVPDetails));
-        // }
-
-        // $MVPDetails = DB::table('incoming_board_member as bd')
-        //     ->select('bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.board_position_id', 'bd.street_address as mvp_addr', 'bd.city as mvp_city', 'bd.zip as mvp_zip', 'bd.phone as mvp_phone', 'bd.state as mvp_state', 'bd.id as ibd_id')
-        //     ->where('bd.chapter_id', '=', $chapterId)
-        //     ->where('bd.board_position_id', '=', '3')
-        //     ->get();
-        // if (count($MVPDetails) == 0) {
-        //     $MVPDetails[0] = ['mvp_fname' => '', 'mvp_lname' => '', 'mvp_email' => '', 'mvp_addr' => '', 'mvp_city' => '', 'mvp_zip' => '', 'mvp_phone' => '', 'mvp_state' => '', 'ibd_id' => ''];
-        //     $MVPDetails = json_decode(json_encode($MVPDetails));
-        // }
-
-        // $TRSDetails = DB::table('incoming_board_member as bd')
-        //     ->select('bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.board_position_id', 'bd.street_address as trs_addr', 'bd.city as trs_city', 'bd.zip as trs_zip', 'bd.phone as trs_phone', 'bd.state as trs_state', 'bd.id as ibd_id')
-        //     ->where('bd.chapter_id', '=', $chapterId)
-        //     ->where('bd.board_position_id', '=', '4')
-        //     ->get();
-        // if (count($TRSDetails) == 0) {
-        //     $TRSDetails[0] = ['trs_fname' => '', 'trs_lname' => '', 'trs_email' => '', 'trs_addr' => '', 'trs_city' => '', 'trs_zip' => '', 'trs_phone' => '', 'trs_state' => '', 'ibd_id' => ''];
-        //     $TRSDetails = json_decode(json_encode($TRSDetails));
-        // }
-
-        // $SECDetails = DB::table('incoming_board_member as bd')
-        //     ->select('bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.board_position_id', 'bd.street_address as sec_addr', 'bd.city as sec_city', 'bd.zip as sec_zip', 'bd.phone as sec_phone', 'bd.state as sec_state', 'bd.id as ibd_id')
-        //     ->where('bd.chapter_id', '=', $chapterId)
-        //     ->where('bd.board_position_id', '=', '5')
-        //     ->get();
-        // if (count($SECDetails) == 0) {
-        //     $SECDetails[0] = ['sec_fname' => '', 'sec_lname' => '', 'sec_email' => '', 'sec_addr' => '', 'sec_city' => '', 'sec_zip' => '', 'sec_phone' => '', 'sec_state' => '', 'ibd_id' => ''];
-        //     $SECDetails = json_decode(json_encode($SECDetails));
-        // }
-
-        $data = ['chapterState' => $chapterState, 'allState' => $allState, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chapterList' => $chapterList,
-            ];
+        $data = ['chapterState' => $chapterState, 'stateArr' => $stateArr, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PREDetails' => $PREDetails, 'chapterList' => $chapterList,
+            'webStatusArr' => $webStatusArr];
 
         return view('eoyreports.editboardreport')->with($data);
     }
@@ -2208,28 +2122,53 @@ class EOYReportController extends Controller
 
     public function viewEOYDetails(Request $request, $id): View
     {
+
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
-        $corDetails = $user->coordinators;
-        $coordId = $corDetails->id;
-        $corConfId = $corDetails->conference_id;
-        $corRegId = $corDetails->region_id;
-        $positionid = $corDetails->position_id;
+        // $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = DB::table('coordinators as cd')
+            ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
+            ->where('cd.user_id', '=', $userId)
+            ->get();
 
-        $chapterList = Chapter::with(['country', 'state', 'conference', 'region', 'documents', 'financialReport'])->find($id);
+        $coordId = $corDetails[0]->id;
+        $corConfId = $corDetails[0]->conference_id;
+        $corRegId = $corDetails[0]->region_id;
+        $positionid = $corDetails[0]->position_id;
 
-        $chIsActive = $chapterList->is_active;
-        $stateShortName = $chapterList->state->state_short_name;
-        $regionLongName = $chapterList->region->long_name;
-        $conferenceDescription = $chapterList->conference->conference_description;
+        $financial_report_array = FinancialReport::find($id);
+        if ($financial_report_array) {
+            $reviewComplete = $financial_report_array['review_complete'];
+        } else {
+            $reviewComplete = null;
+        }
 
-        $chConfId = $chapterList->conference_id;
-        $chRegId = $chapterList->region_id;
-        $chPCid = $chapterList->primary_coordinator_id;
+        $financial_report_array = FinancialReport::find($id);
 
-        $allDocuments = $chapterList->documents;
-        $allFinancialReport = $chapterList->financialReport;
+        $chapterList = DB::table('chapters as ch')
+            ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id',
+                'ct.name as countryname', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth',
+                'fr.check_current_990N_verified_IRS as irs_verified', 'fr.check_current_990N_notes as irs_notes',
+                'fr.file_irs_path as file_irs_path')
+            ->join('country as ct', 'ch.country', '=', 'ct.short_name')
+            ->join('state as st', 'ch.state', '=', 'st.id')
+            ->join('conference as cf', 'ch.conference', '=', 'cf.id')
+            ->join('region as rg', 'ch.region', '=', 'rg.id')
+            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
+            ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
+            ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
+            ->where('ch.is_active', '=', '1')
+            ->where('ch.id', '=', $id)
+            ->where('bd.board_position_id', '=', '1')
+            ->get();
+
+        $chConfId = $chapterList[0]->conference;
+        $chRegId = $chapterList[0]->region;
+        $chPCid = $chapterList[0]->primary_coordinator_id;
+
+        // Load Active Status for Active/Zapped Visibility
+        $chIsActive = $chapterList[0]->is_active;
 
         $reportReviewerList = DB::table('chapters as ch')
             ->select('cd.id as cid', 'cd.first_name as rfname', 'cd.last_name as rlname', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
@@ -2252,9 +2191,8 @@ class EOYReportController extends Controller
             ->orderBy('cd.first_name')
             ->get();
 
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'allDocuments' => $allDocuments, 'chapterList' => $chapterList,
-            'reportReviewerList' => $reportReviewerList, 'corConfId' => $corConfId, 'chConfId' => $chConfId, 'chPCid' => $chPCid, 'allFinancialReport' => $allFinancialReport,
-            'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
+        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete,
+            'chapterList' => $chapterList, 'reportReviewerList' => $reportReviewerList, 'corConfId' => $corConfId, 'chConfId' => $chConfId, 'chPCid' => $chPCid, 'financial_report_array' => $financial_report_array,
         ];
 
         return view('eoyreports.view')->with($data);

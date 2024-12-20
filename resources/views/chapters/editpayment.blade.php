@@ -21,57 +21,57 @@
 </style>
 @section('content')
     <!-- Main content -->
-    <form class="form-horizontal" method="POST" action='{{ route("chapters.updatepayment", $chapterList->id) }}'>
+    <form class="form-horizontal" method="POST" action='{{ route("chapters.updatepayment", $chapterList[0]->id) }}'>
     @csrf
     <section class="content">
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-4">
-                <input type="hidden" name="ch_nxt_renewalyear" value="{{ $chapterList->next_renewal_year }}">
-                <input type="hidden" name="ch_pre_email" value="{{ $chapterList->bd_email }}">
-                <input type="hidden" name="ch_pc_fname" value="{{ $chapterList->cor_fname }}">
-                <input type="hidden" name="ch_pc_lname" value="{{ $chapterList->cor_lname }}">
-                <input type="hidden" name="ch_pc_email" value="{{ $chapterList->cor_email }}">
-                <input type="hidden" name="ch_pc_confid" value="{{ $chapterList->cor_confid }}">
-                <input type="hidden" name="ch_name" value="{{ $chapterList->name }}">
-                <input type="hidden" name="ch_state" value="{{ $chapterList->statename }}">
+                <input type="hidden" name="ch_nxt_renewalyear" value="{{ $chapterList[0]->next_renewal_year }}">
+                <input type="hidden" name="ch_pre_email" value="{{ $chapterList[0]->bd_email }}">
+                <input type="hidden" name="ch_pc_fname" value="{{ $chapterList[0]->cor_fname }}">
+                <input type="hidden" name="ch_pc_lname" value="{{ $chapterList[0]->cor_lname }}">
+                <input type="hidden" name="ch_pc_email" value="{{ $chapterList[0]->cor_email }}">
+                <input type="hidden" name="ch_pc_confid" value="{{ $chapterList[0]->cor_confid }}">
+                <input type="hidden" name="ch_name" value="{{ $chapterList[0]->name }}">
+                <input type="hidden" name="ch_state" value="{{ $chapterList[0]->statename }}">
 
-                <input type="hidden" name="PaymentDate" value="{{ $chapterList->dues_last_paid }}">
-                <input type="hidden" name="MembersPaidFor" value="{{ $chapterList->members_paid_for }}">
-                <input type="hidden" name="ch_regnotes" value="{{ $chapterList->reg_notes }}">
-                <input type="hidden" name="M2MPaymentDate" value="{{ $chapterList->m2m_date }}">
-                <input type="hidden" name="M2MPayment" value="{{ $chapterList->m2m_payment }}">
-                <input type="hidden" name="SustainingPaymentDate" value="{{ $chapterList->sustaining_date }}">
-                <input type="hidden" name="SustainingPayment" value="{{ $chapterList->sustaining_donation }}">
+                <input type="hidden" name="PaymentDate" value="{{ $chapterList[0]->dues_last_paid }}">
+                <input type="hidden" name="MembersPaidFor" value="{{ $chapterList[0]->members_paid_for }}">
+                <input type="hidden" name="ch_regnotes" value="{{ $chapterList[0]->reg_notes }}">
+                <input type="hidden" name="M2MPaymentDate" value="{{ $chapterList[0]->m2m_date }}">
+                <input type="hidden" name="M2MPayment" value="{{ $chapterList[0]->m2m_payment }}">
+                <input type="hidden" name="SustainingPaymentDate" value="{{ $chapterList[0]->sustaining_date }}">
+                <input type="hidden" name="SustainingPayment" value="{{ $chapterList[0]->sustaining_donation }}">
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
-                  <h3 class="profile-username text-center">MOMS Club of {{ $chapterList->name }}, {{$stateShortName}}</h3>
-                  <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
+                  <h3 class="profile-username text-center">MOMS Club of {{ $chapterList[0]->name }}, {{$chapterList[0]->statename}}</h3>
+                  <p class="text-center">{{ $chapterList[0]->confname }} Conference, {{ $chapterList[0]->regname }} Region
                   <br>
-                  EIN: {{$chapterList->ein}}
+                  EIN: {{$chapterList[0]->ein}}
                   </p>
 
                   <ul class="list-group list-group-unbordered mb-3">
                       <li class="list-group-item">
                           <b>Re-Registration Dues:</b><span class="float-right">
-                              @if ($chapterList->members_paid_for)
-                                  <b>{{ $chapterList->members_paid_for }} Members</b> on <b><span class="date-mask">{{ $chapterList->dues_last_paid }}</span></b>
+                              @if ($chapterList[0]->members_paid_for)
+                                  <b>{{ $chapterList[0]->members_paid_for }} Members</b> on <b><span class="date-mask">{{ $chapterList[0]->dues_last_paid }}</span></b>
                               @else
                                   No Payment Recorded
                               @endif
                           </span><br>
                           <b>M2M Donation:</b><span class="float-right">
-                              @if ($chapterList->m2m_payment)
-                                  <b>${{ $chapterList->m2m_payment }}</b> on <b><span class="date-mask">{{ $chapterList->m2m_date }}</span></b>
+                              @if ($chapterList[0]->m2m_payment)
+                                  <b>${{ $chapterList[0]->m2m_payment }}</b> on <b><span class="date-mask">{{ $chapterList[0]->m2m_date }}</span></b>
                               @else
                                   No Donation Recorded
                               @endif
                           </span><br>
                           <b>Sustaining Chapter Donation: </b><span class="float-right">
-                              @if ($chapterList->sustaining_donation)
-                                  <b>${{ $chapterList->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chapterList->sustaining_date }}</span></b>
+                              @if ($chapterList[0]->sustaining_donation)
+                                  <b>${{ $chapterList[0]->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chapterList[0]->sustaining_date }}</span></b>
                               @else
                                   No Donation Recorded
                               @endif
@@ -79,20 +79,20 @@
                           <br>
                       </li>
                       <li class="list-group-item">
-                        <b>Founded:</b><span class="float-right">{{ $startMonthName }} {{ $chapterList->start_year }}</span>
+                        <b>Founded:</b><span class="float-right">{{ $chapterList[0]->startmonth }} {{ $chapterList[0]->start_year }}</span>
                            <br>
-                          <b>Status:</b><span class="float-right ">{{$statusInWords}}</span>
+                          <b>Status:</b><span class="float-right ">{{$chapterStatusinWords}}</span>
                       </li>
-                      <input type="hidden" id="ch_primarycor" value="{{ $chapterList->primary_coordinator_id }}">
+                      <input type="hidden" id="ch_primarycor" value="{{ $chapterList[0]->primary_coordinator_id }}">
                       <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
                   </ul>
                   <div class="text-center">
-                      @if ($chapterList->is_active == 1 )
+                      @if ($chapterList[0]->is_active == 1 )
                           <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
                       @else
                           <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                          Disband Date: <span class="date-mask">{{ $chapterList->zap_date }}</span><br>
-                          {{ $chapterList->disband_reason }}
+                          Disband Date: <span class="date-mask">{{ $chapterList[0]->zap_date }}</span><br>
+                          {{ $chapterList[0]->disband_reason }}
                       @endif
                   </div>
                 </div>
@@ -126,7 +126,7 @@
                             <div class="form-group row mb-1">
                                 <label class="col-sm-2 col-form-label">Re-Registration Notes:</label>
                                 <div class="col-sm-8">
-                                  <input type="text" name="ch_regnotes" id="ch_regnotes" class="form-control"  value="{{ $chapterList->reg_notes}}" >
+                                  <input type="text" name="ch_regnotes" id="ch_regnotes" class="form-control"  value="{{ $chapterList[0]->reg_notes}}" >
                                 </div>
                             </div>
                             <div class="form-group row ">
@@ -214,7 +214,7 @@
                 <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapreregistration') }}'"><i class="fas fa-reply mr-2"></i>Back to Re-Registration Report</button>
                 <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapreports.chaprptdonations') }}'"><i class="fas fa-reply mr-2"></i>Back to Donations Report</button>
 
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chapterList->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
+                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chapterList[0]->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
         </div>
         </div>
         <!-- /.row -->

@@ -57,18 +57,18 @@ class ChapterReportController extends Controller
                 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
-            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1');
 
         if ($conditions['founderCondition']) {
 
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference_id', '=', $corConfId);
+            $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region_id', '=', $corRegId);
+            $baseQuery->where('chapters.region', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -171,9 +171,9 @@ class ChapterReportController extends Controller
                 'st.state_short_name as state', 'db.month_long_name as start_month', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
-            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->leftJoin('month as db', 'chapters.start_month_id', '=', 'db.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
@@ -183,9 +183,9 @@ class ChapterReportController extends Controller
         if ($conditions['founderCondition']) {
 
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference_id', '=', $corConfId);
+            $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region_id', '=', $corRegId);
+            $baseQuery->where('chapters.region', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -214,7 +214,7 @@ class ChapterReportController extends Controller
                 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.conference_id as cor_confid', 'cd.email as cor_email', 'bd.email as bor_email', 'st.state_short_name as statename')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
-            ->leftJoin('state as st', 'ch.state_id', '=', 'st.id')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->where('ch.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->where('ch.id', $id)
@@ -299,9 +299,9 @@ class ChapterReportController extends Controller
                 'st.state_short_name as ch_state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
-            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->leftJoin('month as db', 'chapters.start_month_id', '=', 'db.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
@@ -310,9 +310,9 @@ class ChapterReportController extends Controller
         if ($conditions['founderCondition']) {
 
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference_id', '=', $corConfId);
+            $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region_id', '=', $corRegId);
+            $baseQuery->where('chapters.region', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -354,9 +354,9 @@ class ChapterReportController extends Controller
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
-            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->where('chapters.members_paid_for', '>=', '60');
@@ -364,9 +364,9 @@ class ChapterReportController extends Controller
         if ($conditions['founderCondition']) {
 
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference_id', '=', $corConfId);
+            $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region_id', '=', $corRegId);
+            $baseQuery->where('chapters.region', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -421,19 +421,19 @@ class ChapterReportController extends Controller
                 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
-            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
-            ->whereIn('chapters.status_id', $status);
+            ->whereIn('chapters.status', $status);
 
         if ($conditions['founderCondition']) {
 
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference_id', '=', $corConfId);
+            $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region_id', '=', $corRegId);
+            $baseQuery->where('chapters.region', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -484,18 +484,18 @@ class ChapterReportController extends Controller
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
-            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1');
 
         if ($conditions['founderCondition']) {
 
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference_id', '=', $corConfId);
+            $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region_id', '=', $corRegId);
+            $baseQuery->where('chapters.region', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -535,7 +535,7 @@ class ChapterReportController extends Controller
                 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.conference_id as cor_confid', 'cd.email as cor_email', 'bd.email as bor_email', 'st.state_short_name as statename')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
-            ->leftJoin('state as st', 'ch.state_id', '=', 'st.id')
+            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
             ->where('ch.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->where('ch.id', $id)
@@ -680,9 +680,9 @@ class ChapterReportController extends Controller
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
-            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->leftJoin('month as db', 'chapters.start_month_id', '=', 'db.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
@@ -692,9 +692,9 @@ class ChapterReportController extends Controller
         if ($conditions['founderCondition']) {
 
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference_id', '=', $corConfId);
+            $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region_id', '=', $corRegId);
+            $baseQuery->where('chapters.region', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -735,18 +735,18 @@ class ChapterReportController extends Controller
                     'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-                ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
-                ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id')
+                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+                ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
                 ->where('chapters.is_active', '=', '1')
                 ->where('bd.board_position_id', '=', '1');
 
             if ($conditions['founderCondition']) {
 
             } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-                $baseQuery->where('chapters.conference_id', '=', $corConfId);
+                $baseQuery->where('chapters.conference', '=', $corConfId);
             } elseif ($conditions['regionalCoordinatorCondition']) {
-                $baseQuery->where('chapters.region_id', '=', $corRegId);
+                $baseQuery->where('chapters.region', '=', $corRegId);
             } else {
                 $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
             }
@@ -828,9 +828,9 @@ class ChapterReportController extends Controller
                 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
-            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->whereIn('chapters.status', $status);
@@ -838,9 +838,9 @@ class ChapterReportController extends Controller
         if ($conditions['founderCondition']) {
 
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference_id', '=', $corConfId);
+            $baseQuery->where('chapters.conference', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region_id', '=', $corRegId);
+            $baseQuery->where('chapters.region', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
