@@ -46,18 +46,25 @@
                   <tr>
                     <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                     <td>
-                        @if ($list->reg != "None")
-                            {{ $list->conf }} / {{ $list->reg }}
-                        @else
-                            {{ $list->conf }}
-                        @endif
-                        </td>
-                        <td>{{ $list->state }}</td>
+                                @if ($list->reg != "None")
+                                    {{ $list->conf }} / {{ $list->reg }}
+                                @else
+                                    {{ $list->conf }}
+                                @endif
+                            </td>
+                            <td>{{ $list->state }}</td>
                         <td>{{ $list->name }}</td>
-                        <td @if($list->status_id == '4' ||$list->status_id == '6' ) style="background-color:#dc3545; color: #ffffff;"
-                            @elseif ($list->status_id == '5') style="background-color:#ffc107;" @endif>
-                            {{ $list->status }}
-                        </td>
+						@switch($list->status_id)
+                                @case(4)
+                                    <td style="background-color: #dc3545; color: #ffffff;">On Hold Do Not Refer</td>
+                                    @break
+                                @case(5)
+                                    <td style="background-color: #ffc107;">Probation</td>
+                                    @break
+                                @case(6)
+                                    <td style="background-color: #dc3545; color: #ffffff;">Probation Do Not Refer</td>
+                                    @break
+                            @endswitch
 						<td>{{ $list->notes }}</td>
 			        </tr>
                   @endforeach

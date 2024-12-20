@@ -37,6 +37,12 @@ class CoordinatorReportController extends Controller
         // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
 
+        if ($conditions['coordinatorCondition']) {
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
+        }
+
         $baseQuery = DB::table('coordinators as cd')
             ->select('cd.id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.report_id as report_id',
                 'cp.long_title as position', 'pos2.long_title as sec_pos', 'cd.conference_id as cor_conf', 'rg.short_name as reg', 'cf.short_name as conf')
@@ -55,13 +61,13 @@ class CoordinatorReportController extends Controller
         } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
-            $baseQuery->whereIn('cd.id', $corId);
+            $baseQuery->whereIn('cd.id', $inQryArr);
         }
 
         $coordinatorList = $baseQuery->get();
 
         foreach ($coordinatorList as $list) {
-            $reportingData = $this->calculateReporting($list->cor_id, $list->layer_id);
+            $reportingData = $this->calculateReporting($list->cor_id, $list->layer_id, $inQryArr);
 
             $list->direct_report = $reportingData['direct_report'];
             $list->indirect_report = $reportingData['indirect_report'];
@@ -76,7 +82,7 @@ class CoordinatorReportController extends Controller
     /**
      * Calculate Direct/Indirect Reports
      */
-    private function calculateReporting($coordinatorId, $corlayerId)
+    private function calculateReporting($coordinatorId, $corlayerId, $inQryArr)
     {
         // Calculate direct chapter report
         $coordinator_options = DB::table('chapters')
@@ -89,7 +95,7 @@ class CoordinatorReportController extends Controller
         // Calculate indirect chapter report
         $sqlLayerId = 'crt.layer'.$corlayerId;
         $reportIdList = DB::table('coordinator_reporting_tree as crt')
-            ->select('crt.coordinator_id as id')
+            ->select('crt.id')
             ->where($sqlLayerId, '=', $coordinatorId)
             ->get();
 
@@ -137,6 +143,12 @@ class CoordinatorReportController extends Controller
         // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
 
+        if ($conditions['coordinatorCondition']) {
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
+        }
+
         $baseQuery = DB::table('coordinators as cd')
             ->select('cd.id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.report_id as report_id', 'cd.sec_position_id as sec_position_id', 'cp.long_title as position', 'rg.short_name as reg', 'cd.conference_id as cor_conf',
                 'cd.todo_month as todo_month', 'cd.todo_check_chapters as todo_check_chapters', 'cd.todo_election_faq as todo_election_faq', 'cd.dashboard_updated as dashboard_updated')
@@ -151,7 +163,7 @@ class CoordinatorReportController extends Controller
         } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
-            $baseQuery->whereIn('cd.id', $corId);
+            $baseQuery->whereIn('cd.id', $inQryArr);
         }
 
         $coordinatorList = $baseQuery->get();
@@ -180,6 +192,12 @@ class CoordinatorReportController extends Controller
         // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
 
+        if ($conditions['coordinatorCondition']) {
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
+        }
+
         $baseQuery = DB::table('coordinators as cd')
             ->select('cd.id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
                 'cd.report_id as report_id', 'cd.sec_position_id as sec_position_id', 'cp.long_title as position', 'rg.short_name as reg', 'cd.conference_id as cor_conf',
@@ -199,7 +217,7 @@ class CoordinatorReportController extends Controller
         } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
-            $baseQuery->whereIn('cd.id', $corId);
+            $baseQuery->whereIn('cd.id', $inQryArr);
         }
 
         $coordinatorList = $baseQuery->get();
@@ -337,6 +355,12 @@ class CoordinatorReportController extends Controller
         // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
 
+        if ($conditions['coordinatorCondition']) {
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
+        }
+
         $baseQuery = DB::table('coordinators as cd')
             ->select('cd.id as cor_id', 'cd.layer_id as layer_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.report_id as report_id', 'cd.sec_position_id as sec_position_id', 'cd.card_sent as card_sent',
                 'cp.long_title as position', 'rg.short_name as reg', 'cf.short_name as conf', 'cd.birthday_month_id as b_month', 'cd.birthday_day as b_day', 'db.month_long_name as month')
@@ -355,7 +379,7 @@ class CoordinatorReportController extends Controller
         } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
-            $baseQuery->whereIn('cd.id', $corId);
+            $baseQuery->whereIn('cd.id', $inQryArr);
         }
 
         $coordinatorList = $baseQuery->get();
@@ -480,6 +504,12 @@ class CoordinatorReportController extends Controller
 
         // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
+
+        if ($conditions['coordinatorCondition']) {
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
+        }
 
         $baseQuery = DB::table('coordinators')
             ->select('coordinators.id AS id', 'coordinators.first_name', 'coordinators.last_name', 'pos1.short_title AS position_title',

@@ -156,8 +156,11 @@
                                     <select name="ch_pre_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
                                         @foreach($allState as $state)
-                                        <option value="{{$state->state_short_name}}" {{$PresDetails->state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
-                                      @endforeach
+                                            <option value="{{$state->id}}"
+                                                @if($chapterList->state_id == $state->id) selected @endif>
+                                                {{$state->state_long_name}}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-sm-2 mb-1">
@@ -193,7 +196,10 @@
                                     <select name="ch_avp_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
                                         @foreach($allState as $state)
-                                            <option value="{{$state->state_short_name}}" {{$AVPDetails->state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
+                                            <option value="{{$state->id}}"
+                                                @if($chapterList->state_id == $state->id) selected @endif>
+                                                {{$state->state_long_name}}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -229,9 +235,12 @@
                                 <div class="col-sm-3 mb-1">
                                     <select name="ch_mvp_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
-                                            @foreach($allState as $state)
-                                            <option value="{{$state->state_short_name}}" {{$MVPDetails->state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
-                                            @endforeach
+                                        @foreach($allState as $state)
+                                            <option value="{{$state->id}}"
+                                                @if($chapterList->state_id == $state->id) selected @endif>
+                                                {{$state->state_long_name}}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-sm-2 mb-1">
@@ -266,9 +275,12 @@
                                 <div class="col-sm-3 mb-1">
                                     <select name="ch_trs_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
-                                            @foreach($allState as $state)
-                                                <option value="{{$state->state_short_name}}" {{$TRSDetails->state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
-                                            @endforeach
+                                        @foreach($allState as $state)
+                                            <option value="{{$state->id}}"
+                                                @if($chapterList->state_id == $state->id) selected @endif>
+                                                {{$state->state_long_name}}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-sm-2 mb-1">
@@ -304,7 +316,10 @@
                                     <select name="ch_sec_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
                                         @foreach($allState as $state)
-                                            <option value="{{$state->state_short_name}}" {{$SECDetails->state == $state->state_short_name  ? 'selected' : ''}}>{{$state->state_long_name}}</option>
+                                            <option value="{{$state->id}}"
+                                                @if($chapterList->state_id == $state->id) selected @endif>
+                                                {{$state->state_long_name}}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>

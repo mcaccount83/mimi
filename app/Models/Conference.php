@@ -29,10 +29,10 @@ class Conference extends Model
 
     ];
 
-    // public function coordinators(): BelongsTo
-    // {
-    //     return $this->belongsTo(Coordinators::class, 'conference');
-    // }
+    public function coordinators(): BelongsTo
+    {
+        return $this->belongsTo(Coordinators::class, 'conference');
+    }
 
     // public function chapter(): BelongsTo
     // {

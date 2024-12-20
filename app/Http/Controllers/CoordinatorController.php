@@ -42,6 +42,12 @@ class CoordinatorController extends Controller
         // Get the conditions
         $conditions = getPositionConditions($positionId, $secPositionId);
 
+        if ($conditions['coordinatorCondition']) {
+            // Load Reporting Tree
+            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $inQryArr = $coordinatorData['inQryArr'];
+        }
+
         $baseQuery = DB::table('coordinators as cd')
             ->select('cd.id as cor_id', 'cd.home_chapter as cor_chapter', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email',
                 'cd.phone as cor_phone', 'cd.report_id as report_id', 'cp.short_title as position', 'pos2.long_title as sec_pos', 'pos3.long_title as display_pos',
@@ -62,7 +68,7 @@ class CoordinatorController extends Controller
         } elseif ($conditions['regionalCoordinatorCondition']) {
             $baseQuery->where('cd.region_id', '=', $corRegId);
         } else {
-            $baseQuery->whereIn('cd.report_id', $corId);
+            $baseQuery->whereIn('cd.report_id', $inQryArr);
         }
 
         if (isset($_GET['check']) && $_GET['check'] == 'yes') {
@@ -96,48 +102,6 @@ class CoordinatorController extends Controller
         $data = ['countList' => $countList, 'corId' => $corId, 'coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus, 'emailListCord' => $emailListCord];
 
         return view('coordinators.coordlist')->with($data);
-    }
-
-     /**
-     * International Coordinators List
-     */
-    public function showIntCoordinator(): View
-    {
-        //Get International Coordinator List
-        $intCoordinatorList = DB::table('coordinators as cd')
-            ->select('cd.id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.conference_id as cor_cid',
-                'rg.short_name as reg', 'cf.short_name as conf', 'cp.long_title as position',
-                DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
-            )
-            ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
-            ->leftJoin('region as rg', 'rg.id', '=', 'cd.region_id')
-            ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
-            ->where('cd.is_active', '=', '1')
-            ->orderBy('cd.first_name')
-            ->get();
-        $data = ['intCoordinatorList' => $intCoordinatorList];
-
-        return view('international.intcoord')->with($data);
-    }
-
-    /**
-     * International Retired Coordinator List
-     */
-    public function showIntCoordinatorRetired(): View
-    {
-        //Get International Coordinator List
-        $intCoordinatorList = DB::table('coordinators as cd')
-            ->select('cd.id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.conference_id as cor_cid', 'rg.short_name as reg', 'cf.short_name as conf', 'cp.long_title as position', 'cd.sec_position_id as sec_position_id', 'cd.zapped_date as zapdate', 'cd.reason_retired as reason')
-            ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
-            ->leftJoin('region as rg', 'rg.id', '=', 'cd.region_id')
-            ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
-            ->where('cd.is_active', '=', '0')
-            ->orderByDesc('cd.zapped_date')
-            ->get();
-
-        $data = ['intCoordinatorList' => $intCoordinatorList];
-
-        return view('international.intcoordretired')->with($data);
     }
 
     /**
@@ -251,7 +215,7 @@ class CoordinatorController extends Controller
 
             $cordReportingTree = DB::table('coordinator_reporting_tree')
                 ->select('layer0', 'layer1', 'layer2', 'layer3', 'layer4', 'layer5', 'layer6', 'layer7', 'layer8')
-                ->where('coordinator_id', '=', $cordId)
+                ->where('id', '=', $cordId)
                 ->limit(1)
                 ->get();
             $layer0 = $cordReportingTree[0]->layer0;
@@ -615,16 +579,16 @@ class CoordinatorController extends Controller
         if ($region_id == 0) {
             $primaryChapterList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'st.state_short_name as state')
-                ->join('state as st', 'chapters.state_id', '=', 'st.id')
-                ->where('chapters.conference_id', '=', $conference_id)
+                ->join('state as st', 'chapters.state', '=', 'st.id')
+                ->where('chapters.conference', '=', $conference_id)
                 ->where('chapters.is_active', '=', '1')
                 ->orderBy('st.state_short_name')
                 ->get();
         } else {
             $primaryChapterList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'st.state_short_name as state')
-                ->join('state as st', 'chapters.state_id', '=', 'st.id')
-                ->where('chapters.region_id', '=', $region_id)
+                ->join('state as st', 'chapters.state', '=', 'st.id')
+                ->where('chapters.region', '=', $region_id)
                 ->where('chapters.is_active', '=', '1')
                 ->orderBy('st.state_short_name')
                 ->orderBy('chapters.name')
@@ -901,7 +865,7 @@ class CoordinatorController extends Controller
 
         $directChapterTo = DB::table('chapters as ch')
             ->select('ch.id as ch_id', 'ch.name as ch_name', 'st.state_short_name as st_name')
-            ->join('state as st', 'ch.state_id', '=', 'st.id')
+            ->join('state as st', 'ch.state', '=', 'st.id')
             ->where('ch.primary_coordinator_id', '=', $id)
             ->where('ch.is_active', '=', '1')
             ->get();
@@ -1276,7 +1240,7 @@ class CoordinatorController extends Controller
 
         $chapter_list = DB::table('chapters')
             ->select('chapters.id', 'state.state_short_name as state', 'chapters.name as name')
-            ->join('state', 'chapters.state_id', '=', 'state.id')
+            ->join('state', 'chapters.state', '=', 'state.id')
             ->where('primary_coordinator_id', $coordinatorDetails[0]->id)
             ->where('chapters.is_active', 1)
             ->orderBy('state.state_short_name')
@@ -1358,8 +1322,8 @@ class CoordinatorController extends Controller
         if ($region_id == 0) {
             $primaryChapterList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'st.state_short_name as state')
-                ->join('state as st', 'chapters.state_id', '=', 'st.id')
-                ->where('chapters.conference_id', '=', $conference_id)
+                ->join('state as st', 'chapters.state', '=', 'st.id')
+                ->where('chapters.conference', '=', $conference_id)
                 ->where('primary_coordinator_id', '!=', $coordinatorDetails[0]->id)
                 ->where('chapters.is_active', '=', '1')
                 ->orderBy('st.state_short_name')
@@ -1367,8 +1331,8 @@ class CoordinatorController extends Controller
         } else {
             $primaryChapterList = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'st.state_short_name as state')
-                ->join('state as st', 'chapters.state_id', '=', 'st.id')
-                ->where('chapters.region_id', '=', $region_id)
+                ->join('state as st', 'chapters.state', '=', 'st.id')
+                ->where('chapters.region', '=', $region_id)
                 ->where('primary_coordinator_id', '!=', $coordinatorDetails[0]->id)
                 ->where('chapters.is_active', '=', '1')
                 ->orderBy('st.state_short_name')
@@ -1718,7 +1682,7 @@ class CoordinatorController extends Controller
 
         $directChapterTo = DB::table('chapters as ch')
             ->select('ch.id as ch_id', 'ch.name as ch_name', 'st.state_short_name as st_name')
-            ->join('state as st', 'ch.state_id', '=', 'st.id')
+            ->join('state as st', 'ch.state', '=', 'st.id')
             ->where('ch.primary_coordinator_id', '=', $corId)
             ->where('ch.is_active', '=', '1')
             ->get();

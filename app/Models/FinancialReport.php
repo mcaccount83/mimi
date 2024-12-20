@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class FinancialReport extends Model
 {
@@ -27,11 +26,6 @@ class FinancialReport extends Model
         'award_4_files',
         'award_5_files',
     ];
-
-    public function reviewer()
-    {
-        return $this->belongsTo(Coordinators::class, 'reviewer_id', 'id');
-    }
 
     protected $primaryKey = 'chapter_id';
 
