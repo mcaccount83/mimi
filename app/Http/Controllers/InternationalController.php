@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Chapter;
+use App\Models\Chapters;
 use App\Models\FinancialReport;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -30,7 +30,7 @@ class InternationalController extends Controller
     {
         $user = User::find($request->user()->id);
 
-        $corDetails = $user->Coordinators;
+        $corDetails = $user->coordinator;
         if (! $corDetails) {
             return to_route('home');
         }
@@ -67,7 +67,7 @@ class InternationalController extends Controller
     //         return to_route('home');
     //     }
 
-    //     $corDetails = $user->Coordinators;
+    //     $corDetails = $user->coordinator;
     //     if (! $corDetails) {
     //         return to_route('home');
     //     }
@@ -176,7 +176,7 @@ class InternationalController extends Controller
     {
         $user = User::find($request->user()->id);
 
-        $corDetails = $user->Coordinators;
+        $corDetails = $user->coordinator;
         if (! $corDetails) {
             return to_route('home');
         }
@@ -212,7 +212,7 @@ class InternationalController extends Controller
     //         return to_route('home');
     //     }
 
-    //     $corDetails = $user->Coordinators;
+    //     $corDetails = $user->coordinator;
     //     if (! $corDetails) {
     //         return to_route('home');
     //     }
@@ -325,7 +325,7 @@ class InternationalController extends Controller
      */
     // public function showIntCoordinatorView(Request $request, $id): View
     // {
-    //     $corDetails = User::find($request->user()->id)->Coordinators;
+    //     $corDetails = User::find($request->user()->id)->coordinator;
     //     $corId = $corDetails['id'];
     //     $corConfId = $corDetails['conference_id'];
     //     $coordinatorDetails = DB::table('coordinators as cd')
@@ -409,7 +409,7 @@ class InternationalController extends Controller
      */
     // public function showIntCoordinatorRetiredView(Request $request, $id): View
     // {
-    //     $corDetails = User::find($request->user()->id)->Coordinators;
+    //     $corDetails = User::find($request->user()->id)->coordinator;
     //     $corId = $corDetails['id'];
     //     $corConfId = $corDetails['conference_id'];
     //     $coordinatorDetails = DB::table('coordinators as cd')
@@ -457,7 +457,7 @@ class InternationalController extends Controller
     public function showIntCoordinatorToDo(Request $request): View
     {
         //Get Coordinator Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $positionId = $corDetails['position_id'];
@@ -488,7 +488,7 @@ class InternationalController extends Controller
     public function showIntEINstatus(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
 
         // Load Reporting Tree
@@ -521,14 +521,14 @@ class InternationalController extends Controller
      */
     // public function showIntEINstatusView(Request $request, $id)
     // {
-    //     //$corDetails = User::find($request->user()->id)->Coordinators;
+    //     //$corDetails = User::find($request->user()->id)->coordinator;
     //     $user = User::find($request->user()->id);
     //     // Check if user is not found
     //     if (! $user) {
     //         return to_route('home');
     //     }
 
-    //     $corDetails = $user->Coordinators;
+    //     $corDetails = $user->coordinator;
     //     // Check if BoardDetails is not found for the user
     //     if (! $corDetails) {
     //         return to_route('home');
@@ -559,7 +559,7 @@ class InternationalController extends Controller
      */
     // public function updateIntEINstatus(Request $request, $id): RedirectResponse
     // {
-    //     $corDetails = User::find($request->user()->id)->Coordinators;
+    //     $corDetails = User::find($request->user()->id)->coordinator;
     //     $corId = $corDetails['id'];
     //     $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
@@ -568,7 +568,7 @@ class InternationalController extends Controller
     //     //$nextRenewalYear = date('Y');
     //     $primaryCordEmail = $request->input('ch_pc_email');
     //     $boardPresEmail = $request->input('ch_pre_email');
-    //     $chapter = Chapter::find($id);
+    //     $chapter = Chapters::find($id);
     //     DB::beginTransaction();
     //     try {
 
@@ -595,7 +595,7 @@ class InternationalController extends Controller
     public function showIntdonation(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $positionId = $corDetails['position_id'];
         $secPositionId = $corDetails['sec_position_id'];

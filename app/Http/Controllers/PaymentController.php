@@ -7,7 +7,7 @@ use App\Mail\PaymentsM2MOnline;
 use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsReRegOnline;
 use App\Mail\PaymentsSustainingChapterThankYou;
-use App\Models\Chapter;
+use App\Models\Chapters;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,10 +26,10 @@ class PaymentController extends Controller
 
     public function processPayment(Request $request): RedirectResponse
     {
-        $borDetails = User::find($request->user()->id)->BoardDetails;
+        $borDetails = User::find($request->user()->id)->board;
         $chapterId = $borDetails['chapter_id'];
 
-        $chapterDetails = Chapter::find($chapterId);
+        $chapterDetails = Chapters::find($chapterId);
         $chapterState = DB::table('state')
             ->select('state_short_name')
             ->where('id', '=', $chapterDetails->state)
@@ -250,7 +250,7 @@ class PaymentController extends Controller
                     $to_email5 = $ConfCoorEmail;
                     $to_email6 = 'dragonmom@msn.com';
 
-                    $existingRecord = Chapter::where('id', $chapterId)->first();
+                    $existingRecord = Chapters::where('id', $chapterId)->first();
                     $existingRecord->members_paid_for = $members;
                     $existingRecord->next_renewal_year = $next_renewal_year + 1;
                     $existingRecord->dues_last_paid = Carbon::today();
@@ -313,10 +313,10 @@ class PaymentController extends Controller
 
     public function processDonation(Request $request): RedirectResponse
     {
-        $borDetails = User::find($request->user()->id)->BoardDetails;
+        $borDetails = User::find($request->user()->id)->board;
         $chapterId = $borDetails['chapter_id'];
 
-        $chapterDetails = Chapter::find($chapterId);
+        $chapterDetails = Chapters::find($chapterId);
         $chapterState = DB::table('state')
             ->select('state_short_name')
             ->where('id', '=', $chapterDetails->state)
@@ -528,7 +528,7 @@ class PaymentController extends Controller
                     $to_email5 = $ConfCoorEmail;
                     $to_email6 = 'dragonmom@msn.com';
 
-                    $existingRecord = Chapter::where('id', $chapterId)->first();
+                    $existingRecord = Chapters::where('id', $chapterId)->first();
 
                     Mail::to([$to_email5, $to_email6])
                         ->queue(new PaymentsM2MOnline($mailData, $coordinator_array));
@@ -584,7 +584,7 @@ class PaymentController extends Controller
 
     public function load_coordinators($chapterId, $chConf, $chPcid)
     {
-        $chapterDetails = Chapter::find($chapterId)
+        $chapterDetails = Chapters::find($chapterId)
             ->select('chapters.id as id', 'chapters.name as chapter_name', 'st.state_short_name as state',
                 'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
             ->leftJoin('state as st', 'chapters.state', '=', 'st.id')

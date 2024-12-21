@@ -5,10 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Notifications\Notifiable;
 
-class OutgoingBoardMember extends Model
+class BoardOutgoing extends Model
 {
     use HasFactory;
+    use Notifiable;
+
+    protected $table = 'outgoing_board_member';
 
     protected $fillable = [
         'user_id',
@@ -20,10 +24,9 @@ class OutgoingBoardMember extends Model
         'chapter_id',
     ];
 
-    protected $table = 'outgoing_board_member';
-
     public function user(): BelongsTo
     {
-        return $this->belongsTo(\App\Models\User::class, 'user_id');
+        return $this->belongsTo(User::class,  'user_id', 'id');  // 'user_id' in outgoing_board_members BelongsTo 'id' in user
     }
+
 }

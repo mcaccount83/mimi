@@ -14,7 +14,7 @@ use App\Http\Requests\StoreRosterGoogleRequest;
 use App\Http\Requests\StoreStatement1GoogleRequest;
 use App\Http\Requests\StoreStatement2GoogleRequest;
 use App\Http\Requests\StoreToolkitGoogleRequest;
-use App\Models\Chapter;
+use App\Models\Chapters;
 use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\FolderRecord;
@@ -107,7 +107,7 @@ class GoogleController extends Controller
             if ($response->getStatusCode() === 200) { // Check for a successful status code
                 $file_id = $jsonResponse['id'];
                 $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
-                $existingChapterRecord = Chapter::where('id', $id)->first();
+                $existingChapterRecord = Chapters::where('id', $id)->first();
 
                 $existingChapterRecord->update([
                     'ein_letter_path' => $path,

@@ -4,17 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 
-class Bugs extends Model
+class Month extends Model
 {
     use HasFactory;
     use Notifiable;
 
-    protected $table = 'bugs';
+    protected $table = 'month';
 
     protected $fillable = [
-        'task', 'details', 'status', 'priority', 'reported_id', 'notes',
+
     ];
 
 }

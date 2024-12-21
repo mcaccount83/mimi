@@ -124,7 +124,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -261,7 +261,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -397,7 +397,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -799,7 +799,7 @@ class ExportController extends Controller
         $previousYear = Carbon::now()->subYear()->startOfYear();
 
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
@@ -883,7 +883,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -1056,7 +1056,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -1227,7 +1227,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -1319,7 +1319,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -1414,7 +1414,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
 
         // Load Reporting Tree
@@ -1486,7 +1486,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
 
         // Load Reporting Tree
@@ -1563,7 +1563,7 @@ class ExportController extends Controller
         ];
 
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -1654,7 +1654,7 @@ class ExportController extends Controller
 
         $chapter_array = null;
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -1816,7 +1816,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $positionid = $corDetails['position_id'];
         $corConfId = $corDetails['conference_id'];
@@ -1951,7 +1951,7 @@ class ExportController extends Controller
             'Expires' => '0',
         ];
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];

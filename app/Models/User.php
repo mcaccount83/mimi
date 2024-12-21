@@ -2,40 +2,39 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    use HasFactory;
     use Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     */
+    protected $table = 'users';
+
     protected $fillable = [
         'name', 'email', 'password',
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     */
     protected $hidden = [
         'password', 'remember_token',
     ];
 
-    public function Coordinators(): HasOne
+    public function coordinator(): HasOne
     {
-        return $this->hasOne(\App\Models\Coordinators::class, 'user_id');
+        return $this->hasOne(Coordinators::class, 'user_id', 'id');  // 'user_id' in coordinators HasOne 'id' in users
     }
 
-    public function BoardDetails(): HasOne
+    public function board(): HasOne
     {
-        return $this->hasOne(\App\Models\Boards::class, 'user_id');
+        return $this->hasOne(Boards::class, 'user_id', 'id');  // 'user_id' in boards HasOne 'id' in users
     }
 
-    public function OutgoingDetails(): HasOne
+    public function outgoing(): HasOne
     {
-        return $this->hasOne(\App\Models\OutgoingBoardMember::class, 'user_id');
+        return $this->hasOne(BoardOutgoing::class, 'user_id', 'id');  // 'user_id' in outgoing_board_members HasOne 'id' in users
     }
+
 }

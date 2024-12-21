@@ -22,7 +22,7 @@ use App\Mail\WebsiteAddNoticeAdmin;
 use App\Mail\WebsiteAddNoticeChapter;
 use App\Mail\WebsiteReviewNotice;
 use App\Mail\WebsiteUpdatePrimaryCoor;
-use App\Models\Chapter;
+use App\Models\Chapters;
 use App\Models\FinancialReport;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -54,7 +54,7 @@ class ChapterController extends Controller
      */
     public function showChapters(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -120,7 +120,7 @@ class ChapterController extends Controller
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
-        // $corDetails = User::find($request->user()->id)->Coordinators;
+        // $corDetails = User::find($request->user()->id)->coordinator;
         $corDetails = DB::table('coordinators as cd')
             ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
             ->where('cd.user_id', '=', $userId)
@@ -265,7 +265,7 @@ class ChapterController extends Controller
 
     public function updateEIN(Request $request): JsonResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
@@ -315,7 +315,7 @@ class ChapterController extends Controller
      */
     public function updateChapterDisband(Request $request): JsonResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -630,7 +630,7 @@ class ChapterController extends Controller
 
         if ($response->getStatusCode() === 200) { // Check for a successful status code
             $pdf_file_id = json_decode($response->getBody()->getContents(), true)['id'];
-            $chapter = Chapter::find($chapterid);
+            $chapter = Chapters::find($chapterid);
             $chapter->disband_letter_path = $pdf_file_id;
             $chapter->save();
 
@@ -643,7 +643,7 @@ class ChapterController extends Controller
      */
     public function updateChapterUnZap(Request $request): JsonResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -864,7 +864,7 @@ class ChapterController extends Controller
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
-        // $corDetails = User::find($request->user()->id)->Coordinators;
+        // $corDetails = User::find($request->user()->id)->coordinator;
         $corDetails = DB::table('coordinators as cd')
             ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
             ->where('cd.user_id', '=', $userId)
@@ -912,7 +912,7 @@ class ChapterController extends Controller
 
     public function updateChapterNew(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -1174,7 +1174,7 @@ class ChapterController extends Controller
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
-        // $corDetails = User::find($request->user()->id)->Coordinators;
+        // $corDetails = User::find($request->user()->id)->coordinator;
         $corDetails = DB::table('coordinators as cd')
             ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
             ->where('cd.user_id', '=', $userId)
@@ -1253,7 +1253,7 @@ class ChapterController extends Controller
     public function updateChapterDetails(Request $request, $id): RedirectResponse
     {
         $chapterId = $id;
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -1287,7 +1287,7 @@ class ChapterController extends Controller
             $website = 'http://'.$website;
         }
 
-        $chapter = Chapter::find($chapterId);
+        $chapter = Chapters::find($chapterId);
         DB::beginTransaction();
         try {
             $chapter->name = $request->filled('ch_name') ? $request->input('ch_name') : $request->input('ch_hid_name');
@@ -1472,7 +1472,7 @@ class ChapterController extends Controller
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
-        // $corDetails = User::find($request->user()->id)->Coordinators;
+        // $corDetails = User::find($request->user()->id)->coordinator;
         $corDetails = DB::table('coordinators as cd')
             ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
             ->where('cd.user_id', '=', $userId)
@@ -1596,7 +1596,7 @@ class ChapterController extends Controller
     public function updateChapterBoard(Request $request, $id): RedirectResponse
     {
         $chapterId = $id;
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -1652,7 +1652,7 @@ class ChapterController extends Controller
         $chPCId = $presInfoPre[0]->cor_id;
         $pc_email = $presInfoPre[0]->cor_email;
 
-        $chapter = Chapter::find($chapterId);
+        $chapter = Chapters::find($chapterId);
         DB::beginTransaction();
         try {
             $chapter->last_updated_by = $lastUpdatedBy;
@@ -2183,7 +2183,7 @@ class ChapterController extends Controller
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
-        // $corDetails = User::find($request->user()->id)->Coordinators;
+        // $corDetails = User::find($request->user()->id)->coordinator;
         $corDetails = DB::table('coordinators as cd')
             ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
             ->where('cd.user_id', '=', $userId)
@@ -2257,11 +2257,11 @@ class ChapterController extends Controller
     public function updateChapterIRS(Request $request, $id): RedirectResponse
     {
         $chapterId = $id;
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
-        $chapter = Chapter::find($chapterId);
+        $chapter = Chapters::find($chapterId);
         DB::beginTransaction();
         try {
             $chapter->ein_letter = $request->has('ch_ein_letter') ? 1 : 0;
@@ -2300,7 +2300,7 @@ class ChapterController extends Controller
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
-        // $corDetails = User::find($request->user()->id)->Coordinators;
+        // $corDetails = User::find($request->user()->id)->coordinator;
         $corDetails = DB::table('coordinators as cd')
             ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
             ->where('cd.user_id', '=', $userId)
@@ -2385,7 +2385,7 @@ class ChapterController extends Controller
     public function updateChapterPayment(Request $request, $id): RedirectResponse
     {
         $chapterId = $id;
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -2395,7 +2395,7 @@ class ChapterController extends Controller
         $primaryCordEmail = $request->input('ch_pc_email');
         $boardPresEmail = $request->input('ch_pre_email');
 
-        $chapter = Chapter::find($id);
+        $chapter = Chapters::find($id);
         $chId = $chapter['id'];
         $emailData = $this->userController->loadEmailDetails($chId);
         $emailListChap = $emailData['emailListChap'];
@@ -2406,7 +2406,7 @@ class ChapterController extends Controller
         $to_email = $chapterEmails;
         $cc_email = $primaryCordEmail;
 
-        $chapter = Chapter::find($chapterId);
+        $chapter = Chapters::find($chapterId);
         DB::beginTransaction();
         try {
             $chapter->dues_last_paid = $request->filled('PaymentDate') ? $request->input('PaymentDate') : $chapter->dues_last_paid;
@@ -2497,7 +2497,7 @@ class ChapterController extends Controller
      */
     public function showZappedChapter(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -2548,7 +2548,7 @@ class ChapterController extends Controller
      */
     public function showChapterReRegistration(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -2638,7 +2638,7 @@ class ChapterController extends Controller
      */
     public function createChapterReRegistrationReminder(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -2670,7 +2670,7 @@ class ChapterController extends Controller
         $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
         $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
-        $chapters = Chapter::select('chapters.*', 'chapters.name as chapter_name', 'state.state_short_name as chapter_state',
+        $chapters = Chapters::select('chapters.*', 'chapters.name as chapter_name', 'state.state_short_name as chapter_state',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month', )
             ->join('state', 'chapters.state', '=', 'state.id')
             ->where('chapters.conference', $corConfId)
@@ -2743,7 +2743,7 @@ class ChapterController extends Controller
      */
     public function createChapterReRegistrationLateReminder(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -2784,7 +2784,7 @@ class ChapterController extends Controller
         $rangeStartDateFormatted = $rangeStartDate->format('m-d-Y');
         $rangeEndDateFormatted = $rangeEndDate->format('m-d-Y');
 
-        $chapters = Chapter::select('chapters.*', 'chapters.name as chapter_name', 'state.state_short_name as chapter_state', 'boards.email as bor_email',
+        $chapters = Chapters::select('chapters.*', 'chapters.name as chapter_name', 'state.state_short_name as chapter_state', 'boards.email as bor_email',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
             'boards.board_position_id')
             ->join('state', 'chapters.state', '=', 'state.id')
@@ -2870,7 +2870,7 @@ class ChapterController extends Controller
      */
     public function showChapterInquiries(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -2929,7 +2929,7 @@ class ChapterController extends Controller
      */
     public function showZappedChapterInquiries(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -2989,7 +2989,7 @@ class ChapterController extends Controller
      */
     public function showChapterWebsite(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -3041,7 +3041,7 @@ class ChapterController extends Controller
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
-        // $corDetails = User::find($request->user()->id)->Coordinators;
+        // $corDetails = User::find($request->user()->id)->coordinator;
         $corDetails = DB::table('coordinators as cd')
             ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
             ->where('cd.user_id', '=', $userId)
@@ -3126,7 +3126,7 @@ class ChapterController extends Controller
     public function updateChapterWebsite(Request $request, $id): RedirectResponse
     {
         $chapterId = $id;
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -3160,7 +3160,7 @@ class ChapterController extends Controller
             $website = 'http://'.$website;
         }
 
-        $chapter = Chapter::find($chapterId);
+        $chapter = Chapters::find($chapterId);
         DB::beginTransaction();
         try {
             $chapter->website_url = $website;
@@ -3260,7 +3260,7 @@ class ChapterController extends Controller
      */
     public function showChapterBoardlist(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
 
         // Load Reporting Tree

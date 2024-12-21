@@ -13,10 +13,10 @@ use App\Mail\AdminNewMIMIBugWish;
 use App\Models\Admin;
 use App\Models\Boards;
 use App\Models\Bugs;
-use App\Models\Chapter;
+use App\Models\Chapters;
 use App\Models\FinancialReport;
 use App\Models\GoogleDrive;
-use App\Models\OutgoingBoardMember;
+use App\Models\BoardOutgoing;
 use App\Models\Resources;
 use App\Models\User;
 use Exception;
@@ -47,13 +47,13 @@ class AdminController extends Controller
     {
         $user = User::find($request->user()->id);
 
-        $corDetails = $user->Coordinators;
+        $corDetails = $user->coordinator;
         // Check if CordDetails is not found for the user
         if (! $corDetails) {
             return to_route('home');
         }
 
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
@@ -89,7 +89,7 @@ class AdminController extends Controller
      */
     public function addBugs(AddBugsAdminRequest $request)
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         // Fetch coordinator details
         $coordinatorDetails = DB::table('coordinators as cd')
@@ -153,7 +153,7 @@ class AdminController extends Controller
     public function showDownloads(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -213,13 +213,13 @@ class AdminController extends Controller
     {
         $user = User::find($request->user()->id);
 
-        $corDetails = $user->Coordinators;
+        $corDetails = $user->coordinator;
         // Check if CordDetails is not found for the user
         if (! $corDetails) {
             return to_route('home');
         }
 
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
@@ -265,7 +265,7 @@ class AdminController extends Controller
      */
     public function addResources(AddResourcesAdminRequest $request): JsonResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         // Fetch coordinator details
         $coordinatorDetails = DB::table('coordinators as cd')
@@ -302,7 +302,7 @@ class AdminController extends Controller
      */
     public function updateResources(UpdateResourcesAdminRequest $request, $id)
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         // Fetch coordinator details
         $coordinatorDetails = DB::table('coordinators as cd')
@@ -345,13 +345,13 @@ class AdminController extends Controller
     {
         $user = User::find($request->user()->id);
 
-        $corDetails = $user->Coordinators;
+        $corDetails = $user->coordinator;
         // Check if CordDetails is not found for the user
         if (! $corDetails) {
             return to_route('home');
         }
 
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
@@ -388,7 +388,7 @@ class AdminController extends Controller
      */
     public function addToolkit(AddToolkitAdminRequest $request): JsonResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
 
         // Fetch coordinator details
@@ -430,7 +430,7 @@ class AdminController extends Controller
      */
     public function updateToolkit(UpdateToolkitAdminRequest $request, $id)
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         // Fetch coordinator details
         $coordinatorDetails = DB::table('coordinators as cd')
@@ -470,7 +470,7 @@ class AdminController extends Controller
     {
         $user = User::find($request->user()->id);
 
-        $corDetails = $user->Coordinators;
+        $corDetails = $user->coordinator;
         // Check if CordDetails is not found for the user
         if (! $corDetails) {
             return to_route('home');
@@ -499,10 +499,10 @@ class AdminController extends Controller
 
     public function editReRegDate(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
+        //$corDetails = User::find($request->user()->id)->coordinator;
         $user = User::find($request->user()->id);
 
-        $corDetails = $user->Coordinators;
+        $corDetails = $user->coordinator;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return to_route('home');
@@ -538,10 +538,10 @@ class AdminController extends Controller
 
     public function updateReRegDate(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
-        $chapter = Chapter::find($id);
+        $chapter = Chapters::find($id);
         DB::beginTransaction();
         try {
             $chapter->start_month_id = $request->input('ch_founddate');
@@ -714,13 +714,13 @@ class AdminController extends Controller
     {
         $user = User::find($request->user()->id);
 
-        $corDetails = $user->Coordinators;
+        $corDetails = $user->coordinator;
         // Check if CordDetails is not found for the user
         if (! $corDetails) {
             return to_route('home');
         }
 
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $coordinatorDetails = DB::table('coordinators as cd')
             ->select('cd.*')
@@ -754,7 +754,7 @@ class AdminController extends Controller
     //         $admin = Admin::findOrFail($id);
     //         $validatedData = $request->validated();
 
-    //         $corDetails = User::find($request->user()->id)->Coordinators;
+    //         $corDetails = User::find($request->user()->id)->coordinator;
     //         $corId = $corDetails['id'];
 
     //         // Convert checkbox values to 1 or null
@@ -826,7 +826,7 @@ class AdminController extends Controller
             $currentYear = Carbon::now()->year;
             $nextYear = $currentYear + 1;
 
-            $corDetails = User::find($request->user()->id)->Coordinators;
+            $corDetails = User::find($request->user()->id)->coordinator;
             $corId = $corDetails['id'];
 
             // Fetch all outgoing board members
@@ -845,7 +845,7 @@ class AdminController extends Controller
             DB::table('incoming_board_member')->truncate();
 
             // Fetch all chapters with their financial reports and update the balance
-            $chapters = Chapter::with('financialReport')->get();
+            $chapters = Chapters::with('financialReport')->get();
             foreach ($chapters as $chapter) {
                 if ($chapter->financialReport) {
                     $chapter->balance = $chapter->financialReport->post_balance;
@@ -864,7 +864,7 @@ class AdminController extends Controller
             DB::table('financial_report')->truncate();
 
             // Fetch all active chapters
-            $activeChapters = Chapter::where('is_active', 1)->get();
+            $activeChapters = Chapters::where('is_active', 1)->get();
 
             // Insert each chapter's balance into financial_report
             foreach ($activeChapters as $chapter) {
@@ -890,7 +890,7 @@ class AdminController extends Controller
 
             // Loop through each board detail and insert into outgoing_boards
             foreach ($boardDetails as $boardDetail) {
-                OutgoingBoardMember::create([
+                BoardOutgoing::create([
                     'board_id' => $boardDetail->id,
                     'user_id' => $boardDetail->user_id,
                     'chapter_id' => $boardDetail->chapter_id,
@@ -936,7 +936,7 @@ class AdminController extends Controller
     public function updateDataDatabase(Request $request): RedirectResponse
     {
         try {
-            $corDetails = User::find($request->user()->id)->Coordinators;
+            $corDetails = User::find($request->user()->id)->coordinator;
             $corId = $corDetails['id'];
 
             // Get the current month and year for table renaming
@@ -1001,7 +1001,7 @@ class AdminController extends Controller
     public function updateEOYCoordinator(Request $request): RedirectResponse
     {
         try {
-            $corDetails = User::find($request->user()->id)->Coordinators;
+            $corDetails = User::find($request->user()->id)->coordinator;
             $corId = $corDetails['id'];
 
             // Update admin table: Set specified columns to 1
@@ -1029,7 +1029,7 @@ class AdminController extends Controller
     public function updateEOYChapter(Request $request): RedirectResponse
     {
         try {
-            $corDetails = User::find($request->user()->id)->Coordinators;
+            $corDetails = User::find($request->user()->id)->coordinator;
             $corId = $corDetails['id'];
 
             // Update admin table: Set specified columns to 1

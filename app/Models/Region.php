@@ -12,30 +12,9 @@ class Region extends Model
     use HasFactory;
     use Notifiable;
 
-    // Specify the table name explicitly
-    protected $table = 'conference';
+    protected $table = 'region';
 
-    /**
-     * The attributes that are mass assignable.
-     */
     protected $fillable = [
 
     ];
-
-    /**
-     * The attributes that should be hidden for arrays.
-     */
-    protected $hidden = [
-
-    ];
-
-    public function coordinators(): BelongsTo
-    {
-        return $this->belongsTo(\App\Models\Coordinators::class, 'region_id');
-    }
-
-    public function chapters(): BelongsTo
-    {
-        return $this->belongsTo(\App\Models\Chapter::class, 'region');
-    }
 }

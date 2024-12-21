@@ -12,30 +12,10 @@ class CoordinatorPosition extends Model
     use HasFactory;
     use Notifiable;
 
-    // Specify the table name explicitly
     protected $table = 'coordinator_position';
 
-    /**
-     * The attributes that are mass assignable.
-     */
     protected $fillable = [
 
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     */
-    protected $hidden = [
-
-    ];
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(\App\Models\User::class, 'user_id');
-    }
-
-    public function position(): BelongsTo
-    {
-        return $this->belongsTo(\App\Models\CoordinatorPosition::class, 'position_id');
-    }
 }

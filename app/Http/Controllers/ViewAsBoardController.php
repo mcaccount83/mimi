@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Chapter;
+use App\Models\Chapters;
 use App\Models\FinancialReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -42,7 +42,7 @@ class ViewAsBoardController extends Controller
         $boardreport_yes = ($eoy_boardreport == 1);
         $financialreport_yes = ($eoy_financialreport == 1);
 
-        $chapterDetails = Chapter::find($id);
+        $chapterDetails = Chapters::find($id);
         $request->session()->put('chapterid', $id);
 
         $stateArr = DB::table('state')
@@ -219,7 +219,7 @@ class ViewAsBoardController extends Controller
 
         $financial_report_array = FinancialReport::find($id);
 
-        $chapterDetails = Chapter::find($id);
+        $chapterDetails = Chapters::find($id);
         $request->session()->put('chapterid', $id);
 
         $stateArr = DB::table('state')
@@ -329,7 +329,7 @@ class ViewAsBoardController extends Controller
         $user = $request->user();
         $user_type = $user->user_type;
 
-        $chapterDetails = Chapter::find($id);
+        $chapterDetails = Chapters::find($id);
         $request->session()->put('chapterid', $id);
 
         $stateArr = DB::table('state')

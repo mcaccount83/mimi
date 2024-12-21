@@ -15,7 +15,7 @@ use App\Mail\EOYFinancialSubmitted;
 use App\Mail\WebsiteAddNoticeAdmin;
 use App\Mail\WebsiteReviewNotice;
 use App\Models\Boards;
-use App\Models\Chapter;
+use App\Models\Chapters;
 use App\Models\FinancialReport;
 use App\Models\FolderRecord;
 use App\Models\User;
@@ -85,11 +85,11 @@ class BoardController extends Controller
     {
         $user = $request->user();
         $user_type = $user->user_type;
-        $borDetails = $request->user()->BoardDetails;
+        $borDetails = $request->user()->board;
         $borPositionId = $borDetails['board_position_id'];
         $isActive = $borDetails['is_active'];
         $chapterId = $borDetails['chapter_id'];
-        $chapterDetails = Chapter::find($chapterId);
+        $chapterDetails = Chapters::find($chapterId);
         $request->session()->put('chapterid', $chapterId);
 
         $financial_report_array = FinancialReport::find($chapterId);
@@ -232,11 +232,11 @@ class BoardController extends Controller
     {
         $user = $request->user();
         $user_type = $user->user_type;
-        $borDetails = $request->user()->BoardDetails;
+        $borDetails = $request->user()->board;
         $borPositionId = $borDetails['board_position_id'];
         $isActive = $borDetails['is_active'];
         $chapterId = $borDetails['chapter_id'];
-        $chapterDetails = Chapter::find($chapterId);
+        $chapterDetails = Chapters::find($chapterId);
         $request->session()->put('chapterid', $chapterId);
 
         $financial_report_array = FinancialReport::find($chapterId);
@@ -441,7 +441,7 @@ class BoardController extends Controller
             ->where('chapters.id', $id)
             ->get();
 
-        $chapter = Chapter::find($chapterId);
+        $chapter = Chapters::find($chapterId);
         DB::beginTransaction();
         try {
             $chapter->website_url = $website;
@@ -1091,7 +1091,7 @@ class BoardController extends Controller
                 $board->save();
 
                 // Update Chapter Details
-                $chapter = Chapter::find($chapterId);
+                $chapter = Chapters::find($chapterId);
                 $chapter->website_url = $website;
                 $chapter->website_status = $request->input('ch_webstatus');
                 $chapter->email = $request->input('ch_email');
@@ -1164,8 +1164,8 @@ class BoardController extends Controller
         $user = $request->user();
         $user_type = $user->user_type;
 
-        // $borDetails = $user->BoardDetails;
-        $borDetails = $request->user()->BoardDetails;
+        // $borDetails = $user->board;
+        $borDetails = $request->user()->board;
 
         // Check if BoardDetails is not found for the user
         if (! $borDetails) {
@@ -1176,7 +1176,7 @@ class BoardController extends Controller
         $chapterId = $borDetails->chapter_id;
         $isActive = $borDetails->is_active;
 
-        $chapterDetails = Chapter::find($chapterId);
+        $chapterDetails = Chapters::find($chapterId);
         $stateArr = DB::table('state')
             ->select('state.*')
             ->orderBy('id')
@@ -1251,7 +1251,7 @@ class BoardController extends Controller
     {
         $user = $request->user();
 
-        $borDetails = $user->BoardDetails;
+        $borDetails = $user->board;
         // Check if BoardDetails is not found for the user
         if (! $borDetails) {
             return to_route('home');
@@ -1261,7 +1261,7 @@ class BoardController extends Controller
         $chapterId = $borDetails['chapter_id'];
         $isActive = $borDetails['is_active'];
 
-        $chapterDetails = Chapter::find($chapterId);
+        $chapterDetails = Chapters::find($chapterId);
         $stateArr = DB::table('state')
             ->select('state.*')
             ->orderBy('id')
@@ -1298,8 +1298,8 @@ class BoardController extends Controller
     {
         $user = $request->user();
 
-        // $borDetails = $user->BoardDetails;
-        $borDetails = $request->user()->BoardDetails;
+        // $borDetails = $user->board;
+        $borDetails = $request->user()->board;
 
         // Check if BoardDetails is not found for the user
         if (! $borDetails) {
@@ -1310,7 +1310,7 @@ class BoardController extends Controller
         $chapterId = $borDetails->chapter_id;
         $isActive = $borDetails->is_active;
 
-        $chapterDetails = Chapter::find($chapterId);
+        $chapterDetails = Chapters::find($chapterId);
         $stateArr = DB::table('state')
             ->select('state.*')
             ->orderBy('id')
@@ -1361,8 +1361,8 @@ class BoardController extends Controller
         $user = $request->user();
         $user_type = $user->user_type;
 
-        // $borDetails = $user->BoardDetails;
-        $borDetails = $request->user()->BoardDetails;
+        // $borDetails = $user->board;
+        $borDetails = $request->user()->board;
 
         // Check if BoardDetails is not found for the user
         if (! $borDetails) {
@@ -1373,7 +1373,7 @@ class BoardController extends Controller
         $chapterId = $borDetails->chapter_id;
         $isActive = $borDetails->is_active;
 
-        $chapterDetails = Chapter::find($chapterId);
+        $chapterDetails = Chapters::find($chapterId);
         $stateArr = DB::table('state')
             ->select('state.*')
             ->orderBy('id')
@@ -1473,7 +1473,7 @@ class BoardController extends Controller
         $user = $request->user();
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
 
-        $chapter = Chapter::find($chapter_id);
+        $chapter = Chapters::find($chapter_id);
 
         $chapterDetails = DB::table('chapters')
             ->select('chapters.*', 'st.state_short_name as state_short_name')
@@ -1822,17 +1822,13 @@ class BoardController extends Controller
     public function showFinancialReport(Request $request, $chapterId)
     {
         try {
-            // $borDetails = User::find($request->user()->id)->BoardDetails;
-            // $loggedInName = $borDetails['first_name'].' '.$borDetails['last_name'];
-            // $isActive = $borDetails['is_active'];
-
             $request->session()->put('chapterid', $chapterId);
 
             $user = $request->user();
             $userName = $user['first_name'].' '.$user['last_name'];
             $userEmail = $user['email'];
 
-            $borDetails = $request->user()->BoardDetails;
+            $borDetails = $request->user()->board;
             $loggedInName = $borDetails->first_name.' '.$borDetails->last_name;
             $isActive = $borDetails->is_active;
             $user_type = $user->user_type;
@@ -1899,7 +1895,7 @@ class BoardController extends Controller
         $userName = $user['first_name'].' '.$user['last_name'];
         $userEmail = $user['email'];
 
-        $borDetails = User::find($request->user()->id)->BoardDetails;
+        $borDetails = User::find($request->user()->id)->board;
         //   $isActive = $borDetails['is_active'];
 
         $input = $request->all();

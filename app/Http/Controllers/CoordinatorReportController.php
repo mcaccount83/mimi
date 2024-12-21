@@ -26,7 +26,7 @@ class CoordinatorReportController extends Controller
     public function showRptVolUtilization(Request $request): View
     {
         //Get Coordinator Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -131,7 +131,7 @@ class CoordinatorReportController extends Controller
     public function showRptCoordToDo(Request $request): View
     {
         //Get Coordinator Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -180,7 +180,7 @@ class CoordinatorReportController extends Controller
     public function showRptAppreciation(Request $request): View
     {
         //Get Coordinator Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -232,7 +232,7 @@ class CoordinatorReportController extends Controller
      */
     public function showRptAppreciationView(Request $request, $id): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $coordinatorDetails = DB::table('coordinators as cd')
@@ -284,7 +284,7 @@ class CoordinatorReportController extends Controller
      */
     public function updateRptAppreciation(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
         $cordinatorId = $id;
@@ -343,7 +343,7 @@ class CoordinatorReportController extends Controller
     public function showRptBirthdays(Request $request): View
     {
         //Get Coordinator Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -394,7 +394,7 @@ class CoordinatorReportController extends Controller
      */
     public function showRptBirthdaysView(Request $request, $id): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $coordinatorDetails = DB::table('coordinators as cd')
@@ -446,7 +446,7 @@ class CoordinatorReportController extends Controller
      */
     public function updateRptBirthdays(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
         $cordinatorId = $id;
@@ -494,7 +494,7 @@ class CoordinatorReportController extends Controller
     public function showRptReportingTree(Request $request): View
     {
         $coordinator_array = [];
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $positionId = $corDetails['position_id'];

@@ -4,17 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 
-class Bugs extends Model
+class CoordinatorTree extends Model
 {
     use HasFactory;
     use Notifiable;
 
-    protected $table = 'bugs';
+    public $timestamps = false;
+
+    protected $table = 'coordinator_reporting_tree';
 
     protected $fillable = [
-        'task', 'details', 'status', 'priority', 'reported_id', 'notes',
+
     ];
 
 }

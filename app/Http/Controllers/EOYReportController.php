@@ -6,7 +6,7 @@ use App\Mail\EOYElectionReportReminder;
 use App\Mail\EOYFinancialReportReminder;
 use App\Mail\EOYLateReportReminder;
 use App\Mail\EOYReviewrAssigned;
-use App\Models\Chapter;
+use App\Models\Chapters;
 use App\Models\FinancialReport;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -36,7 +36,7 @@ class EOYReportController extends Controller
         $user = $request->user();
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -108,13 +108,13 @@ class EOYReportController extends Controller
      */
     public function showEOYStatusReminder(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         //Get Chapter List mapped with login coordinator
-        $chapters = Chapter::select('chapters.*', 'chapters.name as name', 'state.state_short_name as state',
+        $chapters = Chapters::select('chapters.*', 'chapters.name as name', 'state.state_short_name as state',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month', )
             ->join('state', 'chapters.state', '=', 'state.id')
             ->join('financial_report', 'chapters.id', '=', 'financial_report.chapter_id')
@@ -203,7 +203,7 @@ class EOYReportController extends Controller
     {
         $user = User::find($request->user()->id);
 
-        $corDetails = $user->Coordinators;
+        $corDetails = $user->coordinator;
         if (! $corDetails) {
             return to_route('home');
         }
@@ -242,12 +242,12 @@ class EOYReportController extends Controller
      */
     public function updateEOYStatus(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $userId = $corDetails['user_id'];
         $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
-        $chapter = Chapter::find($id);
+        $chapter = Chapters::find($id);
         DB::beginTransaction();
         try {
             $chapter->new_board_submitted = (int) $request->has('ch_board_submitted');
@@ -299,7 +299,7 @@ class EOYReportController extends Controller
         $user = $request->user();
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -391,13 +391,13 @@ class EOYReportController extends Controller
      */
     public function showEOYBoardReportReminder(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         //Get Chapter List mapped with login coordinator
-        $chapters = Chapter::select('chapters.*', 'chapters.name as name', 'state.state_short_name as state',
+        $chapters = Chapters::select('chapters.*', 'chapters.name as name', 'state.state_short_name as state',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
         )
             ->join('state', 'chapters.state', '=', 'state.id')
@@ -474,10 +474,10 @@ class EOYReportController extends Controller
      */
     public function showEOYBoardReportView(Request $request, $chapterId)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
+        //$corDetails = User::find($request->user()->id)->coordinator;
         $user = User::find($request->user()->id);
 
-        $corDetails = $user->Coordinators;
+        $corDetails = $user->coordinator;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return to_route('home');
@@ -485,7 +485,7 @@ class EOYReportController extends Controller
 
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
-        $chapterDetails = Chapter::find($chapterId);
+        $chapterDetails = Chapters::find($chapterId);
         $stateArr = DB::table('state')
             ->select('state.*')
             ->orderBy('id')
@@ -566,10 +566,10 @@ class EOYReportController extends Controller
      */
     public function editBoardReport(Request $request, $chapterId)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
+        //$corDetails = User::find($request->user()->id)->coordinator;
         $user = User::find($request->user()->id);
 
-        $corDetails = $user->Coordinators;
+        $corDetails = $user->coordinator;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return to_route('home');
@@ -583,7 +583,7 @@ class EOYReportController extends Controller
 
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
-        $chapterDetails = Chapter::find($chapterId);
+        $chapterDetails = Chapters::find($chapterId);
         $stateArr = DB::table('state')
             ->select('state.*')
             ->orderBy('id')
@@ -679,7 +679,7 @@ class EOYReportController extends Controller
             }
         }
 
-        $chapter = Chapter::find($chapter_id);
+        $chapter = Chapters::find($chapter_id);
         $boundaryStatus = $request->input('BoundaryStatus');
         $issue_note = $request->input('BoundaryIssue');
         //Boundary Issues Correct 0 | Not Correct 1
@@ -971,7 +971,7 @@ class EOYReportController extends Controller
     public function showEOYFinancialReport(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -1054,13 +1054,13 @@ class EOYReportController extends Controller
      */
     public function showEOYFinancialReportReminder(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         // Get Chapter List mapped with login coordinator
-        $chapters = Chapter::select('chapters.*', 'chapters.name as name', 'state.state_short_name as state',
+        $chapters = Chapters::select('chapters.*', 'chapters.name as name', 'state.state_short_name as state',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month', )
             ->join('state', 'chapters.state', '=', 'state.id')
             ->join('financial_report', 'chapters.id', '=', 'financial_report.chapter_id')
@@ -1141,10 +1141,10 @@ class EOYReportController extends Controller
      */
     // public function showEOYFinancialReportView(Request $request, $chapterId)
     // {
-    //     //$corDetails = User::find($request->user()->id)->Coordinators;
+    //     //$corDetails = User::find($request->user()->id)->coordinator;
     //     $user = User::find($request->user()->id);
 
-    //     $corDetails = $user->Coordinators;
+    //     $corDetails = $user->coordinator;
     //     // Check if BoardDetails is not found for the user
     //     if (! $corDetails) {
     //         return to_route('home');
@@ -1204,10 +1204,10 @@ class EOYReportController extends Controller
      */
     public function reviewFinancialReport(Request $request, $chapterId)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
+        //$corDetails = User::find($request->user()->id)->coordinator;
         $user = User::find($request->user()->id);
 
-        $corDetails = $user->Coordinators;
+        $corDetails = $user->coordinator;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return to_route('home');
@@ -1267,7 +1267,7 @@ class EOYReportController extends Controller
      */
     public function updateEOYFinancialReport(Request $request, $chapter_id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $userName = $corDetails['first_name'].' '.$corDetails['last_name'];
 
         $input = $request->all();
@@ -1427,7 +1427,7 @@ class EOYReportController extends Controller
 
             $report->save();
 
-            $chapter = Chapter::find($chapter_id);
+            $chapter = Chapters::find($chapter_id);
 
             if ($submitType == 'review_complete') {
                 $chapter->financial_report_complete = 1;
@@ -1457,12 +1457,12 @@ class EOYReportController extends Controller
      */
     public function updateUnsubmit(Request $request, $chapter_id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $userId = $corDetails['user_id'];
         $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
-        $chapter = Chapter::find($chapter_id);
+        $chapter = Chapters::find($chapter_id);
         DB::beginTransaction();
         try {
             $chapter->financial_report_received = null;
@@ -1494,12 +1494,12 @@ class EOYReportController extends Controller
      */
     public function updateClearReview(Request $request, $chapter_id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $userId = $corDetails['user_id'];
         $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
-        $chapter = Chapter::find($chapter_id);
+        $chapter = Chapters::find($chapter_id);
         DB::beginTransaction();
         try {
             $chapter->financial_report_received = '1';
@@ -1535,7 +1535,7 @@ class EOYReportController extends Controller
         $user = $request->user();
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -1612,7 +1612,7 @@ class EOYReportController extends Controller
     {
         $user = User::find($request->user()->id);
 
-        $corDetails = $user->Coordinators;
+        $corDetails = $user->coordinator;
         if (! $corDetails) {
             return to_route('home');
         }
@@ -1651,7 +1651,7 @@ class EOYReportController extends Controller
      */
     public function updateEOYAttachments(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $userId = $corDetails['user_id'];
         $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
@@ -1683,7 +1683,7 @@ class EOYReportController extends Controller
     public function showEOYBoundaries(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -1748,10 +1748,10 @@ class EOYReportController extends Controller
      */
     public function showEOYBoundariesView(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
+        //$corDetails = User::find($request->user()->id)->coordinator;
         $user = User::find($request->user()->id);
 
-        $corDetails = $user->Coordinators;
+        $corDetails = $user->coordinator;
         // Check if CorDetails is not found for the user
         if (! $corDetails) {
             return to_route('home');
@@ -1789,11 +1789,11 @@ class EOYReportController extends Controller
      */
     public function updateEOYBoundaries5(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
-        $chapter = Chapter::find($id);
+        $chapter = Chapters::find($id);
         DB::beginTransaction();
         try {
             $chapter->territory = $request->input('ch_territory');
@@ -1821,7 +1821,7 @@ class EOYReportController extends Controller
     public function showEOYAwards(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -1904,10 +1904,10 @@ class EOYReportController extends Controller
      */
     public function showEOYAwardsView(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->Coordinators;
+        //$corDetails = User::find($request->user()->id)->coordinator;
         $user = User::find($request->user()->id);
 
-        $corDetails = $user->Coordinators;
+        $corDetails = $user->coordinator;
         // Check if BoardDetails is not found for the user
         if (! $corDetails) {
             return to_route('home');
@@ -1946,7 +1946,7 @@ class EOYReportController extends Controller
      */
     public function updateEOYAwards5(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
@@ -2126,7 +2126,7 @@ class EOYReportController extends Controller
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
-        // $corDetails = User::find($request->user()->id)->Coordinators;
+        // $corDetails = User::find($request->user()->id)->coordinator;
         $corDetails = DB::table('coordinators as cd')
             ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
             ->where('cd.user_id', '=', $userId)
@@ -2200,12 +2200,12 @@ class EOYReportController extends Controller
 
     public function updateEOYDetails(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $userId = $corDetails['user_id'];
         $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
-        $chapter = Chapter::find($id);
+        $chapter = Chapters::find($id);
         DB::beginTransaction();
         try {
             $chapter->new_board_submitted = (int) $request->has('new_board_submitted');
@@ -2260,7 +2260,7 @@ class EOYReportController extends Controller
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
-        // $corDetails = User::find($request->user()->id)->Coordinators;
+        // $corDetails = User::find($request->user()->id)->coordinator;
         $corDetails = DB::table('coordinators as cd')
             ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
             ->where('cd.user_id', '=', $userId)
@@ -2335,12 +2335,12 @@ class EOYReportController extends Controller
 
     public function updateEOYBoundaries(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $userId = $corDetails['user_id'];
         $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
 
-        $chapter = Chapter::find($id);
+        $chapter = Chapters::find($id);
         DB::beginTransaction();
         try {
             $chapter->territory = $request->filled('ch_territory') ? $request->input('ch_territory') : $request->input('ch_old_territory');
@@ -2369,7 +2369,7 @@ class EOYReportController extends Controller
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
-        // $corDetails = User::find($request->user()->id)->Coordinators;
+        // $corDetails = User::find($request->user()->id)->coordinator;
         $corDetails = DB::table('coordinators as cd')
             ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
             ->where('cd.user_id', '=', $userId)
@@ -2444,7 +2444,7 @@ class EOYReportController extends Controller
 
     public function updateEOYAwards(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $userId = $corDetails['user_id'];
         $corId = $corDetails['id'];
         $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];

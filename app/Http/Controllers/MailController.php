@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\IndexMailRequest;
 use App\Mail\NewChapterWelcome;
-use App\Models\Chapter;
+use App\Models\Chapters;
 use App\Models\Conference;
 use App\Models\CoordinatorPosition;
 use App\Models\Region;
@@ -190,7 +190,7 @@ class MailController extends Controller
     public function createNewChapterEmail(Request $request, $id): RedirectResponse
     {
         // Find the coordinator details for the current user to be signer of letter
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $userName = $corDetails['first_name'].' '.$corDetails['last_name'];
         $userEmail = $corDetails['email'];
@@ -366,7 +366,7 @@ class MailController extends Controller
 
         if ($response->getStatusCode() === 200) { // Check for a successful status code
             // $pdf_file_id = json_decode($response->getBody()->getContents(), true)['id'];
-            // $chapter = Chapter::find($id);
+            // $chapter = Chapters::find($id);
             // $chapter->disband_letter_path = $pdf_file_id;
             // $chapter->save();
 

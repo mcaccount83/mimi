@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsSustainingChapterThankYou;
-use App\Models\Chapter;
+use App\Models\Chapters;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\RedirectResponse;
@@ -32,7 +32,7 @@ class ChapterReportController extends Controller
     public function showRptChapterStatus(Request $request): View
     {
         //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -96,7 +96,7 @@ class ChapterReportController extends Controller
      */
     public function showChapterStatusView(Request $request, $id): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -150,7 +150,7 @@ class ChapterReportController extends Controller
      */
     public function showRptEINstatus(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -202,7 +202,7 @@ class ChapterReportController extends Controller
      */
     public function showRptEINstatusView(Request $request, $id): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -234,7 +234,7 @@ class ChapterReportController extends Controller
      */
     public function updateRptEINstatus(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -248,7 +248,7 @@ class ChapterReportController extends Controller
         $primaryCordEmail = $request->input('ch_pc_email');
         $boardPresEmail = $request->input('ch_pre_email');
 
-        $chapter = Chapter::find($id);
+        $chapter = Chapters::find($id);
         DB::beginTransaction();
         try {
 
@@ -274,7 +274,7 @@ class ChapterReportController extends Controller
      */
     public function showRptNewChapters(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -329,7 +329,7 @@ class ChapterReportController extends Controller
      */
     public function showRptLargeChapters(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -394,7 +394,7 @@ class ChapterReportController extends Controller
      */
     public function showRptProbation(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -461,7 +461,7 @@ class ChapterReportController extends Controller
      */
     public function showRptDonations(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -523,7 +523,7 @@ class ChapterReportController extends Controller
      */
     public function showRptDonationsView(Request $request, $id): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -577,7 +577,7 @@ class ChapterReportController extends Controller
      */
     public function updateRptDonations(Request $request, $id): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -588,7 +588,7 @@ class ChapterReportController extends Controller
         $primaryCordEmail = $request->input('ch_pc_email');
         $boardPresEmail = $request->input('ch_pre_email');
 
-        $chapter = Chapter::find($id);
+        $chapter = Chapters::find($id);
         $chId = $chapter['id'];
         $emailData = $this->userController->loadEmailDetails($chId);
         $emailListChap = $emailData['emailListChap'];
@@ -659,7 +659,7 @@ class ChapterReportController extends Controller
      */
     public function showRptSocialMedia(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];
@@ -712,7 +712,7 @@ class ChapterReportController extends Controller
     public function showRptChapterCoordinators(Request $request): View
     {
         try {
-            $corDetails = User::find($request->user()->id)->Coordinators;
+            $corDetails = User::find($request->user()->id)->coordinator;
             $corId = $corDetails['id'];
             $corConfId = $corDetails['conference_id'];
             $corRegId = $corDetails['region_id'];
@@ -801,7 +801,7 @@ class ChapterReportController extends Controller
 
     public function viewChaperReports(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->Coordinators;
+        $corDetails = User::find($request->user()->id)->coordinator;
         $corId = $corDetails['id'];
         $corConfId = $corDetails['conference_id'];
         $corRegId = $corDetails['region_id'];

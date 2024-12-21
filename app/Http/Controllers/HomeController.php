@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Chapter;
+use App\Models\Chapters;
 use App\Models\FinancialReport;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -44,7 +44,7 @@ class HomeController extends Controller
 
         if ($user_type == 'board') {
             //Send to President or Board Profile Screen
-            $borDetails = $request->user()->BoardDetails;
+            $borDetails = $request->user()->board;
             $borPositionId = $borDetails['board_position_id'];
 
             if ($borPositionId == 1) {
@@ -56,13 +56,13 @@ class HomeController extends Controller
 
         if ($user_type == 'outgoing') {
             //Send to Financial Report without Menus
-            $user = User::with('OutgoingDetails')->find($request->user()->id);
+            $user = User::with('outgoing')->find($request->user()->id);
             $userName = $user['first_name'].' '.$user['last_name'];
             $userEmail = $user['email'];
-            $borDetails = $user->OutgoingDetails;
+            $borDetails = $user->outgoing;
 
             $chapterId = $borDetails['chapter_id'];
-            $chapterDetails = Chapter::find($chapterId);
+            $chapterDetails = Chapters::find($chapterId);
             $request->session()->put('chapterid', $chapterId);
 
             $loggedInName = $borDetails->first_name.' '.$borDetails->last_name;

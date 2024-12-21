@@ -4,10 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+
 
 class FinancialReport extends Model
 {
     use HasFactory;
+    use Notifiable;
+
+    protected $primaryKey = 'chapter_id';
+
+    protected $table = 'financial_report';
 
     public $timestamps = false;
 
@@ -27,7 +34,4 @@ class FinancialReport extends Model
         'award_5_files',
     ];
 
-    protected $primaryKey = 'chapter_id';
-
-    protected $table = 'financial_report';
 }
