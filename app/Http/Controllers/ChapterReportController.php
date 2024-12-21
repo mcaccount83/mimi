@@ -198,6 +198,40 @@ class ChapterReportController extends Controller
     }
 
     /**
+     * View the International EIN Status
+     */
+    public function showIntEINstatus(Request $request): View
+    {
+        //Get Coordinators Details
+        $corDetails = User::find($request->user()->id)->coordinator;
+        $corId = $corDetails['id'];
+
+        // Load Reporting Tree
+        $coordinatorData = $this->userController->loadReportingTree($corId);
+        $inQryArr = $coordinatorData['inQryArr'];
+
+        //Get Chapter List mapped with login coordinator
+        $chapterList = DB::table('chapters')
+            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
+                'st.state_short_name as state', 'db.month_long_name as start_month', 'rg.short_name as reg', 'cf.short_name as conf')
+            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
+            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
+            ->leftJoin('month as db', 'chapters.start_month_id', '=', 'db.id')
+            ->where('chapters.is_active', '=', '1')
+            ->where('bd.board_position_id', '=', '1')
+            ->orderBy('st.state_short_name')
+            ->orderBy('chapters.name')
+            ->get();
+
+        $data = ['chapterList' => $chapterList, 'corId' => $corId];
+
+        return view('international.inteinstatus')->with($data);
+    }
+
+    /**
      * View EIN Status Details
      */
     public function showRptEINstatusView(Request $request, $id): View
@@ -457,204 +491,6 @@ class ChapterReportController extends Controller
     }
 
     /**
-     * View Doantions List
-     */
-    public function showRptDonations(Request $request): View
-    {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-        $request->session()->put('positionid', $positionId);
-        $request->session()->put('secpositionid', $secPositionId);
-
-        // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
-
-        if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
-
-        $baseQuery = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
-            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
-            ->where('chapters.is_active', '=', '1')
-            ->where('bd.board_position_id', '=', '1');
-
-        if ($conditions['founderCondition']) {
-
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference', '=', $corConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region', '=', $corRegId);
-        } else {
-            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
-        }
-
-        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-            $checkBoxStatus = 'checked';
-            $baseQuery->where('chapters.primary_coordinator_id', '=', $corId)
-                ->orderBy('st.state_short_name')
-                ->orderBy('chapters.name');
-        } else {
-            $checkBoxStatus = '';
-            $baseQuery->orderBy('st.state_short_name')
-                ->orderBy('chapters.name');
-        }
-
-        $chapterList = $baseQuery->get();
-
-        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $corId];
-
-        return view('chapreports.chaprptdonations')->with($data);
-    }
-
-    /**
-     * View Donations & Payments Details
-     */
-    public function showRptDonationsView(Request $request, $id): View
-    {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-
-        $chapterList = DB::table('chapters as ch')
-            ->select('ch.*', 'ch.id', 'ch.state', 'ch.name', 'ch.sustaining_donation', 'ch.m2m_payment', 'ch.m2m_date', 'cd.conference_id as cor_confid', 'ch.sustaining_date',
-                'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.conference_id as cor_confid', 'cd.email as cor_email', 'bd.email as bor_email', 'st.state_short_name as statename')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('bd.board_position_id', '=', '1')
-            ->where('ch.id', $id)
-            ->get();
-
-        $maxDateLimit = Carbon::now()->format('Y-m-d');
-        $minDateLimit = Carbon::now()->subYear()->format('Y-m-d');
-        // $minDateLimit = '';
-
-        $corConfId = $chapterList[0]->conference;
-        $corId = $chapterList[0]->primary_coordinator_id;
-        $stateArr = DB::table('state')
-            ->select('state.*')
-            ->orderBy('id')
-            ->get();
-        $countryArr = DB::table('country')
-            ->select('country.*')
-            ->orderBy('id')
-            ->get();
-        $regionList = DB::table('region')
-            ->select('id', 'long_name')
-            ->where('conference_id', '=', $corConfId)
-            ->orderBy('long_name')
-            ->get();
-        $confList = DB::table('conference')
-            ->select('id', 'conference_name')
-            ->where('id', '>=', 0)
-            ->orderBy('conference_name')
-            ->get();
-
-        $data = ['chapterList' => $chapterList, 'maxDateLimit' => $maxDateLimit, 'minDateLimit' => $minDateLimit,
-            'regionList' => $regionList, 'confList' => $confList, 'stateArr' => $stateArr, 'countryArr' => $countryArr];
-
-        return view('chapreports.chaprptdonationsview')->with($data);
-    }
-
-    /**
-     * Update Donations & Payments (store)
-     */
-    public function updateRptDonations(Request $request, $id): RedirectResponse
-    {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-        $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
-
-        $primaryCordEmail = $request->input('ch_pc_email');
-        $boardPresEmail = $request->input('ch_pre_email');
-
-        $chapter = Chapters::find($id);
-        $chId = $chapter['id'];
-        $emailData = $this->userController->loadEmailDetails($chId);
-        $emailListChap = $emailData['emailListChap'];
-        $emailListCoord = $emailData['emailListCoord'];
-
-        $to_email = $emailListChap;
-        $cc_email = $primaryCordEmail;
-
-        DB::beginTransaction();
-        try {
-            $chapter->m2m_date = $request->input('M2MPaymentDate');
-            $chapter->m2m_payment = $request->input('M2MPayment');
-            $chapter->sustaining_date = $request->input('SustainingPaymentDate');
-            $chapter->sustaining_donation = $request->input('SustainingPayment');
-            $chapter->last_updated_by = $lastUpdatedBy;
-            $chapter->last_updated_date = date('Y-m-d H:i:s');
-            $chapter->save();
-
-            if ($request->input('ch_thanks') == 'on') {
-                $mailData = [
-                    'chapterName' => $request->input('ch_name'),
-                    'chapterState' => $request->input('ch_state'),
-                    'chapterPreEmail' => $request->input('ch_pre_email'),
-                    'chapterAmount' => $request->input('M2MPayment'),
-                    'cordFname' => $request->input('ch_pc_fname'),
-                    'cordLname' => $request->input('ch_pc_lname'),
-                    'cordConf' => $request->input('ch_pc_confid'),
-                ];
-
-                //M2M Donation Thank You Email//
-                Mail::to($to_email)
-                    ->cc($cc_email)
-                    ->queue(new PaymentsM2MChapterThankYou($mailData));
-            }
-
-            if ($request->input('ch_sustaining') == 'on') {
-                $mailData = [
-                    'chapterName' => $request->input('ch_name'),
-                    'chapterState' => $request->input('ch_state'),
-                    'chapterPreEmail' => $request->input('ch_pre_email'),
-                    'chapterTotal' => $request->input('SustainingPayment'),
-                    'cordFname' => $request->input('ch_pc_fname'),
-                    'cordLname' => $request->input('ch_pc_lname'),
-                    'cordConf' => $request->input('ch_pc_confid'),
-                ];
-
-                //Sustaining Chapter Thank You Email//
-                Mail::to($to_email)
-                    ->cc($cc_email)
-                    ->queue(new PaymentsSustainingChapterThankYou($mailData));
-            }
-
-            DB::commit();
-        } catch (\Exception $e) {
-            // Rollback Transaction
-            DB::rollback();
-            // Log the error
-            Log::error($e);
-
-            return redirect()->to('/chapterreports/donations')->with('fail', 'Something went wrong, Please try again.');
-        }
-
-        return redirect()->to('/chapterreports/donations')->with('success', 'Donation has been successfully saved');
-    }
-
-    /**
      * View the Social Media Report
      */
     public function showRptSocialMedia(Request $request): View
@@ -862,4 +698,140 @@ class ChapterReportController extends Controller
 
         return view('chapreports.view')->with($data);
     }
+
+        /**
+     * View Donations & Payments Details
+     */
+    // public function showRptDonationsView(Request $request, $id): View
+    // {
+    //     $corDetails = User::find($request->user()->id)->coordinator;
+    //     $corId = $corDetails['id'];
+    //     $corConfId = $corDetails['conference_id'];
+    //     $corRegId = $corDetails['region_id'];
+    //     $positionId = $corDetails['position_id'];
+    //     $secPositionId = $corDetails['sec_position_id'];
+
+    //     $chapterList = DB::table('chapters as ch')
+    //         ->select('ch.*', 'ch.id', 'ch.state', 'ch.name', 'ch.sustaining_donation', 'ch.m2m_payment', 'ch.m2m_date', 'cd.conference_id as cor_confid', 'ch.sustaining_date',
+    //             'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.conference_id as cor_confid', 'cd.email as cor_email', 'bd.email as bor_email', 'st.state_short_name as statename')
+    //         ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
+    //         ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
+    //         ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+    //         ->where('ch.is_active', '=', '1')
+    //         ->where('bd.board_position_id', '=', '1')
+    //         ->where('ch.id', $id)
+    //         ->get();
+
+    //     $maxDateLimit = Carbon::now()->format('Y-m-d');
+    //     $minDateLimit = Carbon::now()->subYear()->format('Y-m-d');
+    //     // $minDateLimit = '';
+
+    //     $corConfId = $chapterList[0]->conference;
+    //     $corId = $chapterList[0]->primary_coordinator_id;
+    //     $stateArr = DB::table('state')
+    //         ->select('state.*')
+    //         ->orderBy('id')
+    //         ->get();
+    //     $countryArr = DB::table('country')
+    //         ->select('country.*')
+    //         ->orderBy('id')
+    //         ->get();
+    //     $regionList = DB::table('region')
+    //         ->select('id', 'long_name')
+    //         ->where('conference_id', '=', $corConfId)
+    //         ->orderBy('long_name')
+    //         ->get();
+    //     $confList = DB::table('conference')
+    //         ->select('id', 'conference_name')
+    //         ->where('id', '>=', 0)
+    //         ->orderBy('conference_name')
+    //         ->get();
+
+    //     $data = ['chapterList' => $chapterList, 'maxDateLimit' => $maxDateLimit, 'minDateLimit' => $minDateLimit,
+    //         'regionList' => $regionList, 'confList' => $confList, 'stateArr' => $stateArr, 'countryArr' => $countryArr];
+
+    //     return view('chapreports.chaprptdonationsview')->with($data);
+    // }
+
+    /**
+     * Update Donations & Payments (store)
+     */
+    // public function updateRptDonations(Request $request, $id): RedirectResponse
+    // {
+    //     $corDetails = User::find($request->user()->id)->coordinator;
+    //     $corId = $corDetails['id'];
+    //     $corConfId = $corDetails['conference_id'];
+    //     $corRegId = $corDetails['region_id'];
+    //     $positionId = $corDetails['position_id'];
+    //     $secPositionId = $corDetails['sec_position_id'];
+    //     $lastUpdatedBy = $corDetails['first_name'].' '.$corDetails['last_name'];
+
+    //     $primaryCordEmail = $request->input('ch_pc_email');
+    //     $boardPresEmail = $request->input('ch_pre_email');
+
+    //     $chapter = Chapters::find($id);
+    //     $chId = $chapter['id'];
+    //     $emailData = $this->userController->loadEmailDetails($chId);
+    //     $emailListChap = $emailData['emailListChap'];
+    //     $emailListCoord = $emailData['emailListCoord'];
+
+    //     $to_email = $emailListChap;
+    //     $cc_email = $primaryCordEmail;
+
+    //     DB::beginTransaction();
+    //     try {
+    //         $chapter->m2m_date = $request->input('M2MPaymentDate');
+    //         $chapter->m2m_payment = $request->input('M2MPayment');
+    //         $chapter->sustaining_date = $request->input('SustainingPaymentDate');
+    //         $chapter->sustaining_donation = $request->input('SustainingPayment');
+    //         $chapter->last_updated_by = $lastUpdatedBy;
+    //         $chapter->last_updated_date = date('Y-m-d H:i:s');
+    //         $chapter->save();
+
+    //         if ($request->input('ch_thanks') == 'on') {
+    //             $mailData = [
+    //                 'chapterName' => $request->input('ch_name'),
+    //                 'chapterState' => $request->input('ch_state'),
+    //                 'chapterPreEmail' => $request->input('ch_pre_email'),
+    //                 'chapterAmount' => $request->input('M2MPayment'),
+    //                 'cordFname' => $request->input('ch_pc_fname'),
+    //                 'cordLname' => $request->input('ch_pc_lname'),
+    //                 'cordConf' => $request->input('ch_pc_confid'),
+    //             ];
+
+    //             //M2M Donation Thank You Email//
+    //             Mail::to($to_email)
+    //                 ->cc($cc_email)
+    //                 ->queue(new PaymentsM2MChapterThankYou($mailData));
+    //         }
+
+    //         if ($request->input('ch_sustaining') == 'on') {
+    //             $mailData = [
+    //                 'chapterName' => $request->input('ch_name'),
+    //                 'chapterState' => $request->input('ch_state'),
+    //                 'chapterPreEmail' => $request->input('ch_pre_email'),
+    //                 'chapterTotal' => $request->input('SustainingPayment'),
+    //                 'cordFname' => $request->input('ch_pc_fname'),
+    //                 'cordLname' => $request->input('ch_pc_lname'),
+    //                 'cordConf' => $request->input('ch_pc_confid'),
+    //             ];
+
+    //             //Sustaining Chapter Thank You Email//
+    //             Mail::to($to_email)
+    //                 ->cc($cc_email)
+    //                 ->queue(new PaymentsSustainingChapterThankYou($mailData));
+    //         }
+
+    //         DB::commit();
+    //     } catch (\Exception $e) {
+    //         // Rollback Transaction
+    //         DB::rollback();
+    //         // Log the error
+    //         Log::error($e);
+
+    //         return redirect()->to('/chapterreports/donations')->with('fail', 'Something went wrong, Please try again.');
+    //     }
+
+    //     return redirect()->to('/chapterreports/donations')->with('success', 'Donation has been successfully saved');
+    // }
 }

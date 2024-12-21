@@ -27,7 +27,7 @@ class CoordinatorController extends Controller
     }
 
     /**
-     * Coordiantor Listing
+     * Active Coordiantor List
      */
     public function showCoordinators(Request $request): View
     {
@@ -102,6 +102,48 @@ class CoordinatorController extends Controller
         $data = ['countList' => $countList, 'corId' => $corId, 'coordinatorList' => $coordinatorList, 'checkBoxStatus' => $checkBoxStatus, 'emailListCord' => $emailListCord];
 
         return view('coordinators.coordlist')->with($data);
+    }
+
+    /**
+     * International Coordinators List
+     */
+    public function showIntCoordinator(): View
+    {
+        //Get International Coordinator List
+        $intCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.conference_id as cor_cid',
+                'rg.short_name as reg', 'cf.short_name as conf', 'cp.long_title as position',
+                DB::raw('(SELECT cp2.long_title FROM coordinator_position as cp2 WHERE cp2.id = cd.sec_position_id) as sec_pos'), // Subquery to get secondary position
+            )
+            ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
+            ->leftJoin('region as rg', 'rg.id', '=', 'cd.region_id')
+            ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
+            ->where('cd.is_active', '=', '1')
+            ->orderBy('cd.first_name')
+            ->get();
+        $data = ['intCoordinatorList' => $intCoordinatorList];
+
+        return view('international.intcoord')->with($data);
+    }
+
+    /**
+     * International Retired Coordinator List
+     */
+    public function showIntCoordinatorRetired(): View
+    {
+        //Get International Coordinator List
+        $intCoordinatorList = DB::table('coordinators as cd')
+            ->select('cd.id as cor_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.conference_id as cor_cid', 'rg.short_name as reg', 'cf.short_name as conf', 'cp.long_title as position', 'cd.sec_position_id as sec_position_id', 'cd.zapped_date as zapdate', 'cd.reason_retired as reason')
+            ->join('coordinator_position as cp', 'cp.id', '=', 'cd.position_id')
+            ->leftJoin('region as rg', 'rg.id', '=', 'cd.region_id')
+            ->leftJoin('conference as cf', 'cd.conference_id', '=', 'cf.id')
+            ->where('cd.is_active', '=', '0')
+            ->orderByDesc('cd.zapped_date')
+            ->get();
+
+        $data = ['intCoordinatorList' => $intCoordinatorList];
+
+        return view('international.intcoordretired')->with($data);
     }
 
     /**

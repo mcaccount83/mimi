@@ -23,7 +23,7 @@ class Coordinators extends Model
 
     public function coorTree(): HasOne
     {
-        return $this->hasOne(Coordinators::class, 'coordinator_id', 'id');  // 'coordinator_id' in coordinator_tree HasOne 'id' in coordinators
+        return $this->hasOne(CoordinatorTree::class, 'coordinator_id', 'id');  // 'coordinator_id' in coordinator_tree HasOne 'id' in coordinators
     }
 
     public function user(): BelongsTo
