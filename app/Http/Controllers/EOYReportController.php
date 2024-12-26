@@ -40,7 +40,7 @@ class EOYReportController extends Controller
             $inQryArr = $coordinatorData['inQryArr'];
         }
 
-        $baseQuery = Chapters::with(['state', 'conference', 'region', 'president', 'documents', 'financialReport', 'primaryCoordinator'])
+        $baseQuery = Chapters::with(['state', 'conference', 'region', 'president', 'documents', 'financialReport', 'reportReviewer', 'primaryCoordinator'])
             ->where('is_active', 1)
             ->where(function ($query) {
                 $query->where('created_at', '<=', date('Y-06-30'))
@@ -63,11 +63,21 @@ class EOYReportController extends Controller
             $checkBoxStatus = '';
         }
 
+        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
+            $checkBox2Status = 'checked';
+            $baseQuery->whereHas('financialReport', function($query) use ($cdId) {
+                $query->where('reviewer_id', '=', $cdId);
+            });
+            // $baseQuery->where('reportReviewer->reviewer_id', '=', $cdId);
+        } else {
+            $checkBox2Status = '';
+        }
+
         $baseQuery->orderBy(State::select('state_short_name')
             ->whereColumn('state.id', 'chapters.state_id'), 'asc')
             ->orderBy('chapters.name', 'asc');
 
-        return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus];
+        return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
 
     }
 
@@ -929,13 +939,7 @@ class EOYReportController extends Controller
         $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
-
-        if (isset($_GET['check2']) && $_GET['check2'] == 'yes') {
-            $checkBox2Status = 'checked';
-            $chapterList->where('chapters.financialReport->reviewer_id', '=', $cdId);
-        } else {
-            $checkBox2Status = '';
-        }
+        $checkBox2Status = $baseQuery['checkBox2Status'];
 
 
 

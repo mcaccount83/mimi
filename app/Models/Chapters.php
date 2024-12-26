@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\Belongsto;
 use Illuminate\Notifications\Notifiable;
 
@@ -68,6 +68,19 @@ class Chapters extends Model
     {
         return $this->hasOne(FinancialReport::class, 'chapter_id', 'id');  // 'chapter_id' in financial_report HasOne 'id' in chapters
     }
+
+    public function reportReviewer(): HasOneThrough
+    {
+        return $this->hasOneThrough(
+            Coordinators::class,
+            FinancialReport::class,
+            'chapter_id', // Foreign key on financial_reports table
+            'id', // Foreign key on coordinators table
+            'id', // Local key on chapters table
+            'reviewer_id' // Local key on financial_reports table
+        );
+    }
+
 
     public function documents(): HasOne
     {

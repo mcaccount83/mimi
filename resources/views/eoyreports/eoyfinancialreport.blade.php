@@ -85,8 +85,8 @@
                         </td>
                         <td>{{ $list->state->state_short_name }}</td>
                         <td>{{ $list->name }}</td>
-                        <td>{{ $list->fname }} {{ $list->lname }}</td>
-                        <td>{{ $list->pcfname }} {{ $list->pclname }}</td>
+                        <td>{{ $list->primaryCoordinator->first_name }} {{ $list->primaryCoordinator->last_name }}</td>
+                        <td>{{ $list->reportReviewer->first_name?? null }} {{ $list->reportReviewer->last_name?? null }}</td>
                         <td @if($list->documents->report_extension == '1') style="background-color: #ffc107;" @else style="background-color: transparent;" @endif>
                             @if($list->documents->report_extension == '1') YES @else @endif
                         </td>
