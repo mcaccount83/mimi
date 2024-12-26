@@ -21,62 +21,56 @@
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
               <div class="card-body box-profile">
-                <h3 class="profile-username text-center">MOMS Club of {{ $chapterList[0]->name }}, {{$chapterList[0]->statename}}</h3>
-                <p class="text-center">{{ $chapterList[0]->confname }} Conference, {{ $chapterList[0]->regname }} Region
+                <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName }} Region
                 <br>
-                EIN: {{$chapterList[0]->ein}}
-                {{-- <br>
-                    @if($chapterList[0]->ein_letter_path != null)
-                        <button class="btn bg-gradient-primary btn-sm" onclick="window.open('{{ $chapterList[0]->ein_letter_path }}', '_blank')">View/Download EIN Letter</button>
-                    @else
-                        <button class="btn bg-gradient-primary btn-sm disabled">No EIN Letter on File</button>
-                    @endif --}}
+                EIN: {{$chDetails->ein}}
                 </p>
                 <ul class="list-group list-group-unbordered mb-3">
                     <li class="list-group-item">
 
-                <b>IRS Notes:</b> {{$chapterList[0]->ein_notes}}
+                <b>IRS Notes:</b> {{$chDetails->ein_notes}}
                     </li>
                     <li class="list-group-item">
                         <b>Re-Registration Dues:</b><span class="float-right">
-                            @if ($chapterList[0]->members_paid_for)
-                                <b>{{ $chapterList[0]->members_paid_for }} Members</b> on <b><span class="date-mask">{{ $chapterList[0]->dues_last_paid }}</span></b>
+                            @if ($chDetails->members_paid_for)
+                                <b>{{ $chDetails->members_paid_for }} Members</b> on <b><span class="date-mask">{{ $chDetails->dues_last_paid }}</span></b>
                             @else
                                 No Payment Recorded
                             @endif
                         </span><br>
                         <b>M2M Donation:</b><span class="float-right">
-                            @if ($chapterList[0]->m2m_payment)
-                                <b>${{ $chapterList[0]->m2m_payment }}</b> on <b><span class="date-mask">{{ $chapterList[0]->m2m_date }}</span></b>
+                            @if ($chDetails->m2m_payment)
+                                <b>${{ $chDetails->m2m_payment }}</b> on <b><span class="date-mask">{{ $chDetails->m2m_date }}</span></b>
                             @else
                                 No Donation Recorded
                             @endif
                         </span><br>
                         <b>Sustaining Chapter Donation: </b><span class="float-right">
-                            @if ($chapterList[0]->sustaining_donation)
-                                <b>${{ $chapterList[0]->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chapterList[0]->sustaining_date }}</span></b>
+                            @if ($chDetails->sustaining_donation)
+                                <b>${{ $chDetails->sustaining_donation }}</b> on <b><span class="date-mask">{{ $chDetails->sustaining_date }}</span></b>
                             @else
                                 No Donation Recorded
                             @endif
                         </span><br>
                     </li>
                     <li class="list-group-item">
-                        <b>Founded:</b> <span class="float-right">{{ $chapterList[0]->startmonth }} {{ $chapterList[0]->start_year }}</span>
+                        <b>Founded:</b> <span class="float-right">{{ $startMonthName }} {{ $chDetails->start_year }}</span>
                         <br>
-                        <b>Formerly Known As:</b> <span class="float-right">{{ $chapterList[0]->former_name }}</span>
+                        <b>Formerly Known As:</b> <span class="float-right">{{ $chDetails->former_name }}</span>
                         <br>
-                        <b>Sistered By:</b> <span class="float-right">{{ $chapterList[0]->sistered_by }}</span>
+                        <b>Sistered By:</b> <span class="float-right">{{ $chDetails->sistered_by }}</span>
                     </li>
-                    <input type="hidden" id="ch_primarycor" value="{{ $chapterList[0]->primary_coordinator_id }}">
+                    <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
                     <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
                 </ul>
                 <div class="text-center">
-                    @if ($chapterList[0]->is_active == 1 )
+                    @if ($chDetails->is_active == 1 )
                         <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
                     @else
                         <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                        Disband Date: <span class="date-mask">{{ $chapterList[0]->zap_date }}</span><br>
-                        {{ $chapterList[0]->disband_reason }}
+                        Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
+                        {{ $chDetails->disband_reason }}
                     @endif
                 </div>
               </div>
@@ -105,53 +99,53 @@
                   <div class="active tab-pane" id="general">
                     <div class="general-field">
                         <h3 class="profile-username">General Information
-                        <button class="btn bg-gradient-primary btn-xs ml-2" onclick="window.location.href='{{ route('viewas.viewchapterpresident', ['id' => $chapterList[0]->id]) }}'">View Chapter Profile As President</button>
+                        <button class="btn bg-gradient-primary btn-xs ml-2" onclick="window.location.href='{{ route('viewas.viewchapterpresident', ['id' => $chDetails->id]) }}'">View Chapter Profile As President</button>
                     </h3>
                     <div class="row">
                             <div class="col-md-12">
-                                <label>Boundaries:</label> {{ $chapterList[0]->territory}}
+                                <label>Boundaries:</label> {{ $chDetails->territory}}
                         <br>
-                        <label>Status:</label> {{$chapterStatusinWords}}
+                        <label>Status:</label> {{$chapterStatus}}
                         <br>
-                        <label>Status Notes (not visible to board members):</label> {{ $chapterList[0]->notes}}
+                        <label>Status Notes (not visible to board members):</label> {{ $chDetails->notes}}
                         <br><br>
                         </div>
                     </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <label>Chpater Email Address:</label> <a href="mailto:{{ $chapterList[0]->email}}">{{ $chapterList[0]->email}}</a>
+                                <label>Chpater Email Address:</label> <a href="mailto:{{ $chDetails->email}}">{{ $chDetails->email}}</a>
                         <br>
-                        <label>Email used for Inquiries:</label> <a href="mailto:{{ $chapterList[0]->inquiries_contact}}">{{ $chapterList[0]->inquiries_contact}}</a>
+                        <label>Email used for Inquiries:</label> <a href="mailto:{{ $chDetails->inquiries_contact}}">{{ $chDetails->inquiries_contact}}</a>
                         <br>
                         <label>Inquiries Notes (not visible to board members):</label><br>
-                        {{ $chapterList[0]->inquiries_note}}
+                        {{ $chDetails->inquiries_note}}
                         <br><br>
                     </div>
 
                         <div class="col-md-6">
-                            <label>PO Box/Mailing Address:</label> {{ $chapterList[0]->po_box }}
+                            <label>PO Box/Mailing Address:</label> {{ $chDetails->po_box }}
                         <br>
                         <label>Additional Information (not visible to board members):</label><br>
-                        {!! nl2br(e($chapterList[0]->additional_info)) !!}
+                        {!! nl2br(e($chDetails->additional_info)) !!}
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
-                            <label>Website:</label> <a href="{{$chapterList[0]->website_url}}" target="_blank">{{$chapterList[0]->website_url}}</a>
+                            <label>Website:</label> <a href="{{$chDetails->website_url}}" target="_blank">{{$chDetails->website_url}}</a>
                         <br>
-                        <label>Webiste Link Status:</label> {{$webStatusinWords}}
+                        <label>Webiste Link Status:</label> {{$websiteLink}}
                         <br>
                         <label>Webiste Notes (not visible to board members):</label><br>
-                        {{ $chapterList[0]->website_notes }}
+                        {{ $chDetails->website_notes }}
                     </div>
                     <div class="col-md-6">
-                        <label>Forum/Group/App:</label> {{ $chapterList[0]->egroup}}
+                        <label>Forum/Group/App:</label> {{ $chDetails->egroup}}
                         <br>
-                        <label>Facebook:</label> {{ $chapterList[0]->social1}}
+                        <label>Facebook:</label> {{ $chDetails->social1}}
                         <br>
-                        <label>Twitter:</label> {{ $chapterList[0]->social2}}
+                        <label>Twitter:</label> {{ $chDetails->social2}}
                         <br>
-                        <label>Instagram:</label> {{ $chapterList[0]->social3}}
+                        <label>Instagram:</label> {{ $chDetails->social3}}
                         <br><br>
                     </div>
                 </div>
@@ -166,14 +160,14 @@
                             <div class="col-md-6">
 
                         <h3 class="profile-username">PDF Letters</h3>
-                        @if($chapterList[0]->is_active != '1')
+                        @if($chDetails->is_active != '1')
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
                                     <label>Disband Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    @if($documentList[0]->disband_letter_path != null)
-                                        <button class="btn bg-gradient-primary btn-sm" type="button" id="disband-letter" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $documentList[0]->disband_letter_path }}'">Disband Letter</button>
+                                    @if($chDocuments->disband_letter_path != null)
+                                        <button class="btn bg-gradient-primary btn-sm" type="button" id="disband-letter" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->disband_letter_path }}'">Disband Letter</button>
                                     @else
                                         <button class="btn bg-gradient-primary btn-sm disabled">No Disband Letter on File</button>
                                     @endif
@@ -186,8 +180,8 @@
                                 <label>EIN Letter:</label>
                             </div>
                             <div class="col-sm-6 mb-2">
-                                @if($documentList[0]->ein_letter_path != null)
-                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="window.open('{{ $documentList[0]->ein_letter_path }}', '_blank')">EIN Letter from IRS</button>
+                                @if($chDocuments->ein_letter_path != null)
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="ein-letter" onclick="window.open('{{ $chDocuments->ein_letter_path }}', '_blank')">EIN Letter from IRS</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm disabled">No EIN Letter on File</button>
                                 @endif
@@ -199,21 +193,21 @@
                                 <label>Chapter Roster:</label>
                             </div>
                             <div class="col-sm-6 mb-2">
-                                @if($documentList[0]->roster_path != null)
-                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="roster-file" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $documentList[0]->roster_path }}'">Most Current Roster</button>
+                                @if($chDocuments->roster_path != null)
+                                    <button class="btn bg-gradient-primary btn-sm" type="button" id="roster-file" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->roster_path }}'">Most Current Roster</button>
                                 @else
                                     <button class="btn bg-gradient-primary btn-sm disabled">No Roster on File</button>
                                 @endif
                             </div>
                         </div>
 
-                        @if($chapterList[0]->is_active == '1')
+                        @if($chDetails->is_active == '1')
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
                                     <label>Chaper in Good Standig Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button id="GoodStanding" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chapterList[0]->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>
+                                    <button id="GoodStanding" type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.open('{{ route('pdf.chapteringoodstanding', ['id' => $chDetails->id]) }}', '_blank')">Good Standing Chapter Letter</button><br>
                                 </div>
                             </div>
 
@@ -222,7 +216,11 @@
                                     <label>Probation Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                        **Coming Soon - In Production
+                                    @if($chDocuments->probation_path != null)
+                                        <button class="btn bg-gradient-primary btn-sm" type="button" id="roster-file" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->probation_path }}'">Probation Letter</button>
+                                    @else
+                                        <button class="btn bg-gradient-primary btn-sm disabled">No Probation Letter on File</button>
+                                    @endif
                                 </div>
                             </div>
 
@@ -231,15 +229,20 @@
                                     <label>Probation Release Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                        **Coming Soon - In Production
+                                    @if($chDocuments->probation_release_path != null)
+                                        <button class="btn bg-gradient-primary btn-sm" type="button" id="roster-file" onclick="window.location.href='https://drive.google.com/uc?export=download&id={{ $chDocuments->probation_release_path }}'">Probation Release Letter</button>
+                                    @else
+                                        <button class="btn bg-gradient-primary btn-sm disabled">No Probation Release Letter on File</button>
+                                    @endif
                                 </div>
                             </div>
+
 
                         @endif
 
                         </div>
 
-                        @if($chapterList[0]->is_active == '1')
+                        @if($chDetails->is_active == '1')
                         <div class="col-md-6">
                             <h3 class="profile-username">Preset Emails</h3>
                             <div class="row">
@@ -247,7 +250,7 @@
                                     <label>Blank Email:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chapterList[0]->name . ', ' . $chapterList[0]->statename) }}'">Email Board</button>
+                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chDetails->name . ', ' . $stateShortName) }}'">Email Board</button>
                                 </div>
                             </div>
 
@@ -269,25 +272,25 @@
                                     <label>Re-Registration Reminder:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Re-Registration Payment Reminder | MOMS Club of ' . $chapterList[0]->name . ', ' . $chapterList[0]->statename) }}&body={{ rawurlencode($reRegMessage) }}'">Email Re-Registration</button>
+                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Re-Registration Payment Reminder | MOMS Club of ' . $chDetails->name . ', ' . $stateShortName) }}&body={{ rawurlencode($reRegMessage) }}'">Email Re-Registration</button>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
-                                    <label>Probation Email w/Letter:</label>
+                                    <label>Probation/Warning Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                        **Coming Soon - In Production
+                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showProbationLetterModal()">Email Probation/Warning</button>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
-                                    <label>Probation Release Email w/Letter:</label>
+                                    <label>Probation Release Letter:</label>
                                 </div>
                                 <div class="col-sm-6 mb-2">
-                                        **Coming Soon - In Production
+                                    <button type="button" class="btn bg-primary mb-1 btn-sm" onclick="showProbationReleaseModal()">Email Probation Release</button>
                                 </div>
                             </div>
 
@@ -307,12 +310,12 @@
                                 <div class="col-sm-3">
                                     <label>Boundary Issues:</label>
                                 </div>
-                                @if ($chapterList[0]->boundary_issues != null)
+                                @if ($chDetails->boundary_issues != null)
                                     <div class="col-sm-5">
                                         Chapter has reported boundary issues.
                                     </div>
                                     <div class="col-sm-4">
-                                        <label class="mr-2">Resolved:</label>{{ $chapterList[0]->boundary_issue_resolved == 1 ? 'YES' : 'NO' }}
+                                        <label class="mr-2">Resolved:</label>{{ $chDetails->boundary_issue_resolved == 1 ? 'YES' : 'NO' }}
                                     </div>
                                 @else
                                     <div class="col-sm-9">
@@ -325,12 +328,12 @@
                                 <div class="col-sm-3">
                                     <label>Board Report:</label>
                                 </div>
-                                @if ($chapterList[0]->new_board_submitted == 1)
+                                @if ($chDetails->new_board_submitted == 1)
                                     <div class="col-sm-5">
                                         Board Election Report has been received.
                                     </div>
                                     <div class="col-sm-4">
-                                        <label class="mr-2">Activated:</label>{{ $chapterList[0]->new_board_active == 1 ? 'YES' : 'NO' }}
+                                        <label class="mr-2">Activated:</label>{{ $chDetails->new_board_active == 1 ? 'YES' : 'NO' }}
                                     </div>
                                 @else
                                     <div class="col-sm-9">
@@ -343,12 +346,12 @@
                                 <div class="col-sm-3">
                                     <label>Financial Report:</label>
                                 </div>
-                                @if ($chapterList[0]->financial_report_received == 1)
+                                @if ($chDetails->financial_report_received == 1)
                                     <div class="col-sm-5">
                                         Financial Report has been received.
                                     </div>
                                     <div class="col-sm-4">
-                                        <label class="mr-2">Review Complete:</label>{{ $chapterList[0]->financial_report_complete == 1 ? 'YES' : 'NO' }}
+                                        <label class="mr-2">Review Complete:</label>{{ $chDetails->financial_report_complete == 1 ? 'YES' : 'NO' }}
                                     </div>
                                 @else
                                     <div class="col-sm-9">
@@ -363,12 +366,12 @@
                                 </div>
                                 <div class="col-sm-9">
                                     @php
-                                    // Check if $financial_report_array is null before proceeding
-                                    $attachments = $financial_report_array ? [
-                                        'Roster' => $financial_report_array->roster_path ?? null,
-                                        'Statement' => $financial_report_array->bank_statement_included_path ?? null,
-                                        'Additional Statement' => $financial_report_array->bank_statement_2_included_path ?? null,
-                                        '990N Confirmation' => $financial_report_array->file_irs_path ?? null,
+                                    // Check if $chFinancialReport is null before proceeding
+                                    $attachments = $chFinancialReport ? [
+                                        'Roster' => $chFinancialReport->roster_path ?? null,
+                                        'Statement' => $chFinancialReport->bank_statement_included_path ?? null,
+                                        'Additional Statement' => $chFinancialReport->bank_statement_2_included_path ?? null,
+                                        '990N Confirmation' => $chFinancialReport->file_irs_path ?? null,
                                     ] : [];
 
                                     $included = array_keys(array_filter($attachments, fn($path) => $path !== null));
@@ -405,9 +408,9 @@
                                 <div class="col-sm-3">
                                     <label>Extension:</label>
                                 </div>
-                                @if ($chapterList[0]->report_extension == 1)
+                                @if ($chDetails->report_extension == 1)
                                     <div class="col-sm-9">
-                                        Extension was granted. {{ $chapterList[0]->extension_notes}}
+                                        Extension was granted. {{ $chDetails->extension_notes}}
                                     </div>
                                 @else
                                     <div class="col-sm-9">
@@ -420,13 +423,13 @@
                                 <div class="col-sm-3">
                                     <label>990N Filing:</label>
                                 </div>
-                                @if ($financial_report_array?->check_current_990N_verified_IRS == 1)
+                                @if ($chFinancialReport?->check_current_990N_verified_IRS == 1)
                                     <div class="col-sm-9">
                                         990N Filing was verified on the IRS website.
                                     </div>
                                 @else
                                     <div class="col-sm-9">
-                                        990N Filing has not been verified on the IRS website. {{ $financial_report_array?->check_current_990N_notes }}
+                                        990N Filing has not been verified on the IRS website. {{ $chFinancialReport?->check_current_990N_notes }}
                                     </div>
                                 @endif
                             </div>
@@ -435,8 +438,8 @@
                                 <div class="col-sm-3">
                                     <label>Chapter Awards:</label>
                                 </div>
-                                    @if(($financial_report_array?->award_1_nomination_type != null)  || ($financial_report_array?->award_2_nomination_type != null) || ($financial_report_array?->award_3_nomination_type != null)
-                                        || ($financial_report_array?->award_4_nomination_type != null) || ($financial_report_array?->award_5_nomination_type != null))
+                                    @if(($chFinancialReport?->award_1_nomination_type != null)  || ($chFinancialReport?->award_2_nomination_type != null) || ($chFinancialReport?->award_3_nomination_type != null)
+                                        || ($chFinancialReport?->award_4_nomination_type != null) || ($chFinancialReport?->award_5_nomination_type != null))
                                  <div class="col-sm-9">
                                     Chapter was nominated for one or more awards.
                                 </div>
@@ -459,117 +462,117 @@
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="pre">
                       <div class="pre-field">
-                          <h3 class="profile-username">{{$chapterList[0]->first_name}} {{$chapterList[0]->last_name}}</h3>
-                          <a href="mailto:{{ $chapterList[0]->bd_email }}">{{ $chapterList[0]->bd_email }}</a>
+                          <h3 class="profile-username">{{$PresDetails->first_name}} {{$PresDetails->last_name}}</h3>
+                          <a href="mailto:{{ $PresDetails->email }}">{{ $PresDetails->email }}</a>
                           <br>
-                          <span class="phone-mask">{{$chapterList[0]->phone }}</span>
+                          <span class="phone-mask">{{$PresDetails->phone }}</span>
                           <br><br>
-                          {{$chapterList[0]->street_address}}
+                          {{$PresDetails->street_address}}
                           <br>
-                          {{$chapterList[0]->city}},{{$chapterList[0]->bd_state}}&nbsp;{{$chapterList[0]->zip}}
+                          {{$PresDetails->city}},{{$PresDetails->state}}&nbsp;{{$PresDetails->zip}}
                           <br><br>
                           <p>This will reset password to default "TempPass4You" for this user only.
                           <br>
-                          <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $chapterList[0]->user_id }}">Reset President Password</button>
+                          <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $PresDetails->user_id }}">Reset President Password</button>
                           </p>
                       </div>
                     </div>
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="avp">
-                    @if ($AVPDetails[0]->user_id == '')
+                    @if ($AVPDetails->user_id == '')
                       <div class="avp-field-vacant">
                           <h3 class="profile-username">Administrative Vice President Position is Vacant</h3>
                           <br><br>
                       </div>
                     @else
                       <div class="avp-field">
-                          <h3 class="profile-username">{{$AVPDetails[0]->avp_fname}} {{$AVPDetails[0]->avp_lname}}</h3>
-                          <a href="mailto:{{ $AVPDetails[0]->avp_email }}">{{ $AVPDetails[0]->avp_email }}</a>
+                          <h3 class="profile-username">{{$AVPDetails->first_name}} {{$AVPDetails->last_name}}</h3>
+                          <a href="mailto:{{ $AVPDetails->email }}">{{ $AVPDetails->email }}</a>
                           <br>
-                          <span class="phone-mask">{{$AVPDetails[0]->avp_phone}}</span>
+                          <span class="phone-mask">{{$AVPDetails->phone}}</span>
                           <br><br>
-                          {{$AVPDetails[0]->avp_addr}}
+                          {{$AVPDetails->street_address}}
                           <br>
-                          {{$AVPDetails[0]->avp_city}},{{$AVPDetails[0]->avp_state}}&nbsp;{{$AVPDetails[0]->avp_zip}}
+                          {{$AVPDetails->city}},{{$AVPDetails->state}}&nbsp;{{$AVPDetails->zip}}
                           <br><br>
                           <p>This will reset password to default "TempPass4You" for this user only.
                           <br>
-                          <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $AVPDetails[0]->user_id }}">Reset AVP Password</button>
+                          <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $AVPDetails->user_id }}">Reset AVP Password</button>
                         </p>
                     </div>
                     @endif
                     </div>
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="mvp">
-                    @if ($MVPDetails[0]->user_id == '')
+                    @if ($MVPDetails->user_id == '')
                       <div class="mvp-field-vacant">
                           <h3 class="profile-username">Membership Vice President Position is Vacant</h3>
                           <br><br>
                       </div>
                     @else
                       <div class="mvp-field">
-                          <h3 class="profile-username">{{$MVPDetails[0]->mvp_fname}} {{$MVPDetails[0]->mvp_lname}}</h3>
-                          <a href="mailto:{{ $MVPDetails[0]->mvp_email }}">{{ $MVPDetails[0]->mvp_email }}</a>
+                          <h3 class="profile-username">{{$MVPDetails->first_name}} {{$MVPDetails->last_name}}</h3>
+                          <a href="mailto:{{ $MVPDetails->email }}">{{ $MVPDetails->email }}</a>
                           <br>
-                          <span class="phone-mask">{{$MVPDetails[0]->mvp_phone}}</span>
+                          <span class="phone-mask">{{$MVPDetails->phone}}</span>
                           <br><br>
-                          {{$MVPDetails[0]->mvp_addr}}
+                          {{$MVPDetails->street_address}}
                           <br>
-                          {{$MVPDetails[0]->mvp_city}},{{$MVPDetails[0]->mvp_state}}&nbsp;{{$MVPDetails[0]->mvp_zip}}
+                          {{$MVPDetails->city}},{{$MVPDetails->state}}&nbsp;{{$MVPDetails->zip}}
                           <br><br>
                           <p>This will reset password to default "TempPass4You" for this user only.
                           <br>
-                          <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $MVPDetails[0]->user_id }}">Reset MVP Password</button>
+                          <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $MVPDetails->user_id }}">Reset MVP Password</button>
                         </p>
                     </div>
                     @endif
                     </div>
                   <!-- /.tab-pane -->
                     <div class="tab-pane" id="trs">
-                        @if ($TRSDetails[0]->user_id == '')
+                        @if ($TRSDetails->user_id == '')
                           <div class="trs-field-vacant">
                               <h3 class="profile-username">Treasury Position is Vacant</h3>
                               <br><br>
                           </div>
                         @else
                           <div class="trs-field">
-                              <h3 class="profile-username">{{$TRSDetails[0]->trs_fname}} {{$TRSDetails[0]->trs_lname}}</h3>
-                              <a href="mailto:{{ $TRSDetails[0]->trs_email }}">{{ $TRSDetails[0]->trs_email }}</a>
+                              <h3 class="profile-username">{{$TRSDetails->first_name}} {{$TRSDetails->last_name}}</h3>
+                              <a href="mailto:{{ $TRSDetails->email }}">{{ $TRSDetails->email }}</a>
                               <br>
-                              <span class="phone-mask">{{$TRSDetails[0]->trs_phone}}</span>
+                              <span class="phone-mask">{{$TRSDetails->phone}}</span>
                               <br><br>
-                              {{$TRSDetails[0]->trs_addr}}
+                              {{$TRSDetails->street_address}}
                               <br>
-                              {{$TRSDetails[0]->trs_city}},{{$TRSDetails[0]->trs_state}}&nbsp;{{$TRSDetails[0]->trs_zip}}
+                              {{$TRSDetails->city}},{{$TRSDetails->state}}&nbsp;{{$TRSDetails->zip}}
                               <br><br>
                               <p>This will reset password to default "TempPass4You" for this user only.
                               <br>
-                              <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $TRSDetails[0]->user_id }}">Reset Treasurer Password</button>
+                              <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $TRSDetails->user_id }}">Reset Treasurer Password</button>
                             </p>
                         </div>
                         @endif
                         </div>
                   <!-- /.tab-pane -->
                   <div class="tab-pane" id="sec">
-                  @if ($SECDetails[0]->user_id == '')
+                  @if ($SECDetails->user_id == '')
                     <div class="sec-field-vacant">
                         <h3 class="profile-username">Secretary Position is Vacant</h3>
                         <br><br>
                     </div>
                   @else
                     <div class="sec-field">
-                        <h3 class="profile-username">{{$SECDetails[0]->sec_fname}} {{$SECDetails[0]->sec_lname}}</h3>
-                        <a href="mailto:{{ $SECDetails[0]->sec_email }}">{{ $SECDetails[0]->sec_email }}</a>
+                        <h3 class="profile-username">{{$SECDetails->first_name}} {{$SECDetails->last_name}}</h3>
+                        <a href="mailto:{{ $SECDetails->email }}">{{ $SECDetails->email }}</a>
                         <br>
-                        <span class="phone-mask">{{$SECDetails[0]->sec_phone}}</span>
+                        <span class="phone-mask">{{$SECDetails->phone}}</span>
                         <br><br>
-                        {{$SECDetails[0]->sec_addr}}
+                        {{$SECDetails->street_address}}
                         <br>
-                        {{$SECDetails[0]->sec_city}},{{$SECDetails[0]->sec_state}}&nbsp;{{$SECDetails[0]->sec_zip}}
+                        {{$SECDetails->city}},{{$SECDetails->state}}&nbsp;{{$SECDetails->zip}}
                         <br><br>
                         <p>This will reset password to default "TempPass4You" for this user only.
                         <br>
-                        <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $SECDetails[0]->user_id }}">Reset Secretary Password</button>
+                        <button type="button" class="btn bg-gradient-primary btn-sm reset-password-btn" data-user-id="{{ $SECDetails->user_id }}">Reset Secretary Password</button>
                         </p>
                     </div>
                   @endif
@@ -587,19 +590,19 @@
             <div class="card-body text-center">
                 @if ($coordinatorCondition)
                         <button type="button" class="btn bg-gradient-primary mb-3"
-                            onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chapterList[0]->name . ', ' . $chapterList[0]->statename) }}'">
+                            onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chDetails->name . ', ' . $stateShortName) }}'">
                             <i class="fas fa-envelope mr-2"></i>Email Board</button>
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chapterList[0]->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Chapter Information</button>
-                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chapterList[0]->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Board Information</button>
+                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.edit', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Chapter Information</button>
+                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Board Information</button>
                 @endif
                 @if($regionalCoordinatorCondition)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chapterList[0]->id]) }}'"><i class="fas fa-edit mr-2"></i>Update EOY Information</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update EOY Information</button>
                 @endif
                 @if($conferenceCoordinatorCondition)
                     <br>
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editpayment', ['id' => $chapterList[0]->id]) }}'"><i class="fas fa-dollar-sign mr-2"></i>Enter Payment/Donation</button>
+                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editpayment', ['id' => $chDetails->id]) }}'"><i class="fas fa-dollar-sign mr-2"></i>Enter Payment/Donation</button>
                     <button type="button" class="btn bg-gradient-primary mb-3" onclick="updateEIN()"><i class="fas fa-university mr-2"></i>Update EIN Number</button>
-                    <button class="btn bg-gradient-primary mb-3 showFileUploadModal" data-ein-letter="{{ $chapterList[0]->ein_letter_path }}"><i class="fas fa-upload mr-2"></i>Update EIN Letter</button>
+                    <button class="btn bg-gradient-primary mb-3 showFileUploadModal" data-ein-letter="{{ $chDetails->ein_letter_path }}"><i class="fas fa-upload mr-2"></i>Update EIN Letter</button>
                 @endif
                 @if($regionalCoordinatorCondition)
                     @if($chIsActive == 1)
@@ -610,21 +613,21 @@
                 @endif
                 <br>
                 @if($coordinatorCondition)
-                    @if ($corConfId == $chConfId)
+                    @if ($cdConfId == $chConfId)
                         @if ($chIsActive == 1)
-                            @if ($inquiriesCondition  && ($coordId != $chPCid))
+                            @if ($inquiriesCondition  && ($cdId != $chPcId))
                                 <button type="button" id="back-inquiries" class="btn bg-gradient-primary mb-3" onclick="window.location.window.location.href='{{ route('chapters.chapinquiries') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Chapter List</button>
                             @else
                                 <button type="button" id="back" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chaplist') }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter List</button>
                             @endif
                         @else
-                            @if ($inquiriesCondition  && ($coordId != $chPCid))
+                            @if ($inquiriesCondition  && ($cdId != $chPcId))
                                 <button type="button" id="back-inquiries-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapinquiries') }}'"><i class="fas fa-reply mr-2"></i>Back to Inquiries Zapped Chapter List</button>
                             @else
                                 <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Chapter List</button>
                             @endif
                         @endif
-                    @elseif ($einCondition && ($corConfId != $chConfId) || $inquiriesCondition  && ($corConfId != $chConfId) || $adminReportCondition  && ($corConfId != $chConfId))
+                    @elseif ($einCondition && ($cdConfId != $chConfId) || $inquiriesCondition  && ($corConfId != $chConfId) || $adminReportCondition  && ($corConfId != $chConfId))
                         @if ($chIsActive == 1)
                             <button type="button" id="back-international"class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapter') }}'"><i class="fas fa-reply mr-2"></i>Back to International Chapter List</button>
                         @else
@@ -645,9 +648,9 @@
     var $chIsActive = @json($chIsActive);
     var $einCondition = @json($einCondition);
     var $inquiriesCondition = @json($inquiriesCondition);
-    var $chPCid = @json($chPCid);
-    var $coordId = @json($coordId);
-    var $corConfId = @json($corConfId);
+    var $chPcId = @json($chPcId);
+    var $cdId = @json($cdId);
+    var $cdConfId = @json($cdConfId);
 
 $(document).ready(function () {
     // Disable fields for chapters that are not active or EIN & Inquiries Coordinators who are not PC for the Chapter
@@ -735,7 +738,7 @@ document.querySelectorAll('.reset-password-btn').forEach(button => {
 });
 
 function updateEIN() {
-    const chapterId = '{{ $chapterList[0]->id }}'; // Get the chapter ID from the Blade variable
+    const chapterId = '{{ $chDetails->id }}'; // Get the chapter ID from the Blade variable
 
     // Check if the chapter already has an EIN
     $.ajax({
@@ -921,6 +924,160 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
+function showProbationLetterModal() {
+    Swal.fire({
+        title: 'Generate Probation Letter',
+        html: `
+            <p>This will generate a Probation/Warning letter to be emailed to the full board and all coordinators for the chapter.</p>
+            <p>Select the type of letter to generate and send:</p>
+            <select id="letterType" class="form-control">
+                <option value="no_report">Probation Letter - No EOY Reports</option>
+                <option value="no_payment">Probation Letter - No Re-Reg Payment</option>
+                <option value="probation_party">Probation Letter - Excess Party Expenses</option>
+                <option value="warning_party">Warning Letter - Excess Party Expenses</option>
+            </select>
+            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chDetails->id }}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Generate Letter',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+            const letterType = Swal.getPopup().querySelector('#letterType').value;
+            return { chapterId, letterType };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we generate your letter.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    $.ajax({
+                        url: '{{ route('pdf.generateProbationLetter') }}',
+                        type: 'POST',
+                        data: {
+                            chapterId: data.chapterId,
+                            letterType: data.letterType,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                if (response.redirect) {
+                                    window.location.href = response.redirect;
+                                }
+                            });
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+function showProbationReleaseModal() {
+    Swal.fire({
+        title: 'Generate Probation Letter',
+        html: `
+            <p>This will generate a Probation Release letter to be emailed to the full board and all coordinators for the chapter.</p>
+
+            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chDetails->id }}">
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Generate Letter',
+        cancelButtonText: 'Close',
+        customClass: {
+            confirmButton: 'btn-sm btn-success',
+            cancelButton: 'btn-sm btn-danger'
+        },
+        preConfirm: () => {
+            const chapterId = Swal.getPopup().querySelector('#chapter_id').value;
+            const letterType = "probation_release";
+
+            return { chapterId, letterType };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const data = result.value;
+
+            Swal.fire({
+                title: 'Processing...',
+                text: 'Please wait while we generate your letter.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    $.ajax({
+                        url: '{{ route('pdf.generateProbationLetter') }}',
+                        type: 'POST',
+                        data: {
+                            chapterId: data.chapterId,
+                            letterType: data.letterType,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 1500,
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            }).then(() => {
+                                if (response.redirect) {
+                                    window.location.href = response.redirect;
+                                }
+                            });
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Something went wrong. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                customClass: {
+                                    confirmButton: 'btn-sm btn-success'
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
+
+
 function showDisbandChapterModal() {
     Swal.fire({
         title: 'Chapter Disband Reason',
@@ -929,7 +1086,7 @@ function showDisbandChapterModal() {
             <div style="display: flex; align-items: center; ">
                 <input type="text" id="disband_reason" name="disband_reason" class="swal2-input" placeholder ="Enter Reason" required style="width: 100%;">
             </div>
-            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chapterList[0]->id }}">
+            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chDetails->id }}">
             <br>
             <div class="custom-control custom-switch">
                 <input type="checkbox" id="disband_letter" class="custom-control-input">
@@ -1025,7 +1182,7 @@ function unZapChapter(chapterid) {
         html: `
             <p>Unzapping a chapter will reactivate the logins for all board members and readd the chapter.</p>
 
-            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chapterList[0]->id }}">
+            <input type="hidden" id="chapter_id" name="chapter_id" value="{{ $chDetails->id }}">
 
         `,
         showCancelButton: true,

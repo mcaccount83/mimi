@@ -41,8 +41,7 @@
 					<th>State</th>
 				    <th>Name</th>
                     <th>EIN</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
+                    <th>President</th>
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Primary Coordinator</th>
@@ -53,20 +52,21 @@
                   <tr>
                     <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fa fa-eye"></i></a></td>
                     <td>
-                        @if ($list->reg != "None")
-                        {{ $list->conf }} / {{ $list->reg }}
-                    @else
-                        {{ $list->conf }}
-                    @endif
-                </td>
-                    <td>{{ $list->state }}</td>
+                        @if ($list->region->short_name != "None")
+                            {{ $list->conference->short_name }} / {{ $list->region->short_name }}
+                        @else
+                            {{ $list->conference->short_name }}
+                        @endif
+                    </td>
+                    <td>{{ $list->state->state_short_name }}</td>
                     <td>{{ $list->name }}</td>
                     <td>{{ $list->ein }}</td>
-                    <td>{{ $list->pre_fname }}</td>
-                    <td>{{ $list->pre_lname }}</td>
-                    <td><a href="mailto:{{ $list->pre_email }}">{{ $list->pre_email }}</a></td>
-                    <td><span class="phone-mask">{{ $list->pre_phone }}</span></td>
-                    <td>{{ $list->cd_fname }} {{ $list->cd_lname }}</td>
+                    <td>{{ $list->president->first_name }} {{ $list->president->last_name }}</td>
+                    <td>
+                        <a href="mailto:{{ $list->president->email }}">{{ $list->president->email }}</a>
+                    </td>
+                    <td><span class="phone-mask">{{ $list->president->phone }}</span></td>
+                    <td>{{ $list->primaryCoordinator->first_name }} {{ $list->primaryCoordinator->last_name }}</td>
                     </tr>
                   @endforeach
                   </tbody>

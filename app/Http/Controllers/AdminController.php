@@ -16,6 +16,7 @@ use App\Models\Bugs;
 use App\Models\Chapters;
 use App\Models\FinancialReport;
 use App\Models\GoogleDrive;
+use App\Models\Month;
 use App\Models\BoardOutgoing;
 use App\Models\Resources;
 use App\Models\User;
@@ -185,7 +186,7 @@ class AdminController extends Controller
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'db.month_long_name as start_month')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
             ->leftJoin('month as db', 'chapters.start_month_id', '=', 'db.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1');
@@ -193,9 +194,9 @@ class AdminController extends Controller
         if ($conditions['founderCondition']) {
 
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference', '=', $corConfId);
+            $baseQuery->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region', '=', $corRegId);
+            $baseQuery->where('chapters.region_id', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -477,14 +478,14 @@ class AdminController extends Controller
         }
 
         $reChapterList = DB::table('chapters as ch')
-            ->select('ch.id', 'ch.members_paid_for', 'ch.notes', 'ch.name', 'ch.state', 'ch.reg_notes', 'ch.next_renewal_year', 'ch.dues_last_paid', 'ch.start_month_id',
+            ->select('ch.id', 'ch.members_paid_for', 'ch.notes', 'ch.name', 'ch.state_id', 'ch.reg_notes', 'ch.next_renewal_year', 'ch.dues_last_paid', 'ch.start_month_id',
                 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name', 'cf.short_name as conf', 'rg.short_name as reg')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->leftJoin('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->leftJoin('region as rg', 'ch.region', '=', 'rg.id')
+            ->leftJoin('state as st', 'ch.state_id', '=', 'st.id')
+            ->leftJoin('conference as cf', 'ch.conference_id', '=', 'cf.id')
+            ->leftJoin('region as rg', 'ch.region_id', '=', 'rg.id')
             ->leftJoin('month as db', 'ch.start_month_id', '=', 'db.id')
             ->where('ch.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
@@ -499,24 +500,25 @@ class AdminController extends Controller
 
     public function editReRegDate(Request $request, $id)
     {
-        //$corDetails = User::find($request->user()->id)->coordinator;
         $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        $corDetails = $user->coordinator;
-        // Check if BoardDetails is not found for the user
-        if (! $corDetails) {
-            return to_route('home');
-        }
+        $cdDetails = $user->coordinator;
+        $coordId = $cdDetails->id;
 
-        $chapterList = DB::table('chapters as ch')
-            ->select('ch.*', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth')
-            ->join('state as st', 'ch.state', '=', 'st.id')
-            ->join('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->join('region as rg', 'ch.region', '=', 'rg.id')
-            ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('ch.id', '=', $id)
-            ->get();
+        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'status', 'documents', 'financialReport', 'boards'])->find($id);
+
+        // $chDetails = DB::table('chapters as ch')
+        //     ->select('ch.*', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth')
+        //     ->join('state as st', 'ch.stat_ide', '=', 'st.id')
+        //     ->join('conference as cf', 'ch.conference_id', '=', 'cf.id')
+        //     ->join('region as rg', 'ch.region_id', '=', 'rg.id')
+        //     ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
+        //     ->where('ch.is_active', '=', '1')
+        //     ->where('ch.id', '=', $id)
+        //     ->get();
+
+        $allMonths = Month::all();
 
         $stateArr = DB::table('state')
             ->select('state.*')
@@ -528,10 +530,7 @@ class AdminController extends Controller
             ->orderBy('id')
             ->get();
 
-        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
-        $currentMonth = $chapterList[0]->start_month_id;
-
-        $data = ['id' => $id, 'chapterList' => $chapterList, 'stateArr' => $stateArr, 'monthArr' => $monthArr];
+        $data = ['id' => $id, 'chDetails' => $chDetails, 'allMonths' => $allMonths];
 
         return view('admin.editreregdate')->with($data);
     }
@@ -672,7 +671,7 @@ class AdminController extends Controller
             ->select('ob.chapter_id', 'ob.first_name', 'ob.last_name', 'ob.email', 'users.user_type', 'chapters.name as chapter_name', 'state.state_short_name as chapter_state')
             ->leftJoin('users', 'ob.email', '=', 'users.email')
             ->leftJoin('chapters', 'ob.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state', 'chapters.state', '=', 'state.id')
+            ->leftJoin('state', 'chapters.state_id', '=', 'state.id')
             ->where('users.user_type', 'outgoing')
             ->where('users.is_active', '1')
             ->orderBy('chapters.name')

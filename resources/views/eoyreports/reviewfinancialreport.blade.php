@@ -37,27 +37,6 @@
             <div class="card-body box-profile">
                 <h3 class="profile-username text-center">MOMS Club of {{ $chapterDetails[0]->chapter_name }}, {{$chapterDetails[0]->state}}</h3>
 
-          {{-- <p><?php if(!$submitted) echo "<br><font color=\"red\">REPORT NOT YET SUBMITTED FOR REVIEW</font>"; ?></p>
-          <?php if ($submitted): ?>
-          <p>
-              <?php $selectedReviewer = null; ?>
-              <?php foreach ($reviewerList as $pcl): ?>
-                  <?php if ($financial_report_array['reviewer_id'] == $pcl['cid']): ?>
-                      <?php $selectedReviewer = $pcl['cname']; ?>
-                  <?php endif; ?>
-              <?php endforeach; ?>
-
-              <?php if ($selectedReviewer !== null): ?>
-                  <label for="AssignedReviewer" style="display: inline; font-weight: normal;">Assigned Reviewer: <?= $selectedReviewer ?></label>
-              <?php else: ?>
-                  <span style="display: inline; color: red;">No Reviewer Assigned - Select Reviewer in Final Review section before continuing to prevent errors.</span>
-              <?php endif; ?>
-         </p>
-      <?php endif; ?>
-      <p>Have some questions about reviewing?<br>
-          <a href="https://momsclub.org/reviewing-reports-faq/"   target="_blank">Check out our FAQ!</a></p> --}}
-
-
           <ul class="list-group list-group-unbordered mb-3">
             <li class="list-group-item">
                <h5>Review Summary</h5>
@@ -118,7 +97,6 @@
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Party Percentage:</b> <span class="float-right">
-                    {{-- {{ number_format($partyPercentage * 100, 2) }}% --}}
                 </span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
@@ -289,65 +267,57 @@
 
                     echo empty($financial_report_notes) ? 'No notes logged for this report.' : implode('<br>', $financial_report_notes);
                     ?>
-
             </li>
             <li class="list-group-item">
 
-    <div class="d-flex justify-content-between w-100">
-        <b>Report Completed By:</b> <span class="float-right"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_name'];}?>
-    </div>
-    <div class="d-flex justify-content-between w-100">
-        <b>Contact Email:</b> <span class="float-right"><a href="mailto:<?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_email'];}?>"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_email'];}?></a></p>
-    </div>
-
-    <div class="d-flex align-items-center justify-content-between w-100">
-        <?php if ($chapterDetails[0]->financial_report_received == 1 && $financial_report_array['reviewer_id'] == null): ?>
-                <span style="display: inline; color: red;">No Reviewer Assigned - Select Reviewer before continuing to prevent errors.<br></span>
-            <?php endif; ?>
-            <label for="AssignedReviewer"><strong>Assigned Reviewer:</strong></label>
-            <select class="form-control" name="AssignedReviewer" id="AssignedReviewer" style="width: 250px;"  required>
-                <option value="" style="display:none" disabled selected>Select a reviewer</option>
-                @foreach($reviewerList as $pcl)
-                    <option value="{{$pcl['cid']}}" {{$financial_report_array['reviewer_id'] == $pcl['cid']  ? 'selected' : ''}} >{{$pcl['cname']}}</option>
-                @endforeach
-            </select>
+        <div class="d-flex justify-content-between w-100">
+            <b>Report Completed By:</b> <span class="float-right"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_name'];}?>
         </div>
-        <div class="form-group" id="emailMessageGroup" style="display: none;">
-            <label for="AssignedReviewer"><strong>Additional Email Message for Reviewer:</strong></label>
-            <textarea class="form-control" style="width:100%" rows="8" name="reviewer_email_message" id="reviewer_email_message"><?php echo $financial_report_array['reviewer_email_message']; ?></textarea>
+        <div class="d-flex justify-content-between w-100">
+            <b>Contact Email:</b> <span class="float-right"><a href="mailto:<?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_email'];}?>"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_email'];}?></a></p>
         </div>
 
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <?php if ($chapterDetails[0]->financial_report_received == 1 && $financial_report_array['reviewer_id'] == null): ?>
+                    <span style="display: inline; color: red;">No Reviewer Assigned - Select Reviewer before continuing to prevent errors.<br></span>
+                <?php endif; ?>
+                <label for="AssignedReviewer"><strong>Assigned Reviewer:</strong></label>
+                <select class="form-control" name="AssignedReviewer" id="AssignedReviewer" style="width: 250px;"  required>
+                    <option value="" style="display:none" disabled selected>Select a reviewer</option>
+                    @foreach($reviewerList as $coordinator)
+                        <option value="{{ $coordinator['cid'] }}"
+                            {{ isset($financial_report_array->reviewer_id) && $financial_report_array->reviewer_id == $coordinator['cid'] ? 'selected' : '' }}>
+                            {{ $coordinator['cname'] }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group" id="emailMessageGroup" style="display: none;">
+                <label for="AssignedReviewer"><strong>Additional Email Message for Reviewer:</strong></label>
+                <textarea class="form-control" style="width:100%" rows="8" name="reviewer_email_message" id="reviewer_email_message"><?php echo $financial_report_array['reviewer_email_message']; ?></textarea>
+            </div>
 
-    <div class="card-body text-center">
-        <br>
-        <button type="submit" id="btn-step-14" class="btn bg-gradient-primary mb-2"><i class="fas fa-save mr-2"></i>Save Report Review</button>
-        <br>
-        @if ($financial_report_array['review_complete'] != "" && $submitted)
-            @if ($regionalCoordinatorCondition)
-                <button type="button" class="btn bg-gradient-success" id="review-clear"><i class="fas fa-minus-circle mr-2"></i>Clear Review Complete</button>
+        <div class="card-body text-center">
+            <br>
+            <button type="submit" id="btn-step-14" class="btn bg-gradient-primary mb-2"><i class="fas fa-save mr-2"></i>Save Report Review</button>
+            <br>
+            @if ($financial_report_array['review_complete'] != "" && $submitted)
+                @if ($regionalCoordinatorCondition)
+                    <button type="button" class="btn bg-gradient-success" id="review-clear"><i class="fas fa-minus-circle mr-2"></i>Clear Review Complete</button>
+                @else
+                    <button type="button" class="btn bg-gradient-success disabled"><i class="fas fa-minus-circle mr-2"></i>Clear Review Complete</button>
+                @endif
             @else
-                <button type="button" class="btn bg-gradient-success disabled"><i class="fas fa-minus-circle mr-2"></i>Clear Review Complete</button>
+                <button type="button" class="btn bg-gradient-success" id="review-complete"><i class="fas fa-check mr-2"></i>Mark as Review Complete</button>
             @endif
-        @else
-            <button type="button" class="btn bg-gradient-success" id="review-complete"><i class="fas fa-check mr-2"></i>Mark as Review Complete</button>
-        @endif
-            <button type="button" class="btn bg-gradient-danger" id="unsubmit"><i class="fas fa-undo mr-2"></i>UnSubmit Report</button>
-        <br>
-        <span style="color:red;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></span>
+                <button type="button" class="btn bg-gradient-danger" id="unsubmit"><i class="fas fa-undo mr-2"></i>UnSubmit Report</button>
+            <br>
+            <span style="color:red;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></span>
+        </div>
+        </li>
+    </ul>
+
     </div>
-    </li>
-</ul>
-        {{-- <div class="card-body text-center">
-        @if ($submitted)
-            <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn bg-gradient-primary mb-2" >Download PDF Report</a>
-        @else
-            <a id="downloadPdfLink" href="#" class="btn bg-gradient-primary mb-2 disabled">Download PDF Report</a>
-        @endif
-        <br>
-        <button type="button" id="back-list" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport') }}'">Back to Financial Report List</button>
-        <button type="button" id="back-details" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chapterid]) }}'">Back to EOY Details</button>
-    </div> --}}
-</div>
       <!-- /.card-body -->
     </div>
     <!-- /.card -->
@@ -563,14 +533,12 @@
                                             <strong style="color:red">Please Note</strong><br>
                                                 This will refresh the screen - be sure to save all work before clicking button to Replace Roster File.<br>
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Roster File</button>
-                                            {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-roster" ><i class="fas fa-undo" ></i>&nbsp; Replace Roster File</button> --}}
                                     </div>
                                 @else
                                     <div class="col-12" id="RosterBlock">
                                             <strong style="color:red">Please Note</strong><br>
                                                 This will refresh the screen - be sure to save all work before clicking button to Upload Roster File.<br>
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Roster File</button>
-                                            {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-roster" ><i class="fas fa-upload" ></i>&nbsp; Upload Roster File</button> --}}
                                     </div>
                                 @endif
                                 <input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $financial_report_array['roster_path']; ?>">
@@ -773,56 +741,56 @@
                             </thead>
                             <tbody>
                                 <?php
-$service_projects = null;
-$totalServiceIncome = 0;
-$totalServiceSupplies = 0;
-$totalServiceCharity = 0;
-$totalServiceM2M = 0;
+                                $service_projects = null;
+                                $totalServiceIncome = 0;
+                                $totalServiceSupplies = 0;
+                                $totalServiceCharity = 0;
+                                $totalServiceM2M = 0;
 
-if (isset($financial_report_array['service_project_array'])) {
-    $blobData = base64_decode($financial_report_array['service_project_array']);
-    $service_projects = unserialize($blobData);
+                                if (isset($financial_report_array['service_project_array'])) {
+                                    $blobData = base64_decode($financial_report_array['service_project_array']);
+                                    $service_projects = unserialize($blobData);
 
-    if ($service_projects === false) {
-        echo "Error: Failed to unserialize data.";
-    } else {
-        foreach ($service_projects as $row) {
-            // Sanitize and remove commas before converting to float
-            $income = is_numeric(str_replace(',', '', $row['service_project_income'])) ? floatval(str_replace(',', '', $row['service_project_income'])) : 0;
-            $supplies = is_numeric(str_replace(',', '', $row['service_project_supplies'])) ? floatval(str_replace(',', '', $row['service_project_supplies'])) : 0;
-            $charity = is_numeric(str_replace(',', '', $row['service_project_charity'])) ? floatval(str_replace(',', '', $row['service_project_charity'])) : 0;
-            $m2m = is_numeric(str_replace(',', '', $row['service_project_m2m'])) ? floatval(str_replace(',', '', $row['service_project_m2m'])) : 0;
+                                    if ($service_projects === false) {
+                                        echo "Error: Failed to unserialize data.";
+                                    } else {
+                                        foreach ($service_projects as $row) {
+                                            // Sanitize and remove commas before converting to float
+                                            $income = is_numeric(str_replace(',', '', $row['service_project_income'])) ? floatval(str_replace(',', '', $row['service_project_income'])) : 0;
+                                            $supplies = is_numeric(str_replace(',', '', $row['service_project_supplies'])) ? floatval(str_replace(',', '', $row['service_project_supplies'])) : 0;
+                                            $charity = is_numeric(str_replace(',', '', $row['service_project_charity'])) ? floatval(str_replace(',', '', $row['service_project_charity'])) : 0;
+                                            $m2m = is_numeric(str_replace(',', '', $row['service_project_m2m'])) ? floatval(str_replace(',', '', $row['service_project_m2m'])) : 0;
 
-            echo "<tr>";
-            echo "<td>" . htmlspecialchars($row['service_project_desc']) . "</td>";
-            echo "<td>$" . number_format($income, 2) . "</td>";
-            echo "<td>$" . number_format($supplies, 2) . "</td>";
-            echo "<td>$" . number_format($charity, 2) . "</td>";
-            echo "<td>$" . number_format($m2m, 2) . "</td>";
-            echo "</tr>";
+                                            echo "<tr>";
+                                            echo "<td>" . htmlspecialchars($row['service_project_desc']) . "</td>";
+                                            echo "<td>$" . number_format($income, 2) . "</td>";
+                                            echo "<td>$" . number_format($supplies, 2) . "</td>";
+                                            echo "<td>$" . number_format($charity, 2) . "</td>";
+                                            echo "<td>$" . number_format($m2m, 2) . "</td>";
+                                            echo "</tr>";
 
-            // Totals
-            $totalServiceIncome += $income;
-            $totalServiceSupplies += $supplies;
-            $totalServiceCharity += $charity;
-            $totalServiceM2M += $m2m;
-        }
-        // Total row
-        echo "<tr style='border-top: 1px solid #333;'>";
-        echo "<td><strong>Total</strong></td>";
-        echo "<td><strong>$" . number_format($totalServiceIncome, 2) . "</strong></td>";
-        echo "<td><strong>$" . number_format($totalServiceSupplies, 2) . "</strong></td>";
-        echo "<td><strong>$" . number_format($totalServiceCharity, 2) . "</strong></td>";
-        echo "<td><strong>$" . number_format($totalServiceM2M, 2) . "</strong></td>";
-        echo "</tr>";
-    }
-} else {
-    echo "<tr style='border-top: 1px solid #333;'>";
-    echo "<td colspan='5'>No Service Projects Entered.</td>";
-    echo "</tr>";
-}
-$totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $totalServiceM2M;
-?>
+                                            // Totals
+                                            $totalServiceIncome += $income;
+                                            $totalServiceSupplies += $supplies;
+                                            $totalServiceCharity += $charity;
+                                            $totalServiceM2M += $m2m;
+                                        }
+                                        // Total row
+                                        echo "<tr style='border-top: 1px solid #333;'>";
+                                        echo "<td><strong>Total</strong></td>";
+                                        echo "<td><strong>$" . number_format($totalServiceIncome, 2) . "</strong></td>";
+                                        echo "<td><strong>$" . number_format($totalServiceSupplies, 2) . "</strong></td>";
+                                        echo "<td><strong>$" . number_format($totalServiceCharity, 2) . "</strong></td>";
+                                        echo "<td><strong>$" . number_format($totalServiceM2M, 2) . "</strong></td>";
+                                        echo "</tr>";
+                                    }
+                                } else {
+                                    echo "<tr style='border-top: 1px solid #333;'>";
+                                    echo "<td colspan='5'>No Service Projects Entered.</td>";
+                                    echo "</tr>";
+                                }
+                                $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $totalServiceM2M;
+                                ?>
                             </tbody>
                         </table>
                         <br>
@@ -930,10 +898,6 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                         // Sanitize inputs
                                         $income = is_numeric(str_replace(',', '', $row['party_expense_income'])) ? floatval(str_replace(',', '', $row['party_expense_income'])) : 0;
                                         $expense = is_numeric(str_replace(',', '', $row['party_expense_expenses'])) ? floatval(str_replace(',', '', $row['party_expense_expenses'])) : 0;
-
-
-                                        // $income = is_numeric($row['party_expense_income']) ? floatval($row['party_expense_income']) : 0;
-                                        // $expense = is_numeric($row['party_expense_expenses']) ? floatval($row['party_expense_expenses']) : 0;
 
                                         echo "<tr>";
                                         echo "<td>" . htmlspecialchars($row['party_expense_desc']) . "</td>";
@@ -1794,7 +1758,6 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                             </table>
                         <br>
                         Reconciled Bank Statement:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array ['bank_balance_now'] + $totalReconciliation, 2) }}</strong><br>
-                        {{-- Treasury Balance Now:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($treasuryBalance, 2)}}</strong><br> --}}
 
 						<hr style="border-bottom: 2px solid #007bff">
 				<!-- start:report_review -->
@@ -1820,10 +1783,8 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                             This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
                                         @if (!is_null($financial_report_array['bank_statement_included_path']))
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Bank Statement</button>
-                                            {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement1" ><i class="fas fa-undo" ></i>&nbsp; Replace Bank Statement</button> --}}
                                         @else
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Bank Statement</button>
-                                            {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement1" ><i class="fas fa-upload" ></i>&nbsp; Upload Bank Statement</button> --}}
                                         @endif
                                     </div>
                                         <input type="hidden" name="StatementFile" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
@@ -1832,10 +1793,8 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                     <div class="col-12" id="Statement2Block">
                                         @if (!is_null($financial_report_array['bank_statement_2_included_path']))
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Additional Bank Statement</button>
-                                            {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement2" ><i class="fas fa-undo" ></i>&nbsp; Replace Additional Bank Statement</button> --}}
                                         @else
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Additional Bank Statement</button>
-                                            {{-- <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-statement2" ><i class="fas fa-upload" ></i>&nbsp; Upload Additional Bank Statement</button> --}}
                                         @endif
                                     </div>
                                     <input type="hidden" name="Statement2File" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
@@ -1954,8 +1913,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                         </div>
                 </div>
 
-
-                    <hr style="border-bottom: 2px solid #007bff">
+            <hr style="border-bottom: 2px solid #007bff">
             <!-- start:report_review -->
             <div  class="form-row report_review">
                 <div class="card-header col-md-12">
@@ -1998,7 +1956,7 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                     </div>
                                 </div>
 
-                <div class="col-12">
+                        <div class="col-12">
                             <div class="form-group row">
                                     <label for="Step11_Note">Add New Note:</label>
                                     <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(11)" name="Step11_Note" id="Step11_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
@@ -2028,8 +1986,6 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
         </div>
     </div>
         <!------End Step 11 ------>
-
-
 
 			<!------Start Step 12 ------>
             <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='12') echo "active";?>">
@@ -2213,27 +2169,8 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                     </div>
                     <div class="card-body form-row">
                         <div class="col-12">
-                            {{-- @if (!is_null($financial_report_array['roster_path']))
-                                    <div class="col-12">
-                                        <label>990N Filing Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $financial_report_array['file_irs_path'] }}">&nbsp; View 990N Confirmation</a><br>
-                                    </div>
-                                    <div class="col-12" id="990NBlock">
-                                        <strong style="color:red">Please Note</strong><br>
-                                            This will refresh the screen - be sure to save all work before clicking button to Replace 990N File.<br>
-                                        <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace 990N Confirmation</button>
-                                </div>
-                            @else
-                                <div class="col-12" id="990NBlock">
-                                        <strong style="color:red">Please Note</strong><br>
-                                            This will refresh the screen - be sure to save all work before clicking button to Upload 990N File.<br>
-                                        <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload 990N Confirmation</button>
-                                </div>
-                            @endif
-                            <input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $financial_report_array['file_irs_path']; ?>">
-                            <div class="clearfix"></div>
-                            <div class="col-12"><br></div> --}}
-                            <div class="col-12">
 
+                            <div class="col-12">
                                     <div class="col-12">
                                         <div class="form-group row">
                                             <label>Did they purchase or have leftover pins? (Quesion 5):<span class="field-required">*&nbsp;</span></label>
@@ -2314,19 +2251,6 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                                 </div>
                                             </div>
                                         </div>
-                                        {{-- <div class="form-group row">
-                                            <label>Did they attach proof of 990N Filing with the date range of <strong>7/1/<?php echo date('Y')-1 .' - 6/30/'.date('Y');?></strong>?<span class="field-required">*&nbsp;</span></label>
-                                            <div class="col-12 row">
-                                                <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="1" {{ $financial_report_array['check_current_990N_included'] === 1 ? 'checked' : '' }}>
-                                                    <label class="form-check-label">Yes</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="0" {{ $financial_report_array['check_current_990N_included'] === 0 ? 'checked' : '' }}>
-                                                    <label class="form-check-label">No</label>
-                                                </div>
-                                            </div>
-                                        </div> --}}
 
                                         <div class="form-group row">
                                             <label for="Step12_Note">Add New Note:</label>
@@ -2901,13 +2825,13 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
                                 </div>
                                 </div>
 
-										<div class="col-md-12">
-											<label for="Step13_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
-										</div>
-										<div class="col-12">
-											<textarea class="form-control" style="width:100%" rows="8" name="Step13_Log" id="Step13_Log" readonly><?php echo $financial_report_array['step_13_notes_log']; ?></textarea>
-										</div>
-                                        <div class="col-12"><br></div>
+                            <div class="col-md-12">
+                                <label for="Step13_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
+                            </div>
+                            <div class="col-12">
+                                <textarea class="form-control" style="width:100%" rows="8" name="Step13_Log" id="Step13_Log" readonly><?php echo $financial_report_array['step_13_notes_log']; ?></textarea>
+                            </div>
+                            <div class="col-12"><br></div>
 
 							<!-- end:report_review -->
                         <div class="col-12 text-center">
@@ -2921,398 +2845,24 @@ $totalServiceProjectExpenses = $totalServiceSupplies + $totalServiceCharity + $t
         </div>
             <!------End Step 13 ------>
 
-			<!------Start Step 14 ------>
-            {{-- <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='14') echo "active";?>">
-                <div class="card-header" id="accordion-header-members">
-                    <h4 class="card-title w-100">
-                        <a class="d-block" data-toggle="collapse" href="#collapseFourteen" style="width: 100%;">REVIEW SUMMARY</a>
-                    </h4>
-                </div>
-                <div id="collapseFourteen" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='14') echo 'show'; ?>" data-parent="#accordion">
-                    <div class="card-body">
-						<section>
-                            <div class="col-md-12">
-                                <strong style="color:red">Please Note</strong><br>
-                                Answers from questios in previous sections will show up here after they have been saved.<br>
-                            <br>
-                            </div>
+                 <!-- end of accordion -->
 
-                            @if ($submitted)
-                                <div class="col-md-12">
-                                    <div class="col-xs-12">
-                                        <label class="control-label" for="DownloadPDF">Financial Report PDF:</label>
-                                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>">Download PDF</a>
-                                </div>
-
-                                    <?php if (!empty($financial_report_array['roster_path'])): ?>
-                                        <div class="col-xs-12">
-                                            <label class="control-label" for="RosterLink">Chapter Roster File:</label>
-                                            <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['roster_path']; ?>">Chapter Roster</a>
-                                        </div>
-                                    <?php else: ?>
-                                        <div class="col-xs-12">
-                                            <label class="control-label" for="RosterLink">Chapter Roster File:</label>
-                                            No file attached
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="col-md-12">
-                                    <?php if (!empty($financial_report_array['bank_statement_included_path'])): ?>
-                                        <div class="col-xs-12">
-                                            <label class="control-label" for="Statement1ink">Primary Bank Statement:</label>
-                                            <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_included_path']; ?>">Statement 1</a>
-                                        </div>
-                                    <?php else: ?>
-                                        <div class="col-xs-12">
-                                            <label class="control-label" for="Statement1Link">Primary Bank Statement:</label>
-                                            No file attached
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="col-md-12">
-                                    <?php if (!empty($financial_report_array['bank_statement_2_included_path'])): ?>
-                                        <div class="col-xs-12">
-                                            <label class="control-label" for="Statement2Link">Additional Bank Statement:</label>
-                                            <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">Statement 2</a>
-                                        </div>
-                                    <?php else: ?>
-                                        <div class="col-xs-12">
-                                            <label class="control-label" for="Statement2Link">Additional Bank Statement:</label>
-                                            No file attached
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                                <div class="col-md-12">
-                                    <?php if (!empty($financial_report_array['file_irs_path'])): ?>
-                                        <div class="col-xs-12">
-                                            <label class="control-label" for="990NLink">990N Filing:</label>
-                                            <a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['file_irs_path']; ?>">990N Confirmation</a>
-                                        </div>
-                                    <?php else: ?>
-                                        <div class="col-xs-12">
-                                            <label class="control-label" for="990NLink">990N Filing:</label>
-                                            No file attached
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-									<div class="clearfix"></div>
-                                @endif
-                                        <style>
-                                            .flex-container2 {
-                                                display: flex;
-                                                flex-wrap: wrap;
-                                                gap: 0px;
-                                                width: 100%;
-                                                overflow-x: auto;
-                                                margin-top: 20px;
-
-                                            }
-
-                                            .flex-item2 {
-                                                flex: 0 0 calc(48% - 10px);
-                                                box-sizing: border-box;
-                                            }
-                                        </style>
-
-                                    <div class="form-group col-md-12">
-                                        <div class="col-md-12">
-                                        <div class="flex-container2">
-                                        <div class="flex-item2">
-                                            Excel roster attached and complete (should be above):&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_roster_attached']) ? 'Please Review'
-                                                : ($financial_report_array ['check_roster_attached'] == 0 ? 'NO' : ($financial_report_array ['check_roster_attached'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div>
-                                        <div class="flex-item2">
-                                            Number of members listed, dues received, and renewal paid "seem right":&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_renewal_seems_right']) ? 'Please Review'
-                                                : ($financial_report_array ['check_renewal_seems_right'] == 0 ? 'NO' : ($financial_report_array ['check_renewal_seems_right'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div>
-                                        <div class="flex-item2">
-                                            Minimum of one service project completed:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_minimum_service_project']) ? 'Please Review'
-                                                : ( $financial_report_array ['check_minimum_service_project'] == 0 ? 'NO' : ($financial_report_array ['check_minimum_service_project'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div>
-                                        <div class="flex-item2">
-                                            Donation to M2M Fund:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_m2m_donation']) ? 'Please Review'
-                                                : ($financial_report_array ['check_m2m_donation'] == 0 ? 'NO' : ($financial_report_array ['check_m2m_donation'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div>
-                                        <div class="flex-item2">
-                                            Party Percentage:&nbsp;&nbsp;&nbsp;<strong>{{ number_format($partyPercentage * 100, 2) }}%</strong><br>
-                                        </div>
-                                        <div class="flex-item2">
-                                            Party Percentage less than 15%:&nbsp;&nbsp;&nbsp;
-                                            <strong>
-                                                <span style="
-                                                    @if(is_null($financial_report_array['check_party_percentage']))
-                                                        background-color: #FFFFFF; color: #000000;
-                                                    @elseif($financial_report_array['check_party_percentage'] == 2)
-                                                        background-color: #28a745; color: #FFFFFF;
-                                                    @elseif($financial_report_array['check_party_percentage'] == 1)
-                                                        background-color: #ffc107; color: #000000;
-                                                    @elseif($financial_report_array['check_party_percentage'] == 0)
-                                                        background-color: #dc3545; color: #FFFFFF;
-                                                    @else
-                                                        background-color: #FFFFFF; color: #000000;
-                                                    @endif
-                                                    padding: 2px 5px; border-radius: 3px;">
-                                                    @if(is_null($financial_report_array['check_party_percentage']))
-                                                        Please Review
-                                                    @elseif($financial_report_array['check_party_percentage'] == 0)
-                                                        They are over 20%
-                                                    @elseif($financial_report_array['check_party_percentage'] == 1)
-                                                        They are between 15-20%
-                                                    @elseif($financial_report_array['check_party_percentage'] == 2)
-                                                        They are under 15%
-                                                    @else
-                                                        Please Review
-                                                    @endif
-                                                </span>
-                                            </strong><br>
-                                        </div>
-
-                                        <div class="flex-item2">
-                                            Total income/revenue less than $50,000:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_total_income_less']) ? 'Please Review'
-                                                : ( $financial_report_array ['check_total_income_less'] == 0 ? 'NO' : ($financial_report_array ['check_total_income_less'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div>
-                                        <div class="flex-item2">
-                                            Current bank statement included (should be above):&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_bank_statement_included']) ? 'Please Review'
-                                                : ( $financial_report_array ['check_bank_statement_included'] == 0 ? 'NO' : ($financial_report_array ['check_bank_statement_included'] == 1 ? 'YES' : 'Please Review')) }}</strong><br>
-                                        </div>
-
-
-                                        <div class="flex-item2">
-                                            Treasury Balance Now matches Reconciled Bank Balance:&nbsp;&nbsp;&nbsp;
-                                            <strong>
-                                                <span style="
-                                                    @if(is_null($financial_report_array['check_bank_statement_matches']))
-                                                        background-color: #FFFFFF; color: #000000;
-                                                    @elseif($financial_report_array['check_bank_statement_matches'] == 1)
-                                                        background-color: #28a745; color: #FFFFFF;
-                                                    @elseif($financial_report_array['check_bank_statement_matches'] == 0)
-                                                        background-color: #dc3545; color: #FFFFFF;
-                                                    @else
-                                                        background-color: #FFFFFF; color: #000000;
-                                                    @endif
-                                                    padding: 2px 5px; border-radius: 3px;">
-                                                    @if(is_null($financial_report_array['check_bank_statement_matches']))
-                                                        Please Review
-                                                    @elseif($financial_report_array['check_bank_statement_matches'] == 1)
-                                                        Report balances
-                                                    @elseif($financial_report_array['check_bank_statement_matches'] == 0)
-                                                        Report is out of balance
-                                                    @else
-                                                        Please Review
-                                                    @endif
-                                                </span>
-                                            </strong><br>
-                                        </div>
-
-                                        <div class="flex-item2">
-                                            Proof of 990N Filing for 7/1/<?php echo date('Y')-1 .' - 6/30/'.date('Y');?> (should be above):&nbsp;&nbsp;&nbsp;
-                                            <strong>
-                                                <span style="
-                                                    @if(is_null($financial_report_array['check_current_990N_included']))
-                                                        background-color: #FFFFFF; color: #000000;
-                                                    @elseif($financial_report_array['check_current_990N_included'] == 1)
-                                                        background-color: #28a745; color: #FFFFFF;
-                                                    @elseif($financial_report_array['check_current_990N_included'] == 0)
-                                                        background-color: #dc3545; color: #FFFFFF;
-                                                    @else
-                                                        background-color: #FFFFFF; color: #000000;
-                                                    @endif
-                                                    padding: 2px 5px; border-radius: 3px;">
-                                                    @if(is_null($financial_report_array['check_current_990N_included']))
-                                                        Please Review
-                                                    @elseif($financial_report_array['check_current_990N_included'] == 1)
-                                                        990N is filed
-                                                    @elseif($financial_report_array['check_current_990N_included'] == 0)
-                                                        990N has not been filed
-                                                    @else
-                                                        Please Review
-                                                    @endif
-                                                </span>
-                                            </strong><br>
-                                        </div>
-
-                                        <div class="flex-item2">
-                                            Purchased membership pins or had leftovers:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_purchased_pins']) ? 'Please Review'
-                                                : ( $financial_report_array ['check_purchased_pins'] == 0 ? 'NO' : ($financial_report_array ['check_purchased_pins'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div>
-                                        <div class="flex-item2">
-                                            Purchased MOMS Club merchandise:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_purchased_mc_merch']) ? 'Please Review'
-                                                : ($financial_report_array ['check_purchased_mc_merch'] == 0 ? 'NO' : ($financial_report_array ['check_purchased_mc_merch'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div>
-                                        <div class="flex-item2">
-                                            Offered MOMS Club merchandise or info on how to buy to members:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_offered_merch']) ? 'Please Review'
-                                                : ( $financial_report_array ['check_offered_merch'] == 0 ? 'NO' : ( $financial_report_array ['check_offered_merch'] == 1 ? 'YES' : 'Pleae Review' )) }}</strong><br>
-                                        </div>
-                                        <div class="flex-item2">
-                                            Manual/by-laws made available to members:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_bylaws_available']) ? 'Please Review'
-                                                : ( $financial_report_array ['check_bylaws_available'] == 0 ? 'NO' : ($financial_report_array ['check_bylaws_available'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div>
-                                        <div class="flex-item2">
-                                            Attended International Event (in person or virtual):&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_attended_training']) ? 'Please Review'
-                                                : ($financial_report_array ['check_attended_training'] == 0 ? 'NO' : ($financial_report_array ['check_attended_training'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div>
-                                        <div class="flex-item2">
-                                            Sistered another chapter:&nbsp;&nbsp;&nbsp;<strong>{{ is_null($financial_report_array['check_sistered_another_chapter']) ? 'Please Review'
-                                                : ($financial_report_array ['check_sistered_another_chapter'] == 0 ? 'NO' : ($financial_report_array ['check_sistered_another_chapter'] == 1 ? 'YES' : 'Please Review' )) }}</strong><br>
-                                        </div>
-
-
-
-                                    </div>
-                                    </div>
-                                    <div class="col-md-12"><br></div>
-                                    @php
-                                        $yesBackground = '#28a745';  // Green background for "YES"
-                                        $noBackground = '#dc3545';   // Red background for "NO"
-                                    @endphp
-
-                                    <div class="col-md-4" >
-                                        Award #1 Status:&nbsp;&nbsp;&nbsp;
-                                        <strong><span style="background-color: {{ is_null($financial_report_array['check_award_1_approved']) ? '#FFFFFF' : ($financial_report_array['check_award_1_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($financial_report_array['check_award_1_approved']) ? '#000000' : '#FFFFFF' }};
-                                            padding: 2px 5px; border-radius: 3px;">
-                                            {{ is_null($financial_report_array['check_award_1_approved']) ? 'N/A' : ($financial_report_array['check_award_1_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_1_approved'] == 1 ? 'YES' : 'N/A')) }}
-                                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_1_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_1_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                                : ($financial_report_array['award_1_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_1_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_1_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                                : ($financial_report_array['award_1_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_1_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_1_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
-                                        </span></strong><br>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                    <div class="col-md-4" >
-                                        Award #2 Status:&nbsp;&nbsp;&nbsp;
-                                        <strong><span style="background-color: {{ is_null($financial_report_array['check_award_2_approved']) ? '#FFFFFF' : ($financial_report_array['check_award_2_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($financial_report_array['check_award_2_approved']) ? '#000000' : '#FFFFFF' }};
-                                            padding: 2px 5px; border-radius: 3px;">                                            {{ is_null($financial_report_array['check_award_2_approved']) ? 'N/A' : ($financial_report_array['check_award_2_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_2_approved'] == 1 ? 'YES' : 'N/A')) }}
-                                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_2_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_2_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                                : ($financial_report_array['award_2_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_2_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_2_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                                : ($financial_report_array['award_2_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_2_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_2_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
-                                        </span></strong><br>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                    <div class="col-md-4" >
-                                        Award #3 Status:&nbsp;&nbsp;&nbsp;
-                                        <strong><span style="background-color: {{ is_null($financial_report_array['check_award_3_approved']) ? '#FFFFFF' : ($financial_report_array['check_award_3_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($financial_report_array['check_award_3_approved']) ? '#000000' : '#FFFFFF' }};
-                                            padding: 2px 5px; border-radius: 3px;">                                            {{ is_null($financial_report_array['check_award_3_approved']) ? 'N/A' : ($financial_report_array['check_award_3_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_3_approved'] == 1 ? 'YES' : 'N/A')) }}
-                                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_3_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_3_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                                : ($financial_report_array['award_3_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_3_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_3_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                                : ($financial_report_array['award_3_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_3_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_3_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
-                                        </span></strong><br>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                    <div class="col-md-4">
-                                        Award #4 Status:&nbsp;&nbsp;&nbsp;
-                                        <strong><span style="background-color: {{ is_null($financial_report_array['check_award_4_approved']) ? '#FFFFFF' : ($financial_report_array['check_award_4_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($financial_report_array['check_award_4_approved']) ? '#000000' : '#FFFFFF' }};
-                                            padding: 2px 5px; border-radius: 3px;">                                            {{ is_null($financial_report_array['check_award_4_approved']) ? 'N/A' : ($financial_report_array['check_award_4_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_4_approved'] == 1 ? 'YES' : 'N/A')) }}
-                                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_4_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_4_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                                : ($financial_report_array['award_4_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_4_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_4_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                                : ($financial_report_array['award_4_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_4_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_4_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
-                                        </span></strong><br>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                    <div class="col-md-4">
-                                        Award #5 Status:&nbsp;&nbsp;&nbsp;
-                                        <strong><span style="background-color: {{ is_null($financial_report_array['check_award_5_approved']) ? '#FFFFFF' : ($financial_report_array['check_award_5_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($financial_report_array['check_award_5_approved']) ? '#000000' : '#FFFFFF' }};
-                                            padding: 2px 5px; border-radius: 3px;">                                            {{ is_null($financial_report_array['check_award_5_approved']) ? 'N/A' : ($financial_report_array['check_award_5_approved'] == 0 ? 'NO' : ($financial_report_array['check_award_5_approved'] == 1 ? 'YES' : 'N/A')) }}
-                                            &nbsp;&nbsp;-&nbsp;&nbsp; {{ is_null($financial_report_array['award_5_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_5_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                                : ($financial_report_array['award_5_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_5_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_5_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                                : ($financial_report_array['award_5_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_5_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_5_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
-                                        </span></strong><br>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-									<div class="col-md-12">
-										<strong>Reviewer Notes Logged for this Report (not visible to chapter):</strong><br>
-                                        <?php
-                                        $financial_report_notes = [];
-                                        for ($i = 1; $i <= 13; $i++) {
-                                            $key = 'step_' . $i . '_notes_log';
-                                            if (isset($financial_report_array[$key])) {
-                                                $notes = explode("\n", $financial_report_array[$key]);
-                                                $financial_report_notes = array_merge($financial_report_notes, $notes);
-                                            }
-                                        }
-
-                                        echo empty($financial_report_notes) ? 'No notes logged for this report.' : implode('<br>', $financial_report_notes);
-                                        ?>
-									</div>
-						<div class="col-sm-12">
-                        <strong>Contact information for the person who completed the report:</strong><br>
-                        Name -&nbsp;<?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_name'];}?><br>
-                        Email -&nbsp;<a href="mailto:<?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_email'];}?>"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_email'];}?></a></p>
-                        </div>
-
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <?php if ($chapterDetails[0]->financial_report_received == 1 && $financial_report_array['reviewer_id'] == null): ?>
-                                    <span style="display: inline; color: red;">No Reviewer Assigned - Select Reviewer before continuing to prevent errors.<br></span>
-                                <?php endif; ?>
-                                <label for="AssignedReviewer"><strong>Assigned Reviewer:</strong></label>
-                                <select class="form-control" name="AssignedReviewer" id="AssignedReviewer" style="width: 250px;"  required>
-                                    <option value="" style="display:none" disabled selected>Select a reviewer</option>
-                                    @foreach($reviewerList as $pcl)
-                                        <option value="{{$pcl['cid']}}" {{$financial_report_array['reviewer_id'] == $pcl['cid']  ? 'selected' : ''}} >{{$pcl['cname']}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group" id="emailMessageGroup" style="display: none;">
-                                <label for="AssignedReviewer"><strong>Additional Email Message for Reviewer:</strong></label>
-                                <textarea class="form-control" style="width:100%" rows="8" name="reviewer_email_message" id="reviewer_email_message"><?php echo $financial_report_array['reviewer_email_message']; ?></textarea>
-                            </div>
-                        </div>
-
-                        <div class="card-body text-center">
-                            <br>
-                            <button type="submit" id="btn-step-14" class="btn bg-gradient-primary"><i class="fas fa-save"></i>&nbsp; Save</button>
-
-                            @if ($financial_report_array['review_complete'] != "" && $submitted)
-                                @if ($regionalCoordinatorCondition)
-                                    <button type="button" class="btn bg-gradient-success" id="review-clear"><i class="fas fa-minus"></i>&nbsp; Clear Review Complete</button>
-                                @else
-                                    <button type="button" class="btn bg-gradient-success disabled"><i class="fas fa-minus"></i>&nbsp; Clear Review Complete</button>
-                                @endif
-                            @else
-                                <button type="button" class="btn bg-gradient-success" id="review-complete"><i class="fas fa-check"></i>&nbsp; Mark as Review Complete</button>
-                            @endif
-                                <button type="button" class="btn bg-gradient-danger" id="unsubmit"><i class="fas fa-times"></i>&nbsp; UnSubmit Report</button>
-                                <p style="color:red;"><b>"Mark as Review Complete" is for FINAL REVIEWER USE ONLY!</b></p>
-					</div>
-                </section>
-				</div>
+                <!-- /.card-body -->
             </div>
-        </div> --}}
-		<!------End Step 14 ------>
-			</div>
-            <!-- end of accordion -->
-        {{-- </div>
-    </div> --}}
+            <!-- /.card -->
+            </div>
 
-    <!-- /.card-body -->
-  </div>
-  <!-- /.card -->
-</div>
-<!-- /.col -->
-
-<div class="card-body text-center">
-    @if ($submitted)
-        <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn bg-gradient-primary mb-2" ><i class="fas fa-download mr-2"></i>Download PDF Report</a>
-    @else
-        <a id="downloadPdfLink" href="#" class="btn bg-gradient-primary mb-2 disabled">Download PDF Report</a>
-    @endif
-    <br>
-    <button type="button" id="back-list" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport') }}'"><i class="fas fa-reply mr-2"></i>Back to Financial Report List</button>
-    <button type="button" id="back-details" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chapterid]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
-</div>
-
-            {{-- <div class="card-body text-center">
-                <button type="submit" id="btn-step-14" class="btn bg-gradient-primary">Save Report Review</button>
-
-                <a href="{{ route('eoyreports.eoyfinancialreport') }}" class="btn bg-gradient-primary">Back to Financial Report List</a>
-            @if ($submitted)
-                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn bg-gradient-primary" >Download PDF Report</a>
-            @else
-                <a id="downloadPdfLink" href="#" class="btn bg-gradient-primary disabled">Download PDF Report</a>
-            @endif --}}
-
+            <div class="card-body text-center">
+                @if ($submitted)
+                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn bg-gradient-primary mb-2" ><i class="fas fa-download mr-2"></i>Download PDF Report</a>
+                @else
+                    <a id="downloadPdfLink" href="#" class="btn bg-gradient-primary mb-2 disabled">Download PDF Report</a>
+                @endif
+                <br>
+                <button type="button" id="back-list" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport') }}'"><i class="fas fa-reply mr-2"></i>Back to Financial Report List</button>
+                <button type="button" id="back-details" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chapterid]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
+            </div>
         </form>
-    {{-- </div> --}}
     </div>
 </div>
 

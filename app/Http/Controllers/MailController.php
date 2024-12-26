@@ -212,8 +212,8 @@ class MailController extends Controller
                     'chapters.primary_coordinator_id as pcid')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
+                ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.id', '=', $id)
                 ->get();
@@ -280,8 +280,8 @@ class MailController extends Controller
                 'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->where('chapters.id', '=', $id)
@@ -298,7 +298,7 @@ class MailController extends Controller
         $chConf = $chapterDetails[0]->conf;
         $chPcid = $chapterDetails[0]->pcid;
 
-        $coordinatorData = $this->userController->loadConferenceCoord($chConf, $chPcid);
+        $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
         $cc_fname = $coordinatorData['cc_fname'];
         $cc_lname = $coordinatorData['cc_lname'];
         $cc_pos = $coordinatorData['cc_pos'];

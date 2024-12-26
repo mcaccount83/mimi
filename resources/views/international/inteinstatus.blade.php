@@ -36,7 +36,7 @@
 			    <tr>
                     <th>Details</th>
                     <th>Letter</th>
-                    <th>Conference</th>
+                    <th>Conf/Reg</th>
                     <th>State</th>
                     <th>Name</th>
                     <th>Start Date</th>
@@ -46,41 +46,44 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($chapterList as $list)
-                  <tr>
-                    <td class="text-center align-middle">
-                        <a href="{{ url("/chapterirsedit/{$list->id}") }}"><i class="fas fa-eye"></i></a>
-                    </td>
+                    @foreach($chapterList as $list)
+                    <tr >
                         <td class="text-center align-middle">
-                            @if($list->ein_letter_path != null)
-                                <a href="{{ $list->ein_letter_path }}" target="_blank"><i class="far fa-file-pdf"></i></a>
+                            @if ($conferenceCoordinatorCondition)
+                                <a href="{{ url("/chapterirsedit/{$list->id}") }}"><i class="fas fa-eye"></i></a>
                             @else
                                 &nbsp; <!-- Placeholder to ensure the cell isn't completely empty -->
                             @endif
                         </td>
-
-                        <td>
-                        @if ($list->reg != "None")
-                                {{ $list->conf }} / {{ $list->reg }}
+                        <td class="text-center align-middle">
+                            @if ($list->documents->ein_letter_path != null)
+                                <a href="{{ $list->documents->ein_letter_path }}"><i class="far fa-file-pdf"></i></a>
                             @else
-                                {{ $list->conf }}
+                                &nbsp; <!-- Placeholder to ensure the cell isn't completely empty -->
                             @endif
                         </td>
-                        <td>{{ $list->state }}</td>
+                        <td>
+                            @if ($list->region->short_name != "None")
+                                {{ $list->conference->short_name }} / {{ $list->region->short_name }}
+                            @else
+                                {{ $list->conference->short_name }}
+                            @endif
+                        </td>
+                        <td>{{ $list->state->state_short_name }}</td>
                         <td>{{ $list->name }}</td>
                         <td data-sort="{{ $list->start_year . '-' . str_pad($list->start_month, 2, '0', STR_PAD_LEFT) }}">
                             {{ $list->start_month }} {{ $list->start_year }}
                         </td>
-                        <td>{{ $list->ein }}</td>
-                        <td  @if($list->ein_letter_path != null)style="background-color: transparent;"
-                                @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->ein_letter_path != null)
+						<td>{{ $list->ein }}</td>
+                        <td @if($list->documents->ein_letter_path != null)style="background-color: transparent;"
+                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documents->ein_letter_path != null)
                                 YES
                             @else
                                 NO
                             @endif
                         </td>
-                        <td>{{ $list->ein_notes }}</td>
+                        <td>{{ $list->documents->ein_notes }}</td>
 			        </tr>
                   @endforeach
                   </tbody>

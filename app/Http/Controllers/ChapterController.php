@@ -18,8 +18,11 @@ use App\Mail\WebsiteAddNoticeChapter;
 use App\Mail\WebsiteReviewNotice;
 use App\Mail\WebsiteUpdatePrimaryCoor;
 use App\Models\Chapters;
+use App\Models\State;
 use App\Models\FinancialReport;
 use App\Models\User;
+use App\Models\Status;
+use App\Models\Website;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
@@ -43,67 +46,95 @@ class ChapterController extends Controller
         $this->userController = $userController;
     }
 
+     /**
+     * Active Chapter List Base Query
+     */
+    public function getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    {
+        $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+        if ($conditions['coordinatorCondition']) {
+            $coordinatorData = $this->userController->loadReportingTree($cdId);
+            $inQryArr = $coordinatorData['inQryArr'];
+        }
+
+        $baseQuery = Chapters::with(['state', 'conference', 'region', 'webLink', 'president', 'avp', 'mvp', 'treasurer', 'secretary', 'primaryCoordinator'])
+            ->where('is_active', 1);
+
+        if ($conditions['founderCondition']) {
+            } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+                $baseQuery->where('conference_id', '=', $cdConfId);
+            } elseif ($conditions['regionalCoordinatorCondition']) {
+                $baseQuery->where('region_id', '=', $cdRegId);
+            } else {
+                $baseQuery->whereIn('primary_coordinator_id', $inQryArr);
+        }
+
+        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
+            $checkBoxStatus = 'checked';
+            $baseQuery->where('primary_coordinator_id', '=', $cdId);
+        } else {
+            $checkBoxStatus = '';
+        }
+
+        $baseQuery->orderBy(State::select('state_short_name')
+            ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+            ->orderBy('chapters.name', 'asc');
+
+        return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus];
+
+    }
+
+
+
+     /**
+     * Zapped Chapter List Base Query
+     */
+    public function getZappedBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
+    {
+        $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+        if ($conditions['coordinatorCondition']) {
+            $coordinatorData = $this->userController->loadReportingTree($cdId);
+            $inQryArr = $coordinatorData['inQryArr'];
+        }
+
+        $baseQuery = Chapters::with(['state', 'conference', 'region', 'president', 'primaryCoordinator'])
+        ->where('is_active', 0)
+        ->orderBy('chapters.zap_date', 'desc');
+
+        if ($conditions['founderCondition']) {
+            } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+                $baseQuery->where('conference_id', '=', $cdConfId);
+            } elseif ($conditions['regionalCoordinatorCondition']) {
+                $baseQuery->where('region_id', '=', $cdRegId);
+            } else {
+                $baseQuery->whereIn('primary_coordinator_id', $inQryArr);
+        }
+
+        return ['query' => $baseQuery ];
+
+    }
+
     /**
      * Display the Active chapter list mapped with login coordinator
      */
     public function showChapters(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-        $request->session()->put('positionid', $positionId);
-        $request->session()->put('secpositionid', $secPositionId);
-        $request->session()->put('corconfid', $corConfId);
-        $request->session()->put('corregid', $corRegId);
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
+        $cdSecPositionid = $cdDetails->sec_position_id;
 
-        if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
+        $baseQuery = $this->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $chapterList = $baseQuery['query']->get();
+        $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
-        $baseQuery = DB::table('chapters as ch')
-            ->select('ch.id', 'ch.name', 'ch.state', 'ch.ein', 'ch.primary_coordinator_id', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone',
-                'st.state_short_name as state', 'cd.region_id', 'ch.region', 'rg.short_name as reg', 'cf.short_name as conf')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->leftJoin('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->leftJoin('region as rg', 'ch.region', '=', 'rg.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('bd.board_position_id', '=', '1');
-
-        if ($conditions['founderCondition']) {
-
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('ch.conference', '=', $corConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('ch.region', '=', $corRegId);
-        } else {
-            $baseQuery->whereIn('ch.primary_coordinator_id', $inQryArr);
-        }
-
-        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-            $checkBoxStatus = 'checked';
-            $baseQuery->where('ch.primary_coordinator_id', '=', $corId)
-                ->orderBy('st.state_short_name')
-                ->orderBy('ch.name');
-        } else {
-            $checkBoxStatus = '';
-            $baseQuery->orderBy('st.state_short_name')
-                ->orderBy('ch.name');
-        }
-
-        $chapterList = $baseQuery->get();
-
-        $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $corId];
+        $countList = $chapterList->count();
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $cdId ];
 
         return view('chapters.chaplist')->with($data);
     }
@@ -113,45 +144,18 @@ class ChapterController extends Controller
      */
     public function showZappedChapter(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
+        $cdSecPositionid = $cdDetails->sec_position_id;
 
-        if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
-
-        $baseQuery = DB::table('chapters as ch')
-            ->select('ch.id', 'ch.state', 'ch.name', 'ch.ein', 'ch.zap_date', 'ch.disband_reason', 'st.state_short_name as state',
-                'cf.short_name as conf', 'rg.short_name as reg')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->leftjoin('region as rg', 'ch.region', '=', 'rg.id')
-            ->leftJoin('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->where('ch.is_active', '=', '0')
-            ->where('bd.board_position_id', '=', '1')
-            ->orderByDesc('ch.zap_date');
-
-        if ($conditions['founderCondition']) {
-
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('ch.conference', '=', $corConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('ch.region', '=', $corRegId);
-        } else {
-            $baseQuery->whereIn('ch.primary_coordinator_id', $inQryArr);
-        }
-
-        $chapterList = $baseQuery->get();
+        $baseQuery = $this->getZappedBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $chapterList = $baseQuery['query']->get();
 
         $countList = count($chapterList);
         $data = ['countList' => $countList, 'chapterList' => $chapterList];
@@ -160,33 +164,99 @@ class ChapterController extends Controller
     }
 
     /**
+     * Display the Inquiries Chapter list
+     */
+    public function showChapterInquiries(Request $request): View
+    {
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
+        $cdSecPositionid = $cdDetails->sec_position_id;
+
+        $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+
+        $baseQuery = Chapters::with(['state', 'conference', 'region'])
+            ->where('is_active', 1);
+
+        if ($conditions['founderCondition'] || $conditions['inquiriesInternationalCondition']) {
+            } elseif ($conditions['assistConferenceCoordinatorCondition'] || $conditions['inquiriesConferneceCondition']) {
+                $baseQuery->where('conference_id', '=', $cdConfId);
+            } else {
+                $baseQuery->where('region_id', '=', $cdRegId);
+            }
+
+        $baseQuery->orderBy(State::select('state_short_name')
+            ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+            ->orderBy('chapters.name', 'asc');
+
+        $inquiriesList = $baseQuery->get();
+
+        $data = ['inquiriesList' => $inquiriesList, 'corConfId' => $cdConfId, 'corRegId' => $cdRegId];
+
+        return view('chapters.chapinquiries')->with($data);
+    }
+
+    /**
+     * Display the Zapped Inquiries list
+     */
+    public function showZappedChapterInquiries(Request $request): View
+    {
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
+        $cdSecPositionid = $cdDetails->sec_position_id;
+
+        $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
+
+        $baseQuery = Chapters::with(['state', 'conference', 'region'])
+        ->where('is_active', 0);
+
+        if ($conditions['founderCondition'] || $conditions['inquiriesInternationalCondition']) {
+            } elseif ($conditions['assistConferenceCoordinatorCondition'] || $conditions['inquiriesConferneceCondition']) {
+                $baseQuery->where('conference_id', '=', $cdConfId);
+            } else {
+                $baseQuery->where('region_id', '=', $cdRegId);
+            }
+
+            $baseQuery->orderBy(State::select('state_short_name')
+            ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+            ->orderBy('chapters.name', 'asc');
+
+        $inquiriesList = $baseQuery->get();
+
+        $data = ['inquiriesList' => $inquiriesList, 'corConfId' => $cdConfId];
+
+        return view('chapters.chapinquirieszapped')->with($data);
+    }
+
+    /**
      * Display the International chapter list
      */
     public function showIntChapter(Request $request)
     {
         $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        $corDetails = $user->coordinator;
-        if (! $corDetails) {
-            return to_route('home');
-        }
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
 
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $intChapterList = DB::table('chapters as ch')
-            ->select('ch.id', 'ch.name', 'ch.state', 'ch.ein', 'ch.primary_coordinator_id', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name',
-                'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.phone as pre_phone', 'st.state_short_name as state',
-                'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'cd.conference_id as cor_cid', 'rg.short_name as reg', 'cf.short_name as conf')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->leftjoin('region as rg', 'ch.region', '=', 'rg.id')
-            ->leftjoin('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('bd.board_position_id', '=', '1')
-            ->orderBy('st.state_short_name')
-            ->orderBy('ch.name')
+        $intChapterList = Chapters::with(['state', 'conference', 'region', 'president', 'primaryCoordinator'])
+            ->where('is_active', 1)
+            ->orderBy(State::select('state_short_name')
+                ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+            ->orderBy('chapters.name', 'asc')
             ->get();
+
         $countList = count($intChapterList);
         $data = ['countList' => $countList, 'intChapterList' => $intChapterList];
 
@@ -199,25 +269,14 @@ class ChapterController extends Controller
     public function showIntZappedChapter(Request $request)
     {
         $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        $corDetails = $user->coordinator;
-        if (! $corDetails) {
-            return to_route('home');
-        }
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
 
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $chapterList = DB::table('chapters as ch')
-            ->select('ch.id', 'ch.conference', 'ch.state', 'ch.name', 'ch.ein', 'ch.zap_date', 'ch.disband_reason', 'st.state_short_name as state',
-                'rg.short_name as reg', 'cf.short_name as conf')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
-            ->leftJoin('state as st', 'ch.state', '=', 'st.id')
-            ->leftjoin('region as rg', 'ch.region', '=', 'rg.id')
-            ->leftjoin('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->where('ch.is_active', '=', '0')
-            ->where('bd.board_position_id', '=', '1')
-            ->orderByDesc('ch.zap_date')
+        $chapterList = Chapters::with(['state', 'conference', 'region'])
+            ->where('is_active', 0)
+            ->orderBy('chapters.zap_date', 'desc')
             ->get();
 
         $countList = count($chapterList);
@@ -231,138 +290,54 @@ class ChapterController extends Controller
      */
     public function viewChapterDetails(Request $request, $id): View
     {
-
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
-        // $corDetails = User::find($request->user()->id)->coordinator;
-        $corDetails = DB::table('coordinators as cd')
-            ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
-            ->where('cd.user_id', '=', $userId)
-            ->get();
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
 
-        $coordId = $corDetails[0]->id;
-        $corConfId = $corDetails[0]->conference_id;
-        $corRegId = $corDetails[0]->region_id;
-        $positionid = $corDetails[0]->position_id;
+        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'status', 'documents', 'financialReport', 'boards'])->find($id);
+        $chId = $chDetails->id;
+        $chIsActive = $chDetails->is_active;
+        $stateShortName = $chDetails->state->state_short_name;
+        $regionLongName = $chDetails->region->long_name;
+        $conferenceDescription = $chDetails->conference->conference_description;
+        $startMonthName = $chDetails->startMonth->month_long_name;
+        $chapterStatus = $chDetails->status->chapter_status;
+        $websiteLink = $chDetails->webLink->link_status ?? null;
 
-        $financial_report_array = FinancialReport::find($id);
-        if ($financial_report_array) {
-            $reviewComplete = $financial_report_array['review_complete'];
-        } else {
-            $reviewComplete = null;
-        }
+        $chConfId = $chDetails->conference_id;
+        $chRegId = $chDetails->region_id;
+        $chPcId = $chDetails->primary_coordinator_id;
 
-        $financial_report_array = FinancialReport::find($id);
+        $chDocuments = $chDetails->documents;
+        $reviewComplete = $chDetails->documents->review_complete;
+        $chFinancialReport = $chDetails->financialReport;
 
-        $chapterList = DB::table('chapters as ch')
-            ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id',
-                'ct.name as countryname', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth')
-            ->join('country as ct', 'ch.country', '=', 'ct.short_name')
-            ->join('state as st', 'ch.state', '=', 'st.id')
-            ->join('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->join('region as rg', 'ch.region', '=', 'rg.id')
-            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
-            ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
-            // ->where('ch.is_active', '=', '1')
-            ->where('ch.id', '=', $id)
-            ->where('bd.board_position_id', '=', '1')
-            ->get();
+        $boards = $chDetails->boards()->with('stateName')->get();
+        $bdDetails = $boards->groupBy('board_position_id');
+        $defaultBoardMember = (object)['first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
 
-        $documentList = DB::table('documents as doc')
-            ->select('doc.*')
-            ->join('chapters as ch', 'ch.id', '=', 'doc.chapter_id')
-            ->where('ch.id', '=', $id)
-            ->get();
-
-        $chConfId = $chapterList[0]->conference;
-        $chRegId = $chapterList[0]->region;
-        $chPCid = $chapterList[0]->primary_coordinator_id;
-
-        $AVPDetails = DB::table('boards as bd')
-            ->select('bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.board_position_id', 'bd.street_address as avp_addr', 'bd.city as avp_city', 'bd.zip as avp_zip', 'bd.phone as avp_phone', 'bd.state as avp_state', 'bd.user_id as user_id')
-            ->where('bd.chapter_id', '=', $id)
-            ->where('bd.board_position_id', '=', '2')
-            ->get();
-        if (count($AVPDetails) == 0) {
-            $AVPDetails[0] = ['avp_fname' => '', 'avp_lname' => '', 'avp_email' => '', 'avp_addr' => '', 'avp_city' => '', 'avp_zip' => '', 'avp_phone' => '', 'avp_state' => '', 'user_id' => ''];
-            $AVPDetails = json_decode(json_encode($AVPDetails));
-        }
-
-        $MVPDetails = DB::table('boards as bd')
-            ->select('bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.board_position_id', 'bd.street_address as mvp_addr', 'bd.city as mvp_city', 'bd.zip as mvp_zip', 'bd.phone as mvp_phone', 'bd.state as mvp_state', 'bd.user_id as user_id')
-            ->where('bd.chapter_id', '=', $id)
-            ->where('bd.board_position_id', '=', '3')
-            ->get();
-        if (count($MVPDetails) == 0) {
-            $MVPDetails[0] = ['mvp_fname' => '', 'mvp_lname' => '', 'mvp_email' => '', 'mvp_addr' => '', 'mvp_city' => '', 'mvp_zip' => '', 'mvp_phone' => '', 'mvp_state' => '', 'user_id' => ''];
-            $MVPDetails = json_decode(json_encode($MVPDetails));
-        }
-
-        $TRSDetails = DB::table('boards as bd')
-            ->select('bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.board_position_id', 'bd.street_address as trs_addr', 'bd.city as trs_city', 'bd.zip as trs_zip', 'bd.phone as trs_phone', 'bd.state as trs_state', 'bd.user_id as user_id')
-            ->where('bd.chapter_id', '=', $id)
-            ->where('bd.board_position_id', '=', '4')
-            ->get();
-        if (count($TRSDetails) == 0) {
-            $TRSDetails[0] = ['trs_fname' => '', 'trs_lname' => '', 'trs_email' => '', 'trs_addr' => '', 'trs_city' => '', 'trs_zip' => '', 'trs_phone' => '', 'trs_state' => '', 'user_id' => ''];
-            $TRSDetails = json_decode(json_encode($TRSDetails));
-        }
-
-        $SECDetails = DB::table('boards as bd')
-            ->select('bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.board_position_id', 'bd.street_address as sec_addr', 'bd.city as sec_city', 'bd.zip as sec_zip', 'bd.phone as sec_phone', 'bd.state as sec_state', 'bd.user_id as user_id')
-            ->where('bd.chapter_id', '=', $id)
-            ->where('bd.board_position_id', '=', '5')
-            ->get();
-        if (count($SECDetails) == 0) {
-            $SECDetails[0] = ['sec_fname' => '', 'sec_lname' => '', 'sec_email' => '', 'sec_addr' => '', 'sec_city' => '', 'sec_zip' => '', 'sec_phone' => '', 'sec_state' => '', 'user_id' => ''];
-            $SECDetails = json_decode(json_encode($SECDetails));
-        }
-
-        // Load Active Status for Active/Zapped Visibility
-        $chIsActive = $chapterList[0]->is_active;
+        // Fetch board details or fallback to default
+        $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
+        $AVPDetails = $bdDetails->get(2, collect([$defaultBoardMember]))->first(); // AVP
+        $MVPDetails = $bdDetails->get(3, collect([$defaultBoardMember]))->first(); // MVP
+        $TRSDetails = $bdDetails->get(4, collect([$defaultBoardMember]))->first(); // Treasurer
+        $SECDetails = $bdDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
 
         // Load Board and Coordinators for Sending Email
-        $chId = $chapterList[0]->id;
         $emailData = $this->userController->loadEmailDetails($chId);
         $emailListChap = $emailData['emailListChapString'];
         $emailListCoord = $emailData['emailListCoordString'];
 
-        $primaryCoordinatorList = DB::table('chapters as ch')
-            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
-            ->join('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
-            ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
-            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
-            ->where(function ($query) use ($chRegId, $chConfId) {
-                $query->where('cd.region_id', '=', $chRegId)
-                    ->orWhere(function ($subQuery) use ($chConfId) {
-                        $subQuery->where('cd.region_id', '=', 0)
-                            ->where('cd.conference_id', $chConfId);
-                    });
-            })
-            ->where('cd.position_id', '<=', '7')
-            ->where('cd.position_id', '>=', '1')
-            ->where('cd.is_active', '=', '1')
-            ->groupBy('cd.id', 'cd.first_name', 'cd.last_name', 'cp.short_title', 'pos2.short_title')
-            ->orderBy('cd.position_id')
-            ->orderBy('cd.first_name')
-            ->get();
-
-        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN', '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
-        $currentMonth = $chapterList[0]->start_month_id;
-
-        $webWords = ['0' => 'Website Not Linked', '1' => 'Website Linked', '2' => 'Add Link Requested', '3' => 'Do Not Link'];
-        $webStatus = $chapterList[0]->website_status;
-        $webStatusinWords = $webWords[$webStatus] ?? 'Status Unknown';
-
-        $statusbWords = ['1' => 'Operating OK', '4' => 'On Hold Do not Refer', '5' => 'Probation', '6' => 'Probation Do Not Refer'];
-        $chapterStatus = $chapterList[0]->status;
-        $chapterStatusinWords = $statusbWords[$chapterStatus] ?? 'Status Unknown';
-
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete, 'emailListCoord' => $emailListCoord, 'emailListChap' => $emailListChap, 'currentMonth' => $currentMonth,
-            'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'chapterList' => $chapterList, 'webStatusinWords' => $webStatusinWords, 'chapterStatusinWords' => $chapterStatusinWords,
-            'primaryCoordinatorList' => $primaryCoordinatorList, 'foundedMonth' => $foundedMonth, 'corConfId' => $corConfId, 'chConfId' => $chConfId, 'chPCid' => $chPCid,
-            'financial_report_array' => $financial_report_array, 'documentList' => $documentList
+        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'cdPositionid' => $cdPositionid, 'cdId' => $cdId, 'reviewComplete' => $reviewComplete, 'emailListCoord' => $emailListCoord, 'emailListChap' => $emailListChap,
+            'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'PresDetails' => $PresDetails, 'chDetails' => $chDetails, 'websiteLink' => $websiteLink,
+            'startMonthName' => $startMonthName, 'cdConfId' => $cdConfId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
+            'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
+            'conferenceDescription' => $conferenceDescription,
         ];
 
         return view('chapters.view')->with($data);
@@ -465,10 +440,10 @@ class ChapterController extends Controller
 
             $chapterList = DB::table('chapters')
                 ->select('chapters.*', 'chapters.primary_coordinator_id as pcid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                    'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'chapters.conference as conf')
+                    'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'chapters.conference_id as conf')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
                 ->where('chapters.is_Active', '=', '0')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.id', $chapterid)
@@ -480,7 +455,7 @@ class ChapterController extends Controller
             $chapterName = $chapterList[0]->name;
             $chapterState = $chapterList[0]->state;
             $chapterEmail = $chapterList[0]->email;
-            $chapterStatus = $chapterList[0]->status;
+            $chapterStatus = $chapterList[0]->status_id;
             //President Info
             $preinfo = DB::table('boards')
                 ->select('first_name', 'last_name', 'email')
@@ -578,7 +553,7 @@ class ChapterController extends Controller
             $chConf = $chapterList[0]->conf;
             $chPcid = $chapterList[0]->pcid;
 
-            $coordinatorData = $this->userController->loadConferenceCoord($chConf, $chPcid);
+            $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
             $cc_fname = $coordinatorData['cc_fname'];
             $cc_lname = $coordinatorData['cc_lname'];
             $cc_pos = $coordinatorData['cc_pos'];
@@ -660,11 +635,11 @@ class ChapterController extends Controller
         $chapterDetails = DB::table('chapters')
             ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name',
                 'st.state_short_name as state', 'bd.first_name as pres_fname', 'bd.last_name as pres_lname', 'bd.street_address as pres_addr', 'bd.city as pres_city', 'bd.state as pres_state',
-                'bd.zip as pres_zip', 'chapters.conference as conf', 'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
+                'bd.zip as pres_zip', 'chapters.conference_id as conf', 'cf.conference_name as conf_name', 'cf.conference_description as conf_desc', 'chapters.primary_coordinator_id as pcid')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
             // ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->where('chapters.id', '=', $chapterid)
@@ -676,7 +651,7 @@ class ChapterController extends Controller
         $chConf = $chapterDetails[0]->conf;
         $chPcid = $chapterDetails[0]->pcid;
 
-        $coordinatorData = $this->userController->loadConferenceCoord($chConf, $chPcid);
+        $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
         $cc_fname = $coordinatorData['cc_fname'];
         $cc_lname = $coordinatorData['cc_lname'];
         $cc_pos = $coordinatorData['cc_pos'];
@@ -791,10 +766,10 @@ class ChapterController extends Controller
 
             $chapterList = DB::table('chapters')
                 ->select('chapters.*', 'chapters.primary_coordinator_id as pcid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                    'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'chapters.conference as conf')
+                    'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'chapters.conference_id as conf')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
                 ->where('chapters.is_Active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.id', $chapterid)
@@ -806,7 +781,7 @@ class ChapterController extends Controller
             $chapterName = $chapterList[0]->name;
             $chapterState = $chapterList[0]->state;
             $chapterEmail = $chapterList[0]->email;
-            $chapterStatus = $chapterList[0]->status;
+            $chapterStatus = $chapterList[0]->status_id;
             //President Info
             $preinfo = DB::table('boards')
                 ->select('first_name', 'last_name', 'email')
@@ -901,7 +876,7 @@ class ChapterController extends Controller
             $chConf = $chapterList[0]->conf;
             $chPcid = $chapterList[0]->pcid;
 
-            $coordinatorData = $this->userController->loadConferenceCoord($chConf, $chPcid);
+            $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
             $cc_fname = $coordinatorData['cc_fname'];
             $cc_lname = $coordinatorData['cc_lname'];
             $cc_pos = $coordinatorData['cc_pos'];
@@ -1281,78 +1256,52 @@ class ChapterController extends Controller
      */
     public function editChapterDetails(Request $request, $id): View
     {
+
         $user = User::find($request->user()->id);
         $userId = $user->id;
 
-        // $corDetails = User::find($request->user()->id)->coordinator;
-        $corDetails = DB::table('coordinators as cd')
-            ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
-            ->where('cd.user_id', '=', $userId)
-            ->get();
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
 
-        $coordId = $corDetails[0]->id;
-        $corConfId = $corDetails[0]->conference_id;
-        $corRegId = $corDetails[0]->region_id;
-        $positionid = $corDetails[0]->position_id;
+        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'status', 'documents', 'financialReport', 'boards'])->find($id);
+        $chId = $chDetails->id;
+        $chIsActive = $chDetails->is_active;
+        $stateShortName = $chDetails->state->state_short_name;
+        $regionLongName = $chDetails->region->long_name;
+        $conferenceDescription = $chDetails->conference->conference_description;
+        $startMonthName = $chDetails->startMonth->month_long_name;
+        $chapterStatus = $chDetails->status->chapter_status;
+        $websiteLink = $chDetails->webLink->link_status ?? null;
 
-        $financial_report_array = FinancialReport::find($id);
-        if ($financial_report_array) {
-            $reviewComplete = $financial_report_array['review_complete'];
-        } else {
-            $reviewComplete = null;
-        }
+        $allStatuses = Status::all();  // Full List for Dropdown Menu
+        $allWebLinks = Website::all();  // Full List for Dropdown Menu
 
-        $chapterList = DB::table('chapters as ch')
-            ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id',
-                'ct.name as countryname', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth')
-            ->join('country as ct', 'ch.country', '=', 'ct.short_name')
-            ->join('state as st', 'ch.state', '=', 'st.id')
-            ->join('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->join('region as rg', 'ch.region', '=', 'rg.id')
-            ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
-            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
-            // ->where('ch.is_active', '=', '1')
-            ->where('ch.id', '=', $id)
-            ->where('bd.board_position_id', '=', '1')
-            ->get();
+        $chConfId = $chDetails->conference_id;
+        $chRegId = $chDetails->region_id;
+        $chPcId = $chDetails->primary_coordinator_id;
 
-        $chConfId = $chapterList[0]->conference;
-        $chRegId = $chapterList[0]->region;
-        $chPCid = $chapterList[0]->primary_coordinator_id;
+        $chDocuments = $chDetails->documents;
+        $reviewComplete = $chDetails->documents->review_complete;
+        $chFinancialReport = $chDetails->financialReport;
 
-        // Load Active Status for Active/Zapped Visibility
-        $chIsActive = $chapterList[0]->is_active;
+        // Load Board and Coordinators for Sending Email
+        $emailData = $this->userController->loadEmailDetails($chId);
+        $emailListChap = $emailData['emailListChapString'];
+        $emailListCoord = $emailData['emailListCoordString'];
 
-        $primaryCoordinatorList = DB::table('chapters as ch')
-            ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
-            ->join('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
-            ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
-            ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
-            ->where(function ($query) use ($chRegId, $chConfId) {
-                $query->where('cd.region_id', '=', $chRegId)
-                    ->orWhere(function ($subQuery) use ($chConfId) {
-                        $subQuery->where('cd.region_id', '=', 0)
-                            ->where('cd.conference_id', $chConfId);
-                    });
-            })
-            ->where('cd.position_id', '<=', '7')
-            ->where('cd.position_id', '>=', '1')
-            ->where('cd.is_active', '=', '1')
-            ->groupBy('cd.id', 'cd.first_name', 'cd.last_name', 'cp.short_title', 'pos2.short_title')
-            ->orderBy('cd.position_id')
-            ->orderBy('cd.first_name')
-            ->get();
+         // Load Primary Coordinator Dropdown List
+        $pcDetails = $this->userController->loadPrimaryList($chRegId, $chConfId);
 
-        $chConfId = $chapterList[0]->conference;
-        $chRegId = $chapterList[0]->region;
-        $chPCid = $chapterList[0]->primary_coordinator_id;
-
-        $webStatusArr = ['0' => 'Website Not Linked', '1' => 'Website Linked', '2' => 'Add Link Requested', '3' => 'Do Not Link'];
-        $chapterStatusArr = ['1' => 'Operating OK', '4' => 'On Hold Do not Refer', '5' => 'Probation', '6' => 'Probation Do Not Refer'];
-
-        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'positionid' => $positionid, 'coordId' => $coordId, 'reviewComplete' => $reviewComplete,
-            'chapterList' => $chapterList, 'webStatusArr' => $webStatusArr, 'chapterStatusArr' => $chapterStatusArr,
-            'primaryCoordinatorList' => $primaryCoordinatorList, 'corConfId' => $corConfId, 'chConfId' => $chConfId, 'chPCid' => $chPCid];
+        $data = ['id' => $id, 'chIsActive' => $chIsActive, 'cdPositionid' => $cdPositionid, 'cdId' => $cdId, 'reviewComplete' => $reviewComplete,
+            'emailListCoord' => $emailListCoord, 'emailListChap' => $emailListChap, 'chDetails' => $chDetails, 'websiteLink' => $websiteLink,
+            'startMonthName' => $startMonthName, 'cdConfId' => $cdConfId, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chapterStatus' => $chapterStatus,
+            'chFinancialReport' => $chFinancialReport, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
+            'conferenceDescription' => $conferenceDescription, 'allStatuses' => $allStatuses, 'allWebLinks' =>$allWebLinks,
+            'pcDetails' => $pcDetails,
+        ];
 
         return view('chapters.edit')->with($data);
     }
@@ -1371,11 +1320,11 @@ class ChapterController extends Controller
 
         $chapterInfoPre = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'st.state_short_name as statename',
-                'chapters.conference as conference', 'chapters.primary_coordinator_id as cor_id', 'bd.first_name as ch_pre_fname', 'bd.last_name as ch_pre_lname',
+                'chapters.conference_id as conference', 'chapters.primary_coordinator_id as cor_id', 'bd.first_name as ch_pre_fname', 'bd.last_name as ch_pre_lname',
                 'bd.email as ch_pre_email')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
             // ->where('chapters.is_Active', '=', '1')
             ->where('chapters.id', $id)
             ->orderByDesc('chapters.id')
@@ -1405,7 +1354,7 @@ class ChapterController extends Controller
             $chapter->former_name = $request->filled('ch_preknown') ? $request->input('ch_preknown') : $request->input('ch_hid_preknown');
             $chapter->sistered_by = $request->filled('ch_sistered') ? $request->input('ch_sistered') : $request->input('ch_hid_sistered');
             $chapter->territory = $request->filled('ch_boundariesterry') ? $request->input('ch_boundariesterry') : $request->input('ch_hid_boundariesterry');
-            $chapter->status = $request->filled('ch_status') ? $request->input('ch_status') : $request->input('ch_hid_status');
+            $chapter->status_id = $request->filled('ch_status') ? $request->input('ch_status') : $request->input('ch_hid_status');
             $chapter->notes = $request->input('ch_notes');
             $chapter->inquiries_contact = $request->input('ch_inqemailcontact');
             $chapter->inquiries_note = $request->input('ch_inqnote');
@@ -1467,7 +1416,7 @@ class ChapterController extends Controller
             $chPcid = $chPCId;
             $chConf = $chConfId;
 
-            $emailData = $this->userController->loadConferenceCoord($chConf, $chPcid);
+            $emailData = $this->userController->loadConferenceCoord($chPcid);
             $to_CCemail = $emailData['cc_email'];
 
             if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
@@ -1496,9 +1445,9 @@ class ChapterController extends Controller
             //Update Chapter MailData//
             $chaperInfoUpd = DB::table('chapters')
                 ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'st.state_short_name as state',
-                    'chapters.conference as conference', 'chapters.primary_coordinator_id as cor_id')
+                    'chapters.conference_id as conference', 'chapters.primary_coordinator_id as cor_id')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
                 ->where('chapters.is_Active', '=', '1')
                 ->where('chapters.id', $chapterId)
                 ->orderByDesc('chapters.id')
@@ -1510,7 +1459,7 @@ class ChapterController extends Controller
                 'conference' => $corConfId,
                 'chapterNameUpd' => $chaperInfoUpd[0]->name,
                 'boundUpd' => $chaperInfoUpd[0]->territory,
-                'chapstatusUpd' => $chaperInfoUpd[0]->status,
+                'chapstatusUpd' => $chaperInfoUpd[0]->status_id,
                 'chapNoteUpd' => $chaperInfoUpd[0]->notes,
                 'inConUpd' => $chaperInfoUpd[0]->inquiries_contact,
                 'inNoteUpd' => $chaperInfoUpd[0]->inquiries_note,
@@ -1524,7 +1473,7 @@ class ChapterController extends Controller
                 'cor_lnameUpd' => $chaperInfoUpd[0]->cor_l_name,
                 'chapterNamePre' => $chapterInfoPre[0]->name,
                 'boundPre' => $chapterInfoPre[0]->territory,
-                'chapstatusPre' => $chapterInfoPre[0]->status,
+                'chapstatusPre' => $chapterInfoPre[0]->status_id,
                 'chapNotePre' => $chapterInfoPre[0]->notes,
                 'inConPre' => $chapterInfoPre[0]->inquiries_contact,
                 'inNotePre' => $chapterInfoPre[0]->inquiries_note,
@@ -1545,7 +1494,7 @@ class ChapterController extends Controller
             if ($chaperInfoUpd[0]->name != $chapterInfoPre[0]->name || $chaperInfoUpd[0]->inquiries_contact != $chapterInfoPre[0]->inquiries_contact || $chaperInfoUpd[0]->inquiries_note != $chapterInfoPre[0]->inquiries_note ||
                     $chaperInfoUpd[0]->email != $chapterInfoPre[0]->email || $chaperInfoUpd[0]->po_box != $chapterInfoPre[0]->po_box || $chaperInfoUpd[0]->website_url != $chapterInfoPre[0]->website_url ||
                     $chaperInfoUpd[0]->website_status != $chapterInfoPre[0]->website_status || $chaperInfoUpd[0]->egroup != $chapterInfoPre[0]->egroup || $chaperInfoUpd[0]->territory != $chapterInfoPre[0]->territory ||
-                    $chaperInfoUpd[0]->additional_info != $chapterInfoPre[0]->additional_info || $chaperInfoUpd[0]->status != $chapterInfoPre[0]->status || $chaperInfoUpd[0]->notes != $chapterInfoPre[0]->notes) {
+                    $chaperInfoUpd[0]->additional_info != $chapterInfoPre[0]->additional_info || $chaperInfoUpd[0]->status_id != $chapterInfoPre[0]->status_id || $chaperInfoUpd[0]->notes != $chapterInfoPre[0]->notes) {
                 Mail::to($to_email)
                     ->queue(new ChaptersUpdatePrimaryCoorChapter($mailData));
             }
@@ -1603,10 +1552,10 @@ class ChapterController extends Controller
         $chapterList = DB::table('chapters as ch')
             ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id',
                 'ct.name as countryname', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth')
-            ->join('country as ct', 'ch.country', '=', 'ct.short_name')
-            ->join('state as st', 'ch.state', '=', 'st.id')
-            ->join('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->join('region as rg', 'ch.region', '=', 'rg.id')
+            ->join('country as ct', 'ch.country_short_name', '=', 'ct.short_name')
+            ->join('state as st', 'ch.state_id', '=', 'st.id')
+            ->join('conference as cf', 'ch.conference_id', '=', 'cf.id')
+            ->join('region as rg', 'ch.region_id', '=', 'rg.id')
             ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
             ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
             // ->where('ch.is_active', '=', '1')
@@ -1614,8 +1563,8 @@ class ChapterController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->get();
 
-        $chConfId = $chapterList[0]->conference;
-        $chRegId = $chapterList[0]->region;
+        $chConfId = $chapterList[0]->conference_id;
+        $chRegId = $chapterList[0]->region_id;
         $chPCid = $chapterList[0]->primary_coordinator_id;
 
         $AVPDetails = DB::table('boards as bd')
@@ -1686,8 +1635,8 @@ class ChapterController extends Controller
             ->orderBy('id')
             ->get();
 
-        $chConfId = $chapterList[0]->conference;
-        $chRegId = $chapterList[0]->region;
+        $chConfId = $chapterList[0]->conference_id;
+        $chRegId = $chapterList[0]->region_id;
         $chPCid = $chapterList[0]->primary_coordinator_id;
 
         $webStatusArr = ['0' => 'Website Not Linked', '1' => 'Website Linked', '2' => 'Add Link Requested', '3' => 'Do Not Link'];
@@ -1714,11 +1663,11 @@ class ChapterController extends Controller
 
         $presInfoPre = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'st.state_short_name as statename',
-                'chapters.conference as conference', 'chapters.primary_coordinator_id as cor_id', 'bd.first_name as ch_pre_fname', 'bd.last_name as ch_pre_lname',
+                'chapters.conference_id as conference', 'chapters.primary_coordinator_id as cor_id', 'bd.first_name as ch_pre_fname', 'bd.last_name as ch_pre_lname',
                 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city', 'bd.zip as zip', )
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
             ->where('bd.board_position_id', '=', '1')
             ->where('chapters.is_Active', '=', '1')
             ->where('chapters.id', $id)
@@ -2089,7 +2038,7 @@ class ChapterController extends Controller
                 ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city', 'bd.zip as zip', 'st.state_short_name as state')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                 ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
                 ->where('chapters.is_Active', '=', '1')
                 ->where('bd.board_position_id', '=', '1')
                 ->where('chapters.id', $chapterId)
@@ -2249,7 +2198,7 @@ class ChapterController extends Controller
                     $presInfoUpd[0]->ein != $presInfoPre[0]->ein || $presInfoUpd[0]->ein_letter_path != $presInfoPre[0]->ein_letter_path || $presInfoUpd[0]->inquiries_note != $presInfoPre[0]->inquiries_note ||
                     $presInfoUpd[0]->email != $presInfoPre[0]->email || $presInfoUpd[0]->po_box != $presInfoPre[0]->po_box || $presInfoUpd[0]->website_url != $presInfoPre[0]->website_url ||
                     $presInfoUpd[0]->website_status != $presInfoPre[0]->website_status || $presInfoUpd[0]->egroup != $presInfoPre[0]->egroup || $presInfoUpd[0]->territory != $presInfoPre[0]->territory ||
-                    $presInfoUpd[0]->additional_info != $presInfoPre[0]->additional_info || $presInfoUpd[0]->status != $presInfoPre[0]->status || $presInfoUpd[0]->notes != $presInfoPre[0]->notes ||
+                    $presInfoUpd[0]->additional_info != $presInfoPre[0]->additional_info || $presInfoUpd[0]->status_id != $presInfoPre[0]->status_id || $presInfoUpd[0]->notes != $presInfoPre[0]->notes ||
                     $mailDataAvpp['avpfnamePre'] != $mailDataAvp['avpfnameUpd'] || $mailDataAvpp['avplnamePre'] != $mailDataAvp['avplnameUpd'] || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] ||
                     $mailDataMvpp['mvpfnamePre'] != $mailDataMvp['mvpfnameUpd'] || $mailDataMvpp['mvplnamePre'] != $mailDataMvp['mvplnameUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] ||
                     $mailDatatresp['tresfnamePre'] != $mailDatatres['tresfnameUpd'] || $mailDatatresp['treslnamePre'] != $mailDatatres['treslnameUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] ||
@@ -2309,10 +2258,10 @@ class ChapterController extends Controller
         $chapterList = DB::table('chapters as ch')
             ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id',
                 'ct.name as countryname', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth')
-            ->join('country as ct', 'ch.country', '=', 'ct.short_name')
-            ->join('state as st', 'ch.state', '=', 'st.id')
-            ->join('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->join('region as rg', 'ch.region', '=', 'rg.id')
+            ->join('country as ct', 'ch.country_short_name', '=', 'ct.short_name')
+            ->join('state as st', 'ch.state_id', '=', 'st.id')
+            ->join('conference as cf', 'ch.conference_id', '=', 'cf.id')
+            ->join('region as rg', 'ch.region_id', '=', 'rg.id')
             ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
             ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
             // ->where('ch.is_active', '=', '1')
@@ -2320,8 +2269,8 @@ class ChapterController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->get();
 
-        $chConfId = $chapterList[0]->conference;
-        $chRegId = $chapterList[0]->region;
+        $chConfId = $chapterList[0]->conference_id;
+        $chRegId = $chapterList[0]->region_id;
         $chPCid = $chapterList[0]->primary_coordinator_id;
 
         // Load Active Status for Active/Zapped Visibility
@@ -2347,8 +2296,8 @@ class ChapterController extends Controller
             ->orderBy('cd.first_name')
             ->get();
 
-        $chConfId = $chapterList[0]->conference;
-        $chRegId = $chapterList[0]->region;
+        $chConfId = $chapterList[0]->conference_id;
+        $chRegId = $chapterList[0]->region_id;
         $chPCid = $chapterList[0]->primary_coordinator_id;
 
         $webStatusArr = ['0' => 'Website Not Linked', '1' => 'Website Linked', '2' => 'Add Link Requested', '3' => 'Do Not Link'];
@@ -2403,172 +2352,52 @@ class ChapterController extends Controller
     }
 
     /**
-     * Display the Inquiries Chapter list
-     */
-    public function showChapterInquiries(Request $request): View
-    {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-
-        // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
-
-        // Load Reporting Tree
-        $coordinatorData = $this->userController->loadReportingTree($corId);
-        $inQryArr = $coordinatorData['inQryArr'];
-
-        if ($conditions['founderCondition'] || $conditions['inquiriesInternationalCondition']) {
-            $inquiriesList = DB::table('chapters')
-                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.inquiries_contact as inq_con', 'chapters.territory as terry', 'chapters.status as status', 'chapters.inquiries_note as inq_note', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'cd.email as cd_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'st.state_short_name as state')
-                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-                ->where('chapters.is_active', '=', '1')
-                ->where('bd.board_position_id', '=', '1')
-                ->orderBy('st.state_short_name')
-                ->get();
-
-        } elseif ($conditions['assistConferenceCoordinatorCondition'] || $conditions['inquiriesConferneceCondition']) {
-            $inquiriesList = DB::table('chapters')
-                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.inquiries_contact as inq_con', 'chapters.territory as terry', 'chapters.status as status', 'chapters.inquiries_note as inq_note', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'cd.email as cd_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'st.state_short_name as state')
-                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-                ->where('chapters.is_active', '=', '1')
-                ->where('bd.board_position_id', '=', '1')
-                ->where('chapters.conference', '=', $corConfId)
-                ->orderBy('st.state_short_name')
-                ->get();
-        } else {
-            $inquiriesList = DB::table('chapters')
-                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.inquiries_contact as inq_con', 'chapters.territory as terry', 'chapters.status as status', 'chapters.inquiries_note as inq_note', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'cd.email as cd_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'st.state_short_name as state')
-                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-                ->where('chapters.is_active', '=', '1')
-                ->where('bd.board_position_id', '=', '1')
-                ->where('chapters.region', '=', $corRegId)
-                ->orderBy('st.state_short_name')
-                ->get();
-        }
-
-        $data = ['inquiriesList' => $inquiriesList, 'corConfId' => $corConfId, 'corRegId' => $corRegId];
-
-        return view('chapters.chapinquiries')->with($data);
-    }
-
-    /**
-     * Display the Zapped Inquiries list
-     */
-    public function showZappedChapterInquiries(Request $request): View
-    {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-
-        // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
-
-        // Load Reporting Tree
-        $coordinatorData = $this->userController->loadReportingTree($corId);
-        $inQryArr = $coordinatorData['inQryArr'];
-
-        if ($conditions['founderCondition'] || $conditions['inquiriesInternationalCondition']) {
-            $inquiriesList = DB::table('chapters')
-                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.inquiries_contact as inq_con', 'chapters.territory as terry', 'chapters.status as status', 'chapters.inquiries_note as inq_note', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'cd.email as cd_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'st.state_short_name as state')
-                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-                ->where('chapters.is_active', '=', '0')
-                ->where('bd.board_position_id', '=', '1')
-                ->orderBy('st.state_short_name')
-                ->get();
-
-        } elseif ($conditions['assistConferenceCoordinatorCondition'] || $conditions['inquiriesConferneceCondition']) {
-            $inquiriesList = DB::table('chapters')
-                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.inquiries_contact as inq_con', 'chapters.territory as terry', 'chapters.status as status', 'chapters.inquiries_note as inq_note', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'cd.email as cd_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'st.state_short_name as state')
-                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-                ->where('chapters.is_active', '=', '0')
-                ->where('bd.board_position_id', '=', '1')
-                ->where('chapters.conference', '=', $corConfId)
-                ->orderBy('st.state_short_name')
-                ->get();
-        } else {
-            $inquiriesList = DB::table('chapters')
-                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.inquiries_contact as inq_con', 'chapters.territory as terry', 'chapters.status as status', 'chapters.inquiries_note as inq_note', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname', 'cd.email as cd_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'st.state_short_name as state')
-                ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-                ->where('chapters.is_active', '=', '0')
-                ->where('bd.board_position_id', '=', '1')
-                ->where('chapters.region', '=', $corRegId)
-                ->orderBy('st.state_short_name')
-                ->get();
-        }
-
-        $data = ['inquiriesList' => $inquiriesList, 'corConfId' => $corConfId];
-
-        return view('chapters.chapinquirieszapped')->with($data);
-    }
-
-    /**
      * Display the Website Details
      */
     public function showChapterWebsite(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
+        $cdSecPositionid = $cdDetails->sec_position_id;
 
-        if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
-
-        $baseQuery = DB::table('chapters')
-            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.website_url as web', 'chapters.website_status as status', 'chapters.website_notes as web_notes', 'chapters.egroup as egroup',
-                'st.state_short_name as state', 'cd.region_id', 'chapters.region', 'rg.short_name as reg', 'cf.short_name as conf')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->join('state as st', 'chapters.state', '=', 'st.id')
-            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
-            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
-            ->where('chapters.is_active', '=', '1')
-            ->orderBy('st.state_short_name')
-            ->orderBy('chapters.name');
-
-        if ($conditions['founderCondition']) {
-
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference', '=', $corConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region', '=', $corRegId);
-        } else {
-            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
-        }
-
-        $websiteList = $baseQuery->get();
+        $baseQuery = $this->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $websiteList = $baseQuery['query']->get();
 
         $data = ['websiteList' => $websiteList];
 
         return view('chapters.chapwebsite')->with($data);
     }
+
+
+    /**
+     * Display the Social Media Information
+     */
+    public function showRptSocialMedia(Request $request): View
+    {
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
+        $cdSecPositionid = $cdDetails->sec_position_id;
+
+        $baseQuery = $this->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $chapterList = $baseQuery['query']->get();
+
+        $data = ['chapterList' => $chapterList, 'corId' => $cdId];
+
+        return view('chapreports.chaprptsocialmedia')->with($data);
+    }
+
 
     /**
      *Edit Website & Social Information
@@ -2599,10 +2428,10 @@ class ChapterController extends Controller
         $chapterList = DB::table('chapters as ch')
             ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id',
                 'ct.name as countryname', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth')
-            ->join('country as ct', 'ch.country', '=', 'ct.short_name')
-            ->join('state as st', 'ch.state', '=', 'st.id')
-            ->join('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->join('region as rg', 'ch.region', '=', 'rg.id')
+            ->join('country as ct', 'ch.country_short_name', '=', 'ct.short_name')
+            ->join('state as st', 'ch.state_id', '=', 'st.id')
+            ->join('conference as cf', 'ch.conference_id', '=', 'cf.id')
+            ->join('region as rg', 'ch.region_id', '=', 'rg.id')
             ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
             ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
             // ->where('ch.is_active', '=', '1')
@@ -2610,8 +2439,8 @@ class ChapterController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->get();
 
-        $chConfId = $chapterList[0]->conference;
-        $chRegId = $chapterList[0]->region;
+        $chConfId = $chapterList[0]->conference_id;
+        $chRegId = $chapterList[0]->region_id;
         $chPCid = $chapterList[0]->primary_coordinator_id;
 
         // Load Active Status for Active/Zapped Visibility
@@ -2643,8 +2472,8 @@ class ChapterController extends Controller
             ->orderBy('cd.first_name')
             ->get();
 
-        $chConfId = $chapterList[0]->conference;
-        $chRegId = $chapterList[0]->region;
+        $chConfId = $chapterList[0]->conference_id;
+        $chRegId = $chapterList[0]->region_id;
         $chPCid = $chapterList[0]->primary_coordinator_id;
 
         $webStatusArr = ['0' => 'Website Not Linked', '1' => 'Website Linked', '2' => 'Add Link Requested', '3' => 'Do Not Link'];
@@ -2671,11 +2500,11 @@ class ChapterController extends Controller
 
         $chapterInfoPre = DB::table('chapters')
             ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'st.state_short_name as statename',
-                'chapters.conference as conference', 'chapters.primary_coordinator_id as cor_id', 'bd.first_name as ch_pre_fname', 'bd.last_name as ch_pre_lname',
+                'chapters.conference_id as conference', 'chapters.primary_coordinator_id as cor_id', 'bd.first_name as ch_pre_fname', 'bd.last_name as ch_pre_lname',
                 'bd.email as ch_pre_email')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
             ->where('chapters.is_Active', '=', '1')
             ->where('chapters.id', $id)
             ->orderByDesc('chapters.id')
@@ -2723,15 +2552,15 @@ class ChapterController extends Controller
             $chPcid = $chPCId;
             $chConf = $chConfId;
 
-            $emailData = $this->userController->loadConferenceCoord($chConf, $chPcid);
+            $emailData = $this->userController->loadConferenceCoord($chPcid);
             $to_CCemail = $emailData['cc_email'];
 
             //Update Chapter MailData//
             $chaperInfoUpd = DB::table('chapters')
                 ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'st.state_short_name as state',
-                    'chapters.conference as conference', 'chapters.primary_coordinator_id as cor_id')
+                    'chapters.conference_id as conference', 'chapters.primary_coordinator_id as cor_id')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
                 ->where('chapters.is_Active', '=', '1')
                 ->where('chapters.id', $chapterId)
                 ->orderByDesc('chapters.id')
@@ -2797,127 +2626,140 @@ class ChapterController extends Controller
      */
     public function showChapterBoardlist(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        // Load Reporting Tree
-        $coordinatorData = $this->userController->loadReportingTree($corId);
-        $inQryArr = $coordinatorData['inQryArr'];
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
+        $cdSecPositionid = $cdDetails->sec_position_id;
 
-        //Get Chapter List mapped with login coordinator
-        $activeChapterList = DB::table('chapters')
-            ->select('chapters.*', 'chapters.conference as conf', 'chapters.email as chapter_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add',
-                'bd.city as pre_city', 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->leftJoin('region as rg', 'rg.id', '=', 'chapters.region')
-            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
-            ->where('chapters.is_active', '=', '1')
-            ->where('bd.board_position_id', '=', '1')
-            ->orderBy('st.state_short_name')
-            ->orderBy('chapters.name')
-            ->get();
+        $baseQuery = $this->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $activeChapterList = $baseQuery['query']->get();
 
-        if (count($activeChapterList) > 0) {
-            $exportChapterList = [];
-            foreach ($activeChapterList as $list) {
-                if ($list->status == 1) {
-                    $list->status_value = 'Operating OK';
-                }
-                if ($list->status == 4) {
-                    $list->status_value = 'On Hold Do not Refer';
-                }
-                if ($list->status == 5) {
-                    $list->status_value = 'Probation';
-                }
-                if ($list->status == 6) {
-                    $list->status_value = 'Probation Do Not Refer';
-                }
-                $chapterId = $list->id;
-                //For AVP Details
-                $avpDeatils = DB::table('chapters')
-                    ->select('chapters.id', 'bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.phone as avp_phone', 'bd.board_position_id as positionid')
-                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                    ->where('chapters.is_active', '=', '1')
-                    ->where('bd.board_position_id', '=', '2')
-                    ->where('chapters.id', '=', $chapterId)
-                    ->get()->toArray();
-                if (count($avpDeatils) > 0) {
-                    $list->avp_fname = $avpDeatils[0]->avp_fname;
-                    $list->avp_lname = $avpDeatils[0]->avp_lname;
-                    $list->avp_email = $avpDeatils[0]->avp_email;
-                    $list->avp_phone = $avpDeatils[0]->avp_phone;
-                } else {
-                    $list->avp_fname = '';
-                    $list->avp_lname = '';
-                    $list->avp_email = '';
-                    $list->avp_phone = '';
-                }
-                //For MVP Details
-                $mvpDeatils = DB::table('chapters')
-                    ->select('chapters.id', 'bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.phone as mvp_phone', 'bd.board_position_id as positionid')
-                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                    ->where('chapters.is_active', '=', '1')
-                    ->where('bd.board_position_id', '=', '3')
-                    ->where('chapters.id', '=', $chapterId)
-                    ->get()->toArray();
-                if (count($mvpDeatils) > 0) {
-                    $list->mvp_fname = $mvpDeatils[0]->mvp_fname;
-                    $list->mvp_lname = $mvpDeatils[0]->mvp_lname;
-                    $list->mvp_email = $mvpDeatils[0]->mvp_email;
-                    $list->mvp_phone = $mvpDeatils[0]->mvp_phone;
-                } else {
-                    $list->mvp_fname = '';
-                    $list->mvp_lname = '';
-                    $list->mvp_email = '';
-                    $list->mvp_phone = '';
-                }
-                //For TREASURER Details
-                $trsDeatils = DB::table('chapters')
-                    ->select('chapters.id', 'bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.phone as trs_phone', 'bd.board_position_id as positionid')
-                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                    ->where('chapters.is_active', '=', '1')
-                    ->where('bd.board_position_id', '=', '4')
-                    ->where('chapters.id', '=', $chapterId)
-                    ->get()->toArray();
-                if (count($trsDeatils) > 0) {
-                    $list->trs_fname = $trsDeatils[0]->trs_fname;
-                    $list->trs_lname = $trsDeatils[0]->trs_lname;
-                    $list->trs_email = $trsDeatils[0]->trs_email;
-                    $list->trs_phone = $trsDeatils[0]->trs_phone;
-                } else {
-                    $list->trs_fname = '';
-                    $list->trs_lname = '';
-                    $list->trs_email = '';
-                    $list->trs_phone = '';
-                }
-                //For SECRETARY Details
-                $secDeatils = DB::table('chapters')
-                    ->select('chapters.id', 'bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.phone as sec_phone', 'bd.board_position_id as positionid')
-                    ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-                    ->where('chapters.is_active', '=', '1')
-                    ->where('bd.board_position_id', '=', '5')
-                    ->where('chapters.id', '=', $chapterId)
-                    ->get()->toArray();
-                if (count($secDeatils) > 0) {
-                    $list->sec_fname = $secDeatils[0]->sec_fname;
-                    $list->sec_lname = $secDeatils[0]->sec_lname;
-                    $list->sec_email = $secDeatils[0]->sec_email;
-                    $list->sec_phone = $secDeatils[0]->sec_phone;
-                } else {
-                    $list->sec_fname = '';
-                    $list->sec_lname = '';
-                    $list->sec_email = '';
-                    $list->sec_phone = '';
-                }
+        // $corDetails = User::find($request->user()->id)->coordinator;
+        // $corId = $corDetails['id'];
 
-                $exportChapterList[] = $list;
-            }
+        // // Load Reporting Tree
+        // $coordinatorData = $this->userController->loadReportingTree($corId);
+        // $inQryArr = $coordinatorData['inQryArr'];
+
+        // //Get Chapter List mapped with login coordinator
+        // $activeChapterList = DB::table('chapters')
+        //     ->select('chapters.*', 'chapters.conference_id as conf', 'chapters.email as chapter_email', 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add',
+        //         'bd.city as pre_city', 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
+        //     ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+        //     ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
+        //     ->leftJoin('region as rg', 'rg.id', '=', 'chapters.region_id')
+        //     ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
+        //     ->where('chapters.is_active', '=', '1')
+        //     ->where('bd.board_position_id', '=', '1')
+        //     ->orderBy('st.state_short_name')
+        //     ->orderBy('chapters.name')
+        //     ->get();
+
+        // if (count($activeChapterList) > 0) {
+        //     $exportChapterList = [];
+        //     foreach ($activeChapterList as $list) {
+        //         // if ($list->status_id == 1) {
+        //         //     $list->status_value = 'Operating OK';
+        //         // }
+        //         // if ($list->status_id == 4) {
+        //         //     $list->status_value = 'On Hold Do not Refer';
+        //         // }
+        //         // if ($list->status_id == 5) {
+        //         //     $list->status_value = 'Probation';
+        //         // }
+        //         // if ($list->status_id == 6) {
+        //         //     $list->status_value = 'Probation Do Not Refer';
+        //         // }
+        //         $chapterId = $list->id;
+        //         //For AVP Details
+        //         $avpDeatils = DB::table('chapters')
+        //             ->select('chapters.id', 'bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.phone as avp_phone', 'bd.board_position_id as positionid')
+        //             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+        //             ->where('chapters.is_active', '=', '1')
+        //             ->where('bd.board_position_id', '=', '2')
+        //             ->where('chapters.id', '=', $chapterId)
+        //             ->get()->toArray();
+        //         if (count($avpDeatils) > 0) {
+        //             $list->avp_fname = $avpDeatils[0]->avp_fname;
+        //             $list->avp_lname = $avpDeatils[0]->avp_lname;
+        //             $list->avp_email = $avpDeatils[0]->avp_email;
+        //             $list->avp_phone = $avpDeatils[0]->avp_phone;
+        //         } else {
+        //             $list->avp_fname = '';
+        //             $list->avp_lname = '';
+        //             $list->avp_email = '';
+        //             $list->avp_phone = '';
+        //         }
+        //         //For MVP Details
+        //         $mvpDeatils = DB::table('chapters')
+        //             ->select('chapters.id', 'bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.phone as mvp_phone', 'bd.board_position_id as positionid')
+        //             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+        //             ->where('chapters.is_active', '=', '1')
+        //             ->where('bd.board_position_id', '=', '3')
+        //             ->where('chapters.id', '=', $chapterId)
+        //             ->get()->toArray();
+        //         if (count($mvpDeatils) > 0) {
+        //             $list->mvp_fname = $mvpDeatils[0]->mvp_fname;
+        //             $list->mvp_lname = $mvpDeatils[0]->mvp_lname;
+        //             $list->mvp_email = $mvpDeatils[0]->mvp_email;
+        //             $list->mvp_phone = $mvpDeatils[0]->mvp_phone;
+        //         } else {
+        //             $list->mvp_fname = '';
+        //             $list->mvp_lname = '';
+        //             $list->mvp_email = '';
+        //             $list->mvp_phone = '';
+        //         }
+        //         //For TREASURER Details
+        //         $trsDeatils = DB::table('chapters')
+        //             ->select('chapters.id', 'bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.phone as trs_phone', 'bd.board_position_id as positionid')
+        //             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+        //             ->where('chapters.is_active', '=', '1')
+        //             ->where('bd.board_position_id', '=', '4')
+        //             ->where('chapters.id', '=', $chapterId)
+        //             ->get()->toArray();
+        //         if (count($trsDeatils) > 0) {
+        //             $list->trs_fname = $trsDeatils[0]->trs_fname;
+        //             $list->trs_lname = $trsDeatils[0]->trs_lname;
+        //             $list->trs_email = $trsDeatils[0]->trs_email;
+        //             $list->trs_phone = $trsDeatils[0]->trs_phone;
+        //         } else {
+        //             $list->trs_fname = '';
+        //             $list->trs_lname = '';
+        //             $list->trs_email = '';
+        //             $list->trs_phone = '';
+        //         }
+        //         //For SECRETARY Details
+        //         $secDeatils = DB::table('chapters')
+        //             ->select('chapters.id', 'bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.phone as sec_phone', 'bd.board_position_id as positionid')
+        //             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+        //             ->where('chapters.is_active', '=', '1')
+        //             ->where('bd.board_position_id', '=', '5')
+        //             ->where('chapters.id', '=', $chapterId)
+        //             ->get()->toArray();
+        //         if (count($secDeatils) > 0) {
+        //             $list->sec_fname = $secDeatils[0]->sec_fname;
+        //             $list->sec_lname = $secDeatils[0]->sec_lname;
+        //             $list->sec_email = $secDeatils[0]->sec_email;
+        //             $list->sec_phone = $secDeatils[0]->sec_phone;
+        //         } else {
+        //             $list->sec_fname = '';
+        //             $list->sec_lname = '';
+        //             $list->sec_email = '';
+        //             $list->sec_phone = '';
+        //         }
+
+        //         $exportChapterList[] = $list;
+        //     }
 
             $countList = count($activeChapterList);
-            $data = ['countList' => $countList, 'activeChapterList' => $activeChapterList, 'avpDeatils' => $avpDeatils, 'mvpDeatils' => $mvpDeatils, 'secDeatils' => $secDeatils, 'trsDeatils' => $trsDeatils];
+            $data = ['countList' => $countList, 'activeChapterList' => $activeChapterList];
 
             return view('chapters.chapboardlist')->with($data);
         }
-    }
+    // }
 }

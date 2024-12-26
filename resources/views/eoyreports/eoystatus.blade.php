@@ -81,28 +81,28 @@
                                 @endif
                             </td>
                             <td>
-                                @if ($list->reg != "None")
-                                    {{ $list->conf }} / {{ $list->reg }}
+                                @if ($list->region->short_name != "None")
+                                    {{ $list->conference->short_name }} / {{ $list->region->short_name }}
                                 @else
-                                    {{ $list->conf }}
+                                    {{ $list->conference->short_name }}
                                 @endif
                             </td>
-                            <td>{{ $list->state }}</td>
+                            <td>{{ $list->state->state_short_name }}</td>
                             <td>{{ $list->name }}</td>
-                            <td @if($list->report_extension == '1') style="background-color: #ffc107;" @else style="background-color: transparent;" @endif>
-                                @if($list->report_extension == '1') YES @else @endif
+                            <td @if($list->documents->report_extension == '1') style="background-color: #ffc107;" @else style="background-color: transparent;" @endif>
+                                @if($list->documents->report_extension == '1') YES @else @endif
                             </td>
-                            <td @if($list->new_board_submitted == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                @if($list->new_board_submitted == '1') YES @else NO @endif
+                            <td @if($list->documents->new_board_submitted == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                @if($list->documents->new_board_submitted == '1') YES @else NO @endif
                             </td>
-                            <td @if($list->new_board_active == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                @if($list->new_board_active == '1') YES @else NO @endif
+                            <td @if($list->documents->new_board_active == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                @if($list->documents->new_board_active == '1') YES @else NO @endif
                             </td>
-                            <td @if($list->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                @if($list->financial_report_received == '1') YES @else NO @endif
+                            <td @if($list->documents->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                @if($list->documents->financial_report_received == '1') YES @else NO @endif
                             </td>
-                            <td @if($list->financial_report_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                @if($list->financial_report_complete == '1') YES @else NO @endif
+                            <td @if($list->documents->financial_report_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                @if($list->documents->financial_report_complete == '1') YES @else NO @endif
                             </td>
                         </tr>
                     @endforeach

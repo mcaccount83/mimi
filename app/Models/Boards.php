@@ -26,9 +26,14 @@ class Boards extends Model
         return $this->belongsTo(User::class,  'user_id', 'id');  // 'user_id' in boards BelongsTo 'id' in user
     }
 
-    public function chapters()
+    public function chapters(): BelongsTo
     {
         return $this->belongsTo(Chapters::class, 'chapter_id', 'id');  // 'chapter_id' in boards BelongsTo 'id' in chapters
+    }
+
+    public function stateName(): BelongsTo
+    {
+        return $this->belongsTo(State::class, 'state', 'state_short_name');  // 'state' in boards BelongsTo 'state_short_name' in state
     }
 
     public function borPosition(): BelongsTo

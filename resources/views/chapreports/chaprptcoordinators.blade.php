@@ -56,8 +56,14 @@
                             <td class="text-center align-middle">
                                 <a href="{{ url('/chapterdetails/' . $chapter->id) }}"><i class="fas fa-eye"></i></a>
                             </td>
-                            <td>{{ $chapter->conf }} / {{ $chapter->reg }}</td>
-                            <td>{{ $chapter->state }}</td>
+                            <td>
+                                @if ($chapter->region->short_name != "None")
+                                    {{ $chapter->conference->short_name }} / {{ $chapter->region->short_name }}
+                                @else
+                                    {{ $chapter->conference->short_name }}
+                                @endif
+                            </td>
+                            <td>{{ $chapter->state->state_short_name }}</td>
                             <td>{{ $chapter->name }}</td>
                             @for ($posRow = 7; $posRow > 0; $posRow--)
                                 @php $positionFound = false; @endphp

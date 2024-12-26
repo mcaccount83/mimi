@@ -3,6 +3,17 @@
 @section('page_title', 'BoardList')
 @section('breadcrumb', 'BoardList Emails')
 
+<style>
+    .email-table .email-column {
+        max-width: 150px; /* Adjust as needed */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+</style>
+
+
 @section('content')
     <!-- Main content -->
      <section class="content">
@@ -15,7 +26,7 @@
                 </div>
                 <!-- /.card-header -->
             <div class="card-body">
-              <table id="chapterlist" class="table table-sm table-hover">
+              <table id="chapterlist" class="table table-sm table-hover email-table">
               <thead>
 			    <tr>
 			      <th>Conf/Reg</th>
@@ -33,20 +44,20 @@
                 @foreach($activeChapterList as $list)
                   <tr>
                     <td>
-                        @if ($list->reg != "None")
-                            {{ $list->conf }} / {{ $list->reg }}
+                        @if ($list->region->short_name != "None")
+                            {{ $list->conference->short_name }} / {{ $list->region->short_name }}
                         @else
-                            {{ $list->conf }}
+                            {{ $list->conference->short_name }}
                         @endif
                     </td>
-                    <td>{{ $list->state }}</td>
+                    <td>{{ $list->state->state_short_name }}</td>
                     <td>{{ $list->name }}</td>
-                    <td>{{ $list->chapter_email }}</td>
-                    <td>{{ $list->pre_email }}</td>
-                    <td>{{ $list->avp_email }}</td>
-                    <td>{{ $list->mvp_email }}</td>
-                    <td>{{ $list->sec_email }}</td>
-                    <td>{{ $list->trs_email }}</td>
+                    <td class="email-column"><a href="mailto:{{ $list->email?? null }}">{{ $list->email?? null }}</a></td>
+                    <td class="email-column"><a href="mailto:{{ $list->president->email }}">{{ $list->president->email }}</a></td>
+                    <td class="email-column"><a href="mailto:{{ $list->avp->email?? null }}">{{ $list->avp->email?? null }}</a></td>
+                    <td class="email-column"><a href="mailto:{{ $list->mvp->email?? null }}">{{ $list->mvp->email?? null }}</a></td>
+                    <td class="email-column"><a href="mailto:{{ $list->secretary->email?? null }}">{{ $list->secretary->email?? null }}</a></td>
+                    <td class="email-column"><a href="mailto:{{ $list->treasurer->email?? null }}">{{ $list->treasurer->email?? null }}</a></td>
 			      </tr>
                   @endforeach
                   </tbody>

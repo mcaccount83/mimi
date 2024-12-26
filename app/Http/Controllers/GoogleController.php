@@ -61,8 +61,8 @@ class GoogleController extends Controller
     {
         try {
             $chapter = DB::table('chapters as ch')
-                ->select('ch.conference', 'ch.state', 'ch.ein', 'ch.name', 'st.state_short_name as state')
-                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->select('ch.conference_id', 'ch.state_id', 'ch.ein', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state_id', '=', 'st.id')
                 ->where('ch.is_active', '=', '1')
                 ->where('ch.id', '=', $id)
                 ->first();
@@ -438,8 +438,8 @@ class GoogleController extends Controller
     {
         try {
             $chapter = DB::table('chapters as ch')
-                ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
-                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->select('ch.conference_id', 'ch.state_id', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state_id', '=', 'st.id')
                 ->where('ch.is_active', '=', '1')
                 ->where('ch.id', '=', $id)
                 ->first();
@@ -522,8 +522,8 @@ class GoogleController extends Controller
     {
         try {
             $chapter = DB::table('chapters as ch')
-                ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
-                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->select('ch.conference_id', 'ch.state_id', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state_id', '=', 'st.id')
                 ->where('ch.is_active', '=', '1')
                 ->where('ch.id', '=', $id)
                 ->first();
@@ -606,8 +606,8 @@ class GoogleController extends Controller
     {
         try {
             $chapter = DB::table('chapters as ch')
-                ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
-                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->select('ch.conference_id', 'ch.state_id', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state_id', '=', 'st.id')
                 ->where('ch.is_active', '=', '1')
                 ->where('ch.id', '=', $id)
                 ->first();
@@ -690,8 +690,8 @@ class GoogleController extends Controller
     {
         try {
             $chapter = DB::table('chapters as ch')
-                ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
-                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->select('ch.conference_id', 'ch.state_id', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state_id', '=', 'st.id')
                 ->where('ch.is_active', '=', '1')
                 ->where('ch.id', '=', $id)
                 ->first();
@@ -771,8 +771,8 @@ class GoogleController extends Controller
     {
         try {
             $chapter = DB::table('chapters as ch')
-                ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
-                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->select('ch.conference_id', 'ch.state_id', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state_id', '=', 'st.id')
                 ->where('ch.is_active', '=', '1')
                 ->where('ch.id', '=', $id)
                 ->first();
@@ -846,8 +846,8 @@ class GoogleController extends Controller
     {
         try {
             $chapter = DB::table('chapters as ch')
-                ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
-                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->select('ch.conference_id', 'ch.state_id', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state_id', '=', 'st.id')
                 ->where('ch.is_active', '=', '1')
                 ->where('ch.id', '=', $id)
                 ->first();
@@ -921,8 +921,8 @@ class GoogleController extends Controller
     {
         try {
             $chapter = DB::table('chapters as ch')
-                ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
-                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->select('ch.conference_id', 'ch.state_id', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state_id', '=', 'st.id')
                 ->where('ch.is_active', '=', '1')
                 ->where('ch.id', '=', $id)
                 ->first();
@@ -996,8 +996,8 @@ class GoogleController extends Controller
     {
         try {
             $chapter = DB::table('chapters as ch')
-                ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
-                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->select('ch.conference_id', 'ch.state_id', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state_id', '=', 'st.id')
                 ->where('ch.is_active', '=', '1')
                 ->where('ch.id', '=', $id)
                 ->first();
@@ -1071,8 +1071,8 @@ class GoogleController extends Controller
     {
         try {
             $chapter = DB::table('chapters as ch')
-                ->select('ch.conference', 'ch.state', 'ch.name', 'st.state_short_name as state')
-                ->leftJoin('state as st', 'ch.state', '=', 'st.id')
+                ->select('ch.conference_id', 'ch.state_id', 'ch.name', 'st.state_short_name as state')
+                ->leftJoin('state as st', 'ch.state_id', '=', 'st.id')
                 ->where('ch.is_active', '=', '1')
                 ->where('ch.id', '=', $id)
                 ->first();

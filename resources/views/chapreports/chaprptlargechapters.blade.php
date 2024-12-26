@@ -48,13 +48,13 @@
                   <tr>
                     <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                     <td>
-                                @if ($list->reg != "None")
-                                    {{ $list->conf }} / {{ $list->reg }}
-                                @else
-                                    {{ $list->conf }}
-                                @endif
-                            </td>
-                            <td>{{ $list->state }}</td>
+                        @if ($list->region->short_name != "None")
+                            {{ $list->conference->short_name }} / {{ $list->region->short_name }}
+                        @else
+                            {{ $list->conference->short_name }}
+                        @endif
+                    </td>
+                    <td>{{ $list->state->state_short_name }}</td>
                         <td>{{ $list->name }}</td>
                         <td>{{ $list->members_paid_for }}</td>
 						<td><span class="date-mask">{{ $list->dues_last_paid }}</span></td>

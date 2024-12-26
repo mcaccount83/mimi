@@ -61,16 +61,16 @@ class PaymentController extends Controller
 
         $baseQuery = DB::table('chapters as ch')
             ->select(
-                'ch.id', 'ch.members_paid_for', 'ch.notes', 'ch.name', 'ch.state', 'ch.reg_notes', 'ch.next_renewal_year', 'ch.dues_last_paid', 'ch.start_month_id',
+                'ch.id', 'ch.members_paid_for', 'ch.notes', 'ch.name', 'ch.state_id', 'ch.reg_notes', 'ch.next_renewal_year', 'ch.dues_last_paid', 'ch.start_month_id',
                 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name', 'cf.short_name as conf', 'rg.short_name as reg',
                 'ct.name as countryname', 'st.state_long_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
-            ->join('country as ct', 'ch.country', '=', 'ct.short_name')
-            ->join('state as st', 'ch.state', '=', 'st.id')
-            ->join('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->join('region as rg', 'ch.region', '=', 'rg.id')
+            ->join('country as ct', 'ch.country_short_name', '=', 'ct.short_name')
+            ->join('state as st', 'ch.state_id', '=', 'st.id')
+            ->join('conference as cf', 'ch.conference_id', '=', 'cf.id')
+            ->join('region as rg', 'ch.region_id', '=', 'rg.id')
             ->leftJoin('month as db', 'ch.start_month_id', '=', 'db.id')
             ->where('ch.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1');
@@ -78,9 +78,9 @@ class PaymentController extends Controller
         if ($conditions['founderCondition']) {
 
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('ch.conference', '=', $corConfId);
+            $baseQuery->where('ch.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('ch.region', '=', $corRegId);
+            $baseQuery->where('ch.region_id', '=', $corRegId);
         } else {
             $baseQuery->whereIn('ch.primary_coordinator_id', $inQryArr);
         }
@@ -100,7 +100,7 @@ class PaymentController extends Controller
         if (isset($_GET['check']) && $_GET['check'] == 'yes') {
             $checkBoxStatus = 'checked';
             $baseQuery
-                ->orderBy('ch.conference')
+                ->orderBy('ch.conference_id')
                 ->orderBy('st.state_short_name')
                 ->orderBy('ch.name');
         } else {
@@ -108,7 +108,7 @@ class PaymentController extends Controller
             $baseQuery
                 ->orderByDesc('ch.next_renewal_year')
                 ->orderByDesc('ch.start_month_id')
-                ->orderBy('ch.conference')
+                ->orderBy('ch.conference_id')
                 ->orderBy('st.state_short_name')
                 ->orderBy('ch.name');
         }
@@ -161,8 +161,8 @@ class PaymentController extends Controller
 
         $chapters = Chapters::select('chapters.*', 'chapters.name as chapter_name', 'state.state_short_name as chapter_state',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month', )
-            ->join('state', 'chapters.state', '=', 'state.id')
-            ->where('chapters.conference', $corConfId)
+            ->join('state', 'chapters.state_id', '=', 'state.id')
+            ->where('chapters.conference_id', $corConfId)
             ->where('chapters.start_month_id', $month)
             ->where('chapters.next_renewal_year', $year)
             ->where('chapters.is_active', 1)
@@ -276,10 +276,10 @@ class PaymentController extends Controller
         $chapters = Chapters::select('chapters.*', 'chapters.name as chapter_name', 'state.state_short_name as chapter_state', 'boards.email as bor_email',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
             'boards.board_position_id')
-            ->join('state', 'chapters.state', '=', 'state.id')
+            ->join('state', 'chapters.state_id', '=', 'state.id')
             ->join('boards', 'chapters.id', '=', 'boards.chapter_id')
             ->whereIn('boards.board_position_id', [1, 2, 3, 4, 5])
-            ->where('chapters.conference', $corConfId)
+            ->where('chapters.conference_id', $corConfId)
             ->where(function ($query) use ($month, $year) {
                 if ($month == 1) {
                     // January, so get chapters with December start_month_id
@@ -382,18 +382,18 @@ class PaymentController extends Controller
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
-            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1');
 
         if ($conditions['founderCondition']) {
 
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference', '=', $corConfId);
+            $baseQuery->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region', '=', $corRegId);
+            $baseQuery->where('chapters.region_id', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -435,9 +435,9 @@ class PaymentController extends Controller
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
-            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
+            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->orderBy('st.state_short_name')
@@ -481,10 +481,10 @@ class PaymentController extends Controller
                 'ct.name as countryname', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth',
                 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'cd.conference_id as cor_confid')
             ->join('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
-            ->join('country as ct', 'ch.country', '=', 'ct.short_name')
-            ->join('state as st', 'ch.state', '=', 'st.id')
-            ->join('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->join('region as rg', 'ch.region', '=', 'rg.id')
+            ->join('country as ct', 'ch.country_short_name', '=', 'ct.short_name')
+            ->join('state as st', 'ch.state_id', '=', 'st.id')
+            ->join('conference as cf', 'ch.conference_id', '=', 'cf.id')
+            ->join('region as rg', 'ch.region_id', '=', 'rg.id')
             ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
             ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
             // ->where('ch.is_active', '=', '1')
@@ -492,8 +492,8 @@ class PaymentController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->get();
 
-        $chConfId = $chapterList[0]->conference;
-        $chRegId = $chapterList[0]->region;
+        $chConfId = $chapterList[0]->conference_id;
+        $chRegId = $chapterList[0]->region_id;
         $chPCid = $chapterList[0]->primary_coordinator_id;
 
         // Load Active Status for Active/Zapped Visibility
@@ -519,12 +519,12 @@ class PaymentController extends Controller
             ->orderBy('cd.first_name')
             ->get();
 
-        $chConfId = $chapterList[0]->conference;
-        $chRegId = $chapterList[0]->region;
+        $chConfId = $chapterList[0]->conference_id;
+        $chRegId = $chapterList[0]->region_id;
         $chPCid = $chapterList[0]->primary_coordinator_id;
 
         $statusbWords = ['1' => 'Operating OK', '4' => 'On Hold Do not Refer', '5' => 'Probation', '6' => 'Probation Do Not Refer'];
-        $chapterStatus = $chapterList[0]->status;
+        $chapterStatus = $chapterList[0]->status_id;
         $chapterStatusinWords = $statusbWords[$chapterStatus] ?? 'Status Unknown';
 
         $webStatusArr = ['0' => 'Website Not Linked', '1' => 'Website Linked', '2' => 'Add Link Requested', '3' => 'Do Not Link'];
@@ -1212,8 +1212,8 @@ class PaymentController extends Controller
     {
         $chapterDetails = Chapters::find($chapterId)
             ->select('chapters.id as id', 'chapters.name as chapter_name', 'st.state_short_name as state',
-                'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                'chapters.conference_id as conf', 'chapters.primary_coordinator_id as pcid')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->first();
 

@@ -47,27 +47,27 @@
                   <tr>
                     <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                     <td>
-                                @if ($list->reg != "None")
-                                    {{ $list->conf }} / {{ $list->reg }}
-                                @else
-                                    {{ $list->conf }}
-                                @endif
-                            </td>
-                            <td>{{ $list->ch_state }}</td>
-                        <td>{{ $list->ch_name }}</td>
-                        <td data-sort="{{ $list->year . '-' . str_pad($list->start_month, 2, '0', STR_PAD_LEFT) }}">
-                            {{ $list->start_month }} {{ $list->year }}
+                        @if ($list->region->short_name != "None")
+                            {{ $list->conference->short_name }} / {{ $list->region->short_name }}
+                        @else
+                            {{ $list->conference->short_name }}
+                        @endif
+                    </td>
+                    <td>{{ $list->state->state_short_name }}</td>
+                        <td>{{ $list->name }}</td>
+                        <td data-sort="{{ $list->start_year . '-' . str_pad($list->start_month_id, 2, '0', STR_PAD_LEFT) }}">
+                            {{ $list->startMonth->month_short_name }} {{ $list->start_year }}
                         </td>
-                        <td  @if($list->ein_letter_path != null)style="background-color: transparent;"
+                        <td  @if($list->documents->ein_letter_path != null)style="background-color: transparent;"
                             @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->ein_letter_path != null)
+                            @if($list->documents->ein_letter_path != null)
                                 YES
                             @else
                                 NO
                             @endif
                         </td>
 
-						<td>{{ $list->cor_fname }} {{ $list->cor_lname }}</td>
+                        <td>{{ $list->primaryCoordinator->first_name }} {{ $list->primaryCoordinator->last_name }}</td>
 			        </tr>
                   @endforeach
                   </tbody>

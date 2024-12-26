@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Chapters;
 use App\Models\FinancialReport;
+use App\Models\Resources;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,45 +58,57 @@ class HomeController extends Controller
         if ($user_type == 'outgoing') {
             //Send to Financial Report without Menus
             $user = User::with('outgoing')->find($request->user()->id);
-            $userName = $user['first_name'].' '.$user['last_name'];
-            $userEmail = $user['email'];
-            $borDetails = $user->outgoing;
+            $userName = $user->first_name.' '.$user->last_name;
+            $userEmail = $user->email;
+            $loggedInName = $user->first_name.' '.$user->last_name;
 
-            $chapterId = $borDetails['chapter_id'];
-            $chapterDetails = Chapters::find($chapterId);
-            $request->session()->put('chapterid', $chapterId);
+            $bdDetails = $user->outgoing;
+            $chId = $bdDetails->chapter_id;
+            $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'status', 'documents', 'financialReport', 'boards'])->find($chId);
 
-            $loggedInName = $borDetails->first_name.' '.$borDetails->last_name;
-            $financial_report_array = FinancialReport::find($chapterId);
+            $financialReport = $chDetails->financialReport;
+            $documents = $chDetails->documents;
+            $submitted = $chDetails->documents->financial_report_received;
 
-            $chapterDetails = DB::table('chapters')
-                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state', 'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-                ->where('chapters.is_active', '=', '1')
-                ->where('chapters.id', '=', $chapterId)
-                ->get();
+            // $chapterId = $borDetails['chapter_id'];
+            // $chapterDetails = Chapters::find($chapterId);
 
-            $resources = DB::table('resources')
-                ->select('resources.*',
-                    DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),
-                    DB::raw('CASE
-                    WHEN category = 1 THEN "BYLAWS"
-                    WHEN category = 2 THEN "FACT SHEETS"
-                    WHEN category = 3 THEN "COPY READY MATERIAL"
-                    WHEN category = 4 THEN "IDEAS AND INSPIRATION"
-                    WHEN category = 5 THEN "CHAPTER RESOURCES"
-                    WHEN category = 6 THEN "SAMPLE CHPATER FILES"
-                    WHEN category = 7 THEN "END OF YEAR"
-                    ELSE "Unknown"
-                END as priority_word'))
-                ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
-                ->orderBy('name')
-                ->get();
+            // $request->session()->put('chapterid', $chapterId);
 
-            $submitted = $chapterDetails[0]->financial_report_received;
+            // $loggedInName = $borDetails->first_name.' '.$borDetails->last_name;
+            // $financial_report_array = FinancialReport::find($chapterId);
 
-            $data = ['financial_report_array' => $financial_report_array, 'submitted' => $submitted, 'loggedInName' => $loggedInName, 'chapterDetails' => $chapterDetails, 'user_type' => $user_type,
-                'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources];
+
+            // $chapterDetails = DB::table('chapters')
+            //     ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state', 'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
+            //     ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
+            //     ->where('chapters.is_active', '=', '1')
+            //     ->where('chapters.id', '=', $chapterId)
+            //     ->get();
+
+            $resources = Resources::with('category')->get();
+
+            // $resources = DB::table('resources')
+            //     ->select('resources.*',
+            //         DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),
+            //         DB::raw('CASE
+            //         WHEN category = 1 THEN "BYLAWS"
+            //         WHEN category = 2 THEN "FACT SHEETS"
+            //         WHEN category = 3 THEN "COPY READY MATERIAL"
+            //         WHEN category = 4 THEN "IDEAS AND INSPIRATION"
+            //         WHEN category = 5 THEN "CHAPTER RESOURCES"
+            //         WHEN category = 6 THEN "SAMPLE CHPATER FILES"
+            //         WHEN category = 7 THEN "END OF YEAR"
+            //         ELSE "Unknown"
+            //     END as priority_word'))
+            //     ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
+            //     ->orderBy('name')
+            //     ->get();
+
+            // $submitted = $chapterDetails[0]->financial_report_received;
+
+            $data = ['financialReport' => $financialReport, 'submitted' => $submitted, 'loggedInName' => $loggedInName, 'chDetails' => $chDetails, 'user_type' => $user_type,
+                'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'documents' => $documents];
 
             return view('boards.financial')->with($data);
 

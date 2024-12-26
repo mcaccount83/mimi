@@ -43,6 +43,7 @@
               <thead>
 			    <tr>
 					<th>Details</th>
+                    <th>Conf/Reg</th>
                     <th>State</th>
                     <th>Chapter Name</th>
                     <th>Boundaries</th>
@@ -55,11 +56,18 @@
                 @foreach($inquiriesList as $list)
                   <tr>
                     <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
-                        <td>{{ $list->state }}</td>
-                        <td>{{ $list->chapter_name }}</td>
-                        <td>{{ $list->terry }}</td>
-                        <td>{{ $list->inq_note }}</td>
-                        <td>{{ $list->inq_con }}</td>
+                    <td>
+                        @if ($list->region?->short_name && $list->region->short_name != "None")
+                            {{ $list->conference->short_name }} / {{ $list->region->short_name }}
+                        @else
+                            {{ $list->conference->short_name }}
+                        @endif
+                    </td>
+                    <td>{{ $list->state->state_short_name }}</td>
+                    <td>{{ $list->name }}</td>
+                    <td>{{ $list->territory }}</td>
+                    <td>{{ $list->inquiries_note }}</td>
+                        <td>{{ $list->inquiries_contact }}</td>
                   @endforeach
                   </tbody>
                 </table>

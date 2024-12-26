@@ -42,8 +42,7 @@
                     <th>State</th>
                     <th>Name</th>
                     <th>EIN</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
+                    <th>President</th>
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Primary Coordinator</th>
@@ -63,22 +62,21 @@
                                 <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $list->name . ', ' . $list->state) }}"><i class="far fa-envelope"></i></a></td>
                            </td>
                             <td>
-                                @if ($list->reg != "None")
-                                    {{ $list->conf }} / {{ $list->reg }}
+                                @if ($list->region->short_name != "None")
+                                    {{ $list->conference->short_name }} / {{ $list->region->short_name }}
                                 @else
-                                    {{ $list->conf }}
+                                    {{ $list->conference->short_name }}
                                 @endif
                             </td>
-                            <td>{{ $list->state }}</td>
+                            <td>{{ $list->state->state_short_name }}</td>
                             <td>{{ $list->name }}</td>
                             <td>{{ $list->ein }}</td>
-                            <td>{{ $list->bor_f_name }}</td>
-                            <td>{{ $list->bor_l_name }}</td>
-                            <td>
-                                <a href="mailto:{{ $list->bor_email }}">{{ $list->bor_email }}</a>
+                            <td>{{ $list->president->first_name }} {{ $list->president->last_name }}</td>
+                            <td class="email-column">
+                                <a href="mailto:{{ $list->president->email }}">{{ $list->president->email }}</a>
                             </td>
-                            <td><span class="phone-mask">{{ $list->phone }}</span></td>
-                            <td>{{ $list->cor_f_name }} {{ $list->cor_l_name }}</td>
+                            <td><span class="phone-mask">{{ $list->president->phone }}</span></td>
+                            <td>{{ $list->primaryCoordinator->first_name }} {{ $list->primaryCoordinator->last_name }}</td>
                         </tr>
                     @endforeach
                 </tbody>

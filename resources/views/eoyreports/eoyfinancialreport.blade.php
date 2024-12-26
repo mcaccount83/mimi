@@ -51,7 +51,7 @@
                 <tbody>
                     @foreach($chapterList as $list)
                     @php
-                        $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->chap_id);
+                        $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
                         $emailListChap = $emailDetails['emailListChapString'];
                         $emailListCoord = $emailDetails['emailListCoordString'];
 
@@ -63,49 +63,44 @@
                     @endphp
                     <tr>
                         <td class="text-center align-middle">
-                            <a href="{{ url("/eoy/financialreportreview/{$list->chap_id}") }}"><i class="fas fa-edit"></i></a>
-                            {{-- <a href="{{ url("/eoy/financialreportview/{$list->chap_id}") }}"><i class="fas fa-edit"></i></a> --}}
+                            <a href="{{ url("/eoy/financialreportreview/{$list->id}") }}"><i class="fas fa-edit"></i></a>
                         </td>
                         <td class="text-center align-middle">
-                            @if($list->financial_report_received == '1' && $list->financial_pdf_path != null)
-                                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $list->financial_pdf_path }}"><i class="far fa-file-pdf"></i></a>
+                            @if($list->documents->financial_report_received == '1' && $list->documents->financial_pdf_path != null)
+                                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id={{ $list->documents->financial_pdf_path }}"><i class="far fa-file-pdf"></i></a>
                             @endif
                         </td>
                         <!-- Email link to be dynamically populated via AJAX -->
                         <td class="text-center align-middle">
-                            @if($list->financial_report_received == null || $list->financial_report_received == 0)
+                            @if($list->documents->financial_report_received == null || $list->documents->financial_report_received == 0)
                             <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Financial Report Reminder | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ rawurlencode($mailMessage) }}"><i class="far fa-envelope"></i></a>
                             @endif
                         </td>
                         <td>
-                            @if ($list->reg != "None")
-                                {{ $list->conf }} / {{ $list->reg }}
+                            @if ($list->region->short_name != "None")
+                                {{ $list->conference->short_name }} / {{ $list->region->short_name }}
                             @else
-                                {{ $list->conf }}
+                                {{ $list->conference->short_name }}
                             @endif
                         </td>
-                        <td>{{ $list->state }}</td>
+                        <td>{{ $list->state->state_short_name }}</td>
                         <td>{{ $list->name }}</td>
                         <td>{{ $list->fname }} {{ $list->lname }}</td>
                         <td>{{ $list->pcfname }} {{ $list->pclname }}</td>
-                        <td style="{{ $list->report_extension == '1' ? 'background-color: #ffc107;' : 'background-color: transparent;' }}">
-                            {{ $list->report_extension == '1' ? 'YES' : '' }}
+                        <td @if($list->documents->report_extension == '1') style="background-color: #ffc107;" @else style="background-color: transparent;" @endif>
+                            @if($list->documents->report_extension == '1') YES @else @endif
                         </td>
-                        <td style="{{ $list->financial_report_received == '1' ? 'background-color: transparent;' : 'background-color:#dc3545; color: #ffffff;' }}">
-                            {{ $list->financial_report_received == '1' ? 'YES' : 'NO' }}
+                        <td @if($list->documents->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documents->financial_report_received == '1') YES @else NO @endif
                         </td>
-                        <td style="{{ $list->financial_report_received == '1' ? 'background-color: transparent;' : 'background-color:#dc3545; color: #ffffff;' }}">
-                            @if($list->financial_report_received != null)
-                                <span class="date-mask">{{ $list->report_received }}</span>
-                            @endif
+                        <td @if($list->documents->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documents->financial_report_received != null)<span class="date-mask">{{ $list->documents->report_received }}</span>@endif
                         </td>
-                        <td style="{{ $list->report_complete == '1' ? 'background-color: transparent;' : 'background-color:#dc3545; color: #ffffff;' }}">
-                            {{ $list->report_complete == '1' ? 'YES' : 'NO' }}
+                        <td @if($list->documents->financial_report_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documents->financial_report_complete == '1') YES @else NO @endif
                         </td>
-                        <td style="{{ $list->report_complete == '1' ? 'background-color: transparent;' : 'background-color:#dc3545; color: #ffffff;' }}">
-                            @if($list->review_complete != null)
-                                <span class="date-mask">{{ $list->review_complete }}</span>
-                            @endif
+                        <td @if($list->documents->financial_report_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documents->review_complete != null)<span class="date-mask">{{ $list->documents->review_complete }}</span>@endif
                         </td>
                     </tr>
                     @endforeach
@@ -115,13 +110,13 @@
             <!-- /.card-body -->
                 <div class="col-sm-12">
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
+                        <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBox2Status}} onchange="showPrimary()" />
                         <label class="custom-control-label" for="showPrimary">Only show chapters I am Assigned Reviewer for</label>
                     </div>
                 </div>
                 <div class="col-sm-12">
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" name="show2Primary" id="show2Primary" class="custom-control-input" {{$checkBox2Status}} onchange="show2Primary()" />
+                        <input type="checkbox" name="show2Primary" id="show2Primary" class="custom-control-input" {{$checkBoxStatus}} onchange="show2Primary()" />
                         <label class="custom-control-label" for="show2Primary">Only show chapters I am primary for</label>
                     </div>
                 </div>

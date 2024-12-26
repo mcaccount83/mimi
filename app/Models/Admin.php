@@ -9,12 +9,13 @@ class Admin extends Model
 {
     use HasFactory;
 
+    protected $table = 'admin';
+
+    protected $primaryKey = 'id';
+
     protected $fillable = [
         'eoy_testers', 'eoy_coordinators', 'checklist',
 
     ];
 
-    protected $table = 'admin';
-
-    protected $primaryKey = 'id';
 }

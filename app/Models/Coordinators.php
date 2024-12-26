@@ -21,7 +21,7 @@ class Coordinators extends Model
         'name', 'email',
     ];
 
-    public function coorTree(): HasOne
+    public function coordTree(): HasOne
     {
         return $this->hasOne(CoordinatorTree::class, 'coordinator_id', 'id');  // 'coordinator_id' in coordinator_tree HasOne 'id' in coordinators
     }
@@ -48,7 +48,7 @@ class Coordinators extends Model
 
     public function state(): BelongsTo
     {
-        return $this->belongsTo(State::class, 'state_id', 'id');  // 'state_id' in coordinators BelongsTo 'id' in state
+        return $this->belongsTo(State::class, 'state', 'id');  // 'state' in coordinators BelongsTo 'id' in state
     }
 
     public function region(): BelongsTo
@@ -63,7 +63,7 @@ class Coordinators extends Model
 
     public function country(): BelongsTo
     {
-        return $this->belongsTo(Country::class, 'country_short_name', 'short_name');  // 'country_short_name' in coordinators BelongsTo 'id' in country
+        return $this->belongsTo(Country::class, 'country', 'short_name');  // 'country_short_name' in coordinators BelongsTo 'id' in country
     }
 
     public function birthdayMonth(): BelongsTo

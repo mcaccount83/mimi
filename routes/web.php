@@ -149,6 +149,9 @@ Route::post('/chapter/warningpartyletter', [PDFController::class, 'saveWarningPa
 Route::get('/chapter/probationreleaseletter/pdf/{id}', [PDFController::class, 'generateProbationReleaseLetter'])->name('pdf.probationrelease');
 Route::post('/chapter/probationreleaseletter', [PDFController::class, 'saveProbationReleaseLetter'])->name('pdf.saveprobationrelease');
 
+Route::post('/generate-probation-letter', [PDFController::class, 'saveProbationLetter'])->name('pdf.generateProbationLetter');
+
+
 // Google Controller -- Uploading Files Routes...
 Route::post('/files/storeEIN/{id}', [GoogleController::class, 'storeEIN']);
 Route::post('/files/storeRoster/{id}', [GoogleController::class, 'storeRoster']);
@@ -186,7 +189,7 @@ Route::get('/chapterboardedit/{id}', [ChapterController::class, 'editChapterBoar
 Route::post('/chapterboardupdate/{id}', [ChapterController::class, 'updateChapterBoard'])->name('chapters.updateboard');
 
 Route::get('/chapter/website', [ChapterController::class, 'showChapterWebsite'])->name('chapters.chapwebsite');
-Route::get('/chapter/socialmedia', [ChapterReportController::class, 'showRptSocialMedia'])->name('chapreports.chaprptsocialmedia');
+Route::get('/chapter/socialmedia', [ChapterController::class, 'showRptSocialMedia'])->name('chapreports.chaprptsocialmedia');
 Route::get('/chapterwebsiteedit/{id}', [ChapterController::class, 'editChapterWebsite'])->name('chapters.editwebsite');
 Route::post('/chapterwebsiteupdate/{id}', [ChapterController::class, 'updateChapterWebsite'])->name('chapters.updatewebsite');
 Route::get('/chapter/boardlist', [ChapterController::class, 'showChapterBoardlist'])->name('chapters.chapboardlist');

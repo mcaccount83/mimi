@@ -7,6 +7,7 @@ use App\Mail\EOYFinancialReportReminder;
 use App\Mail\EOYLateReportReminder;
 use App\Mail\EOYReviewrAssigned;
 use App\Models\Chapters;
+use App\Models\State;
 use App\Models\FinancialReport;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -29,73 +30,65 @@ class EOYReportController extends Controller
     }
 
     /**
-     * View the EOY Status list
+     * Active Chapter List Base Query
      */
-    public function showEOYStatus(Request $request): View
+    public function getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid)
     {
-        $user = $request->user();
-        $lastUpdatedBy = $user->first_name.' '.$user->last_name;
-        //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-        $request->session()->put('positionid', $positionId);
-        $request->session()->put('secpositionid', $secPositionId);
-        $request->session()->put('corregid', $corRegId);
-
-        // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
-
+        $conditions = getPositionConditions($cdPositionid, $cdSecPositionid);
         if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
+            $coordinatorData = $this->userController->loadReportingTree($cdId);
             $inQryArr = $coordinatorData['inQryArr'];
         }
 
-        $year = date('Y');
-
-        $baseQuery = DB::table('chapters')
-            ->select('chapters.*', 'rg.short_name as region', 'st.state_short_name as state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname',
-                'rg.short_name as reg', 'cf.short_name as conf')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
-            ->join('region as rg', 'rg.id', '=', 'chapters.region')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->where('chapters.is_active', '=', '1')
-            ->where('bd.board_position_id', '=', '1')
+        $baseQuery = Chapters::with(['state', 'conference', 'region', 'president', 'documents', 'financialReport', 'primaryCoordinator'])
+            ->where('is_active', 1)
             ->where(function ($query) {
                 $query->where('created_at', '<=', date('Y-06-30'))
                     ->orWhereNull('created_at');
             });
 
         if ($conditions['founderCondition']) {
-
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference', '=', $corConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region', '=', $corRegId);
-        } else {
-            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
+            } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+                $baseQuery->where('conference_id', '=', $cdConfId);
+            } elseif ($conditions['regionalCoordinatorCondition']) {
+                $baseQuery->where('region_id', '=', $cdRegId);
+            } else {
+                $baseQuery->whereIn('primary_coordinator_id', $inQryArr);
         }
 
         if (isset($_GET['check']) && $_GET['check'] == 'yes') {
             $checkBoxStatus = 'checked';
-            $baseQuery->where('chapters.primary_coordinator_id', '=', $corId)
-                ->orderBy('st.state_short_name')
-                ->orderBy('chapters.name');
+            $baseQuery->where('primary_coordinator_id', '=', $cdId);
         } else {
             $checkBoxStatus = '';
-            $baseQuery->orderBy('st.state_short_name')
-                ->orderBy('chapters.name');
         }
 
-        $chapterList = $baseQuery->get();
+        $baseQuery->orderBy(State::select('state_short_name')
+            ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+            ->orderBy('chapters.name', 'asc');
 
-        $row_count = count($chapterList);
+        return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus];
+
+    }
+
+    /**
+     * View the EOY Status list
+     */
+    public function showEOYStatus(Request $request): View
+    {
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
+        $cdSecPositionid = $cdDetails->sec_position_id;
+
+        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $chapterList = $baseQuery['query']->get();
+        $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
         $countList = count($chapterList);
         $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
@@ -116,13 +109,13 @@ class EOYReportController extends Controller
         //Get Chapter List mapped with login coordinator
         $chapters = Chapters::select('chapters.*', 'chapters.name as name', 'state.state_short_name as state',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month', )
-            ->join('state', 'chapters.state', '=', 'state.id')
+            ->join('state', 'chapters.state_id', '=', 'state.id')
             ->join('financial_report', 'chapters.id', '=', 'financial_report.chapter_id')
             ->where('financial_report.reviewer_id', null)
             ->where(function ($query) {
                 $query->where('chapters.report_extension', '=', '0')
                     ->orWhereNull('chapters.report_extension');
-            })->where('chapters.conference', $corConfId)
+            })->where('chapters.conference_id', $corConfId)
             ->where(function ($query) {
                 $query->where('chapters.new_board_submitted', '=', '0')
                     ->orWhereNull('chapters.new_board_submitted')
@@ -212,7 +205,7 @@ class EOYReportController extends Controller
         $corConfId = $corDetails['conference_id'];
 
         $chapterList = DB::table('chapters as ch')
-            ->select('ch.id', 'ch.name', 'ch.state', 'ch.region', 'ch.new_board_submitted', 'ch.new_board_active', 'ch.financial_report_received', 'financial_report_complete',
+            ->select('ch.id', 'ch.name', 'ch.state_id', 'ch.region_id', 'ch.new_board_submitted', 'ch.new_board_active', 'ch.financial_report_received', 'financial_report_complete',
                 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id',
                 'ch.report_extension', 'ch.extension_notes')
             ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
@@ -296,67 +289,20 @@ class EOYReportController extends Controller
      */
     public function showEOYBoardReport(Request $request)
     {
-        $user = $request->user();
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
         $lastUpdatedBy = $user->first_name.' '.$user->last_name;
-        //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-        $request->session()->put('positionid', $positionId);
-        $request->session()->put('secpositionid', $secPositionId);
-        $request->session()->put('corconfid', $corConfId);
 
-        // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
+        $cdSecPositionid = $cdDetails->sec_position_id;
 
-        if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
-
-        $year = date('Y');
-
-        $baseQuery = DB::table('chapters')
-            ->select('chapters.*', 'rg.short_name as region', 'st.state_short_name as state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname',
-                'rg.short_name as reg', 'cf.short_name as conf')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
-            ->join('region as rg', 'rg.id', '=', 'chapters.region')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->where('chapters.is_active', '=', '1')
-            ->where('bd.board_position_id', '=', '1')
-            ->where(function ($query) {
-                $query->where('created_at', '<=', date('Y-06-30'))
-                    ->orWhereNull('created_at');
-            });
-
-        if ($conditions['founderCondition']) {
-
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference', '=', $corConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region', '=', $corRegId);
-        } else {
-            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
-        }
-
-        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-            $checkBoxStatus = 'checked';
-            $baseQuery->where('chapters.primary_coordinator_id', '=', $corId)
-                ->orderBy('st.state_short_name')
-                ->orderBy('chapters.name');
-        } else {
-            $checkBoxStatus = '';
-            $baseQuery->orderBy('st.state_short_name')
-                ->orderBy('chapters.name');
-        }
-
-        $chapterList = $baseQuery->get();
+        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $chapterList = $baseQuery['query']->get();
+        $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
         $row_count = count($chapterList);
 
@@ -400,8 +346,8 @@ class EOYReportController extends Controller
         $chapters = Chapters::select('chapters.*', 'chapters.name as name', 'state.state_short_name as state',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
         )
-            ->join('state', 'chapters.state', '=', 'state.id')
-            ->where('chapters.conference', $corConfId)
+            ->join('state', 'chapters.state_id', '=', 'state.id')
+            ->where('chapters.conference_id', $corConfId)
             ->where('chapters.is_active', 1)
             ->where(function ($query) {
                 $query->where('chapters.new_board_submitted', '=', '0')
@@ -498,7 +444,7 @@ class EOYReportController extends Controller
         $chapterState = $chapterState[0]->state_short_name;
 
         $chapterList = DB::table('chapters as ch')
-            ->select('ch.id', 'ch.name', 'ch.state', 'ch.territory', 'ch.boundary_issues', 'ch.boundary_issue_notes', 'ch.inquiries_contact', 'ch.website_url', 'ch.website_status',
+            ->select('ch.id', 'ch.name', 'ch.state_id', 'ch.territory', 'ch.boundary_issues', 'ch.boundary_issue_notes', 'ch.inquiries_contact', 'ch.website_url', 'ch.website_status',
                 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'ch.new_board_submitted')
             ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
             ->where('ch.is_active', '=', '1')
@@ -970,79 +916,102 @@ class EOYReportController extends Controller
      */
     public function showEOYFinancialReport(Request $request): View
     {
-        //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-        $request->session()->put('positionid', $positionId);
-        $request->session()->put('secpositionid', $secPositionId);
-        $request->session()->put('corconfid', $corConfId);
-        $request->session()->put('corregid', $corRegId);
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
+        $cdSecPositionid = $cdDetails->sec_position_id;
 
-        if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
-
-        $year = date('Y');
-
-        $baseQuery = DB::table('chapters as ch')
-            ->select('ch.id as chap_id', 'ch.primary_coordinator_id as primary_coordinator_id', 'ch.name as name', 'ch.financial_report_received as financial_report_received',
-                'ch.financial_report_complete as report_complete', 'ch.report_extension as report_extension', 'ch.extension_notes as extension_notes', 'cd.id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state',
-                'fr.submitted as report_received', 'fr.review_complete as review_complete', 'fr.post_balance as post_balance', 'fr.financial_pdf_path as financial_pdf_path', 'cd_reviewer.first_name as pcfname', 'cd_reviewer.last_name as pclname',
-                'rg.short_name as reg', 'cf.short_name as conf')
-            ->join('state as st', 'ch.state', '=', 'st.id')
-            ->leftJoin('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->leftJoin('region as rg', 'rg.id', '=', 'ch.region')
-            ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
-            ->leftJoin('coordinators as cd_reviewer', 'cd_reviewer.id', '=', 'fr.reviewer_id')
-            ->where(function ($query) {
-                $query->where('created_at', '<=', date('Y-06-30'))
-                    ->orWhereNull('created_at');
-            })
-            ->where('ch.is_active', 1);
-
-        if ($conditions['founderCondition']) {
-
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('ch.conference', '=', $corConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('ch.region', '=', $corRegId);
-        } else {
-            $baseQuery->whereIn('ch.primary_coordinator_id', $inQryArr);
-        }
-
-        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-            $checkBoxStatus = 'checked';
-            $baseQuery->where('fr.reviewer_id', $corId)
-                ->orderBy('st.state_short_name')
-                ->orderBy('ch.name');
-        } else {
-            $checkBoxStatus = '';
-            $baseQuery->orderBy('st.state_short_name')
-                ->orderBy('ch.name');
-        }
+        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $chapterList = $baseQuery['query']->get();
+        $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
         if (isset($_GET['check2']) && $_GET['check2'] == 'yes') {
             $checkBox2Status = 'checked';
-            $baseQuery->where('ch.primary_coordinator_id', '=', $corId)
-                ->orderBy('st.state_short_name')
-                ->orderBy('ch.name');
+            $chapterList->where('chapters.financialReport->reviewer_id', '=', $cdId);
         } else {
             $checkBox2Status = '';
-            $baseQuery->orderBy('st.state_short_name')
-                ->orderBy('ch.name');
         }
 
-        $chapterList = $baseQuery->get();
+
+
+        // //Get Coordinators Details
+        // $corDetails = User::find($request->user()->id)->coordinator;
+        // $corId = $corDetails['id'];
+        // $corConfId = $corDetails['conference_id'];
+        // $corRegId = $corDetails['region_id'];
+        // $positionId = $corDetails['position_id'];
+        // $secPositionId = $corDetails['sec_position_id'];
+        // $request->session()->put('positionid', $positionId);
+        // $request->session()->put('secpositionid', $secPositionId);
+        // $request->session()->put('corconfid', $corConfId);
+        // $request->session()->put('corregid', $corRegId);
+
+        // // Get the conditions
+        // $conditions = getPositionConditions($positionId, $secPositionId);
+
+        // if ($conditions['coordinatorCondition']) {
+        //     // Load Reporting Tree
+        //     $coordinatorData = $this->userController->loadReportingTree($corId);
+        //     $inQryArr = $coordinatorData['inQryArr'];
+        // }
+
+        // $year = date('Y');
+
+        // $baseQuery = DB::table('chapters as ch')
+        //     ->select('ch.id as chap_id', 'ch.primary_coordinator_id as primary_coordinator_id', 'ch.name as name', 'ch.financial_report_received as financial_report_received',
+        //         'ch.financial_report_complete as report_complete', 'ch.report_extension as report_extension', 'ch.extension_notes as extension_notes', 'cd.id AS cord_id', 'cd.first_name as fname', 'cd.last_name as lname', 'st.state_short_name as state',
+        //         'fr.submitted as report_received', 'fr.review_complete as review_complete', 'fr.post_balance as post_balance', 'fr.financial_pdf_path as financial_pdf_path', 'cd_reviewer.first_name as pcfname', 'cd_reviewer.last_name as pclname',
+        //         'rg.short_name as reg', 'cf.short_name as conf')
+        //     ->join('state as st', 'ch.state_id', '=', 'st.id')
+        //     ->leftJoin('conference as cf', 'ch.conference_id', '=', 'cf.id')
+        //     ->leftJoin('region as rg', 'rg.id', '=', 'ch.region_id')
+        //     ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
+        //     ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
+        //     ->leftJoin('coordinators as cd_reviewer', 'cd_reviewer.id', '=', 'fr.reviewer_id')
+        //     ->where(function ($query) {
+        //         $query->where('created_at', '<=', date('Y-06-30'))
+        //             ->orWhereNull('created_at');
+        //     })
+        //     ->where('ch.is_active', 1);
+
+        // if ($conditions['founderCondition']) {
+
+        // } elseif ($conditions['assistConferenceCoordinatorCondition']) {
+        //     $baseQuery->where('ch.conference_id', '=', $corConfId);
+        // } elseif ($conditions['regionalCoordinatorCondition']) {
+        //     $baseQuery->where('ch.region_id', '=', $corRegId);
+        // } else {
+        //     $baseQuery->whereIn('ch.primary_coordinator_id', $inQryArr);
+        // }
+
+        // if (isset($_GET['check']) && $_GET['check'] == 'yes') {
+        //     $checkBoxStatus = 'checked';
+        //     $baseQuery->where('fr.reviewer_id', $corId)
+        //         ->orderBy('st.state_short_name')
+        //         ->orderBy('ch.name');
+        // } else {
+        //     $checkBoxStatus = '';
+        //     $baseQuery->orderBy('st.state_short_name')
+        //         ->orderBy('ch.name');
+        // }
+
+        // if (isset($_GET['check2']) && $_GET['check2'] == 'yes') {
+        //     $checkBox2Status = 'checked';
+        //     $baseQuery->where('ch.primary_coordinator_id', '=', $corId)
+        //         ->orderBy('st.state_short_name')
+        //         ->orderBy('ch.name');
+        // } else {
+        //     $checkBox2Status = '';
+        //     $baseQuery->orderBy('st.state_short_name')
+        //         ->orderBy('ch.name');
+        // }
+
+        // $chapterList = $baseQuery->get();
 
         $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
 
@@ -1062,10 +1031,10 @@ class EOYReportController extends Controller
         // Get Chapter List mapped with login coordinator
         $chapters = Chapters::select('chapters.*', 'chapters.name as name', 'state.state_short_name as state',
             'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month', )
-            ->join('state', 'chapters.state', '=', 'state.id')
+            ->join('state', 'chapters.state_id', '=', 'state.id')
             ->join('financial_report', 'chapters.id', '=', 'financial_report.chapter_id')
             ->where('financial_report.reviewer_id', null)
-            ->where('chapters.conference', $corConfId)
+            ->where('chapters.conference_id', $corConfId)
             ->where('chapters.is_active', 1)
             ->where(function ($query) {
                 $query->where('chapters.report_extension', '=', '0')
@@ -1158,7 +1127,7 @@ class EOYReportController extends Controller
     //     $chapterDetails = DB::table('chapters')
     //         ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'chapters.primary_coordinator_id as pcid', 'chapters.balance as balance', 'st.state_short_name as state',
     //             'chapters.financial_report_complete as financial_report_complete', 'chapters.financial_pdf_path as financial_pdf_path')
-    //         ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+    //         ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
     //         ->where('chapters.is_active', '=', '1')
     //         ->where('chapters.id', '=', $chapterId)
     //         ->get();
@@ -1219,9 +1188,10 @@ class EOYReportController extends Controller
 
         $financial_report_array = FinancialReport::find($chapterId);
         $chapterDetails = DB::table('chapters')
-            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'chapters.primary_coordinator_id as pcid', 'chapters.balance as balance', 'st.state_short_name as state',
+            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'chapters.primary_coordinator_id as pcid', 'dc.balance as balance', 'st.state_short_name as state',
                 'chapters.financial_report_complete as financial_report_complete', 'chapters.financial_pdf_path as financial_pdf_path')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('documents as dc', 'chapters.id', '=', 'dc.chapter_id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('chapters.id', '=', $chapterId)
             ->get();
@@ -1332,13 +1302,13 @@ class EOYReportController extends Controller
 
         $chapterDetails = DB::table('chapters')
             ->select('chapters.*', 'st.state_short_name as state_short_name')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
             ->where('chapters.id', '=', $chapter_id)
             ->get();
-        $chapter_conf = $chapterDetails[0]->conference;
+        $chapter_conf = $chapterDetails[0]->conference_id;
         $chapter_state = $chapterDetails[0]->state_short_name;
         $chapter_name = $chapterDetails[0]->name;
-        $chapter_country = $chapterDetails[0]->country;
+        $chapter_country = $chapterDetails[0]->country_short_name;
 
         // Links for uploaded documents
         $files = DB::table('financial_report')
@@ -1564,9 +1534,9 @@ class EOYReportController extends Controller
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'chapters.id')
-            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
-            ->leftJoin('region as rg', 'rg.id', '=', 'chapters.region')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
+            ->leftJoin('region as rg', 'rg.id', '=', 'chapters.region_id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->where(function ($query) {
@@ -1577,9 +1547,9 @@ class EOYReportController extends Controller
         if ($conditions['founderCondition']) {
 
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference', '=', $corConfId);
+            $baseQuery->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region', '=', $corRegId);
+            $baseQuery->where('chapters.region_id', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -1621,7 +1591,7 @@ class EOYReportController extends Controller
         $corConfId = $corDetails['conference_id'];
 
         $chapterList = DB::table('chapters as ch')
-            ->select('ch.id', 'ch.name', 'ch.state', 'ch.ein', 'fr.roster_path as roster_path', 'fr.file_irs_path as file_irs_path', 'fr.bank_statement_included_path as bank_statement_included_path',
+            ->select('ch.id', 'ch.name', 'ch.state_id', 'ch.ein', 'fr.roster_path as roster_path', 'fr.file_irs_path as file_irs_path', 'fr.bank_statement_included_path as bank_statement_included_path',
                 'fr.bank_statement_2_included_path as bank_statement_2_included_path', 'fr.check_current_990N_verified_IRS as check_current_990N_verified_IRS', 'fr.check_current_990N_notes as check_current_990N_notes')
             ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
@@ -1707,9 +1677,9 @@ class EOYReportController extends Controller
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('conference as cf', 'chapters.conference', '=', 'cf.id')
-            ->leftJoin('region as rg', 'rg.id', '=', 'chapters.region')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
+            ->leftJoin('region as rg', 'rg.id', '=', 'chapters.region_id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('chapters.boundary_issues', '=', '1')
             ->where('chapters.new_board_submitted', '=', '1')
@@ -1718,9 +1688,9 @@ class EOYReportController extends Controller
         if ($conditions['founderCondition']) {
 
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference', '=', $corConfId);
+            $baseQuery->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region', '=', $corRegId);
+            $baseQuery->where('chapters.region_id', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -1761,7 +1731,7 @@ class EOYReportController extends Controller
         $corConfId = $corDetails['conference_id'];
 
         $chapterList = DB::table('chapters as ch')
-            ->select('ch.id', 'ch.conference', 'ch.region', 'ch.country', 'ch.state', 'ch.name', 'ch.territory', 'ch.boundary_issues', 'ch.boundary_issue_notes', 'ch.boundary_issue_resolved')
+            ->select('ch.id', 'ch.conference_id', 'ch.region_id', 'ch.country_short_name', 'ch.state_id', 'ch.name', 'ch.territory', 'ch.boundary_issues', 'ch.boundary_issue_notes', 'ch.boundary_issue_resolved')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $id)
             ->get();
@@ -1849,9 +1819,9 @@ class EOYReportController extends Controller
                 'fr.check_award_3_approved as award_3_approved', 'fr.check_award_4_approved as award_4_approved',
                 'fr.check_award_5_approved as award_5_approved',
                 'rg.short_name as reg', 'cf.short_name as conf')
-            ->join('state as st', 'ch.state', '=', 'st.id')
-            ->leftJoin('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->leftJoin('region as rg', 'rg.id', '=', 'ch.region')
+            ->join('state as st', 'ch.state_id', '=', 'st.id')
+            ->leftJoin('conference as cf', 'ch.conference_id', '=', 'cf.id')
+            ->leftJoin('region as rg', 'rg.id', '=', 'ch.region_id')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
             ->leftJoin('coordinators as cd_reviewer', 'cd_reviewer.id', '=', 'fr.reviewer_id')
@@ -1871,9 +1841,9 @@ class EOYReportController extends Controller
         if ($conditions['founderCondition']) {
 
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('ch.conference', '=', $corConfId);
+            $baseQuery->where('ch.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('ch.region', '=', $corRegId);
+            $baseQuery->where('ch.region_id', '=', $corRegId);
         } else {
             $baseQuery->whereIn('ch.primary_coordinator_id', $inQryArr);
         }
@@ -1918,7 +1888,7 @@ class EOYReportController extends Controller
         $financial_report_array = FinancialReport::find($id);
 
         $chapterList = DB::table('chapters as ch')
-            ->select('ch.id', 'ch.name', 'ch.state', 'ch.region')
+            ->select('ch.id', 'ch.name', 'ch.state_id', 'ch.region_id')
             ->where('ch.is_active', '=', '1')
             ->where('ch.id', '=', $id)
             ->get();
@@ -2151,10 +2121,10 @@ class EOYReportController extends Controller
                 'ct.name as countryname', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth',
                 'fr.check_current_990N_verified_IRS as irs_verified', 'fr.check_current_990N_notes as irs_notes',
                 'fr.file_irs_path as file_irs_path')
-            ->join('country as ct', 'ch.country', '=', 'ct.short_name')
-            ->join('state as st', 'ch.state', '=', 'st.id')
-            ->join('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->join('region as rg', 'ch.region', '=', 'rg.id')
+            ->join('country as ct', 'ch.country_short_name', '=', 'ct.short_name')
+            ->join('state as st', 'ch.state_id', '=', 'st.id')
+            ->join('conference as cf', 'ch.conference_id', '=', 'cf.id')
+            ->join('region as rg', 'ch.region_id', '=', 'rg.id')
             ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
             ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
@@ -2163,8 +2133,8 @@ class EOYReportController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->get();
 
-        $chConfId = $chapterList[0]->conference;
-        $chRegId = $chapterList[0]->region;
+        $chConfId = $chapterList[0]->conference_id;
+        $chRegId = $chapterList[0]->region_id;
         $chPCid = $chapterList[0]->primary_coordinator_id;
 
         // Load Active Status for Active/Zapped Visibility
@@ -2285,10 +2255,10 @@ class EOYReportController extends Controller
                 'ct.name as countryname', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth',
                 'fr.check_current_990N_verified_IRS as irs_verified', 'fr.check_current_990N_notes as irs_notes', 'cd.first_name as rfname', 'cd.last_name as rlname',
                 'fr.file_irs_path as file_irs_path')
-            ->join('country as ct', 'ch.country', '=', 'ct.short_name')
-            ->join('state as st', 'ch.state', '=', 'st.id')
-            ->join('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->join('region as rg', 'ch.region', '=', 'rg.id')
+            ->join('country as ct', 'ch.country_short_name', '=', 'ct.short_name')
+            ->join('state as st', 'ch.state_id', '=', 'st.id')
+            ->join('conference as cf', 'ch.conference_id', '=', 'cf.id')
+            ->join('region as rg', 'ch.region_id', '=', 'rg.id')
             ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
             ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
@@ -2298,8 +2268,8 @@ class EOYReportController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->get();
 
-        $chConfId = $chapterList[0]->conference;
-        $chRegId = $chapterList[0]->region;
+        $chConfId = $chapterList[0]->conference_id;
+        $chRegId = $chapterList[0]->region_id;
         $chPCid = $chapterList[0]->primary_coordinator_id;
 
         // Load Active Status for Active/Zapped Visibility
@@ -2394,10 +2364,10 @@ class EOYReportController extends Controller
                 'ct.name as countryname', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth',
                 'fr.check_current_990N_verified_IRS as irs_verified', 'fr.check_current_990N_notes as irs_notes', 'cd.first_name as rfname', 'cd.last_name as rlname',
                 'fr.file_irs_path as file_irs_path')
-            ->join('country as ct', 'ch.country', '=', 'ct.short_name')
-            ->join('state as st', 'ch.state', '=', 'st.id')
-            ->join('conference as cf', 'ch.conference', '=', 'cf.id')
-            ->join('region as rg', 'ch.region', '=', 'rg.id')
+            ->join('country as ct', 'ch.country_short_name', '=', 'ct.short_name')
+            ->join('state as st', 'ch.state_id', '=', 'st.id')
+            ->join('conference as cf', 'ch.conference_id', '=', 'cf.id')
+            ->join('region as rg', 'ch.region_id', '=', 'rg.id')
             ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
             ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
             ->leftJoin('financial_report as fr', 'fr.chapter_id', '=', 'ch.id')
@@ -2407,8 +2377,8 @@ class EOYReportController extends Controller
             ->where('bd.board_position_id', '=', '1')
             ->get();
 
-        $chConfId = $chapterList[0]->conference;
-        $chRegId = $chapterList[0]->region;
+        $chConfId = $chapterList[0]->conference_id;
+        $chRegId = $chapterList[0]->region_id;
         $chPCid = $chapterList[0]->primary_coordinator_id;
 
         // Load Active Status for Active/Zapped Visibility

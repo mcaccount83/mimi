@@ -12,9 +12,9 @@ class FinancialReport extends Model
     use HasFactory;
     use Notifiable;
 
-    protected $primaryKey = 'chapter_id';
-
     protected $table = 'financial_report';
+
+    protected $primaryKey = 'chapter_id';
 
     public $timestamps = false;
 

@@ -61,8 +61,8 @@ class ExportController extends Controller
                 $join->on('sec.chapter_id', '=', 'chapters.id')
                     ->where('sec.board_position_id', '=', 5); // Secretary
             })
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id');
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
+            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id');
     }
 
     /**
@@ -106,8 +106,8 @@ class ExportController extends Controller
                 $join->on('sec.chapter_id', '=', 'chapters.id')
                     ->where('sec.board_position_id', '=', 5); // Secretary
             })
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id');
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
+            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id');
     }
 
     /**
@@ -151,9 +151,9 @@ class ExportController extends Controller
         if ($conditions['founderCondition']) {
             // No additional condition; proceed with the base query
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.conference', '=', $corConfId);
+            $chapterList = $chapterList->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.region', '=', $corRegId);
+            $chapterList = $chapterList->where('chapters.region_id', '=', $corRegId);
         } else {
             $chapterList = $chapterList->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -172,7 +172,7 @@ class ExportController extends Controller
             ];
 
             foreach ($activeChapterList as $list) {
-                $list->status_value = $statusValues[$list->status] ?? 'Unknown';
+                $list->status_value = $statusValues[$list->status_id] ?? 'Unknown';
                 $exportChapterList[] = $list;
             }
 
@@ -288,9 +288,9 @@ class ExportController extends Controller
         if ($conditions['founderCondition']) {
             // No additional condition; proceed with the base query
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.conference', '=', $corConfId);
+            $chapterList = $chapterList->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.region', '=', $corRegId);
+            $chapterList = $chapterList->where('chapters.region_id', '=', $corRegId);
         } else {
             $chapterList = $chapterList->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -310,7 +310,7 @@ class ExportController extends Controller
             ];
 
             foreach ($zappedChapterList as $list) {
-                $list->status_value = $statusValues[$list->status] ?? 'Unknown';
+                $list->status_value = $statusValues[$list->status_id] ?? 'Unknown';
                 $exportZapChapterList[] = $list;
             }
 
@@ -434,9 +434,9 @@ class ExportController extends Controller
         if ($conditions['founderCondition']) {
             // No additional condition; proceed with the base query
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.conference', '=', $corConfId);
+            $chapterList = $chapterList->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.region', '=', $corRegId);
+            $chapterList = $chapterList->where('chapters.region_id', '=', $corRegId);
         } else {
             $chapterList = $chapterList->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -455,7 +455,7 @@ class ExportController extends Controller
             ];
 
             foreach ($ReRegList as $list) {
-                $list->status_value = $statusValues[$list->status] ?? 'Unknown';
+                $list->status_value = $statusValues[$list->status_id] ?? 'Unknown';
                 $exportReRegList[] = $list;
             }
 
@@ -533,7 +533,7 @@ class ExportController extends Controller
             ];
 
             foreach ($ReRegList as $list) {
-                $list->status_value = $statusValues[$list->status] ?? 'Unknown';
+                $list->status_value = $statusValues[$list->status_id] ?? 'Unknown';
                 $exportReRegList[] = $list;
             }
 
@@ -601,7 +601,7 @@ class ExportController extends Controller
             ];
 
             foreach ($activeChapterList as $list) {
-                $list->status_value = $statusValues[$list->status] ?? 'Unknown';
+                $list->status_value = $statusValues[$list->status_id] ?? 'Unknown';
                 $exportChapterList[] = $list;
             }
 
@@ -708,7 +708,7 @@ class ExportController extends Controller
             ];
 
             foreach ($zappedChapterList as $list) {
-                $list->status_value = $statusValues[$list->status] ?? 'Unknown';
+                $list->status_value = $statusValues[$list->status_id] ?? 'Unknown';
                 $exportZapChapterList[] = $list;
             }
 
@@ -804,13 +804,13 @@ class ExportController extends Controller
         $corConfId = $corDetails['conference_id'];
         $corlayerId = $corDetails['layer_id'];
         $activeChapterList = DB::table('chapters')
-            ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
+            ->select('chapters.*', 'chapters.conference_id as conf', 'rg.short_name as reg_name', 'cd.first_name as cd_fname', 'cd.last_name as cd_lname',
                 'bd.first_name as pre_fname', 'bd.last_name as pre_lname', 'bd.email as pre_email', 'bd.street_address as pre_add', 'bd.city as pre_city',
                 'bd.state as pre_state', 'bd.zip as pre_zip', 'bd.country as pre_country', 'bd.phone as pre_phone', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
+            ->leftjoin('region as rg', 'chapters.region_id', '=', 'rg.id')
             // ->where('chapters.is_active', '=', '1')
             ->where(function ($query) use ($previousYear) {
                 $query->where('chapters.is_active', '=', 1)
@@ -911,9 +911,9 @@ class ExportController extends Controller
         if ($conditions['founderCondition']) {
             // No additional condition; proceed with the base query
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.conference', '=', $corConfId);
+            $chapterList = $chapterList->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.region', '=', $corRegId);
+            $chapterList = $chapterList->where('chapters.region_id', '=', $corRegId);
         } else {
             $chapterList = $chapterList->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -1084,9 +1084,9 @@ class ExportController extends Controller
         if ($conditions['founderCondition']) {
             // No additional condition; proceed with the base query
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.conference', '=', $corConfId);
+            $chapterList = $chapterList->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.region', '=', $corRegId);
+            $chapterList = $chapterList->where('chapters.region_id', '=', $corRegId);
         } else {
             $chapterList = $chapterList->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -1675,8 +1675,8 @@ class ExportController extends Controller
                 'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as region')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->leftJoin('region as rg', 'chapters.region', '=', 'rg.id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
+            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->orderBy('chapters.name');
@@ -1684,9 +1684,9 @@ class ExportController extends Controller
         if ($conditions['founderCondition']) {
 
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference', '=', $corConfId);
+            $baseQuery->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region', '=', $corRegId);
+            $baseQuery->where('chapters.region_id', '=', $corRegId);
         } else {
             $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -1846,9 +1846,9 @@ class ExportController extends Controller
         if ($conditions['founderCondition']) {
             // No additional condition; proceed with the base query
         } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.conference', '=', $corConfId);
+            $chapterList = $chapterList->where('chapters.conference_id', '=', $corConfId);
         } elseif ($conditions['regionalCoordinatorCondition']) {
-            $chapterList = $chapterList->where('chapters.region', '=', $corRegId);
+            $chapterList = $chapterList->where('chapters.region_id', '=', $corRegId);
         } else {
             $chapterList = $chapterList->whereIn('chapters.primary_coordinator_id', $inQryArr);
         }
@@ -1867,7 +1867,7 @@ class ExportController extends Controller
             ];
 
             foreach ($activeChapterList as $list) {
-                $list->status_value = $statusValues[$list->status] ?? 'Unknown';
+                $list->status_value = $statusValues[$list->status_id] ?? 'Unknown';
                 $exportChapterList[] = $list;
             }
 
@@ -1957,11 +1957,11 @@ class ExportController extends Controller
         $corlayerId = $corDetails['layer_id'];
 
         $activeChapterList = DB::table('chapters')
-            ->select('chapters.*', 'chapters.conference as conf', 'rg.short_name as reg_name', 'bd.email as pre_email', 'st.state_short_name as state')
+            ->select('chapters.*', 'chapters.conference_id as conf', 'rg.short_name as reg_name', 'bd.email as pre_email', 'st.state_short_name as state')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
-            ->leftjoin('region as rg', 'chapters.region', '=', 'rg.id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
+            ->leftjoin('region as rg', 'chapters.region_id', '=', 'rg.id')
             ->where('chapters.is_active', '=', '1')
             ->where('bd.board_position_id', '=', '1')
             ->orderBy('st.state_short_name')

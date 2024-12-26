@@ -50,29 +50,22 @@
                     <td class="text-center align-middle">
                         <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $list->chapter_name . ', ' . $list->state) }} | Website Review"><i class="far fa-envelope"></i></a></td>
                    </td>
-                        <td>
-                            @if ($list->reg != "None")
-                                {{ $list->conf }} / {{ $list->reg }}
-                            @else
-                                {{ $list->conf }}
-                            @endif
-                        </td>
-                        <td>{{ $list->state }}</td>
-                        <td>{{ $list->chapter_name }}</td>
-                        <td>
-                            @if($list->status == '1')
-                                Linked
-                            @elseif ($list->status == '2')
-                                Add Link Requested
-                            @elseif ($list->status == '3')
-                                Do No Link
-                            @else
-
-                            @endif
-                        </td>
-                        <td><a href="{{ url("{$list->web}") }}" target="_blank">{{ $list->web }}</a></td>
-                        <td>{{ $list->egroup }}</td>
-                        <td>{{ $list->web_notes }}</td>
+                   <td>
+                        @if ($list->region->short_name != "None")
+                            {{ $list->conference->short_name }} / {{ $list->region->short_name }}
+                        @else
+                            {{ $list->conference->short_name }}
+                        @endif
+                    </td>
+                    <td>{{ $list->state->state_short_name }}</td>
+                    <td>{{ $list->name }}</td>
+                    <td @if ( $list->website_status == 3 ) style="background-color: #dc3545; color: #ffffff;"
+                        @elseif ( $list->website_status == 2 ) style="background-color: #ffc107;"
+                        @endif>
+                    {{ $list->webLink->link_status?? null }}</td>
+                    <td><a href="{{ url("{$list->website_url}") }}" target="_blank">{{ $list->website_url }}</a></td>
+                    <td>{{ $list->egroup }}</td>
+                    <td>{{ $list->website_notes }}</td>
                     </tr>
                   @endforeach
                   </tbody>

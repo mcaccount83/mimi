@@ -4,17 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 
-class Website extends Model
+class ResourceCategory extends Model
 {
     use HasFactory;
     use Notifiable;
 
-    protected $table = 'website';
-
-    protected $primaryKey = 'id';
+    protected $table = 'resource_category';
 
     protected $fillable = [
 

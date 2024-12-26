@@ -14,6 +14,8 @@ class Month extends Model
 
     protected $table = 'month';
 
+    protected $primaryKey = 'id';
+
     protected $fillable = [
 
     ];

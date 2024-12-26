@@ -61,33 +61,26 @@
                         $mailMessage .= "The Board Election Report can be accessed by logging into your MIMI account: $mimiUrl and selecting the buttons at the top of your screen.\n";
                     @endphp
                         <tr id="chapter-{{ $list->id }}">
-                            {{-- <td class="text-center align-middle">
-                                @if($regionalCoordinatorCondition)
-                                    @if($list->new_board_active == null || $list->new_board_active == 0 )
-                                        <a href="{{ url("/eoy/boardreportview/{$list->id}") }}"><i class="fas fa-edit"></i></a>
-                                    @endif
-                                @endif
-                            </td> --}}
                             <td class="text-center align-middle">
                             @if ($assistConferenceCoordinatorCondition)
                                <a href="{{ url("/eoy/boardreportedit/{$list->id}") }}"><i class="fas fa-eye"></i></a>
                            @endif
                         </td>
                             <td class="text-center align-middle">
-                                @if ($list->new_board_submitted == null || $list->new_board_submitted == 0)
-                                    <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Board Report Reminder | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ rawurlencode($mailMessage) }}"><i class="far fa-envelope"></i></a>
+                                @if ($list->documents->new_board_submitted == null || $list->documents->new_board_submitted == 0)
+                                    <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Board Report Reminder | MOMS Club of ' . $list->name . ', ' . $list->state->state_short_name) }}&body={{ rawurlencode($mailMessage) }}"><i class="far fa-envelope"></i></a>
                                 @endif
                             </td>
                             <td>
-                                @if ($list->reg != "None")
-                                    {{ $list->conf }} / {{ $list->reg }}
+                                @if ($list->region->short_name != "None")
+                                    {{ $list->conference->short_name }} / {{ $list->region->short_name }}
                                 @else
-                                    {{ $list->conf }}
+                                    {{ $list->conference->short_name }}
                                 @endif
                             </td>
-                            <td>{{ $list->state }}</td>
+                            <td>{{ $list->state->state_short_name }}</td>
                             <td>{{ $list->name }}</td>
-                            <td>{{ $list->cor_fname }} {{ $list->cor_lname }}</td>
+                            <td>{{ $list->primaryCoordinator->first_name }} {{ $list->primaryCoordinator->last_name }}</td>
                             <td @if($list->new_board_submitted == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                                 @if($list->new_board_submitted == '1') YES @else NO @endif
                             </td>

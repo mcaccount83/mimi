@@ -377,7 +377,7 @@ class BoardController extends Controller
                 'bd.email as ch_pre_email', 'cd.email as cor_email')
             ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
             ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
             // ->where('chapters.is_Active', '=', '1')
             ->where('chapters.id', $id)
             ->orderByDesc('chapters.id')
@@ -777,7 +777,7 @@ class BoardController extends Controller
             $chPcid = $chPCId;
             $chConf = $chConfId;
 
-            $emailData = $this->userController->loadConferenceCoord($chConf, $chPcid);
+            $emailData = $this->userController->loadConferenceCoord($chPcid);
             $to_CCemail = $emailData['cc_email'];
 
             if ($request->input('ch_webstatus') != $request->input('ch_hid_webstatus')) {
@@ -804,7 +804,7 @@ class BoardController extends Controller
                 ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'st.state_short_name as state',
                     'chapters.conference as conference', 'chapters.primary_coordinator_id as cor_id')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
                 ->where('chapters.is_Active', '=', '1')
                 ->where('chapters.id', $chapterId)
                 ->orderByDesc('chapters.id')
@@ -1046,9 +1046,9 @@ class BoardController extends Controller
 
             // Fetch Chapter Info
             $chapterInfo = DB::table('chapters')
-                ->select('chapters.id as chapter_id', 'chapters.name', 'chapters.state', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'st.state_short_name as state')
+                ->select('chapters.id as chapter_id', 'chapters.name', 'chapters.state_id', 'cd.first_name as cor_fname', 'cd.last_name as cor_lname', 'cd.email as cor_email', 'st.state_short_name as state')
                 ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
                 ->where('chapters.id', '=', $chapterId)
                 ->get();
 
@@ -1477,10 +1477,10 @@ class BoardController extends Controller
 
         $chapterDetails = DB::table('chapters')
             ->select('chapters.*', 'st.state_short_name as state_short_name')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
             ->where('chapters.id', '=', $chapter_id)
             ->get();
-        $chapter_conf = $chapterDetails[0]->conference;
+        $chapter_conf = $chapterDetails[0]->conference_id;
         $chapter_state = $chapterDetails[0]->state_short_name;
         $chapter_name = $chapterDetails[0]->name;
         $chapter_country = $chapterDetails[0]->country;
@@ -1784,7 +1784,7 @@ class BoardController extends Controller
 
             // Load Conference Coordinators
             $chId = $chapter_id;
-            $coordinatorData = $this->userController->loadConferenceCoord($chConf, $chPcid);
+            $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
             $cc_email = $coordinatorData['cc_email'];
             $coordinator_array = $coordinatorData['coordinator_array'];
 
@@ -1839,7 +1839,7 @@ class BoardController extends Controller
 
             $chapterDetails = DB::table('chapters')
                 ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state', 'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
-                ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
                 ->where('chapters.is_active', '=', '1')
                 ->where('chapters.id', '=', $chapterId)
                 ->get();
@@ -1909,13 +1909,13 @@ class BoardController extends Controller
         $chapterDetails = DB::table('chapters')
             ->select('chapters.*', 'st.state_short_name as state_short_name', 'fr.reviewer_id as reviewer_id')
             ->leftJoin('financial_report as fr', 'chapters.id', '=', 'fr.chapter_id')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
             ->where('chapters.id', '=', $chapter_id)
             ->get();
-        $chapter_conf = $chapterDetails[0]->conference;
+        $chapter_conf = $chapterDetails[0]->conference_id;
         $chapter_state = $chapterDetails[0]->state_short_name;
         $chapter_name = $chapterDetails[0]->name;
-        $chapter_country = $chapterDetails[0]->country;
+        $chapter_country = $chapterDetails[0]->country_short_name;
 
         $reviewer_id = $chapterDetails[0]->reviewer_id;
         $coorDetails = DB::table('coordinators as cd')
@@ -2231,7 +2231,7 @@ class BoardController extends Controller
 
         // Load Conference Coordinators
         $chId = $chapter_id;
-        $coordinatorData = $this->userController->loadConferenceCoord($chConf, $chPcid);
+        $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
         $coordinator_array = $coordinatorData['coordinator_array'];
         $cc_email = $coordinatorData['cc_email'];
         $cc_id = $coordinatorData['cc_id'];
@@ -2542,8 +2542,8 @@ class BoardController extends Controller
         $chapterDetails = DB::table('chapters')
             ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'chapters.territory as boundaries',
                 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state',
-                'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
-            ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+                'chapters.conference_id as conf', 'chapters.primary_coordinator_id as pcid')
+            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
             ->where('chapters.is_active', '=', '1')
             ->where('chapters.id', '=', $chapter_id)
             ->get();
@@ -2839,7 +2839,7 @@ class BoardController extends Controller
     //     // $chapterDetails = DB::table('chapters')
     //     //     ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state',
     //     //         'chapters.conference as conf', 'chapters.primary_coordinator_id as pcid')
-    //     //     ->leftJoin('state as st', 'chapters.state', '=', 'st.id')
+    //     //     ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
     //     //     ->where('chapters.is_active', '=', '1')
     //     //     ->where('chapters.id', '=', $chId)
     //     //     ->get();
