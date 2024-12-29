@@ -245,6 +245,11 @@
                         @if($chDetails->is_active == '1')
                         <div class="col-md-6">
                             <h3 class="profile-username">Preset Emails</h3>
+                            @php
+                                $emailData = app('App\Http\Controllers\UserController')->loadEmailDetails($chDetails->id);
+                                $emailListChap = implode(',', $emailData['emailListChap']); // Convert array to comma-separated string
+                                $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
+                            @endphp
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
                                     <label>Blank Email:</label>
@@ -980,9 +985,7 @@ function showProbationLetterModal() {
                                     confirmButton: 'btn-sm btn-success'
                                 }
                             }).then(() => {
-                                if (response.redirect) {
-                                    window.location.href = response.redirect;
-                                }
+                                location.reload(); // Reload the page to reflect changes
                             });
                         },
                         error: function() {
@@ -1054,9 +1057,7 @@ function showProbationReleaseModal() {
                                     confirmButton: 'btn-sm btn-success'
                                 }
                             }).then(() => {
-                                if (response.redirect) {
-                                    window.location.href = response.redirect;
-                                }
+                                location.reload(); // Reload the page to reflect changes
                             });
                         },
                         error: function() {
@@ -1076,7 +1077,6 @@ function showProbationReleaseModal() {
         }
     });
 }
-
 
 function showDisbandChapterModal() {
     Swal.fire({
@@ -1152,9 +1152,7 @@ function showDisbandChapterModal() {
                                     confirmButton: 'btn-sm btn-success'
                                 }
                             }).then(() => {
-                                if (response.redirect) {
-                                    window.location.href = response.redirect;
-                                }
+                                location.reload(); // Reload the page to reflect changes
                             });
                         },
                         error: function(jqXHR, exception) {
@@ -1222,10 +1220,8 @@ function unZapChapter(chapterid) {
                             confirmButton: 'btn-sm btn-success'
                         }
                     }).then(() => {
-                        if (response.redirect) {
-                            window.location.href = response.redirect;
-                        }
-                    });
+                                location.reload(); // Reload the page to reflect changes
+                            });
                 },
                 error: function(jqXHR, exception) {
                     Swal.fire({

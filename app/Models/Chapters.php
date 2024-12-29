@@ -71,16 +71,9 @@ class Chapters extends Model
 
     public function reportReviewer(): HasOneThrough
     {
-        return $this->hasOneThrough(
-            Coordinators::class,
-            FinancialReport::class,
-            'chapter_id', // Foreign key on financial_reports table
-            'id', // Foreign key on coordinators table
-            'id', // Local key on chapters table
-            'reviewer_id' // Local key on financial_reports table
-        );
+        return $this->hasOneThrough(Coordinators::class, FinancialReport::class, 'chapter_id', 'id', 'id', 'reviewer_id' );
+        // 'chpter_id' IN financial_reports HASONE 'id' in coordinators THROUGH 'id' in chapters IN 'reviewer_id' for financial_reports
     }
-
 
     public function documents(): HasOne
     {

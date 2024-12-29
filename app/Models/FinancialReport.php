@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\Belongsto;
 
 
 class FinancialReport extends Model
@@ -33,5 +34,30 @@ class FinancialReport extends Model
         'award_4_files',
         'award_5_files',
     ];
+
+    public function awardType1(): BelongsTo
+    {
+        return $this->belongsTo(FinancialReportAwards::class, 'award_1_nomination_type', 'id');  // 'award_1_nomination_type' in financial_report BelongsTo 'id' in financial_report_awards
+    }
+
+    public function awardType2(): BelongsTo
+    {
+        return $this->belongsTo(FinancialReportAwards::class, 'award_2_nomination_type', 'id');  // 'award_2_nomination_type' in financial_report BelongsTo 'id' in financial_report_awards
+    }
+
+    public function awardType3(): BelongsTo
+    {
+        return $this->belongsTo(FinancialReportAwards::class, 'award_3_nomination_type', 'id');  // 'award_3_nomination_type' in financial_report BelongsTo 'id' in financial_report_awards
+    }
+
+    public function awardType4(): BelongsTo
+    {
+        return $this->belongsTo(FinancialReportAwards::class, 'award_4_nomination_type', 'id');  // 'award_4_nomination_type' in financial_report BelongsTo 'id' in financial_report_awards
+    }
+
+    public function awardType5(): BelongsTo
+    {
+        return $this->belongsTo(FinancialReportAwards::class, 'award_5_nomination_type', 'id');  // 'award_5_nomination_type' in financial_report BelongsTo 'id' in financial_report_awards
+    }
 
 }

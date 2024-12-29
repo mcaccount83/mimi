@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Admin;
 use App\Models\Chapters;
+use App\Models\User;
+use App\Models\Website;
+use App\Models\State;
+use App\Models\Month;
 use App\Models\FinancialReport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -25,138 +30,63 @@ class ViewAsBoardController extends Controller
      */
     public function showChapterView(Request $request, $id): View
     {
-        $user = $request->user();
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
         $user_type = $user->user_type;
 
-        $financial_report_array = FinancialReport::find($id);
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
 
-        $admin = DB::table('admin')
-            ->select('admin.*',
-                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'), )
-            ->leftJoin('coordinators as cd', 'admin.updated_id', '=', 'cd.id')
-            ->orderByDesc('admin.id') // Assuming 'id' represents the order of insertion
-            ->first();
+        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'state', 'documents', 'financialReport', 'reportReviewer', 'boards'])->find($id);
+        $chId = $chDetails->id;
+        $chIsActive = $chDetails->is_active;
+        $stateShortName = $chDetails->state->state_short_name;
+        $regionLongName = $chDetails->region->long_name;
+        $conferenceDescription = $chDetails->conference->conference_description;
+        $chConfId = $chDetails->conference_id;
+        $chRegId = $chDetails->region_id;
+        $chPcId = $chDetails->primary_coordinator_id;
+        $startMonthName = $chDetails->startMonth->month_long_name;
+        $websiteLink = $chDetails->webLink->link_status ?? null;
 
-        $eoy_boardreport = $admin->eoy_boardreport;
-        $eoy_financialreport = $admin->eoy_financialreport;
-        $boardreport_yes = ($eoy_boardreport == 1);
-        $financialreport_yes = ($eoy_financialreport == 1);
+        $allWebLinks = Website::all(); // Full List for Dropdown Menu
+        $allStates = State::all();  // Full List for Dropdown Menu
 
-        $chapterDetails = Chapters::find($id);
-        $request->session()->put('chapterid', $id);
+        $chDocuments = $chDetails->documents;
+        $submitted = $chDetails->documents->financial_report_received;
+        $reviewComplete = $chDetails->documents->review_complete;
+        $chFinancialReport = $chDetails->financialReport;
 
-        $stateArr = DB::table('state')
-            ->select('state.*')
-            ->orderBy('id')
-            ->get();
+        $boards = $chDetails->boards()->with(['stateName', 'position'])->get();
+        $bdDetails = $boards->groupBy('board_position_id');
+        $defaultBoardMember = (object)['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
 
-        $chapterState = DB::table('state')
-            ->select('state_short_name')
-            ->where('id', '=', $chapterDetails->state)
-            ->get();
-        $chapterState = $chapterState[0]->state_short_name;
-
-        $foundedMonth = ['1' => 'JAN', '2' => 'FEB', '3' => 'MAR', '4' => 'APR', '5' => 'MAY', '6' => 'JUN',
-            '7' => 'JUL', '8' => 'AUG', '9' => 'SEP', '10' => 'OCT', '11' => 'NOV', '12' => 'DEC'];
-        $currentMonthCode = $chapterDetails->start_month_id;
-        $currentMonthAbbreviation = isset($foundedMonth[$currentMonthCode]) ? $foundedMonth[$currentMonthCode] : '';
-
-        $webStatusArr = ['0' => 'Website Not Linked', '1' => 'Website Linked', '2' => 'Add Link Requested', '3' => 'Do Not Link'];
-
-        $boardPosition = ['1' => 'President', '2' => 'AVP', '3' => 'MVP', '4' => 'Treasurer', '5' => 'Secretary'];
-        $boardPositionCode = 1;
-        $boardPositionAbbreviation = isset($boardPosition[$boardPositionCode]) ? $boardPosition[$boardPositionCode] : '';
+        // Fetch board details or fallback to default
+        $PresDetails = $bdDetails->get(1, collect([$defaultBoardMember]))->first(); // President
+        $AVPDetails = $bdDetails->get(2, collect([$defaultBoardMember]))->first(); // AVP
+        $MVPDetails = $bdDetails->get(3, collect([$defaultBoardMember]))->first(); // MVP
+        $TRSDetails = $bdDetails->get(4, collect([$defaultBoardMember]))->first(); // Treasurer
+        $SECDetails = $bdDetails->get(5, collect([$defaultBoardMember]))->first(); // Secretary
 
         $year = date('Y');
         $month = date('m');
+        $currentMonthName = Month::where('id', $month)->first()->month_short_name;
 
-        $next_renewal_year = $chapterDetails['next_renewal_year'];
-        $start_month = $chapterDetails['start_month_id'];
+        $next_renewal_year = $chDetails->next_renewal_year;
+        $start_month = $chDetails->start_month_id;
         $late_month = $start_month + 1;
 
         $due_date = Carbon::create($next_renewal_year, $start_month, 1);
         $late_date = Carbon::create($next_renewal_year, $late_month, 1);
 
-        // Convert $start_month to words
-        $start_monthInWords = Carbon::createFromFormat('m', $start_month)->format('F');
+        $eoyStatus = Admin::first();
+        $boardreport_yes = ($eoyStatus->eoy_boardreport == 1);
+        $financialreport_yes = ($eoyStatus->eoy_financialreport == 1);
 
-        // Determine the range start and end months correctly
-        $monthRangeStart = $start_month;
-        $monthRangeEnd = $start_month - 1;
-
-        // Adjust range for January
-        if ($start_month == 1) {
-            $monthRangeStart = 1;
-            $monthRangeEnd = 12;
-        }
-
-        // Create Carbon instances for start and end dates
-        $rangeStartDate = Carbon::create($year, $monthRangeStart, 1);
-        $rangeEndDate = Carbon::create($year, $monthRangeEnd, 1)->endOfMonth();
-
-        // Format the dates as words
-        $rangeStartDateFormatted = $rangeStartDate->format('F jS');
-        $rangeEndDateFormatted = $rangeEndDate->format('F jS');
-
-        $chapterList = DB::table('chapters as ch')
-            ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip',
-                'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id')
-            ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
-            ->where('ch.id', '=', $id)
-            ->where('bd.board_position_id', '=', '1')
-            ->get();
-
-        $AVPDetails = DB::table('boards as bd')
-            ->select('bd.first_name as avp_fname', 'bd.last_name as avp_lname', 'bd.email as avp_email', 'bd.board_position_id', 'bd.street_address as avp_addr',
-                'bd.city as avp_city', 'bd.zip as avp_zip', 'bd.phone as avp_phone', 'bd.state as avp_state', 'bd.user_id as user_id')
-            ->where('bd.chapter_id', '=', $id)
-            ->where('bd.board_position_id', '=', '2')
-            ->get();
-        if (count($AVPDetails) == 0) {
-            $AVPDetails[0] = ['avp_fname' => '', 'avp_lname' => '', 'avp_email' => '', 'avp_addr' => '', 'avp_city' => '', 'avp_zip' => '', 'avp_phone' => '',
-                'avp_state' => '', 'user_id' => ''];
-            $AVPDetails = json_decode(json_encode($AVPDetails));
-        }
-
-        $MVPDetails = DB::table('boards as bd')
-            ->select('bd.first_name as mvp_fname', 'bd.last_name as mvp_lname', 'bd.email as mvp_email', 'bd.board_position_id', 'bd.street_address as mvp_addr',
-                'bd.city as mvp_city', 'bd.zip as mvp_zip', 'bd.phone as mvp_phone', 'bd.state as mvp_state', 'bd.user_id as user_id')
-            ->where('bd.chapter_id', '=', $id)
-            ->where('bd.board_position_id', '=', '3')
-            ->get();
-        if (count($MVPDetails) == 0) {
-            $MVPDetails[0] = ['mvp_fname' => '', 'mvp_lname' => '', 'mvp_email' => '', 'mvp_addr' => '', 'mvp_city' => '', 'mvp_zip' => '', 'mvp_phone' => '',
-                'mvp_state' => '', 'user_id' => ''];
-            $MVPDetails = json_decode(json_encode($MVPDetails));
-        }
-
-        $TRSDetails = DB::table('boards as bd')
-            ->select('bd.first_name as trs_fname', 'bd.last_name as trs_lname', 'bd.email as trs_email', 'bd.board_position_id', 'bd.street_address as trs_addr',
-                'bd.city as trs_city', 'bd.zip as trs_zip', 'bd.phone as trs_phone', 'bd.state as trs_state', 'bd.user_id as user_id')
-            ->where('bd.chapter_id', '=', $id)
-            ->where('bd.board_position_id', '=', '4')
-            ->get();
-        if (count($TRSDetails) == 0) {
-            $TRSDetails[0] = ['trs_fname' => '', 'trs_lname' => '', 'trs_email' => '', 'trs_addr' => '', 'trs_city' => '', 'trs_zip' => '', 'trs_phone' => '',
-                'trs_state' => '', 'user_id' => ''];
-            $TRSDetails = json_decode(json_encode($TRSDetails));
-        }
-
-        $SECDetails = DB::table('boards as bd')
-            ->select('bd.first_name as sec_fname', 'bd.last_name as sec_lname', 'bd.email as sec_email', 'bd.board_position_id', 'bd.street_address as sec_addr',
-                'bd.city as sec_city', 'bd.zip as sec_zip', 'bd.phone as sec_phone', 'bd.state as sec_state', 'bd.user_id as user_id')
-            ->where('bd.chapter_id', '=', $id)
-            ->where('bd.board_position_id', '=', '5')
-            ->get();
-        if (count($SECDetails) == 0) {
-            $SECDetails[0] = ['sec_fname' => '', 'sec_lname' => '', 'sec_email' => '', 'sec_addr' => '', 'sec_city' => '', 'sec_zip' => '', 'sec_phone' => '',
-                'sec_state' => '', 'user_id' => ''];
-            $SECDetails = json_decode(json_encode($SECDetails));
-        }
-        $data = ['financial_report_array' => $financial_report_array, 'chapterState' => $chapterState, 'stateArr' => $stateArr, 'boardPositionAbbreviation' => $boardPositionAbbreviation, 'currentMonthAbbreviation' => $currentMonthAbbreviation,
-            'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails, 'chapterList' => $chapterList,
-            'startMonth' => $start_monthInWords, 'thisMonth' => $month, 'due_date' => $due_date, 'late_date' => $late_date, 'user_type' => $user_type,
-            'webStatusArr' => $webStatusArr, 'boardreport_yes' => $boardreport_yes, 'financialreport_yes' => $financialreport_yes];
+        $data = [ 'chDetails' => $chDetails,'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
+            'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
+            'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'late_date' => $late_date, 'user_type' => $user_type,
+            'boardreport_yes' => $boardreport_yes, 'financialreport_yes' => $financialreport_yes];
 
         return view('boards.president')->with($data);
 

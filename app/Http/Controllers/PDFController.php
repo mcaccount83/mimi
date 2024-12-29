@@ -329,7 +329,7 @@ class PDFController extends Controller
 
             $document->save();
 
-            $emailData = $this->userController->loadEmailDetails($chapterId);
+            $emailData = $this->userController->loadEmailDetails($chapterId, true);
                 $emailListChap = $emailData['emailListChap'];
                 $emailListCoord = $emailData['emailListCoord'];
 

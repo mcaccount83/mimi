@@ -19,14 +19,14 @@
                         $thisDate = \Carbon\Carbon::now();
                     @endphp
                     <div class="col-md-12"><br><br></div>
-                        <h2 class="text-center"> MOMS Club of {{ $chapterList[0]->name }}, {{ $chapterState }} </h2>
+                        <h2 class="text-center"> MOMS Club of {{ $chDetails->name }}, {{ $stateShortName }} </h2>
                         <h4 class="text-center"> Re-Registration Payment</h4>
 
                         </div>
                         <div class="col-md-12"><br></div>
-                        <div class="col-md-12"><center>Your chapter's anniversary month is <strong>{{ $startMonth }}</strong>.</center></div>
+                        <div class="col-md-12"><center>Your chapter's anniversary month is <strong>{{ $startMonthName }}</strong>.</center></div>
                         <div class="col-md-12"><center>Re-registration payments are due each year by the last day of your anniversary month.</center></div>
-                        <div class="col-md-12"><center>Your next due date: <strong>{{ $startMonth }} {{ $chapterList[0]->next_renewal_year }}</strong></center></div>
+                        <div class="col-md-12"><center>Your next due date: <strong>{{ $startMonthName }} {{ $chDetails->next_renewal_year }}</strong></center></div>
                         @php
                            $thisDate = \Illuminate\Support\Carbon::now();
                         @endphp
@@ -52,13 +52,13 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>RE-REGISTRATION DUES LAST PAID</label>
-                                    <p>{{\Illuminate\Support\Carbon::parse($chapterList[0]->dues_last_paid)->format('m-d-Y')}}</p>
+                                    <p>{{\Illuminate\Support\Carbon::parse($chDetails->dues_last_paid)->format('m-d-Y')}}</p>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>LAST NUMBER OF MEMBERS REGISTERED</label>
-                                    <p>{{ $chapterList[0]->members_paid_for}}</p>
+                                    <p>{{ $chDetails->members_paid_for}}</p>
                                 </div>
                             </div>
                         </div>
@@ -75,7 +75,7 @@
                         </div>
                         <div class="col-md-12"><br></div>
                         <div class="col-md-12"><strong>Late Fee:</strong></div>
-                        <div class="col-md-12">A late fee of $10.00 will be added if your payment is submitted after the last day of <strong>{{ $startMonth }}</strong>.</div>
+                        <div class="col-md-12">A late fee of $10.00 will be added if your payment is submitted after the last day of <strong>{{ $startMonthName }}</strong>.</div>
                         <div class="col-md-12"><br></div>
                         <div class="col-md-12"><strong>Sustaining Chapter Donation:</strong></div>
                         <div class="col-md-12">Sustaining chapter donations are voluntary and in addition to your chapter’s re-registration dues.
@@ -213,7 +213,7 @@
                             <br>
                                 <button type="submit" class="btn btn-primary"><i class="fas fa-share" ></i>&nbsp;{{ __('Submit Payment') }}</button>
                             @if($user_type === 'coordinator')
-                                <a href="{{ route('viewas.viewchapterpresident', $chapterList[0]->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Profile</a>
+                                <a href="{{ route('viewas.viewchapterpresident', $chDetails->id) }}" class="btn btn-primary" id="btn-back"><i class="fas fa-reply"></i>&nbsp; Back to Profile</a>
                             @else
                             <a href="{{ route('home') }}" class="btn btn-primary"><i class="fas fa-home" ></i>&nbsp; Back to Profile</a>
                             @endif

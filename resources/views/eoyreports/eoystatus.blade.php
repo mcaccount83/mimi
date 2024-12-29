@@ -46,21 +46,21 @@
                 <tbody>
                     @foreach($chapterList as $list)
                         @php
-                            $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
-                            $emailListChap = $emailDetails['emailListChapString'];
-                            $emailListCoord = $emailDetails['emailListCoordString'];
+                            $emailData = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
+                            $emailListChap = implode(',', $emailData['emailListChap']); // Convert array to comma-separated string
+                            $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
 
-                            $boardSubmitted = $emailDetails['boardSubmitted'] ?? null;
-                            $reportReceived = $emailDetails['reportReceived'] ?? null;
-                            $einLetter = $emailDetails['einLetter'] ?? null;
+                            $boardSubmitted = $emailData['boardSubmitted'] ?? null;
+                            $reportReceived = $emailData['reportReceived'] ?? null;
+                            $einLetter = $emailData['einLetter'] ?? null;
 
                             $mimiUrl = 'https://example.com/mimi';
                             $mailMessage = "At this time, we have not received one or more of your chapter's End of Year Reports. They are now considered PAST DUE.\n\n";
                             $mailMessage .= "The following items are missing:\n";
-                                if (is_null($list->new_board_submitted) || $list->new_board_submitted == 0) {
+                                if (is_null($list->documents->new_board_submitted) || $list->documents->new_board_submitted == 0) {
                                     $mailMessage .= "- Board Election Report\n";
                                 }
-                                if (is_null($list->financial_report_received) || $list->financial_report_received == 0) {
+                                if (is_null($list->documents->financial_report_received) || $list->documents->financial_report_received == 0) {
                                     $mailMessage .= "- Financial Report\n";
                                 }
                                 if (is_null($einLetter) || $einLetter == 0) { // `einLetter` is still used if its value directly reflects the EIN letter status
@@ -72,12 +72,12 @@
                         <tr>
                             <td class="text-center align-middle">
                                 @if($regionalCoordinatorCondition)
-                                    <a href="{{ url("/eoydetails/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ url("/eoy/editstatus/{$list->id}") }}"><i class="fas fa-eye"></i></a>
                                 @endif
                             </td>
                             <td class="text-center align-middle">
-                                @if ($list->new_board_submitted == null || $list->financial_report_received == null || $list->new_board_submitted == 0 || $list->financial_report_received == 0)
-                                    <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('EOY Status Report | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ rawurlencode($mailMessage) }}"><i class="far fa-envelope"></i></a>
+                                @if ($list->documents->new_board_submitted == null || $list->documents->financial_report_received == null || $list->documents->new_board_submitted == 0 || $list->documents->financial_report_received == 0)
+                                    <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('EOY Status Report | MOMS Club of ' . $list->name . ', ' . $list->state->state_short_name) }}&body={{ rawurlencode($mailMessage) }}"><i class="far fa-envelope"></i></a>
                                 @endif
                             </td>
                             <td>
@@ -101,8 +101,8 @@
                             <td @if($list->documents->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                                 @if($list->documents->financial_report_received == '1') YES @else NO @endif
                             </td>
-                            <td @if($list->documents->financial_report_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                                @if($list->documents->financial_report_complete == '1') YES @else NO @endif
+                            <td @if($list->documents->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                                @if($list->documents->financial_review_complete == '1') YES @else NO @endif
                             </td>
                         </tr>
                     @endforeach

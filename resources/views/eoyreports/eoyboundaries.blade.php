@@ -45,25 +45,20 @@
                 @if($list->boundary_issue_notes != '')
                   <tr>
 						<td class="text-center align-middle">
-                            <a href="{{ url("/eoydetailseditboundaries/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
-                        <td>
-                            @if ($list->reg != "None")
-                                {{ $list->conf }} / {{ $list->reg }}
-                            @else
-                                {{ $list->conf }}
-                            @endif
-                        </td>
-                        <td>{{ $list->state }}</td>
+                            <a href="{{ url("/eoy/editboundaries/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
+                            <td>
+                                @if ($list->region->short_name != "None")
+                                    {{ $list->conference->short_name }} / {{ $list->region->short_name }}
+                                @else
+                                    {{ $list->conference->short_name }}
+                                @endif
+                            </td>
+                            <td>{{ $list->state->state_short_name }}</td>
 						<td>{{ $list->name }}</td>
                         <td>{{ $list->boundary_issue_notes}}</td>
                         <td>{{ $list->territory}}</td>
-                        <td @if($list->boundary_issue_resolved == '1')style="background-color: transparent;"
-                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->boundary_issue_resolved == '1')
-                                YES
-                            @else
-                                NO
-                            @endif
+                        <td @if($list->boundary_issue_resolved == '1') style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->boundary_issue_resolved == '1') YES @else NO @endif
                         </td>
 			        </tr>
                   @endif

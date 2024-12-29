@@ -444,7 +444,7 @@ class GoogleController extends Controller
                 ->where('ch.id', '=', $id)
                 ->first();
 
-            $conf = $chapter->conference;
+            $conf = $chapter->conference_id;
             $state = $chapter->state;
             $chapterName = $chapter->name;
             $name = $state.'_'.$chapterName.'_Roster';
@@ -528,7 +528,7 @@ class GoogleController extends Controller
                 ->where('ch.id', '=', $id)
                 ->first();
 
-            $conf = $chapter->conference;
+            $conf = $chapter->conference_id;
             $state = $chapter->state;
             $chapterName = $chapter->name;
             $name = $chapter->state.'_'.$chapter->name.'_990N';
@@ -612,7 +612,7 @@ class GoogleController extends Controller
                 ->where('ch.id', '=', $id)
                 ->first();
 
-            $conf = $chapter->conference;
+            $conf = $chapter->conference_id;
             $state = $chapter->state;
             $chapterName = $chapter->name;
             $name = $chapter->state.'_'.$chapter->name.'_Statement';
@@ -668,7 +668,7 @@ class GoogleController extends Controller
                 $existingDocRecord = Documents::where('chapter_id', $id)->first();
 
                 $existingDocRecord->update([
-                    'bank_statement_1_path' => $file_id,
+                    'statement_1_path' => $file_id,
                 ]);
 
                 return response()->json(['message' => 'File uploaded successfully!'], 200);
@@ -696,7 +696,7 @@ class GoogleController extends Controller
                 ->where('ch.id', '=', $id)
                 ->first();
 
-            $conf = $chapter->conference;
+            $conf = $chapter->conference_id;
             $state = $chapter->state;
             $chapterName = $chapter->name;
             $name = $chapter->state.'_'.$chapter->name.'_Statement2';
@@ -752,7 +752,7 @@ class GoogleController extends Controller
                 $existingDocRecord = Documents::where('chapter_id', $id)->first();
 
                 $existingDocRecord->update([
-                    'bank_statement_2_path' => $file_id,
+                    'statement_2_path' => $file_id,
                 ]);
 
                 return response()->json(['message' => 'File uploaded successfully!'], 200);
@@ -777,7 +777,7 @@ class GoogleController extends Controller
                 ->where('ch.id', '=', $id)
                 ->first();
 
-            $conf = $chapter->conference;
+            $conf = $chapter->conference_id;
             $state = $chapter->state;
             $chapterName = $chapter->name;
             $name = $chapter->state.'_'.$chapter->name.'_Award1';
@@ -852,7 +852,7 @@ class GoogleController extends Controller
                 ->where('ch.id', '=', $id)
                 ->first();
 
-            $conf = $chapter->conference;
+            $conf = $chapter->conference_id;
             $state = $chapter->state;
             $chapterName = $chapter->name;
             $name = $chapter->state.'_'.$chapter->name.'_Award2';
@@ -927,7 +927,7 @@ class GoogleController extends Controller
                 ->where('ch.id', '=', $id)
                 ->first();
 
-            $conf = $chapter->conference;
+            $conf = $chapter->conference_id;
             $state = $chapter->state;
             $chapterName = $chapter->name;
             $name = $chapter->state.'_'.$chapter->name.'_Award3';
@@ -1002,7 +1002,7 @@ class GoogleController extends Controller
                 ->where('ch.id', '=', $id)
                 ->first();
 
-            $conf = $chapter->conference;
+            $conf = $chapter->conference_id;
             $state = $chapter->state;
             $chapterName = $chapter->name;
             $name = $chapter->state.'_'.$chapter->name.'_Award4';
@@ -1077,7 +1077,7 @@ class GoogleController extends Controller
                 ->where('ch.id', '=', $id)
                 ->first();
 
-            $conf = $chapter->conference;
+            $conf = $chapter->conference_id;
             $state = $chapter->state;
             $chapterName = $chapter->name;
             $name = $chapter->state.'_'.$chapter->name.'_Award5';

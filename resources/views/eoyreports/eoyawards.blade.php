@@ -47,139 +47,63 @@
                     <tr>
                         <td class="text-center align-middle">
                             @if ($assistConferenceCoordinatorCondition)
-                                <a href="{{ url("/eoydetailseditawards/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                                <a href="{{ url("/eoy/editawards/{$list->id}") }}"><i class="fas fa-eye"></i></a>
                           @endif
                         </td>
                         <td>
-                            @if ($list->reg != "None")
-                                {{ $list->conf }} / {{ $list->reg }}
+                            @if ($list->region->short_name != "None")
+                                {{ $list->conference->short_name }} / {{ $list->region->short_name }}
                             @else
-                                {{ $list->conf }}
+                                {{ $list->conference->short_name }}
                             @endif
                         </td>
-                        <td>{{ $list->state }}</td>
-                            <td>{{ $list->name }}</td>
-                            <td>@if($list->award_1_nomination_type=='1')
-                                Outstanding Specific Service Project
-                                @elseif($list->award_1_nomination_type=='2')
-                                Outstanding Overall Service Program
-                                @elseif($list->award_1_nomination_type=='3')
-                                Outstanding Children's Activity
-                                @elseif($list->award_1_nomination_type=='4')
-                                Outstanding Spirit
-                                @elseif($list->award_1_nomination_type=='5')
-                                Outstanding Chapter
-                                @elseif($list->award_1_nomination_type=='6')
-                                Outstanding New Chapter
-                                @elseif($list->award_1_nomination_type=='7')
-                                Other Outstanding Award
-                                @else
-
-                                @endif
-                                    @if ($list->award_1_approved)
-                                        <div style="background-color:#28a745; color: #ffffff;">YES</div>
-                                    @else
-                                        @if ($list->award_1_nomination_type)
-                                            <div style="background-color:#dc3545; color: #ffffff;">NO</div>
-                                        @endif
-                                @endif</td>
-                            <td>@if($list->award_2_nomination_type=='1')
-                                Outstanding Specific Service Project
-                                @elseif($list->award_2_nomination_type=='2')
-                                Outstanding Overall Service Program
-                                @elseif($list->award_2_nomination_type=='3')
-                                Outstanding Children's Activity
-                                @elseif($list->award_2_nomination_type=='4')
-                                Outstanding Spirit
-                                @elseif($list->award_2_nomination_type=='5')
-                                Outstanding Chapter
-                                @elseif($list->award_2_nomination_type=='6')
-                                Outstanding New Chapter
-                                @elseif($list->award_2_nomination_type=='7')
-                                Other Outstanding Award
-                                @else
-
-                                @endif
-                                    @if ($list->award_2_approved)
-                                    <div style="background-color:#28a745; color: #ffffff;">YES</div>
-                                    @else
-                                        @if ($list->award_2_nomination_type)
-                                        <div style="background-color:#dc3545; color: #ffffff;">NO</div>
-                                        @endif
-                                @endif</td>
-                            <td>@if($list->award_3_nomination_type=='1')
-                                Outstanding Specific Service Project
-                                @elseif($list->award_3_nomination_type=='2')
-                                Outstanding Overall Service Program
-                                @elseif($list->award_3_nomination_type=='3')
-                                Outstanding Children's Activity
-                                @elseif($list->award_3_nomination_type=='4')
-                                Outstanding Spirit
-                                @elseif($list->award_3_nomination_type=='5')
-                                Outstanding Chapter
-                                @elseif($list->award_3_nomination_type=='6')
-                                Outstanding New Chapter
-                                @elseif($list->award_3_nomination_type=='7')
-                                Other Outstanding Award
-                                @else
-
-                                @endif
-                                    @if ($list->award_3_approved)
-                                    <div style="background-color:#28a745; color: #ffffff;">YES</div>
-                                    @else
-                                        @if ($list->award_3_nomination_type)
-                                        <div style="background-color:#dc3545; color: #ffffff;">NO</div>
-                                        @endif
-                                @endif</td>
-                            <td>@if($list->award_4_nomination_type=='1')
-                                Outstanding Specific Service Project
-                                @elseif($list->award_4_nomination_type=='2')
-                                Outstanding Overall Service Program
-                                @elseif($list->award_4_nomination_type=='3')
-                                Outstanding Children's Activity
-                                @elseif($list->award_4_nomination_type=='4')
-                                Outstanding Spirit
-                                @elseif($list->award_4_nomination_type=='5')
-                                Outstanding Chapter
-                                @elseif($list->award_4_nomination_type=='6')
-                                Outstanding New Chapter
-                                @elseif($list->award_4_nomination_type=='7')
-                                Other Outstanding Award
-                                @else
-
-                                @endif
-                                @if ($list->award_4_approved)
+                        <td>{{ $list->state->state_short_name }}</td>
+                        <td>{{ $list->name }}</td>
+                        <td>{{ $list->financialReport->awardType1?->award_type }}
+                            @if ($list->financialReport->check_award_1_approved)
                                 <div style="background-color:#28a745; color: #ffffff;">YES</div>
-                                @else
-                                    @if ($list->award_4_nomination_type)
+                            @else
+                                @if ($list->financialReport->award_1_nomination_type)
                                     <div style="background-color:#dc3545; color: #ffffff;">NO</div>
-                                    @endif
-                            @endif</td>
-                            <td>@if($list->award_5_nomination_type=='1')
-                                Outstanding Specific Service Project
-                                @elseif($list->award_5_nomination_type=='2')
-                                Outstanding Overall Service Program
-                                @elseif($list->award_5_nomination_type=='3')
-                                Outstanding Children's Activity
-                                @elseif($list->award_5_nomination_type=='4')
-                                Outstanding Spirit
-                                @elseif($list->award_5_nomination_type=='5')
-                                Outstanding Chapter
-                                @elseif($list->award_5_nomination_type=='6')
-                                Outstanding New Chapter
-                                @elseif($list->award_5_nomination_type=='7')
-                                Other Outstanding Award
-                                @else
-
                                 @endif
-                                    @if ($list->award_5_approved)
-                                    <div style="background-color:#28a745; color: #ffffff;">YES</div>
-                                    @else
-                                        @if ($list->award_5_nomination_type)
-                                        <div style="background-color:#dc3545; color: #ffffff;">NO</div>
-                                        @endif
-                                @endif</td>
-
+                            @endif
+                        </td>
+                        <td>{{ $list->financialReport->awardType2?->award_type }}
+                            @if ($list->financialReport->check_award_2_approved)
+                                <div style="background-color:#28a745; color: #ffffff;">YES</div>
+                            @else
+                                @if ($list->financialReport->award_2_nomination_type)
+                                    <div style="background-color:#dc3545; color: #ffffff;">NO</div>
+                                @endif
+                            @endif
+                        </td>
+                        <td>{{ $list->financialReport->awardType3?->award_type }}
+                            @if ($list->financialReport->check_award_3_approved)
+                                <div style="background-color:#28a745; color: #ffffff;">YES</div>
+                            @else
+                                @if ($list->financialReport->award_3_nomination_type)
+                                    <div style="background-color:#dc3545; color: #ffffff;">NO</div>
+                                @endif
+                            @endif
+                        </td>
+                        <td>{{ $list->financialReport->awardType4?->award_type }}
+                            @if ($list->financialReport->check_award_4_approved)
+                                <div style="background-color:#28a745; color: #ffffff;">YES</div>
+                            @else
+                                @if ($list->financialReport->award_4_nomination_type)
+                                    <div style="background-color:#dc3545; color: #ffffff;">NO</div>
+                                @endif
+                            @endif
+                        </td>
+                        <td>{{ $list->financialReport->awardType5?->award_type }}
+                            @if ($list->financialReport->check_award_5_approved)
+                                <div style="background-color:#28a745; color: #ffffff;">YES</div>
+                            @else
+                                @if ($list->financialReport->award_5_nomination_type)
+                                    <div style="background-color:#dc3545; color: #ffffff;">NO</div>
+                                @endif
+                            @endif
+                        </td>
                     </tr>
                 @endforeach
 
@@ -195,26 +119,13 @@
                         </div>
                     </div>
                     <div class="card-body text-center">
-                          {{-- <a class="btn bg-gradient-primary" href="{{ route('report.addawards') }}"><i class="fas fa-eye" ></i>&nbsp;&nbsp;&nbsp;View All Chapers</a> --}}
-
-        {{-- @if ($checkBoxStatus)
-				<a href="{{ route('export.chapteraward',$corId) }}"><button class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-envelope" ></i>&nbsp;&nbsp;&nbsp;Export Award List</button></a>
-
-			 @else
-				<a href="{{ route('export.chapteraward','0') }}"><button class="btn bg-gradient-primary" <?php if($countList ==0) echo "disabled";?>><i class="fas fa-envelope" ></i>&nbsp;&nbsp;&nbsp;Export Award List</button></a>
-		@endif --}}
-
-
 
              </div>
-
             </div>
-
            </div>
         </div>
       </div>
     </section>
-
 
 @endsection
 @section('customscript')

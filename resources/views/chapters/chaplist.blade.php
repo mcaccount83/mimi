@@ -51,15 +51,15 @@
                 <tbody>
                     @foreach($chapterList as $list)
                     @php
-                        $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
-                        $emailListChap = $emailDetails['emailListChapString'];
-                        $emailListCoord = $emailDetails['emailListCoordString'];
+                        $emailData = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
+                        $emailListChap = implode(',', $emailData['emailListChap']); // Convert array to comma-separated string
+                        $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
                     @endphp
 
                         <tr id="chapter-{{ $list->id }}">
                             <td class="text-center align-middle"><a href="{{ url("/chapterdetails/{$list->id}") }}"><i class="fas fa-eye"></i></a></td>
                             <td class="text-center align-middle">
-                                <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $list->name . ', ' . $list->state) }}"><i class="far fa-envelope"></i></a></td>
+                                <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $list->name . ', ' . $list->state->state_short_name) }}"><i class="far fa-envelope"></i></a></td>
                            </td>
                             <td>
                                 @if ($list->region->short_name != "None")

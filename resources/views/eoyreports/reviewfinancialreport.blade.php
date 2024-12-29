@@ -26,16 +26,16 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-4">
-            <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("eoyreports.updatefinancialreport", $chapterid) }}' novalidate>
+            <form id="financial_report" name="financial_report" role="form" data-toggle="validator" enctype="multipart/form-data" method="POST" action='{{ route("eoyreports.updatefinancialreport", $chDetails->id) }}' novalidate>
                 @csrf
                 <input type="hidden" name="submitted" id="submitted" value="{{ $submitted }}" />
-                <input type="hidden" name="FurthestStep" id="FurthestStep" value="<?php if($financial_report_array['farthest_step_visited_coord'] != null) echo $financial_report_array['farthest_step_visited_coord']; else echo '14'; ?>" />
+                <input type="hidden" name="FurthestStep" id="FurthestStep" value="<?php if($chFinancialReport['farthest_step_visited_coord'] != null) echo $chFinancialReport['farthest_step_visited_coord']; else echo '14'; ?>" />
                 <input type="hidden" name="submit_type" id="submit_type" value="" />
 
           <!-- Profile Image -->
           <div class="card card-primary card-outline">
             <div class="card-body box-profile">
-                <h3 class="profile-username text-center">MOMS Club of {{ $chapterDetails[0]->chapter_name }}, {{$chapterDetails[0]->state}}</h3>
+                <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
 
           <ul class="list-group list-group-unbordered mb-3">
             <li class="list-group-item">
@@ -44,56 +44,56 @@
             <br>
             @if ($submitted)
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Financial Report PDF:</b> <span class="float-right"><a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>">Download PDF</a></span>
+                <b>Financial Report PDF:</b> <span class="float-right"><a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chFinancialReport['financial_pdf_path']; ?>">Download PDF</a></span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Chapter Roster File:</b> <span class="float-right">
-                @if ($financial_report_array['roster_path'] != null)
-                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>">Chapter Roster</a></span>
+                @if ($chFinancialReport['roster_path'] != null)
+                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chFinancialReport['financial_pdf_path']; ?>">Chapter Roster</a></span>
                 @else
                 No file attached</span>
                 @endif
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Primary Bank Statement:</b> <span class="float-right">
-                @if ($financial_report_array['bank_statement_included_path'] != null)
-                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_included_path']; ?>">Primary Statement</a></span>
+                @if ($chFinancialReport['bank_statement_included_path'] != null)
+                <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chFinancialReport['bank_statement_included_path']; ?>">Primary Statement</a></span>
                 @else
                 No file attached</span>
                 @endif
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Additional Bank Statement:</b> <span class="float-right">
-                    @if ($financial_report_array['bank_statement_2_included_path'] != null)
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">Additional Statement</a></span>
+                    @if ($chFinancialReport['bank_statement_2_included_path'] != null)
+                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chFinancialReport['bank_statement_2_included_path']; ?>">Additional Statement</a></span>
                     @else
                     No file attached</span>
                     @endif
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>990N Filing:</b> <span class="float-right">
-                    @if ($financial_report_array['file_irs_path'] != null)
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['file_irs_path']; ?>">990N Confirmation</a></span>
+                    @if ($chFinancialReport['file_irs_path'] != null)
+                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chFinancialReport['file_irs_path']; ?>">990N Confirmation</a></span>
                     @else
                     No file attached</span>
                     @endif
             </div>
             @endif
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Excel roster attached and complete:</b> <span class="float-right">{{ is_null($financial_report_array['check_roster_attached']) ? 'Please Review'
-                    : ($financial_report_array ['check_roster_attached'] == 0 ? 'NO' : ($financial_report_array ['check_roster_attached'] == 1 ? 'YES' : 'Please Review' )) }}</span>
+                <b>Excel roster attached and complete:</b> <span class="float-right">{{ is_null($chFinancialReport['check_roster_attached']) ? 'Please Review'
+                    : ($chFinancialReport ['check_roster_attached'] == 0 ? 'NO' : ($chFinancialReport ['check_roster_attached'] == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Number of members/dues/renewal "seem right":</b> <span class="float-right">{{ is_null($financial_report_array['check_renewal_seems_right']) ? 'Please Review'
-                    : ($financial_report_array ['check_renewal_seems_right'] == 0 ? 'NO' : ($financial_report_array ['check_renewal_seems_right'] == 1 ? 'YES' : 'Please Review' )) }}</span>
+                <b>Number of members/dues/renewal "seem right":</b> <span class="float-right">{{ is_null($chFinancialReport['check_renewal_seems_right']) ? 'Please Review'
+                    : ($chFinancialReport ['check_renewal_seems_right'] == 0 ? 'NO' : ($chFinancialReport ['check_renewal_seems_right'] == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Minimum of one service project completed:</b> <span class="float-right">{{ is_null($financial_report_array['check_minimum_service_project']) ? 'Please Review'
-                    : ( $financial_report_array ['check_minimum_service_project'] == 0 ? 'NO' : ($financial_report_array ['check_minimum_service_project'] == 1 ? 'YES' : 'Please Review' )) }}</span>
+                <b>Minimum of one service project completed:</b> <span class="float-right">{{ is_null($chFinancialReport['check_minimum_service_project']) ? 'Please Review'
+                    : ( $chFinancialReport ['check_minimum_service_project'] == 0 ? 'NO' : ($chFinancialReport ['check_minimum_service_project'] == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Donation to M2M Fund:</b> <span class="float-right">{{ is_null($financial_report_array['check_m2m_donation']) ? 'Please Review'
-                    : ($financial_report_array ['check_m2m_donation'] == 0 ? 'NO' : ($financial_report_array ['check_m2m_donation'] == 1 ? 'YES' : 'Please Review' )) }}</span>
+                <b>Donation to M2M Fund:</b> <span class="float-right">{{ is_null($chFinancialReport['check_m2m_donation']) ? 'Please Review'
+                    : ($chFinancialReport ['check_m2m_donation'] == 0 ? 'NO' : ($chFinancialReport ['check_m2m_donation'] == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Party Percentage:</b> <span class="float-right">
@@ -101,25 +101,25 @@
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b> Party Percentage less than 15%:</b> <span class="float-right" style="
-                    @if(is_null($financial_report_array['check_party_percentage']))
+                    @if(is_null($chFinancialReport['check_party_percentage']))
                         background-color: #FFFFFF; color: #000000;
-                    @elseif($financial_report_array['check_party_percentage'] == 2)
+                    @elseif($chFinancialReport['check_party_percentage'] == 2)
                         background-color: #28a745; color: #FFFFFF;
-                    @elseif($financial_report_array['check_party_percentage'] == 1)
+                    @elseif($chFinancialReport['check_party_percentage'] == 1)
                         background-color: #ffc107; color: #000000;
-                    @elseif($financial_report_array['check_party_percentage'] == 0)
+                    @elseif($chFinancialReport['check_party_percentage'] == 0)
                         background-color: #dc3545; color: #FFFFFF;
                     @else
                         background-color: #FFFFFF; color: #000000;
                     @endif
                         ">
-                    @if(is_null($financial_report_array['check_party_percentage']))
+                    @if(is_null($chFinancialReport['check_party_percentage']))
                         Please Review
-                    @elseif($financial_report_array['check_party_percentage'] == 0)
+                    @elseif($chFinancialReport['check_party_percentage'] == 0)
                         They are over 20%
-                    @elseif($financial_report_array['check_party_percentage'] == 1)
+                    @elseif($chFinancialReport['check_party_percentage'] == 1)
                         They are between 15-20%
-                    @elseif($financial_report_array['check_party_percentage'] == 2)
+                    @elseif($chFinancialReport['check_party_percentage'] == 2)
                         They are under 15%
                     @else
                         Please Review
@@ -127,30 +127,30 @@
                 </span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Total income/revenue less than $50,000:</b> <span class="float-right">{{ is_null($financial_report_array['check_total_income_less']) ? 'Please Review'
-                    : ( $financial_report_array ['check_total_income_less'] == 0 ? 'NO' : ($financial_report_array ['check_total_income_less'] == 1 ? 'YES' : 'Please Review' )) }}</span>
+                <b>Total income/revenue less than $50,000:</b> <span class="float-right">{{ is_null($chFinancialReport['check_total_income_less']) ? 'Please Review'
+                    : ( $chFinancialReport ['check_total_income_less'] == 0 ? 'NO' : ($chFinancialReport ['check_total_income_less'] == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Current bank statement included:</b> <span class="float-right">{{ is_null($financial_report_array['check_bank_statement_included']) ? 'Please Review'
-                    : ( $financial_report_array ['check_bank_statement_included'] == 0 ? 'NO' : ($financial_report_array ['check_bank_statement_included'] == 1 ? 'YES' : 'Please Review')) }}</span>
+                <b>Current bank statement included:</b> <span class="float-right">{{ is_null($chFinancialReport['check_bank_statement_included']) ? 'Please Review'
+                    : ( $chFinancialReport ['check_bank_statement_included'] == 0 ? 'NO' : ($chFinancialReport ['check_bank_statement_included'] == 1 ? 'YES' : 'Please Review')) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Treasury & Reconciled Balances Match:</b> <span class="float-right" style="
-                    @if(is_null($financial_report_array['check_bank_statement_matches']))
+                    @if(is_null($chFinancialReport['check_bank_statement_matches']))
                         background-color: #FFFFFF; color: #000000;
-                    @elseif($financial_report_array['check_bank_statement_matches'] == 1)
+                    @elseif($chFinancialReport['check_bank_statement_matches'] == 1)
                         background-color: #28a745; color: #FFFFFF;
-                    @elseif($financial_report_array['check_bank_statement_matches'] == 0)
+                    @elseif($chFinancialReport['check_bank_statement_matches'] == 0)
                         background-color: #dc3545; color: #FFFFFF;
                     @else
                         background-color: #FFFFFF; color: #000000;
                     @endif
                         ">
-                    @if(is_null($financial_report_array['check_bank_statement_matches']))
+                    @if(is_null($chFinancialReport['check_bank_statement_matches']))
                         Please Review
-                    @elseif($financial_report_array['check_bank_statement_matches'] == 1)
+                    @elseif($chFinancialReport['check_bank_statement_matches'] == 1)
                         In Balance
-                    @elseif($financial_report_array['check_bank_statement_matches'] == 0)
+                    @elseif($chFinancialReport['check_bank_statement_matches'] == 0)
                         Out of balance
                     @else
                         Please Review
@@ -159,21 +159,21 @@
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
                 <b>Proof of 990N Filing for 7/1/<?php echo date('Y')-1 .' - 6/30/'.date('Y');?> :</b> <span class="float-right" style="
-                    @if(is_null($financial_report_array['check_current_990N_included']))
+                    @if(is_null($chFinancialReport['check_current_990N_included']))
                         background-color: #FFFFFF; color: #000000;
-                    @elseif($financial_report_array['check_current_990N_included'] == 1)
+                    @elseif($chFinancialReport['check_current_990N_included'] == 1)
                         background-color: #28a745; color: #FFFFFF;
-                    @elseif($financial_report_array['check_current_990N_included'] == 0)
+                    @elseif($chFinancialReport['check_current_990N_included'] == 0)
                         background-color: #dc3545; color: #FFFFFF;
                     @else
                         background-color: #FFFFFF; color: #000000;
                     @endif
                         ">
-                    @if(is_null($financial_report_array['check_current_990N_included']))
+                    @if(is_null($chFinancialReport['check_current_990N_included']))
                        Please Review
-                    @elseif($financial_report_array['check_current_990N_included'] == 1)
+                    @elseif($chFinancialReport['check_current_990N_included'] == 1)
                         990N is filed
-                    @elseif($financial_report_array['check_current_990N_included'] == 0)
+                    @elseif($chFinancialReport['check_current_990N_included'] == 0)
                         990N has not been filed
                     @else
                         Please Review
@@ -182,28 +182,28 @@
             </div>
 
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Purchased membership pins or had leftovers:</b> <span class="float-right">{{ is_null($financial_report_array['check_purchased_pins']) ? 'Please Review'
-                    : ( $financial_report_array ['check_purchased_pins'] == 0 ? 'NO' : ($financial_report_array ['check_purchased_pins'] == 1 ? 'YES' : 'Please Review' )) }}</span>
+                <b>Purchased membership pins or had leftovers:</b> <span class="float-right">{{ is_null($chFinancialReport['check_purchased_pins']) ? 'Please Review'
+                    : ( $chFinancialReport ['check_purchased_pins'] == 0 ? 'NO' : ($chFinancialReport ['check_purchased_pins'] == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Purchased MOMS Club merchandise:</b> <span class="float-right">{{ is_null($financial_report_array['check_purchased_mc_merch']) ? 'Please Review'
-                    : ($financial_report_array ['check_purchased_mc_merch'] == 0 ? 'NO' : ($financial_report_array ['check_purchased_mc_merch'] == 1 ? 'YES' : 'Please Review' )) }}</span>
+                <b>Purchased MOMS Club merchandise:</b> <span class="float-right">{{ is_null($chFinancialReport['check_purchased_mc_merch']) ? 'Please Review'
+                    : ($chFinancialReport ['check_purchased_mc_merch'] == 0 ? 'NO' : ($chFinancialReport ['check_purchased_mc_merch'] == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Offered MOMS Club merchandise or info to members:</b> <span class="float-right">{{ is_null($financial_report_array['check_offered_merch']) ? 'Please Review'
-                    : ( $financial_report_array ['check_offered_merch'] == 0 ? 'NO' : ( $financial_report_array ['check_offered_merch'] == 1 ? 'YES' : 'Pleae Review' )) }}</span>
+                <b>Offered MOMS Club merchandise or info to members:</b> <span class="float-right">{{ is_null($chFinancialReport['check_offered_merch']) ? 'Please Review'
+                    : ( $chFinancialReport ['check_offered_merch'] == 0 ? 'NO' : ( $chFinancialReport ['check_offered_merch'] == 1 ? 'YES' : 'Pleae Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Manual/by-laws made available to members:</b> <span class="float-right">{{ is_null($financial_report_array['check_bylaws_available']) ? 'Please Review'
-                    : ( $financial_report_array ['check_bylaws_available'] == 0 ? 'NO' : ($financial_report_array ['check_bylaws_available'] == 1 ? 'YES' : 'Please Review' )) }}</span>
+                <b>Manual/by-laws made available to members:</b> <span class="float-right">{{ is_null($chFinancialReport['check_bylaws_available']) ? 'Please Review'
+                    : ( $chFinancialReport ['check_bylaws_available'] == 0 ? 'NO' : ($chFinancialReport ['check_bylaws_available'] == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Attended International Event:</b> <span class="float-right">{{ is_null($financial_report_array['check_attended_training']) ? 'Please Review'
-                    : ($financial_report_array ['check_attended_training'] == 0 ? 'NO' : ($financial_report_array ['check_attended_training'] == 1 ? 'YES' : 'Please Review' )) }}</span>
+                <b>Attended International Event:</b> <span class="float-right">{{ is_null($chFinancialReport['check_attended_training']) ? 'Please Review'
+                    : ($chFinancialReport ['check_attended_training'] == 0 ? 'NO' : ($chFinancialReport ['check_attended_training'] == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Sistered another chapter:</b> <span class="float-right">{{ is_null($financial_report_array['check_sistered_another_chapter']) ? 'Please Review'
-                    : ($financial_report_array ['check_sistered_another_chapter'] == 0 ? 'NO' : ($financial_report_array ['check_sistered_another_chapter'] == 1 ? 'YES' : 'Please Review' )) }}</span>
+                <b>Sistered another chapter:</b> <span class="float-right">{{ is_null($chFinancialReport['check_sistered_another_chapter']) ? 'Please Review'
+                    : ($chFinancialReport ['check_sistered_another_chapter'] == 0 ? 'NO' : ($chFinancialReport ['check_sistered_another_chapter'] == 1 ? 'YES' : 'Please Review' )) }}</span>
             </div>
 
             @php
@@ -212,42 +212,42 @@
             @endphp
 
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Award #1 Status:</b> <span class="float-right" style="background-color: {{ is_null($financial_report_array['check_award_1_approved']) ? '#FFFFFF' : ($financial_report_array['check_award_1_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($financial_report_array['check_award_1_approved']) ? '#000000' : '#FFFFFF' }};">
-                    {{ is_null($financial_report_array['award_1_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_1_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                    : ($financial_report_array['award_1_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_1_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_1_nomination_type'] == 4 ? 'Outstanding Spirit'
-                    : ($financial_report_array['award_1_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_1_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_1_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                <b>Award #1 Status:</b> <span class="float-right" style="background-color: {{ is_null($chFinancialReport['check_award_1_approved']) ? '#FFFFFF' : ($chFinancialReport['check_award_1_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($chFinancialReport['check_award_1_approved']) ? '#000000' : '#FFFFFF' }};">
+                    {{ is_null($chFinancialReport['award_1_nomination_type']) ? 'No Award Selected' : ($chFinancialReport['award_1_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                    : ($chFinancialReport['award_1_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($chFinancialReport['award_1_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($chFinancialReport['award_1_nomination_type'] == 4 ? 'Outstanding Spirit'
+                    : ($chFinancialReport['award_1_nomination_type'] == 5 ? 'Outstanding Chapter' : ($chFinancialReport['award_1_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($chFinancialReport['award_1_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                 </span>
             </div>
 
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Award #2 Status:</b> <span class="float-right" style="background-color: {{ is_null($financial_report_array['check_award_2_approved']) ? '#FFFFFF' : ($financial_report_array['check_award_2_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($financial_report_array['check_award_2_approved']) ? '#000000' : '#FFFFFF' }};">
-                    {{ is_null($financial_report_array['award_2_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_2_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                        : ($financial_report_array['award_2_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_2_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_2_nomination_type'] == 4 ? 'Outstanding Spirit'
-                        : ($financial_report_array['award_2_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_2_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_2_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                <b>Award #2 Status:</b> <span class="float-right" style="background-color: {{ is_null($chFinancialReport['check_award_2_approved']) ? '#FFFFFF' : ($chFinancialReport['check_award_2_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($chFinancialReport['check_award_2_approved']) ? '#000000' : '#FFFFFF' }};">
+                    {{ is_null($chFinancialReport['award_2_nomination_type']) ? 'No Award Selected' : ($chFinancialReport['award_2_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                        : ($chFinancialReport['award_2_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($chFinancialReport['award_2_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($chFinancialReport['award_2_nomination_type'] == 4 ? 'Outstanding Spirit'
+                        : ($chFinancialReport['award_2_nomination_type'] == 5 ? 'Outstanding Chapter' : ($chFinancialReport['award_2_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($chFinancialReport['award_2_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                 </span>
             </div>
 
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Award #3 Status:</b> <span class="float-right" style="background-color: {{ is_null($financial_report_array['check_award_3_approved']) ? '#FFFFFF' : ($financial_report_array['check_award_3_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($financial_report_array['check_award_3_approved']) ? '#000000' : '#FFFFFF' }};">
-                    {{ is_null($financial_report_array['award_3_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_3_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                        : ($financial_report_array['award_3_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_3_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_3_nomination_type'] == 4 ? 'Outstanding Spirit'
-                        : ($financial_report_array['award_3_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_3_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_3_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                <b>Award #3 Status:</b> <span class="float-right" style="background-color: {{ is_null($chFinancialReport['check_award_3_approved']) ? '#FFFFFF' : ($chFinancialReport['check_award_3_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($chFinancialReport['check_award_3_approved']) ? '#000000' : '#FFFFFF' }};">
+                    {{ is_null($chFinancialReport['award_3_nomination_type']) ? 'No Award Selected' : ($chFinancialReport['award_3_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                        : ($chFinancialReport['award_3_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($chFinancialReport['award_3_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($chFinancialReport['award_3_nomination_type'] == 4 ? 'Outstanding Spirit'
+                        : ($chFinancialReport['award_3_nomination_type'] == 5 ? 'Outstanding Chapter' : ($chFinancialReport['award_3_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($chFinancialReport['award_3_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                 </span>
             </div>
 
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Award #4 Status:</b> <span class="float-right" style="background-color: {{ is_null($financial_report_array['check_award_4_approved']) ? '#FFFFFF' : ($financial_report_array['check_award_4_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($financial_report_array['check_award_4_approved']) ? '#000000' : '#FFFFFF' }};">
-                    {{ is_null($financial_report_array['award_4_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_4_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                        : ($financial_report_array['award_4_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_4_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_4_nomination_type'] == 4 ? 'Outstanding Spirit'
-                        : ($financial_report_array['award_4_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_4_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_4_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                <b>Award #4 Status:</b> <span class="float-right" style="background-color: {{ is_null($chFinancialReport['check_award_4_approved']) ? '#FFFFFF' : ($chFinancialReport['check_award_4_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($chFinancialReport['check_award_4_approved']) ? '#000000' : '#FFFFFF' }};">
+                    {{ is_null($chFinancialReport['award_4_nomination_type']) ? 'No Award Selected' : ($chFinancialReport['award_4_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                        : ($chFinancialReport['award_4_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($chFinancialReport['award_4_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($chFinancialReport['award_4_nomination_type'] == 4 ? 'Outstanding Spirit'
+                        : ($chFinancialReport['award_4_nomination_type'] == 5 ? 'Outstanding Chapter' : ($chFinancialReport['award_4_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($chFinancialReport['award_4_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                 </span>
             </div>
 
             <div class="d-flex align-items-center justify-content-between w-100 mb-1">
-                <b>Award #5 Status:</b> <span class="float-right" style="background-color: {{ is_null($financial_report_array['check_award_5_approved']) ? '#FFFFFF' : ($financial_report_array['check_award_5_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($financial_report_array['check_award_5_approved']) ? '#000000' : '#FFFFFF' }};">
-                    {{ is_null($financial_report_array['award_5_nomination_type']) ? 'No Award Selected' : ($financial_report_array['award_5_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                        : ($financial_report_array['award_5_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_5_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_5_nomination_type'] == 4 ? 'Outstanding Spirit'
-                        : ($financial_report_array['award_5_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_5_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_5_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                <b>Award #5 Status:</b> <span class="float-right" style="background-color: {{ is_null($chFinancialReport['check_award_5_approved']) ? '#FFFFFF' : ($chFinancialReport['check_award_5_approved'] == 1 ? $yesBackground : $noBackground) }}; color: {{ is_null($chFinancialReport['check_award_5_approved']) ? '#000000' : '#FFFFFF' }};">
+                    {{ is_null($chFinancialReport['award_5_nomination_type']) ? 'No Award Selected' : ($chFinancialReport['award_5_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                        : ($chFinancialReport['award_5_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($chFinancialReport['award_5_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($chFinancialReport['award_5_nomination_type'] == 4 ? 'Outstanding Spirit'
+                        : ($chFinancialReport['award_5_nomination_type'] == 5 ? 'Outstanding Chapter' : ($chFinancialReport['award_5_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($chFinancialReport['award_5_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                 </span>
             </div>
 
@@ -259,8 +259,8 @@
                     $financial_report_notes = [];
                     for ($i = 1; $i <= 13; $i++) {
                         $key = 'step_' . $i . '_notes_log';
-                        if (isset($financial_report_array[$key])) {
-                            $notes = explode("\n", $financial_report_array[$key]);
+                        if (isset($chFinancialReport[$key])) {
+                            $notes = explode("\n", $chFinancialReport[$key]);
                             $financial_report_notes = array_merge($financial_report_notes, $notes);
                         }
                     }
@@ -271,37 +271,43 @@
             <li class="list-group-item">
 
         <div class="d-flex justify-content-between w-100">
-            <b>Report Completed By:</b> <span class="float-right"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_name'];}?>
+            <b>Report Completed By:</b> <span class="float-right"><?php if (!is_null($chFinancialReport)) {echo $chFinancialReport['completed_name'];}?>
         </div>
         <div class="d-flex justify-content-between w-100">
-            <b>Contact Email:</b> <span class="float-right"><a href="mailto:<?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_email'];}?>"><?php if (!is_null($financial_report_array)) {echo $financial_report_array['completed_email'];}?></a></p>
+            <b>Contact Email:</b> <span class="float-right"><a href="mailto:<?php if (!is_null($chFinancialReport)) {echo $chFinancialReport['completed_email'];}?>"><?php if (!is_null($chFinancialReport)) {echo $chFinancialReport['completed_email'];}?></a></p>
         </div>
 
         <div class="d-flex align-items-center justify-content-between w-100">
-            <?php if ($chapterDetails[0]->financial_report_received == 1 && $financial_report_array['reviewer_id'] == null): ?>
+            <?php if ($chDetails->financial_report_received == 1 && $chFinancialReport['reviewer_id'] == null): ?>
                     <span style="display: inline; color: red;">No Reviewer Assigned - Select Reviewer before continuing to prevent errors.<br></span>
                 <?php endif; ?>
                 <label for="AssignedReviewer"><strong>Assigned Reviewer:</strong></label>
                 <select class="form-control" name="AssignedReviewer" id="AssignedReviewer" style="width: 250px;"  required>
                     <option value="" style="display:none" disabled selected>Select a reviewer</option>
-                    @foreach($reviewerList as $coordinator)
+                        @foreach($rrDetails as $coordinator)
+                            <option value="{{ $coordinator['cid'] }}"
+                                {{ isset($chFinancialReport->reviewer_id) && $chFinancialReport->reviewer_id == $coordinator['cid'] ? 'selected' : '' }}>
+                                {{ $coordinator['cname'] }} ({{ $coordinator['cpos'] }})
+                            </option>
+                        @endforeach
+                    {{-- @foreach($reviewerList as $coordinator)
                         <option value="{{ $coordinator['cid'] }}"
-                            {{ isset($financial_report_array->reviewer_id) && $financial_report_array->reviewer_id == $coordinator['cid'] ? 'selected' : '' }}>
+                            {{ isset($chFinancialReport->reviewer_id) && $chFinancialReport->reviewer_id == $coordinator['cid'] ? 'selected' : '' }}>
                             {{ $coordinator['cname'] }}
                         </option>
-                    @endforeach
+                    @endforeach --}}
                 </select>
             </div>
             <div class="form-group" id="emailMessageGroup" style="display: none;">
                 <label for="AssignedReviewer"><strong>Additional Email Message for Reviewer:</strong></label>
-                <textarea class="form-control" style="width:100%" rows="8" name="reviewer_email_message" id="reviewer_email_message"><?php echo $financial_report_array['reviewer_email_message']; ?></textarea>
+                <textarea class="form-control" style="width:100%" rows="8" name="reviewer_email_message" id="reviewer_email_message"><?php echo $chFinancialReport['reviewer_email_message']; ?></textarea>
             </div>
 
         <div class="card-body text-center">
             <br>
             <button type="submit" id="btn-step-14" class="btn bg-gradient-primary mb-2"><i class="fas fa-save mr-2"></i>Save Report Review</button>
             <br>
-            @if ($financial_report_array['review_complete'] != "" && $submitted)
+            @if ($chFinancialReport['review_complete'] != "" && $submitted)
                 @if ($regionalCoordinatorCondition)
                     <button type="button" class="btn bg-gradient-success" id="review-clear"><i class="fas fa-minus-circle mr-2"></i>Clear Review Complete</button>
                 @else
@@ -331,19 +337,19 @@
             <!-- /.card-header -->
             <div class="row">
                 <div class="col-md-12">
-                    @php
+                    {{-- @php
                         $selectedReviewer = null;
                         foreach ($reviewerList as $pcl) {
-                            if ($financial_report_array['reviewer_id'] == $pcl['cid']) {
+                            if ($chFinancialReport['reviewer_id'] == $pcl['cid']) {
                                 $selectedReviewer = $pcl['cname'];
                                 break;
                             }
                         }
-                    @endphp
+                    @endphp --}}
 
                     @if($submitted)
-                        @if ($selectedReviewer != null)
-                            <label>Assigned Reviewer:</label>&nbsp;&nbsp;{{$selectedReviewer}}
+                        @if ($chFinancialReport->reviewer_id != null)
+                            <label>Assigned Reviewer:</label>&nbsp;&nbsp;{{ $chDetails->reportReviewer->first_name }} {{ $chDetails->reportReviewer->last_name }}
                         @else
                             <span style="color:red">No Reviewer Assigned - Select Reviewer before saving report review to prevent errors</span>
                         @endif
@@ -359,24 +365,24 @@
 
                 <div class="col-12"  id="accordion">
                     	<!------Start Step 1 ------>
-                    <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='1') echo "active";?>">
+                    <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='1') echo "active";?>">
                         <div class="card-header" id="accordion-header-members">
                             <h4 class="card-title w-100">
                                 <a class="d-block" data-toggle="collapse" href="#collapseOne" style="width: 100%;">CHAPTER DUES</a>
                             </h4>
                         </div>
-                        <div id="collapseOne" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='1') echo 'show'; ?>" data-parent="#accordion">
+                        <div id="collapseOne" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='1') echo 'show'; ?>" data-parent="#accordion">
                             <div class="card-body">
 						<section>
                             Did your chapter change dues this year?&nbsp;&nbsp;&nbsp;
-                            <strong>{{ is_null($financial_report_array['changed_dues']) ? 'Not Answered' : ($financial_report_array['changed_dues'] == 0 ? 'NO'
-                                : ($financial_report_array ['changed_dues'] == 1 ? 'YES' : 'Not Answered' )) }}</strong><br>
+                            <strong>{{ is_null($chFinancialReport['changed_dues']) ? 'Not Answered' : ($chFinancialReport['changed_dues'] == 0 ? 'NO'
+                                : ($chFinancialReport ['changed_dues'] == 1 ? 'YES' : 'Not Answered' )) }}</strong><br>
                             Did your chapter charge different amounts for new and returning members?&nbsp;&nbsp;&nbsp;
-                            <strong>{{ is_null($financial_report_array['different_dues']) ? 'Not Answered' : ($financial_report_array['different_dues'] == 0 ? 'NO'
-                                :( $financial_report_array ['different_dues'] == 1 ? 'YES' : 'Not Answered' )) }}</strong><br>
+                            <strong>{{ is_null($chFinancialReport['different_dues']) ? 'Not Answered' : ($chFinancialReport['different_dues'] == 0 ? 'NO'
+                                :( $chFinancialReport ['different_dues'] == 1 ? 'YES' : 'Not Answered' )) }}</strong><br>
                             Did your chapter have any members who didn't pay full dues?&nbsp;&nbsp;&nbsp;
-                            <strong>{{ is_null($financial_report_array['not_all_full_dues']) ? 'Not Answered' : ($financial_report_array['not_all_full_dues'] == 0 ? 'NO'
-                                : ( $financial_report_array ['not_all_full_dues'] == 1 ? 'YES' : 'Not Answered' )) }}</strong><br>
+                            <strong>{{ is_null($chFinancialReport['not_all_full_dues']) ? 'Not Answered' : ($chFinancialReport['not_all_full_dues'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['not_all_full_dues'] == 1 ? 'YES' : 'Not Answered' )) }}</strong><br>
                             <br>
                             <style>
                                 .flex-container {
@@ -394,121 +400,121 @@
                             </style>
 
                             <div class="flex-container">
-                                @if ($financial_report_array['changed_dues'] != 1)
+                                @if ($chFinancialReport['changed_dues'] != 1)
                                     <div class="flex-item">
-                                        New Members:&nbsp;&nbsp;&nbsp;<strong>{{ $financial_report_array['total_new_members'] }}</strong>
+                                        New Members:&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReport['total_new_members'] }}</strong>
                                     </div>
-                                    @if ($financial_report_array['different_dues'] != 1)
+                                    @if ($chFinancialReport['different_dues'] != 1)
                                         <div class="flex-item">
-                                            Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array['dues_per_member'], 2) }}</strong>
+                                            Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['dues_per_member'], 2) }}</strong>
                                         </div>
                                     @endif
-                                    @if ($financial_report_array['different_dues'] == 1)
+                                    @if ($chFinancialReport['different_dues'] == 1)
                                         <div class="flex-item">
-                                            New Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array['dues_per_member'], 2) }}</strong>
+                                            New Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['dues_per_member'], 2) }}</strong>
                                         </div>
                                     @endif
                                     <div class="flex-item">
-                                        Renewed Members:&nbsp;&nbsp;&nbsp;<strong>{{ $financial_report_array['total_renewed_members'] }}</strong>
+                                        Renewed Members:&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReport['total_renewed_members'] }}</strong>
                                     </div>
-                                    @if ($financial_report_array['different_dues'] != 1)
+                                    @if ($chFinancialReport['different_dues'] != 1)
                                         <div class="flex-item">
                                            &nbsp;&nbsp;&nbsp;
                                         </div>
                                     @endif
-                                    @if ($financial_report_array['different_dues'] == 1)
+                                    @if ($chFinancialReport['different_dues'] == 1)
                                         <div class="flex-item">
-                                            Renewal Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array['dues_per_member_renewal'], 2) }}</strong>
+                                            Renewal Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['dues_per_member_renewal'], 2) }}</strong>
                                         </div>
                                     @endif
                                 @endif
 
-                                @if ($financial_report_array['changed_dues'] == 1)
+                                @if ($chFinancialReport['changed_dues'] == 1)
                                     <div class="flex-item">
-                                        New Members (OLD dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ $financial_report_array['total_new_members'] }}</strong>
+                                        New Members (OLD dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReport['total_new_members'] }}</strong>
                                     </div>
-                                    @if ($financial_report_array['different_dues'] != 1)
+                                    @if ($chFinancialReport['different_dues'] != 1)
                                         <div class="flex-item">
-                                            Dues (OLD dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array['dues_per_member'], 2) }}</strong>
+                                            Dues (OLD dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['dues_per_member'], 2) }}</strong>
                                         </div>
                                     @endif
-                                    @if ($financial_report_array['different_dues'] == 1)
+                                    @if ($chFinancialReport['different_dues'] == 1)
                                         <div class="flex-item">
-                                            New Dues (OLD dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array['dues_per_member'], 2) }}</strong>
+                                            New Dues (OLD dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['dues_per_member'], 2) }}</strong>
                                         </div>
                                     @endif
                                     <div class="flex-item">
-                                        Renewed Members (OLD dues amount): <strong>{{ $financial_report_array['total_renewed_members'] }}</strong>
+                                        Renewed Members (OLD dues amount): <strong>{{ $chFinancialReport['total_renewed_members'] }}</strong>
                                     </div>
-                                    @if ($financial_report_array['different_dues'] == 1)
+                                    @if ($chFinancialReport['different_dues'] == 1)
                                         <div class="flex-item">
-                                            Renewal Dues (OLD dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array['dues_per_member_renewal'], 2) }}</strong>
+                                            Renewal Dues (OLD dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['dues_per_member_renewal'], 2) }}</strong>
                                         </div>
                                     @endif
 
                                     <div class="flex-item">
-                                        New Members (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ $financial_report_array['total_new_members_changed_dues'] }}</strong>
+                                        New Members (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReport['total_new_members_changed_dues'] }}</strong>
                                     </div>
-                                    @if ($financial_report_array['different_dues'] != 1)
+                                    @if ($chFinancialReport['different_dues'] != 1)
                                         <div class="flex-item">
-                                            Dues (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array['dues_per_member_new_changed'], 2) }}</strong>
+                                            Dues (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['dues_per_member_new_changed'], 2) }}</strong>
                                         </div>
                                     @endif
-                                    @if ($financial_report_array['different_dues'] == 1)
+                                    @if ($chFinancialReport['different_dues'] == 1)
                                         <div class="flex-item">
-                                            New Dues (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array['dues_per_member_new_changed'], 2) }}</strong>
+                                            New Dues (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['dues_per_member_new_changed'], 2) }}</strong>
                                         </div>
                                     @endif
                                     <div class="flex-item">
-                                        Renewed Members (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ $financial_report_array['total_renewed_members_changed_dues'] }}</strong>
+                                        Renewed Members (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReport['total_renewed_members_changed_dues'] }}</strong>
                                     </div>
-                                    @if ($financial_report_array['different_dues'] == 1)
+                                    @if ($chFinancialReport['different_dues'] == 1)
                                         <div class="flex-item">
-                                            Renewal Dues (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array['dues_per_member_renewal_changed'], 2) }}</strong>
+                                            Renewal Dues (NEW dues amount):&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['dues_per_member_renewal_changed'], 2) }}</strong>
                                         </div>
                                     @endif
                                 @endif
 
-                                @if ($financial_report_array['not_all_full_dues'] == 1)
+                                @if ($chFinancialReport['not_all_full_dues'] == 1)
                                     <div class="flex-item">
-                                        Members Who Paid No Dues:&nbsp;&nbsp;&nbsp;<strong>{{ $financial_report_array['members_who_paid_no_dues'] }}</strong>
+                                        Members Who Paid No Dues:&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReport['members_who_paid_no_dues'] }}</strong>
                                     </div>
                                     <div class="flex-item">
                                         &nbsp;&nbsp;&nbsp;
                                     </div>
                                     <div class="flex-item">
-                                        Members Who Paid Partial Dues:&nbsp;&nbsp;&nbsp;<strong>{{ $financial_report_array['members_who_paid_partial_dues'] }}</strong>
+                                        Members Who Paid Partial Dues:&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReport['members_who_paid_partial_dues'] }}</strong>
                                     </div>
                                     <div class="flex-item">
-                                        Partial Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array['total_partial_fees_collected'], 2) }}</strong>
+                                        Partial Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['total_partial_fees_collected'], 2) }}</strong>
                                     </div>
                                     <div class="flex-item">
-                                        Assiciate Members:&nbsp;&nbsp;&nbsp;<strong>{{ $financial_report_array['total_associate_members'] }}</strong>
+                                        Assiciate Members:&nbsp;&nbsp;&nbsp;<strong>{{ $chFinancialReport['total_associate_members'] }}</strong>
                                     </div>
                                     <div class="flex-item">
-                                        Associate Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array['associate_member_fee'], 2) }}</strong>
+                                        Associate Dues:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['associate_member_fee'], 2) }}</strong>
                                     </div>
                                 @endif
                             </div>
 
                             <?php
-                                $newMembers = $financial_report_array['total_new_members'] * $financial_report_array['dues_per_member'];
-                                $renewalMembers = $financial_report_array['total_renewed_members'] * $financial_report_array['dues_per_member'];
-                                $renewalMembersDiff = $financial_report_array['total_renewed_members'] * $financial_report_array['dues_per_member_renewal'];
-                                $newMembersNew = $financial_report_array['total_new_members_changed_dues'] * $financial_report_array['dues_per_member_new_changed'];
-                                $renewMembersNew = $financial_report_array['total_renewed_members_changed_dues'] * $financial_report_array['dues_per_member_new_changed'];
-                                $renewMembersNewDiff = $financial_report_array['total_renewed_members_changed_dues'] * $financial_report_array['dues_per_member_renewal_changed'];
-                                $partialMembers = $financial_report_array['members_who_paid_partial_dues'] * $financial_report_array['total_partial_fees_collected'];
-                                $associateMembers = $financial_report_array['total_associate_members'] * $financial_report_array['associate_member_fee'];
+                                $newMembers = $chFinancialReport['total_new_members'] * $chFinancialReport['dues_per_member'];
+                                $renewalMembers = $chFinancialReport['total_renewed_members'] * $chFinancialReport['dues_per_member'];
+                                $renewalMembersDiff = $chFinancialReport['total_renewed_members'] * $chFinancialReport['dues_per_member_renewal'];
+                                $newMembersNew = $chFinancialReport['total_new_members_changed_dues'] * $chFinancialReport['dues_per_member_new_changed'];
+                                $renewMembersNew = $chFinancialReport['total_renewed_members_changed_dues'] * $chFinancialReport['dues_per_member_new_changed'];
+                                $renewMembersNewDiff = $chFinancialReport['total_renewed_members_changed_dues'] * $chFinancialReport['dues_per_member_renewal_changed'];
+                                $partialMembers = $chFinancialReport['members_who_paid_partial_dues'] * $chFinancialReport['total_partial_fees_collected'];
+                                $associateMembers = $chFinancialReport['total_associate_members'] * $chFinancialReport['associate_member_fee'];
 
-                                $totalMembers = $financial_report_array['total_new_members'] +$financial_report_array['total_renewed_members'] + $financial_report_array['total_new_members_changed_dues'] + $financial_report_array['total_renewed_members_changed_dues']
-                                        + $financial_report_array['members_who_paid_partial_dues'] + $financial_report_array['total_associate_members']+ $financial_report_array['members_who_paid_no_dues'];
+                                $totalMembers = $chFinancialReport['total_new_members'] +$chFinancialReport['total_renewed_members'] + $chFinancialReport['total_new_members_changed_dues'] + $chFinancialReport['total_renewed_members_changed_dues']
+                                        + $chFinancialReport['members_who_paid_partial_dues'] + $chFinancialReport['total_associate_members']+ $chFinancialReport['members_who_paid_no_dues'];
 
-                                if ($financial_report_array['different_dues'] == 1 && $financial_report_array['changed_dues'] == 1) {
+                                if ($chFinancialReport['different_dues'] == 1 && $chFinancialReport['changed_dues'] == 1) {
                                     $totalDues = $newMembers + $renewalMembersDiff + $newMembersNew + $renewMembersNewDiff + $partialMembers + $associateMembers;
-                                } elseif ($financial_report_array['different_dues'] == 1) {
+                                } elseif ($chFinancialReport['different_dues'] == 1) {
                                     $totalDues = $newMembers + $renewalMembersDiff + $partialMembers + $associateMembers;
-                                } elseif ($financial_report_array['changed_dues'] == 1) {
+                                } elseif ($chFinancialReport['changed_dues'] == 1) {
                                     $totalDues = $newMembers + $renewalMembers + $newMembersNew + $renewMembersNew + $partialMembers + $associateMembers;
                                 } else {
                                     $totalDues = $newMembers + $renewalMembers + $partialMembers + $associateMembers;
@@ -525,9 +531,9 @@
                             </div>
 							<div class="card-body form-row">
                                 <div class="col-12">
-                                @if (!is_null($financial_report_array['roster_path']))
+                                @if (!is_null($chFinancialReport['roster_path']))
                                         <div class="col-12">
-                                            <label>Chapter Roster Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $financial_report_array['roster_path'] }}">&nbsp; View Chapter Roster</a><br>
+                                            <label>Chapter Roster Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chFinancialReport['roster_path'] }}">&nbsp; View Chapter Roster</a><br>
                                         </div>
                                         <div class="col-12" id="RosterBlock">
                                             <strong style="color:red">Please Note</strong><br>
@@ -541,7 +547,7 @@
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showRosterUploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Roster File</button>
                                     </div>
                                 @endif
-                                <input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $financial_report_array['roster_path']; ?>">
+                                <input type="hidden" name="RosterPath" id="RosterPath" value="<?php echo $chFinancialReport['roster_path']; ?>">
                                 <div class="clearfix"></div>
                                 <div class="col-12"><br></div>
                                 <div class="col-12">
@@ -550,11 +556,11 @@
                                             <label>Excel roster attached and complete:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkRosterAttached" value="1" {{ $financial_report_array['check_roster_attached'] === 1 ? 'checked' : '' }} required>
+                                                    <input class="form-check-input" type="radio" name="checkRosterAttached" value="1" {{ $chFinancialReport['check_roster_attached'] === 1 ? 'checked' : '' }} required>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkRosterAttached" value="0" {{ $financial_report_array['check_roster_attached'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkRosterAttached" value="0" {{ $chFinancialReport['check_roster_attached'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -563,18 +569,18 @@
                                             <label>Number of members listed, dues received, and renewal paid "seem right":<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkRenewalSeemsRight" value="1" {{ $financial_report_array['check_renewal_seems_right'] === 1 ? 'checked' : '' }} required>
+                                                    <input class="form-check-input" type="radio" name="checkRenewalSeemsRight" value="1" {{ $chFinancialReport['check_renewal_seems_right'] === 1 ? 'checked' : '' }} required>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkRenewalSeemsRight" value="0" {{ $financial_report_array['check_renewal_seems_right'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkRenewalSeemsRight" value="0" {{ $chFinancialReport['check_renewal_seems_right'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group row">
 										<label for="Step1_Note">Add New Note:</label>
-										<textarea class="form-control" style="width:100%" rows="3" name="Step1_Note" id="Step1_Note" oninput="EnableNoteLogButton(1)" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+										<textarea class="form-control" style="width:100%" rows="3" name="Step1_Note" id="Step1_Note" oninput="EnableNoteLogButton(1)" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                     <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
 										<button type="button" id="AddNote1" class="btn btn-sm bg-gradient-success" onclick="AddNote(1)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                     </div>
@@ -585,7 +591,7 @@
 										<label for="Step1_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 									</div>
 									<div class="col-12">
-										<textarea class="form-control" rows="8" name="Step1_Log" id="Step1_Log" readonly style="width:100%"><?php echo $financial_report_array['step_1_notes_log']; ?></textarea>
+										<textarea class="form-control" rows="8" name="Step1_Log" id="Step1_Log" readonly style="width:100%"><?php echo $chFinancialReport['step_1_notes_log']; ?></textarea>
 									</div>
                                     <div class="col-12"><br></div>
 
@@ -602,21 +608,21 @@
 				<!------End Step 1 ------>
 
 				<!------Start Step 2 ------>
-                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='2') echo "active";?>">
+                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='2') echo "active";?>">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseTwo" style="width: 100%;">MONTHLY MEETING EXPENSES</a>
                         </h4>
                     </div>
-                    <div id="collapseTwo" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='2') echo 'show'; ?>" data-parent="#accordion" data-parent="#accordion">
+                    <div id="collapseTwo" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='2') echo 'show'; ?>" data-parent="#accordion" data-parent="#accordion">
                         <div class="card-body">
 						<section>
-                            Meeting Room Fees:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array['manditory_meeting_fees_paid'], 2) }}</strong><br>
-                            Voluntary Donations Paid:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array['voluntary_donations_paid'], 2) }}</strong><br>
+                            Meeting Room Fees:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['manditory_meeting_fees_paid'], 2) }}</strong><br>
+                            Voluntary Donations Paid:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['voluntary_donations_paid'], 2) }}</strong><br>
                             <strong>Total Meeting Room Expenses:&nbsp;&nbsp;&nbsp;
-                                {{ '$'.number_format($financial_report_array['manditory_meeting_fees_paid'] + $financial_report_array['voluntary_donations_paid']) }}</strong><br>
+                                {{ '$'.number_format($chFinancialReport['manditory_meeting_fees_paid'] + $chFinancialReport['voluntary_donations_paid']) }}</strong><br>
                             <br>
-                            Paid Babysitter Expense:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array['paid_baby_sitters'], 2) }}</strong><br>
+                            Paid Babysitter Expense:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['paid_baby_sitters'], 2) }}</strong><br>
                             <br>
                             Children's Room Miscellaneous:
                             <table width="75%" style="border-collapse: collapse;">
@@ -633,8 +639,8 @@
                                         $totalChildrenSupplies = 0;
                                         $totalChildrenOther = 0;
 
-                                        if (isset($financial_report_array['childrens_room_expenses']) && $financial_report_array['childrens_room_expenses'] !== null) {
-                                            $blobData = base64_decode($financial_report_array['childrens_room_expenses']);
+                                        if (isset($chFinancialReport['childrens_room_expenses']) && $chFinancialReport['childrens_room_expenses'] !== null) {
+                                            $blobData = base64_decode($chFinancialReport['childrens_room_expenses']);
                                             $childrens_room = unserialize($blobData);
 
                                             if ($childrens_room === false) {
@@ -676,7 +682,7 @@
                                 </tbody>
                                 </table>
                             <br>
-                            <strong>Total Children's Room Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($financial_report_array['paid_baby_sitters'] + $totalChildrensRoomExpenses, 2) }}</strong><br>
+                            <strong>Total Children's Room Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($chFinancialReport['paid_baby_sitters'] + $totalChildrensRoomExpenses, 2) }}</strong><br>
                             <hr style="border-bottom: 2px solid #007bff">
 							<!-- start:report_review -->
 								<div class="form-row report_review" >
@@ -690,7 +696,7 @@
                                             <div class="col-12">
                                                 <div class="form-group row">
                                                     <label for="Step2_Note">Add New Note:</label>
-                                                    <textarea class="form-control" style="width:100%" rows="3" name="Step2_Note" id="Step2_Note" oninput="EnableNoteLogButton(2)" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+                                                    <textarea class="form-control" style="width:100%" rows="3" name="Step2_Note" id="Step2_Note" oninput="EnableNoteLogButton(2)" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                                     <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
                                                         <button type="button" id="AddNote2" class="btn btn-sm bg-gradient-success" onclick="AddNote(2)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                                 </div>
@@ -702,7 +708,7 @@
 												<label for="Step2_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 											</div>
 											<div class="col-12">
-                                                <textarea class="form-control" rows="8" name="Step2_Log" id="Step2_Log" readonly style="width:100%"><?php echo $financial_report_array['step_2_notes_log']; ?></textarea>
+                                                <textarea class="form-control" rows="8" name="Step2_Log" id="Step2_Log" readonly style="width:100%"><?php echo $chFinancialReport['step_2_notes_log']; ?></textarea>
                                             </div>
                                             <div class="col-12"><br></div>
 
@@ -720,13 +726,13 @@
 				<!------End Step 2 ------>
 
 				<!------Start Step 3 ------>
-                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='3') echo "active";?>">
+                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='3') echo "active";?>">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseThree" style="width: 100%;">SERVICE PROJECTS</a>
                         </h4>
                     </div>
-                    <div id="collapseThree" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='3') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseThree" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='3') echo 'show'; ?>" data-parent="#accordion">
                         <div class="card-body">
 					<section>
                             <table width="100%" style="border-collapse: collapse;">
@@ -747,8 +753,8 @@
                                 $totalServiceCharity = 0;
                                 $totalServiceM2M = 0;
 
-                                if (isset($financial_report_array['service_project_array'])) {
-                                    $blobData = base64_decode($financial_report_array['service_project_array']);
+                                if (isset($chFinancialReport['service_project_array'])) {
+                                    $blobData = base64_decode($chFinancialReport['service_project_array']);
                                     $service_projects = unserialize($blobData);
 
                                     if ($service_projects === false) {
@@ -810,11 +816,11 @@
                                             <label>Minimum of one service project completed:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-md-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkServiceProject" value="1" {{ $financial_report_array['check_minimum_service_project'] === 1 ? 'checked' : '' }} required>
+                                                    <input class="form-check-input" type="radio" name="checkServiceProject" value="1" {{ $chFinancialReport['check_minimum_service_project'] === 1 ? 'checked' : '' }} required>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkServiceProject" value="0" {{ $financial_report_array['check_minimum_service_project'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkServiceProject" value="0" {{ $chFinancialReport['check_minimum_service_project'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -823,11 +829,11 @@
                                             <label>Made a donation to the M2M Fund:<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkM2MDonation" value="1" {{ $financial_report_array['check_m2m_donation'] === 1 ? 'checked' : '' }} required>
+                                                    <input class="form-check-input" type="radio" name="checkM2MDonation" value="1" {{ $chFinancialReport['check_m2m_donation'] === 1 ? 'checked' : '' }} required>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkM2MDonation" value="0" {{ $financial_report_array['check_m2m_donation'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkM2MDonation" value="0" {{ $chFinancialReport['check_m2m_donation'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -836,7 +842,7 @@
                                     <div class="col-12">
                                         <div class="form-group row">
 										<label for="Step3_Note">Add New Note:</label>
-									    <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(3)" name="Step3_Note" id="Step3_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+									    <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(3)" name="Step3_Note" id="Step3_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                         <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
                                             <button type="button" id="AddNote3" class="btn btn-sm btn-success" onclick="AddNote(3)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 								        </div>
@@ -847,7 +853,7 @@
 										<label for="Step3_Log"><strong>Reviewer Notes Logged for this Section (not visible to chapter):</strong></label>
 									</div>
 									<div class="col-12">
-                                        <textarea class="form-control" style="width:100%" rows="8" name="Step3_Log" id="Step3_Log" readonly><?php echo $financial_report_array['step_3_notes_log']; ?></textarea>
+                                        <textarea class="form-control" style="width:100%" rows="8" name="Step3_Log" id="Step3_Log" readonly><?php echo $chFinancialReport['step_3_notes_log']; ?></textarea>
 									</div>
                                <div class="col-12"><br></div>
 
@@ -864,13 +870,13 @@
 				<!------End Step 3 ------>
 
 				<!------Start Step 4 ------>
-                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='4') echo "active";?>">
+                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='4') echo "active";?>">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseFour" style="width: 100%;">PARTIES & MEMBER BENEFITS</a>
                         </h4>
                     </div>
-                    <div id="collapseFour" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='4') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseFour" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='4') echo 'show'; ?>" data-parent="#accordion">
                         <div class="card-body">
 				    <section>
                        <table width="75%" style="border-collapse: collapse;">
@@ -887,8 +893,8 @@
                             $totalPartyIncome = 0;
                             $totalPartyExpense = 0;
 
-                            if (isset($financial_report_array['party_expense_array'])) {
-                                $blobData = base64_decode($financial_report_array['party_expense_array']);
+                            if (isset($chFinancialReport['party_expense_array'])) {
+                                $blobData = base64_decode($chFinancialReport['party_expense_array']);
                                 $party_expenses = unserialize($blobData);
 
                                 if ($party_expenses === false) {
@@ -951,15 +957,15 @@
                                         <label>Is the Chapter's Party Expense under 15%?<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="2" {{ $financial_report_array['check_party_percentage'] === 2 ? 'checked' : '' }} required>
+                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="2" {{ $chFinancialReport['check_party_percentage'] === 2 ? 'checked' : '' }} required>
                                                 <label class="form-check-label">They are under 15%</label>
                                             </div>
                                             <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="1" {{ $financial_report_array['check_party_percentage'] === 1 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="1" {{ $chFinancialReport['check_party_percentage'] === 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label">They are between 15-20%</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="0" {{ $financial_report_array['check_party_percentage'] === 0 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="check_party_percentage" value="0" {{ $chFinancialReport['check_party_percentage'] === 0 ? 'checked' : '' }}>
                                                 <label class="form-check-label">They are over 20%</label>
                                             </div>
                                         </div>
@@ -969,7 +975,7 @@
                                 <div class="col-12">
                                     <div class="form-group row">
                                         <label for="Step4_Note">Add New Note:</label>
-									<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(4)" name="Step4_Note" id="Step4_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+									<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(4)" name="Step4_Note" id="Step4_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                     <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
                                         <button type="button" id="AddNote4" class="btn btn-sm bg-gradient-success" onclick="AddNote(4)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                     </div>
@@ -981,13 +987,13 @@
 									<label for="Step4_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 								</div>
 								<div class="col-12">
-									<textarea class="form-control" style="width:100%" rows="8" name="Step4_Log" id="Step4_Log" readonly><?php echo $financial_report_array['step_4_notes_log']; ?></textarea>
+									<textarea class="form-control" style="width:100%" rows="8" name="Step4_Log" id="Step4_Log" readonly><?php echo $chFinancialReport['step_4_notes_log']; ?></textarea>
 								</div>
                                 <div class="col-12"><br></div>
 
 					<!-- end:report_review -->
                     <div class="col-12 text-center">
-                        <button type="submit" id="btn-step-4" class="btn bg-gradient-primary" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fas fa-save mr-2"></i>Save Report Review</button>
+                        <button type="submit" id="btn-step-4" class="btn bg-gradient-primary" <?php if($chFinancialReport['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fas fa-save mr-2"></i>Save Report Review</button>
                     </div>
                 </div>
             </div>
@@ -998,18 +1004,18 @@
 				<!------End Step 4 ------>
 
 				<!------Start Step 5 ------>
-                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='5') echo "active";?>">
+                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='5') echo "active";?>">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseFive" style="width: 100%;">OFFICE & OPERATING EXPENSES</a>
                         </h4>
                     </div>
-                    <div id="collapseFive" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='5') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseFive" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='5') echo 'show'; ?>" data-parent="#accordion">
                         <div class="card-body">
                 <section>
-                    Printing Costs:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array['office_printing_costs'], 2) }}</strong><br>
-                    Postage Costs:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array['office_postage_costs'], 2) }}</strong><br>
-                    Membership Pins:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array['office_membership_pins_cost'], 2) }}</strong><br>
+                    Printing Costs:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['office_printing_costs'], 2) }}</strong><br>
+                    Postage Costs:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['office_postage_costs'], 2) }}</strong><br>
+                    Membership Pins:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport['office_membership_pins_cost'], 2) }}</strong><br>
                 <br>
                 Other Office/Operating Expenses:
                     <table width="50%" >
@@ -1018,8 +1024,8 @@
                             $other_office_expenses = null;
                             $totalOfficeExpense = 0;
 
-                            if (isset($financial_report_array['office_other_expenses']) && $financial_report_array['office_other_expenses'] !== null) {
-                                $blobData = base64_decode($financial_report_array['office_other_expenses']);
+                            if (isset($chFinancialReport['office_other_expenses']) && $chFinancialReport['office_other_expenses'] !== null) {
+                                $blobData = base64_decode($chFinancialReport['office_other_expenses']);
                                 $other_office_expenses = unserialize($blobData);
 
                                 if ($other_office_expenses === false) {
@@ -1060,8 +1066,8 @@
                         </tbody>
                     </table>
                     <br>
-                    <strong>Total Office/Operating Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($financial_report_array['office_printing_costs'] + $financial_report_array['office_postage_costs'] +
-                            $financial_report_array['office_membership_pins_cost'] + $totalOfficeExpense, 2) }}</strong><br>
+                    <strong>Total Office/Operating Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($chFinancialReport['office_printing_costs'] + $chFinancialReport['office_postage_costs'] +
+                            $chFinancialReport['office_membership_pins_cost'] + $totalOfficeExpense, 2) }}</strong><br>
 						<hr style="border-bottom: 2px solid #007bff">
                         <!-- start:report_review -->
 				<div  class="form-row report_review">
@@ -1075,7 +1081,7 @@
                                 <div class="col-12">
                                     <div class="form-group row">
 								<label for="Step5_Note">Add New Note:</label>
-								<textarea class="form-control" rows="3" style="width:100%" oninput="EnableNoteLogButton(5)" name="Step5_Note" id="Step5_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+								<textarea class="form-control" rows="3" style="width:100%" oninput="EnableNoteLogButton(5)" name="Step5_Note" id="Step5_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                 <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
 								<button type="button" id="AddNote5" class="btn btn-sm bg-gradient-success" onclick="AddNote(5)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 						    </div>
@@ -1087,7 +1093,7 @@
 								<label for="Step5_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 							</div>
 							<div class="col-12">
-								<textarea class="form-control" style="width:100%" rows="8" name="Step5_Log" id="Step5_Log" readonly><?php echo $financial_report_array['step_5_notes_log']; ?></textarea>
+								<textarea class="form-control" style="width:100%" rows="8" name="Step5_Log" id="Step5_Log" readonly><?php echo $chFinancialReport['step_5_notes_log']; ?></textarea>
 							</div>
                             <div class="col-12"><br></div>
 
@@ -1104,13 +1110,13 @@
 			<!------End Step 5 ------>
 
             <!------Start Step 6 ------>
-            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='6') echo "active";?>">
+            <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='6') echo "active";?>">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
                         <a class="d-block" data-toggle="collapse" href="#collapseSix" style="width: 100%;">INTERNATIONAL EVENTS & RE-REGISTRATION</a>
                     </h4>
                 </div>
-                <div id="collapseSix" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='6') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseSix" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='6') echo 'show'; ?>" data-parent="#accordion">
                     <div class="card-body">
                     <section>
                         <table width="75%" style="border-collapse: collapse;">
@@ -1127,8 +1133,8 @@
                                 $totalEventIncome = 0;
                                 $totalEventExpense = 0;
 
-                                if (isset($financial_report_array['international_event_array']) && $financial_report_array['international_event_array'] !== null) {
-                                    $blobData = base64_decode($financial_report_array['international_event_array']);
+                                if (isset($chFinancialReport['international_event_array']) && $chFinancialReport['international_event_array'] !== null) {
+                                    $blobData = base64_decode($chFinancialReport['international_event_array']);
                                     $international_event_array = unserialize($blobData);
 
                                     if ($international_event_array === false) {
@@ -1177,7 +1183,7 @@
                         <strong>Total Events Income:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalEventIncome, 2) }}</strong><br>
                         <strong>Total Events Expenses:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($totalEventExpense, 2) }}</strong><br>
                         <br>
-                        <strong>Chapter Re-Registration:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($financial_report_array['annual_registration_fee'], 2) }}</strong><br>
+                        <strong>Chapter Re-Registration:&nbsp;&nbsp;&nbsp;{{ '$'.number_format($chFinancialReport['annual_registration_fee'], 2) }}</strong><br>
 						<hr style="border-bottom: 2px solid #007bff">
                 <!-- start:report_review -->
                     <div  class="form-row report_review">
@@ -1191,7 +1197,7 @@
                                 <div class="col-12">
                                     <div class="form-group row">
                                     <label for="Step6_Note">Add New Note:</label>
-                                    <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(6)" name="Step6_Note" id="Step6_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+                                    <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(6)" name="Step6_Note" id="Step6_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                     <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
                                         <button type="button" id="AddNote6" class="btn btn-sm bg-gradient-success" onclick="AddNote(6)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                 </div>
@@ -1203,7 +1209,7 @@
 						<label for="Step6_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 					</div>
 					<div class="col-12">
-						<textarea class="form-control" style="width:100%" rows="8" name="Step6_Log" id="Step6_Log" readonly><?php echo $financial_report_array['step_6_notes_log']; ?></textarea>
+						<textarea class="form-control" style="width:100%" rows="8" name="Step6_Log" id="Step6_Log" readonly><?php echo $chFinancialReport['step_6_notes_log']; ?></textarea>
 					</div>
                     <div class="col-12"><br></div>
 
@@ -1220,13 +1226,13 @@
                 <!------End Step 6 ------>
 
 			<!------Start Step 7 ------>
-            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='7') echo "active";?>">
+            <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='7') echo "active";?>">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
                         <a class="d-block" data-toggle="collapse" href="#collapseSeven" style="width: 100%;">DONATIONS TO YOUR CHAPTER</a>
                     </h4>
                 </div>
-                <div id="collapseSeven" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='7') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseSeven" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='7') echo 'show'; ?>" data-parent="#accordion">
                     <div class="card-body">
 				<section>
                     Monetary Donations:
@@ -1244,8 +1250,8 @@
                             $monetary_donations_to_chapter = null;
                             $totalDonationAmount = 0;
 
-                            if (isset($financial_report_array['monetary_donations_to_chapter']) && $financial_report_array['monetary_donations_to_chapter'] !== null) {
-                                $blobData = base64_decode($financial_report_array['monetary_donations_to_chapter']);
+                            if (isset($chFinancialReport['monetary_donations_to_chapter']) && $chFinancialReport['monetary_donations_to_chapter'] !== null) {
+                                $blobData = base64_decode($chFinancialReport['monetary_donations_to_chapter']);
                                 $monetary_donations_to_chapter = unserialize($blobData);
 
                                 if ($monetary_donations_to_chapter === false) {
@@ -1307,8 +1313,8 @@
                             <?php
                                 $non_monetary_donations_to_chapter = null;
 
-                                if (isset($financial_report_array['non_monetary_donations_to_chapter']) && $financial_report_array['non_monetary_donations_to_chapter'] !== null) {
-                                    $blobData = base64_decode($financial_report_array['non_monetary_donations_to_chapter']);
+                                if (isset($chFinancialReport['non_monetary_donations_to_chapter']) && $chFinancialReport['non_monetary_donations_to_chapter'] !== null) {
+                                    $blobData = base64_decode($chFinancialReport['non_monetary_donations_to_chapter']);
                                     $non_monetary_donations_to_chapter = unserialize($blobData);
 
                                     if ($non_monetary_donations_to_chapter === false) {
@@ -1351,7 +1357,7 @@
                                     <div class="col-12">
                                         <div class="form-group row">
 										<label for="Step7_Note">Add New Note:</label>
-										<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(7)" name="Step7_Note" id="Step7_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+										<textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(7)" name="Step7_Note" id="Step7_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                         <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
 										<button type="button" id="AddNote7" class="btn btn-sm bg-gradient-success" onclick="AddNote(7)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 								</div>
@@ -1363,7 +1369,7 @@
 										<label for="Step7_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 									</div>
 									<div class="col-12">
-										<textarea class="form-control" style="width:100%" rows="8" name="Step7_Log" id="Step7_Log" readonly><?php echo $financial_report_array['step_7_notes_log']; ?></textarea>
+										<textarea class="form-control" style="width:100%" rows="8" name="Step7_Log" id="Step7_Log" readonly><?php echo $chFinancialReport['step_7_notes_log']; ?></textarea>
 									</div>
                                     <div class="col-12"><br></div>
 
@@ -1380,13 +1386,13 @@
 				<!------End Step 7 ------>
 
 				<!------Start Step 8 ------>
-                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='8') echo "active";?>">
+                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='8') echo "active";?>">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseEight" style="width: 100%;">OTHER INCOME & EXPENSES</a>
                         </h4>
                     </div>
-                    <div id="collapseEight" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='8') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseEight" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='8') echo 'show'; ?>" data-parent="#accordion">
                         <div class="card-body">
 					<section>
                         <table width="75%" style="border-collapse: collapse;">
@@ -1403,8 +1409,8 @@
                                 $totalOtherIncome = 0;
                                 $totalOtherExpenses = 0;
 
-                                if (isset($financial_report_array['other_income_and_expenses_array'])) {
-                                    $blobData = base64_decode($financial_report_array['other_income_and_expenses_array']);
+                                if (isset($chFinancialReport['other_income_and_expenses_array'])) {
+                                    $blobData = base64_decode($chFinancialReport['other_income_and_expenses_array']);
                                     $other_income_and_expenses_array = unserialize($blobData);
 
                                     if ($other_income_and_expenses_array === false) {
@@ -1465,7 +1471,7 @@
                                 <div class="col-12">
                                     <div class="form-group row">
 									<label for="Step8_Note">Add New Note:</label>
-									<textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(8)"  name="Step8_Note" id="Step8_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+									<textarea class="form-control" style="width:100%" rows="3" oninput="EnableNoteLogButton(8)"  name="Step8_Note" id="Step8_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                     <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
 									<button type="button" id="AddNote8" class="btn btn-sm bg-gradient-success" onclick="AddNote(8)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 							</div>
@@ -1476,7 +1482,7 @@
 									<label for="Step8_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 								</div>
 								<div class="col-12">
-									<textarea class="form-control" style="width:100%" rows="8" name="Step8_Log" id="Step8_Log" readonly><?php echo $financial_report_array['step_8_notes_log']; ?></textarea>
+									<textarea class="form-control" style="width:100%" rows="8" name="Step8_Log" id="Step8_Log" readonly><?php echo $chFinancialReport['step_8_notes_log']; ?></textarea>
 								</div>
                                 <div class="col-12"><br></div>
 
@@ -1493,21 +1499,21 @@
 				<!------End Step 8 ------>
 
                 <!------Start Step 9 ------>
-                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='9') echo "active";?>">
+                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='9') echo "active";?>">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseNine" style="width: 100%;">FINANCIAL SUMMARY</a>
                         </h4>
                     </div>
-                    <div id="collapseNine" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='9') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseNine" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='9') echo 'show'; ?>" data-parent="#accordion">
                         <div class="card-body">
 				<section>
                     <?php
                         $totalIncome = $totalDues + $totalServiceIncome + $totalPartyIncome + $totalDonationAmount + $totalEventIncome + $totalOtherIncome;
-                        $totalExpenses = $financial_report_array['manditory_meeting_fees_paid'] + $financial_report_array['voluntary_donations_paid'] + $financial_report_array['paid_baby_sitters'] + $totalChildrensRoomExpenses + $totalServiceProjectExpenses
-                                + $totalPartyExpense + $financial_report_array['office_printing_costs'] + $financial_report_array['office_postage_costs'] +
-                                $financial_report_array['office_membership_pins_cost'] + $totalOfficeExpense + $financial_report_array['annual_registration_fee'] + $totalEventExpense + $totalOtherExpenses;
-                        $treasuryBalance = $financial_report_array ['amount_reserved_from_previous_year'] + $totalIncome - $totalExpenses
+                        $totalExpenses = $chFinancialReport['manditory_meeting_fees_paid'] + $chFinancialReport['voluntary_donations_paid'] + $chFinancialReport['paid_baby_sitters'] + $totalChildrensRoomExpenses + $totalServiceProjectExpenses
+                                + $totalPartyExpense + $chFinancialReport['office_printing_costs'] + $chFinancialReport['office_postage_costs'] +
+                                $chFinancialReport['office_membership_pins_cost'] + $totalOfficeExpense + $chFinancialReport['annual_registration_fee'] + $totalEventExpense + $totalOtherExpenses;
+                        $treasuryBalance = $chFinancialReport ['amount_reserved_from_previous_year'] + $totalIncome - $totalExpenses
                     ?>
                     <table width="50%" style="border-collapse: collapse;">
                         <tbody>
@@ -1529,16 +1535,16 @@
                             <tr><td>&nbsp;</td></tr>
                             <tr><td><strong>EXPENSES<strong></td></tr>
                             <tr><td style="border-top: 1px solid #333;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Meeting Room Expenses</td>
-                            <td style="border-top: 1px solid #333;">{{ '$'.number_format($financial_report_array['manditory_meeting_fees_paid'] + $financial_report_array['voluntary_donations_paid'], 2) }}</td></tr>
+                            <td style="border-top: 1px solid #333;">{{ '$'.number_format($chFinancialReport['manditory_meeting_fees_paid'] + $chFinancialReport['voluntary_donations_paid'], 2) }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Children's Room Expenses:</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supplies</td>
                             <td>{{ '$'.number_format($totalChildrenSupplies, 2) }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Paid Sitters</td>
-                            <td>{{ '$'.number_format($financial_report_array['paid_baby_sitters'], 2)  }}</td></tr>
+                            <td>{{ '$'.number_format($chFinancialReport['paid_baby_sitters'], 2)  }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other</td>
                             <td>{{ '$'.number_format($totalChildrenOther, 2) }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Children's Room Expense Total</td>
-                            <td>{{ '$'.number_format($financial_report_array['paid_baby_sitters'] + $totalChildrensRoomExpenses, 2) }}</td></tr>
+                            <td>{{ '$'.number_format($chFinancialReport['paid_baby_sitters'] + $totalChildrensRoomExpenses, 2) }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Service Project Expenses</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Supplies:</td>
                             <td>{{ '$'.number_format($totalServiceSupplies, 2) }}</td></tr>
@@ -1552,18 +1558,18 @@
                             <td> {{ '$'.number_format($totalPartyExpense, 2) }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Office/Operating Expenses</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Printing</td>
-                            <td>{{ '$'.number_format($financial_report_array['office_printing_costs'], 2) }}</td></tr>
+                            <td>{{ '$'.number_format($chFinancialReport['office_printing_costs'], 2) }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Postage</td>
-                            <td>{{ '$'.number_format($financial_report_array['office_postage_costs'], 2) }}</td></tr>
+                            <td>{{ '$'.number_format($chFinancialReport['office_postage_costs'], 2) }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Membership Pins</td>
-                            <td>{{ '$'.number_format($financial_report_array['office_membership_pins_cost'], 2) }}</td></tr>
+                            <td>{{ '$'.number_format($chFinancialReport['office_membership_pins_cost'], 2) }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other</td>
                             <td>{{ '$'.number_format($totalOfficeExpense, 2) }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Office/Operating Expense Total</td>
-                            <td>{{ '$'.number_format($financial_report_array['office_printing_costs'] + $financial_report_array['office_postage_costs'] +
-                                $financial_report_array['office_membership_pins_cost'] + $totalOfficeExpense, 2) }}</td></tr>
+                            <td>{{ '$'.number_format($chFinancialReport['office_printing_costs'] + $chFinancialReport['office_postage_costs'] +
+                                $chFinancialReport['office_membership_pins_cost'] + $totalOfficeExpense, 2) }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Annual Chapter Re-registration Fee</td>
-                            <td>{{ '$'.number_format($financial_report_array['annual_registration_fee'], 2)  }}</td></tr>
+                            <td>{{ '$'.number_format($chFinancialReport['annual_registration_fee'], 2)  }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;International Event Registration</td>
                             <td>{{ '$'.number_format($totalEventExpense, 2) }}</td></tr>
                             <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Other Expenses</td>
@@ -1601,11 +1607,11 @@
                             <label>Is the Total Income/Revenue less than $50,000?<span class="field-required">*&nbsp;</span></label>
                             <div class="col-12 row">
                                 <div class="form-check" style="margin-right: 20px;">
-                                    <input class="form-check-input" type="radio" name="checkTotalIncome" value="1" {{ $financial_report_array['check_total_income_less'] === 1 ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="radio" name="checkTotalIncome" value="1" {{ $chFinancialReport['check_total_income_less'] === 1 ? 'checked' : '' }}>
                                     <label class="form-check-label">Yes</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="checkTotalIncome" value="0" {{ $financial_report_array['check_total_income_less'] === 0 ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="radio" name="checkTotalIncome" value="0" {{ $chFinancialReport['check_total_income_less'] === 0 ? 'checked' : '' }}>
                                     <label class="form-check-label">No</label>
                                 </div>
                             </div>
@@ -1615,7 +1621,7 @@
                     <div class="col-12">
                         <div class="form-group row">
                             <label for="Step9_Note">Add New Note:</label>
-                            <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+                            <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(9)" name="Step9_Note" id="Step9_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                             <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
                             <button type="button" id="AddNote9" class="btn btn-sm bg-gradient-success" onclick="AddNote(9)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                     </div>
@@ -1626,7 +1632,7 @@
 						<label for="Step9_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 					</div>
 					<div class="col-12">
-						<textarea class="form-control" style="width:100%" rows="8" name="Step9_Log" id="Step9_Log" readonly><?php echo $financial_report_array['step_9_notes_log']; ?></textarea>
+						<textarea class="form-control" style="width:100%" rows="8" name="Step9_Log" id="Step9_Log" readonly><?php echo $chFinancialReport['step_9_notes_log']; ?></textarea>
 					</div>
                                             <div class="col-12"><br></div>
 		    <!-- end:report_review -->
@@ -1642,28 +1648,28 @@
 			<!------End Step 9 ------>
 
                 <!------Start Step 10 ------>
-                <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='10') echo "active";?>">
+                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='10') echo "active";?>">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseTen" style="width: 100%;">BANK RECONCILIATION</a>
                         </h4>
                     </div>
-                    <div id="collapseTen" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='10') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseTen" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='10') echo 'show'; ?>" data-parent="#accordion">
                         <div class="card-body">
 					<section>
                         {{-- <?php
                             $totalIncome = $totalDues + $totalServiceIncome + $totalPartyIncome + $totalDonationAmount + $totalEventIncome + $totalOtherIncome;
-                            $totalExpenses = $financial_report_array['manditory_meeting_fees_paid'] + $financial_report_array['voluntary_donations_paid'] + $financial_report_array['paid_baby_sitters'] + $totalChildrensRoomExpenses + $totalServiceProjectExpenses
-                                    + $totalPartyExpense + $financial_report_array['office_printing_costs'] + $financial_report_array['office_postage_costs'] +
-                                    $financial_report_array['office_membership_pins_cost'] + $totalOfficeExpense + $financial_report_array['annual_registration_fee'] + $totalEventExpense + $totalOtherExpenses;
-                            $treasuryBalance = $financial_report_array ['amount_reserved_from_previous_year'] + $totalIncome - $totalExpenses
+                            $totalExpenses = $chFinancialReport['manditory_meeting_fees_paid'] + $chFinancialReport['voluntary_donations_paid'] + $chFinancialReport['paid_baby_sitters'] + $totalChildrensRoomExpenses + $totalServiceProjectExpenses
+                                    + $totalPartyExpense + $chFinancialReport['office_printing_costs'] + $chFinancialReport['office_postage_costs'] +
+                                    $chFinancialReport['office_membership_pins_cost'] + $totalOfficeExpense + $chFinancialReport['annual_registration_fee'] + $totalEventExpense + $totalOtherExpenses;
+                            $treasuryBalance = $chFinancialReport ['amount_reserved_from_previous_year'] + $totalIncome - $totalExpenses
                         ?> --}}
                         <div class="flex-container">
                             <div class="flex-item">
-                                Beginning Balance&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array ['amount_reserved_from_previous_year'], 2)}}</strong><br>
+                                Beginning Balance&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport ['amount_reserved_from_previous_year'], 2)}}</strong><br>
                             </div>
                             <div class="flex-item">
-                                Ending Bank Statement Balance&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array ['bank_balance_now'], 2)}}</strong><br>
+                                Ending Bank Statement Balance&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport ['bank_balance_now'], 2)}}</strong><br>
                             </div>
                             <div class="flex-item">
                                 Profit (Loss)&nbsp;&nbsp;&nbsp;<strong>
@@ -1700,8 +1706,8 @@
                                 $totalPayments = 0;
                                 $totalDeposits = 0;
 
-                                if (isset($financial_report_array['bank_reconciliation_array']) && $financial_report_array['bank_reconciliation_array'] !== null) {
-                                    $blobData = base64_decode($financial_report_array['bank_reconciliation_array']);
+                                if (isset($chFinancialReport['bank_reconciliation_array']) && $chFinancialReport['bank_reconciliation_array'] !== null) {
+                                    $blobData = base64_decode($chFinancialReport['bank_reconciliation_array']);
                                     $bank_rec_array = unserialize($blobData);
 
                                     if ($bank_rec_array === false) {
@@ -1757,7 +1763,7 @@
                             </tbody>
                             </table>
                         <br>
-                        Reconciled Bank Statement:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($financial_report_array ['bank_balance_now'] + $totalReconciliation, 2) }}</strong><br>
+                        Reconciled Bank Statement:&nbsp;&nbsp;&nbsp;<strong>{{ '$'.number_format($chFinancialReport ['bank_balance_now'] + $totalReconciliation, 2) }}</strong><br>
 
 						<hr style="border-bottom: 2px solid #007bff">
 				<!-- start:report_review -->
@@ -1768,36 +1774,36 @@
                             <div class="card-body form-row">
                                 <div class="col-12">
 
-                                    @if (!is_null($financial_report_array['bank_statement_included_path']))
+                                    @if (!is_null($chFinancialReport['bank_statement_included_path']))
                                         <div class="col-12">
-                                            <label>Bank Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_included_path']; ?>" >&nbsp; View Bank Statement</a><br>
+                                            <label>Bank Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chFinancialReport['bank_statement_included_path']; ?>" >&nbsp; View Bank Statement</a><br>
                                         </div>
                                     @endif
-                                    @if (!is_null($financial_report_array['bank_statement_2_included_path']))
+                                    @if (!is_null($chFinancialReport['bank_statement_2_included_path']))
                                         <div class="col-12">
-                                            <label>Additional Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['bank_statement_2_included_path']; ?>" >&nbsp; View Additional Bank Statement</a><br>
+                                            <label>Additional Statement Uploaded:</label><a href="https://drive.google.com/uc?export=download&id=<?php echo $chFinancialReport['bank_statement_2_included_path']; ?>" >&nbsp; View Additional Bank Statement</a><br>
                                         </div>
                                     @endif
                                     <div class="col-12" id="StatementBlock">
                                         <strong style="color:red">Please Note</strong><br>
                                             This will refresh the screen - be sure to save all work before clicking button to Upload or Replace Bank Statement(s).<br>
-                                        @if (!is_null($financial_report_array['bank_statement_included_path']))
+                                        @if (!is_null($chFinancialReport['bank_statement_included_path']))
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Bank Statement</button>
                                         @else
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement1UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Bank Statement</button>
                                         @endif
                                     </div>
-                                        <input type="hidden" name="StatementFile" id="StatementPath" value="<?php echo $financial_report_array['bank_statement_included_path']; ?>">
+                                        <input type="hidden" name="StatementFile" id="StatementPath" value="<?php echo $chFinancialReport['bank_statement_included_path']; ?>">
                                     <div class="clearfix"></div>
                                     <div class="col-12"><br></div>
                                     <div class="col-12" id="Statement2Block">
-                                        @if (!is_null($financial_report_array['bank_statement_2_included_path']))
+                                        @if (!is_null($chFinancialReport['bank_statement_2_included_path']))
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Additional Bank Statement</button>
                                         @else
                                             <button type="button" class="btn btn-sm btn-primary" onclick="showStatement2UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Additional Bank Statement</button>
                                         @endif
                                     </div>
-                                    <input type="hidden" name="Statement2File" id="Statement2Path" value="<?php echo $financial_report_array['bank_statement_2_included_path']; ?>">
+                                    <input type="hidden" name="Statement2File" id="Statement2Path" value="<?php echo $chFinancialReport['bank_statement_2_included_path']; ?>">
                                     <div class="clearfix"></div>
                                     <div class="col-12"><br></div>
 
@@ -1807,7 +1813,7 @@
                                     <div class="form-group row">
                                         <label>Ending Balance on Last Year's Report:</label>
                                         <div class="col-md-12 row">
-                                            <strong>{{ '$'.number_format($financial_report_array['pre_balance'], 2) }}</strong>
+                                            <strong>{{ '$'.number_format($chFinancialReport['pre_balance'], 2) }}</strong>
                                         </div>
                                     </div>
 
@@ -1815,11 +1821,11 @@
                                         <label>Does this year's Beginning Balance match last year's Ending Balance?<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="check_beginning_balance" value="1" {{ $financial_report_array['check_beginning_balance'] === 1 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="check_beginning_balance" value="1" {{ $chFinancialReport['check_beginning_balance'] === 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label">Yes</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="check_beginning_balance" value="0" {{ $financial_report_array['check_beginning_balance'] === 0 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="check_beginning_balance" value="0" {{ $chFinancialReport['check_beginning_balance'] === 0 ? 'checked' : '' }}>
                                                 <label class="form-check-label">No</label>
                                             </div>
                                         </div>
@@ -1828,11 +1834,11 @@
                                         <label>Current bank statement included and balance matches chapter entry:<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="checkBankStatementIncluded" value="1" {{ $financial_report_array['check_bank_statement_included'] === 1 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="checkBankStatementIncluded" value="1" {{ $chFinancialReport['check_bank_statement_included'] === 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label">Yes</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="checkBankStatementIncluded" value="0" {{ $financial_report_array['check_bank_statement_included'] === 0 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="checkBankStatementIncluded" value="0" {{ $chFinancialReport['check_bank_statement_included'] === 0 ? 'checked' : '' }}>
                                                 <label class="form-check-label">No</label>
                                             </div>
                                         </div>
@@ -1841,11 +1847,11 @@
                                         <label>Treasury Balance Now matches Reconciled Bank Balance:<span class="field-required">*&nbsp;</span></label>
                                         <div class="col-md-12 row">
                                             <div class="form-check" style="margin-right: 20px;">
-                                                <input class="form-check-input" type="radio" name="checkBankStatementMatches" value="1" {{ $financial_report_array['check_bank_statement_matches'] === 1 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="checkBankStatementMatches" value="1" {{ $chFinancialReport['check_bank_statement_matches'] === 1 ? 'checked' : '' }}>
                                                 <label class="form-check-label">Yes</label>
                                             </div>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="checkBankStatementMatches" value="0" {{ $financial_report_array['check_bank_statement_matches'] === 0 ? 'checked' : '' }}>
+                                                <input class="form-check-input" type="radio" name="checkBankStatementMatches" value="0" {{ $chFinancialReport['check_bank_statement_matches'] === 0 ? 'checked' : '' }}>
                                                 <label class="form-check-label">No</label>
                                             </div>
                                         </div>
@@ -1859,7 +1865,7 @@
                                              <div class="input-group-prepend">
                                               <span class="input-group-text">$</span>
                                             </div>
-                                            <input type="text" class="form-control" min="0" step="0.01" name="post_balance" id="post_balance" style="width: 120px;" value="<?php if(!empty($financial_report_array)) echo $financial_report_array['post_balance'] ?>">
+                                            <input type="text" class="form-control" min="0" step="0.01" name="post_balance" id="post_balance" style="width: 120px;" value="<?php if(!empty($chFinancialReport)) echo $chFinancialReport['post_balance'] ?>">
                                         </div>
                                         </div>
                                     </div>
@@ -1869,7 +1875,7 @@
                     <div class="col-12">
                                 <div class="form-group row">
                                         <label for="Step10_Note">Add New Note:</label>
-                                        <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(10)" name="Step10_Note" id="Step10_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+                                        <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(10)" name="Step10_Note" id="Step10_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                         <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
                                         <button type="button" id="AddNote10" class="btn btn-sm bg-gradient-success" onclick="AddNote(10)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                     </div>
@@ -1881,7 +1887,7 @@
 								<label for="Step10_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 							</div>
 							<div class="col-12">
-								<textarea class="form-control" style="width:100%" rows="8" name="Step10_Log" id="Step10_Log" readonly><?php echo $financial_report_array['step_10_notes_log']; ?></textarea>
+								<textarea class="form-control" style="width:100%" rows="8" name="Step10_Log" id="Step10_Log" readonly><?php echo $chFinancialReport['step_10_notes_log']; ?></textarea>
 							</div>
                             <div class="col-12"><br></div>
 
@@ -1898,13 +1904,13 @@
 			<!------End Step 10 ------>
 
             <!------Start Step 11 ------>
-            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='11') echo "active";?>">
+            <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='11') echo "active";?>">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
                         <a class="d-block" data-toggle="collapse" href="#collapseEleven" style="width: 100%;">990N IRS FILING</a>
                     </h4>
                 </div>
-                <div id="collapseEleven" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='11') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseEleven" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='11') echo 'show'; ?>" data-parent="#accordion">
                     <div class="card-body">
                 <section>
                     <div class="flex-container">
@@ -1921,9 +1927,9 @@
                 </div>
                         <div class="card-body form-row">
                               <div class="col-12">
-                            @if (!is_null($financial_report_array['roster_path']))
+                            @if (!is_null($chFinancialReport['roster_path']))
                                     <div class="col-12">
-                                        <label>990N Filing Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $financial_report_array['file_irs_path'] }}">&nbsp; View 990N Confirmation</a><br>
+                                        <label>990N Filing Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chFinancialReport['file_irs_path'] }}">&nbsp; View 990N Confirmation</a><br>
                                     </div>
                                     <div class="col-12" id="990NBlock">
                                         <strong style="color:red">Please Note</strong><br>
@@ -1937,7 +1943,7 @@
                                         <button type="button" class="btn btn-sm btn-primary" onclick="show990NUploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload 990N Confirmation</button>
                                 </div>
                             @endif
-                            <input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $financial_report_array['file_irs_path']; ?>">
+                            <input type="hidden" name="990NFiling" id="990NFiling" value="<?php echo $chFinancialReport['file_irs_path']; ?>">
                             <div class="clearfix"></div>
                             <div class="col-12"><br></div>
                             <div class="col-12">
@@ -1946,11 +1952,11 @@
                                     <label>Did the chapter file their 990N with the date range of <strong>7/1/<?php echo date('Y')-1 .' - 6/30/'.date('Y');?></strong>?<span class="field-required">*&nbsp;</span></label>
                                     <div class="col-12 row">
                                         <div class="form-check" style="margin-right: 20px;">
-                                            <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="1" {{ $financial_report_array['check_current_990N_included'] === 1 ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="1" {{ $chFinancialReport['check_current_990N_included'] === 1 ? 'checked' : '' }}>
                                             <label class="form-check-label">Yes</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="0" {{ $financial_report_array['check_current_990N_included'] === 0 ? 'checked' : '' }}>
+                                            <input class="form-check-input" type="radio" name="checkCurrent990NAttached" value="0" {{ $chFinancialReport['check_current_990N_included'] === 0 ? 'checked' : '' }}>
                                             <label class="form-check-label">No</label>
                                         </div>
                                     </div>
@@ -1959,7 +1965,7 @@
                         <div class="col-12">
                             <div class="form-group row">
                                     <label for="Step11_Note">Add New Note:</label>
-                                    <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(11)" name="Step11_Note" id="Step11_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+                                    <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(11)" name="Step11_Note" id="Step11_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                     <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
                                     <button type="button" id="AddNote11" class="btn btn-sm bg-gradient-success" onclick="AddNote(11)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                 </div>
@@ -1971,7 +1977,7 @@
                             <label for="Step11_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                         </div>
                         <div class="col-12">
-                            <textarea class="form-control" style="width:100%" rows="8" name="Step11_Log" id="Step11_Log" readonly><?php echo $financial_report_array['step_11_notes_log']; ?></textarea>
+                            <textarea class="form-control" style="width:100%" rows="8" name="Step11_Log" id="Step11_Log" readonly><?php echo $chFinancialReport['step_11_notes_log']; ?></textarea>
                         </div>
                         <div class="col-12"><br></div>
 
@@ -1988,13 +1994,13 @@
         <!------End Step 11 ------>
 
 			<!------Start Step 12 ------>
-            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='12') echo "active";?>">
+            <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='12') echo "active";?>">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
                         <a class="d-block" data-toggle="collapse" href="#collapseTwelve" style="width: 100%;">CHAPTER QUESTIONS</a>
                     </h4>
                 </div>
-                <div id="collapseTwelve" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='12') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseTwelve" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='12') echo 'show'; ?>" data-parent="#accordion">
                     <div class="card-body">
 				<section>
                     <table>
@@ -2002,72 +2008,72 @@
                            <tr><td>1.</td>
                                <td>Did anyone in your chapter receive any compensation or pay for their work with your chapter?</td></tr>
                            <tr><td></td>
-                               <td><strong>{{ is_null($financial_report_array['receive_compensation']) ? 'Not Answered' : ($financial_report_array['receive_compensation'] == 0 ? 'NO'
-                                : ( $financial_report_array ['receive_compensation'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['receive_compensation_explanation']}}</strong></td></tr>
+                               <td><strong>{{ is_null($chFinancialReport['receive_compensation']) ? 'Not Answered' : ($chFinancialReport['receive_compensation'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['receive_compensation'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['receive_compensation_explanation']}}</strong></td></tr>
                            <tr><td>2.</td>
                                <td>Did any officer, member or family of a member benefit financially in any way from the member's position with your chapter?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['financial_benefit']) ? 'Not Answered' : ($financial_report_array['financial_benefit'] == 0 ? 'NO'
-                                : ( $financial_report_array ['financial_benefit'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['financial_benefit_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['financial_benefit']) ? 'Not Answered' : ($chFinancialReport['financial_benefit'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['financial_benefit'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['financial_benefit_explanation']}}</strong></td></tr>
                            <tr><td>3.</td>
                                <td>Did your chapter attempt to influence any national, state/provincial, or local legislation, or support any other organization that did?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['influence_political']) ? 'Not Answered' : ($financial_report_array['influence_political'] == 0 ? 'NO'
-                                : ( $financial_report_array ['influence_political'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['influence_political_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['influence_political']) ? 'Not Answered' : ($chFinancialReport['influence_political'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['influence_political'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['influence_political_explanation']}}</strong></td></tr>
                            <tr><td>4.</td>
                                <td>Did your chapter vote on all activities and expenditures during the fiscal year?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['vote_all_activities']) ? 'Not Answered' : ($financial_report_array['vote_all_activities'] == 0 ? 'NO'
-                                : ( $financial_report_array ['vote_all_activities'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['vote_all_activities_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['vote_all_activities']) ? 'Not Answered' : ($chFinancialReport['vote_all_activities'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['vote_all_activities'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['vote_all_activities_explanation']}}</strong></td></tr>
                            <tr><td>5.</td>
                                <td>Did you purchase pins from International?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['purchase_pins']) ? 'Not Answered' : ($financial_report_array['purchase_pins'] == 0 ? 'NO'
-                                : ( $financial_report_array ['purchase_pins'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['purchase_pins_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['purchase_pins']) ? 'Not Answered' : ($chFinancialReport['purchase_pins'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['purchase_pins'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['purchase_pins_explanation']}}</strong></td></tr>
                            <tr><td>6.</td>
                                <td>Did you purchase any merchandise from International other than pins?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['bought_merch']) ? 'Not Answered' : ($financial_report_array['bought_merch'] == 0 ? 'NO'
-                                : ( $financial_report_array ['bought_merch'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{$financial_report_array ['bought_merch_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['bought_merch']) ? 'Not Answered' : ($chFinancialReport['bought_merch'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['bought_merch'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{$chFinancialReport ['bought_merch_explanation']}}</strong></td></tr>
                            <tr><td>7.</td>
                                <td>Did you offer or inform your members about MOMS Club merchandise?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['offered_merch']) ? 'Not Answered' : ($financial_report_array['offered_merch'] == 0 ? 'NO'
-                                : ( $financial_report_array ['offered_merch'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['offered_merch_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['offered_merch']) ? 'Not Answered' : ($chFinancialReport['offered_merch'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['offered_merch'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['offered_merch_explanation']}}</strong></td></tr>
                            <tr><td>8.</td>
                                <td>Did you make the Bylaws and/or manual available for any chapter members that requested them?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['bylaws_available']) ? 'Not Answered' : ($financial_report_array['bylaws_available'] == 0 ? 'NO'
-                                : ( $financial_report_array ['bylaws_available'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['bylaws_available_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['bylaws_available']) ? 'Not Answered' : ($chFinancialReport['bylaws_available'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['bylaws_available'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['bylaws_available_explanation']}}</strong></td></tr>
                            <tr><td>9.</td>
                                <td>Did you have a children's room with babysitters?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['childrens_room_sitters']) ? 'Not Answered' : ($financial_report_array['childrens_room_sitters'] == 0 ? 'NO'
-                                : ( $financial_report_array ['childrens_room_sitters'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array['childrens_room_sitters_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['childrens_room_sitters']) ? 'Not Answered' : ($chFinancialReport['childrens_room_sitters'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['childrens_room_sitters'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport['childrens_room_sitters_explanation']}}</strong></td></tr>
                            <tr><td>10.</td>
                                <td>Did you have playgroups? If so, how were they arranged.</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['playgroups']) ? 'Not Answered' : ($financial_report_array['playgroups'] == 0 ? 'NO'
-                                : ( $financial_report_array ['playgroups'] == 1 ? 'YES   Arranged by Age' : (['playgroups'] == 2 ? 'YES   Multi-aged Groups' : 'Not Answered'))) }}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['playgroups']) ? 'Not Answered' : ($chFinancialReport['playgroups'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['playgroups'] == 1 ? 'YES   Arranged by Age' : (['playgroups'] == 2 ? 'YES   Multi-aged Groups' : 'Not Answered'))) }}</strong></td></tr>
                            <tr><td>11.</td>
                                <td>Did you have any child focused outings or activities?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['child_outings']) ? 'Not Answered' : ($financial_report_array['child_outings'] == 0 ? 'NO'
-                                : ( $financial_report_array ['child_outings'] == 1 ? 'YES' : 'Not Answered')) }}&nbsp;&nbsp;  {{ $financial_report_array ['child_outings_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['child_outings']) ? 'Not Answered' : ($chFinancialReport['child_outings'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['child_outings'] == 1 ? 'YES' : 'Not Answered')) }}&nbsp;&nbsp;  {{ $chFinancialReport ['child_outings_explanation']}}</strong></td></tr>
                            <tr><td>12.</td>
                                <td>Did you have any mother focused outings or activities?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['mother_outings']) ? 'Not Answered' : ($financial_report_array['mother_outings'] == 0 ? 'NO'
-                                : ( $financial_report_array ['mother_outings'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['mother_outings_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['mother_outings']) ? 'Not Answered' : ($chFinancialReport['mother_outings'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['mother_outings'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['mother_outings_explanation']}}</strong></td></tr>
                            <tr><td>13.</td>
                                <td>Did you have speakers at any meetings?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['meeting_speakers']) ? 'Not Answered' : ($financial_report_array['meeting_speakers'] == 0 ? 'NO'
-                                : ( $financial_report_array ['meeting_speakers'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['meeting_speakers_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['meeting_speakers']) ? 'Not Answered' : ($chFinancialReport['meeting_speakers'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['meeting_speakers'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['meeting_speakers_explanation']}}</strong></td></tr>
                             <tr><td></td>
                                 <td><strong>
                                     @php
-                                        $meetingSpeakersArray = json_decode($financial_report_array['meeting_speakers_array']);
+                                        $meetingSpeakersArray = json_decode($chFinancialReport['meeting_speakers_array']);
                                         $meetingSpeakersMapping = [
                                             '0' => 'N/A',
                                             '1' => 'Child Rearing',
@@ -2092,22 +2098,22 @@
                            <tr><td>14.</td>
                                <td>Did you have any discussion topics at your meetings? If yes, how often?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['discussion_topic_frequency']) ? 'Not Answered' : ($financial_report_array['discussion_topic_frequency'] == 0 ? 'NO'
-                                : ( $financial_report_array['discussion_topic_frequency'] == 1 ? '1-3 Times' : ($financial_report_array['discussion_topic_frequency'] == 2 ? '4-6 Times' :
-                                   ($financial_report_array['discussion_topic_frequency'] == 3 ? '7-9 Times' : ($financial_report_array['discussion_topic_frequency'] == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['discussion_topic_frequency']) ? 'Not Answered' : ($chFinancialReport['discussion_topic_frequency'] == 0 ? 'NO'
+                                : ( $chFinancialReport['discussion_topic_frequency'] == 1 ? '1-3 Times' : ($chFinancialReport['discussion_topic_frequency'] == 2 ? '4-6 Times' :
+                                   ($chFinancialReport['discussion_topic_frequency'] == 3 ? '7-9 Times' : ($chFinancialReport['discussion_topic_frequency'] == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong></td></tr>
                            <tr><td>15.</td>
                                <td>Did your chapter have scheduled park days? If yes, how often?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['park_day_frequency']) ? 'Not Answered' : ($financial_report_array['park_day_frequency'] == 0 ? 'NO'
-                                : ( $financial_report_array['park_day_frequency'] == 1 ? '1-3 Times' : ($financial_report_array['park_day_frequency'] == 2 ? '4-6 Times' :
-                                   ($financial_report_array['park_day_frequency'] == 3 ? '7-9 Times' : ($financial_report_array['park_day_frequency'] == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['park_day_frequency']) ? 'Not Answered' : ($chFinancialReport['park_day_frequency'] == 0 ? 'NO'
+                                : ( $chFinancialReport['park_day_frequency'] == 1 ? '1-3 Times' : ($chFinancialReport['park_day_frequency'] == 2 ? '4-6 Times' :
+                                   ($chFinancialReport['park_day_frequency'] == 3 ? '7-9 Times' : ($chFinancialReport['park_day_frequency'] == 4 ? '10+ Times' : 'Not Answered'))))) }}</strong></td></tr>
 
                            <tr><td>16.</td>
                             <td>Did your chapter have any of the following activity groups?</td></tr>
                             <tr><td></td>
                             <td><strong>
                                 @php
-                                    $activityArray = json_decode($financial_report_array['activity_array']);
+                                    $activityArray = json_decode($chFinancialReport['activity_array']);
                                     $activityMapping = [
                                         '0' => 'N/A',
                                         '1' => 'Cooking',
@@ -2132,33 +2138,33 @@
                            <tr><td>17.</td>
                                <td>Did your chapter make any contributions to any organization or individual that is not registered with the government as a charity?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['contributions_not_registered_charity']) ? 'Not Answered' : ($financial_report_array['contributions_not_registered_charity'] == 0 ? 'NO'
-                                : ( $financial_report_array ['contributions_not_registered_charity'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['contributions_not_registered_charity_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['contributions_not_registered_charity']) ? 'Not Answered' : ($chFinancialReport['contributions_not_registered_charity'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['contributions_not_registered_charity'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['contributions_not_registered_charity_explanation']}}</strong></td></tr>
                            <tr><td>18.</td>
                                <td>Did your chapter perform at least one service project to benefit mothers or children?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['at_least_one_service_project']) ? 'Not Answered' : ($financial_report_array['at_least_one_service_project'] == 0 ? 'NO'
-                                : ( $financial_report_array ['at_least_one_service_project'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array['at_least_one_service_project_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['at_least_one_service_project']) ? 'Not Answered' : ($chFinancialReport['at_least_one_service_project'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['at_least_one_service_project'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport['at_least_one_service_project_explanation']}}</strong></td></tr>
                            <tr><td>19.</td>
                                <td>Did your chapter sister another chapter?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['sister_chapter']) ? 'Not Answered' : ($financial_report_array['sister_chapter'] == 0 ? 'NO'
-                                : ( $financial_report_array ['sister_chapter'] == 1 ? 'YES' : 'Not Answered' )) }}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['sister_chapter']) ? 'Not Answered' : ($chFinancialReport['sister_chapter'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['sister_chapter'] == 1 ? 'YES' : 'Not Answered' )) }}</strong></td></tr>
                            <tr><td>20.</td>
                                <td>Did your chapter attend an International Event?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['international_event']) ? 'Not Answered' : ($financial_report_array['international_event'] == 0 ? 'NO'
-                                : ( $financial_report_array['international_event'] == 1 ? 'YES' : 'Not Answered' )) }}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['international_event']) ? 'Not Answered' : ($chFinancialReport['international_event'] == 0 ? 'NO'
+                                : ( $chFinancialReport['international_event'] == 1 ? 'YES' : 'Not Answered' )) }}</strong></td></tr>
                            <tr><td>21.</td>
                                <td>Did your chapter file their IRS 990N?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['file_irs']) ? 'Not Answered' : ($financial_report_array['file_irs'] == 0 ? 'NO'
-                                : ( $financial_report_array ['file_irs'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{$financial_report_array ['file_irs_explanation']}}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['file_irs']) ? 'Not Answered' : ($chFinancialReport['file_irs'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['file_irs'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{$chFinancialReport ['file_irs_explanation']}}</strong></td></tr>
                            <tr><td>22.</td>
                                <td>Is a copy of your chapter's most recent bank statement included with the copy of this report that you are submitting to International?</td></tr>
                            <tr><td></td>
-                            <td><strong>{{ is_null($financial_report_array['bank_statement_included']) ? 'Not Answered' : ($financial_report_array['bank_statement_included'] == 0 ? 'NO'
-                                : ( $financial_report_array ['bank_statement_included'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $financial_report_array ['bank_statement_included_explanation']}}{{ $financial_report_array ['wheres_the_money'] }}</strong></td></tr>
+                            <td><strong>{{ is_null($chFinancialReport['bank_statement_included']) ? 'Not Answered' : ($chFinancialReport['bank_statement_included'] == 0 ? 'NO'
+                                : ( $chFinancialReport ['bank_statement_included'] == 1 ? 'YES' : 'Not Answered' )) }}&nbsp;&nbsp;  {{ $chFinancialReport ['bank_statement_included_explanation']}}{{ $chFinancialReport ['wheres_the_money'] }}</strong></td></tr>
                            </tbody>
                    </table>
                    <hr style="border-bottom: 2px solid #007bff">
@@ -2176,11 +2182,11 @@
                                             <label>Did they purchase or have leftover pins? (Quesion 5):<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkPurchasedPins" value="1" {{ $financial_report_array['check_purchased_pins'] === 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkPurchasedPins" value="1" {{ $chFinancialReport['check_purchased_pins'] === 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkPurchasedPins" value="0" {{ $financial_report_array['check_purchased_pins'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkPurchasedPins" value="0" {{ $chFinancialReport['check_purchased_pins'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -2189,11 +2195,11 @@
                                             <label>Did they purchase MOMS Club merchandise? (Quesion 6):<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="1" {{ $financial_report_array['check_purchased_mc_merch'] === 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="1" {{ $chFinancialReport['check_purchased_mc_merch'] === 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="0" {{ $financial_report_array['check_purchased_mc_merch'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkPurchasedMCMerch" value="0" {{ $chFinancialReport['check_purchased_mc_merch'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -2202,11 +2208,11 @@
                                             <label>Did they offer MOMS Club merchandise or info on how to buy to members? (Question 7):<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkOfferedMerch" value="1" {{ $financial_report_array['check_offered_merch'] === 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkOfferedMerch" value="1" {{ $chFinancialReport['check_offered_merch'] === 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkOfferedMerch" value="0" {{ $financial_report_array['check_offered_merch'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkOfferedMerch" value="0" {{ $chFinancialReport['check_offered_merch'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -2216,11 +2222,11 @@
                                             <label>Did they make the Manual/By-Laws available to members? (Question 8):<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="1" {{ $financial_report_array['check_bylaws_available'] === 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="1" {{ $chFinancialReport['check_bylaws_available'] === 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="0" {{ $financial_report_array['check_bylaws_available'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkBylawsMadeAvailable" value="0" {{ $chFinancialReport['check_bylaws_available'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -2229,11 +2235,11 @@
                                             <label>Did they Sistered another chapter? (Question 19):<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="1" {{ $financial_report_array['check_sistered_another_chapter'] === 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="1" {{ $chFinancialReport['check_sistered_another_chapter'] === 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="0" {{ $financial_report_array['check_sistered_another_chapter'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkSisteredAnotherChapter" value="0" {{ $chFinancialReport['check_sistered_another_chapter'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -2242,11 +2248,11 @@
                                             <label>Did they attended an in person or virtual International Event? (Question 20):<span class="field-required">*&nbsp;</span></label>
                                             <div class="col-12 row">
                                                 <div class="form-check" style="margin-right: 20px;">
-                                                    <input class="form-check-input" type="radio" name="checkAttendedTraining" value="1" {{ $financial_report_array['check_attended_training'] === 1 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkAttendedTraining" value="1" {{ $chFinancialReport['check_attended_training'] === 1 ? 'checked' : '' }}>
                                                     <label class="form-check-label">Yes</label>
                                                 </div>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="checkAttendedTraining" value="0" {{ $financial_report_array['check_attended_training'] === 0 ? 'checked' : '' }}>
+                                                    <input class="form-check-input" type="radio" name="checkAttendedTraining" value="0" {{ $chFinancialReport['check_attended_training'] === 0 ? 'checked' : '' }}>
                                                     <label class="form-check-label">No</label>
                                                 </div>
                                             </div>
@@ -2254,7 +2260,7 @@
 
                                         <div class="form-group row">
                                             <label for="Step12_Note">Add New Note:</label>
-                                            <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(12)" name="Step12_Note" id="Step12_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+                                            <textarea class="form-control" style="width:100%" rows="3"  oninput="EnableNoteLogButton(12)" name="Step12_Note" id="Step12_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                             <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
                                             <button type="button" id="AddNote12" class="btn btn-sm bg-gradient-success" onclick="AddNote(12)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
                                         </div>
@@ -2266,7 +2272,7 @@
 								<label for="Step12_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
 							</div>
 							<div class="col-12">
-								<textarea class="form-control" style="width:100%" rows="8" name="Step12_Log" id="Step12_Log" readonly><?php echo $financial_report_array['step_12_notes_log']; ?></textarea>
+								<textarea class="form-control" style="width:100%" rows="8" name="Step12_Log" id="Step12_Log" readonly><?php echo $chFinancialReport['step_12_notes_log']; ?></textarea>
 							</div>
                             <div class="col-12"><br></div>
 
@@ -2283,20 +2289,20 @@
 			<!------End Step 12 ------>
 
 			<!------Start Step 13 ------>
-            <div class="card card-primary <?php if($financial_report_array['farthest_step_visited_coord'] =='13') echo "active";?>">
+            <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited_coord'] =='13') echo "active";?>">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
                         <a class="d-block" data-toggle="collapse" href="#collapseThirteen" style="width: 100%;">AWARD NOMINATIONS</a>
                     </h4>
                 </div>
-                <div id="collapseThirteen" class="collapse <?php if($financial_report_array['farthest_step_visited_coord'] =='13') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseThirteen" class="collapse <?php if($chFinancialReport['farthest_step_visited_coord'] =='13') echo 'show'; ?>" data-parent="#accordion">
                     <div class="card-body">
 					<section>
 					<div class="form-row form-group">
                         <input type="hidden" id="TotalAwardNominations" name="TotalAwardNominations" value=<?php
-							if (!empty($financial_report_array)) {
-								if ($financial_report_array['award_nominations']>0){
-									echo $financial_report_array['award_nominations'];
+							if (!empty($chFinancialReport)) {
+								if ($chFinancialReport['award_nominations']>0){
+									echo $chFinancialReport['award_nominations'];
 								}
 								else {
 									echo "0";
@@ -2307,19 +2313,19 @@
 							} ?>>
 
 							<?php
-                                if (empty($financial_report_array) || $financial_report_array['award_1_nomination_type'] === null || $financial_report_array['award_1_nomination_type'] == 0) {
+                                if (empty($chFinancialReport) || $chFinancialReport['award_1_nomination_type'] === null || $chFinancialReport['award_1_nomination_type'] == 0) {
                                     echo "No Award Nominations for this Chapter";
                                 }
                             ?>
 
 						<!-- Award 1 Start -->
-						<div class="box_brd_contentpad" id="Award1Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_nomination_type']==NULL) echo "none;"; else echo "block;";} else echo "none;";?>">
+						<div class="box_brd_contentpad" id="Award1Panel" style="display: <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==NULL) echo "none;"; else echo "block;";} else echo "none;";?>">
 							<div class="box_brd_title_box">
 								<div class="form-group">
                                     <div class="col-md-12">
-                                        Award #1:&nbsp;&nbsp;&nbsp;{{ is_null($financial_report_array['award_1_nomination_type']) ? 'N/A' : ($financial_report_array['award_1_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                                : ($financial_report_array['award_1_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_1_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_1_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                                : ($financial_report_array['award_1_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_1_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_1_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                                        Award #1:&nbsp;&nbsp;&nbsp;{{ is_null($chFinancialReport['award_1_nomination_type']) ? 'N/A' : ($chFinancialReport['award_1_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                                                : ($chFinancialReport['award_1_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($chFinancialReport['award_1_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($chFinancialReport['award_1_nomination_type'] == 4 ? 'Outstanding Spirit'
+                                                : ($chFinancialReport['award_1_nomination_type'] == 5 ? 'Outstanding Chapter' : ($chFinancialReport['award_1_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($chFinancialReport['award_1_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                                     </div>
 								</div>
 							</div>
@@ -2327,18 +2333,18 @@
 								 Description:
                                  <div class="col-sm-12">
                                     <?php
-                                        if (!empty($financial_report_array)) {
-                                            $award_1_files = $financial_report_array['award_1_outstanding_project_desc'];
+                                        if (!empty($chFinancialReport)) {
+                                            $award_1_files = $chFinancialReport['award_1_outstanding_project_desc'];
                                             echo ($award_1_files !== null) ? $award_1_files : "No description entered";
                                         }
                                     ?>
                                 </div>
                             </div>
                             <div class="col-sm-12">
-                                <?php if (!empty($financial_report_array['award_1_files'])): ?>
+                                <?php if (!empty($chFinancialReport['award_1_files'])): ?>
                                         <label class="control-label" for="Award1Files">File Attachment:</label>
                                         <div class="col-sm-12">
-                                            <a href="<?php echo $financial_report_array['award_1_files']; ?>" target="_blank">Award 1 Files</a>
+                                            <a href="<?php echo $chFinancialReport['award_1_files']; ?>" target="_blank">Award 1 Files</a>
                                         </div>
                                 <?php else: ?>
                                         <label class="control-label" for="Award1Files">File Attachment:</label>
@@ -2347,13 +2353,13 @@
                                         </div>
                                 <?php endif; ?>
                             </div>
-                            <?php if (!empty($financial_report_array) && ($financial_report_array['award_1_nomination_type'] == 5 || $financial_report_array['award_1_nomination_type'] == 6)) : ?>
+                            <?php if (!empty($chFinancialReport) && ($chFinancialReport['award_1_nomination_type'] == 5 || $chFinancialReport['award_1_nomination_type'] == 6)) : ?>
                             <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
                             <div class="col-sm-12">
                                 <table>
                                     <tr><td colspan="2">Did you follow the Bylaws and all instructions from International?</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_1_outstanding_follow_bylaws']) ? 'Not Answered' : ($financial_report_array['award_1_outstanding_follow_bylaws'] == 0 ? 'NO'
-                                            : ($financial_report_array['award_1_outstanding_follow_bylaws'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_1_outstanding_follow_bylaws']) ? 'Not Answered' : ($chFinancialReport['award_1_outstanding_follow_bylaws'] == 0 ? 'NO'
+                                            : ($chFinancialReport['award_1_outstanding_follow_bylaws'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
                                     </tr>
                                     <tr><td colspan="2">Did you run a well-rounded program for your members?</td></tr>
                                     <tr><td>&nbsp;&nbsp;&nbsp;</td>
@@ -2361,16 +2367,16 @@
                                         kept under 15% of the dues received -- these are all taken into consideration.<br>
                                         A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older
                                         children (or vice versa) would not be offering a well-rounded program.</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_1_outstanding_well_rounded']) ? 'Not Answered' : ($financial_report_array['award_1_outstanding_well_rounded'] == 0 ? 'NO'
-                                            : ($financial_report_array['award_1_outstanding_well_rounded'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_1_outstanding_well_rounded']) ? 'Not Answered' : ($chFinancialReport['award_1_outstanding_well_rounded'] == 0 ? 'NO'
+                                            : ($chFinancialReport['award_1_outstanding_well_rounded'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
                                     </tr>
                                     <tr><td colspan="2">Did you communicate with your Coordinator?</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_1_outstanding_communicated']) ? 'Not Answered' : ($financial_report_array['award_1_outstanding_communicated'] == 0 ? 'NO'
-                                        : ($financial_report_array['award_1_outstanding_communicated'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_1_outstanding_communicated']) ? 'Not Answered' : ($chFinancialReport['award_1_outstanding_communicated'] == 0 ? 'NO'
+                                        : ($chFinancialReport['award_1_outstanding_communicated'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
                                     </tr>
                                     <tr><td colspan="2" colspan="2">Did you support the International MOMS Club?</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_1_outstanding_support_international']) ? 'Not Answered' : ($financial_report_array['award_1_outstanding_support_international'] == 0 ? 'NO'
-                                        : ($financial_report_array['award_1_outstanding_support_international'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_1_outstanding_support_international']) ? 'Not Answered' : ($chFinancialReport['award_1_outstanding_support_international'] == 0 ? 'NO'
+                                        : ($chFinancialReport['award_1_outstanding_support_international'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
                                     </tr>
                                 </table>
                             </div>
@@ -2378,13 +2384,13 @@
 						</div>
 						<!-- Award 1 Stop -->
 						<!-- Award 2 Start -->
-						<div class="box_brd_contentpad" id="Award2Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_2_nomination_type']==NULL) echo "none;"; else echo "block;";} else echo "none;";?>">
+						<div class="box_brd_contentpad" id="Award2Panel" style="display: <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==NULL) echo "none;"; else echo "block;";} else echo "none;";?>">
 							<div class="box_brd_title_box">
 								<div class="form-group">
                                     <div class="col-md-12">
-                                        Award #2:&nbsp;&nbsp;&nbsp;{{ is_null($financial_report_array['award_2_nomination_type']) ? 'N/A' : ($financial_report_array['award_2_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                                : ($financial_report_array['award_2_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_2_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_2_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                                : ($financial_report_array['award_2_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_2_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_2_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                                        Award #2:&nbsp;&nbsp;&nbsp;{{ is_null($chFinancialReport['award_2_nomination_type']) ? 'N/A' : ($chFinancialReport['award_2_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                                                : ($chFinancialReport['award_2_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($chFinancialReport['award_2_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($chFinancialReport['award_2_nomination_type'] == 4 ? 'Outstanding Spirit'
+                                                : ($chFinancialReport['award_2_nomination_type'] == 5 ? 'Outstanding Chapter' : ($chFinancialReport['award_2_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($chFinancialReport['award_2_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                                     </div>
 								</div>
 							</div>
@@ -2392,18 +2398,18 @@
 								 Description:
                                  <div class="col-sm-12">
                                     <?php
-                                        if (!empty($financial_report_array)) {
-                                            $description = $financial_report_array['award_2_outstanding_project_desc'];
+                                        if (!empty($chFinancialReport)) {
+                                            $description = $chFinancialReport['award_2_outstanding_project_desc'];
                                             echo ($description !== null) ? $description : "No description entered";
                                         }
                                     ?>
                                 </div>
                             </div>
                             <div class="col-sm-12">
-                                <?php if (!empty($financial_report_array['award_2_files'])): ?>
+                                <?php if (!empty($chFinancialReport['award_2_files'])): ?>
                                         <label class="control-label" for="Award2Files">File Attachment:</label>
                                         <div class="col-sm-12">
-                                            <a href="<?php echo $financial_report_array['award_2_files']; ?>" target="_blank">Award 2 Files</a>
+                                            <a href="<?php echo $chFinancialReport['award_2_files']; ?>" target="_blank">Award 2 Files</a>
                                         </div>
                                 <?php else: ?>
                                         <label class="control-label" for="Award2Files">File Attachment:</label>
@@ -2412,13 +2418,13 @@
                                         </div>
                                 <?php endif; ?>
                             </div>
-                            <?php if (!empty($financial_report_array) && ($financial_report_array['award_2_nomination_type'] == 5 || $financial_report_array['award_2_nomination_type'] == 6)) : ?>
+                            <?php if (!empty($chFinancialReport) && ($chFinancialReport['award_2_nomination_type'] == 5 || $chFinancialReport['award_2_nomination_type'] == 6)) : ?>
                             <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
                             <div class="col-sm-12">
                                 <table>
                                     <tr><td colspan="2">Did you follow the Bylaws and all instructions from International?</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_2_outstanding_follow_bylaws']) ? 'Not Answered' : ($financial_report_array['award_2_outstanding_follow_bylaws'] == 0 ? 'NO'
-                                            : ($financial_report_array['award_2_outstanding_follow_bylaws'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_2_outstanding_follow_bylaws']) ? 'Not Answered' : ($chFinancialReport['award_2_outstanding_follow_bylaws'] == 0 ? 'NO'
+                                            : ($chFinancialReport['award_2_outstanding_follow_bylaws'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
                                     </tr>
                                     <tr><td colspan="2">Did you run a well-rounded program for your members?</td></tr>
                                     <tr><td>&nbsp;&nbsp;&nbsp;</td>
@@ -2426,16 +2432,16 @@
                                         kept under 15% of the dues received -- these are all taken into consideration.<br>
                                         A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older
                                         children (or vice versa) would not be offering a well-rounded program.</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_2_outstanding_well_rounded']) ? 'Not Answered' : ($financial_report_array['award_2_outstanding_well_rounded'] == 0 ? 'NO'
-                                            : ($financial_report_array['award_2_outstanding_well_rounded'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_2_outstanding_well_rounded']) ? 'Not Answered' : ($chFinancialReport['award_2_outstanding_well_rounded'] == 0 ? 'NO'
+                                            : ($chFinancialReport['award_2_outstanding_well_rounded'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
                                     </tr>
                                     <tr><td colspan="2">Did you communicate with your Coordinator?</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_2_outstanding_communicated']) ? 'Not Answered' : ($financial_report_array['award_2_outstanding_communicated'] == 0 ? 'NO'
-                                        : ($financial_report_array['award_2_outstanding_communicated'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_2_outstanding_communicated']) ? 'Not Answered' : ($chFinancialReport['award_2_outstanding_communicated'] == 0 ? 'NO'
+                                        : ($chFinancialReport['award_2_outstanding_communicated'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
                                     </tr>
                                     <tr><td colspan="2" colspan="2">Did you support the International MOMS Club?</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_2_outstanding_support_international']) ? 'Not Answered' : ($financial_report_array['award_2_outstanding_support_international'] == 0 ? 'NO'
-                                        : ($financial_report_array['award_2_outstanding_support_international'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_2_outstanding_support_international']) ? 'Not Answered' : ($chFinancialReport['award_2_outstanding_support_international'] == 0 ? 'NO'
+                                        : ($chFinancialReport['award_2_outstanding_support_international'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
                                     </tr>
                                 </table>
                             </div>
@@ -2443,13 +2449,13 @@
 						</div>
 						<!-- Award 2 Stop -->
 						<!-- Award 3 Start -->
-						<div class="box_brd_contentpad" id="Award3Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_nomination_type']==NULL) echo "none;"; else echo "block;";} else echo "none;";?>">
+						<div class="box_brd_contentpad" id="Award3Panel" style="display: <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==NULL) echo "none;"; else echo "block;";} else echo "none;";?>">
 							<div class="box_brd_title_box">
 								<div class="form-group">
                                     <div class="col-md-12">
-                                        Award #3:&nbsp;&nbsp;&nbsp;{{ is_null($financial_report_array['award_3_nomination_type']) ? 'N/A' : ($financial_report_array['award_3_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                                : ($financial_report_array['award_3_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_3_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_3_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                                : ($financial_report_array['award_3_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_3_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_3_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                                        Award #3:&nbsp;&nbsp;&nbsp;{{ is_null($chFinancialReport['award_3_nomination_type']) ? 'N/A' : ($chFinancialReport['award_3_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                                                : ($chFinancialReport['award_3_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($chFinancialReport['award_3_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($chFinancialReport['award_3_nomination_type'] == 4 ? 'Outstanding Spirit'
+                                                : ($chFinancialReport['award_3_nomination_type'] == 5 ? 'Outstanding Chapter' : ($chFinancialReport['award_3_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($chFinancialReport['award_3_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                                     </div>
 								</div>
 							</div>
@@ -2457,18 +2463,18 @@
 								 Description:
                                  <div class="col-sm-12">
                                     <?php
-                                        if (!empty($financial_report_array)) {
-                                            $description = $financial_report_array['award_3_outstanding_project_desc'];
+                                        if (!empty($chFinancialReport)) {
+                                            $description = $chFinancialReport['award_3_outstanding_project_desc'];
                                             echo ($description !== null) ? $description : "No description entered";
                                         }
                                     ?>
                                 </div>
                             </div>
                             <div class="col-sm-12">
-                                <?php if (!empty($financial_report_array['award_3_files'])): ?>
+                                <?php if (!empty($chFinancialReport['award_3_files'])): ?>
                                         <label class="control-label" for="Award3Files">File Attachment:</label>
                                         <div class="col-sm-12">
-                                            <a href="<?php echo $financial_report_array['award_3_files']; ?>" target="_blank">Award 3 Files</a>
+                                            <a href="<?php echo $chFinancialReport['award_3_files']; ?>" target="_blank">Award 3 Files</a>
                                         </div>
                                 <?php else: ?>
                                         <label class="control-label" for="Award3Files">File Attachment:</label>
@@ -2477,13 +2483,13 @@
                                         </div>
                                 <?php endif; ?>
                             </div>
-                            <?php if (!empty($financial_report_array) && ($financial_report_array['award_3_nomination_type'] == 5 || $financial_report_array['award_3_nomination_type'] == 6)) : ?>
+                            <?php if (!empty($chFinancialReport) && ($chFinancialReport['award_3_nomination_type'] == 5 || $chFinancialReport['award_3_nomination_type'] == 6)) : ?>
                             <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
                             <div class="col-sm-12">
                                 <table>
                                     <tr><td colspan="2">Did you follow the Bylaws and all instructions from International?</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_3_outstanding_follow_bylaws']) ? 'Not Answered' : ($financial_report_array['award_3_outstanding_follow_bylaws'] == 0 ? 'NO'
-                                            : ($financial_report_array['award_3_outstanding_follow_bylaws'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_3_outstanding_follow_bylaws']) ? 'Not Answered' : ($chFinancialReport['award_3_outstanding_follow_bylaws'] == 0 ? 'NO'
+                                            : ($chFinancialReport['award_3_outstanding_follow_bylaws'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
                                     </tr>
                                     <tr><td colspan="2">Did you run a well-rounded program for your members?</td></tr>
                                     <tr><td>&nbsp;&nbsp;&nbsp;</td>
@@ -2491,16 +2497,16 @@
                                         kept under 15% of the dues received -- these are all taken into consideration.<br>
                                         A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older
                                         children (or vice versa) would not be offering a well-rounded program.</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_3_outstanding_well_rounded']) ? 'Not Answered' : ($financial_report_array['award_3_outstanding_well_rounded'] == 0 ? 'NO'
-                                            : ($financial_report_array['award_3_outstanding_well_rounded'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_3_outstanding_well_rounded']) ? 'Not Answered' : ($chFinancialReport['award_3_outstanding_well_rounded'] == 0 ? 'NO'
+                                            : ($chFinancialReport['award_3_outstanding_well_rounded'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
                                     </tr>
                                     <tr><td colspan="2">Did you communicate with your Coordinator?</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_3_outstanding_communicated']) ? 'Not Answered' : ($financial_report_array['award_3_outstanding_communicated'] == 0 ? 'NO'
-                                        : ($financial_report_array['award_3_outstanding_communicated'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_3_outstanding_communicated']) ? 'Not Answered' : ($chFinancialReport['award_3_outstanding_communicated'] == 0 ? 'NO'
+                                        : ($chFinancialReport['award_3_outstanding_communicated'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
                                     </tr>
                                     <tr><td colspan="2" colspan="2">Did you support the International MOMS Club?</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_3_outstanding_support_international']) ? 'Not Answered' : ($financial_report_array['award_3_outstanding_support_international'] == 0 ? 'NO'
-                                        : ($financial_report_array['award_3_outstanding_support_international'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_3_outstanding_support_international']) ? 'Not Answered' : ($chFinancialReport['award_3_outstanding_support_international'] == 0 ? 'NO'
+                                        : ($chFinancialReport['award_3_outstanding_support_international'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
                                     </tr>
                                 </table>
                             </div>
@@ -2508,13 +2514,13 @@
 						</div>
 						<!-- Award 3 Stop -->
 						<!-- Award 4 Start -->
-						<div class="box_brd_contentpad" id="Award1Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==NULL) echo "none;"; else echo "block;";} else echo "none;";?>">
+						<div class="box_brd_contentpad" id="Award1Panel" style="display: <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==NULL) echo "none;"; else echo "block;";} else echo "none;";?>">
 							<div class="box_brd_title_box">
 								<div class="form-group">
                                     <div class="col-md-12">
-                                        Award #4:&nbsp;&nbsp;&nbsp;{{ is_null($financial_report_array['award_4_nomination_type']) ? 'N/A' : ($financial_report_array['award_4_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                                : ($financial_report_array['award_4_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_4_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_4_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                                : ($financial_report_array['award_4_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_4_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_4_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                                        Award #4:&nbsp;&nbsp;&nbsp;{{ is_null($chFinancialReport['award_4_nomination_type']) ? 'N/A' : ($chFinancialReport['award_4_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                                                : ($chFinancialReport['award_4_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($chFinancialReport['award_4_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($chFinancialReport['award_4_nomination_type'] == 4 ? 'Outstanding Spirit'
+                                                : ($chFinancialReport['award_4_nomination_type'] == 5 ? 'Outstanding Chapter' : ($chFinancialReport['award_4_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($chFinancialReport['award_4_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                                     </div>
 								</div>
 							</div>
@@ -2522,18 +2528,18 @@
 								 Description:
                                  <div class="col-sm-12">
                                     <?php
-                                        if (!empty($financial_report_array)) {
-                                            $description = $financial_report_array['award_4_outstanding_project_desc'];
+                                        if (!empty($chFinancialReport)) {
+                                            $description = $chFinancialReport['award_4_outstanding_project_desc'];
                                             echo ($description !== null) ? $description : "No description entered";
                                         }
                                     ?>
                                 </div>
                             </div>
                             <div class="col-sm-12">
-                                <?php if (!empty($financial_report_array['award_4_files'])): ?>
+                                <?php if (!empty($chFinancialReport['award_4_files'])): ?>
                                         <label class="control-label" for="Award4Files">File Attachment:</label>
                                         <div class="col-sm-12">
-                                            <a href="<?php echo $financial_report_array['award_4_files']; ?>" target="_blank">Award 4 Files</a>
+                                            <a href="<?php echo $chFinancialReport['award_4_files']; ?>" target="_blank">Award 4 Files</a>
                                         </div>
                                 <?php else: ?>
                                         <label class="control-label" for="Award4Files">File Attachment:</label>
@@ -2542,13 +2548,13 @@
                                         </div>
                                 <?php endif; ?>
                             </div>
-                            <?php if (!empty($financial_report_array) && ($financial_report_array['award_4_nomination_type'] == 5 || $financial_report_array['award_4_nomination_type'] == 6)) : ?>
+                            <?php if (!empty($chFinancialReport) && ($chFinancialReport['award_4_nomination_type'] == 5 || $chFinancialReport['award_4_nomination_type'] == 6)) : ?>
                             <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
                             <div class="col-sm-12">
                                 <table>
                                     <tr><td colspan="2">Did you follow the Bylaws and all instructions from International?</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_4_outstanding_follow_bylaws']) ? 'Not Answered' : ($financial_report_array['award_4_outstanding_follow_bylaws'] == 0 ? 'NO'
-                                            : ($financial_report_array['award_4_outstanding_follow_bylaws'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_4_outstanding_follow_bylaws']) ? 'Not Answered' : ($chFinancialReport['award_4_outstanding_follow_bylaws'] == 0 ? 'NO'
+                                            : ($chFinancialReport['award_4_outstanding_follow_bylaws'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
                                     </tr>
                                     <tr><td colspan="2">Did you run a well-rounded program for your members?</td></tr>
                                     <tr><td>&nbsp;&nbsp;&nbsp;</td>
@@ -2556,16 +2562,16 @@
                                         kept under 15% of the dues received -- these are all taken into consideration.<br>
                                         A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older
                                         children (or vice versa) would not be offering a well-rounded program.</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_4_outstanding_well_rounded']) ? 'Not Answered' : ($financial_report_array['award_4_outstanding_well_rounded'] == 0 ? 'NO'
-                                            : ($financial_report_array['award_4_outstanding_well_rounded'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_4_outstanding_well_rounded']) ? 'Not Answered' : ($chFinancialReport['award_4_outstanding_well_rounded'] == 0 ? 'NO'
+                                            : ($chFinancialReport['award_4_outstanding_well_rounded'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
                                     </tr>
                                     <tr><td colspan="2">Did you communicate with your Coordinator?</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_4_outstanding_communicated']) ? 'Not Answered' : ($financial_report_array['award_4_outstanding_communicated'] == 0 ? 'NO'
-                                        : ($financial_report_array['award_4_outstanding_communicated'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_4_outstanding_communicated']) ? 'Not Answered' : ($chFinancialReport['award_4_outstanding_communicated'] == 0 ? 'NO'
+                                        : ($chFinancialReport['award_4_outstanding_communicated'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
                                     </tr>
                                     <tr><td colspan="2" colspan="2">Did you support the International MOMS Club?</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_4_outstanding_support_international']) ? 'Not Answered' : ($financial_report_array['award_4_outstanding_support_international'] == 0 ? 'NO'
-                                        : ($financial_report_array['award_4_outstanding_support_international'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_4_outstanding_support_international']) ? 'Not Answered' : ($chFinancialReport['award_4_outstanding_support_international'] == 0 ? 'NO'
+                                        : ($chFinancialReport['award_4_outstanding_support_international'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
                                     </tr>
                                 </table>
                             </div>
@@ -2573,13 +2579,13 @@
 						</div>
 						<!-- Award 4 Stop -->
 						<!-- Award 5 Start -->
-						<div class="box_brd_contentpad" id="Award1Panel" style="display: <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==NULL) echo "none;"; else echo "block;";} else echo "none;";?>">
+						<div class="box_brd_contentpad" id="Award1Panel" style="display: <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==NULL) echo "none;"; else echo "block;";} else echo "none;";?>">
 							<div class="box_brd_title_box">
 								<div class="form-group">
                                     <div class="col-md-12">
-                                        Award #5:&nbsp;&nbsp;&nbsp;{{ is_null($financial_report_array['award_5_nomination_type']) ? 'N/A' : ($financial_report_array['award_5_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
-                                                : ($financial_report_array['award_5_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($financial_report_array['award_5_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($financial_report_array['award_5_nomination_type'] == 4 ? 'Outstanding Spirit'
-                                                : ($financial_report_array['award_5_nomination_type'] == 5 ? 'Outstanding Chapter' : ($financial_report_array['award_5_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($financial_report_array['award_5_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
+                                        Award #5:&nbsp;&nbsp;&nbsp;{{ is_null($chFinancialReport['award_5_nomination_type']) ? 'N/A' : ($chFinancialReport['award_5_nomination_type'] == 1 ? 'Outstanding Specific Service Project'
+                                                : ($chFinancialReport['award_5_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($chFinancialReport['award_5_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($chFinancialReport['award_5_nomination_type'] == 4 ? 'Outstanding Spirit'
+                                                : ($chFinancialReport['award_5_nomination_type'] == 5 ? 'Outstanding Chapter' : ($chFinancialReport['award_5_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($chFinancialReport['award_5_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                                     </div>
 								</div>
 							</div>
@@ -2587,18 +2593,18 @@
 								 Description:
                                  <div class="col-sm-12">
                                     <?php
-                                        if (!empty($financial_report_array)) {
-                                            $description = $financial_report_array['award_5_outstanding_project_desc'];
+                                        if (!empty($chFinancialReport)) {
+                                            $description = $chFinancialReport['award_5_outstanding_project_desc'];
                                             echo ($description !== null) ? $description : "No description entered";
                                         }
                                     ?>
                                 </div>
                             </div>
                             <div class="col-sm-12">
-                                <?php if (!empty($financial_report_array['award_5_files'])): ?>
+                                <?php if (!empty($chFinancialReport['award_5_files'])): ?>
                                         <label class="control-label" for="Award5Files">File Attachment:</label>
                                         <div class="col-sm-12">
-                                            <a href="<?php echo $financial_report_array['award_5_files']; ?>" target="_blank">Award 5 Files</a>
+                                            <a href="<?php echo $chFinancialReport['award_5_files']; ?>" target="_blank">Award 5 Files</a>
                                         </div>
                                 <?php else: ?>
                                         <label class="control-label" for="Award5Files">File Attachment:</label>
@@ -2607,13 +2613,13 @@
                                         </div>
                                 <?php endif; ?>
                             </div>
-                            <?php if (!empty($financial_report_array) && ($financial_report_array['award_5_nomination_type'] == 5 || $financial_report_array['award_5_nomination_type'] == 6)) : ?>
+                            <?php if (!empty($chFinancialReport) && ($chFinancialReport['award_5_nomination_type'] == 5 || $chFinancialReport['award_5_nomination_type'] == 6)) : ?>
                             <div class="col-sm-12">&nbsp;&nbsp;&nbsp;</div>
                             <div class="col-sm-12">
                                 <table>
                                     <tr><td colspan="2">Did you follow the Bylaws and all instructions from International?</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_5_outstanding_follow_bylaws']) ? 'Not Answered' : ($financial_report_array['award_5_outstanding_follow_bylaws'] == 0 ? 'NO'
-                                            : ($financial_report_array['award_5_outstanding_follow_bylaws'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_5_outstanding_follow_bylaws']) ? 'Not Answered' : ($chFinancialReport['award_5_outstanding_follow_bylaws'] == 0 ? 'NO'
+                                            : ($chFinancialReport['award_5_outstanding_follow_bylaws'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
                                     </tr>
                                     <tr><td colspan="2">Did you run a well-rounded program for your members?</td></tr>
                                     <tr><td>&nbsp;&nbsp;&nbsp;</td>
@@ -2621,16 +2627,16 @@
                                         kept under 15% of the dues received -- these are all taken into consideration.<br>
                                         A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older
                                         children (or vice versa) would not be offering a well-rounded program.</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_5_outstanding_well_rounded']) ? 'Not Answered' : ($financial_report_array['award_5_outstanding_well_rounded'] == 0 ? 'NO'
-                                            : ($financial_report_array['award_5_outstanding_well_rounded'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_5_outstanding_well_rounded']) ? 'Not Answered' : ($chFinancialReport['award_5_outstanding_well_rounded'] == 0 ? 'NO'
+                                            : ($chFinancialReport['award_5_outstanding_well_rounded'] == 1 ? 'YES' : 'Not Answered')) }}</strong></td>
                                     </tr>
                                     <tr><td colspan="2">Did you communicate with your Coordinator?</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_5_outstanding_communicated']) ? 'Not Answered' : ($financial_report_array['award_5_outstanding_communicated'] == 0 ? 'NO'
-                                        : ($financial_report_array['award_5_outstanding_communicated'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_5_outstanding_communicated']) ? 'Not Answered' : ($chFinancialReport['award_5_outstanding_communicated'] == 0 ? 'NO'
+                                        : ($chFinancialReport['award_5_outstanding_communicated'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
                                     </tr>
                                     <tr><td colspan="2" colspan="2">Did you support the International MOMS Club?</td></tr>
-                                    <tr><td colspan="2"><strong>{{ is_null($financial_report_array['award_5_outstanding_support_international']) ? 'Not Answered' : ($financial_report_array['award_5_outstanding_support_international'] == 0 ? 'NO'
-                                        : ($financial_report_array['award_5_outstanding_support_international'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
+                                    <tr><td colspan="2"><strong>{{ is_null($chFinancialReport['award_5_outstanding_support_international']) ? 'Not Answered' : ($chFinancialReport['award_5_outstanding_support_international'] == 0 ? 'NO'
+                                        : ($chFinancialReport['award_5_outstanding_support_international'] == 1 ? 'YES' : 'NO' )) }}</strong></td>
                                     </tr>
                                 </table>
                             </div>
@@ -2666,18 +2672,18 @@
                                 <div class="card-body form-row">
                                     <div class="col-12">
 
-									<div class="col-12" <?php if ($financial_report_array['award_1_nomination_type']==NULL) echo "style=\"display: none;\""; ?> ?>
+									<div class="col-12" <?php if ($chFinancialReport['award_1_nomination_type']==NULL) echo "style=\"display: none;\""; ?> ?>
 										<div class="form-group col-md-6">
 											<label for="NominationType1">Award #1:</label>
 											<select class="form-control" id="sumcheckNominationType1" name="sumcheckNominationType1" disabled >
 												<option value="" style="display:none" disabled selected>Select an award type</option>
-												<option value=1 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
-												<option value=2 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
-												<option value=3 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
-												<option value=4 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
-												<option value=5 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, 2018))</option>
-												<option value=6 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, 2018)</option>
-												<option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_1_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
+												<option value=1 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
+												<option value=2 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
+												<option value=3 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
+												<option value=4 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
+												<option value=5 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, 2018))</option>
+												<option value=6 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, 2018)</option>
+												<option value=7 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
 											</select>
 										</div>
 										<div class="col-md-6">
@@ -2685,27 +2691,27 @@
                                             <div class="form-inline">
                                                 <label style="display: block;">Award Status:<span class="field-required">*</span></label>
                                                 <select id="checkAward1Approved" name="checkAward1Approved" class="form-control select2-sb4" style="width: 150px;" required >
-                                                    <option value="" {{ is_null($financial_report_array->check_award_1_approved) ? 'selected' : '' }} disabled>Please Select</option>
-                                                    <option value="0" {{$financial_report_array->check_award_1_approved === 0 ? 'selected' : ''}}>No</option>
-                                                    <option value="1" {{$financial_report_array->check_award_1_approved == 1 ? 'selected' : ''}}>Yes</option>
+                                                    <option value="" {{ is_null($chFinancialReport->check_award_1_approved) ? 'selected' : '' }} disabled>Please Select</option>
+                                                    <option value="0" {{$chFinancialReport->check_award_1_approved === 0 ? 'selected' : ''}}>No</option>
+                                                    <option value="1" {{$chFinancialReport->check_award_1_approved == 1 ? 'selected' : ''}}>Yes</option>
                                                 </select>
                                             </div>
                                             </div>
                                         </div>
 									</div>
 
-									<div class="col-12" <?php if ($financial_report_array['award_2_nomination_type']==NULL) echo "style=\"display: none;\""; ?>>
+									<div class="col-12" <?php if ($chFinancialReport['award_2_nomination_type']==NULL) echo "style=\"display: none;\""; ?>>
 										<div class="form-group col-md-6">
 											<label for="NominationType2">Award #2:</label>
 											<select class="form-control" id="sumcheckNominationType2" name="sumcheckNominationType2" disabled >
 												<option value="" style="display:none" disabled selected>Select an award type</option>
-												<option value=1 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_2_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
-												<option value=2 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_2_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
-												<option value=3 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_2_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
-												<option value=4 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_2_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
-												<option value=5 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_2_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, 2018))</option>
-												<option value=6 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_2_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, 2018)</option>
-												<option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_2_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
+												<option value=1 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
+												<option value=2 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
+												<option value=3 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
+												<option value=4 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
+												<option value=5 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, 2018))</option>
+												<option value=6 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, 2018)</option>
+												<option value=7 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
 											</select>
 										</div>
                                         <div class="col-md-6">
@@ -2713,27 +2719,27 @@
                                             <div class="form-inline">
                                                 <label style="display: block;">Award Status:<span class="field-required">*</span></label>
                                                 <select id="checkAward2Approved" name="checkAward2Approved" class="form-control select2-sb4" style="width: 150px;" required >
-                                                    <option value="" {{ is_null($financial_report_array->check_award_2_approved) ? 'selected' : '' }} disabled>Please Select</option>
-                                                    <option value="0" {{$financial_report_array->check_award_2_approved === 0 ? 'selected' : ''}}>No</option>
-                                                    <option value="1" {{$financial_report_array->check_award_2_approved == 1 ? 'selected' : ''}}>Yes</option>
+                                                    <option value="" {{ is_null($chFinancialReport->check_award_2_approved) ? 'selected' : '' }} disabled>Please Select</option>
+                                                    <option value="0" {{$chFinancialReport->check_award_2_approved === 0 ? 'selected' : ''}}>No</option>
+                                                    <option value="1" {{$chFinancialReport->check_award_2_approved == 1 ? 'selected' : ''}}>Yes</option>
                                                 </select>
                                             </div>
                                             </div>
                                         </div>
 									</div>
 
-									<div class="col-12" <?php if ($financial_report_array['award_3_nomination_type']==NULL) echo "style=\"display: none;\""; ?>>
+									<div class="col-12" <?php if ($chFinancialReport['award_3_nomination_type']==NULL) echo "style=\"display: none;\""; ?>>
 										<div class="form-group col-md-6">
 											<label for="NominationType3">Award #3:</label>
 											<select class="form-control" id="sumcheckNominationType3" name="sumcheckNominationType3" disabled >
 												<option value="" style="display:none" disabled selected>Select an award type</option>
-												<option value=1 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
-												<option value=2 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
-												<option value=3 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
-												<option value=4 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
-												<option value=5 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, 2018))</option>
-												<option value=6 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, 2018)</option>
-												<option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_3_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
+												<option value=1 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
+												<option value=2 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
+												<option value=3 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
+												<option value=4 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
+												<option value=5 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, 2018))</option>
+												<option value=6 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, 2018)</option>
+												<option value=7 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
 											</select>
 										</div>
 										<div class="col-md-6">
@@ -2741,27 +2747,27 @@
                                             <div class="form-inline">
                                                 <label style="display: block;">Award Status:<span class="field-required">*</span></label>
                                                 <select id="checkAward3Approved" name="checkAward3Approved" class="form-control select2-sb4" style="width: 150px;" required >
-                                                    <option value="" {{ is_null($financial_report_array->check_award_3_approved) ? 'selected' : '' }} disabled>Please Select</option>
-                                                    <option value="0" {{$financial_report_array->check_award_3_approved === 0 ? 'selected' : ''}}>No</option>
-                                                    <option value="1" {{$financial_report_array->check_award_3_approved == 1 ? 'selected' : ''}}>Yes</option>
+                                                    <option value="" {{ is_null($chFinancialReport->check_award_3_approved) ? 'selected' : '' }} disabled>Please Select</option>
+                                                    <option value="0" {{$chFinancialReport->check_award_3_approved === 0 ? 'selected' : ''}}>No</option>
+                                                    <option value="1" {{$chFinancialReport->check_award_3_approved == 1 ? 'selected' : ''}}>Yes</option>
                                                 </select>
                                             </div>
                                             </div>
                                         </div>
 									</div>
 
-									<div class="col-12" <?php if ($financial_report_array['award_4_nomination_type']==NULL) echo "style=\"display: none;\""; ?>>
+									<div class="col-12" <?php if ($chFinancialReport['award_4_nomination_type']==NULL) echo "style=\"display: none;\""; ?>>
 										<div class="form-group col-md-6">
 											<label for="NominationType4">Award #4:</label>
 											<select class="form-control" id="sumcheckNominationType4" name="sumcheckNominationType4" disabled >
 												<option value="" style="display:none" disabled selected>Select an award type</option>
-												<option value=1 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
-												<option value=2 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
-												<option value=3 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
-												<option value=4 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
-												<option value=5 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, 2018))</option>
-												<option value=6 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, 2018)</option>
-												<option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_4_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
+												<option value=1 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
+												<option value=2 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
+												<option value=3 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
+												<option value=4 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
+												<option value=5 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, 2018))</option>
+												<option value=6 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, 2018)</option>
+												<option value=7 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
 											</select>
 										</div>
 										<div class="col-md-6">
@@ -2769,27 +2775,27 @@
                                             <div class="form-inline">
                                                 <label style="display: block;">Award Status:<span class="field-required">*</span></label>
                                                 <select id="checkAward4Approved" name="checkAward4Approved" class="form-control select2-sb4" style="width: 150px;" required >
-                                                    <option value="" {{ is_null($financial_report_array->check_award_4_approved) ? 'selected' : '' }} disabled>Please Select</option>
-                                                    <option value="0" {{$financial_report_array->check_award_4_approved === 0 ? 'selected' : ''}}>No</option>
-                                                    <option value="1" {{$financial_report_array->check_award_4_approved == 1 ? 'selected' : ''}}>Yes</option>
+                                                    <option value="" {{ is_null($chFinancialReport->check_award_4_approved) ? 'selected' : '' }} disabled>Please Select</option>
+                                                    <option value="0" {{$chFinancialReport->check_award_4_approved === 0 ? 'selected' : ''}}>No</option>
+                                                    <option value="1" {{$chFinancialReport->check_award_4_approved == 1 ? 'selected' : ''}}>Yes</option>
                                                 </select>
                                             </div>
                                             </div>
                                         </div>
 									</div>
 
-									<div class="col-12" <?php if ($financial_report_array['award_5_nomination_type']==NULL) echo "style=\"display: none;\""; ?> >
+									<div class="col-12" <?php if ($chFinancialReport['award_5_nomination_type']==NULL) echo "style=\"display: none;\""; ?> >
 										<div class="form-group col-md-6">
 											<label for="NominationType5">Award #5:</label>
 											<select class="form-control" id="sumcheckNominationType5" name="sumcheckNominationType5" disabled >
 												<option value="" style="display:none" disabled selected>Select an award type</option>
-												<option value=1 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
-												<option value=2 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
-												<option value=3 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
-												<option value=4 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
-												<option value=5 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, 2018))</option>
-												<option value=6 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, 2018)</option>
-												<option value=7 <?php if (!empty($financial_report_array)) {if ($financial_report_array['award_5_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
+												<option value=1 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
+												<option value=2 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
+												<option value=3 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
+												<option value=4 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
+												<option value=5 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, 2018))</option>
+												<option value=6 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, 2018)</option>
+												<option value=7 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
 											</select>
 										</div>
 										<div class="col-md-6">
@@ -2797,9 +2803,9 @@
                                             <div class="form-inline">
                                                 <label style="display: block;">Award Status:<span class="field-required">*</span></label>
                                                 <select id="checkAward5Approved" name="checkAward5Approved" class="form-control select2-sb4" style="width: 150px;" required >
-                                                    <option value="" {{ is_null($financial_report_array->check_award_5_approved) ? 'selected' : '' }} disabled>Please Select</option>
-                                                    <option value="0" {{$financial_report_array->check_award_5_approved === 0 ? 'selected' : ''}}>No</option>
-                                                    <option value="1" {{$financial_report_array->check_award_5_approved == 1 ? 'selected' : ''}}>Yes</option>
+                                                    <option value="" {{ is_null($chFinancialReport->check_award_5_approved) ? 'selected' : '' }} disabled>Please Select</option>
+                                                    <option value="0" {{$chFinancialReport->check_award_5_approved === 0 ? 'selected' : ''}}>No</option>
+                                                    <option value="1" {{$chFinancialReport->check_award_5_approved == 1 ? 'selected' : ''}}>Yes</option>
                                                 </select>
                                             </div>
                                             </div>
@@ -2809,7 +2815,7 @@
 									<div class="col-12" >
                                             <strong style="color:red">Please Note</strong><br>
                                             This will take you to a new screen - be sure to save all work before clicking button to Add Additional Awards.<br>
-                                            <a id="addAwardsLink" href="{{ url("/eoydetailseditawards/{$chapterid}") }}" class="btn btn-sm bg-gradient-primary" <?php if($financial_report_array['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fas fa-trophy" ></i>&nbsp; Add/Edit Awards</a>
+                                            <a id="addAwardsLink" href="{{ url("/eoydetailseditawards/{$chDetails->id}") }}" class="btn btn-sm bg-gradient-primary" <?php if($chFinancialReport['review_complete'] != "" || !$submitted) echo "disabled"; ?>><i class="fas fa-trophy" ></i>&nbsp; Add/Edit Awards</a>
 									<div class="clearfix"></div>
                                     <div class="col-12"><br></div>
 
@@ -2817,7 +2823,7 @@
                                     <div class="col-12">
                                         <div class="form-group row">
 											<label for="Step13_Note">Add New Note:</label>
-											<textarea class="form-control" style="width:100%" oninput="EnableNoteLogButton(13)" rows="3" name="Step13_Note" id="Step13_Note" <?php if ($financial_report_array['review_complete']!="") echo "readonly"?>></textarea>
+											<textarea class="form-control" style="width:100%" oninput="EnableNoteLogButton(13)" rows="3" name="Step13_Note" id="Step13_Note" <?php if ($chFinancialReport['review_complete']!="") echo "readonly"?>></textarea>
                                             <div class="form-group row" style="margin-left: 5px; margin-top: 5px">
 											<button type="button" id="AddNote13" class="btn btn-sm bg-gradient-success" onclick="AddNote(13)" disabled><i class="fa fa-plus fa-fw" aria-hidden="true" ></i>&nbsp; Add Note to Log</button>
 										</div>
@@ -2829,7 +2835,7 @@
                                 <label for="Step13_Log">Reviewer Notes Logged for this Section (not visible to chapter):</label>
                             </div>
                             <div class="col-12">
-                                <textarea class="form-control" style="width:100%" rows="8" name="Step13_Log" id="Step13_Log" readonly><?php echo $financial_report_array['step_13_notes_log']; ?></textarea>
+                                <textarea class="form-control" style="width:100%" rows="8" name="Step13_Log" id="Step13_Log" readonly><?php echo $chFinancialReport['step_13_notes_log']; ?></textarea>
                             </div>
                             <div class="col-12"><br></div>
 
@@ -2844,9 +2850,9 @@
             </div>
         </div>
             <!------End Step 13 ------>
-
+    </div>
                  <!-- end of accordion -->
-
+    </div>
                 <!-- /.card-body -->
             </div>
             <!-- /.card -->
@@ -2854,13 +2860,13 @@
 
             <div class="card-body text-center">
                 @if ($submitted)
-                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $financial_report_array['financial_pdf_path']; ?>" class="btn bg-gradient-primary mb-2" ><i class="fas fa-download mr-2"></i>Download PDF Report</a>
+                    <a id="downloadPdfLink" href="https://drive.google.com/uc?export=download&id=<?php echo $chFinancialReport['financial_pdf_path']; ?>" class="btn bg-gradient-primary mb-2" ><i class="fas fa-download mr-2"></i>Download PDF Report</a>
                 @else
                     <a id="downloadPdfLink" href="#" class="btn bg-gradient-primary mb-2 disabled">Download PDF Report</a>
                 @endif
                 <br>
                 <button type="button" id="back-list" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.eoyfinancialreport') }}'"><i class="fas fa-reply mr-2"></i>Back to Financial Report List</button>
-                <button type="button" id="back-details" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chapterid]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
+                <button type="button" id="back-details" class="btn bg-gradient-primary mb-2" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to EOY Details</button>
             </div>
         </form>
     </div>
@@ -2889,7 +2895,7 @@
             buttonsStyling: false
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = "{{ url('/eoy/unsubmit/' . $chapterDetails[0]->id) }}";
+                window.location.href = "{{ url('/eoy/unsubmit/' . $chDetails->id) }}";
             }
         });
     });
@@ -2911,14 +2917,14 @@
             buttonsStyling: false
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = "{{ url('/eoy/clearreview/' . $chapterDetails[0]->id) }}";
+                window.location.href = "{{ url('/eoy/clearreview/' . $chDetails->id) }}";
             }
         });
     });
 });
 
 function showRosterUploadModal() {
-    var chapter_id = "{{ $chapterid }}";
+    var chapter_id = "{{ $chDetails->id }}";
 
     Swal.fire({
         title: 'Upload Chapter Roster',
@@ -2980,7 +2986,7 @@ function showRosterUploadModal() {
 }
 
 function showStatement1UploadModal() {
-    var chapter_id = "{{ $chapterid }}";
+    var chapter_id = "{{ $chDetails->id }}";
 
     Swal.fire({
         title: 'Upload Statement',
@@ -3042,7 +3048,7 @@ function showStatement1UploadModal() {
 }
 
 function showStatement2UploadModal() {
-    var chapter_id = "{{ $chapterid }}";
+    var chapter_id = "{{ $chDetails->id }}";
 
     Swal.fire({
         title: 'Upload Additional Statement',
@@ -3104,7 +3110,7 @@ function showStatement2UploadModal() {
 }
 
 function show990NUploadModal() {
-    var chapter_id = "{{ $chapterid }}";
+    var chapter_id = "{{ $chDetails->id }}";
 
     Swal.fire({
         title: 'Upload 990N',
@@ -3284,8 +3290,8 @@ function show990NUploadModal() {
 
     /* Disable fields and buttons  */
     $(document).ready(function () {
-        var submitted = @json($chapterDetails[0]->financial_report_complete);
-        var received =  @json($chapterDetails[0]->financial_report_received);
+        var submitted = @json($chDetails->financial_report_complete);
+        var received =  @json($chDetails->financial_report_received);
 
         if (received != '1') {
             $('button').not('#btn-back').prop('disabled', true);

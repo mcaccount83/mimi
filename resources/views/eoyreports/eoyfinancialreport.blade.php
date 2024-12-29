@@ -51,9 +51,9 @@
                 <tbody>
                     @foreach($chapterList as $list)
                     @php
-                        $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
-                        $emailListChap = $emailDetails['emailListChapString'];
-                        $emailListCoord = $emailDetails['emailListCoordString'];
+                        $emailData = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
+                        $emailListChap = implode(',', $emailData['emailListChap']); // Convert array to comma-separated string
+                        $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
 
                         // Define the message body with a link
                         $mimiUrl = 'https://example.com/mimi';
@@ -63,7 +63,7 @@
                     @endphp
                     <tr>
                         <td class="text-center align-middle">
-                            <a href="{{ url("/eoy/financialreportreview/{$list->id}") }}"><i class="fas fa-edit"></i></a>
+                            <a href="{{ url("/eoy/reviewfinancialreport/{$list->id}") }}"><i class="fas fa-edit"></i></a>
                         </td>
                         <td class="text-center align-middle">
                             @if($list->documents->financial_report_received == '1' && $list->documents->financial_pdf_path != null)
@@ -73,7 +73,7 @@
                         <!-- Email link to be dynamically populated via AJAX -->
                         <td class="text-center align-middle">
                             @if($list->documents->financial_report_received == null || $list->documents->financial_report_received == 0)
-                            <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Financial Report Reminder | MOMS Club of ' . $list->name . ', ' . $list->state) }}&body={{ rawurlencode($mailMessage) }}"><i class="far fa-envelope"></i></a>
+                            <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Financial Report Reminder | MOMS Club of ' . $list->name . ', ' . $list->state->state_short_name) }}&body={{ rawurlencode($mailMessage) }}"><i class="far fa-envelope"></i></a>
                             @endif
                         </td>
                         <td>
@@ -96,10 +96,10 @@
                         <td @if($list->documents->financial_report_received == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->documents->financial_report_received != null)<span class="date-mask">{{ $list->documents->report_received }}</span>@endif
                         </td>
-                        <td @if($list->documents->financial_report_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->documents->financial_report_complete == '1') YES @else NO @endif
+                        <td @if($list->documents->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documents->financial_review_complete == '1') YES @else NO @endif
                         </td>
-                        <td @if($list->documents->financial_report_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                        <td @if($list->documents->financial_review_complete == '1') style="background-color: transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
                             @if($list->documents->review_complete != null)<span class="date-mask">{{ $list->documents->review_complete }}</span>@endif
                         </td>
                     </tr>
@@ -110,14 +110,14 @@
             <!-- /.card-body -->
                 <div class="col-sm-12">
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBox2Status}} onchange="showPrimary()" />
-                        <label class="custom-control-label" for="showPrimary">Only show chapters I am Assigned Reviewer for</label>
+                        <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
+                        <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
                     </div>
                 </div>
                 <div class="col-sm-12">
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" name="show2Primary" id="show2Primary" class="custom-control-input" {{$checkBoxStatus}} onchange="show2Primary()" />
-                        <label class="custom-control-label" for="show2Primary">Only show chapters I am primary for</label>
+                        <input type="checkbox" name="showReviewer" id="showReviewer" class="custom-control-input" {{$checkBox2Status}} onchange="showReviewer()" />
+                        <label class="custom-control-label" for="showReviewer">Only show chapters I am Assigned Reviewer for</label>
                     </div>
                 </div>
               <div class="card-body text-center">
@@ -159,10 +159,10 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 }
 
-function show2Primary() {
+function showReviewer() {
     var base_url = '{{ url("/eoy/financialreport") }}';
 
-    if ($("#show2Primary").prop("checked") == true) {
+    if ($("#showReviewer").prop("checked") == true) {
         window.location.href = base_url + '?check2=yes';
     } else {
         window.location.href = base_url;

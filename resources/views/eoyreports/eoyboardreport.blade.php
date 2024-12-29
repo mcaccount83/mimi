@@ -45,9 +45,9 @@
                 <tbody>
                     @foreach($chapterList as $list)
                     @php
-                        $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
-                        $emailListChap = $emailDetails['emailListChapString'];
-                        $emailListCoord = $emailDetails['emailListCoordString'];
+                        $emailData = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
+                        $emailListChap = implode(',', $emailData['emailListChap']); // Convert array to comma-separated string
+                        $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
 
                         // Define the message body with a link
                         $mimiUrl = 'https://example.com/mimi';
@@ -63,7 +63,7 @@
                         <tr id="chapter-{{ $list->id }}">
                             <td class="text-center align-middle">
                             @if ($assistConferenceCoordinatorCondition)
-                               <a href="{{ url("/eoy/boardreportedit/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                               <a href="{{ url("/eoy/editboardreport/{$list->id}") }}"><i class="fas fa-eye"></i></a>
                            @endif
                         </td>
                             <td class="text-center align-middle">

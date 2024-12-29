@@ -85,61 +85,38 @@ class UserController extends Controller
     public function loadEmailDetails($chId)
     {
         $chDetails = Chapters::with(['state', 'documents', 'boards', 'coordinatorTree'])->find($chId);
-        $chEmail = trim($chDetails->email); // Trim spaces from chapter email
-        $stateShortName = $chDetails->state->state_short_name;
+
+        $chEmail = trim($chDetails->email);
+        $stateShortName = $chDetails->state->state_short_name ?? '';
         $documents = $chDetails->documents()->first();
-        $boards = $chDetails->boards()->get();
+        $boards = $chDetails->boards()->pluck('email')->filter()->toArray();
         $coordiantors = $chDetails->coordinatorTree()->get();
 
-        $emailListBoard = [];
-        foreach ($boards as $val) {
-            $email = trim($val->email); // Trim spaces from each email
-            if (! empty($email)) { // Check for non-empty email
-                $escaped_email = str_replace("'", "\\'", $email);
-                $emailListBoard[] = $escaped_email; // Add to the array
-            }
+        $emailListChap = $boards;
+        if (!empty($chEmail)) {
+            $emailListChap[] = $chEmail;
         }
 
-        $emailListChap = $emailListBoard; // Copy the board emails to the chapter email list
-        if (! empty($chEmail)) {
-            $emailListChap[] = $chEmail; // Add the chapter email if it's not empty
-        }
+        $coordinatorList = collect($coordiantors)
+            ->flatMap(function ($value) {
+                $attributes = $value->getAttributes();
+                return collect(range(1, 8))
+                    ->map(fn($i) => $attributes['layer' . $i] ?? null)
+                    ->filter(fn($id) => is_numeric($id));
+            })
+            ->unique();
 
-        $coordinatorList = [];
-        foreach ($coordiantors as $value) {
-            $attributes = $value->getAttributes(); // Use Eloquent's method to get raw attributes
-            // Log::info('Extracted Attributes:', $attributes);
+        $emailListCoord = Coordinators::whereIn('id', $coordinatorList)->pluck('email')->filter()->toArray();
 
-            for ($i = 1; $i <= 8; $i++) {
-                $layerKey = 'layer' . $i;
-
-                if (!empty($attributes[$layerKey]) && is_numeric($attributes[$layerKey])) {
-                    $coordinatorList[] = (int) $attributes[$layerKey];
-                }
-            }
-        }
-
-        $coordinatorList = array_unique($coordinatorList);
-
-        if (!empty($coordinatorList)) {
-            $emailListCoord = DB::table('coordinators as cd')
-                ->whereIn('cd.id', $coordinatorList)
-                ->where('cd.is_active', 1)
-                ->pluck('cd.email')
-                ->filter(function ($email) {
-                    return !empty(trim($email)); // Exclude empty or null emails
-                })
-                ->toArray();
-        }
-
-        return ['chapEmail' => $chEmail, 'emailListChap' => $emailListChap, // Return as an array
-            'emailListChapString' => implode(';', $emailListChap), // Return as a comma-separated string
-            'emailListCoord' => $emailListCoord, // Return as an array
-            'emailListCoordString' => implode(';', $emailListCoord), // Return as a comma-separated string
+        return [
+            'chapEmail' => $chEmail,
+            'emailListChap' => $emailListChap,
+            'emailListCoord' => $emailListCoord,
             'board_submitted' => $documents->new_board_submitted ?? null,
             'report_received' => $documents->financial_report_received ?? null,
             'ein_letter' => $documents->ein_letter ?? null,
-            'name' => $chDetails->name, 'state' => $stateShortName,
+            'name' => $chDetails->name,
+            'state' => $stateShortName,
         ];
     }
 
@@ -255,8 +232,7 @@ class UserController extends Controller
             ];
         });
 
-        // Remove duplicates based on the 'cid' field
-        $pcDetails = $pcDetails->unique('cid');
+        $pcDetails = $pcDetails->unique('cid');  // Remove duplicates based on the 'cid' field
 
         return $pcDetails; // Return all coordinators as a collection
     }
@@ -267,46 +243,7 @@ class UserController extends Controller
     public function loadReviewerList($chRegId, $chConfId)
     {
         $chList = Chapters::with([
-            'financialReport' => function ($query) {
-                $query->with('reviewingCoordinator'); // Eager load the reviewingCoordinator through financialReport
-            },
-            'financialReport.reviewingCoordinator' => function ($query) use ($chRegId, $chConfId) {
-                $query->with(['coorDispPosition', 'coorSecPosition'])
-                    ->where(function ($q) use ($chRegId, $chConfId) {
-                        $q->where('region_id', $chRegId)
-                            ->orWhere(function ($subQuery) use ($chConfId) {
-                                $subQuery->where('region_id', 0)
-                                         ->where('conference_id', $chConfId);
-                            });
-                    })
-                    ->whereBetween('position_id', [1, 7])
-                    ->where('is_active', 1);
-            }
-        ])->get();
-
-        // Collect all reviewing coordinators from the chapters' financial reports
-        $rcList = $chList->pluck('financialReport.reviewingCoordinator')->flatten()->filter();
-
-        // Map to extract relevant details (avoiding duplicates)
-        $rcDetails = $rcList->map(function ($coordinator) {
-            return [
-                'cid' => $coordinator->id,
-                'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
-                'cpos' => $coordinator->coorDispPosition->short_title ?? 'No Position',
-            ];
-        });
-
-        // Remove duplicates based on the 'cid' field
-        $rcDetails = $rcDetails->unique('cid');
-
-        return $rcDetails; // Return all coordinators as a collection
-    }
-
-
-    public function loadReviewerList2($chRegId, $chConfId)
-    {
-        $chList = Chapters::with([
-            'financialReport.reviewingCoordinator' => function ($query) use ($chRegId, $chConfId) {
+            'reportReviewer' => function ($query) use ($chRegId, $chConfId) {
                 $query->with(['coorDispPosition', 'coorSecPosition'])
                     ->where(function ($q) use ($chRegId, $chConfId) {
                         $q->where('region_id', $chRegId)
@@ -320,11 +257,9 @@ class UserController extends Controller
             }
         ])->get();
 
-        // Extract reviewing coordinators
-        $rcList = $chList->pluck('financialReport.reviewingCoordinator')->filter();
+        $rrList = $chList->pluck('reportReviewer')->filter();
 
-        // Transform the data
-        $rcDetails = $rcList->map(function ($coordinator) {
+        $rrDetails = $rrList->map(function ($coordinator) {
             return [
                 'cid' => $coordinator->id,
                 'cname' => "{$coordinator->first_name} {$coordinator->last_name}",
@@ -332,90 +267,9 @@ class UserController extends Controller
             ];
         });
 
-        // Remove duplicates based on the 'cid' field
-        $rcDetails = $rcDetails->unique('cid');
+        $rrDetails = $rrDetails->unique('cid');  // Remove duplicates based on the 'cid' field
 
-        return $rcDetails; // Return all unique reviewing coordinators
+        return $rrDetails; // Return all coordinators as a collection
     }
-
-
-    /**
-     * Load Logged in Coordinator
-     */
-    // public function loadUser(Request $request)
-    // {
-    //     // Find the user by ID from the request
-    //     $user = User::find($request->user_id);
-    //     $userId = $user->id;
-
-    //     // Get the coordinator details
-    //     $corList = DB::table('coordinators as cd')
-    //         ->select('cd.id as cid', 'cd.first_name as fname', 'cd.last_name as lname', 'cp.long_title as pos')
-    //         ->join('coordinator_position as cp', 'cd.position_id', '=', 'cp.id')
-    //         ->where('cd.user_id', '=', $userId)
-    //         ->get();
-
-    //     $cor_fname = $corList[0]->fname;
-    //     $cor_lname = $corList[0]->lname;
-    //     $cor_pos = $corList[0]->pos;
-
-    //     return ['corList' => $corList, 'cor_fname' => $cor_fname, 'cor_lname' => $cor_lname, 'cor_pos' => $cor_pos];
-    // }
-
-    /**
-     * load Coordinator Email -- Mail for full Coordinator Upline
-     */
-    // public function loadCoordEmail($corId)
-    // {
-    //     $coordinatorDetails = DB::table('coordinators as cd')
-    //         ->select('cd.*')
-    //         ->where('cd.id', $corId)
-    //         ->get();
-
-    //     $coordEmail = $coordinatorDetails[0]->email;
-    //     $coordSecEmail = $coordinatorDetails[0]->sec_email;
-
-    //     $coordinatorEmailList = DB::table('coordinator_reporting_tree')
-    //         ->select('*')
-    //         ->where('coordinator_id', '=', $corId)
-    //         ->get();
-
-    //     foreach ($coordinatorEmailList as $key => $value) {
-    //         $coordinatorList[$key] = (array) $value;
-    //     }
-    //     $filterCoordinatorList = array_filter($coordinatorList[0]);
-    //     unset($filterCoordinatorList['id']);
-    //     unset($filterCoordinatorList['coordinator_id']);
-    //     unset($filterCoordinatorList['layer0']);
-    //     $filterCoordinatorList = array_reverse($filterCoordinatorList);
-    //     $str = '';
-    //     $array_rows = count($filterCoordinatorList);
-    //     $i = 0;
-
-    //     $emailListCoord = '';
-    //     foreach ($filterCoordinatorList as $key => $val) {
-    //         if ($val > 1) {
-    //             $corList = DB::table('coordinators as cd')
-    //                 ->select('cd.email as cord_email')
-    //                 ->where('cd.id', '=', $val)
-    //                 ->where('cd.is_active', '=', 1)
-    //                 ->get();
-    //             if (count($corList) > 0) {
-    //                 $cordEmail = $corList[0]->cord_email;
-    //                 // Check if the cord_email is different from coordEmail
-    //                 if ($cordEmail !== $coordEmail) {
-    //                     if ($emailListCoord == '') {
-    //                         $emailListCoord = $cordEmail;
-    //                     } else {
-    //                         $emailListCoord .= ','.$cordEmail;
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     return ['coordEmail' => $coordEmail, 'coordSecEmail' => $coordSecEmail, 'emailListCoord' => $emailListCoord];
-    // }
-
 
 }

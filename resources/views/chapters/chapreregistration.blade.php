@@ -45,9 +45,9 @@
                     <tbody>
                         @foreach($reChapterList as $list)
                         @php
-                            $emailDetails = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
-                            $emailListChap = $emailDetails['emailListChapString'];
-                            $emailListCoord = $emailDetails['emailListCoordString'];
+                            $emailData = app('App\Http\Controllers\UserController')->loadEmailDetails($list->id);
+                            $emailListChap = implode(',', $emailData['emailListChap']); // Convert array to comma-separated string
+                            $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
 
                             // Define the message body with a link
                             $mimiUrl = 'https://example.com/mimi';

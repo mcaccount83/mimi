@@ -48,58 +48,35 @@
                     <tr>
                         <td class="text-center align-middle">
                             @if ($assistConferenceCoordinatorCondition)
-                               <a href="{{ url("/eoydetails/{$list->id}") }}"><i class="fas fa-eye"></i></a>
+                               <a href="{{ url("/eoy/editattachments/{$list->id}") }}"><i class="fas fa-eye"></i></a>
                            @endif
                         </td>
                         <td>
-                            @if ($list->reg != "None")
-                                {{ $list->conf }} / {{ $list->reg }}
+                            @if ($list->region->short_name != "None")
+                                {{ $list->conference->short_name }} / {{ $list->region->short_name }}
                             @else
-                                {{ $list->conf }}
+                                {{ $list->conference->short_name }}
                             @endif
                         </td>
-                        <td>{{ $list->state }}</td>
+                        <td>{{ $list->state->state_short_name }}</td>
 						<td>{{ $list->name }}</td>
                         </td>
-                        <td @if($list->roster_path != null)style="background-color: transparent;"
-                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->roster_path != null)
-                                YES
-                            @else
-                                NO
-                            @endif
+                        <td @if($list->documents?->roster_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documents?->roster_path != null) YES @else NO @endif
                         </td>
-                        <td @if($list->bank_statement_included_path != null)style="background-color: transparent;"
-                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->bank_statement_included_path != null)
-                                YES
-                            @else
-                                NO
-                            @endif
+                        <td @if($list->documents?->statement_1_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documents?->statement_1_path != null) YES @else NO @endif
                         </td>
-                        <td>
-                            @if($list->bank_statement_2_included_path != null)
-                                YES
-                            @else
-                                NO
-                            @endif
+                        <td @if($list->documents?->statement_2_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documents?->statement_2_path != null) YES @else NO @endif
                         </td>
-                        <td  @if($list->file_irs_path != null)style="background-color: transparent;"
-                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->file_irs_path != null)
-                                YES
-                            @else
-                                NO
-                            @endif
+                        <td @if($list->documents?->irs_path != null) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documents?->irs_path != null) YES @else NO @endif
                         </td>
-                        <td  @if($list->check_current_990N_verified_IRS == 1)style="background-color: transparent;"
-                            @else style="background-color:#dc3545; color: #ffffff;" @endif>
-                            @if($list->check_current_990N_verified_IRS == 1)
-                                YES
-                            @else
-                                NO
-                            @endif
-                        <td>{{ $list->check_current_990N_notes }}</td>
+                        <td @if($list->documents?->irs_verified == 1) style="background-color: #transparent;" @else style="background-color:#dc3545; color: #ffffff;" @endif>
+                            @if($list->documents?->irs_verified == 1) YES @else NO @endif
+                        </td>
+                        <td>{{ $list->documents?->irs_notes?? null }}</td>
                  </tr>
                   @endforeach
                   </tbody>
