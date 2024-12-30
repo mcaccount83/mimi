@@ -40,7 +40,7 @@
                     <div id="collapseOne" class="collapse" data-parent="#accordion">
                         <div class="card-body">
                             <section>
-                                @foreach($resources->where('category', 1) as $resourceItem)
+                                @foreach($resources->where('categoryName.category_name', 'BYLAWS') as $resourceItem)
                                 <div class="col-md-12" style="margin-bottom: 5px;">
                                     @if ($resourceItem->link)
                                         <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
@@ -67,7 +67,7 @@
                     <div id="collapseTwo" class="collapse" data-parent="#accordion">
                         <div class="card-body">
                             <section>
-                                @foreach($resources->where('category', 2) as $resourceItem)
+                                @foreach($resources->where('categoryName.category_name', 'FACT SHEETS') as $resourceItem)
                                 <div class="col-md-12"style="margin-bottom: 5px;">
                                     @if ($resourceItem->link)
                                         <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
@@ -88,13 +88,13 @@
                 <div class="card card-primary ">
                     <div class="card-header" id="accordion-header-materials">
                         <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseThree" style="width: 100%;">COPY READY MATERIALS</a>
+                            <a class="d-block" data-toggle="collapse" href="#collapseThree" style="width: 100%;">COPY READY MATERIAL</a>
                         </h4>
                     </div>
                     <div id="collapseThree" class="collapse" data-parent="#accordion">
                         <div class="card-body">
                             <section>
-                                @foreach($resources->where('category', 3) as $resourceItem)
+                                @foreach($resources->where('categoryName.category_name', 'COPY READY MATERIAL') as $resourceItem)
                                 <div class="col-md-12"style="margin-bottom: 5px;">
                                     @if ($resourceItem->link)
                                         <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
@@ -118,13 +118,13 @@
                 <div class="card card-primary ">
                     <div class="card-header" id="accordion-header-inspiration">
                         <h4 class="card-title w-100">
-                            <a class="d-block" data-toggle="collapse" href="#collapseFour" style="width: 100%;">IDEA AND INSPIRATIONS</a>
+                            <a class="d-block" data-toggle="collapse" href="#collapseFour" style="width: 100%;">IDEAS AND INSPIRATIONS</a>
                         </h4>
                     </div>
                     <div id="collapseFour" class="collapse" data-parent="#accordion">
                         <div class="card-body">
                             <section>
-                                @foreach($resources->where('category', 4) as $resourceItem)
+                                @foreach($resources->where('categoryName.category_name', 'IDEAS AND INSPIRATION') as $resourceItem)
                                 <div class="col-md-12"style="margin-bottom: 5px;">
                                     @if ($resourceItem->link)
                                         <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
@@ -155,7 +155,7 @@
                             <div id="collapseFive" class="collapse" data-parent="#accordion">
                                 <div class="card-body">
                                     <section>
-                                        @foreach($resources->where('category', 5) as $resourceItem)
+                                        @foreach($resources->where('categoryName.category_name', 'CHAPTER RESOURCES') as $resourceItem)
                                         <div class="col-md-12"style="margin-bottom: 5px;">
                                             @if ($resourceItem->link)
                                                 <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>
@@ -182,7 +182,7 @@
                             <div id="collapseSix" class="collapse" data-parent="#accordion">
                                 <div class="card-body">
                                     <section>
-                                        @foreach($resources->where('category', 6) as $resourceItem)
+                                        @foreach($resources->where('categoryName.category_name', 'SAMPLE CHAPTER FILES') as $resourceItem)
                                         <div class="col-md-12"style="margin-bottom: 5px;">
                                             @if ($resourceItem->link)
                                                 <a href="{{ $resourceItem->link }}" target="_blank">{{ $resourceItem->name }}&nbsp;{{ $resourceItem->version ? '(' . $resourceItem->version . ')' : '' }}</a>

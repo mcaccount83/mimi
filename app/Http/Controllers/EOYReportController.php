@@ -116,7 +116,7 @@ class EOYReportController extends Controller
 
         // Load Board and Coordinators for Sending Email
         $emailData = $this->userController->loadEmailDetails($chId);
-        $emailListChap = $emailData['emailListChapS'];
+        $emailListChap = $emailData['emailListChap'];
         $emailListCoord = $emailData['emailListCoord'];
 
         // Load Report Reviewer Coordinator Dropdown List
@@ -325,20 +325,6 @@ class EOYReportController extends Controller
             $documents->review_complete = $financial_review_complete != null ? date('Y-m-d H:i:s') : null;
             $documents->save();
 
-            // if ($financial_report_received != null) {
-            //     $documents->submitted = date('Y-m-d H:i:s');
-            // }
-            // if ($financial_report_received == null) {
-            //     $documents->submitted = null;
-            // }
-            // if ($financial_review_complete != null) {
-            //     $documents->review_complete = date('Y-m-d H:i:s');
-            // }
-            // if ($financial_review_complete == null) {
-            //     $documents->review_complete = null;
-            // }
-            // $documents->save();
-
             $financialReport->reviewer_id = $reviewer_id;
             $financialReport->submitted = $financial_report_received != null ? date('Y-m-d H:i:s') : null;
             if ($financial_report_received != null) {
@@ -346,22 +332,6 @@ class EOYReportController extends Controller
             }
             $financialReport->review_complete = $financial_review_complete != null ? date('Y-m-d H:i:s') : null;
             $financialReport->save();
-
-            // if ($financial_report_received != null) {
-            //     $financialReport->submitted = date('Y-m-d H:i:s');
-            //     $financialReport->reviewer_id = $financialReport->reviewer_id ?? $userId; // Ensures reviewer_id is set to $userId if not already set
-            // }
-            // if ($financial_report_received == null) {
-            //     $financialReport->submitted = null;
-            // }
-            // if ($financial_review_complete != null) {
-            //     $financialReport->review_complete = date('Y-m-d H:i:s');
-            // }
-            // if ($financial_review_complete == null) {
-            //     $financialReport->review_complete = null;
-            // }
-
-            // $financialReport->save();
 
             $chapter->last_updated_by = $lastUpdatedBy;
             $chapter->last_updated_date = date('Y-m-d H:i:s');
@@ -1289,7 +1259,6 @@ class EOYReportController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             Log::error($e);  // Log the error
-            //throw $e;     // Show on screen error intead of message - use only for testing
         }
 
         return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
@@ -1314,7 +1283,7 @@ class EOYReportController extends Controller
         DB::beginTransaction();
         try {
             $documents->financial_report_received = null;
-            $documents->submitted = null;
+            $documents->report_received = null;
             $documents->save();
 
             $financialReport->submitted = null;

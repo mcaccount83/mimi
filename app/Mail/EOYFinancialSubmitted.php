@@ -16,8 +16,6 @@ class EOYFinancialSubmitted extends Mailable implements ShouldQueue
 
     public $mailData;
 
-    public $coordinator_array;
-
     protected $pdfPath;
 
     /**
@@ -25,10 +23,9 @@ class EOYFinancialSubmitted extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($mailData, $coordinator_array, $pdfPath)
+    public function __construct($mailData, $pdfPath)
     {
         $this->mailData = $mailData;
-        $this->coordinator_array = $coordinator_array;
         $this->pdfPath = $pdfPath;
 
     }

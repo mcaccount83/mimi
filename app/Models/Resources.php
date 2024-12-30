@@ -19,9 +19,9 @@ class Resources extends Authenticatable
         'name', 'description', 'version', 'link',
     ];
 
-    public function category(): BelongsTo
+    public function categoryName(): BelongsTo
     {
-        return $this->belongsTo(ResourceCategory::class, 'category', 'id');  // 'category' in resrouces HasOne 'id' in resource_category
+        return $this->belongsTo(ResourceCategory::class, 'category', 'id');  // 'category' in resrouces belongsTo 'id' in resource_category
     }
 
 }

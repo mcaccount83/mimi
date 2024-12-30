@@ -23,6 +23,7 @@ use App\Models\Documents;
 use App\Models\FinancialReport;
 use App\Models\FolderRecord;
 use App\Models\User;
+use App\Models\Resources;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
 use Illuminate\Http\JsonResponse;
@@ -54,7 +55,6 @@ class BoardController extends Controller
      */
     public function updatePassword(UpdatePasswordBoardRequest $request): JsonResponse
     {
-
         $user = $request->user();
 
         // Ensure the current password is correct
@@ -75,7 +75,6 @@ class BoardController extends Controller
      */
     public function checkCurrentPassword(CheckCurrentPasswordBoardRequest $request): JsonResponse
     {
-
         $user = $request->user();
         $isValid = Hash::check($request->current_password, $user->password);
 
@@ -87,7 +86,7 @@ class BoardController extends Controller
      */
     public function getChapterDetails($id)
     {
-        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'state', 'documents', 'financialReport', 'president', 'boards'])->find($id);
+        $chDetails = Chapters::with(['country', 'state', 'conference', 'region', 'startMonth', 'webLink', 'state', 'documents', 'financialReport', 'president', 'boards', 'reportReviewer'])->find($id);
         $chId = $chDetails->id;
         $chIsActive = $chDetails->is_active;
         $stateShortName = $chDetails->state->state_short_name;
@@ -103,9 +102,10 @@ class BoardController extends Controller
         $allStates = State::all();  // Full List for Dropdown Menu
 
         $chDocuments = $chDetails->documents;
-        $submitted = $chDetails->documents->financial_report_received;
+        $submitted = $chDocuments->financial_report_received;
         $reviewComplete = $chDetails->documents->review_complete;
         $chFinancialReport = $chDetails->financialReport;
+        $reviewerEmail = $chDetails->reportReviewer->email;
 
         $boards = $chDetails->boards()->with(['stateName', 'position'])->get();
         $bdDetails = $boards->groupBy('board_position_id');
@@ -125,12 +125,14 @@ class BoardController extends Controller
 
          // Load Conference Coordinators for Sending Email
          $ccEmailData = $this->userController->loadConferenceCoord($chPcId);
+         $cc_id = $ccEmailData['cc_id'];
          $emailCC = $ccEmailData['cc_email'];
 
-        return ['chDetails' => $chDetails, 'stateShortName' => $stateShortName,
-            'chFinancialReport' => $chFinancialReport, 'startMonthName' => $startMonthName,
+        return ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'cc_id' => $cc_id,
+            'chFinancialReport' => $chFinancialReport, 'startMonthName' => $startMonthName, 'chDocuments' => $chDocuments, 'submitted' => $submitted,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
             'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'emailCC' => $emailCC,
+            'reviewerEmail' => $reviewerEmail
         ];
 
     }
@@ -175,7 +177,7 @@ class BoardController extends Controller
         $boardreport_yes = ($eoyStatus->eoy_boardreport == 1);
         $financialreport_yes = ($eoyStatus->eoy_financialreport == 1);
 
-        $data = [ 'chDetails' => $chDetails,'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
+        $data = ['chDetails' => $chDetails,'chFinancialReport' => $chFinancialReport, 'stateShortName' => $stateShortName, 'allStates' => $allStates, 'allWebLinks' => $allWebLinks,
             'PresDetails' => $PresDetails, 'SECDetails' => $SECDetails, 'TRSDetails' => $TRSDetails, 'MVPDetails' => $MVPDetails, 'AVPDetails' => $AVPDetails,
             'startMonthName' => $startMonthName, 'thisMonth' => $month, 'due_date' => $due_date, 'user_type' => $user_type,
             'boardreport_yes' => $boardreport_yes, 'financialreport_yes' => $financialreport_yes];
@@ -1214,7 +1216,6 @@ class BoardController extends Controller
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
-        $user_type = $user->user_type;
 
         $bdDetails = $request->user()->board;
         $bdId = $bdDetails->id;
@@ -1224,22 +1225,7 @@ class BoardController extends Controller
         $chDetails = $baseQuery['chDetails'];
         $stateShortName = $baseQuery['stateShortName'];
 
-        $resources = DB::table('resources')
-            ->select('resources.*',
-                DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),
-                DB::raw('CASE
-                    WHEN category = 1 THEN "BYLAWS"
-                    WHEN category = 2 THEN "FACT SHEETS"
-                    WHEN category = 3 THEN "COPY READY MATERIAL"
-                    WHEN category = 4 THEN "IDEAS AND INSPIRATION"
-                    WHEN category = 5 THEN "CHAPTER RESOURCES"
-                    WHEN category = 6 THEN "SAMPLE CHPATER FILES"
-                    WHEN category = 7 THEN "END OF YEAR"
-                    ELSE "Unknown"
-                END as priority_word'))
-            ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
-            ->orderBy('name')
-            ->get();
+        $resources = Resources::with('categoryName')->get();
 
         $data = ['stateShortName' => $stateShortName, 'chDetails' => $chDetails, 'resources' => $resources];
 
@@ -1298,50 +1284,9 @@ class BoardController extends Controller
         $chDetails = $baseQuery['chDetails'];
 
         $stateShortName = $baseQuery['stateShortName'];
-        $startMonthName = $baseQuery['startMonthName'];
         $emailListChap = $baseQuery['emailListChap'];
         $emailListCoord = $baseQuery['emailListCoord'];
         $emailCC = $baseQuery['emailCC'];
-
-
-
-
-
-        // $user = $request->user();
-        // $lastUpdatedBy = $user->first_name.' '.$user->last_name;
-
-        // $chapter = Chapters::find($chapter_id);
-
-        // $chapterDetails = DB::table('chapters')
-        //     ->select('chapters.*', 'st.state_short_name as state_short_name')
-        //     ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-        //     ->where('chapters.id', '=', $chapter_id)
-        //     ->get();
-        // $chapter_conf = $chapterDetails[0]->conference_id;
-        // $chapter_state = $chapterDetails[0]->state_short_name;
-        // $chapter_name = $chapterDetails[0]->name;
-        // $chapter_country = $chapterDetails[0]->country_short_name;
-
-        // $chName = $chapter_name;
-        // $chState = $chapter_state;
-        // $chPcid = $chapterDetails[0]->primary_coordinator_id;
-        // $chConf = $chapter_conf;
-
-        // $coremail = DB::table('coordinators')
-        //     ->select('email')
-        //     ->where('is_active', '=', '1')
-        //     ->where('id', $chPcid)
-        //     ->get();
-        // $coremail = $coremail[0]->email;
-
-        // $PREemail = DB::table('boards')
-        //     ->select('email')
-        //     ->where('board_position_id', 1)
-        //     ->where('chapter_id', $chapter_id)
-        //     ->where('is_active', 1)
-        //     ->get();
-
-        // $to_email2 = [$PREemail[0]->email];
 
         $boundaryStatus = $request->input('BoundaryStatus');
         $issue_note = $request->input('BoundaryIssue');
@@ -1360,8 +1305,6 @@ class BoardController extends Controller
         if (! str_starts_with($website, 'http://') && ! str_starts_with($website, 'https://')) {
             $website = 'http://'.$website;
         }
-
-
 
         $chapter = Chapters::find($id);
         $documents = Documents::find($id);
@@ -1661,118 +1604,73 @@ class BoardController extends Controller
      */
     public function showFinancialReport(Request $request, $chapterId)
     {
-        try {
-            $request->session()->put('chapterid', $chapterId);
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+        $user_type = $user->user_type;
+        $userName = $user->first_name.' '.$user->last_name;
+        $userEmail = $user->email;
+        $loggedInName = $user->first_name.' '.$user->last_name;
 
-            $user = $request->user();
-            $userName = $user['first_name'].' '.$user['last_name'];
-            $userEmail = $user['email'];
+        $bdDetails = $request->user()->board;
+        $bdId = $bdDetails->id;
 
-            $borDetails = $request->user()->board;
-            $loggedInName = $borDetails->first_name.' '.$borDetails->last_name;
-            $isActive = $borDetails->is_active;
-            $user_type = $user->user_type;
+        $id = $bdDetails->chapter_id;
 
-            DB::beginTransaction();
+        $baseQuery = $this->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $chDocuments = $baseQuery['chDocuments'];
+        $submitted = $baseQuery['submitted'];
+        $chFinancialReport = $baseQuery['chFinancialReport'];
 
-            $financial_report_array = FinancialReport::find($chapterId);
+        $resources = Resources::with('categoryName')->get();
 
-            $chapterDetails = DB::table('chapters')
-                ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state', 'chapters.conference_id as conf', 'chapters.primary_coordinator_id as pcid')
-                ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-                ->where('chapters.is_active', '=', '1')
-                ->where('chapters.id', '=', $chapterId)
-                ->get();
+        $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chDetails' => $chDetails, 'user_type' => $user_type,
+            'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName
+        ];
 
-            $resources = DB::table('resources')
-                ->select('resources.*',
-                    DB::raw('CONCAT(cd.first_name, " ", cd.last_name) AS updated_by'),
-                    DB::raw('CASE
-                        WHEN category = 1 THEN "BYLAWS"
-                        WHEN category = 2 THEN "FACT SHEETS"
-                        WHEN category = 3 THEN "COPY READY MATERIAL"
-                        WHEN category = 4 THEN "IDEAS AND INSPIRATION"
-                        WHEN category = 5 THEN "CHAPTER RESOURCES"
-                        WHEN category = 6 THEN "SAMPLE CHPATER FILES"
-                        WHEN category = 7 THEN "END OF YEAR"
-                        ELSE "Unknown"
-                    END as priority_word'))
-                ->leftJoin('coordinators as cd', 'resources.updated_id', '=', 'cd.id')
-                ->orderBy('name')
-                ->get();
+        return view('boards.financial')->with($data);
 
-            $submitted = $chapterDetails[0]->financial_report_received;
-            $data = ['financial_report_array' => $financial_report_array, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chapterDetails' => $chapterDetails, 'user_type' => $user_type,
-                'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources];
-
-            DB::commit();
-
-            return view('boards.financial')->with($data);
-        } catch (\Exception $e) {
-            DB::rollBack();
-            // Log the error
-            Log::error($e);
-
-            return redirect()->to('/home');
-        }
     }
 
     /**
      * Save EOY Financial Report All Board Members
      */
-    public function storeFinancialReport(Request $request, $chapterId): RedirectResponse
+    public function storeFinancialReport(Request $request, $id): RedirectResponse
     {
-        $chapterId = $request->session()->get('chapterid');
-        $chapter_id = $chapterId;
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+        $user_type = $user->user_type;
+        $userName = $user->first_name.' '.$user->last_name;
+        $userEmail = $user->email;
+        $lastUpdatedBy = $user->first_name.' '.$user->last_name;
 
-        if (! $chapter_id) {
-            return redirect()->to('/login')->with('error', 'Your session has expired, Please log in again');
+        $bdDetails = $request->user()->board;
+        $bdId = $bdDetails->id;
 
-        }
-
-        $user = $request->user();
-        $user_id = $user['id'];
-        $userName = $user['first_name'].' '.$user['last_name'];
-        $userEmail = $user['email'];
-
-        $borDetails = User::find($request->user()->id)->board;
-        //   $isActive = $borDetails['is_active'];
+        $id = $bdDetails->chapter_id;
 
         $input = $request->all();
-        $chName = $input['ch_name'];
-        $chState = $input['ch_state'];
-        $chPcid = $input['ch_pcid'];
-        $chConf = $input['ch_conf'];
         $farthest_step_visited = $input['FurthestStep'];
         $reportReceived = $input['submitted'];
 
-        $chapterDetails = DB::table('chapters')
-            ->select('chapters.*', 'st.state_short_name as state_short_name', 'fr.reviewer_id as reviewer_id')
-            ->leftJoin('financial_report as fr', 'chapters.id', '=', 'fr.chapter_id')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            ->where('chapters.id', '=', $chapter_id)
-            ->get();
-        $chapter_conf = $chapterDetails[0]->conference_id;
-        $chapter_state = $chapterDetails[0]->state_short_name;
-        $chapter_name = $chapterDetails[0]->name;
-        $chapter_country = $chapterDetails[0]->country_short_name;
 
-        $reviewer_id = $chapterDetails[0]->reviewer_id;
-        $coorDetails = DB::table('coordinators as cd')
-            ->select('cd.*')
-            ->where('cd.id', '=', $reviewer_id)
-            ->get();
+        $baseQuery = $this->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $chDocuments = $baseQuery['chDocuments'];
+        $chFinancialReport = $baseQuery['chFinancialReport'];
+        $emailListChap = $baseQuery['emailListChap'];
+        $emailListCoord = $baseQuery['emailListCoord'];
+        $emailCC = $baseQuery['emailCC'];
+        $cc_id = $baseQuery['cc_id'];
+        $reviewerEmail = $baseQuery['reviewerEmail'];
 
-        // Check if $coorDetails is not empty
-        if ($coorDetails->isNotEmpty()) {
-            $reviewer_email = $coorDetails[0]->email;
-        } else {
-            // Handle the case where no results were found
-            $reviewer_email = null; // or set to a default value or handle accordingly
-        }
-
-        $chapterDetailsExistArr = DB::table('financial_report')->where('chapter_id', '=', $chapter_id)->get();
-        $chapterDetailsExist = $chapterDetailsExistArr->count();
+        $roster_path = $chDocuments->roster_path;
+        $irs_path = $chDocuments->irs_path;
+        $statement_1_path = $chDocuments->statement_1_path;
+        $statement_2_path = $chDocuments->statement_2_path;
+        $financial_pdf_path = $chDocuments->financial_pdf_path;
 
         // CHAPTER DUES
         $changed_dues = isset($input['optChangeDues']) ? $input['optChangeDues'] : null;
@@ -1795,6 +1693,10 @@ class BoardController extends Controller
         // MONTHLY MEETING EXPENSES
         $manditory_meeting_fees_paid = $input['ManditoryMeetingFeesPaid'];
         $voluntary_donations_paid = $input['VoluntaryDonationsPaid'];
+        $meeting_speakers = isset($input['MeetingSpeakers']) ? $input['MeetingSpeakers'] : null;
+        $meeting_speakers_array = isset($input['Speakers']) ? $input['Speakers'] : null;
+        $discussion_topic_frequency = isset($input['SpeakerFrequency']) ? $input['SpeakerFrequency'] : null;
+        $childrens_room_sitters = isset($input['ChildrensRoom']) ? $input['ChildrensRoom'] : null;
         $paid_baby_sitters = $input['PaidBabySitters'];
 
         $ChildrenRoomArray = null;
@@ -1807,6 +1709,11 @@ class BoardController extends Controller
         $childrens_room_expenses = base64_encode(serialize($ChildrenRoomArray));
 
         // SERVICE PROJECTS
+        $at_least_one_service_project = isset($input['PerformServiceProject']) ? $input['PerformServiceProject'] : null;
+        $at_least_one_service_project_explanation = $input['PerformServiceProjectExplanation'];
+        $contributions_not_registered_charity = isset($input['ContributionsNotRegNP']) ? $input['ContributionsNotRegNP'] : null;
+        $contributions_not_registered_charity_explanation = $input['ContributionsNotRegNPExplanation'];
+
         $ServiceProjectFields = null;
         $FieldCount = $input['ServiceProjectRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
@@ -1843,6 +1750,9 @@ class BoardController extends Controller
         $office_other_expenses = base64_encode(serialize($OfficeOtherArray));
 
         // INTERNATIONAL EVENTS & RE-REGISTRATION
+        $annual_registration_fee = $input['AnnualRegistrationFee'];
+        $international_event = isset($input['InternationalEvent']) ? $input['InternationalEvent'] : null;
+
         $InternationalEventArray = null;
         $FieldCount = $input['InternationalEventRowCount'];
         for ($i = 0; $i < $FieldCount; $i++) {
@@ -1851,7 +1761,6 @@ class BoardController extends Controller
             $InternationalEventArray[$i]['intl_event_expenses'] = $input['InternationalEventExpense'.$i] ?? null;
         }
         $international_event_array = base64_encode(serialize($InternationalEventArray));
-        $annual_registration_fee = $input['AnnualRegistrationFee'];
 
         // DONATIONS TO CHAPTER
         $MonetaryDonation = null;
@@ -1884,6 +1793,10 @@ class BoardController extends Controller
         $other_income_and_expenses_array = base64_encode(serialize($OtherOffice));
 
         // BANK RECONCILLIATION
+        $bank_statement_included = isset($input['BankStatementIncluded']) ? $input['BankStatementIncluded'] : null;
+        $bank_statement_included_explanation = $input['BankStatementIncludedExplanation'];
+        $wheres_the_money = $input['WheresTheMoney'];
+
         $amount_reserved_from_previous_year = $input['AmountReservedFromLastYear'];
         $amount_reserved_from_previous_year = str_replace(',', '', $amount_reserved_from_previous_year);
         $amount_reserved_from_previous_year = $amount_reserved_from_previous_year === '' ? null : $amount_reserved_from_previous_year;
@@ -1891,9 +1804,6 @@ class BoardController extends Controller
         $bank_balance_now = $input['BankBalanceNow'];
         $bank_balance_now = str_replace(',', '', $bank_balance_now);
         $bank_balance_now = $bank_balance_now === '' ? null : $bank_balance_now;
-
-        // $petty_cash = $input['PettyCash'];
-
         $BankRecArray = null;
         $FieldCount = $input['BankRecRowCount'];
 
@@ -1906,8 +1816,42 @@ class BoardController extends Controller
         }
         $bank_reconciliation_array = base64_encode(serialize($BankRecArray));
 
+        // 990 IRS FILING
+        $file_irs = isset($input['FileIRS']) ? $input['FileIRS'] : null;
+        $file_irs_explanation = $input['FileIRSExplanation'];
+
         // CHPATER QUESTIONS
         //Question 1
+        $bylaws_available = isset($input['ByLawsAvailable']) ? $input['ByLawsAvailable'] : null;
+        $bylaws_available_explanation = $input['ByLawsAvailableExplanation'];
+        //Question 4
+        $vote_all_activities = isset($input['VoteAllActivities']) ? $input['VoteAllActivities'] : null;
+        $vote_all_activities_explanation = $input['VoteAllActivitiesExplanation'];
+        //Question 11
+        $child_outings = isset($input['ChildOutings']) ? $input['ChildOutings'] : null;
+        $child_outings_explanation = $input['ChildOutingsExplanation'];
+        //Question 10
+        $playgroups = isset($input['Playgroups']) ? $input['Playgroups'] : null;
+        $had_playgroups_explanation = $input['PlaygroupsExplanation'];
+        //Question 16
+        $park_day_frequency = isset($input['ParkDays']) ? $input['ParkDays'] : null;
+        $park_day_frequency_explanation = $input['ParkDaysExplanation'];
+        //Question 12
+        $mother_outings = isset($input['MotherOutings']) ? $input['MotherOutings'] : null;
+        $mother_outings_explanation = $input['MotherOutingsExplanation'];
+        //Question 17
+        $activity_array = isset($input['Activity']) ? $input['Activity'] : null;
+        $activity_other_explanation = $input['ActivityOtherExplanation'];
+        //Question 7
+        $offered_merch = isset($input['OfferedMerch']) ? $input['OfferedMerch'] : null;
+        $offered_merch_explanation = $input['OfferedMerchExplanation'];
+        //Question 6
+        $bought_merch = isset($input['BoughtMerch']) ? $input['BoughtMerch'] : null;
+        $bought_merch_explanation = $input['BoughtMerchExplanation'];
+        //Question 5
+        $purchase_pins = isset($input['BoughtPins']) ? $input['BoughtPins'] : null;
+        $purchase_pins_explanation = $input['BoughtPinsExplanation'];
+        //Question 8
         $receive_compensation = isset($input['ReceiveCompensation']) ? $input['ReceiveCompensation'] : null;
         $receive_compensation_explanation = $input['ReceiveCompensationExplanation'];
         //Question 2
@@ -1916,63 +1860,9 @@ class BoardController extends Controller
         //Question 3
         $influence_political = isset($input['InfluencePolitical']) ? $input['InfluencePolitical'] : null;
         $influence_political_explanation = $input['InfluencePoliticalExplanation'];
-        //Question 4
-        $vote_all_activities = isset($input['VoteAllActivities']) ? $input['VoteAllActivities'] : null;
-        $vote_all_activities_explanation = $input['VoteAllActivitiesExplanation'];
-        //Question 5
-        $purchase_pins = isset($input['BoughtPins']) ? $input['BoughtPins'] : null;
-        $purchase_pins_explanation = $input['BoughtPinsExplanation'];
-        //Question 6
-        $bought_merch = isset($input['BoughtMerch']) ? $input['BoughtMerch'] : null;
-        $bought_merch_explanation = $input['BoughtMerchExplanation'];
-        //Question 7
-        $offered_merch = isset($input['OfferedMerch']) ? $input['OfferedMerch'] : null;
-        $offered_merch_explanation = $input['OfferedMerchExplanation'];
-        //Question 8
-        $bylaws_available = isset($input['ByLawsAvailable']) ? $input['ByLawsAvailable'] : null;
-        $bylaws_available_explanation = $input['ByLawsAvailableExplanation'];
-        //Question 9
-        $childrens_room_sitters = isset($input['ChildrensRoom']) ? $input['ChildrensRoom'] : null;
-        $childrens_room_sitters_explanation = $input['ChildrensRoomExplanation'];
-        //Question 10
-        $playgroups = isset($input['Playgroups']) ? $input['Playgroups'] : null;
-        $had_playgroups_explanation = $input['PlaygroupsExplanation'];
-        //Question 11
-        $child_outings = isset($input['ChildOutings']) ? $input['ChildOutings'] : null;
-        $child_outings_explanation = $input['ChildOutingsExplanation'];
-        //Question 12
-        $mother_outings = isset($input['MotherOutings']) ? $input['MotherOutings'] : null;
-        $mother_outings_explanation = $input['MotherOutingsExplanation'];
-        //Question 13
-        $meeting_speakers = isset($input['MeetingSpeakers']) ? $input['MeetingSpeakers'] : null;
-        $meeting_speakers_explanation = $input['MeetingSpeakersExplanation'];
-        //Question 14
-        $meeting_speakers_array = isset($input['Speakers']) ? $input['Speakers'] : null;
-        //Question 15
-        $discussion_topic_frequency = isset($input['SpeakerFrequency']) ? $input['SpeakerFrequency'] : null;
-        //Question 16
-        $park_day_frequency = isset($input['ParkDays']) ? $input['ParkDays'] : null;
-        //Question 17
-        $activity_array = isset($input['Activity']) ? $input['Activity'] : null;
-        $activity_other_explanation = $input['ActivityOtherExplanation'];
-        //Question 18
-        $contributions_not_registered_charity = isset($input['ContributionsNotRegNP']) ? $input['ContributionsNotRegNP'] : null;
-        $contributions_not_registered_charity_explanation = $input['ContributionsNotRegNPExplanation'];
-        //Question 19
-        $at_least_one_service_project = isset($input['PerformServiceProject']) ? $input['PerformServiceProject'] : null;
-        $at_least_one_service_project_explanation = $input['PerformServiceProjectExplanation'];
         //Question 20
         $sister_chapter = isset($input['SisterChapter']) ? $input['SisterChapter'] : null;
-        //Question 21
-        $international_event = isset($input['InternationalEvent']) ? $input['InternationalEvent'] : null;
-        //Question 22
-        $file_irs = isset($input['FileIRS']) ? $input['FileIRS'] : null;
-        $file_irs_explanation = $input['FileIRSExplanation'];
-        //Question 23
-        $bank_statement_included = isset($input['BankStatementIncluded']) ? $input['BankStatementIncluded'] : null;
-        $bank_statement_included_explanation = $input['BankStatementIncludedExplanation'];
-        //Question 24
-        $wheres_the_money = $input['WheresTheMoney'];
+        $sister_chapter_explanation = $input['SisterChapterExplanation'];
 
         // AWARDS
         $award_nominations = $input['TotalAwardNominations'];
@@ -2049,165 +1939,12 @@ class BoardController extends Controller
             $award_agree = null;
         }
 
-        // SUBMISSION INFORMATION
-        // $completed_name = $input['CompletedName'];
-        // $completed_email = $input['CompletedEmail'];
-
-        if ($reportReceived == 1) {
-            DB::update('UPDATE chapters SET financial_report_received = ? where id = ?', [1, $chapter_id]);
-        }
-
-        // Links for uploaded documents
-        $files = DB::table('financial_report')
-            ->select('*')
-            ->where('chapter_id', '=', $chapter_id)
-            ->get();
-
-        $roster_path = $files[0]->roster_path;
-        $file_irs_path = $files[0]->file_irs_path;
-        $bank_statement_included_path = $files[0]->bank_statement_included_path;
-        $bank_statement_2_included_path = $files[0]->bank_statement_2_included_path;
-        $financial_pdf_path = $files[0]->financial_pdf_path;
-
-        // Load Conference Coordinators
-        $chId = $chapter_id;
-        $coordinatorData = $this->userController->loadConferenceCoord($chPcid);
-        $coordinator_array = $coordinatorData['coordinator_array'];
-        $cc_email = $coordinatorData['cc_email'];
-        $cc_id = $coordinatorData['cc_id'];
-
-        // Send email to Assigned Reviewer//
-        $to_email = $cc_email;
-        $to_email3 = $reviewer_email;
-        $to_email2 = $userEmail;
+        $report = FinancialReport::find($id);
+        $documents = Documents::find($id);
+        $chapter = Chapters::find($id);
 
         DB::beginTransaction();
         try {
-            if ($chapterDetailsExist == 0) {
-                $userId = DB::table('financial_report')->insert([
-                    'chapter_id' => $chapter_id,
-                    'changed_dues' => $changed_dues,
-                    'different_dues' => $different_dues,
-                    'not_all_full_dues' => $not_all_full_dues,
-                    'total_new_members' => $total_new_members,
-                    'total_renewed_members' => $total_renewed_members,
-                    'dues_per_member' => $dues_per_member,
-                    'total_new_members_changed_dues' => $total_new_members_changed_dues,
-                    'total_renewed_members_changed_dues' => $total_renewed_members_changed_dues,
-                    'dues_per_member_renewal' => $dues_per_member_renewal,
-                    'dues_per_member_new_changed' => $dues_per_member_new_changed,
-                    'dues_per_member_renewal_changed' => $dues_per_member_renewal_changed,
-                    'members_who_paid_no_dues' => $members_who_paid_no_dues,
-                    'members_who_paid_partial_dues' => $members_who_paid_partial_dues,
-                    'total_partial_fees_collected' => $total_partial_fees_collected,
-                    'total_associate_members' => $total_associate_members,
-                    'associate_member_fee' => $associate_member_fee,
-                    'manditory_meeting_fees_paid' => $manditory_meeting_fees_paid,
-                    'voluntary_donations_paid' => $voluntary_donations_paid,
-                    'paid_baby_sitters' => $paid_baby_sitters,
-                    'childrens_room_expenses' => $childrens_room_expenses,
-                    'service_project_array' => $service_project_array,
-                    'party_expense_array' => $party_expense_array,
-                    'office_printing_costs' => $office_printing_costs,
-                    'office_postage_costs' => $office_postage_costs,
-                    'office_membership_pins_cost' => $office_membership_pins_cost,
-                    'office_other_expenses' => $office_other_expenses,
-                    'international_event_array' => $international_event_array,
-                    'annual_registration_fee' => $annual_registration_fee,
-                    'monetary_donations_to_chapter' => $monetary_donations_to_chapter,
-                    'non_monetary_donations_to_chapter' => $non_monetary_donations_to_chapter,
-                    'other_income_and_expenses_array' => $other_income_and_expenses_array,
-                    'amount_reserved_from_previous_year' => $amount_reserved_from_previous_year,
-                    'bank_balance_now' => $bank_balance_now,
-                    // 'petty_cash' => $petty_cash,
-                    'bank_reconciliation_array' => $bank_reconciliation_array,
-                    'receive_compensation' => $receive_compensation,
-                    'receive_compensation_explanation' => $receive_compensation_explanation,
-                    'financial_benefit' => $financial_benefit,
-                    'financial_benefit_explanation' => $financial_benefit_explanation,
-                    'influence_political' => $influence_political,
-                    'influence_political_explanation' => $influence_political_explanation,
-                    'vote_all_activities' => $vote_all_activities,
-                    'vote_all_activities_explanation' => $vote_all_activities_explanation,
-                    'purchase_pins' => $purchase_pins,
-                    'purchase_pins_explanation' => $purchase_pins_explanation,
-                    'bought_merch' => $bought_merch,
-                    'bought_merch_explanation' => $bought_merch_explanation,
-                    'offered_merch' => $offered_merch,
-                    'offered_merch_explanation' => $offered_merch_explanation,
-                    'bylaws_available' => $bylaws_available,
-                    'bylaws_available_explanation' => $bylaws_available_explanation,
-                    'childrens_room_sitters' => $childrens_room_sitters,
-                    'childrens_room_sitters_explanation' => $childrens_room_sitters_explanation,
-                    'playgroups' => $playgroups,
-                    'had_playgroups_explanation' => $had_playgroups_explanation,
-                    'child_outings' => $child_outings,
-                    'child_outings_explanation' => $child_outings_explanation,
-                    'mother_outings' => $mother_outings,
-                    'mother_outings_explanation' => $mother_outings_explanation,
-                    'meeting_speakers' => $meeting_speakers,
-                    'meeting_speakers_explanation' => $meeting_speakers_explanation,
-                    'meeting_speakers_array' => $meeting_speakers_array,
-                    'discussion_topic_frequency' => $discussion_topic_frequency,
-                    'park_day_frequency' => $park_day_frequency,
-                    'activity_array' => $activity_array,
-                    'activity_other_explanation' => $activity_other_explanation,
-                    'contributions_not_registered_charity' => $contributions_not_registered_charity,
-                    'contributions_not_registered_charity_explanation' => $contributions_not_registered_charity_explanation,
-                    'at_least_one_service_project' => $at_least_one_service_project,
-                    'at_least_one_service_project_explanation' => $at_least_one_service_project_explanation,
-                    'sister_chapter' => $sister_chapter,
-                    'international_event' => $international_event,
-                    'file_irs' => $file_irs,
-                    'file_irs_explanation' => $file_irs_explanation,
-                    'bank_statement_included' => $bank_statement_included,
-                    'bank_statement_included_explanation' => $bank_statement_included_explanation,
-                    'wheres_the_money' => $wheres_the_money,
-                    'award_nominations' => $award_nominations,
-                    'farthest_step_visited' => $farthest_step_visited,
-                    'award_1_nomination_type' => $award_1_nomination_type,
-                    // 'completed_name' => $completed_name,
-                    // 'completed_email' => $completed_email,
-                    'completed_name' => $userName,
-                    'completed_email' => $userEmail,
-                    'award_1_outstanding_follow_bylaws' => $award_1_outstanding_follow_bylaws,
-                    'award_1_outstanding_well_rounded' => $award_1_outstanding_well_rounded,
-                    'award_1_outstanding_communicated' => $award_1_outstanding_communicated,
-                    'award_1_outstanding_support_international' => $award_1_outstanding_support_international,
-                    'award_1_outstanding_project_desc' => $award_1_outstanding_project_desc,
-                    'award_2_nomination_type' => $award_2_nomination_type,
-                    'award_2_outstanding_follow_bylaws' => $award_2_outstanding_follow_bylaws,
-                    'award_2_outstanding_well_rounded' => $award_2_outstanding_well_rounded,
-                    'award_2_outstanding_communicated' => $award_2_outstanding_communicated,
-                    'award_2_outstanding_support_international' => $award_2_outstanding_support_international,
-                    'award_2_outstanding_project_desc' => $award_2_outstanding_project_desc,
-                    'award_3_nomination_type' => $award_3_nomination_type,
-                    'award_3_outstanding_follow_bylaws' => $award_3_outstanding_follow_bylaws,
-                    'award_3_outstanding_well_rounded' => $award_3_outstanding_well_rounded,
-                    'award_3_outstanding_communicated' => $award_3_outstanding_communicated,
-                    'award_3_outstanding_support_international' => $award_3_outstanding_support_international,
-                    'award_3_outstanding_project_desc' => $award_3_outstanding_project_desc,
-                    'award_4_nomination_type' => $award_4_nomination_type,
-                    'award_4_outstanding_follow_bylaws' => $award_4_outstanding_follow_bylaws,
-                    'award_4_outstanding_well_rounded' => $award_4_outstanding_well_rounded,
-                    'award_4_outstanding_communicated' => $award_4_outstanding_communicated,
-                    'award_4_outstanding_support_international' => $award_4_outstanding_support_international,
-                    'award_4_outstanding_project_desc' => $award_4_outstanding_project_desc,
-                    'award_5_nomination_type' => $award_5_nomination_type,
-                    'award_5_outstanding_follow_bylaws' => $award_5_outstanding_follow_bylaws,
-                    'award_5_outstanding_well_rounded' => $award_5_outstanding_well_rounded,
-                    'award_5_outstanding_communicated' => $award_5_outstanding_communicated,
-                    'award_5_outstanding_support_international' => $award_5_outstanding_support_international,
-                    'award_5_outstanding_project_desc' => $award_5_outstanding_project_desc,
-                    'award_agree' => $award_agree,
-                ]);
-
-                DB::commit();
-
-                return redirect()->back()->with('success', 'Report has been successfully saved');
-            } else {
-
-                $report = FinancialReport::find($chapter_id);
                 $report->changed_dues = $changed_dues;
                 $report->different_dues = $different_dues;
                 $report->not_all_full_dues = $not_all_full_dues;
@@ -2241,7 +1978,6 @@ class BoardController extends Controller
                 $report->other_income_and_expenses_array = $other_income_and_expenses_array;
                 $report->amount_reserved_from_previous_year = $amount_reserved_from_previous_year;
                 $report->bank_balance_now = $bank_balance_now;
-                // $report->petty_cash = $petty_cash;
                 $report->bank_reconciliation_array = $bank_reconciliation_array;
                 $report->receive_compensation = $receive_compensation;
                 $report->receive_compensation_explanation = $receive_compensation_explanation;
@@ -2260,7 +1996,6 @@ class BoardController extends Controller
                 $report->bylaws_available = $bylaws_available;
                 $report->bylaws_available_explanation = $bylaws_available_explanation;
                 $report->childrens_room_sitters = $childrens_room_sitters;
-                $report->childrens_room_sitters_explanation = $childrens_room_sitters_explanation;
                 $report->playgroups = $playgroups;
                 $report->had_playgroups_explanation = $had_playgroups_explanation;
                 $report->child_outings = $child_outings;
@@ -2268,10 +2003,10 @@ class BoardController extends Controller
                 $report->mother_outings = $mother_outings;
                 $report->mother_outings_explanation = $mother_outings_explanation;
                 $report->meeting_speakers = $meeting_speakers;
-                $report->meeting_speakers_explanation = $meeting_speakers_explanation;
                 $report->meeting_speakers_array = $meeting_speakers_array;
                 $report->discussion_topic_frequency = $discussion_topic_frequency;
                 $report->park_day_frequency = $park_day_frequency;
+                $report->park_day_frequency_explanation = $park_day_frequency_explanation;
                 $report->activity_array = $activity_array;
                 $report->activity_other_explanation = $activity_other_explanation;
                 $report->contributions_not_registered_charity = $contributions_not_registered_charity;
@@ -2279,6 +2014,7 @@ class BoardController extends Controller
                 $report->at_least_one_service_project = $at_least_one_service_project;
                 $report->at_least_one_service_project_explanation = $at_least_one_service_project_explanation;
                 $report->sister_chapter = $sister_chapter;
+                $report->sister_chapter_explanation = $sister_chapter_explanation;
                 $report->international_event = $international_event;
                 $report->file_irs = $file_irs;
                 $report->file_irs_explanation = $file_irs_explanation;
@@ -2318,44 +2054,60 @@ class BoardController extends Controller
                 $report->award_5_outstanding_project_desc = $award_5_outstanding_project_desc;
                 $report->award_agree = $award_agree;
                 $report->farthest_step_visited = $farthest_step_visited;
-                // $report->completed_name = $completed_name;
-                // $report->completed_email = $completed_email;
                 $report->completed_name = $userName;
                 $report->completed_email = $userEmail;
-                $report->reviewer_id = $reviewer_id;
                 $report->submitted = date('Y-m-d H:i:s');
 
                 $mailData = [
-                    'chapterid' => $chapter_id,
-                    'chapter_name' => $chapter_name,
-                    'chapter_state' => $chapter_state,
+                    'chapterid' => $id,
+                    'chapter_name' => $chDetails->name,
+                    'chapter_state' => $stateShortName,
                     'completed_name' => $userName,
                     'completed_email' => $userEmail,
                     'roster_path' => $roster_path,
-                    'file_irs_path' => $file_irs_path,
-                    'bank_statement_included_path' => $bank_statement_included_path,
-                    'bank_statement_2_included_path' => $bank_statement_2_included_path,
+                    'file_irs_path' => $irs_path,
+                    'bank_statement_included_path' => $statement_1_path,
+                    'bank_statement_2_included_path' => $statement_2_path,
                     'financial_pdf_path' => $financial_pdf_path,
                 ];
 
-                if ($reportReceived == 1) {
-                    $pdfPath = $this->generateAndSavePdf($chapter_id, $user_id);   // Generate and save the PDF
-                    Mail::to($to_email2)
-                        ->queue(new EOYFinancialReportThankYou($mailData, $coordinator_array, $pdfPath));
+                 // Send emails
+                $to_email = $emailCC;
+                $to_email3 = $reviewerEmail;
+                $to_email2 = $userEmail;
+                $to_email4 = $emailListChap;
 
-                    if ($reviewer_id == null) {
-                        DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $chapter_id]);
+                if ($reportReceived == 1) {
+                    $pdfPath = $this->generateAndSavePdf($id, $userId);   // Generate and save the PDF
+                    Mail::to($to_email2)
+                        ->cc($to_email4)
+                        ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));
+
+                    if ($chFinancialReport->reviewer_id == null) {
+                        DB::update('UPDATE financial_report SET reviewer_id = ? where chapter_id = ?', [$cc_id, $id]);
                         Mail::to($to_email)
-                            ->queue(new EOYFinancialSubmitted($mailData, $coordinator_array, $pdfPath));
+                            ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
                     }
 
-                    if ($reviewer_id != null) {
+                    if ($chFinancialReport->reviewer_id != null) {
                         Mail::to($to_email3)
-                            ->queue(new EOYFinancialSubmitted($mailData, $coordinator_array, $pdfPath));
+                            ->queue(new EOYFinancialSubmitted($mailData, $pdfPath));
                     }
                 }
 
                 $report->save();
+
+                if ($reportReceived == 1) {
+                    $documents->financial_report_received = 1;
+                    $documents->report_received = date('Y-m-d H:i:s');
+                }
+
+                $documents->save();
+
+                $chapter->last_updated_by = $lastUpdatedBy;
+                $chapter->last_updated_date = date('Y-m-d H:i:s');
+                $chapter->save();
+
 
                 DB::commit();
                 if ($reportReceived == 1) {
@@ -2363,117 +2115,120 @@ class BoardController extends Controller
                 } else {
                     return redirect()->back()->with('success', 'Report has been successfully updated');
                 }
-            }
-        } catch (\Exception $e) {
-            // Rollback Transaction
-            DB::rollback();
-            // Log the error
-            Log::error($e);
+
+            } catch (\Exception $e) {
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return redirect()->back()->with('fail', 'Something went wrong Please try again.');
         }
     }
 
-    public function generateAndSavePdf($chapter_id)
+    public function generateAndSavePdf($id)
     {
-        // Load financial report data, chapter details, and any other data you need
-        $financial_report_array = FinancialReport::findOrFail($chapter_id);
+        $baseQuery = $this->getChapterDetails($id);
+        $chDetails = $baseQuery['chDetails'];
+        $stateShortName = $baseQuery['stateShortName'];
+        $chDocuments = $baseQuery['chDocuments'];
+        $chFinancialReport = $baseQuery['chFinancialReport'];
 
-        $chapterDetails = DB::table('chapters')
-            ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'chapters.territory as boundaries',
-                'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state',
-                'chapters.conference_id_id as conf', 'chapters.primary_coordinator_id as pcid')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            ->where('chapters.is_active', '=', '1')
-            ->where('chapters.id', '=', $chapter_id)
-            ->get();
+        // // Load financial report data, chapter details, and any other data you need
+        // $financial_report_array = FinancialReport::findOrFail($chapter_id);
+
+        // $chapterDetails = DB::table('chapters')
+        //     ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'chapters.territory as boundaries',
+        //         'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state',
+        //         'chapters.conference_id_id as conf', 'chapters.primary_coordinator_id as pcid')
+        //     ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
+        //     ->where('chapters.is_active', '=', '1')
+        //     ->where('chapters.id', '=', $chapter_id)
+        //     ->get();
 
         $pdfData = [
-            'conf' => $chapterDetails[0]->conf,
-            'chapter_name' => $chapterDetails[0]->chapter_name,
-            'state' => $chapterDetails[0]->state,
-            'ein' => $chapterDetails[0]->ein,
-            'boundaries' => $chapterDetails[0]->boundaries,
-            'changed_dues' => $financial_report_array->changed_dues,
-            'different_dues' => $financial_report_array->different_dues,
-            'not_all_full_dues' => $financial_report_array->not_all_full_dues,
-            'total_new_members' => $financial_report_array->total_new_members,
-            'total_renewed_members' => $financial_report_array->total_renewed_members,
-            'dues_per_member' => $financial_report_array->dues_per_member,
-            'total_new_members_changed_dues' => $financial_report_array->total_new_members_changed_dues,
-            'total_renewed_members_changed_dues' => $financial_report_array->total_renewed_members_changed_dues,
-            'dues_per_member_renewal' => $financial_report_array->dues_per_member_renewal,
-            'dues_per_member_new_changed' => $financial_report_array->dues_per_member_new_changed,
-            'dues_per_member_renewal_changed' => $financial_report_array->dues_per_member_renewal_changed,
-            'members_who_paid_no_dues' => $financial_report_array->members_who_paid_no_dues,
-            'members_who_paid_partial_dues' => $financial_report_array->members_who_paid_partial_dues,
-            'total_partial_fees_collected' => $financial_report_array->total_partial_fees_collected,
-            'total_associate_members' => $financial_report_array->total_associate_members,
-            'associate_member_fee' => $financial_report_array->associate_member_fee,
-            'manditory_meeting_fees_paid' => $financial_report_array->manditory_meeting_fees_paid,
-            'voluntary_donations_paid' => $financial_report_array->voluntary_donations_paid,
-            'paid_baby_sitters' => $financial_report_array->paid_baby_sitters,
-            'childrens_room_expenses' => $financial_report_array->childrens_room_expenses,
-            'service_project_array' => $financial_report_array->service_project_array,
-            'party_expense_array' => $financial_report_array->party_expense_array,
-            'office_printing_costs' => $financial_report_array->office_printing_costs,
-            'office_postage_costs' => $financial_report_array->office_postage_costs,
-            'office_membership_pins_cost' => $financial_report_array->office_membership_pins_cost,
-            'office_other_expenses' => $financial_report_array->office_other_expenses,
-            'international_event_array' => $financial_report_array->international_event_array,
-            'annual_registration_fee' => $financial_report_array->annual_registration_fee,
-            'monetary_donations_to_chapter' => $financial_report_array->monetary_donations_to_chapter,
-            'non_monetary_donations_to_chapter' => $financial_report_array->non_monetary_donations_to_chapter,
-            'other_income_and_expenses_array' => $financial_report_array->other_income_and_expenses_array,
-            'amount_reserved_from_previous_year' => $financial_report_array->amount_reserved_from_previous_year,
-            'bank_balance_now' => $financial_report_array->bank_balance_now,
-            'petty_cash' => $financial_report_array->petty_cash,
-            'bank_reconciliation_array' => $financial_report_array->bank_reconciliation_array,
-            'receive_compensation' => $financial_report_array->receive_compensation,
-            'receive_compensation_explanation' => $financial_report_array->receive_compensation_explanation,
-            'financial_benefit' => $financial_report_array->financial_benefit,
-            'financial_benefit_explanation' => $financial_report_array->financial_benefit_explanation,
-            'influence_political' => $financial_report_array->influence_political,
-            'influence_political_explanation' => $financial_report_array->influence_political_explanation,
-            'vote_all_activities' => $financial_report_array->vote_all_activities,
-            'vote_all_activities_explanation' => $financial_report_array->vote_all_activities_explanation,
-            'purchase_pins' => $financial_report_array->purchase_pins,
-            'purchase_pins_explanation' => $financial_report_array->purchase_pins_explanation,
-            'bought_merch' => $financial_report_array->bought_merch,
-            'bought_merch_explanation' => $financial_report_array->bought_merch_explanation,
-            'offered_merch' => $financial_report_array->offered_merch,
-            'offered_merch_explanation' => $financial_report_array->offered_merch_explanation,
-            'bylaws_available' => $financial_report_array->bylaws_available,
-            'bylaws_available_explanation' => $financial_report_array->bylaws_available_explanation,
-            'childrens_room_sitters' => $financial_report_array->childrens_room_sitters,
-            'childrens_room_sitters_explanation' => $financial_report_array->childrens_room_sitters_explanation,
-            'had_playgroups' => $financial_report_array->had_playgroups,
-            'playgroups' => $financial_report_array->playgroups,
-            'had_playgroups_explanation' => $financial_report_array->had_playgroups_explanation,
-            'child_outings' => $financial_report_array->child_outings,
-            'child_outings_explanation' => $financial_report_array->child_outings_explanation,
-            'mother_outings' => $financial_report_array->mother_outings,
-            'mother_outings_explanation' => $financial_report_array->mother_outings_explanation,
-            'meeting_speakers' => $financial_report_array->meeting_speakers,
-            'meeting_speakers_explanation' => $financial_report_array->meeting_speakers_explanation,
-            'meeting_speakers_array' => $financial_report_array->meeting_speakers_array,
-            'discussion_topic_frequency' => $financial_report_array->discussion_topic_frequency,
-            'park_day_frequency' => $financial_report_array->park_day_frequency,
-            'activity_array' => $financial_report_array->activity_array,
-            'contributions_not_registered_charity' => $financial_report_array->contributions_not_registered_charity,
-            'contributions_not_registered_charity_explanation' => $financial_report_array->contributions_not_registered_charity_explanation,
-            'at_least_one_service_project' => $financial_report_array->at_least_one_service_project,
-            'at_least_one_service_project_explanation' => $financial_report_array->at_least_one_service_project_explanation,
-            'sister_chapter' => $financial_report_array->sister_chapter,
-            'international_event' => $financial_report_array->international_event,
-            'file_irs' => $financial_report_array->file_irs,
-            'file_irs_explanation' => $financial_report_array->file_irs_explanation,
-            'bank_statement_included' => $financial_report_array->bank_statement_included,
-            'bank_statement_included_explanation' => $financial_report_array->bank_statement_included_explanation,
-            'wheres_the_money' => $financial_report_array->wheres_the_money,
-            'completed_name' => $financial_report_array->completed_name,
-            'completed_email' => $financial_report_array->completed_email,
-            'submitted' => $financial_report_array->submitted,
+            'conf' => $chDetails->conference_id,
+            'chapter_name' => $chDetails->name,
+            'state' => $stateShortName,
+            'ein' => $chDetails->ein,
+            'boundaries' => $chDetails->territory,
+            'changed_dues' => $chFinancialReport->changed_dues,
+            'different_dues' => $chFinancialReport->different_dues,
+            'not_all_full_dues' => $chFinancialReport->not_all_full_dues,
+            'total_new_members' => $chFinancialReport->total_new_members,
+            'total_renewed_members' => $chFinancialReport->total_renewed_members,
+            'dues_per_member' => $chFinancialReport->dues_per_member,
+            'total_new_members_changed_dues' => $chFinancialReport->total_new_members_changed_dues,
+            'total_renewed_members_changed_dues' => $chFinancialReport->total_renewed_members_changed_dues,
+            'dues_per_member_renewal' => $chFinancialReport->dues_per_member_renewal,
+            'dues_per_member_new_changed' => $chFinancialReport->dues_per_member_new_changed,
+            'dues_per_member_renewal_changed' => $chFinancialReport->dues_per_member_renewal_changed,
+            'members_who_paid_no_dues' => $chFinancialReport->members_who_paid_no_dues,
+            'members_who_paid_partial_dues' => $chFinancialReport->members_who_paid_partial_dues,
+            'total_partial_fees_collected' => $chFinancialReport->total_partial_fees_collected,
+            'total_associate_members' => $chFinancialReport->total_associate_members,
+            'associate_member_fee' => $chFinancialReport->associate_member_fee,
+            'manditory_meeting_fees_paid' => $chFinancialReport->manditory_meeting_fees_paid,
+            'voluntary_donations_paid' => $chFinancialReport->voluntary_donations_paid,
+            'paid_baby_sitters' => $chFinancialReport->paid_baby_sitters,
+            'childrens_room_expenses' => $chFinancialReport->childrens_room_expenses,
+            'service_project_array' => $chFinancialReport->service_project_array,
+            'party_expense_array' => $chFinancialReport->party_expense_array,
+            'office_printing_costs' => $chFinancialReport->office_printing_costs,
+            'office_postage_costs' => $chFinancialReport->office_postage_costs,
+            'office_membership_pins_cost' => $chFinancialReport->office_membership_pins_cost,
+            'office_other_expenses' => $chFinancialReport->office_other_expenses,
+            'international_event_array' => $chFinancialReport->international_event_array,
+            'annual_registration_fee' => $chFinancialReport->annual_registration_fee,
+            'monetary_donations_to_chapter' => $chFinancialReport->monetary_donations_to_chapter,
+            'non_monetary_donations_to_chapter' => $chFinancialReport->non_monetary_donations_to_chapter,
+            'other_income_and_expenses_array' => $chFinancialReport->other_income_and_expenses_array,
+            'amount_reserved_from_previous_year' => $chFinancialReport->amount_reserved_from_previous_year,
+            'bank_balance_now' => $chFinancialReport->bank_balance_now,
+            'bank_reconciliation_array' => $chFinancialReport->bank_reconciliation_array,
+            'receive_compensation' => $chFinancialReport->receive_compensation,
+            'receive_compensation_explanation' => $chFinancialReport->receive_compensation_explanation,
+            'financial_benefit' => $chFinancialReport->financial_benefit,
+            'financial_benefit_explanation' => $chFinancialReport->financial_benefit_explanation,
+            'influence_political' => $chFinancialReport->influence_political,
+            'influence_political_explanation' => $chFinancialReport->influence_political_explanation,
+            'vote_all_activities' => $chFinancialReport->vote_all_activities,
+            'vote_all_activities_explanation' => $chFinancialReport->vote_all_activities_explanation,
+            'purchase_pins' => $chFinancialReport->purchase_pins,
+            'purchase_pins_explanation' => $chFinancialReport->purchase_pins_explanation,
+            'bought_merch' => $chFinancialReport->bought_merch,
+            'bought_merch_explanation' => $chFinancialReport->bought_merch_explanation,
+            'offered_merch' => $chFinancialReport->offered_merch,
+            'offered_merch_explanation' => $chFinancialReport->offered_merch_explanation,
+            'bylaws_available' => $chFinancialReport->bylaws_available,
+            'bylaws_available_explanation' => $chFinancialReport->bylaws_available_explanation,
+            'childrens_room_sitters' => $chFinancialReport->childrens_room_sitters,
+            'childrens_room_sitters_explanation' => $chFinancialReport->childrens_room_sitters_explanation,
+            'had_playgroups' => $chFinancialReport->had_playgroups,
+            'playgroups' => $chFinancialReport->playgroups,
+            'had_playgroups_explanation' => $chFinancialReport->had_playgroups_explanation,
+            'child_outings' => $chFinancialReport->child_outings,
+            'child_outings_explanation' => $chFinancialReport->child_outings_explanation,
+            'mother_outings' => $chFinancialReport->mother_outings,
+            'mother_outings_explanation' => $chFinancialReport->mother_outings_explanation,
+            'meeting_speakers' => $chFinancialReport->meeting_speakers,
+            'meeting_speakers_explanation' => $chFinancialReport->meeting_speakers_explanation,
+            'meeting_speakers_array' => $chFinancialReport->meeting_speakers_array,
+            'discussion_topic_frequency' => $chFinancialReport->discussion_topic_frequency,
+            'park_day_frequency' => $chFinancialReport->park_day_frequency,
+            'activity_array' => $chFinancialReport->activity_array,
+            'contributions_not_registered_charity' => $chFinancialReport->contributions_not_registered_charity,
+            'contributions_not_registered_charity_explanation' => $chFinancialReport->contributions_not_registered_charity_explanation,
+            'at_least_one_service_project' => $chFinancialReport->at_least_one_service_project,
+            'at_least_one_service_project_explanation' => $chFinancialReport->at_least_one_service_project_explanation,
+            'sister_chapter' => $chFinancialReport->sister_chapter,
+            'international_event' => $chFinancialReport->international_event,
+            'file_irs' => $chFinancialReport->file_irs,
+            'file_irs_explanation' => $chFinancialReport->file_irs_explanation,
+            'bank_statement_included' => $chFinancialReport->bank_statement_included,
+            'bank_statement_included_explanation' => $chFinancialReport->bank_statement_included_explanation,
+            'wheres_the_money' => $chFinancialReport->wheres_the_money,
+            'completed_name' => $chFinancialReport->completed_name,
+            'completed_email' => $chFinancialReport->completed_email,
+            'submitted' => $chFinancialReport->submitted,
         ];
 
         $pdf = Pdf::loadView('pdf.financialreport', compact('pdfData'));
@@ -2528,9 +2283,9 @@ class BoardController extends Controller
 
         if ($response->getStatusCode() === 200) { // Check for a successful status code
             $pdf_file_id = json_decode($response->getBody()->getContents(), true)['id'];
-            $report = FinancialReport::find($chapter_id);
-            $report->financial_pdf_path = $pdf_file_id;
-            $report->save();
+            $documents = Documents::find($id);
+            $documents->financial_pdf_path = $pdf_file_id;
+            $documents->save();
 
             return $pdfPath;  // Return the full local stored path
         }

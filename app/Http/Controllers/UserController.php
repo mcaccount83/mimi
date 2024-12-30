@@ -198,7 +198,7 @@ class UserController extends Controller
         $cc_pos = $ccDetails->coorDispPosition->long_title ?? 'N/A';
 
         return ['cc_id' => $cc_id, 'cc_fname' => $cc_fname, 'cc_lname' => $cc_lname, 'cc_pos' => $cc_pos, 'cc_email' => $cc_email, 'cc_conf' => $cc_conf,
-            'cc_conf_name' =>$cc_conf_name, 'cc_conf_desc' => $cc_conf_desc,
+            'cc_conf_name' =>$cc_conf_name, 'cc_conf_desc' => $cc_conf_desc, 'cc_id' => $cc_id,
         ];
     }
 
