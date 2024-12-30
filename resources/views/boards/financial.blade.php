@@ -53,13 +53,13 @@
             <div class="row">
                     <div class="col-12"  id="accordion">
                         <!------Start Step 1 ------>
-                        <div class="card card-primary {{ $chaFinancialReport->farthest_step_visited == '1' ? 'active' : '' }}">
+                        <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '1' ? 'active' : '' }}">
                             <div class="card-header" id="accordion-header-members">
                                 <h4 class="card-title w-100">
                                     <a class="d-block" data-toggle="collapse" href="#collapseOne" style="width: 100%;">CHAPTER DUES</a>
                                 </h4>
                             </div>
-                            <div id="collapseOne" class="collapse <?php if($chFinancialReport['farthest_step_visited'] =='1') echo 'show'; ?>" data-parent="#accordion">
+                            <div id="collapseOne" class="collapse {{ $chFinancialReport->farthest_step_visited == '1' ? 'show' : '' }}" data-parent="#accordion">
                                 <div class="card-body">
                                     <section>
                         @if (!is_null($chDocuments['roster_path']))
@@ -297,13 +297,13 @@
                 <!------End Step 1 ------>
 
                 <!------Start Step 2 ------>
-                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited'] =='2') echo "active";?>">
+                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '2' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseTwo" style="width: 100%;">MONTHLY MEETING EXPENSES</a>
                         </h4>
                     </div>
-                    <div id="collapseTwo" class="collapse <?php if($chFinancialReport['farthest_step_visited'] =='2') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseTwo" class="collapse {{ $chFinancialReport->farthest_step_visited == '2' ? 'show' : '' }}" data-parent="#accordion">
                         <div class="card-body">
                         <section>
                             <div class="col-12 form-row form-group">
@@ -585,13 +585,13 @@
                 <!------End Step 2 ------>
 
                 <!------Start Step 3 ------>
-                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited'] =='3') echo "active";?>">
+                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '3' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseThree" style="width: 100%;">SERVICE PROJECTS</a>
                         </h4>
                     </div>
-                    <div id="collapseThree" class="collapse <?php if($chFinancialReport['farthest_step_visited'] =='3') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseThree" class="collapse {{ $chFinancialReport->farthest_step_visited == '3' ? 'show' : '' }}" data-parent="#accordion">
                         <div class="card-body">
                     <section>
                         <div class="col-12 form-row form-group">
@@ -829,13 +829,13 @@
                 <!------End Step 3 ------>
 
                 <!------Start Step 4 ------>
-                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited'] =='4') echo "active";?>">
+                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '4' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseFour" style="width: 100%;">PARTIES & MEMBER BENEFITS</a>
                         </h4>
                     </div>
-                    <div id="collapseFour" class="collapse <?php if($chFinancialReport['farthest_step_visited'] =='4') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseFour" class="collapse {{ $chFinancialReport->farthest_step_visited == '4' ? 'show' : '' }}" data-parent="#accordion">
                         <div class="card-body">
                 <section>
                     <div class="col-12 form-row form-group">
@@ -984,13 +984,13 @@
                 <!------End Step 4 ------>
 
                 <!------Start Step 5 ------>
-                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited'] =='5') echo "active";?>">
+                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '5' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseFive" style="width: 100%;">OFFICE & OPERATING EXPENSES</a>
                         </h4>
                     </div>
-                    <div id="collapseFive" class="collapse <?php if($chFinancialReport['farthest_step_visited'] =='5') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseFive" class="collapse {{ $chFinancialReport->farthest_step_visited == '5' ? 'show' : '' }}" data-parent="#accordion">
                         <div class="card-body">
                     <section>
                     <div class="col-12 form-row form-group">
@@ -1136,13 +1136,13 @@
             <!------End Step 5 ------>
 
             <!------Start Step 6 ------>
-            <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited'] =='6') echo "active";?>">
+            <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '6' ? 'active' : '' }}">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
                         <a class="d-block" data-toggle="collapse" href="#collapseSix" style="width: 100%;">INTERNATIONAL EVENTS & RE-REGISTRATION</a>
                     </h4>
                 </div>
-                <div id="collapseSix" class="collapse <?php if($chFinancialReport['farthest_step_visited'] =='6') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseSix" class="collapse {{ $chFinancialReport->farthest_step_visited == '6' ? 'show' : '' }}" data-parent="#accordion">
                     <div class="card-body">
                     <section>
                         <div class="col-12 form-row form-group">
@@ -1342,13 +1342,13 @@
             <!------End Step 6 ------>
 
             <!------Start Step 7 ------>
-            <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited'] =='7') echo "active";?>">
+            <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '7' ? 'active' : '' }}">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
                         <a class="d-block" data-toggle="collapse" href="#collapseSeven" style="width: 100%;">DONATIONS TO YOUR CHAPTER</a>
                     </h4>
                 </div>
-                <div id="collapseSeven" class="collapse <?php if($chFinancialReport['farthest_step_visited'] =='7') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseSeven" class="collapse {{ $chFinancialReport->farthest_step_visited == '7' ? 'show' : '' }}" data-parent="#accordion">
                     <div class="card-body">
                 <section>
                 <div class="col-12 form-row form-group">
@@ -1519,13 +1519,13 @@
                 <!------End Step 7 ------>
 
                 <!------Start Step 8 ------>
-                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited'] =='8') echo "active";?>">
+                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '8' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseEight" style="width: 100%;">OTHER INCOME & EXPENSES</a>
                         </h4>
                     </div>
-                    <div id="collapseEight" class="collapse <?php if($chFinancialReport['farthest_step_visited'] =='8') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseEight" class="collapse {{ $chFinancialReport->farthest_step_visited == '8' ? 'show' : '' }}" data-parent="#accordion">
                         <div class="card-body">
                     <section>
                     <div class="col-12 form-row form-group">
@@ -1672,13 +1672,13 @@
                 <!------End Step 8 ------>
 
                 <!------Start Step 9 ------>
-            <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited'] =='9') echo "active";?>">
-                <div class="card-header" id="accordion-header-members">
+                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '9' ? 'active' : '' }}">
+                    <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
                         <a class="d-block" data-toggle="collapse" href="#collapseNine" style="width: 100%;">FINANCIAL SUMMARY</a>
                     </h4>
                 </div>
-                <div id="collapseNine" class="collapse <?php if($chFinancialReport['farthest_step_visited'] =='9') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseNine" class="collapse {{ $chFinancialReport->farthest_step_visited == '9' ? 'show' : '' }}" data-parent="#accordion">
                     <div class="card-body">
                 <section>
                 <div class="col-12 form-row form-group">
@@ -2055,13 +2055,13 @@
             <!------End Step 9 ------>
 
                 <!------Start Step 10 ------>
-                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited'] =='10') echo "active";?>">
+                <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '10' ? 'active' : '' }}">
                     <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseTen" style="width: 100%;">BANK RECONCILIATION</a>
                         </h4>
                     </div>
-                    <div id="collapseTen" class="collapse <?php if($chFinancialReport['farthest_step_visited'] =='10') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseTen" class="collapse {{ $chFinancialReport->farthest_step_visited == '10' ? 'show' : '' }}" data-parent="#accordion">
                         <div class="card-body">
                     <section>
                         @if (!is_null($chDocuments['statement_1_path']))
@@ -2337,13 +2337,13 @@
             <!------End Step 10 ------>
 
             <!------Start Step 11 ------>
-                <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited'] =='11') echo "active";?>">
-                    <div class="card-header" id="accordion-header-members">
+            <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '11' ? 'active' : '' }}">
+                <div class="card-header" id="accordion-header-members">
                         <h4 class="card-title w-100">
                             <a class="d-block" data-toggle="collapse" href="#collapseEleven" style="width: 100%;">990N IRS FILING</a>
                         </h4>
                     </div>
-                    <div id="collapseEleven" class="collapse <?php if($chFinancialReport['farthest_step_visited'] =='11') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseEleven" class="collapse {{ $chFinancialReport->farthest_step_visited == '11' ? 'show' : '' }}" data-parent="#accordion">
                         <div class="card-body">
                     <section>
                         @if (!is_null($chDocuments['irs_path']))
@@ -2440,13 +2440,13 @@
             <!------End Step 11 ------>
 
             <!------Start Step 12 ------>
-            <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited'] =='12') echo "active";?>">
+            <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '12' ? 'active' : '' }}">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
                         <a class="d-block" data-toggle="collapse" href="#collapseTwelve" style="width: 100%;">CHAPTER QUESTIONS</a>
                     </h4>
                 </div>
-                <div id="collapseTwelve" class="collapse <?php if($chFinancialReport['farthest_step_visited'] =='12') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseTwelve" class="collapse {{ $chFinancialReport->farthest_step_visited == '12' ? 'show' : '' }}" data-parent="#accordion">
                     <div class="card-body">
                 <section>
                 <div id="form-step-8" role="form" data-toggle="validator" class="form-row form-group">
@@ -2774,13 +2774,13 @@
             <!------End Step 12 ------>
 
             <!------Begin Step 13 ------>
-            <div class="card card-primary <?php if($chFinancialReport['farthest_step_visited'] =='13') echo "active";?>">
+            <div class="card card-primary {{ $chFinancialReport->farthest_step_visited == '13' ? 'active' : '' }}">
                 <div class="card-header" id="accordion-header-members">
                     <h4 class="card-title w-100">
                         <a class="d-block" data-toggle="collapse" href="#collapseThirteen" style="width: 100%;">AWARD NOMINATIONS</a>
                     </h4>
                 </div>
-                <div id="collapseThirteen" class="collapse <?php if($chFinancialReport['farthest_step_visited'] =='13') echo 'show'; ?>" data-parent="#accordion">
+                <div id="collapseThirteen" class="collapse {{ $chFinancialReport->farthest_step_visited == '13' ? 'show' : '' }}" data-parent="#accordion">
                     <div class="card-body">
                     <section>
                     <div class="col-12 form-row form-group">
@@ -3390,7 +3390,7 @@
                             <a class="d-block" data-toggle="collapse" href="#collapseFourteen" style="width: 100%;">SUBMIT REPORT</a>
                         </h4>
                     </div>
-                    <div id="collapseFourteen" class="collapse <?php if($chFinancialReport['farthest_step_visited'] =='14') echo 'show'; ?>" data-parent="#accordion">
+                    <div id="collapseFourteen" class="collapse {{ $chFinancialReport->farthest_step_visited == '14' ? 'show' : '' }}" data-parent="#accordion">
                         <div class="card-body">
                         <section>
                             <div class="form-row form-group">
