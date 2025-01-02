@@ -15,13 +15,13 @@
             @endphp
 
             @foreach($international as $chapter)
-                @if($chapter->country !== $previousCountry)
+                @if($chapter->country_short_name !== $previousCountry)
                     <div class="col-md-3 mb-1">
                         <div class="card card-primary">
                             <div class="card-header" id="heading{{ $loop->index }}">
                                 <h4 class="card-title w-100">
                                     <a class="d-block" data-toggle="collapse" href="#collapse{{ $loop->index }}" >
-                                        {{ $chapter->country }}
+                                        {{ $chapter->country_short_name }}
                                     </a>
                                 </h4>
                             </div>
@@ -36,10 +36,10 @@
                                         @endif
                                     </div>
                 @php
-                    $previousCountry = $chapter->country;
+                    $previousCountry = $chapter->country_short_name;
                 @endphp
 
-                @if(!$loop->last && $chapter->country !== $international[$loop->index + 1]->country)
+                @if(!$loop->last && $chapter->country_short_name !== $international[$loop->index + 1]->country_short_name)
                                 </div>
                             </div>
                         </div>

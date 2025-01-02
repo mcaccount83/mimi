@@ -15,10 +15,12 @@ class PublicController extends Controller
 
     public function chapterLinks(): View
     {
+
+
         $international = DB::table('chapters')
             ->select('chapters.*', 'state.state_short_name', 'state.state_long_name')
             ->join('state', 'chapters.state_id', '=', 'state.id')
-            ->where('state', '=', '52')
+            ->where('state_id', '=', '52')
             ->where('is_active', '1')
             ->where('name', 'not like', '%test%')
             ->orderBy('name')
@@ -30,7 +32,7 @@ class PublicController extends Controller
             ->where('chapters.state_id', '<>', 52)
             ->where('is_active', '1')
             ->where('name', 'not like', '%test%')
-            ->orderBy('state')
+            ->orderBy('state_id')
             ->orderBy('name')
             ->get();
 
