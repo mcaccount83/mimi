@@ -21,33 +21,33 @@
 </style>
 @section('content')
     <!-- Main content -->
-    <form class="form-horizontal" method="POST" action='{{ route("chapters.updatewebsite", $chapterList[0]->id) }}'>
+    <form class="form-horizontal" method="POST" action='{{ route("chapters.updatewebsite", $chDetails->id) }}'>
     @csrf
     <section class="content">
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-4">
-                <input type="hidden" name="ch_state" value="{{$chapterList[0]->state}}">
-                <input type="hidden" name="ch_hid_webstatus" value="{{ $chapterList[0]->website_status }}">
+                <input type="hidden" name="ch_state" value="{{$stateShortName}}">
+                <input type="hidden" name="ch_hid_webstatus" value="{{ $chDetails->website_status }}">
 
             <!-- Profile Image -->
             <div class="card card-primary card-outline">
                 <div class="card-body box-profile">
-                  <h3 class="profile-username text-center">MOMS Club of {{ $chapterList[0]->name }}, {{$chapterList[0]->statename}}</h3>
-                  <p class="text-center">{{ $chapterList[0]->confname }} Conference, {{ $chapterList[0]->regname }} Region
+                  <h3 class="profile-username text-center">MOMS Club of {{ $chDetails->name }}, {{$stateShortName}}</h3>
+                  <p class="text-center">{{ $conferenceDescription }} Conference, {{ $regionLongName}} Region
                   </p>
 
                   <ul class="list-group list-group-unbordered mb-3">
-                      <input type="hidden" id="ch_primarycor" value="{{ $chapterList[0]->primary_coordinator_id }}">
+                      <input type="hidden" id="ch_primarycor" value="{{ $chDetails->primary_coordinator_id }}">
                       <li class="list-group-item" id="display_corlist" class="list-group-item"></li>
                   </ul>
                   <div class="text-center">
-                      @if ($chapterList[0]->is_active == 1 )
+                      @if ($chDetails->is_active == 1 )
                           <b><span style="color: #28a745;">Chapter is ACTIVE</span></b>
                       @else
                           <b><span style="color: #dc3545;">Chapter is NOT ACTIVE</span></b><br>
-                          Disband Date: <span class="date-mask">{{ $chapterList[0]->zap_date }}</span><br>
-                          {{ $chapterList[0]->disband_reason }}
+                          Disband Date: <span class="date-mask">{{ $chDetails->zap_date }}</span><br>
+                          {{ $chDetails->disband_reason }}
                       @endif
                   </div>
                 </div>
@@ -69,9 +69,7 @@
                                 <label class="col-sm-2 col-form-label">Website:</label>
                                     <div class="col-sm-7">
                                         <input type="text" name="ch_website" id="ch_website" class="form-control"
-                                        {{-- data-inputmask='"mask": "http://*{1,250}.*{2,6}"' data-mask --}}
-                                        {{-- value="{{ strpos($chapterList[0]->website_url, 'http://') === 0 ? substr($chapterList[0]->website_url, 7) : $chapterList[0]->website_url }}" --}}
-                                        value="{{$chapterList[0]->website_url}}"
+                                        value="{{$chDetails->website_url}}"
                                         onchange="updateWebsiteStatus()" placeholder="Chapter Website">
                                     </div>
                             </div>
@@ -82,9 +80,10 @@
                                 <div class="col-sm-3">
                                     <select name="ch_webstatus" id="ch_webstatus"class="form-control" style="width: 100%;" required>
                                         <option value="">Select Status</option>
-                                        @foreach($webStatusArr as $webstatusKey => $webstatusText)
-                                            <option value="{{ $webstatusKey }}" {{ $chapterList[0]->website_status == $webstatusKey ? 'selected' : '' }} >
-                                                {{ $webstatusText }}
+                                        @foreach($allWebLinks as $status)
+                                            <option value="{{$status->id}}"
+                                                @if($chDetails->website_status == $status->id) selected @endif>
+                                                {{$status->link_status}}
                                             </option>
                                         @endforeach
                                     </select>
@@ -94,7 +93,7 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Website Notes:</label>
                                 <div class="col-sm-8">
-                                  <input type="text" name="ch_webnotes" id="ch_webnotes" class="form-control"  value="{{ $chapterList[0]->website_notes}}" >
+                                  <input type="text" name="ch_webnotes" id="ch_webnotes" class="form-control"  value="{{ $chDetails->website_notes}}" >
                                 </div>
                             </div>
 
@@ -102,19 +101,19 @@
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label">Social Media:</label>
                                 <div class="col-sm-3">
-                                <input type="text" name="ch_onlinediss" id="ch_onlinediss" class="form-control" value="{{ $chapterList[0]->egroup }}"  placeholder="Forum/Group/App" >
+                                <input type="text" name="ch_onlinediss" id="ch_onlinediss" class="form-control" value="{{ $chDetails->egroup }}"  placeholder="Forum/Group/App" >
                                 </div>
                                 <div class="col-sm-3">
-                                <input type="text" name="ch_social1" id="ch_social1" class="form-control" value="{{ $chapterList[0]->social1 }}" placeholder="Facebook"  >
+                                <input type="text" name="ch_social1" id="ch_social1" class="form-control" value="{{ $chDetails->social1 }}" placeholder="Facebook"  >
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-2 col-form-label"></label>
                                 <div class="col-sm-3">
-                                    <input type="text" name="ch_social2" id="ch_social2" class="form-control" value="{{ $chapterList[0]->social2 }}"  placeholder="Twitter" >
+                                    <input type="text" name="ch_social2" id="ch_social2" class="form-control" value="{{ $chDetails->social2 }}"  placeholder="Twitter" >
                                 </div>
                                 <div class="col-sm-3">
-                                    <input type="text" name="ch_social3" id="ch_social3" class="form-control" value="{{ $chapterList[0]->social3 }}"  placeholder="Instagram" >
+                                    <input type="text" name="ch_social3" id="ch_social3" class="form-control" value="{{ $chDetails->social3 }}"  placeholder="Instagram" >
                                 </div>
                             </div>
                         </div>
@@ -129,16 +128,21 @@
           <div class="col-md-12">
             <div class="card-body text-center">
                 @if ($coordinatorCondition)
+                @php
+                    $emailData = app('App\Http\Controllers\UserController')->loadEmailDetails($chDetails->id);
+                    $emailListChap = implode(',', $emailData['emailListChap']); // Convert array to comma-separated string
+                    $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
+                @endphp
                 <button type="button" class="btn bg-gradient-primary mb-3"
-                            onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chapterList[0]->name . ', ' . $chapterList[0]->statename) }} | Website Review'">
+                            onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chDetails->name . ', ' . $stateShortName) }}'">
                             <i class="fas fa-envelope mr-2"></i>Email Board</button>
-                    <button type="submit" class="btn bg-gradient-primary mb-3" onclick="return PreSaveValidate();"><i class="fas fa-save mr-2"></i>Save Website Information</button>
+                    <button type="submit" class="btn bg-gradient-primary mb-3" ><i class="fas fa-save mr-2"></i>Save Website Information</button>
                 <br>
                 @endif
                 <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapwebsite') }}'"><i class="fas fa-reply mr-2"></i>Back to Website Report</button>
                 <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapreports.chaprptsocialmedia') }}'"><i class="fas fa-reply mr-2"></i>Back to Social Media Report</button>
 
-                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chapterList[0]->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
+                <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-reply mr-2"></i>Back to Chapter Details</button>
         </div>
         </div>
         <!-- /.row -->
