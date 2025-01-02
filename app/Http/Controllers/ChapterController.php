@@ -23,6 +23,7 @@ use App\Mail\PaymentsM2MChapterThankYou;
 use App\Mail\PaymentsReRegChapterThankYou;
 use App\Mail\PaymentsSustainingChapterThankYou;
 use App\Models\Chapters;
+use App\Models\Coordinators;
 use App\Models\State;
 use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
@@ -151,25 +152,6 @@ class ChapterController extends Controller
         ];
 
     }
-
-      /**
-     * Update Chapter Base Query
-     */
-    public function getChapterUpdate($id)
-    {
-        $chUpdate = Chapters::with(['state', 'conference', 'region', 'boards', 'president', 'avp', 'mvp', 'treasurer', 'secretary'])->find($id);
-        $presUpdate = $chUpdate->president;
-        $avpUpdate = $chUpdate->avp;
-        $mvpUpdate = $chUpdate->mvp;
-        $trsUpdate = $chUpdate->treasurer;
-        $secUpdate = $chUpdate->secretary;
-
-
-        return ['chUpdate' => $chUpdate, 'presUpdate' => $presUpdate, 'avpUpdate' => $avpUpdate, 'mvpUpdate' => $mvpUpdate,
-        'trsUpdate' => $trsUpdate, 'trsUpdate' => $trsUpdate, 'secUpdate' => $secUpdate,
-    ];
-
-}
 
      /**
      * Zapped Chapter List Base Query
@@ -1654,6 +1636,7 @@ class ChapterController extends Controller
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
         $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
+        $lastupdatedDate = date('Y-m-d H:i:s');
 
         $baseQueryPre = $this->getChapterDetails($id);
         $chDetailsPre = $baseQueryPre['chDetails'];
@@ -1987,7 +1970,7 @@ class ChapterController extends Controller
                     }
 
                     //Update Chapter MailData//
-                    // $presInfoUpd = DB::table('chapters')
+                     // $presInfoUpd = DB::table('chapters')
                     //     ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cd.email as cor_email', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name', 'bd.email as bor_email', 'bd.phone as phone', 'bd.street_address as street', 'bd.city as city', 'bd.zip as zip', 'st.state_short_name as state')
                     //     ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
                     //     ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
@@ -2053,6 +2036,169 @@ class ChapterController extends Controller
                     //     'statePre' => $presInfoPre[0]->state,
                     //     'zipPre' => $presInfoPre[0]->zip,
                     // ];
+
+                    //Update Chapter MailData//
+                    $baseQueryUpd = $this->getChapterDetails($id);
+                    $chDetailsUpd = $baseQueryUpd['chDetails'];
+                    $stateShortName = $baseQueryUpd['stateShortName'];
+                    $chConfId = $baseQueryUpd['chConfId'];
+                    $chPcId = $baseQueryUpd['chPcId'];
+                    $PresDetailsUpd = $baseQueryUpd['PresDetails'];
+                    $AVPDetailsUpd = $baseQueryUpd['AVPDetails'];
+                    $MVPDetailsUpd = $baseQueryUpd['MVPDetails'];
+                    $TRSDetailsUpd = $baseQueryUpd['TRSDetails'];
+                    $SECDetailsUpd = $baseQueryUpd['SECDetails'];
+
+                    $mailDataPres = [
+                            'chapter_name' => $chDetailsUpd->name,
+                            'chapter_state' => $stateShortName,
+                            'conference' => $chConfId,
+                            'updated_byUpd' => $lastUpdatedBy,
+                            'updated_byPre' => $lastupdatedDate,
+
+                            'chapfnamePre' => $PresDetailsPre->first_name,
+                            'chaplnamePre' => $PresDetailsPre->last_name,
+                            'chapteremailPre' => $PresDetailsPre->email,
+                            'phonePre' => $PresDetailsPre->phone,
+                            'streetPre' => $PresDetailsPre->street,
+                            'cityPre' => $PresDetailsPre->city,
+                            'statePre' => $PresDetailsPre->state,
+                            'zipPre' => $PresDetailsPre->zip,
+
+                            'chapfnameUpd' => $PresDetailsUpd->first_name,
+                            'chaplnameUpd' => $PresDetailsUpd->last_name,
+                            'chapteremailUpd' => $PresDetailsUpd->email,
+                            'phoneUpd' => $PresDetailsUpd->phone,
+                            'streetUpd' => $PresDetailsUpd->street,
+                            'cityUpd' => $PresDetailsUpd->city,
+                            'stateUpd' => $PresDetailsUpd->state,
+                            'zipUpd' => $PresDetailsUpd->zip,
+                        ];
+
+                         $mailData = array_merge($mailDataPres);
+                        if ($AVPDetailsUpd !== null) {
+                            $mailDataAvp = ['avpfnameUpd' => $AVPDetailsUpd->first_name,
+                                'avplnameUpd' => $AVPDetailsUpd->last_name,
+                                'avpemailUpd' => $AVPDetailsUpd->email, ];
+                            $mailData = array_merge($mailData, $mailDataAvp);
+                        } else {
+                            $mailDataAvp = ['avpfnameUpd' => '',
+                                'avplnameUpd' => '',
+                                'avpemailUpd' => '', ];
+                            $mailData = array_merge($mailData, $mailDataAvp);
+                        }
+                        if ($MVPDetailsUpd !== null) {
+                            $mailDataMvp = ['mvpfnameUpd' => $MVPDetailsUpd->first_name,
+                                'mvplnameUpd' => $MVPDetailsUpd->last_name,
+                                'mvpemailUpd' => $MVPDetailsUpd->email, ];
+                            $mailData = array_merge($mailData, $mailDataMvp);
+                        } else {
+                            $mailDataMvp = ['mvpfnameUpd' => '',
+                                'mvplnameUpd' => '',
+                                'mvpemailUpd' => '', ];
+                            $mailData = array_merge($mailData, $mailDataMvp);
+                        }
+                        if ($TRSDetailsUpd !== null) {
+                            $mailDatatres = ['tresfnameUpd' => $TRSDetailsUpd->first_name,
+                                'treslnameUpd' => $TRSDetailsUpd->last_name,
+                                'tresemailUpd' => $TRSDetailsUpd->email, ];
+                            $mailData = array_merge($mailData, $mailDatatres);
+                        } else {
+                            $mailDatatres = ['tresfnameUpd' => '',
+                                'treslnameUpd' => '',
+                                'tresemailUpd' => '', ];
+                            $mailData = array_merge($mailData, $mailDatatres);
+                        }
+                        if ($SECDetailsUpd !== null) {
+                            $mailDataSec = ['secfnameUpd' => $SECDetailsUpd->first_name,
+                                'seclnameUpd' => $SECDetailsUpd->last_name,
+                                'secemailUpd' => $SECDetailsUpd->email, ];
+                            $mailData = array_merge($mailData, $mailDataSec);
+                        } else {
+                            $mailDataSec = ['secfnameUpd' => '',
+                                'seclnameUpd' => '',
+                                'secemailUpd' => '', ];
+                            $mailData = array_merge($mailData, $mailDataSec);
+                        }
+
+                        if ($AVPDetailsPre !== null) {
+                            $mailDataAvpp = ['avpfnamePre' => $AVPDetailsPre->first_name,
+                                'avplnamePre' => $AVPDetailsPre->last_name,
+                                'avpemailPre' => $AVPDetailsPre->email, ];
+                            $mailData = array_merge($mailData, $mailDataAvpp);
+                        } else {
+                            $mailDataAvpp = ['avpfnamePre' => '',
+                                'avplnamePre' => '',
+                                'avpemailPre' => '', ];
+                            $mailData = array_merge($mailData, $mailDataAvpp);
+                        }
+                        if ($MVPDetailsPre !== null) {
+                            $mailDataMvpp = ['mvpfnamePre' => $MVPDetailsPre->first_name,
+                                'mvplnamePre' => $MVPDetailsPre->last_name,
+                                'mvpemailPre' => $MVPDetailsPre->email, ];
+                            $mailData = array_merge($mailData, $mailDataMvpp);
+                        } else {
+                            $mailDataMvpp = ['mvpfnamePre' => '',
+                                'mvplnamePre' => '',
+                                'mvpemailPre' => '', ];
+                            $mailData = array_merge($mailData, $mailDataMvpp);
+                        }
+                        if ($TRSDetailsPre !== null) {
+                            $mailDatatresp = ['tresfnamePre' => $TRSDetailsPre->first_name,
+                                'treslnamePre' => $TRSDetailsPre->last_name,
+                                'tresemailPre' => $TRSDetailsPre->email, ];
+                            $mailData = array_merge($mailData, $mailDatatresp);
+                        } else {
+                            $mailDatatresp = ['tresfnamePre' => '',
+                                'treslnamePre' => '',
+                                'tresemailPre' => '', ];
+                            $mailData = array_merge($mailData, $mailDatatresp);
+                        }
+                        if ($SECDetailsPre !== null) {
+                            $mailDataSecp = ['secfnamePre' => $SECDetailsPre->first_name,
+                                'seclnamePre' => $SECDetailsPre->last_name,
+                                'secemailPre' => $SECDetailsPre->email, ];
+                            $mailData = array_merge($mailData, $mailDataSecp);
+                        } else {
+                            $mailDataSecp = ['secfnamePre' => '',
+                                'seclnamePre' => '',
+                                'secemailPre' => '', ];
+                            $mailData = array_merge($mailData, $mailDataSecp);
+                        }
+
+                    // //Primary Coordinator Notification//
+                    $pc_email = Coordinators::find($chPcId);
+                    $to_email = $pc_email;
+
+                    if ($chDetailsUpd->name != $chDetailsPre->name || $PresDetailsUpd->bor_email != $PresDetailsPre->bor_email || $PresDetailsUpd->street_address != $PresDetailsPre->street_address || $PresDetailsUpd->city != $PresDetailsPre->city ||
+                            $PresDetailsUpd->state != $PresDetailsPre->state || $PresDetailsUpd->first_name != $PresDetailsPre->first_name || $PresDetailsUpd->last_name != $PresDetailsPre->last_name ||
+                            $PresDetailsUpd->zip != $PresDetailsPre->zip || $PresDetailsUpd->phone != $PresDetailsPre->phone || $PresDetailsUpd->inquiries_contact != $PresDetailsPre->inquiries_contact ||
+                            $PresDetailsUpd->ein != $chDetailsPre->ein || $chDetailsUpd->ein_letter_path != $chDetailsPre->ein_letter_path || $PresDetailsUpd->inquiries_note != $PresDetailsPre->inquiries_note ||
+                            $chDetailsUpd->email != $chDetailsPre->email || $chDetailsUpd->po_box != $chDetailsPre->po_box || $chDetailsUpd->website_url != $chDetailsPre->website_url ||
+                            $chDetailsUpd->website_status != $chDetailsPre->website_status || $chDetailsUpd->egroup != $chDetailsPre->egroup || $chDetailsUpd->territory != $chDetailsPre->territory ||
+                            $chDetailsUpd->additional_info != $chDetailsPre->additional_info || $chDetailsUpd->status_id != $chDetailsPre->status_id || $chDetailsUpd->notes != $chDetailsPre->notes ||
+                            $mailDataAvpp['avpfnamePre'] != $mailDataAvp['avpfnameUpd'] || $mailDataAvpp['avplnamePre'] != $mailDataAvp['avplnameUpd'] || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] ||
+                            $mailDataMvpp['mvpfnamePre'] != $mailDataMvp['mvpfnameUpd'] || $mailDataMvpp['mvplnamePre'] != $mailDataMvp['mvplnameUpd'] || $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] ||
+                            $mailDatatresp['tresfnamePre'] != $mailDatatres['tresfnameUpd'] || $mailDatatresp['treslnamePre'] != $mailDatatres['treslnameUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] ||
+                            $mailDataSecp['secfnamePre'] != $mailDataSec['secfnameUpd'] || $mailDataSecp['seclnamePre'] != $mailDataSec['seclnameUpd'] || $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
+
+                        Mail::to($to_email)
+                            ->queue(new ChaptersUpdatePrimaryCoorBoard($mailData));
+                    }
+
+                    // //List Admin Notification//
+                    $to_email2 = 'listadmin@momsclub.org';
+
+                    if ($PresDetailsUpd->email != $PresDetailsPre->email || $PresDetailsUpd->email != $PresDetailsPre->email || $mailDataAvpp['avpemailPre'] != $mailDataAvp['avpemailUpd'] ||
+                                $mailDataMvpp['mvpemailPre'] != $mailDataMvp['mvpemailUpd'] || $mailDatatresp['tresemailPre'] != $mailDatatres['tresemailUpd'] ||
+                                $mailDataSecp['secemailPre'] != $mailDataSec['secemailUpd']) {
+
+                        Mail::to($to_email2)
+                            ->queue(new ChapersUpdateListAdmin($mailData));
+                    }
+
+
+
                     // $mailData = array_merge($mailDataPres);
                     // if ($AVPInfoUpd !== null && count($AVPInfoUpd) > 0) {
                     //     $mailDataAvp = ['avpfnameUpd' => $AVPInfoUpd[0]->bor_f_name,
