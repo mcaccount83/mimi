@@ -149,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-  function showPrimary() {
+function showPrimary() {
     var base_url = '{{ url("/eoy/financialreport") }}';
 
     if ($("#showPrimary").prop("checked") == true) {

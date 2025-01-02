@@ -107,13 +107,6 @@ class GoogleController extends Controller
             if ($response->getStatusCode() === 200) { // Check for a successful status code
                 $file_id = $jsonResponse['id'];
                 $path = 'https://drive.google.com/file/d/'.$file_id.'/view?usp=drive_link';
-                $existingChapterRecord = Chapters::where('id', $id)->first();
-
-                $existingChapterRecord->update([
-                    'ein_letter_path' => $path,
-                    'ein_letter' => '1',
-                ]);
-
                 $existingRecord = Documents::where('chapter_id', $id)->first();
 
                 $existingRecord->update([
@@ -491,12 +484,6 @@ class GoogleController extends Controller
 
             if ($response->getStatusCode() === 200) { // Check for a successful status code
                 $file_id = $jsonResponse['id'];
-                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
-
-                $existingRecord->update([
-                    'roster_path' => $file_id,
-                ]);
-
                 $existingDocRecord = Documents::where('chapter_id', $id)->first();
 
                 $existingDocRecord->update([
@@ -575,12 +562,6 @@ class GoogleController extends Controller
 
             if ($response->getStatusCode() === 200) { // Check for a successful status code
                 $file_id = $jsonResponse['id'];
-                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
-
-                $existingRecord->update([
-                    'file_irs_path' => $file_id,
-                ]);
-
                 $existingDocRecord = Documents::where('chapter_id', $id)->first();
 
                 $existingDocRecord->update([
@@ -659,17 +640,12 @@ class GoogleController extends Controller
 
             if ($response->getStatusCode() === 200) { // Check for a successful status code
                 $file_id = $jsonResponse['id'];
-                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
-
-                $existingRecord->update([
-                    'bank_statement_included_path' => $file_id,
-                ]);
-
                 $existingDocRecord = Documents::where('chapter_id', $id)->first();
 
                 $existingDocRecord->update([
                     'statement_1_path' => $file_id,
                 ]);
+
 
                 return response()->json(['message' => 'File uploaded successfully!'], 200);
             } else {
@@ -743,12 +719,6 @@ class GoogleController extends Controller
 
             if ($response->getStatusCode() === 200) { // Check for a successful status code
                 $file_id = $jsonResponse['id'];
-                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
-
-                $existingRecord->update([
-                    'bank_statement_2_included_path' => $file_id,
-                ]);
-
                 $existingDocRecord = Documents::where('chapter_id', $id)->first();
 
                 $existingDocRecord->update([
@@ -824,7 +794,7 @@ class GoogleController extends Controller
 
             if ($response->getStatusCode() === 200) { // Check for a successful status code
                 $file_id = $jsonResponse['id'];
-                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+                $existingRecord = Documents::where('chapter_id', $id)->first();
 
                 $existingRecord->update([
                     'award_1_files' => $file_id,
@@ -899,7 +869,7 @@ class GoogleController extends Controller
 
             if ($response->getStatusCode() === 200) { // Check for a successful status code
                 $file_id = $jsonResponse['id'];
-                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+                $existingRecord = Documents::where('chapter_id', $id)->first();
 
                 $existingRecord->update([
                     'award_2_files' => $file_id,
@@ -974,7 +944,7 @@ class GoogleController extends Controller
 
             if ($response->getStatusCode() === 200) { // Check for a successful status code
                 $file_id = $jsonResponse['id'];
-                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+                $existingRecord = Documents::where('chapter_id', $id)->first();
 
                 $existingRecord->update([
                     'award_3_files' => $file_id,
@@ -1049,7 +1019,7 @@ class GoogleController extends Controller
 
             if ($response->getStatusCode() === 200) { // Check for a successful status code
                 $file_id = $jsonResponse['id'];
-                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+                $existingRecord = Documents::where('chapter_id', $id)->first();
 
                 $existingRecord->update([
                     'award_4_files' => $file_id,
@@ -1124,7 +1094,7 @@ class GoogleController extends Controller
 
             if ($response->getStatusCode() === 200) { // Check for a successful status code
                 $file_id = $jsonResponse['id'];
-                $existingRecord = FinancialReport::where('chapter_id', $id)->first();
+                $existingRecord = Documents::where('chapter_id', $id)->first();
 
                 $existingRecord->update([
                     'award_5_files' => $file_id,

@@ -62,7 +62,7 @@
                             <div id="collapseOne" class="collapse {{ $chFinancialReport->farthest_step_visited == '1' ? 'show' : '' }}" data-parent="#accordion">
                                 <div class="card-body">
                                     <section>
-                        @if (!is_null($chDocuments['roster_path']))
+                            @if ($chDocuments->roster_path != null)
                                 <div class="col-md-12" id="RosterBlock">
                                         <label>Chapter Roster Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chDocuments['roster_path'] }}">&nbsp; View Chapter Roster</a><br>
                                         <strong style="color:red">Please Note</strong><br>
@@ -2788,6 +2788,188 @@
                             <div class="box_brd_title_box">
                                 <h4>Instructions for Recognition Entry</h4>
                             </div>
+                            <div class="award_acc_con">
+                                <ul class="border_list">
+                                    <li>Include with your entry a written description of your project/activity and any photos or newspaper clippings available. You may be contacted for more information, if necessary. Give enough information that someone who is not familiar with your project or activity can see how wonderful it was!</li>
+                                    <li>Please submit a separate Recognition for each entry. If you have any questions, please contact your Coordinator.</li>
+                                    <li>All entries must be submitted by the deadline in the instructions for your Conference.</li>
+                                    <li>Keep a copy of your entry, photos and other information!</li>
+                                </ul>
+
+                                <h5 class="awrd_sub_head">Chapter Award Types</h5>
+                                    <ul class="border_list">
+                                        <li><strong>Outstanding Specific Service Project</strong> (one project only)</li>
+                                        <li><strong>Outstanding Overall Service Program</strong> (multiple projects considered together)</li>
+                                        <li><strong>Outstanding Children's Activity</strong></li>
+                                        <li>
+                                        <strong>Outstanding Spirit (formation of sister chapters)</strong><br>
+                                        <em>Given to existing chapters who Sister new Chapters</em>
+                                        </li>
+                                        <li>
+                                           <strong>Outstanding Chapter</strong> (for chapters started before July 1, <?php echo date('Y')-1;?>)<br>
+                                           <em>Given for outstanding overall representation of MOMS Club goals, principles, and program (including program to members, community involvement, and support of International MOMS Club)</em>
+                                        </li>
+                                        <li>
+                                           <strong>Outstanding New Chapter</strong> (for chapters started after July 1, <?php echo date('Y')-1;?>)<br>
+                                           <em>Given for outstanding overall representation of MOMS Club goals, principles, and program (including program to members, community involvement, and support of International MOMS Club)</em>
+                                        </li>
+                                        <li>
+                                           <strong>Other Outstanding Award</strong> (any entries not included in categories above)</li>
+                                    </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-12 form-row form-group">
+                            <p>
+                                <strong>List all Award Nominations below.</strong> Briefly describe each award and attach any necessary documents/photos.
+                              </p>
+                            <!-- Awards Table -->
+                            <table id="awards" width="100%" class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <td width="33%">Award Category</td>
+                                        <td width="67%">Description/Information</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $chapter_awards = null;
+                                        if (isset($chFinancialReport['chapter_awards'])) {
+                                            $chapter_awards = unserialize(base64_decode($chFinancialReport['chapter_awards']));
+                                            $ChapterAwardsRowCount = is_array($chapter_awards) ? count($chapter_awards) : 0;
+                                        } else {
+                                            $ChapterAwardsRowCount = 1;
+                                        }
+                                    @endphp
+
+                                    @for ($row = 0; $row < $ChapterAwardsRowCount; $row++)
+                                    <tr>
+                                        <td>
+                                            <div class="form-group">
+                                                <select class="form-control" name="ChapterAwardsType{{ $row }}"
+                                                    id="ChapterAwardsType{{ $row }}"
+                                                    onchange="toggleOutstandingCriteria({{ $row }})">
+                                                    <option value="">Select an Award Type</option>
+                                                    @foreach($allAwards as $award)
+                                                        <option value="{{ $award->id }}"
+                                                            {{ isset($chapter_awards[$row]['awards_type']) &&
+                                                               $chapter_awards[$row]['awards_type'] == $award->id ? 'selected' : '' }}>
+                                                            {{ $award->award_type }} {{ $award->extra }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group">
+                                                <textarea class="form-control" rows="2" name="ChapterAwardsDesc{{ $row }}"
+                                                          id="ChapterAwardsDesc{{ $row }}">{{ $chapter_awards[$row]['awards_desc'] ?? '' }}</textarea>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endfor
+                                </tbody>
+                            </table>
+
+                            <!-- Add/Remove Row Buttons -->
+                            <div class="col-md-12 float-left">
+                                <button type="button" class="btn btn-sm btn-success" onclick="AddChapterAwardsRow()">
+                                    <i class="fas fa-plus"></i>&nbsp; Add Row
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger" onclick="DeleteChapterAwardsRow()">
+                                    <i class="fas fa-minus"></i>&nbsp; Remove Row
+                                </button>
+                            </div>
+
+                            <input type="hidden" name="ChapterAwardsRowCount" id="ChapterAwardsRowCount" value="{{ $ChapterAwardsRowCount }}" />
+
+                            <div class="col-sm-12"><br><hr></div>
+
+                           <!-- Outstanding Criteria Section - Now Outside Table -->
+                        @for ($row = 0; $row < $ChapterAwardsRowCount; $row++)
+                        <div id="OutstandingCriteria{{ $row }}" class="mt-3" style="display: {{ (isset($chapter_awards[$row]['awards_type']) &&
+                            ($chapter_awards[$row]['awards_type'] == 5 || $chapter_awards[$row]['awards_type'] == 6)) ? 'block' : 'none' }}">
+                            <h4>Outstanding Chapter Criteria</h4>
+                            <div class="col-md-12" style="margin-left: 10px">
+                                <div class="form-group row">
+                                    <label>Did you follow the Bylaws and all instructions from International?<span class="field-required">*</span></label>
+                                    <div class="col-md-12 row">
+                                        <div class="form-check" style="margin-left: 20px;">
+                                            <input class="form-check-input" type="radio" id="OutstandingFollowByLaws2Yes" name="OutstandingFollowByLaws2" value="1" {{ $chFinancialReport->award_2_outstanding_follow_bylaws === 1 ? 'checked' : '' }}>
+                                            <label class="form-check-label" for="OutstandingFollowByLaws2Yes">Yes</label>
+                                        </div>
+                                        <div class="form-check" style="margin-left: 20px;">
+                                            <input class="form-check-input" type="radio" id="OutstandingFollowByLaws2No" name="OutstandingFollowByLaws2" value="0" {{ $chFinancialReport->award_2_outstanding_follow_bylaws === 0 ? 'checked' : '' }} >
+                                            <label class="form-check-label" for="OutstandingFollowByLaws2No">No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label>Did you run a well-rounded program for your members?<span class="field-required">*</span></label>
+                                    <br>
+                                    <p>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings),
+                                        a variety of outings, playgroups, other activity groups, service projects, parties/member benefits kept under 15% of the dues received -- these are all taken into consideration.
+                                        A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
+                                    <div class="col-md-12 row">
+                                        <div class="form-check" style="margin-left: 20px;">
+                                            <input class="form-check-input" type="radio" id="OutstandingWellRounded2Yes" name="OutstandingWellRounded2" value="1" {{ $chFinancialReport->award_2_outstanding_well_rounded === 1 ? 'checked' : '' }} >
+                                            <label class="form-check-label" for="OutstandingWellRounded2Yes">Yes</label>
+                                        </div>
+                                        <div class="form-check" style="margin-left: 20px;">
+                                            <input class="form-check-input" type="radio" id="OutstandingWellRounded2No" name="OutstandingWellRounded2" value="0" {{ $chFinancialReport->award_2_outstanding_well_rounded === 0 ? 'checked' : '' }} >
+                                            <label class="form-check-label" for="OutstandingWellRounded2No">No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label>Did you communicate with your Coordinator?<span class="field-required">*</span></label>
+                                    <br>
+                                    <p>Did you send in your newsletter regularly? Send updates? Return telephone calls?
+                                        A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
+                                    <div class="col-md-12 row">
+                                        <div class="form-check" style="margin-left: 20px;">
+                                            <input class="form-check-input" type="radio" id="OutstandingCommunicated2Yes" name="OutstandingCommunicated2" value="1" {{ $chFinancialReport->award_2_outstanding_communicated === 1 ? 'checked' : '' }} >
+                                            <label class="form-check-label" for="OutstandingCommunicated2Yes">Yes</label>
+                                        </div>
+                                        <div class="form-check" style="margin-left: 20px;">
+                                            <input class="form-check-input" type="radio" id="OutstandingCommunicated2No" name="OutstandingCommunicated2" value="0" {{ $chFinancialReport->award_2_outstanding_communicated === 0 ? 'checked' : '' }} >
+                                            <label class="form-check-label" for="OutstandingCommunicated2No">No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label>Did you support the International MOMS Club?<span class="field-required">*</span></label>
+                                    <br>
+                                    <p>Indications of supporting International MAY include but are not limited to:
+                                        <ul>
+                                            <li>Providing MOMS Club pins to your members</li>
+                                            <li>Purchasing MOMS Club merchandise from International</li>
+                                            <li>Forming sister chapters (when possible)</li>
+                                            <li>Donating to the Mother-to-Mother Fund</li>
+                                            <li>Participating in Area, State and Regional events.</li>
+                                        </ul></p>
+                                    <div class="col-md-12 row">
+                                        <div class="form-check" style="margin-left: 20px;">
+                                            <input class="form-check-input" type="radio" id="OutstandingSupportMomsClub2Yes" name="OutstandingSupportMomsClub2" value="1" {{ $chFinancialReport->award_2_outstanding_support_international === 1 ? 'checked' : '' }} >
+                                            <label class="form-check-label" for="OutstandingSupportMomsClub2Yes">Yes</label>
+                                        </div>
+                                        <div class="form-check" style="margin-left: 20px;">
+                                            <input class="form-check-input" type="radio" id="OutstandingSupportMomsClub2No" name="OutstandingSupportMomsClub2" value="0" {{ $chFinancialReport->award_2_outstanding_support_international === 0 ? 'checked' : '' }} >
+                                            <label class="form-check-label" for="OutstandingSupportMomsClub2No">No</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12"><hr></div>
+                        </div>
+                        @endfor
+                           <!-- END Outstanding Criteria Section -->
+
+
+                {{--        <div class="box_brd_contentpad">
+                            <div class="box_brd_title_box">
+                                <h4>Instructions for Recognition Entry</h4>
+                            </div>
                             <input type="hidden" id="TotalAwardNominations" name="TotalAwardNominations" value=<?php
                                     if (!empty($chFinancialReport)) {
                                         if ($chFinancialReport['award_nominations']>0){
@@ -2838,59 +3020,200 @@
                             </div>
                         </div>
                         <!-- Award 1 Start -->
-                        <div class="col-12 box_brd_contentpad" id="Award1Panel" style="display: <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_nominations']<1) echo "none;"; else echo "block;";} else echo "none;";?>">
+                        <div class="col-12 box_brd_contentpad" id="Award1Panel" style="display: {{ $chFinancialReport->award_nominations < 1 ? 'none' : 'block' }}">
                             <div class="box_brd_title_box">
                                 <div class="col-sm-12"><br></div>
                                 <h4>Award 1</h4>
                                 <div class="col-12 form-group">
                                 <label for="NominationType1">Select list:</label>
                                     <select class="form-control" id="NominationType1" name="NominationType1" onClick="ShowOutstandingCriteria(1)">
-                                       <option style="display:none" disabled selected>Select an award type</option>
-                                       <option value=1 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
-                                            <option value=2 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
-                                            <option value=3 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
-                                            <option value=4 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
-                                            <option value=5 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, <?php echo date('Y')-1;?>)</option>
-                                            <option value=6 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, <?php echo date('Y')-1;?>)</option>
-                                            <option value=7 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
+                                        <option value="">Select an Award Type</option>
+                                        @foreach($allAwards as $awards)
+                                            <option value="{{$awards->id}}"
+                                                @if($chFinancialReport->award_1_nomination_type == $awards->id) selected @endif>
+                                                {{$awards->award_type}} {{$awards->extra}}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-sm-12">
                                         <div class="award_acc_con">
                                             <div id="OutstandingCriteria1" style="display: none;">
                                         <h4>Outstanding Chapter Criteria</h4>
-                                    <div class="form-group">
-                                        <label>Did you follow the Bylaws and all instructions from International?<span class="field-required">*</span></label>
-                                        <select id="OutstandingFollowByLaws1" name="OutstandingFollowByLaws1" class="form-control select2" style="width: 25%;" required >
-                                            <option value="" {{ is_null($chFinancialReport->award_1_outstanding_follow_bylaws) ? 'selected' : ''}} disabled>Please Select</option>
-                                            <option value="0" {{$chFinancialReport->award_1_outstanding_follow_bylaws === 0 ? 'selected' : ''}}>No</option>
-                                            <option value="1" {{$chFinancialReport->award_1_outstanding_follow_bylaws == 1 ? 'selected' : ''}}>Yes</option>
-                                        </select>
+                                        <div class="col-md-12" style="margin-left: 10px">
+                                        <div class="form-group row">
+                                            <label>Did you follow the Bylaws and all instructions from International?<span class="field-required">*</span></label>
+                                            <div class="col-md-12 row">
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingFollowByLaws1Yes" name="OutstandingFollowByLaws1" value="1" {{ $chFinancialReport->award_1_outstanding_follow_bylaws === 1 ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="OutstandingFollowByLaws1Yes">Yes</label>
+                                                </div>
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingFollowByLaws1No" name="OutstandingFollowByLaws1" value="0" {{ $chFinancialReport->award_1_outstanding_follow_bylaws === 0 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingFollowByLaws1No">No</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label>Did you run a well-rounded program for your members?<span class="field-required">*</span></label>
+                                            <br>
+                                            <p>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings),
+                                                a variety of outings, playgroups, other activity groups, service projects, parties/member benefits kept under 15% of the dues received -- these are all taken into consideration.
+                                                A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
+                                            <div class="col-md-12 row">
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingWellRounded1Yes" name="OutstandingWellRounded1" value="1" {{ $chFinancialReport->award_1_outstanding_well_rounded === 1 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingWellRounded1Yes">Yes</label>
+                                                </div>
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingWellRounded1No" name="OutstandingWellRounded1" value="0" {{ $chFinancialReport->award_1_outstanding_well_rounded === 0 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingWellRounded1No">No</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label>Did you communicate with your Coordinator?<span class="field-required">*</span></label>
+                                            <br>
+                                            <p>Did you send in your newsletter regularly? Send updates? Return telephone calls?
+                                                A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
+                                            <div class="col-md-12 row">
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingCommunicated1Yes" name="OutstandingCommunicated1" value="1" {{ $chFinancialReport->award_1_outstanding_communicated === 1 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingCommunicated1Yes">Yes</label>
+                                                </div>
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingCommunicated1No" name="OutstandingCommunicated1" value="0" {{ $chFinancialReport->award_1_outstanding_communicated === 0 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingCommunicated1No">No</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label>Did you support the International MOMS Club?<span class="field-required">*</span></label>
+                                            <br>
+                                            <p>Indications of supporting International MAY include but are not limited to:
+                                                <ul>
+                                                    <li>Providing MOMS Club pins to your members</li>
+                                                    <li>Purchasing MOMS Club merchandise from International</li>
+                                                    <li>Forming sister chapters (when possible)</li>
+                                                    <li>Donating to the Mother-to-Mother Fund</li>
+                                                    <li>Participating in Area, State and Regional events.</li>
+                                                </ul></p>
+                                            <div class="col-md-12 row">
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingSupportMomsClub1Yes" name="OutstandingSupportMomsClub1" value="1" {{ $chFinancialReport->award_1_outstanding_support_international === 1 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingSupportMomsClub1Yes">Yes</label>
+                                                </div>
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingSupportMomsClub1No" name="OutstandingSupportMomsClub1" value="0" {{ $chFinancialReport->award_1_outstanding_support_international === 0 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingSupportMomsClub1No">No</label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div><br></div>
-                                    <div class="form-group">
-                                        <label>Did you run a well-rounded program for your members?<span class="field-required">*</span></label><br><p>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings),
+                                </div>
+                            </div>
+                                <div class="col-md-12" style="margin-left: 10px">
+                                    <div class="form-group row">
+                                 <label>Description:</label>
+                                 <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
+                                 <div class="col-md-12 row">
+                                    <textarea class="form-control" rows="10" id="AwardDesc1" name="AwardDesc1">{{ $chFinancialReport->award_1_outstanding_project_desc }}</textarea>
+                                 </div>
+                                </div>
+                            </div>
+                                @if ($chDocuments->award_1_path != null)
+                                    <div class="col-md-12" id="Award1Block">
+                                            <label>Award 1 Files Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chDocuments['award_1_path'] }}">&nbsp; View Award 1 Files</a><br>
+                                            <strong style="color:red">Please Note</strong><br>
+                                                This will refresh the screen - be sure to save all work before clicking button to Replace Award 1 Files.<br>
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="showAward1UploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Award 1 Files</button>
+                                    </div>
+                                @else
+                                    <div class="col-md-12" id="Award1Block">
+                                            <strong style="color:red">Please Note</strong><br>
+                                                This will refresh the screen - be sure to save all work before clicking button to Upload Award 1 Files.<br>
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="showAward1UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Award 1 Files</button>
+                                    </div>
+                                @endif
+                                    <input type="hidden" name="Award1Path" id="Award1Path" value="{{ $chDocuments->award_1_path }}">
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Award 1 Stop -->
+                        <!-- Award 2 Start -->
+                        <div class="col-12 box_brd_contentpad" id="Award2Panel" style="display: {{ $chFinancialReport->award_nominations < 2 ? 'none' : 'block' }}">
+                            <div class="col-sm-12"><br><hr></div>
+                            <div class="box_brd_title_box">
+                                <div class="col-sm-12"><br></div>
+                                <h4>Award 2</h4>
+                                <div class="col-12 form-group">
+                                <label for="NominationType2">Select list:</label>
+                                    <select class="form-control" id="NominationType2" name="NominationType2" onClick="ShowOutstandingCriteria(2)">
+                                        <option value="">Select an Award Type</option>
+                                        @foreach($allAwards as $awards)
+                                            <option value="{{$awards->id}}"
+                                                @if($chFinancialReport->award_2_nomination_type == $awards->id) selected @endif>
+                                                {{$awards->award_type}} {{$awards->extra}}
+                                            </option>
+                                        @endforeach
+                                        </select>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="award_acc_con">
+                                        <div id="OutstandingCriteria2" style="display: none;">
+                                    <h4>Outstanding Chapter Criteria</h4>
+                                    <div class="col-md-12" style="margin-left: 10px">
+                                    <div class="form-group row">
+                                        <label>Did you follow the Bylaws and all instructions from International?<span class="field-required">*</span></label>
+                                        <div class="col-md-12 row">
+                                            <div class="form-check" style="margin-left: 20px;">
+                                                <input class="form-check-input" type="radio" id="OutstandingFollowByLaws2Yes" name="OutstandingFollowByLaws2" value="1" {{ $chFinancialReport->award_2_outstanding_follow_bylaws === 1 ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="OutstandingFollowByLaws2Yes">Yes</label>
+                                            </div>
+                                            <div class="form-check" style="margin-left: 20px;">
+                                                <input class="form-check-input" type="radio" id="OutstandingFollowByLaws2No" name="OutstandingFollowByLaws2" value="0" {{ $chFinancialReport->award_2_outstanding_follow_bylaws === 0 ? 'checked' : '' }} >
+                                                <label class="form-check-label" for="OutstandingFollowByLaws2No">No</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label>Did you run a well-rounded program for your members?<span class="field-required">*</span></label>
+                                        <br>
+                                        <p>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings),
                                             a variety of outings, playgroups, other activity groups, service projects, parties/member benefits kept under 15% of the dues received -- these are all taken into consideration.
                                             A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
-                                        <select id="OutstandingWellRounded1" name="OutstandingWellRounded1" class="form-control select2" style="width: 25%;" required >
-                                            <option value="" {{ is_null($chFinancialReport->award_1_outstanding_well_rounded) ? 'selected' : ''}} disabled>Please Select</option>
-                                            <option value="0" {{$chFinancialReport->award_1_outstanding_well_rounded === 0 ? 'selected' : ''}}>No</option>
-                                            <option value="1" {{$chFinancialReport->award_1_outstanding_well_rounded == 1 ? 'selected' : ''}}>Yes</option>
-                                        </select>
+                                        <div class="col-md-12 row">
+                                            <div class="form-check" style="margin-left: 20px;">
+                                                <input class="form-check-input" type="radio" id="OutstandingWellRounded2Yes" name="OutstandingWellRounded2" value="1" {{ $chFinancialReport->award_2_outstanding_well_rounded === 1 ? 'checked' : '' }} >
+                                                <label class="form-check-label" for="OutstandingWellRounded2Yes">Yes</label>
+                                            </div>
+                                            <div class="form-check" style="margin-left: 20px;">
+                                                <input class="form-check-input" type="radio" id="OutstandingWellRounded2No" name="OutstandingWellRounded2" value="0" {{ $chFinancialReport->award_2_outstanding_well_rounded === 0 ? 'checked' : '' }} >
+                                                <label class="form-check-label" for="OutstandingWellRounded2No">No</label>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div><br></div>
-                                    <div class="form-group">
-                                        <label>Did you communicate with your Coordinator?<span class="field-required">*</span></label><br><p>Did you send in your newsletter regularly? Send updates? Return telephone calls?
+                                    <div class="form-group row">
+                                        <label>Did you communicate with your Coordinator?<span class="field-required">*</span></label>
+                                        <br>
+                                        <p>Did you send in your newsletter regularly? Send updates? Return telephone calls?
                                             A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
-                                        <select id="OutstandingCommunicated1" name="OutstandingCommunicated1" class="form-control select2" style="width: 25%;" required >
-                                            <option value="" {{ is_null($chFinancialReport->award_1_outstanding_communicated) ? 'selected' : ''}} disabled>Please Select</option>
-                                            <option value="0" {{$chFinancialReport->award_1_outstanding_communicated === 0 ? 'selected' : ''}}>No</option>
-                                            <option value="1" {{$chFinancialReport->award_1_outstanding_communicated == 1 ? 'selected' : ''}}>Yes</option>
-                                        </select>
+                                        <div class="col-md-12 row">
+                                            <div class="form-check" style="margin-left: 20px;">
+                                                <input class="form-check-input" type="radio" id="OutstandingCommunicated2Yes" name="OutstandingCommunicated2" value="1" {{ $chFinancialReport->award_2_outstanding_communicated === 1 ? 'checked' : '' }} >
+                                                <label class="form-check-label" for="OutstandingCommunicated2Yes">Yes</label>
+                                            </div>
+                                            <div class="form-check" style="margin-left: 20px;">
+                                                <input class="form-check-input" type="radio" id="OutstandingCommunicated2No" name="OutstandingCommunicated2" value="0" {{ $chFinancialReport->award_2_outstanding_communicated === 0 ? 'checked' : '' }} >
+                                                <label class="form-check-label" for="OutstandingCommunicated2No">No</label>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div><br></div>
-                                    <div class="form-group">
-                                        <label>Did you support the International MOMS Club?<span class="field-required">*</span></label><br><p>Indications of supporting International MAY include but are not limited to:
+                                    <div class="form-group row">
+                                        <label>Did you support the International MOMS Club?<span class="field-required">*</span></label>
+                                        <br>
+                                        <p>Indications of supporting International MAY include but are not limited to:
                                             <ul>
                                                 <li>Providing MOMS Club pins to your members</li>
                                                 <li>Purchasing MOMS Club merchandise from International</li>
@@ -2898,462 +3221,443 @@
                                                 <li>Donating to the Mother-to-Mother Fund</li>
                                                 <li>Participating in Area, State and Regional events.</li>
                                             </ul></p>
-                                        <select id="OutstandingSupportMomsClub1" name="OutstandingSupportMomsClub1" class="form-control select2" style="width: 25%;" required >
-                                            <option value="" {{ is_null($chFinancialReport->award_1_outstanding_support_international) ? 'selected' : ''}} disabled>Please Select</option>
-                                            <option value="0" {{$chFinancialReport->award_1_outstanding_support_international === 0 ? 'selected' : ''}}>No</option>
-                                            <option value="1" {{$chFinancialReport->award_1_outstanding_support_international == 1 ? 'selected' : ''}}>Yes</option>
-                                        </select>
+                                        <div class="col-md-12 row">
+                                            <div class="form-check" style="margin-left: 20px;">
+                                                <input class="form-check-input" type="radio" id="OutstandingSupportMomsClub2Yes" name="OutstandingSupportMomsClub2" value="1" {{ $chFinancialReport->award_2_outstanding_support_international === 1 ? 'checked' : '' }} >
+                                                <label class="form-check-label" for="OutstandingSupportMomsClub2Yes">Yes</label>
+                                            </div>
+                                            <div class="form-check" style="margin-left: 20px;">
+                                                <input class="form-check-input" type="radio" id="OutstandingSupportMomsClub2No" name="OutstandingSupportMomsClub2" value="0" {{ $chFinancialReport->award_2_outstanding_support_international === 0 ? 'checked' : '' }} >
+                                                <label class="form-check-label" for="OutstandingSupportMomsClub2No">No</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                    <div>
-                                        <div>
-                                 <label>Description:</label>
-                                 <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
-                                 <div class="form-group">
-                                    <textarea class="form-control" rows="20" id="AwardDesc1" name="AwardDesc1"><?php if (!empty($chFinancialReport)) {echo $chFinancialReport['award_1_outstanding_project_desc'];}?></textarea>
-                                 </div>
-                                </div>
-                                 <div class="col-md-12" id="Award1Block" <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_1_files']) echo "style=\"display: none;\"";} ?>>
-                                    <div class="col-md-12">
-                                        <strong style="color:red">Please Note</strong><br>
-                                            This will refresh the screen - be sure to save all work before clicking button to Upload Award 1 Files.<br>
-                                        <button type="button" class="btn btn-sm btn-primary" onclick="showAward1UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Award 1 Attachments</button>
-                                        {{-- <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award1" ><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 1 Files</button> --}}
-                                    </div>
-                                </div>
-                                <input type="hidden" name="Award1Path" id="Award1Path" value="<?php echo $chFinancialReport['award_1_files']; ?>">
-                                <div class="col-md-12 mar_bot_20" <?php if (!empty($chFinancialReport)) {if (!$chFinancialReport['award_1_files']) echo "style=\"display: none;\"";} ?>>
-                                    <div class="col-md-12" >
-                                        <div>
-                                            <label class="control-label" for="Award1Link">Award 1 Files:</label>
-                                           <a href="<?php echo $chFinancialReport['award_1_files']; ?>" target="_blank">View Award 1 Attachments</a><br>
-                                            <strong style="color:red">Please Note</strong><br>
-                                            This will refresh the screen - be sure to save all work before clicking button to Replace Award 1 Files.<br>
-                                        <button type="button" class="btn btn-sm btn-primary" onclick="showAward1UploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Award 1 Attachments</button>
-                                        {{-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-award1" ><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 1 Files</button> --}}
-                                    </div>
-                                    </div>
-                                </div>
-                                <div class="clearfix"></div>
                             </div>
+                        </div>
+                            <div class="col-md-12" style="margin-left: 10px">
+                                <div class="form-group row">
+                             <label>Description:</label>
+                             <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
+                             <div class="col-md-12 row">
+                                <textarea class="form-control" rows="10" id="AwardDesc2" name="AwardDesc2">{{ $chFinancialReport->award_2_outstanding_project_desc }}</textarea>
+                             </div>
+                            </div>
+                        </div>
+                            @if ($chDocuments->award_2_path != null)
+                                <div class="col-md-12" id="Award2Block">
+                                        <label>Award 2 Files Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chDocuments['award_2_path'] }}">&nbsp; View Award 2 Files</a><br>
+                                        <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Replace Award 2 Files.<br>
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="showAward2UploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Award 2 Files</button>
+                                </div>
+                            @else
+                                <div class="col-md-12" id="Award2Block">
+                                        <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Upload Award 2 Files.<br>
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="showAward2UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Award 2 Files</button>
+                                </div>
+                            @endif
+                                <input type="hidden" name="Award2Path" id="Award2Path" value="{{ $chDocuments->award_2_path }}">
+                                <div class="clearfix"></div>
                             </div>
                         </div>
                     </div>
-                        <!-- Award 1 Stop -->
-                        <!-- Award 2 Start -->
-                        <div class="col-12 box_brd_contentpad" id="Award2Panel" style="display: <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_nominations']<2) echo "none;"; else echo "block;";} else echo "none;";?>">
-                            <div class="box_brd_title_box">
-                                <div class="col-sm-12"><br></div>
-                                <h4>Award 2</h4>
-                                <div class="col-12 form-group">
-                                <label for="NominationType2">Select list:</label>
-                                    <select class="form-control" id="NominationType2" name="NominationType2" onClick="ShowOutstandingCriteria(2)">
-                                       <option style="display:none" disabled selected>Select an award type</option>
-                                       <option value=1 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
-                                            <option value=2 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
-                                            <option value=3 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
-                                            <option value=4 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
-                                            <option value=5 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, <?php echo date('Y')-1;?>)</option>
-                                            <option value=6 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, <?php echo date('Y')-1;?>)</option>
-                                            <option value=7 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="award_acc_con">
-                                    <div id="OutstandingCriteria2" style="display: none;">
-                                <h4>Outstanding Chapter Criteria</h4>
-                            <div class="form-group">
-                                <label>Did you follow the Bylaws and all instructions from International?<span class="field-required">*</span></label>
-                                <select id="OutstandingFollowByLaws2" name="OutstandingFollowByLaws2" class="form-control select2" style="width: 25%;" required >
-                                    <option value="" {{ is_null($chFinancialReport->award_2_outstanding_follow_bylaws) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" {{$chFinancialReport->award_2_outstanding_follow_bylaws === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$chFinancialReport->award_2_outstanding_follow_bylaws == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            <div><br></div>
-                            <div class="form-group">
-                                <label>Did you run a well-rounded program for your members?<span class="field-required">*</span></label><br><p>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings),
-                                    a variety of outings, playgroups, other activity groups, service projects, parties/member benefits kept under 15% of the dues received -- these are all taken into consideration.
-                                    A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
-                                <select id="OutstandingWellRounded2" name="OutstandingWellRounded2" class="form-control select2" style="width: 25%;" required >
-                                    <option value="" {{ is_null($chFinancialReport->award_2_outstanding_well_rounded) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" {{$chFinancialReport->award_2_outstanding_well_rounded === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$chFinancialReport->award_2_outstanding_well_rounded == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            <div><br></div>
-                            <div class="form-group">
-                                <label>Did you communicate with your Coordinator?<span class="field-required">*</span></label><br><p>Did you send in your newsletter regularly? Send updates? Return telephone calls?
-                                    A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
-                                <select id="OutstandingCommunicated2" name="OutstandingCommunicated2" class="form-control select2" style="width: 25%;" required >
-                                    <option value="" {{ is_null($chFinancialReport->award_2_outstanding_communicated) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" {{$chFinancialReport->award_2_outstanding_communicated === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$chFinancialReport->award_2_outstanding_communicated == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            <div><br></div>
-                            <div class="form-group">
-                                <label>Did you support the International MOMS Club?<span class="field-required">*</span></label><br><p>Indications of supporting International MAY include but are not limited to:
-                                    <ul>
-                                        <li>Providing MOMS Club pins to your members</li>
-                                        <li>Purchasing MOMS Club merchandise from International</li>
-                                        <li>Forming sister chapters (when possible)</li>
-                                        <li>Donating to the Mother-to-Mother Fund</li>
-                                        <li>Participating in Area, State and Regional events.</li>
-                                    </ul></p>
-                                <select id="OutstandingSupportMomsClub2" name="OutstandingSupportMomsClub2" class="form-control select2" style="width: 25%;" required >
-                                    <option value="" {{ is_null($chFinancialReport->award_2_outstanding_support_international) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" {{$chFinancialReport->award_2_outstanding_support_international === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$chFinancialReport->award_2_outstanding_support_international == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                            <div>
-                                <div>
-                                 <label>Description:</label>
-                                 <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
-                                 <div class="form-group">
-                                    <textarea class="form-control" rows="20" id="AwardDesc2" name="AwardDesc2"><?php if (!empty($chFinancialReport)) {echo $chFinancialReport['award_2_outstanding_project_desc'];}?></textarea>
-                                 </div>
-                                </div>
-                                 <div class="col-md-12" id="Award2Block" <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_2_files']) echo "style=\"display: none;\"";} ?>>
-                                    <div class="col-md-12">
-                                        <strong style="color:red">Please Note</strong><br>
-                                            This will refresh the screen - be sure to save all work before clicking button to Upload Award 2 Files.<br>
-                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award2" ><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 2 Files</button>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="Award2Path" id="Award2Path" value="<?php echo $chFinancialReport['award_2_files']; ?>">
-                                <div class="col-md-12 mar_bot_20" <?php if (!empty($chFinancialReport)) {if (!$chFinancialReport['award_2_files']) echo "style=\"display: none;\"";} ?>>
-                                    <div class="col-md-12" >
-                                        <div>
-                                            <label class="control-label" for="Award2Link">Award 2 Files:</label>
-                                           <a href="<?php echo $chFinancialReport['award_2_files']; ?>" target="_blank">View Award 2 Files</a><br>
-                                            <strong style="color:red">Please Note</strong><br>
-                                            This will refresh the screen - be sure to save all work before clicking button to Replace Award 2 Files.<br>
-                                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-award2" ><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 2 Files</button>
-                                    </div>
-                                    </div>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                        </div>
-                            </div>
-                        </div>
                         <!-- Award 2 Stop -->
                         <!-- Award 3 Start -->
-                        <div class="col-12 box_brd_contentpad" id="Award3Panel" style="display: <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_nominations']<3) echo "none;"; else echo "block;";} else echo "none;";?>">
+                        <div class="col-12 box_brd_contentpad" id="Award3Panel" style="display: {{ $chFinancialReport->award_nominations < 3 ? 'none' : 'block' }}">
+                            <div class="col-sm-12"><br><hr></div>
                             <div class="box_brd_title_box">
                                 <div class="col-sm-12"><br></div>
                                 <h4>Award 3</h4>
                                 <div class="col-12 form-group">
                                 <label for="NominationType3">Select list:</label>
                                     <select class="form-control" id="NominationType3" name="NominationType3" onClick="ShowOutstandingCriteria(3)">
-                                       <option style="display:none" disabled selected>Select an award type</option>
-                                       <option value=1 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
-                                            <option value=2 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
-                                            <option value=3 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
-                                            <option value=4 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
-                                            <option value=5 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, <?php echo date('Y')-1;?>)</option>
-                                            <option value=6 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, <?php echo date('Y')-1;?>)</option>
-                                            <option value=7 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
-                                    </select>
+                                        <option value="">Select an Award Type</option>
+                                        @foreach($allAwards as $awards)
+                                            <option value="{{$awards->id}}"
+                                                @if($chFinancialReport->award_3_nomination_type == $awards->id) selected @endif>
+                                                {{$awards->award_type}} {{$awards->extra}}
+                                            </option>
+                                        @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="award_acc_con">
+                                            <div id="OutstandingCriteria3" style="display: none;">
+                                        <h4>Outstanding Chapter Criteria</h4>
+                                        <div class="col-md-12" style="margin-left: 10px">
+                                        <div class="form-group row">
+                                            <label>Did you follow the Bylaws and all instructions from International?<span class="field-required">*</span></label>
+                                            <div class="col-md-12 row">
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingFollowByLaws3Yes" name="OutstandingFollowByLaws3" value="1" {{ $chFinancialReport->award_3_outstanding_follow_bylaws === 1 ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="OutstandingFollowByLaws3Yes">Yes</label>
+                                                </div>
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingFollowByLaws3No" name="OutstandingFollowByLaws3" value="0" {{ $chFinancialReport->award_3_outstanding_follow_bylaws === 0 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingFollowByLaws3No">No</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label>Did you run a well-rounded program for your members?<span class="field-required">*</span></label>
+                                            <br>
+                                            <p>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings),
+                                                a variety of outings, playgroups, other activity groups, service projects, parties/member benefits kept under 15% of the dues received -- these are all taken into consideration.
+                                                A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
+                                            <div class="col-md-12 row">
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingWellRounded3Yes" name="OutstandingWellRounded3" value="1" {{ $chFinancialReport->award_3_outstanding_well_rounded === 1 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingWellRounded3Yes">Yes</label>
+                                                </div>
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingWellRounded3No" name="OutstandingWellRounded3" value="0" {{ $chFinancialReport->award_3_outstanding_well_rounded === 0 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingWellRounded3No">No</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label>Did you communicate with your Coordinator?<span class="field-required">*</span></label>
+                                            <br>
+                                            <p>Did you send in your newsletter regularly? Send updates? Return telephone calls?
+                                                A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
+                                            <div class="col-md-12 row">
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingCommunicated3Yes" name="OutstandingCommunicated3" value="1" {{ $chFinancialReport->award_3_outstanding_communicated === 1 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingCommunicated3Yes">Yes</label>
+                                                </div>
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingCommunicated3No" name="OutstandingCommunicated3" value="0" {{ $chFinancialReport->award_3_outstanding_communicated === 0 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingCommunicated3No">No</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label>Did you support the International MOMS Club?<span class="field-required">*</span></label>
+                                            <br>
+                                            <p>Indications of supporting International MAY include but are not limited to:
+                                                <ul>
+                                                    <li>Providing MOMS Club pins to your members</li>
+                                                    <li>Purchasing MOMS Club merchandise from International</li>
+                                                    <li>Forming sister chapters (when possible)</li>
+                                                    <li>Donating to the Mother-to-Mother Fund</li>
+                                                    <li>Participating in Area, State and Regional events.</li>
+                                                </ul></p>
+                                            <div class="col-md-12 row">
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingSupportMomsClub3Yes" name="OutstandingSupportMomsClub3" value="1" {{ $chFinancialReport->award_3_outstanding_support_international === 1 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingSupportMomsClub3Yes">Yes</label>
+                                                </div>
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingSupportMomsClub3No" name="OutstandingSupportMomsClub3" value="0" {{ $chFinancialReport->award_3_outstanding_support_international === 0 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingSupportMomsClub3No">No</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12">
-                                <div class="award_acc_con">
-                                    <div id="OutstandingCriteria3" style="display: none;">
-                                <h4>Outstanding Chapter Criteria</h4>
-                            <div class="form-group">
-                                <label>Did you follow the Bylaws and all instructions from International?<span class="field-required">*</span></label>
-                                <select id="OutstandingFollowByLaws3" name="OutstandingFollowByLaws3" class="form-control select2" style="width: 25%;" required >
-                                    <option value="" {{ is_null($chFinancialReport->award_3_outstanding_follow_bylaws) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" {{$chFinancialReport->award_3_outstanding_follow_bylaws === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$chFinancialReport->award_3_outstanding_follow_bylaws == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            <div><br></div>
-                            <div class="form-group">
-                                <label>Did you run a well-rounded program for your members?<span class="field-required">*</span></label><br><p>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings),
-                                    a variety of outings, playgroups, other activity groups, service projects, parties/member benefits kept under 15% of the dues received -- these are all taken into consideration.
-                                    A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
-                                <select id="OutstandingWellRounded3" name="OutstandingWellRounded3" class="form-control select2" style="width: 25%;" required >
-                                    <option value="" {{ is_null($chFinancialReport->award_3_outstanding_well_rounded) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" {{$chFinancialReport->award_3_outstanding_well_rounded === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$chFinancialReport->award_3_outstanding_well_rounded == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            <div><br></div>
-                            <div class="form-group">
-                                <label>Did you communicate with your Coordinator?<span class="field-required">*</span></label><br><p>Did you send in your newsletter regularly? Send updates? Return telephone calls?
-                                    A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
-                                <select id="OutstandingCommunicated3" name="OutstandingCommunicated3" class="form-control select2" style="width: 25%;" required >
-                                    <option value="" {{ is_null($chFinancialReport->award_3_outstanding_communicated) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" {{$chFinancialReport->award_3_outstanding_communicated === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$chFinancialReport->award_3_outstanding_communicated == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            <div><br></div>
-                            <div class="form-group">
-                                <label>Did you support the International MOMS Club?<span class="field-required">*</span></label><br><p>Indications of supporting International MAY include but are not limited to:
-                                    <ul>
-                                        <li>Providing MOMS Club pins to your members</li>
-                                        <li>Purchasing MOMS Club merchandise from International</li>
-                                        <li>Forming sister chapters (when possible)</li>
-                                        <li>Donating to the Mother-to-Mother Fund</li>
-                                        <li>Participating in Area, State and Regional events.</li>
-                                    </ul></p>
-                                <select id="OutstandingSupportMomsClub3" name="OutstandingSupportMomsClub3" class="form-control select2" style="width: 25%;" required >
-                                    <option value="" {{ is_null($chFinancialReport->award_3_outstanding_support_international) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" {{$chFinancialReport->award_3_outstanding_support_international === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$chFinancialReport->award_3_outstanding_support_international == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                            <div>
-                                <div>
+                                <div class="col-md-12" style="margin-left: 10px">
+                                    <div class="form-group row">
                                  <label>Description:</label>
                                  <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
-                                 <div class="form-group">
-                                    <textarea class="form-control" rows="20" id="AwardDesc3" name="AwardDesc3"><?php if (!empty($chFinancialReport)) {echo $chFinancialReport['award_3_outstanding_project_desc'];}?></textarea>
+                                 <div class="col-md-12 row">
+                                    <textarea class="form-control" rows="10" id="AwardDesc3" name="AwardDesc3">{{ $chFinancialReport->award_3_outstanding_project_desc }}</textarea>
                                  </div>
                                 </div>
-                                 <div class="col-md-12" id="Award3Block" <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_3_files']) echo "style=\"display: none;\"";} ?>>
-                                    <div class="col-md-12">
-                                        <strong style="color:red">Please Note</strong><br>
-                                            This will refresh the screen - be sure to save all work before clicking button to Upload Award 3 Files.<br>
-                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award3" ><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 3 Files</button>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="Award3Path" id="Award3Path" value="<?php echo $chFinancialReport['award_3_files']; ?>">
-                                <div class="col-md-12 mar_bot_20" <?php if (!empty($chFinancialReport)) {if (!$chFinancialReport['award_3_files']) echo "style=\"display: none;\"";} ?>>
-                                    <div class="col-md-12" >
-                                        <div>
-                                            <label class="control-label" for="Award3Link">Award 3 Files:</label>
-                                           <a href="<?php echo $chFinancialReport['award_3_files']; ?>" target="_blank">View Award 3 Files</a><br>
+                            </div>
+                                @if ($chDocuments->award_3_path != null)
+                                    <div class="col-md-12" id="Award3Block">
+                                            <label>Award 3 Files Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chDocuments['award_3_path'] }}">&nbsp; View Award 3 Files</a><br>
                                             <strong style="color:red">Please Note</strong><br>
-                                            This will refresh the screen - be sure to save all work before clicking button to Replace Award 3 Files.<br>
-                                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-award3" ><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 3 Files</button>
+                                                This will refresh the screen - be sure to save all work before clicking button to Replace Award 3 Files.<br>
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="showAward3ploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Award 3 Files</button>
                                     </div>
+                                @else
+                                    <div class="col-md-12" id="Award3Block">
+                                            <strong style="color:red">Please Note</strong><br>
+                                                This will refresh the screen - be sure to save all work before clicking button to Upload Award 3 Files.<br>
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="showAward3UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Award 3 Files</button>
                                     </div>
+                                @endif
+                                    <input type="hidden" name="Award3Path" id="Award3Path" value="{{ $chDocuments->award_3_path }}">
+                                    <div class="clearfix"></div>
                                 </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            </div>
                             </div>
                         </div>
                         <!-- Award 3 Stop -->
                         <!-- Award 4 Start -->
-                        <div class="col-12 box_brd_contentpad" id="Award4Panel" style="display: <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_nominations']<4) echo "none;"; else echo "block;";} else echo "none;";?>">
+                        <div class="col-12 box_brd_contentpad" id="Award4Panel" style="display: {{ $chFinancialReport->award_nominations < 4 ? 'none' : 'block' }}">
+                            <div class="col-sm-12"><br><hr></div>
                             <div class="box_brd_title_box">
                                 <div class="col-sm-12"><br></div>
                                 <h4>Award 4</h4>
                                 <div class="col-12 form-group">
                                 <label for="NominationType4">Select list:</label>
                                     <select class="form-control" id="NominationType4" name="NominationType4" onClick="ShowOutstandingCriteria(4)">
-                                       <option style="display:none" disabled selected>Select an award type</option>
-                                       <option value=1 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
-                                            <option value=2 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
-                                            <option value=3 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
-                                            <option value=4 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
-                                            <option value=5 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, <?php echo date('Y')-1;?>)</option>
-                                            <option value=6 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, <?php echo date('Y')-1;?>)</option>
-                                            <option value=7 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
-                                    </select>
+                                        <option value="">Select an Award Type</option>
+                                        @foreach($allAwards as $awards)
+                                            <option value="{{$awards->id}}"
+                                                @if($chFinancialReport->award_4_nomination_type == $awards->id) selected @endif>
+                                                {{$awards->award_type}} {{$awards->extra}}
+                                            </option>
+                                        @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="award_acc_con">
+                                            <div id="OutstandingCriteria4" style="display: none;">
+                                        <h4>Outstanding Chapter Criteria</h4>
+                                        <div class="col-md-12" style="margin-left: 10px">
+                                        <div class="form-group row">
+                                            <label>Did you follow the Bylaws and all instructions from International?<span class="field-required">*</span></label>
+                                            <div class="col-md-12 row">
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingFollowByLaws4Yes" name="OutstandingFollowByLaws4" value="1" {{ $chFinancialReport->award_4_outstanding_follow_bylaws === 1 ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="OutstandingFollowByLaws4Yes">Yes</label>
+                                                </div>
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingFollowByLaws4No" name="OutstandingFollowByLaws4" value="0" {{ $chFinancialReport->award_4_outstanding_follow_bylaws === 0 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingFollowByLaws4No">No</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label>Did you run a well-rounded program for your members?<span class="field-required">*</span></label>
+                                            <br>
+                                            <p>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings),
+                                                a variety of outings, playgroups, other activity groups, service projects, parties/member benefits kept under 15% of the dues received -- these are all taken into consideration.
+                                                A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
+                                            <div class="col-md-12 row">
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingWellRounded4Yes" name="OutstandingWellRounded4" value="1" {{ $chFinancialReport->award_4_outstanding_well_rounded === 1 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingWellRounded4Yes">Yes</label>
+                                                </div>
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingWellRounded4No" name="OutstandingWellRounded4" value="0" {{ $chFinancialReport->award_4_outstanding_well_rounded === 0 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingWellRounded4No">No</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label>Did you communicate with your Coordinator?<span class="field-required">*</span></label>
+                                            <br>
+                                            <p>Did you send in your newsletter regularly? Send updates? Return telephone calls?
+                                                A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
+                                            <div class="col-md-12 row">
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingCommunicated4Yes" name="OutstandingCommunicated4" value="1" {{ $chFinancialReport->award_4_outstanding_communicated === 1 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingCommunicated4Yes">Yes</label>
+                                                </div>
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingCommunicated4No" name="OutstandingCommunicated4" value="0" {{ $chFinancialReport->award_4_outstanding_communicated === 0 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingCommunicated4No">No</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label>Did you support the International MOMS Club?<span class="field-required">*</span></label>
+                                            <br>
+                                            <p>Indications of supporting International MAY include but are not limited to:
+                                                <ul>
+                                                    <li>Providing MOMS Club pins to your members</li>
+                                                    <li>Purchasing MOMS Club merchandise from International</li>
+                                                    <li>Forming sister chapters (when possible)</li>
+                                                    <li>Donating to the Mother-to-Mother Fund</li>
+                                                    <li>Participating in Area, State and Regional events.</li>
+                                                </ul></p>
+                                            <div class="col-md-12 row">
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingSupportMomsClub4Yes" name="OutstandingSupportMomsClub4" value="1" {{ $chFinancialReport->award_4_outstanding_support_international === 1 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingSupportMomsClub4Yes">Yes</label>
+                                                </div>
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingSupportMomsClub4No" name="OutstandingSupportMomsClub4" value="0" {{ $chFinancialReport->award_4_outstanding_support_international === 0 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingSupportMomsClub4No">No</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12">
-                                <div class="award_acc_con">
-                                    <div id="OutstandingCriteria4" style="display: none;">
-                                <h4>Outstanding Chapter Criteria</h4>
-                            <div class="form-group">
-                                <label>Did you follow the Bylaws and all instructions from International?<span class="field-required">*</span></label>
-                                <select id="OutstandingFollowByLaws4" name="OutstandingFollowByLaws4" class="form-control select2" style="width: 25%;" required >
-                                    <option value="" {{ is_null($chFinancialReport->award_4_outstanding_follow_bylaws) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" {{$chFinancialReport->award_4_outstanding_follow_bylaws === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$chFinancialReport->award_4_outstanding_follow_bylaws == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            <div><br></div>
-                            <div class="form-group">
-                                <label>Did you run a well-rounded program for your members?<span class="field-required">*</span></label><br><p>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings),
-                                    a variety of outings, playgroups, other activity groups, service projects, parties/member benefits kept under 15% of the dues received -- these are all taken into consideration.
-                                    A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
-                                <select id="OutstandingWellRounded4" name="OutstandingWellRounded4" class="form-control select2" style="width: 25%;" required >
-                                    <option value="" {{ is_null($chFinancialReport->award_4_outstanding_well_rounded) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" {{$chFinancialReport->award_4_outstanding_well_rounded === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$chFinancialReport->award_4_outstanding_well_rounded == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            <div><br></div>
-                            <div class="form-group">
-                                <label>Did you communicate with your Coordinator?<span class="field-required">*</span></label><br><p>Did you send in your newsletter regularly? Send updates? Return telephone calls?
-                                    A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
-                                <select id="OutstandingCommunicated4" name="OutstandingCommunicated4" class="form-control select2" style="width: 25%;" required >
-                                    <option value="" {{ is_null($chFinancialReport->award_4_outstanding_communicated) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" {{$chFinancialReport->award_4_outstanding_communicated === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$chFinancialReport->award_4_outstanding_communicated == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            <div><br></div>
-                            <div class="form-group">
-                                <label>Did you support the International MOMS Club?<span class="field-required">*</span></label><br><p>Indications of supporting International MAY include but are not limited to:
-                                    <ul>
-                                        <li>Providing MOMS Club pins to your members</li>
-                                        <li>Purchasing MOMS Club merchandise from International</li>
-                                        <li>Forming sister chapters (when possible)</li>
-                                        <li>Donating to the Mother-to-Mother Fund</li>
-                                        <li>Participating in Area, State and Regional events.</li>
-                                    </ul></p>
-                                <select id="OutstandingSupportMomsClub4" name="OutstandingSupportMomsClub4" class="form-control select2" style="width: 25%;" required >
-                                    <option value="" {{ is_null($chFinancialReport->award_4_outstanding_support_international) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" {{$chFinancialReport->award_4_outstanding_support_international === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$chFinancialReport->award_4_outstanding_support_international == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                            <div>
-                                <div>
+                                <div class="col-md-12" style="margin-left: 10px">
+                                    <div class="form-group row">
                                  <label>Description:</label>
                                  <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
-                                 <div class="form-group">
-                                    <textarea class="form-control" rows="20" id="AwardDesc4" name="AwardDesc4"><?php if (!empty($chFinancialReport)) {echo $chFinancialReport['award_4_outstanding_project_desc'];}?></textarea>
+                                 <div class="col-md-12 row">
+                                    <textarea class="form-control" rows="10" id="AwardDesc4" name="AwardDesc4">{{ $chFinancialReport->award_4_outstanding_project_desc }}</textarea>
                                  </div>
                                 </div>
-                                 <div class="col-md-12" id="Award4Block" <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_4_files']) echo "style=\"display: none;\"";} ?>>
-                                    <div class="col-md-12">
-                                        <strong style="color:red">Please Note</strong><br>
-                                            This will refresh the screen - be sure to save all work before clicking button to Upload Award 4 Files.<br>
-                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award4" ><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 4 Files</button>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="Award1Path" id="Award4Path" value="<?php echo $chFinancialReport['award_4_files']; ?>">
-                                <div class="col-md-12 mar_bot_20" <?php if (!empty($chFinancialReport)) {if (!$chFinancialReport['award_4_files']) echo "style=\"display: none;\"";} ?>>
-                                    <div class="col-md-12" >
-                                        <div>
-                                            <label class="control-label" for="Award4Link">Award 4 Files:</label>
-                                           <a href="<?php echo $chFinancialReport['award_4_files']; ?>" target="_blank">View Award 4 Files</a><br>
-                                            <strong style="color:red">Please Note</strong><br>
-                                            This will refresh the screen - be sure to save all work before clicking button to Replace Award 4 Files.<br>
-                                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-award4" ><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 4 Files</button>
-                                    </div>
-                                    </div>
-                                </div>
-                                <div class="clearfix"></div>
                             </div>
-                        </div>
+                                @if ($chDocuments->award_3_path != null)
+                                    <div class="col-md-12" id="Award4Block">
+                                            <label>Award 4 Files Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chDocuments['award_4_path'] }}">&nbsp; View Award 4 Files</a><br>
+                                            <strong style="color:red">Please Note</strong><br>
+                                                This will refresh the screen - be sure to save all work before clicking button to Replace Award 4 Files.<br>
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="showAward4ploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Award 4 Files</button>
+                                    </div>
+                                @else
+                                    <div class="col-md-12" id="Award4Block">
+                                            <strong style="color:red">Please Note</strong><br>
+                                                This will refresh the screen - be sure to save all work before clicking button to Upload Award 4 Files.<br>
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="showAward4UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Award 4 Files</button>
+                                    </div>
+                                @endif
+                                    <input type="hidden" name="Award4Path" id="Award4Path" value="{{ $chDocuments->award_4_path }}">
+                                    <div class="clearfix"></div>
+                                </div>
                             </div>
                         </div>
                         <!-- Award 4 Stop -->
                         <!-- Award 5 Start -->
-                        <div class="col-12 box_brd_contentpad" id="Award5Panel" style="display: <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_nominations']<5) echo "none;"; else echo "block;";} else echo "none;";?>">
+                        <div class="col-12 box_brd_contentpad" id="Award5Panel" style="display: {{ $chFinancialReport->award_nominations < 5 ? 'none' : 'block' }}">
+                            <div class="col-sm-12"><br><hr></div>
                             <div class="box_brd_title_box">
                                 <div class="col-sm-12"><br></div>
                                 <h4>Award 5</h4>
                                 <div class="col-12 form-group">
                                 <label for="NominationType5">Select list:</label>
                                     <select class="form-control" id="NominationType5" name="NominationType5" onClick="ShowOutstandingCriteria(5)">
-                                       <option style="display:none" disabled selected>Select an award type</option>
-                                       <option value=1 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==1) echo "selected";} ?>>Outstanding Specific Service Project (one project only)</option>
-                                            <option value=2 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==2) echo "selected";} ?>>Outstanding Overall Service Program (multiple projects considered together)</option>
-                                            <option value=3 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==3) echo "selected";} ?>>Outstanding Children's Activity</option>
-                                            <option value=4 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==4) echo "selected";} ?>>Outstanding Spirit (formation of sister chapters)</option>
-                                            <option value=5 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==5) echo "selected";} ?>>Outstanding Chapter (for chapters started before July 1, <?php echo date('Y')-1;?>)</option>
-                                            <option value=6 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==6) echo "selected";} ?>>Outstanding New Chapter (for chapters started after July 1, <?php echo date('Y')-1;?>)</option>
-                                            <option value=7 <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_nomination_type']==7) echo "selected";} ?>>Other Outstanding Award</option>
-                                    </select>
+                                        <option value="">Select an Award Type</option>
+                                        @foreach($allAwards as $awards)
+                                            <option value="{{$awards->id}}"
+                                                @if($chFinancialReport->award_5_nomination_type == $awards->id) selected @endif>
+                                                {{$awards->award_type}} {{$awards->extra}}
+                                            </option>
+                                        @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <div class="award_acc_con">
+                                            <div id="OutstandingCriteria5" style="display: none;">
+                                        <h4>Outstanding Chapter Criteria</h4>
+                                        <div class="col-md-12" style="margin-left: 10px">
+                                        <div class="form-group row">
+                                            <label>Did you follow the Bylaws and all instructions from International?<span class="field-required">*</span></label>
+                                            <div class="col-md-12 row">
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingFollowByLaws5Yes" name="OutstandingFollowByLaws5" value="1" {{ $chFinancialReport->award_5_outstanding_follow_bylaws === 1 ? 'checked' : '' }}>
+                                                    <label class="form-check-label" for="OutstandingFollowByLaws5Yes">Yes</label>
+                                                </div>
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingFollowByLaws5No" name="OutstandingFollowByLaws5" value="0" {{ $chFinancialReport->award_5_outstanding_follow_bylaws === 0 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingFollowByLaws5No">No</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label>Did you run a well-rounded program for your members?<span class="field-required">*</span></label>
+                                            <br>
+                                            <p>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings),
+                                                a variety of outings, playgroups, other activity groups, service projects, parties/member benefits kept under 15% of the dues received -- these are all taken into consideration.
+                                                A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
+                                            <div class="col-md-12 row">
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingWellRounded5Yes" name="OutstandingWellRounded5" value="1" {{ $chFinancialReport->award_5_outstanding_well_rounded === 1 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingWellRounded5Yes">Yes</label>
+                                                </div>
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingWellRounded5No" name="OutstandingWellRounded5" value="0" {{ $chFinancialReport->award_5_outstanding_well_rounded === 0 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingWellRounded5No">No</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label>Did you communicate with your Coordinator?<span class="field-required">*</span></label>
+                                            <br>
+                                            <p>Did you send in your newsletter regularly? Send updates? Return telephone calls?
+                                                A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
+                                            <div class="col-md-12 row">
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingCommunicated5Yes" name="OutstandingCommunicated5" value="1" {{ $chFinancialReport->award_5_outstanding_communicated === 1 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingCommunicated5Yes">Yes</label>
+                                                </div>
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingCommunicated5No" name="OutstandingCommunicated5" value="0" {{ $chFinancialReport->award_5_outstanding_communicated === 0 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingCommunicated5No">No</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label>Did you support the International MOMS Club?<span class="field-required">*</span></label>
+                                            <br>
+                                            <p>Indications of supporting International MAY include but are not limited to:
+                                                <ul>
+                                                    <li>Providing MOMS Club pins to your members</li>
+                                                    <li>Purchasing MOMS Club merchandise from International</li>
+                                                    <li>Forming sister chapters (when possible)</li>
+                                                    <li>Donating to the Mother-to-Mother Fund</li>
+                                                    <li>Participating in Area, State and Regional events.</li>
+                                                </ul></p>
+                                            <div class="col-md-12 row">
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingSupportMomsClub5Yes" name="OutstandingSupportMomsClub5" value="1" {{ $chFinancialReport->award_5_outstanding_support_international === 1 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingSupportMomsClub5Yes">Yes</label>
+                                                </div>
+                                                <div class="form-check" style="margin-left: 20px;">
+                                                    <input class="form-check-input" type="radio" id="OutstandingSupportMomsClub5No" name="OutstandingSupportMomsClub5" value="0" {{ $chFinancialReport->award_5_outstanding_support_international === 0 ? 'checked' : '' }} >
+                                                    <label class="form-check-label" for="OutstandingSupportMomsClub5No">No</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-sm-12">
-                                <div class="award_acc_con">
-                                    <div id="OutstandingCriteria5" style="display: none;">
-                                <h4>Outstanding Chapter Criteria</h4>
-                            <div class="form-group">
-                                <label>Did you follow the Bylaws and all instructions from International?<span class="field-required">*</span></label>
-                                <select id="OutstandingFollowByLaws5" name="OutstandingFollowByLaws5" class="form-control select2" style="width: 25%;" required >
-                                    <option value="" {{ is_null($chFinancialReport->award_5_outstanding_follow_bylaws) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" {{$chFinancialReport->award_5_outstanding_follow_bylaws === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$chFinancialReport->award_5_outstanding_follow_bylaws == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            <div><br></div>
-                            <div class="form-group">
-                                <label>Did you run a well-rounded program for your members?<span class="field-required">*</span></label><br><p>Speakers, discussions, a well-run children’s room (if your chapter has one during meetings),
-                                    a variety of outings, playgroups, other activity groups, service projects, parties/member benefits kept under 15% of the dues received -- these are all taken into consideration.
-                                    A chapter that has lots of activities for its mothers-of-infants, but nothing for the mothers of older children (or vice versa) would not be offering a well-rounded program.</p>
-                                <select id="OutstandingWellRounded5" name="OutstandingWellRounded5" class="form-control select2" style="width: 25%;" required >
-                                    <option value="" {{ is_null($chFinancialReport->award_5_outstanding_well_rounded) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" {{$chFinancialReport->award_5_outstanding_well_rounded === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$chFinancialReport->award_5_outstanding_well_rounded == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            <div><br></div>
-                            <div class="form-group">
-                                <label>Did you communicate with your Coordinator?<span class="field-required">*</span></label><br><p>Did you send in your newsletter regularly? Send updates? Return telephone calls?
-                                    A chapter MUST communicate often and positively with their Coordinator to receive this award.</p>
-                                <select id="OutstandingCommunicated5" name="OutstandingCommunicated5" class="form-control select2" style="width: 25%;" required >
-                                    <option value="" {{ is_null($chFinancialReport->award_5_outstanding_communicated) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" {{$chFinancialReport->award_5_outstanding_communicated === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$chFinancialReport->award_5_outstanding_communicated == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                            <div><br></div>
-                            <div class="form-group">
-                                <label>Did you support the International MOMS Club?<span class="field-required">*</span></label><br><p>Indications of supporting International MAY include but are not limited to:
-                                    <ul>
-                                        <li>Providing MOMS Club pins to your members</li>
-                                        <li>Purchasing MOMS Club merchandise from International</li>
-                                        <li>Forming sister chapters (when possible)</li>
-                                        <li>Donating to the Mother-to-Mother Fund</li>
-                                        <li>Participating in Area, State and Regional events.</li>
-                                    </ul></p>
-                                <select id="OutstandingSupportMomsClub5" name="OutstandingSupportMomsClub5" class="form-control select2" style="width: 25%;" required >
-                                    <option value="" {{ is_null($chFinancialReport->award_5_outstanding_support_international) ? 'selected' : ''}} disabled>Please Select</option>
-                                    <option value="0" {{$chFinancialReport->award_5_outstanding_support_international === 0 ? 'selected' : ''}}>No</option>
-                                    <option value="1" {{$chFinancialReport->award_5_outstanding_support_international == 1 ? 'selected' : ''}}>Yes</option>
-                                </select>
-                            </div>
-                        </div>
-                            <div>
-                                <div>
+                                <div class="col-md-12" style="margin-left: 10px">
+                                    <div class="form-group row">
                                  <label>Description:</label>
                                  <p>Please include a written description of your project/activities. Be sure to give enough information so that someone who is not familiar with your project or activity can see how wonderful it was! You may also attach any related photos or newspaper clippings. You may be contacted for more information, if necessary.</p>
-                                 <div class="form-group">
-                                    <textarea class="form-control" rows="20" id="AwardDesc5" name="AwardDesc5"><?php if (!empty($chFinancialReport)) {echo $chFinancialReport['award_5_outstanding_project_desc'];}?></textarea>
+                                 <div class="col-md-12 row">
+                                    <textarea class="form-control" rows="10" id="AwardDesc5" name="AwardDesc5">{{ $chFinancialReport->award_5_outstanding_project_desc }}</textarea>
                                  </div>
                                 </div>
-                                 <div class="col-md-12" id="Award5Block" <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_5_files']) echo "style=\"display: none;\"";} ?>>
-                                    <div class="col-md-12">
-                                        <strong style="color:red">Please Note</strong><br>
-                                            This will refresh the screen - be sure to save all work before clicking button to Upload Award 5 Files.<br>
-                                        <button type="button" class="btn btn-themeBlue margin" data-toggle="modal" data-target="#modal-award5" ><i class="fa fa-upload fa-fw" aria-hidden="true" ></i>&nbsp; Upload Award 5 Files</button>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="Award5Path" id="Award5Path" value="<?php echo $chFinancialReport['award_5_files']; ?>">
-                                <div class="col-md-12 mar_bot_20" <?php if (!empty($chFinancialReport)) {if (!$chFinancialReport['award_5_files']) echo "style=\"display: none;\"";} ?>>
-                                    <div class="col-md-12" >
-                                        <div>
-                                            <label class="control-label" for="Award5Link">Award 1 Files:</label>
-                                           <a href="<?php echo $chFinancialReport['award_5_files']; ?>" target="_blank">View Award 5 Files</a><br>
+                            </div>
+                                @if ($chDocuments->award_3_path != null)
+                                    <div class="col-md-12" id="Award5Block">
+                                            <label>Award 5 Files Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chDocuments['award_5_path'] }}">&nbsp; View Award 5 Files</a><br>
                                             <strong style="color:red">Please Note</strong><br>
-                                            This will refresh the screen - be sure to save all work before clicking button to Replace Award 5 Files.<br>
-                                           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-award5" ><i class="fa fa-refresh fa-fw" aria-hidden="true" ></i>&nbsp; Replace Award 5 Files</button>
+                                                This will refresh the screen - be sure to save all work before clicking button to Replace Award 5 Files.<br>
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="showAward5ploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Award 5 Files</button>
                                     </div>
+                                @else
+                                    <div class="col-md-12" id="Award5Block">
+                                            <strong style="color:red">Please Note</strong><br>
+                                                This will refresh the screen - be sure to save all work before clicking button to Upload Award 5 Files.<br>
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="showAward5UploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Award 5 Files</button>
                                     </div>
+                                @endif
+                                    <input type="hidden" name="Award5Path" id="Award5Path" value="{{ $chDocuments->award_5_path }}">
+                                    <div class="clearfix"></div>
                                 </div>
-                                <div class="clearfix"></div>
                             </div>
                         </div>
-                            </div>
-                        </div>
-                        <!-- Award 5 Stop -->
+                        <!-- Award 5 Stop --> --}}
 
-                        <div class="box_brd_contentpad" id="AwardSignatureBlock" style="display: <?php if (!empty($chFinancialReport)) {if ($chFinancialReport['award_nominations']<1) echo "none;"; else echo "block;";} else echo "none;";?>">
-                              <div class="box_brd_title_box">
+
+                        <div class="box_brd_contentpad" id="AwardSignatureBlock" style="display: {{ (isset($chapter_awards) &&
+                            collect($chapter_awards)->contains('awards_type', '!=', null)) ? 'block' : 'none' }}">
+                            <div class="box_brd_title_box">
+
+                                @if ($chDocuments->award_path != null)
+                                <div class="col-md-12" id="AwardBlock">
+                                        <label>Award Files Uploaded:</label><a href="https://drive.google.com/uc?export=download&id={{ $chDocuments['award_path'] }}">&nbsp; View Award Files</a><br>
+                                        <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Replace Award Files.<br>
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="showAwardploadModal()"><i class="fas fa-upload"></i>&nbsp; Replace Award Files</button>
+                                </div>
+                            @else
+                                <div class="col-md-12" id="AwardBlock">
+                                        <strong style="color:red">Please Note</strong><br>
+                                            This will refresh the screen - be sure to save all work before clicking button to Upload Award Files.<br>
+                                        <button type="button" class="btn btn-sm btn-primary" onclick="showAwardUploadModal()"><i class="fas fa-upload"></i>&nbsp; Upload Award Files</button>
+                                </div>
+                            @endif
+                                <input type="hidden" name="AwardPath" id="AwardPath" value="{{ $chDocuments->award_path }}">
+
                                 <div class="col-sm-12"><br></div>
+
                                  <label>ALL ENTRIES MUST INCLUDE THIS SIGNED AGREEMENT</label>
-                              </div>
                                 <div class="award_acc_con form-check">
                                     <p>I, the undersigned, affirm that I have the right to submit the enclosed entry to the International MOMS Club for consideration in their Outstanding Chapter Recognitions,
                                         that the enclosed information is accurate and complete to the best of my ability and that I have received permission to enter this information from any other members
@@ -3376,6 +3680,7 @@
                     <div class="card-body text-center">
                              <button type="button" id="btn-step-13" class="btn btn-primary" ><i class="fas fa-save" ></i>&nbsp; Save</button>
                     </div>
+                </div>
                      </section>
                     </div><!-- end of accordion body -->
                 </div><!-- end of accordion item -->
@@ -4283,6 +4588,81 @@ document.querySelectorAll('.input-field-selector').forEach(function(element) {
         }
     }
 
+    function AddChapterAwardsRow() {
+    // Get row count and add new table row
+    var rowCount = document.getElementById("ChapterAwardsRowCount").value;
+    var table = document.getElementById("awards");
+    var row = table.insertRow(-1);
+
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+
+    // Get the options from an existing select element
+    var existingSelect = document.getElementById("ChapterAwardsType0");
+    var options = Array.from(existingSelect.options).map(opt => {
+        return `<option value="${opt.value}">${opt.text}</option>`;
+    }).join('');
+
+    // Create the table cells
+    cell1.innerHTML = `
+        <div class="form-group">
+            <select class="form-control"
+                    name="ChapterAwardsType${rowCount}"
+                    id="ChapterAwardsType${rowCount}"
+                    onchange="toggleOutstandingCriteria(${rowCount})">
+                ${options}
+            </select>
+        </div>`;
+
+    cell2.innerHTML = `
+        <div class="form-group">
+            <textarea class="form-control"
+                      rows="2"
+                      name="ChapterAwardsDesc${rowCount}"
+                      id="ChapterAwardsDesc${rowCount}"></textarea>
+        </div>`;
+
+    // Create new Outstanding Criteria section
+    var criteriaContainer = document.createElement('div');
+    criteriaContainer.id = `OutstandingCriteria${rowCount}`;
+    criteriaContainer.className = 'mt-3';
+    criteriaContainer.style.display = 'none';
+
+    // Copy the content from the first criteria section
+    var originalCriteria = document.getElementById('OutstandingCriteria0');
+    criteriaContainer.innerHTML = originalCriteria.innerHTML.replace(/2/g, rowCount); // Replace all "2" with new row number
+
+    // Find where to insert the new criteria section
+    var lastCriteria = document.getElementById(`OutstandingCriteria${rowCount-1}`);
+    if (lastCriteria) {
+        lastCriteria.parentNode.insertBefore(criteriaContainer, lastCriteria.nextSibling);
+    }
+
+    rowCount++;
+    document.getElementById('ChapterAwardsRowCount').value = rowCount;
+}
+
+function DeleteChapterAwardsRow() {
+    var table = document.getElementById("awards");
+    var rowCount = document.getElementById("ChapterAwardsRowCount").value;
+
+    if (rowCount > 1) {  // Keep at least one row
+        table.deleteRow(-1);
+
+        // Remove the corresponding criteria section
+        var criteriaToRemove = document.getElementById(`OutstandingCriteria${rowCount-1}`);
+        if (criteriaToRemove) {
+            criteriaToRemove.remove();
+        }
+
+        rowCount--;
+        document.getElementById('ChapterAwardsRowCount').value = rowCount;
+
+        // Update displays
+        toggleAwardBlocks();
+    }
+}
+
     function TreasuryBalanceChange() {
         var TreasuryBalance = parseFloat(document.getElementById("AmountReservedFromLastYear").value.replace(/,/g, '')) || 0;
         document.getElementById("AmountReservedFromLastYear").value = TreasuryBalance.toFixed(2);
@@ -4518,6 +4898,8 @@ document.addEventListener("DOMContentLoaded", function() {
     TogglePlaygroupsExplanation();
     ToggleParkDaysExplanation();
     ToggleSisterChapterExplanation();
+    toggleOutstandingCriteria(row);
+    toggleAwardBlocks();
 });
 
     function ToggleReceiveCompensationExplanation() {
@@ -4770,6 +5152,41 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("WheresTheMoney").style.display = 'none'; // If "Yes" is selected
         }
     }
+
+    function toggleOutstandingCriteria(row) {
+    const selectElement = document.getElementById(`ChapterAwardsType${row}`);
+    const criteriaDiv = document.getElementById(`OutstandingCriteria${row}`);
+
+    if (selectElement && criteriaDiv) {
+        if (selectElement.value == '5' || selectElement.value == '6') {
+            criteriaDiv.style.display = 'block';
+        } else {
+            criteriaDiv.style.display = 'none';
+        }
+    }
+
+    toggleAwardBlocks();
+}
+
+function toggleAwardBlocks() {
+    const awardSignatureBlock = document.getElementById('AwardSignatureBlock');
+    const rowCount = parseInt(document.getElementById('ChapterAwardsRowCount').value);
+    let hasSelectedAward = false;
+
+    // Check if any award type is selected
+    for(let i = 0; i < rowCount; i++) {
+        const select = document.getElementById(`ChapterAwardsType${i}`);
+        if(select && select.value) {
+            hasSelectedAward = true;
+            break;
+        }
+    }
+
+    // Show/hide the signature block
+    if (awardSignatureBlock) {
+        awardSignatureBlock.style.display = hasSelectedAward ? 'block' : 'none';
+    }
+}
 
     function AddAwardNomination(){
         // Did they say no, if so, we need to mark the explanation field as required

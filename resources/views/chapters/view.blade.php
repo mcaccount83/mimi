@@ -455,10 +455,8 @@
                                     @endif
                             </div>
 
-
-
                         @else
-                        <h3><strong>{{ (date('Y') - 1) . '-' . date('Y') }} Report Status/Links are not available at this time.</strong></h3>
+                            <strong>Report Status/Links are not available at this time.</strong>
                         @endif
                         <br><br>
                     </div>
@@ -601,7 +599,9 @@
                         <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.editboard', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update Board Information</button>
                 @endif
                 @if($regionalCoordinatorCondition)
-                    <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update EOY Information</button>
+                    @if ($eoyReportConditionDISABLED || ($eoyReportCondition && $eoyTestCondition && $testers_yes) || ($eoyReportCondition && $coordinators_yes))
+                        <button type="button" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('eoyreports.view', ['id' => $chDetails->id]) }}'"><i class="fas fa-edit mr-2"></i>Update EOY Information</button>
+                    @endif
                 @endif
                 @if($conferenceCoordinatorCondition)
                     <br>

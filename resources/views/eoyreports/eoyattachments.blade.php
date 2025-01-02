@@ -83,12 +83,18 @@
                 </table>
             </div>
             <!-- /.card-body -->
-                <div class="col-sm-12">
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
-                        <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
-                    </div>
+            <div class="col-sm-12">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
+                    <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
                 </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" name="showReviewer" id="showReviewer" class="custom-control-input" {{$checkBox2Status}} onchange="showReviewer()" />
+                    <label class="custom-control-label" for="showReviewer">Only show chapters I am Assigned Reviewer for</label>
+                </div>
+            </div>
                 <div class="card-body text-center">
            </div>
           <!-- /.box -->
@@ -119,6 +125,16 @@ function showPrimary() {
 
     if ($("#showPrimary").prop("checked") == true) {
         window.location.href = base_url + '?check=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
+
+function showReviewer() {
+    var base_url = '{{ url("/eoy/attachments") }}';
+
+    if ($("#showReviewer").prop("checked") == true) {
+        window.location.href = base_url + '?check2=yes';
     } else {
         window.location.href = base_url;
     }

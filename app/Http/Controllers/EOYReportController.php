@@ -10,6 +10,7 @@ use App\Models\Chapters;
 use App\Models\Documents;
 use App\Models\State;
 use App\Models\FinancialReport;
+use App\Models\FinancialReportAwards;
 use App\Models\User;
 use App\Models\Website;
 use App\Models\Coordinators;
@@ -103,6 +104,8 @@ class EOYReportController extends Controller
         $reviewComplete = $chDetails->documents->review_complete;
         $chFinancialReport = $chDetails->financialReport;
 
+        $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
+
         $boards = $chDetails->boards()->with('stateName')->get();
         $bdDetails = $boards->groupBy('board_position_id');
         $defaultBoardMember = (object)['id' => null, 'first_name' => '', 'last_name' => '', 'email' => '', 'street_address' => '', 'city' => '', 'zip' => '', 'phone' => '', 'state' => '', 'user_id' => ''];
@@ -124,7 +127,7 @@ class EOYReportController extends Controller
 
         return ['chDetails' => $chDetails, 'chIsActive' => $chIsActive, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName,
             'conferenceDescription' => $conferenceDescription, 'chConfId' => $chConfId, 'chRegId' => $chRegId, 'chPcId' => $chPcId,
-            'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport,
+            'chDocuments' => $chDocuments, 'reviewComplete' => $reviewComplete, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
             'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'rrDetails' => $rrDetails, 'submitted' => $submitted
         ];
@@ -149,9 +152,10 @@ class EOYReportController extends Controller
         $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
+        $checkBox2Status = $baseQuery['checkBox2Status'];
 
         $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
 
         return view('eoyreports.eoystatus')->with($data);
     }
@@ -161,35 +165,31 @@ class EOYReportController extends Controller
      */
     public function sendEOYStatusReminder(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        //Get Chapter List mapped with login coordinator
-        $chapters = Chapters::select('chapters.*', 'chapters.name as name', 'state.state_short_name as state',
-            'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month', )
-            ->join('state', 'chapters.state_id', '=', 'state.id')
-            ->join('financial_report', 'chapters.id', '=', 'financial_report.chapter_id')
-            ->where('financial_report.reviewer_id', null)
-            ->where(function ($query) {
-                $query->where('chapters.report_extension', '=', '0')
-                    ->orWhereNull('chapters.report_extension');
-            })->where('chapters.conference_id', $corConfId)
-            ->where(function ($query) {
-                $query->where('chapters.new_board_submitted', '=', '0')
-                    ->orWhereNull('chapters.new_board_submitted')
-                    ->orwhere('chapters.financial_report_received', '=', '0')
-                    ->orWhereNull('chapters.financial_report_received');
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
+        $cdSecPositionid = $cdDetails->sec_position_id;
+
+        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $chapterList = $baseQuery['query']
+            ->whereHas('documents', function ($query) {
+                $query->where('report_extension', '0')
+                    ->orWhereNull('report_extension');
             })
-            ->where(function ($query) {
-                $query->where('created_at', '<=', date('Y-06-30'))
-                    ->orWhereNull('created_at');
+            ->whereHas('documents', function ($query) {
+                $query->where('new_board_submitted', '0')
+                    ->orWhereNull('new_board_submitted')
+                    ->orWhere('financial_report_received', '0')
+                    ->orWhereNull('financial_report_received');
             })
-            ->where('chapters.is_active', 1)
             ->get();
 
-        if ($chapters->isEmpty()) {
+        if ($chapterList->isEmpty()) {
             return redirect()->back()->with('info', 'There are no Chapters with Reports Due.');
         }
 
@@ -198,7 +198,7 @@ class EOYReportController extends Controller
         $coordinatorEmails = [];
         $mailData = [];
 
-        foreach ($chapters as $chapter) {
+        foreach ($chapterList as $chapter) {
             $chapterIds[] = $chapter->id;
 
             if ($chapter->name) {
@@ -210,15 +210,16 @@ class EOYReportController extends Controller
                 $coordinatorEmails[$chapter->name] = $emailListCoord;
             }
 
-            $chapterState = $chapter->state;
+            $stateShortName = $chapter->state->state_short_name;
+            $chDocuments = $chapter->documents;
 
             $mailData[$chapter->name] = [
                 'chapterName' => $chapter->name,
-                'chapterState' => $chapterState,
-                'boardElectionReportReceived' => $chapter->new_board_submitted,
-                'financialReportReceived' => $chapter->financial_report_received,
-                '990NSubmissionReceived' => $chapter->financial_report_received,
-                'einLetterCopyReceived' => $chapter->ein_letter_path,
+                'chapterState' => $stateShortName,
+                'boardElectionReportReceived' => $chDocuments->new_board_submitted,
+                'financialReportReceived' => $chDocuments->financial_report_received,
+                '990NSubmissionReceived' => $chDocuments->financial_report_received,
+                'einLetterCopyReceived' => $chDocuments->ein_letter_path,
             ];
         }
 
@@ -236,11 +237,8 @@ class EOYReportController extends Controller
         try {
             DB::commit();
         } catch (\Exception $e) {
-            // Rollback Transaction
-            echo $e->getMessage();
-            exit();
-            // Log the error
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
@@ -248,6 +246,7 @@ class EOYReportController extends Controller
         return redirect()->to('/eoy/status')->with('success', 'EOY Late Notices have been successfully sent.');
 
     }
+
 
      /**
      * Edit the EOY Status Details
@@ -271,11 +270,13 @@ class EOYReportController extends Controller
         $chIsActive = $baseQuery['chIsActive'];
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
+        $chDocuments = $baseQuery['chDocuments'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $allAwards = $baseQuery['allAwards'];
         $reviewComplete = $baseQuery['reviewComplete'];
         $rrDetails = $baseQuery['rrDetails'];
 
-        $data = ['cdId' => $cdId, 'cdPositionid' => $cdPositionid, 'cdConfId' => $cdConfId,
+        $data = ['cdId' => $cdId, 'cdPositionid' => $cdPositionid, 'cdConfId' => $cdConfId, 'allAwards' => $allAwards, 'chDocuments' => $chDocuments,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
             'chIsActive' => $chIsActive, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
             'reviewComplete' => $reviewComplete,  'rrDetails' => $rrDetails,
@@ -367,6 +368,7 @@ class EOYReportController extends Controller
         $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
         $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
+        $checkBox2Status = $baseQuery['checkBox2Status'];
 
         $row_count = count($chapterList);
 
@@ -391,7 +393,7 @@ class EOYReportController extends Controller
         }
 
         $countList = count($chapterList);
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus];
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
 
         return view('eoyreports.eoyboardreport')->with($data);
     }
@@ -401,30 +403,30 @@ class EOYReportController extends Controller
      */
     public function sendEOYBoardReportReminder(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        //Get Chapter List mapped with login coordinator
-        $chapters = Chapters::select('chapters.*', 'chapters.name as name', 'state.state_short_name as state',
-            'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month',
-        )
-            ->join('state', 'chapters.state_id', '=', 'state.id')
-            ->where('chapters.conference_id', $corConfId)
-            ->where('chapters.is_active', 1)
-            ->where(function ($query) {
-                $query->where('chapters.new_board_submitted', '=', '0')
-                    ->orWhereNull('chapters.new_board_submitted');
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
+        $cdSecPositionid = $cdDetails->sec_position_id;
+
+        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $chapterList = $baseQuery['query']
+            ->whereHas('documents', function ($query) {
+                $query->where('report_extension', '0')
+                    ->orWhereNull('report_extension');
             })
-            ->where(function ($query) {
-                $query->where('created_at', '<=', date('Y-06-30'))
-                    ->orWhereNull('created_at');
+            ->whereHas('documents', function ($query) {
+                $query->where('new_board_submitted', '0')
+                    ->orWhereNull('new_board_submitted');
             })
             ->get();
 
-        if ($chapters->isEmpty()) {
-            return redirect()->back()->with('info', 'There are no Chapters with Board Reports Due.');
+            if ($chapterList->isEmpty()) {
+                return redirect()->back()->with('info', 'There are no Chapters with Board Reports Due.');
         }
 
         $chapterIds = [];
@@ -432,7 +434,7 @@ class EOYReportController extends Controller
         $coordinatorEmails = [];
         $mailData = [];
 
-        foreach ($chapters as $chapter) {
+        foreach ($chapterList as $chapter) {
             $chapterIds[] = $chapter->id;
 
             if ($chapter->name) {
@@ -444,11 +446,12 @@ class EOYReportController extends Controller
                 $coordinatorEmails[$chapter->name] = $emailListCoord;
             }
 
-            $chapterState = $chapter->state;
+            $stateShortName = $chapter->state->state_short_name;
+            $chDocuments = $chapter->documents;
 
             $mailData[$chapter->name] = [
                 'chapterName' => $chapter->name,
-                'chapterState' => $chapterState,
+                'chapterState' => $stateShortName,
             ];
         }
 
@@ -466,11 +469,8 @@ class EOYReportController extends Controller
         try {
             DB::commit();
         } catch (\Exception $e) {
-            // Rollback Transaction
-            echo $e->getMessage();
-            exit();
-            // Log the error
-            Log::error($e);
+                DB::rollback();  // Rollback Transaction
+                Log::error($e);  // Log the error
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
@@ -927,10 +927,8 @@ class EOYReportController extends Controller
             }
             DB::commit();
         } catch (\Exception $e) {
-            // Rollback Transaction
-            DB::rollback();
-            // Log the error
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
@@ -968,35 +966,30 @@ class EOYReportController extends Controller
      */
     public function sendEOYFinancialReportReminder(Request $request): RedirectResponse
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corName = $corDetails['first_name'].' '.$corDetails['last_name'];
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        // Get Chapter List mapped with login coordinator
-        $chapters = Chapters::select('chapters.*', 'chapters.name as name', 'state.state_short_name as state',
-            'chapters.primary_coordinator_id as pcid', 'chapters.email as ch_email', 'chapters.start_month_id as start_month', )
-            ->join('state', 'chapters.state_id', '=', 'state.id')
-            ->join('financial_report', 'chapters.id', '=', 'financial_report.chapter_id')
-            ->where('financial_report.reviewer_id', null)
-            ->where('chapters.conference_id', $corConfId)
-            ->where('chapters.is_active', 1)
-            ->where(function ($query) {
-                $query->where('chapters.report_extension', '=', '0')
-                    ->orWhereNull('chapters.report_extension');
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
+        $cdSecPositionid = $cdDetails->sec_position_id;
+
+        $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $chapterList = $baseQuery['query']
+            ->whereHas('documents', function ($query) {
+                $query->where('report_extension', '0')
+                    ->orWhereNull('report_extension');
             })
-            ->where(function ($query) {
-                $query->where('chapters.financial_report_received', '=', '0')
-                    ->orWhereNull('chapters.financial_report_received');
-            })
-            ->where(function ($query) {
-                $query->where('created_at', '<=', date('Y-06-30'))
-                    ->orWhereNull('created_at');
+            ->whereHas('documents', function ($query) {
+                $query->where('financial_report_received', '0')
+                    ->orWhereNull('financial_report_received');
             })
             ->get();
 
-        if ($chapters->isEmpty()) {
-            return redirect()->back()->with('info', 'There are no Chapters with Financial Reports Due.');
+            if ($chapterList->isEmpty()) {
+                return redirect()->back()->with('info', 'There are no Chapters with Financial Reports Due.');
         }
 
         $chapterIds = [];
@@ -1004,7 +997,7 @@ class EOYReportController extends Controller
         $coordinatorEmails = [];
         $mailData = [];
 
-        foreach ($chapters as $chapter) {
+        foreach ($chapterList as $chapter) {
             $chapterIds[] = $chapter->id;
 
             if ($chapter->name) {
@@ -1016,11 +1009,12 @@ class EOYReportController extends Controller
                 $coordinatorEmails[$chapter->name] = $emailListCoord;
             }
 
-            $chapterState = $chapter->state;
+            $stateShortName = $chapter->state->state_short_name;
+            $chDocuments = $chapter->documents;
 
             $mailData[$chapter->name] = [
                 'chapterName' => $chapter->name,
-                'chapterState' => $chapterState,
+                'chapterState' => $stateShortName,
             ];
         }
 
@@ -1037,11 +1031,8 @@ class EOYReportController extends Controller
         try {
             DB::commit();
         } catch (\Exception $e) {
-            // Rollback Transaction
-            echo $e->getMessage();
-            exit();
-            // Log the error
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
@@ -1068,11 +1059,14 @@ class EOYReportController extends Controller
         $regionLongName = $baseQuery['regionLongName'];
         $conferenceDescription = $baseQuery['conferenceDescription'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $chDocuments = $baseQuery['chDocuments'];
+        $allAwards = $baseQuery['allAwards'];
         $submitted = $baseQuery['submitted'];
         $rrDetails = $baseQuery['rrDetails'];
 
         $data = ['chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-           'chFinancialReport' => $chFinancialReport, 'loggedInName'=> $loggedInName, 'rrDetails' => $rrDetails, 'submitted' => $submitted
+           'chFinancialReport' => $chFinancialReport, 'loggedInName'=> $loggedInName, 'rrDetails' => $rrDetails, 'submitted' => $submitted, 'allAwards' => $allAwards,
+           'chDocuments' => $chDocuments
         ];
 
         return view('eoyreports.reviewfinancialreport')->with($data);
@@ -1202,17 +1196,16 @@ class EOYReportController extends Controller
             $financialReport->check_current_990N_included = $check_current_990N_included;
             $financialReport->check_total_income_less = $check_total_income_less;
             $financialReport->check_sistered_another_chapter = $check_sistered_another_chapter;
-            $financialReport->check_award_1_approved = $check_award_1_approved;
-            $financialReport->check_award_2_approved = $check_award_2_approved;
-            $financialReport->check_award_3_approved = $check_award_3_approved;
-            $financialReport->check_award_4_approved = $check_award_4_approved;
-            $financialReport->check_award_5_approved = $check_award_5_approved;
+            // $financialReport->check_award_1_approved = $check_award_1_approved;
+            // $financialReport->check_award_2_approved = $check_award_2_approved;
+            // $financialReport->check_award_3_approved = $check_award_3_approved;
+            // $financialReport->check_award_4_approved = $check_award_4_approved;
+            // $financialReport->check_award_5_approved = $check_award_5_approved;
             $financialReport->farthest_step_visited_coord = $farthest_step_visited_coord;
             if ($submitType == 'review_complete') {
                 $financialReport->review_complete = date('Y-m-d H:i:s');
             }
 
-            // $to_email = $reviewerEmail;  // Send email to new Assigned Reviewer
             $mailData = [
                 'chapterid' => $id,
                 'chapter_name' => $chDetails->name,
@@ -1295,11 +1288,8 @@ class EOYReportController extends Controller
 
             DB::commit();
         } catch (\Exception $e) {
-            // Rollback Transaction
-            DB::rollback();
-
-            // Log the error
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
@@ -1339,11 +1329,8 @@ class EOYReportController extends Controller
 
             DB::commit();
         } catch (\Exception $e) {
-            // Rollback Transaction
-            DB::rollback();
-
-            // Log the error
-            Log::error($e);
+            DB::rollback();  // Rollback Transaction
+            Log::error($e);  // Log the error
 
             return redirect()->back()->with('fail', 'Something went wrong, Please try again.');
         }
@@ -1551,28 +1538,26 @@ class EOYReportController extends Controller
         $cdSecPositionid = $cdDetails->sec_position_id;
 
         $baseQuery = $this->getBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
-        $chapterList = $baseQuery['query']
-            ->with(['financialReport' => function($query) {
-                    $query->with(['awardType1', 'awardType2', 'awardType3', 'awardType4', 'awardType5']);
-                }])
-            ->whereHas('financialReport', function($query) {
-                $query->whereNotNull('award_1_nomination_type')
-                    ->orWhereNotNull('award_2_nomination_type')
-                    ->orWhereNotNull('award_3_nomination_type')
-                    ->orWhereNotNull('award_4_nomination_type')
-                    ->orWhereNotNull('award_5_nomination_type');
-                })
-            ->where(function ($query) {
-                $query->where('created_at', '<=', date('Y-06-30'))
-                    ->orWhereNull('created_at');
-                })
-            ->get();
+        $chapterList = $baseQuery['query']->get();
         $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox2Status = $baseQuery['checkBox2Status'];
 
-        $countList = count($chapterList);
+        $allAwards = FinancialReportAwards::all();
 
-        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status];
+        $maxAwards = 0;
+        foreach($chapterList as $list) {
+            if (isset($list->financialReport->chapter_awards)) {
+                $awards = unserialize(base64_decode($list->financialReport->chapter_awards));
+                if ($awards) {
+                    $maxAwards = max($maxAwards, count($awards));
+                }
+            }
+        }
+
+        $countList = count($chapterList);
+        $data = ['countList' => $countList, 'chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox2Status' => $checkBox2Status,
+            'allAwards' => $allAwards, 'maxAwards' => $maxAwards,
+        ];
 
         return view('eoyreports.eoyawards', $data);
     }
@@ -1600,10 +1585,11 @@ class EOYReportController extends Controller
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $allAwards = $baseQuery['allAwards'];
 
         $data = ['cdId' => $cdId, 'cdPositionid' => $cdPositionid, 'cdConfId' => $cdConfId,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'conferenceDescription' => $conferenceDescription,
-            'chIsActive' => $chIsActive, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport,
+            'chIsActive' => $chIsActive, 'chConfId' => $chConfId, 'chPcId' => $chPcId, 'chFinancialReport' => $chFinancialReport, 'allAwards' => $allAwards,
         ];
 
         return view('eoyreports.editawards')->with($data);
@@ -1621,6 +1607,16 @@ class EOYReportController extends Controller
         $cdId = $cdDetails->id;
         $lastUpdatedBy = $cdDetails->first_name.' '.$cdDetails->last_name;
 
+        $input = $request->all();
+        $ChapterAwards = null;
+            $FieldCount = $input['ChapterAwardsRowCount'];
+            for ($i = 0; $i < $FieldCount; $i++) {
+                $ChapterAwards[$i]['awards_type'] = $input['ChapterAwardsType'.$i] ?? null;
+                $ChapterAwards[$i]['awards_desc'] = $input['ChapterAwardsDesc'.$i] ?? null;
+                $ChapterAwards[$i]['awards_approved'] = $input['ChapterAwardsApproved'.$i] ?? null;
+            }
+            $chapter_awards = base64_encode(serialize($ChapterAwards));
+
         $chapter = Chapters::find($id);
         $financialReport = FinancialReport::find($id);
 
@@ -1630,22 +1626,7 @@ class EOYReportController extends Controller
             $chapter->last_updated_date = date('Y-m-d H:i:s');
             $chapter->save();
 
-            $financialReport->award_1_nomination_type = $request->input('checkNominationType1');
-            $financialReport->award_1_outstanding_project_desc = $request->input('AwardDesc1');
-            $financialReport->check_award_1_approved = (int) $request->has('checkAward1Approved');
-            $financialReport->award_2_nomination_type = $request->input('checkNominationType2');
-            $financialReport->award_2_outstanding_project_desc = $request->input('AwardDesc2');
-            $financialReport->check_award_2_approved = (int) $request->has('checkAward2Approved');
-            $financialReport->award_3_nomination_type = $request->input('checkNominationType3');
-            $financialReport->award_3_outstanding_project_desc = $request->input('AwardDesc3');
-            $financialReport->check_award_3_approved = (int) $request->has('checkAward3Approved');
-            $financialReport->award_4_nomination_type = $request->input('checkNominationType4');
-            $financialReport->award_4_outstanding_project_desc = $request->input('AwardDesc4');
-            $financialReport->check_award_4_approved = (int) $request->has('checkAward4Approved');
-            $financialReport->award_5_nomination_type = $request->input('checkNominationType5');
-            $financialReport->award_5_outstanding_project_desc = $request->input('AwardDesc5');
-            $financialReport->check_award_5_approved = (int) $request->has('checkAward5Approved');
-
+            $financialReport->chapter_awards = $chapter_awards;
             $financialReport->save();
 
             DB::commit();

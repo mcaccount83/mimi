@@ -21,11 +21,14 @@ use App\Models\Website;
 use App\Models\State;
 use App\Models\Documents;
 use App\Models\FinancialReport;
+use App\Models\FinancialReportAwards;
 use App\Models\FolderRecord;
 use App\Models\User;
 use App\Models\Resources;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\PDFController;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -42,12 +45,14 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 class BoardController extends Controller
 {
     protected $userController;
+    protected $pdfController;
 
-    public function __construct(UserController $userController)
+    public function __construct(UserController $userController, PDFController $pdfController)
     {
         $this->middleware('auth')->except('logout');
         $this->middleware(\App\Http\Middleware\EnsureUserIsActiveAndBoard::class);
         $this->userController = $userController;
+        $this->pdfController = $pdfController;  // Note the consistent naming
     }
 
     /**
@@ -100,12 +105,15 @@ class BoardController extends Controller
 
         $allWebLinks = Website::all(); // Full List for Dropdown Menu
         $allStates = State::all();  // Full List for Dropdown Menu
+        $allAwards = FinancialReportAwards::all();  // Full List for Dropdown Menu
 
         $chDocuments = $chDetails->documents;
         $submitted = $chDocuments->financial_report_received;
         $reviewComplete = $chDetails->documents->review_complete;
-        $chFinancialReport = $chDetails->financialReport;
         $reviewerEmail = $chDetails->reportReviewer->email;
+        $chFinancialReport = $chDetails->financialReport;
+
+        $awards = $chDetails->financialReport;
 
         $boards = $chDetails->boards()->with(['stateName', 'position'])->get();
         $bdDetails = $boards->groupBy('board_position_id');
@@ -132,7 +140,7 @@ class BoardController extends Controller
             'chFinancialReport' => $chFinancialReport, 'startMonthName' => $startMonthName, 'chDocuments' => $chDocuments, 'submitted' => $submitted,
             'PresDetails' => $PresDetails, 'AVPDetails' => $AVPDetails, 'MVPDetails' => $MVPDetails, 'TRSDetails' => $TRSDetails, 'SECDetails' => $SECDetails,
             'allWebLinks' => $allWebLinks, 'allStates' => $allStates, 'emailListChap' => $emailListChap, 'emailListCoord' => $emailListCoord, 'emailCC' => $emailCC,
-            'reviewerEmail' => $reviewerEmail
+            'reviewerEmail' => $reviewerEmail, 'awards' => $awards, 'allAwards' => $allAwards
         ];
 
     }
@@ -1622,11 +1630,14 @@ class BoardController extends Controller
         $chDocuments = $baseQuery['chDocuments'];
         $submitted = $baseQuery['submitted'];
         $chFinancialReport = $baseQuery['chFinancialReport'];
+        $awards = $baseQuery['awards'];
+        $allAwards = $baseQuery['allAwards'];
 
         $resources = Resources::with('categoryName')->get();
 
         $data = ['chFinancialReport' => $chFinancialReport, 'loggedInName' => $loggedInName, 'submitted' => $submitted, 'chDetails' => $chDetails, 'user_type' => $user_type,
-            'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName
+            'userName' => $userName, 'userEmail' => $userEmail, 'resources' => $resources, 'chDocuments' => $chDocuments, 'stateShortName' => $stateShortName,
+            'awards' => $awards, 'allAwards' => $allAwards,
         ];
 
         return view('boards.financial')->with($data);
@@ -1653,7 +1664,6 @@ class BoardController extends Controller
         $input = $request->all();
         $farthest_step_visited = $input['FurthestStep'];
         $reportReceived = $input['submitted'];
-
 
         $baseQuery = $this->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -1746,7 +1756,6 @@ class BoardController extends Controller
             $OfficeOtherArray[$i]['office_other_desc'] = $input['OfficeDesc'.$i] ?? null;
             $OfficeOtherArray[$i]['office_other_expense'] = $input['OfficeExpenses'.$i] ?? null;
         }
-
         $office_other_expenses = base64_encode(serialize($OfficeOtherArray));
 
         // INTERNATIONAL EVENTS & RE-REGISTRATION
@@ -1796,17 +1805,14 @@ class BoardController extends Controller
         $bank_statement_included = isset($input['BankStatementIncluded']) ? $input['BankStatementIncluded'] : null;
         $bank_statement_included_explanation = $input['BankStatementIncludedExplanation'];
         $wheres_the_money = $input['WheresTheMoney'];
-
         $amount_reserved_from_previous_year = $input['AmountReservedFromLastYear'];
         $amount_reserved_from_previous_year = str_replace(',', '', $amount_reserved_from_previous_year);
         $amount_reserved_from_previous_year = $amount_reserved_from_previous_year === '' ? null : $amount_reserved_from_previous_year;
-
         $bank_balance_now = $input['BankBalanceNow'];
         $bank_balance_now = str_replace(',', '', $bank_balance_now);
         $bank_balance_now = $bank_balance_now === '' ? null : $bank_balance_now;
         $BankRecArray = null;
         $FieldCount = $input['BankRecRowCount'];
-
         for ($i = 0; $i < $FieldCount; $i++) {
             $BankRecArray[$i]['bank_rec_date'] = $input['BankRecDate'.$i] ?? null;
             $BankRecArray[$i]['bank_rec_check_no'] = $input['BankRecCheckNo'.$i] ?? null;
@@ -1865,79 +1871,73 @@ class BoardController extends Controller
         $sister_chapter_explanation = $input['SisterChapterExplanation'];
 
         // AWARDS
-        $award_nominations = $input['TotalAwardNominations'];
-        //Award Nomination 1
-        if (isset($input['NominationType1'])) {
-            $award_1_nomination_type = $input['NominationType1'];
-        } else {
-            $award_1_nomination_type = null;
+        // $award_nominations = $input['TotalAwardNominations'];
+        $ChapterAwards = null;
+        $FieldCount = $input['ChapterAwardsRowCount'];
+        for ($i = 0; $i < $FieldCount; $i++) {
+            $ChapterAwards[$i]['awards_type'] = $input['ChapterAwardsType'.$i] ?? null;
+            $ChapterAwards[$i]['awards_desc'] = $input['ChapterAwardsDesc'.$i] ?? null;
         }
+        $chapter_awards = base64_encode(serialize($ChapterAwards));
 
-        $award_1_outstanding_follow_bylaws = isset($input['OutstandingFollowByLaws1']) ? $input['OutstandingFollowByLaws1'] : null;
-        $award_1_outstanding_well_rounded = isset($input['OutstandingWellRounded1']) ? $input['OutstandingWellRounded1'] : null;
-        $award_1_outstanding_communicated = isset($input['OutstandingCommunicated1']) ? $input['OutstandingCommunicated1'] : null;
-        $award_1_outstanding_support_international = isset($input['OutstandingSupportMomsClub1']) ? $input['OutstandingSupportMomsClub1'] : null;
-        $award_1_outstanding_project_desc = $input['AwardDesc1'];
+//         $awards_data = [];
+// for ($i = 0; $i < $request->input('award_count'); $i++) {
+//     $awards_data[] = [
+//         'awards_type' => $request->input("ChaperAwardsType{$i}"), // This will now be the award ID
+//         'awards_desc' => $request->input("ChaperAwardsDesc{$i}")
+//     ];
+// }
 
-        //Award Nomination 2
-        if (isset($input['NominationType2'])) {
-            $award_2_nomination_type = $input['NominationType2'];
-        } else {
-            $award_2_nomination_type = null;
-        }
+// $chapter_awards = base64_encode(serialize($awards_data));
 
-        $award_2_outstanding_follow_bylaws = isset($input['OutstandingFollowByLaws2']) ? $input['OutstandingFollowByLaws2'] : null;
-        $award_2_outstanding_well_rounded = isset($input['OutstandingWellRounded2']) ? $input['OutstandingWellRounded2'] : null;
-        $award_2_outstanding_communicated = isset($input['OutstandingCommunicated2']) ? $input['OutstandingCommunicated2'] : null;
-        $award_2_outstanding_support_international = isset($input['OutstandingSupportMomsClub2']) ? $input['OutstandingSupportMomsClub2'] : null;
-        $award_2_outstanding_project_desc = $input['AwardDesc2'];
+        // //Award Nomination 1
+        // if (isset($input['NominationType1'])) {$award_1_nomination_type = $input['NominationType1'];}
+        // else {$award_1_nomination_type = null;}
+        // $award_1_outstanding_follow_bylaws = isset($input['OutstandingFollowByLaws1']) ? $input['OutstandingFollowByLaws1'] : null;
+        // $award_1_outstanding_well_rounded = isset($input['OutstandingWellRounded1']) ? $input['OutstandingWellRounded1'] : null;
+        // $award_1_outstanding_communicated = isset($input['OutstandingCommunicated1']) ? $input['OutstandingCommunicated1'] : null;
+        // $award_1_outstanding_support_international = isset($input['OutstandingSupportMomsClub1']) ? $input['OutstandingSupportMomsClub1'] : null;
+        // $award_1_outstanding_project_desc = $input['AwardDesc1'];
 
-        //Award Nomination 3
-        if (isset($input['NominationType3'])) {
-            $award_3_nomination_type = $input['NominationType3'];
-        } else {
-            $award_3_nomination_type = null;
-        }
+        // //Award Nomination 2
+        // if (isset($input['NominationType2'])) {$award_2_nomination_type = $input['NominationType2'];}
+        // else {$award_2_nomination_type = null;}
+        // $award_2_outstanding_follow_bylaws = isset($input['OutstandingFollowByLaws2']) ? $input['OutstandingFollowByLaws2'] : null;
+        // $award_2_outstanding_well_rounded = isset($input['OutstandingWellRounded2']) ? $input['OutstandingWellRounded2'] : null;
+        // $award_2_outstanding_communicated = isset($input['OutstandingCommunicated2']) ? $input['OutstandingCommunicated2'] : null;
+        // $award_2_outstanding_support_international = isset($input['OutstandingSupportMomsClub2']) ? $input['OutstandingSupportMomsClub2'] : null;
+        // $award_2_outstanding_project_desc = $input['AwardDesc2'];
 
-        $award_3_outstanding_follow_bylaws = isset($input['OutstandingFollowByLaws3']) ? $input['OutstandingFollowByLaws3'] : null;
-        $award_3_outstanding_well_rounded = isset($input['OutstandingWellRounded3']) ? $input['OutstandingWellRounded3'] : null;
-        $award_3_outstanding_communicated = isset($input['OutstandingCommunicated3']) ? $input['OutstandingCommunicated3'] : null;
-        $award_3_outstanding_support_international = isset($input['OutstandingSupportMomsClub3']) ? $input['OutstandingSupportMomsClub3'] : null;
-        $award_3_outstanding_project_desc = $input['AwardDesc3'];
+        // //Award Nomination 3
+        // if (isset($input['NominationType3'])) {$award_3_nomination_type = $input['NominationType3'];}
+        // else {$award_3_nomination_type = null;}
+        // $award_3_outstanding_follow_bylaws = isset($input['OutstandingFollowByLaws3']) ? $input['OutstandingFollowByLaws3'] : null;
+        // $award_3_outstanding_well_rounded = isset($input['OutstandingWellRounded3']) ? $input['OutstandingWellRounded3'] : null;
+        // $award_3_outstanding_communicated = isset($input['OutstandingCommunicated3']) ? $input['OutstandingCommunicated3'] : null;
+        // $award_3_outstanding_support_international = isset($input['OutstandingSupportMomsClub3']) ? $input['OutstandingSupportMomsClub3'] : null;
+        // $award_3_outstanding_project_desc = $input['AwardDesc3'];
 
-        //Award Nomination 4
-        if (isset($input['NominationType4'])) {
-            $award_4_nomination_type = $input['NominationType4'];
-        } else {
-            $award_4_nomination_type = null;
-        }
+        // //Award Nomination 4
+        // if (isset($input['NominationType4'])) {$award_4_nomination_type = $input['NominationType4'];}
+        // else {$award_4_nomination_type = null;}
+        // $award_4_outstanding_follow_bylaws = isset($input['OutstandingFollowByLaws4']) ? $input['OutstandingFollowByLaws4'] : null;
+        // $award_4_outstanding_well_rounded = isset($input['OutstandingWellRounded4']) ? $input['OutstandingWellRounded4'] : null;
+        // $award_4_outstanding_communicated = isset($input['OutstandingCommunicated4']) ? $input['OutstandingCommunicated4'] : null;
+        // $award_4_outstanding_support_international = isset($input['OutstandingSupportMomsClub4']) ? $input['OutstandingSupportMomsClub4'] : null;
+        // $award_4_outstanding_project_desc = $input['AwardDesc4'];
 
-        $award_4_outstanding_follow_bylaws = isset($input['OutstandingFollowByLaws4']) ? $input['OutstandingFollowByLaws4'] : null;
-        $award_4_outstanding_well_rounded = isset($input['OutstandingWellRounded4']) ? $input['OutstandingWellRounded4'] : null;
-        $award_4_outstanding_communicated = isset($input['OutstandingCommunicated4']) ? $input['OutstandingCommunicated4'] : null;
-        $award_4_outstanding_support_international = isset($input['OutstandingSupportMomsClub4']) ? $input['OutstandingSupportMomsClub4'] : null;
-        $award_4_outstanding_project_desc = $input['AwardDesc4'];
+        // //Award Nomination 5
+        // if (isset($input['NominationType5'])) {$award_5_nomination_type = $input['NominationType5'];}
+        // else {$award_5_nomination_type = null;}
+        // $award_5_outstanding_follow_bylaws = isset($input['OutstandingFollowByLaws5']) ? $input['OutstandingFollowByLaws5'] : null;
+        // $award_5_outstanding_well_rounded = isset($input['OutstandingWellRounded5']) ? $input['OutstandingWellRounded5'] : null;
+        // $award_5_outstanding_communicated = isset($input['OutstandingCommunicated5']) ? $input['OutstandingCommunicated5'] : null;
+        // $award_5_outstanding_support_international = isset($input['OutstandingSupportMomsClub5']) ? $input['OutstandingSupportMomsClub5'] : null;
+        // $award_5_outstanding_project_desc = $input['AwardDesc5'];
 
-        //Award Nomination 5
-        if (isset($input['NominationType5'])) {
-            $award_5_nomination_type = $input['NominationType5'];
-        } else {
-            $award_5_nomination_type = null;
-        }
-
-        $award_5_outstanding_follow_bylaws = isset($input['OutstandingFollowByLaws5']) ? $input['OutstandingFollowByLaws5'] : null;
-        $award_5_outstanding_well_rounded = isset($input['OutstandingWellRounded5']) ? $input['OutstandingWellRounded5'] : null;
-        $award_5_outstanding_communicated = isset($input['OutstandingCommunicated5']) ? $input['OutstandingCommunicated5'] : null;
-        $award_5_outstanding_support_international = isset($input['OutstandingSupportMomsClub5']) ? $input['OutstandingSupportMomsClub5'] : null;
-        $award_5_outstanding_project_desc = $input['AwardDesc5'];
-
-        if (isset($input['AwardsAgree']) && $input['AwardsAgree'] == false) {
-            $award_agree = 0;
-        } elseif (isset($input['AwardsAgree'])) {
-            $award_agree = 1;
-        } else {
-            $award_agree = null;
-        }
+        if (isset($input['AwardsAgree']) && $input['AwardsAgree'] == false) {$award_agree = 0;}
+        elseif (isset($input['AwardsAgree'])) {$award_agree = 1;}
+        else {$award_agree = null;}
 
         $report = FinancialReport::find($id);
         $documents = Documents::find($id);
@@ -2021,37 +2021,38 @@ class BoardController extends Controller
                 $report->bank_statement_included = $bank_statement_included;
                 $report->bank_statement_included_explanation = $bank_statement_included_explanation;
                 $report->wheres_the_money = $wheres_the_money;
-                $report->award_nominations = $award_nominations;
-                $report->award_1_nomination_type = $award_1_nomination_type;
-                $report->award_1_outstanding_follow_bylaws = $award_1_outstanding_follow_bylaws;
-                $report->award_1_outstanding_well_rounded = $award_1_outstanding_well_rounded;
-                $report->award_1_outstanding_communicated = $award_1_outstanding_communicated;
-                $report->award_1_outstanding_support_international = $award_1_outstanding_support_international;
-                $report->award_1_outstanding_project_desc = $award_1_outstanding_project_desc;
-                $report->award_2_nomination_type = $award_2_nomination_type;
-                $report->award_2_outstanding_follow_bylaws = $award_2_outstanding_follow_bylaws;
-                $report->award_2_outstanding_well_rounded = $award_2_outstanding_well_rounded;
-                $report->award_2_outstanding_communicated = $award_2_outstanding_communicated;
-                $report->award_2_outstanding_support_international = $award_2_outstanding_support_international;
-                $report->award_2_outstanding_project_desc = $award_2_outstanding_project_desc;
-                $report->award_3_nomination_type = $award_3_nomination_type;
-                $report->award_3_outstanding_follow_bylaws = $award_3_outstanding_follow_bylaws;
-                $report->award_3_outstanding_well_rounded = $award_3_outstanding_well_rounded;
-                $report->award_3_outstanding_communicated = $award_3_outstanding_communicated;
-                $report->award_3_outstanding_support_international = $award_3_outstanding_support_international;
-                $report->award_3_outstanding_project_desc = $award_3_outstanding_project_desc;
-                $report->award_4_nomination_type = $award_4_nomination_type;
-                $report->award_4_outstanding_follow_bylaws = $award_4_outstanding_follow_bylaws;
-                $report->award_4_outstanding_well_rounded = $award_4_outstanding_well_rounded;
-                $report->award_4_outstanding_communicated = $award_4_outstanding_communicated;
-                $report->award_4_outstanding_support_international = $award_4_outstanding_support_international;
-                $report->award_4_outstanding_project_desc = $award_4_outstanding_project_desc;
-                $report->award_5_nomination_type = $award_5_nomination_type;
-                $report->award_5_outstanding_follow_bylaws = $award_5_outstanding_follow_bylaws;
-                $report->award_5_outstanding_well_rounded = $award_5_outstanding_well_rounded;
-                $report->award_5_outstanding_communicated = $award_5_outstanding_communicated;
-                $report->award_5_outstanding_support_international = $award_5_outstanding_support_international;
-                $report->award_5_outstanding_project_desc = $award_5_outstanding_project_desc;
+                // $report->award_nominations = $award_nominations;
+                $report->chapter_awards = $chapter_awards;
+                // $report->award_1_nomination_type = $award_1_nomination_type;
+                // $report->award_1_outstanding_follow_bylaws = $award_1_outstanding_follow_bylaws;
+                // $report->award_1_outstanding_well_rounded = $award_1_outstanding_well_rounded;
+                // $report->award_1_outstanding_communicated = $award_1_outstanding_communicated;
+                // $report->award_1_outstanding_support_international = $award_1_outstanding_support_international;
+                // $report->award_1_outstanding_project_desc = $award_1_outstanding_project_desc;
+                // $report->award_2_nomination_type = $award_2_nomination_type;
+                // $report->award_2_outstanding_follow_bylaws = $award_2_outstanding_follow_bylaws;
+                // $report->award_2_outstanding_well_rounded = $award_2_outstanding_well_rounded;
+                // $report->award_2_outstanding_communicated = $award_2_outstanding_communicated;
+                // $report->award_2_outstanding_support_international = $award_2_outstanding_support_international;
+                // $report->award_2_outstanding_project_desc = $award_2_outstanding_project_desc;
+                // $report->award_3_nomination_type = $award_3_nomination_type;
+                // $report->award_3_outstanding_follow_bylaws = $award_3_outstanding_follow_bylaws;
+                // $report->award_3_outstanding_well_rounded = $award_3_outstanding_well_rounded;
+                // $report->award_3_outstanding_communicated = $award_3_outstanding_communicated;
+                // $report->award_3_outstanding_support_international = $award_3_outstanding_support_international;
+                // $report->award_3_outstanding_project_desc = $award_3_outstanding_project_desc;
+                // $report->award_4_nomination_type = $award_4_nomination_type;
+                // $report->award_4_outstanding_follow_bylaws = $award_4_outstanding_follow_bylaws;
+                // $report->award_4_outstanding_well_rounded = $award_4_outstanding_well_rounded;
+                // $report->award_4_outstanding_communicated = $award_4_outstanding_communicated;
+                // $report->award_4_outstanding_support_international = $award_4_outstanding_support_international;
+                // $report->award_4_outstanding_project_desc = $award_4_outstanding_project_desc;
+                // $report->award_5_nomination_type = $award_5_nomination_type;
+                // $report->award_5_outstanding_follow_bylaws = $award_5_outstanding_follow_bylaws;
+                // $report->award_5_outstanding_well_rounded = $award_5_outstanding_well_rounded;
+                // $report->award_5_outstanding_communicated = $award_5_outstanding_communicated;
+                // $report->award_5_outstanding_support_international = $award_5_outstanding_support_international;
+                // $report->award_5_outstanding_project_desc = $award_5_outstanding_project_desc;
                 $report->award_agree = $award_agree;
                 $report->farthest_step_visited = $farthest_step_visited;
                 $report->completed_name = $userName;
@@ -2068,7 +2069,7 @@ class BoardController extends Controller
                     'file_irs_path' => $irs_path,
                     'bank_statement_included_path' => $statement_1_path,
                     'bank_statement_2_included_path' => $statement_2_path,
-                    'financial_pdf_path' => $financial_pdf_path,
+                    // 'financial_pdf_path' => $financial_pdf_path,
                 ];
 
                  // Send emails
@@ -2078,7 +2079,8 @@ class BoardController extends Controller
                 $to_email4 = $emailListChap;
 
                 if ($reportReceived == 1) {
-                    $pdfPath = $this->generateAndSavePdf($id, $userId);   // Generate and save the PDF
+                    $pdfPath = $this->pdfController->generateAndSavePdf($id, $userId);   // Generate and save the PDF
+                    // $pdfPath = $this->generateAndSavePdf($id, $userId);   // Generate and save the PDF
                     Mail::to($to_email2)
                         ->cc($to_email4)
                         ->queue(new EOYFinancialReportThankYou($mailData, $pdfPath));
@@ -2124,297 +2126,285 @@ class BoardController extends Controller
         }
     }
 
-    public function generateAndSavePdf($id)
-    {
-        $baseQuery = $this->getChapterDetails($id);
-        $chDetails = $baseQuery['chDetails'];
-        $stateShortName = $baseQuery['stateShortName'];
-        $chDocuments = $baseQuery['chDocuments'];
-        $chFinancialReport = $baseQuery['chFinancialReport'];
+    // public function generateAndSavePdf($id)
+    // {
+    //     $baseQuery = $this->getChapterDetails($id);
+    //     $chDetails = $baseQuery['chDetails'];
+    //     $stateShortName = $baseQuery['stateShortName'];
+    //     $chDocuments = $baseQuery['chDocuments'];
+    //     $chFinancialReport = $baseQuery['chFinancialReport'];
 
-        // // Load financial report data, chapter details, and any other data you need
-        // $financial_report_array = FinancialReport::findOrFail($chapter_id);
+    //     $pdfData = [
+    //         'conf' => $chDetails->conference_id,
+    //         'chapter_name' => $chDetails->name,
+    //         'state' => $stateShortName,
+    //         'ein' => $chDetails->ein,
+    //         'boundaries' => $chDetails->territory,
+    //         'changed_dues' => $chFinancialReport->changed_dues,
+    //         'different_dues' => $chFinancialReport->different_dues,
+    //         'not_all_full_dues' => $chFinancialReport->not_all_full_dues,
+    //         'total_new_members' => $chFinancialReport->total_new_members,
+    //         'total_renewed_members' => $chFinancialReport->total_renewed_members,
+    //         'dues_per_member' => $chFinancialReport->dues_per_member,
+    //         'total_new_members_changed_dues' => $chFinancialReport->total_new_members_changed_dues,
+    //         'total_renewed_members_changed_dues' => $chFinancialReport->total_renewed_members_changed_dues,
+    //         'dues_per_member_renewal' => $chFinancialReport->dues_per_member_renewal,
+    //         'dues_per_member_new_changed' => $chFinancialReport->dues_per_member_new_changed,
+    //         'dues_per_member_renewal_changed' => $chFinancialReport->dues_per_member_renewal_changed,
+    //         'members_who_paid_no_dues' => $chFinancialReport->members_who_paid_no_dues,
+    //         'members_who_paid_partial_dues' => $chFinancialReport->members_who_paid_partial_dues,
+    //         'total_partial_fees_collected' => $chFinancialReport->total_partial_fees_collected,
+    //         'total_associate_members' => $chFinancialReport->total_associate_members,
+    //         'associate_member_fee' => $chFinancialReport->associate_member_fee,
+    //         'manditory_meeting_fees_paid' => $chFinancialReport->manditory_meeting_fees_paid,
+    //         'voluntary_donations_paid' => $chFinancialReport->voluntary_donations_paid,
+    //         'paid_baby_sitters' => $chFinancialReport->paid_baby_sitters,
+    //         'childrens_room_expenses' => $chFinancialReport->childrens_room_expenses,
+    //         'service_project_array' => $chFinancialReport->service_project_array,
+    //         'party_expense_array' => $chFinancialReport->party_expense_array,
+    //         'office_printing_costs' => $chFinancialReport->office_printing_costs,
+    //         'office_postage_costs' => $chFinancialReport->office_postage_costs,
+    //         'office_membership_pins_cost' => $chFinancialReport->office_membership_pins_cost,
+    //         'office_other_expenses' => $chFinancialReport->office_other_expenses,
+    //         'international_event_array' => $chFinancialReport->international_event_array,
+    //         'annual_registration_fee' => $chFinancialReport->annual_registration_fee,
+    //         'monetary_donations_to_chapter' => $chFinancialReport->monetary_donations_to_chapter,
+    //         'non_monetary_donations_to_chapter' => $chFinancialReport->non_monetary_donations_to_chapter,
+    //         'other_income_and_expenses_array' => $chFinancialReport->other_income_and_expenses_array,
+    //         'amount_reserved_from_previous_year' => $chFinancialReport->amount_reserved_from_previous_year,
+    //         'bank_balance_now' => $chFinancialReport->bank_balance_now,
+    //         'bank_reconciliation_array' => $chFinancialReport->bank_reconciliation_array,
+    //         'receive_compensation' => $chFinancialReport->receive_compensation,
+    //         'receive_compensation_explanation' => $chFinancialReport->receive_compensation_explanation,
+    //         'financial_benefit' => $chFinancialReport->financial_benefit,
+    //         'financial_benefit_explanation' => $chFinancialReport->financial_benefit_explanation,
+    //         'influence_political' => $chFinancialReport->influence_political,
+    //         'influence_political_explanation' => $chFinancialReport->influence_political_explanation,
+    //         'vote_all_activities' => $chFinancialReport->vote_all_activities,
+    //         'vote_all_activities_explanation' => $chFinancialReport->vote_all_activities_explanation,
+    //         'purchase_pins' => $chFinancialReport->purchase_pins,
+    //         'purchase_pins_explanation' => $chFinancialReport->purchase_pins_explanation,
+    //         'bought_merch' => $chFinancialReport->bought_merch,
+    //         'bought_merch_explanation' => $chFinancialReport->bought_merch_explanation,
+    //         'offered_merch' => $chFinancialReport->offered_merch,
+    //         'offered_merch_explanation' => $chFinancialReport->offered_merch_explanation,
+    //         'bylaws_available' => $chFinancialReport->bylaws_available,
+    //         'bylaws_available_explanation' => $chFinancialReport->bylaws_available_explanation,
+    //         'childrens_room_sitters' => $chFinancialReport->childrens_room_sitters,
+    //         'childrens_room_sitters_explanation' => $chFinancialReport->childrens_room_sitters_explanation,
+    //         'had_playgroups' => $chFinancialReport->had_playgroups,
+    //         'playgroups' => $chFinancialReport->playgroups,
+    //         'had_playgroups_explanation' => $chFinancialReport->had_playgroups_explanation,
+    //         'child_outings' => $chFinancialReport->child_outings,
+    //         'child_outings_explanation' => $chFinancialReport->child_outings_explanation,
+    //         'mother_outings' => $chFinancialReport->mother_outings,
+    //         'mother_outings_explanation' => $chFinancialReport->mother_outings_explanation,
+    //         'meeting_speakers' => $chFinancialReport->meeting_speakers,
+    //         'meeting_speakers_explanation' => $chFinancialReport->meeting_speakers_explanation,
+    //         'meeting_speakers_array' => $chFinancialReport->meeting_speakers_array,
+    //         'discussion_topic_frequency' => $chFinancialReport->discussion_topic_frequency,
+    //         'park_day_frequency' => $chFinancialReport->park_day_frequency,
+    //         'activity_array' => $chFinancialReport->activity_array,
+    //         'contributions_not_registered_charity' => $chFinancialReport->contributions_not_registered_charity,
+    //         'contributions_not_registered_charity_explanation' => $chFinancialReport->contributions_not_registered_charity_explanation,
+    //         'at_least_one_service_project' => $chFinancialReport->at_least_one_service_project,
+    //         'at_least_one_service_project_explanation' => $chFinancialReport->at_least_one_service_project_explanation,
+    //         'sister_chapter' => $chFinancialReport->sister_chapter,
+    //         'international_event' => $chFinancialReport->international_event,
+    //         'file_irs' => $chFinancialReport->file_irs,
+    //         'file_irs_explanation' => $chFinancialReport->file_irs_explanation,
+    //         'bank_statement_included' => $chFinancialReport->bank_statement_included,
+    //         'bank_statement_included_explanation' => $chFinancialReport->bank_statement_included_explanation,
+    //         'wheres_the_money' => $chFinancialReport->wheres_the_money,
+    //         'completed_name' => $chFinancialReport->completed_name,
+    //         'completed_email' => $chFinancialReport->completed_email,
+    //         'submitted' => $chFinancialReport->submitted,
+    //     ];
 
-        // $chapterDetails = DB::table('chapters')
-        //     ->select('chapters.id as id', 'chapters.name as chapter_name', 'chapters.ein as ein', 'chapters.territory as boundaries',
-        //         'chapters.financial_report_received as financial_report_received', 'st.state_short_name as state',
-        //         'chapters.conference_id_id as conf', 'chapters.primary_coordinator_id as pcid')
-        //     ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-        //     ->where('chapters.is_active', '=', '1')
-        //     ->where('chapters.id', '=', $chapter_id)
-        //     ->get();
+    //     $pdf = Pdf::loadView('pdf.financialreport', compact('pdfData'));
 
-        $pdfData = [
-            'conf' => $chDetails->conference_id,
-            'chapter_name' => $chDetails->name,
-            'state' => $stateShortName,
-            'ein' => $chDetails->ein,
-            'boundaries' => $chDetails->territory,
-            'changed_dues' => $chFinancialReport->changed_dues,
-            'different_dues' => $chFinancialReport->different_dues,
-            'not_all_full_dues' => $chFinancialReport->not_all_full_dues,
-            'total_new_members' => $chFinancialReport->total_new_members,
-            'total_renewed_members' => $chFinancialReport->total_renewed_members,
-            'dues_per_member' => $chFinancialReport->dues_per_member,
-            'total_new_members_changed_dues' => $chFinancialReport->total_new_members_changed_dues,
-            'total_renewed_members_changed_dues' => $chFinancialReport->total_renewed_members_changed_dues,
-            'dues_per_member_renewal' => $chFinancialReport->dues_per_member_renewal,
-            'dues_per_member_new_changed' => $chFinancialReport->dues_per_member_new_changed,
-            'dues_per_member_renewal_changed' => $chFinancialReport->dues_per_member_renewal_changed,
-            'members_who_paid_no_dues' => $chFinancialReport->members_who_paid_no_dues,
-            'members_who_paid_partial_dues' => $chFinancialReport->members_who_paid_partial_dues,
-            'total_partial_fees_collected' => $chFinancialReport->total_partial_fees_collected,
-            'total_associate_members' => $chFinancialReport->total_associate_members,
-            'associate_member_fee' => $chFinancialReport->associate_member_fee,
-            'manditory_meeting_fees_paid' => $chFinancialReport->manditory_meeting_fees_paid,
-            'voluntary_donations_paid' => $chFinancialReport->voluntary_donations_paid,
-            'paid_baby_sitters' => $chFinancialReport->paid_baby_sitters,
-            'childrens_room_expenses' => $chFinancialReport->childrens_room_expenses,
-            'service_project_array' => $chFinancialReport->service_project_array,
-            'party_expense_array' => $chFinancialReport->party_expense_array,
-            'office_printing_costs' => $chFinancialReport->office_printing_costs,
-            'office_postage_costs' => $chFinancialReport->office_postage_costs,
-            'office_membership_pins_cost' => $chFinancialReport->office_membership_pins_cost,
-            'office_other_expenses' => $chFinancialReport->office_other_expenses,
-            'international_event_array' => $chFinancialReport->international_event_array,
-            'annual_registration_fee' => $chFinancialReport->annual_registration_fee,
-            'monetary_donations_to_chapter' => $chFinancialReport->monetary_donations_to_chapter,
-            'non_monetary_donations_to_chapter' => $chFinancialReport->non_monetary_donations_to_chapter,
-            'other_income_and_expenses_array' => $chFinancialReport->other_income_and_expenses_array,
-            'amount_reserved_from_previous_year' => $chFinancialReport->amount_reserved_from_previous_year,
-            'bank_balance_now' => $chFinancialReport->bank_balance_now,
-            'bank_reconciliation_array' => $chFinancialReport->bank_reconciliation_array,
-            'receive_compensation' => $chFinancialReport->receive_compensation,
-            'receive_compensation_explanation' => $chFinancialReport->receive_compensation_explanation,
-            'financial_benefit' => $chFinancialReport->financial_benefit,
-            'financial_benefit_explanation' => $chFinancialReport->financial_benefit_explanation,
-            'influence_political' => $chFinancialReport->influence_political,
-            'influence_political_explanation' => $chFinancialReport->influence_political_explanation,
-            'vote_all_activities' => $chFinancialReport->vote_all_activities,
-            'vote_all_activities_explanation' => $chFinancialReport->vote_all_activities_explanation,
-            'purchase_pins' => $chFinancialReport->purchase_pins,
-            'purchase_pins_explanation' => $chFinancialReport->purchase_pins_explanation,
-            'bought_merch' => $chFinancialReport->bought_merch,
-            'bought_merch_explanation' => $chFinancialReport->bought_merch_explanation,
-            'offered_merch' => $chFinancialReport->offered_merch,
-            'offered_merch_explanation' => $chFinancialReport->offered_merch_explanation,
-            'bylaws_available' => $chFinancialReport->bylaws_available,
-            'bylaws_available_explanation' => $chFinancialReport->bylaws_available_explanation,
-            'childrens_room_sitters' => $chFinancialReport->childrens_room_sitters,
-            'childrens_room_sitters_explanation' => $chFinancialReport->childrens_room_sitters_explanation,
-            'had_playgroups' => $chFinancialReport->had_playgroups,
-            'playgroups' => $chFinancialReport->playgroups,
-            'had_playgroups_explanation' => $chFinancialReport->had_playgroups_explanation,
-            'child_outings' => $chFinancialReport->child_outings,
-            'child_outings_explanation' => $chFinancialReport->child_outings_explanation,
-            'mother_outings' => $chFinancialReport->mother_outings,
-            'mother_outings_explanation' => $chFinancialReport->mother_outings_explanation,
-            'meeting_speakers' => $chFinancialReport->meeting_speakers,
-            'meeting_speakers_explanation' => $chFinancialReport->meeting_speakers_explanation,
-            'meeting_speakers_array' => $chFinancialReport->meeting_speakers_array,
-            'discussion_topic_frequency' => $chFinancialReport->discussion_topic_frequency,
-            'park_day_frequency' => $chFinancialReport->park_day_frequency,
-            'activity_array' => $chFinancialReport->activity_array,
-            'contributions_not_registered_charity' => $chFinancialReport->contributions_not_registered_charity,
-            'contributions_not_registered_charity_explanation' => $chFinancialReport->contributions_not_registered_charity_explanation,
-            'at_least_one_service_project' => $chFinancialReport->at_least_one_service_project,
-            'at_least_one_service_project_explanation' => $chFinancialReport->at_least_one_service_project_explanation,
-            'sister_chapter' => $chFinancialReport->sister_chapter,
-            'international_event' => $chFinancialReport->international_event,
-            'file_irs' => $chFinancialReport->file_irs,
-            'file_irs_explanation' => $chFinancialReport->file_irs_explanation,
-            'bank_statement_included' => $chFinancialReport->bank_statement_included,
-            'bank_statement_included_explanation' => $chFinancialReport->bank_statement_included_explanation,
-            'wheres_the_money' => $chFinancialReport->wheres_the_money,
-            'completed_name' => $chFinancialReport->completed_name,
-            'completed_email' => $chFinancialReport->completed_email,
-            'submitted' => $chFinancialReport->submitted,
-        ];
+    //     $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
+    //     $filename = (date('Y') - 1).'-'.date('Y').'_'.$pdfData['state'].'_'.$chapterName.'_FinancialReport.pdf'; // Use sanitized chapter name
 
-        $pdf = Pdf::loadView('pdf.financialreport', compact('pdfData'));
+    //     $pdfPath = storage_path('app/pdf_reports/'.$filename);
+    //     $pdf->save($pdfPath);
 
-        $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
-        $filename = (date('Y') - 1).'-'.date('Y').'_'.$pdfData['state'].'_'.$chapterName.'_FinancialReport.pdf'; // Use sanitized chapter name
+    //     $googleClient = new Client;
+    //     $client_id = \config('services.google.client_id');
+    //     $client_secret = \config('services.google.client_secret');
+    //     $refresh_token = \config('services.google.refresh_token');
+    //     $response = Http::post('https://oauth2.googleapis.com/token', [
+    //         'client_id' => $client_id,
+    //         'client_secret' => $client_secret,
+    //         'refresh_token' => $refresh_token,
+    //         'grant_type' => 'refresh_token',
+    //     ]);
 
-        $pdfPath = storage_path('app/pdf_reports/'.$filename);
-        $pdf->save($pdfPath);
+    //     $conf = $pdfData['conf'];
+    //     $state = $pdfData['state'];
+    //     $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
+    //     $accessToken = json_decode((string) $response->getBody(), true)['access_token'];
 
-        $googleClient = new Client;
-        $client_id = \config('services.google.client_id');
-        $client_secret = \config('services.google.client_secret');
-        $refresh_token = \config('services.google.refresh_token');
-        $response = Http::post('https://oauth2.googleapis.com/token', [
-            'client_id' => $client_id,
-            'client_secret' => $client_secret,
-            'refresh_token' => $refresh_token,
-            'grant_type' => 'refresh_token',
-        ]);
+    //     $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
 
-        $conf = $pdfData['conf'];
-        $state = $pdfData['state'];
-        $chapterName = str_replace('/', '', $pdfData['chapter_name']); // Remove any slashes from chapter name
-        $accessToken = json_decode((string) $response->getBody(), true)['access_token'];
+    //     // Create conference folder if it doesn't exist in the shared drive
+    //     $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
 
-        $sharedDriveId = '1Grx5na3UIpm0wq6AGBrK6tmNnqybLbvd';   //Shared Drive -> EOY Uploads -> 2024
+    //     // Set parent IDs for the file
+    //     $fileMetadata = [
+    //         'name' => $filename,
+    //         'mimeType' => 'application/pdf',
+    //         'parents' => [$chapterFolderId],
+    //         'driveId' => $sharedDriveId,
+    //     ];
 
-        // Create conference folder if it doesn't exist in the shared drive
-        $chapterFolderId = $this->createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId);
+    //     // Upload the file
+    //     $fileContent = file_get_contents($pdfPath);
+    //     $fileContentBase64 = base64_encode($fileContent);
+    //     $metadataJson = json_encode($fileMetadata);
 
-        // Set parent IDs for the file
-        $fileMetadata = [
-            'name' => $filename,
-            'mimeType' => 'application/pdf',
-            'parents' => [$chapterFolderId],
-            'driveId' => $sharedDriveId,
-        ];
+    //     $response = $googleClient->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
+    //         'headers' => [
+    //             'Authorization' => 'Bearer '.$accessToken,
+    //             'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
+    //         ],
+    //         'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
+    //     ]);
 
-        // Upload the file
-        $fileContent = file_get_contents($pdfPath);
-        $fileContentBase64 = base64_encode($fileContent);
-        $metadataJson = json_encode($fileMetadata);
+    //     if ($response->getStatusCode() === 200) { // Check for a successful status code
+    //         $pdf_file_id = json_decode($response->getBody()->getContents(), true)['id'];
+    //         $documents = Documents::find($id);
+    //         $documents->financial_pdf_path = $pdf_file_id;
+    //         $documents->save();
 
-        $response = $googleClient->request('POST', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&supportsAllDrives=true', [
-            'headers' => [
-                'Authorization' => 'Bearer '.$accessToken,
-                'Content-Type' => 'multipart/related; boundary=foo_bar_baz',
-            ],
-            'body' => "--foo_bar_baz\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n{$metadataJson}\r\n--foo_bar_baz\r\nContent-Type: {$fileMetadata['mimeType']}\r\nContent-Transfer-Encoding: base64\r\n\r\n{$fileContentBase64}\r\n--foo_bar_baz--",
-        ]);
+    //         return $pdfPath;  // Return the full local stored path
+    //     }
+    // }
 
-        if ($response->getStatusCode() === 200) { // Check for a successful status code
-            $pdf_file_id = json_decode($response->getBody()->getContents(), true)['id'];
-            $documents = Documents::find($id);
-            $documents->financial_pdf_path = $pdf_file_id;
-            $documents->save();
+    // private function createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId)
+    // {
+    //     // Check if the conference folder exists, create it if not
+    //     $confFolderId = $this->getOrCreateConfFolder($conf, $accessToken, $sharedDriveId);
 
-            return $pdfPath;  // Return the full local stored path
-        }
-    }
+    //     // Check if the state folder exists, create it if not
+    //     $stateFolderId = $this->getOrCreateStateFolder($conf, $state, $confFolderId, $accessToken, $sharedDriveId);
 
-    private function createFolderIfNotExists($conf, $state, $chapterName, $accessToken, $sharedDriveId)
-    {
-        // Check if the conference folder exists, create it if not
-        $confFolderId = $this->getOrCreateConfFolder($conf, $accessToken, $sharedDriveId);
+    //     // Check if the chapter folder exists, create it if not
+    //     $chapterFolderId = $this->getOrCreateChapterFolder($conf, $state, $chapterName, $stateFolderId, $accessToken, $sharedDriveId);
 
-        // Check if the state folder exists, create it if not
-        $stateFolderId = $this->getOrCreateStateFolder($conf, $state, $confFolderId, $accessToken, $sharedDriveId);
+    //     return $chapterFolderId;
+    // }
 
-        // Check if the chapter folder exists, create it if not
-        $chapterFolderId = $this->getOrCreateChapterFolder($conf, $state, $chapterName, $stateFolderId, $accessToken, $sharedDriveId);
+    // private function getOrCreateConfFolder($conf, $accessToken, $sharedDriveId)
+    // {
+    //     // Check if the conference folder exists in the records
+    //     $confRecord = FolderRecord::where('conf', $conf)->first();
 
-        return $chapterFolderId;
-    }
+    //     if ($confRecord) {
+    //         // Conference folder exists, return its ID
+    //         return $confRecord->folder_id;
+    //     } else {
+    //         // Conference folder doesn't exist, create it
+    //         $client = new Client;
+    //         $folderMetadata = [
+    //             'name' => "Conference $conf",
+    //             'parents' => [$sharedDriveId],
+    //             'driveId' => $sharedDriveId,
+    //             'mimeType' => 'application/vnd.google-apps.folder',
+    //         ];
+    //         $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
+    //             'headers' => [
+    //                 'Authorization' => 'Bearer '.$accessToken,
+    //                 'Content-Type' => 'application/json',
+    //             ],
+    //             'json' => $folderMetadata,
+    //         ]);
+    //         $folderId = json_decode($response->getBody()->getContents(), true)['id'];
 
-    private function getOrCreateConfFolder($conf, $accessToken, $sharedDriveId)
-    {
-        // Check if the conference folder exists in the records
-        $confRecord = FolderRecord::where('conf', $conf)->first();
+    //         // Record the created folder ID for future reference
+    //         FolderRecord::create([
+    //             'conf' => $conf,
+    //             'folder_id' => $folderId,
+    //         ]);
 
-        if ($confRecord) {
-            // Conference folder exists, return its ID
-            return $confRecord->folder_id;
-        } else {
-            // Conference folder doesn't exist, create it
-            $client = new Client;
-            $folderMetadata = [
-                'name' => "Conference $conf",
-                'parents' => [$sharedDriveId],
-                'driveId' => $sharedDriveId,
-                'mimeType' => 'application/vnd.google-apps.folder',
-            ];
-            $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
-                'headers' => [
-                    'Authorization' => 'Bearer '.$accessToken,
-                    'Content-Type' => 'application/json',
-                ],
-                'json' => $folderMetadata,
-            ]);
-            $folderId = json_decode($response->getBody()->getContents(), true)['id'];
+    //         return $folderId;
+    //     }
+    // }
 
-            // Record the created folder ID for future reference
-            FolderRecord::create([
-                'conf' => $conf,
-                'folder_id' => $folderId,
-            ]);
+    // private function getOrCreateStateFolder($conf, $state, $confFolderId, $accessToken, $sharedDriveId)
+    // {
+    //     // Check if the state folder exists in the records
+    //     $stateRecord = FolderRecord::where('state', $state)->first();
 
-            return $folderId;
-        }
-    }
+    //     if ($stateRecord) {
+    //         // State folder exists, return its ID
+    //         return $stateRecord->folder_id;
+    //     } else {
+    //         // State folder doesn't exist, create it
+    //         $client = new Client;
+    //         $folderMetadata = [
+    //             'name' => $state,
+    //             'parents' => [$confFolderId],
+    //             'driveId' => $sharedDriveId,
+    //             'mimeType' => 'application/vnd.google-apps.folder',
+    //         ];
+    //         $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
+    //             'headers' => [
+    //                 'Authorization' => 'Bearer '.$accessToken,
+    //                 'Content-Type' => 'application/json',
+    //             ],
+    //             'json' => $folderMetadata,
+    //         ]);
+    //         $folderId = json_decode($response->getBody()->getContents(), true)['id'];
 
-    private function getOrCreateStateFolder($conf, $state, $confFolderId, $accessToken, $sharedDriveId)
-    {
-        // Check if the state folder exists in the records
-        $stateRecord = FolderRecord::where('state', $state)->first();
+    //         // Record the created folder ID for future reference
+    //         FolderRecord::create([
+    //             // 'conf' => "Conference $conf",
+    //             'state' => $state,
+    //             'folder_id' => $folderId,
+    //         ]);
 
-        if ($stateRecord) {
-            // State folder exists, return its ID
-            return $stateRecord->folder_id;
-        } else {
-            // State folder doesn't exist, create it
-            $client = new Client;
-            $folderMetadata = [
-                'name' => $state,
-                'parents' => [$confFolderId],
-                'driveId' => $sharedDriveId,
-                'mimeType' => 'application/vnd.google-apps.folder',
-            ];
-            $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
-                'headers' => [
-                    'Authorization' => 'Bearer '.$accessToken,
-                    'Content-Type' => 'application/json',
-                ],
-                'json' => $folderMetadata,
-            ]);
-            $folderId = json_decode($response->getBody()->getContents(), true)['id'];
+    //         return $folderId;
+    //     }
+    // }
 
-            // Record the created folder ID for future reference
-            FolderRecord::create([
-                // 'conf' => "Conference $conf",
-                'state' => $state,
-                'folder_id' => $folderId,
-            ]);
+    // private function getOrCreateChapterFolder($conf, $state, $chapterName, $stateFolderId, $accessToken, $sharedDriveId)
+    // {
+    //     // Check if the chapter folder exists in the records
+    //     $chapterRecord = FolderRecord::where('chapter_name', $chapterName)->first();
 
-            return $folderId;
-        }
-    }
+    //     if ($chapterRecord) {
+    //         // Chapter folder exists, return its ID
+    //         return $chapterRecord->folder_id;
+    //     } else {
+    //         // Chapter folder doesn't exist, create it
+    //         $client = new Client;
+    //         $folderMetadata = [
+    //             'name' => $chapterName,
+    //             'parents' => [$stateFolderId],
+    //             'driveId' => $sharedDriveId,
+    //             'mimeType' => 'application/vnd.google-apps.folder',
+    //         ];
+    //         $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
+    //             'headers' => [
+    //                 'Authorization' => 'Bearer '.$accessToken,
+    //                 'Content-Type' => 'application/json',
+    //             ],
+    //             'json' => $folderMetadata,
+    //         ]);
+    //         $folderId = json_decode($response->getBody()->getContents(), true)['id'];
 
-    private function getOrCreateChapterFolder($conf, $state, $chapterName, $stateFolderId, $accessToken, $sharedDriveId)
-    {
-        // Check if the chapter folder exists in the records
-        $chapterRecord = FolderRecord::where('chapter_name', $chapterName)->first();
+    //         // Record the created folder ID for future reference
+    //         FolderRecord::create([
+    //             // 'conf' => "Conference $conf",
+    //             // 'state' => $state,
+    //             'chapter_name' => $chapterName,
+    //             'folder_id' => $folderId,
+    //         ]);
 
-        if ($chapterRecord) {
-            // Chapter folder exists, return its ID
-            return $chapterRecord->folder_id;
-        } else {
-            // Chapter folder doesn't exist, create it
-            $client = new Client;
-            $folderMetadata = [
-                'name' => $chapterName,
-                'parents' => [$stateFolderId],
-                'driveId' => $sharedDriveId,
-                'mimeType' => 'application/vnd.google-apps.folder',
-            ];
-            $response = $client->request('POST', 'https://www.googleapis.com/drive/v3/files?supportsAllDrives=true', [
-                'headers' => [
-                    'Authorization' => 'Bearer '.$accessToken,
-                    'Content-Type' => 'application/json',
-                ],
-                'json' => $folderMetadata,
-            ]);
-            $folderId = json_decode($response->getBody()->getContents(), true)['id'];
-
-            // Record the created folder ID for future reference
-            FolderRecord::create([
-                // 'conf' => "Conference $conf",
-                // 'state' => $state,
-                'chapter_name' => $chapterName,
-                'folder_id' => $folderId,
-            ]);
-
-            return $folderId;
-        }
-    }
+    //         return $folderId;
+    //     }
+    // }
 
     public function getRosterfile(): BinaryFileResponse
     {

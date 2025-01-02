@@ -175,7 +175,14 @@
 
                 </div>
                 <div class="col-sm-9">
-                            <input type="text" name="extension_notes" id="extension_notes" class="form-control" value="{{ $chDetails->extension_notes }}" placeholder="Extension Notes">
+                    @if ($chDocuments->report_extension != null && $chDocuments->extension_notes != null)
+                    {{ $chDocuments->extension_notes }}
+                 @elseif ($chDocuments->report_extension != null && $chDocuments->extension_notes == null)
+                     Chapter been given an extension, but no notes are recorded.
+                @else
+                    Chapter has not been given an extension.
+                @endif
+                            {{-- <input type="text" name="extension_notes" id="extension_notes" class="form-control" value="{{ $chDetails->extension_notes }}" placeholder="Extension Notes"> --}}
                         </div>
                     </div>
 
@@ -223,10 +230,23 @@
                                 @endif
                         </div>
                     </div>
-
                     <div class="row mt-2">
                         <div class="col-sm-3">
                             <label>990N Filing:</label>
+                    </div>
+                    <div class="col-sm-9">
+                    @if ($chFinancialReport->check_current_990N_notes != null)
+                        {{ $chFinancialReport->check_current_990N_notes }}
+                     @else
+                         Chapter has no 990 filing notes.
+                    @endif
+                           {{-- <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chFinancialReport->check_current_990N_notes }}" placeholder="990N Filing Notes"> --}}
+                        </div>
+                    </div>
+
+                    <div class="row ">
+                        <div class="col-sm-3">
+                            <label></label>
                         </div>
                         <div class="col-sm-9">
                                 @if (!empty($chFinancialReport->file_irs_path))
@@ -241,15 +261,57 @@
 
                     <div class="row mt-2">
                         <div class="col-sm-3">
-                            <label></label>
-                    </div>
-                    <div class="col-sm-9">
-                           <input type="text" name="irs_notes" id="irs_notes" class="form-control" value="{{ $chFinancialReport->check_current_990N_notes }}" placeholder="990N Filing Notes">
+                            <label>Awards:</label>
                         </div>
+                        <div class="col-sm-9">
+                            <table width="100%" style="border-collapse: collapse;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid #333;">
+                                        <td width="20%">Award Category</td>
+                                        <td width="65%">Description/Information</td>
+                                        <td width="15%">Approval</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $chapter_awards = null;
+
+                                    if (isset($chFinancialReport['chapter_awards'])) {
+                                        $blobData = base64_decode($chFinancialReport['chapter_awards']);
+                                        $chapter_awards = unserialize($blobData);
+
+                                        if ($chapter_awards === false) {
+                                            echo "<tr><td colspan='3'>Error: Failed to unserialize data.</td></tr>";
+                                        } else {
+                                            foreach ($chapter_awards as $row) {
+                                                echo "<tr style='border-bottom: 1px solid #ddd;'>";
+
+                                                // Get award type name instead of just ID
+                                                $awardType = "Unknown";
+                                                foreach($allAwards as $award) {
+                                                    if($award->id == $row['awards_type']) {
+                                                        $awardType = $award->type_short_name;
+                                                        break;
+                                                    }
+                                                }
+
+                                                echo "<td>" . htmlspecialchars($awardType) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['awards_desc']) . "</td>";
+                                                echo "<td>" . ($row['awards_approved'] == 1 ? 'Yes' : 'No') . "</td>";
+                                                echo "</tr>";
+                                            }
+                                        }
+                                    } else {
+                                        echo "<tr><td colspan='3'>Chapter has no award nominations.</td></tr>";
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                    </div>
                     </div>
 
 
-                    <div class="row mt-2">
+                    {{-- <div class="row mt-2">
                         <div class="col-sm-3">
                             <label>Award #1 Status:</label>
                         </div>
@@ -307,7 +369,7 @@
                                 : ($chFinancialReport['award_5_nomination_type'] == 2 ? 'Outstanding Overall Service Program' : ($chFinancialReport['award_5_nomination_type'] == 3 ? 'Outstanding Childrens Activity' : ($chFinancialReport['award_5_nomination_type'] == 4 ? 'Outstanding Spirit'
                                 : ($chFinancialReport['award_5_nomination_type'] == 5 ? 'Outstanding Chapter' : ($chFinancialReport['award_5_nomination_type'] == 6 ? 'Outstanding New Chapter' : ($chFinancialReport['award_5_nomination_type'] == 7 ? 'Other Outstanding Award' : 'No Award Selected' ))))))) }}
                          </div>
-                        </div>
+                        </div> --}}
 
                   </div>
               <!-- /.card-body -->

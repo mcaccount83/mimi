@@ -116,7 +116,90 @@
                 <h3 class="profile-username">{{ (date('Y') - 1) . '-' . date('Y') }} Chapter Awards</h3>
                     <!-- /.card-header -->
 
-                    <div class="form-group row">
+
+                    <!-- Awards Table -->
+                    <table id="awards" width="100%" class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <td width="25%">Award Category</td>
+                                <td width="60%">Description/Information</td>
+                                <td width="15%">Approval</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php
+                                $chapter_awards = null;
+                                if (isset($chFinancialReport['chapter_awards'])) {
+                                    $chapter_awards = unserialize(base64_decode($chFinancialReport['chapter_awards']));
+                                    $ChapterAwardsRowCount = is_array($chapter_awards) ? count($chapter_awards) : 0;
+                                } else {
+                                    $ChapterAwardsRowCount = 1;
+                                }
+                            @endphp
+
+                            @for ($row = 0; $row < $ChapterAwardsRowCount; $row++)
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <select class="form-control" name="ChapterAwardsType{{ $row }}"
+                                            id="ChapterAwardsType{{ $row }}">
+                                            <option value="">Select an Award Type</option>
+                                            @foreach($allAwards as $award)
+                                                <option value="{{ $award->id }}"
+                                                    {{ isset($chapter_awards[$row]['awards_type']) &&
+                                                    $chapter_awards[$row]['awards_type'] == $award->id ? 'selected' : '' }}>
+                                                    {{ $award->award_type }} {{ $award->extra }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <textarea class="form-control" rows="2" name="ChapterAwardsDesc{{ $row }}"
+                                                id="ChapterAwardsDesc{{ $row }}">{{ $chapter_awards[$row]['awards_desc'] ?? '' }}</textarea>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio"
+                                               id="ChapterAwardsApprovedYes{{ $row }}"
+                                               name="ChapterAwardsApproved{{ $row }}"
+                                               value="1"
+                                               {{ isset($chapter_awards[$row]['awards_approved']) &&
+                                                  $chapter_awards[$row]['awards_approved'] == 1 ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="ChapterAwardsApprovedYes{{ $row }}">Yes</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio"
+                                               id="ChapterAwardsApprovedNo{{ $row }}"
+                                               name="ChapterAwardsApproved{{ $row }}"
+                                               value="0"
+                                               {{ isset($chapter_awards[$row]['awards_approved']) &&
+                                                  $chapter_awards[$row]['awards_approved'] == 0 ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="ChapterAwardsApprovedNo{{ $row }}">No</label>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endfor
+                        </tbody>
+                    </table>
+
+                    <!-- Add/Remove Row Buttons -->
+                    <div class="col-md-12 float-left">
+                        <button type="button" class="btn btn-sm btn-success" onclick="AddChapterAwardsRow()">
+                            <i class="fas fa-plus"></i>&nbsp; Add Row
+                        </button>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="DeleteChapterAwardsRow()">
+                            <i class="fas fa-minus"></i>&nbsp; Remove Row
+                        </button>
+                    </div>
+
+                    <input type="hidden" name="ChapterAwardsRowCount" id="ChapterAwardsRowCount" value="{{ $ChapterAwardsRowCount }}" />
+
+
+
+                    {{-- <div class="form-group row">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-2 col-form-label">Award #1:</label>
                             <div class="col-sm-4">
@@ -293,16 +376,16 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <!-- /.form group -->
-                    <div class="form-group row">
+                    {{-- <div class="form-group row">
                         <div class="col-md-12 d-flex align-items-center">
                             <label class="col-sm-2 col-form-label">Description:</label>
                             <div class="col-sm-10">
                             <textarea class="form-control" rows="3" id="AwardDesc5" name="AwardDesc5">{{$chFinancialReport['award_5_outstanding_project_desc']}}</textarea>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                     <!-- /.form group -->
 
                   </div>
@@ -382,6 +465,84 @@ $(document).ready(function() {
             loadCoordinatorList(selectedValue);
     });
 });
+
+function AddChapterAwardsRow() {
+    var rowCount = document.getElementById("ChapterAwardsRowCount").value;
+    var table = document.getElementById("awards");
+    var row = table.insertRow(-1);
+
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);  // Add third cell for approval
+
+    // Get the options from an existing select element
+    var existingSelect = document.getElementById("ChapterAwardsType0");
+    var options = Array.from(existingSelect.options).map(opt => {
+        return `<option value="${opt.value}">${opt.text}</option>`;
+    }).join('');
+
+    // Create the cells
+    cell1.innerHTML = `
+        <div class="form-group">
+            <select class="form-control"
+                    name="ChapterAwardsType${rowCount}"
+                    id="ChapterAwardsType${rowCount}"
+                    onchange="toggleOutstandingCriteria(${rowCount})">
+                ${options}
+            </select>
+        </div>`;
+
+    cell2.innerHTML = `
+        <div class="form-group">
+            <textarea class="form-control"
+                      rows="2"
+                      name="ChapterAwardsDesc${rowCount}"
+                      id="ChapterAwardsDesc${rowCount}"></textarea>
+        </div>`;
+
+    // Add the approval radio buttons
+    cell3.innerHTML = `
+        <div class="form-check">
+            <input class="form-check-input" type="radio"
+                   id="ChapterAwardsApprovedYes${rowCount}"
+                   name="ChapterAwardsApproved${rowCount}"
+                   value="1">
+            <label class="form-check-label"
+                   for="ChapterAwardsApprovedYes${rowCount}">Yes</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio"
+                   id="ChapterAwardsApprovedNo${rowCount}"
+                   name="ChapterAwardsApproved${rowCount}"
+                   value="0">
+            <label class="form-check-label"
+                   for="ChapterAwardsApprovedNo${rowCount}">No</label>
+        </div>`;
+
+    rowCount++;
+    document.getElementById('ChapterAwardsRowCount').value = rowCount;
+}
+
+function DeleteChapterAwardsRow() {
+    var table = document.getElementById("awards");
+    var rowCount = document.getElementById("ChapterAwardsRowCount").value;
+
+    if (rowCount > 1) {  // Keep at least one row
+        table.deleteRow(-1);
+
+        // Remove the corresponding criteria section
+        var criteriaToRemove = document.getElementById(`OutstandingCriteria${rowCount-1}`);
+        if (criteriaToRemove) {
+            criteriaToRemove.remove();
+        }
+
+        rowCount--;
+        document.getElementById('ChapterAwardsRowCount').value = rowCount;
+
+        // Update displays
+        toggleAwardBlocks();
+    }
+}
 
 </script>
 @endsection

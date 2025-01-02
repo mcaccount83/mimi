@@ -664,6 +664,8 @@ function customErrorAlert(message) {
 
  <script>
 
+
+
  $(function () {
     $('#chapterlist').DataTable({
       "paging": true,
