@@ -1075,6 +1075,7 @@ class AdminController extends Controller
         $resourcesDrive = $request->input('resourcesDrive');
         $disbandDrive = $request->input('disbandDrive');
         $goodStandingDrive = $request->input('goodStandingDrive');
+        $probationDrive = $request->input('probationDrive');
 
         $drive = GoogleDrive::firstOrFail();
         $drive->ein_letter_uploads = $einLetterDrive;
@@ -1083,6 +1084,7 @@ class AdminController extends Controller
         $drive->resources_uploads = $resourcesDrive;
         $drive->disband_letter = $disbandDrive;
         $drive->good_standing_letter = $goodStandingDrive;
+        $drive->probation_letter = $probationDrive;
 
         $drive->save();
 
