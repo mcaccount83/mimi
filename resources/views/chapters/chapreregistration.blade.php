@@ -73,10 +73,10 @@
                                 <a href="mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('Re-Registration Payment Reminder | MOMS Club of ' . $list->name . ', ' . $list->state_short_name) }}&body={{ rawurlencode($mailMessage) }}"><i class="far fa-envelope"></i></a>
                             </td>
                             <td>
-                                @if ($list->reg != "None")
-                                    {{ $list->conf }} / {{ $list->reg }}
+                                @if ($list->region->short_name != "None")
+                                    {{ $list->conference->short_name }} / {{ $list->region->short_name }}
                                 @else
-                                    {{ $list->conf }}
+                                    {{ $list->conference->short_name }}
                                 @endif
                             </td>
                             <td>{{ $list->state_short_name }}</td>
@@ -84,7 +84,7 @@
                             <td>{{ $list->reg_notes }}</td>
                             <td style="
                                 @php
-                                    $due = $list->month_short_name . ' ' . $list->next_renewal_year;
+                                    $due = $list->startMonth->month_short_name . ' ' . $list->next_renewal_year;
                                     $overdue = (date('Y') * 12 + date('m')) - ($list->next_renewal_year * 12 + $list->start_month_id);
                                     if ($overdue > 1) {
                                         echo 'background-color: #dc3545; color: #ffffff;';
@@ -105,18 +105,21 @@
           <!-- /.card-body -->
           <div class="col-sm-12">
             <div class="custom-control custom-switch">
-                        <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBoxStatus}} onchange="showAll()" />
+                        <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox3Status}} onchange="showAll()" />
                         <label class="custom-control-label" for="showAll">Show All Chapters</label>
                     </div>
                 </div>
                 <div class="card-body text-center">
-                <?php if($conferenceCoordinatorCondition){ ?>
-                <a title="Re-registration reminders will be sent to all unpaid chapters in your conference with renewal dates this month." href="{{ route('chapters.chapreregreminder') }}"><button class="btn bg-gradient-primary"   <?php if($checkBoxStatus) echo "disabled";?>><i class="fas fa-envelope mr-2" ></i>Send Current Month Reminders</button></a>
-                <?php }?>
-                <?php if($conferenceCoordinatorCondition){ ?>
-                    <a href="{{route('chapters.chaprereglatereminder')}}" class="btn bg-gradient-primary" <?php if($checkBoxStatus) echo "disabled";?>><i class="fas fa-envelope mr-2" ></i>Send One Month Late Notices</a>
-                <?php }?>
-					<a href="{{ route('export.rereg')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download mr-2" ></i>Export Overdue Chapter List</button></a>
+                    @if($conferenceCoordinatorCondition)
+                    @if($checkBox3Status == null)
+                        <a class="btn bg-gradient-primary" href="{{ route('chapters.chapreregreminder') }}"><i class="fas fa-envelope mr-2" ></i>Send Current Month Reminders</a>
+                        <a class="btn bg-gradient-primary" href="{{ route('chapters.chaprereglatereminder') }}"><i class="fas fa-envelope mr-2" ></i>Send One Month Late Notices</a>
+                    @else
+                        <button class="btn bg-gradient-primary" disabled><i class="fas fa-envelope mr-2" ></i>Send Current Month Reminders</button>
+                        <button class="btn bg-gradient-primary" disabled><i class="fas fa-envelope mr-2" ></i>Send One Month Late Notices</button>
+                    @endif
+                        <a href="{{ route('export.rereg')}}"><button class="btn bg-gradient-primary"><i class="fas fa-download mr-2" ></i>Export Overdue Chapter List</button></a>
+                    @endif
             </div>
         </div>
     </div>
@@ -151,19 +154,9 @@ document.addEventListener("DOMContentLoaded", function() {
 function showAll() {
     var base_url = '{{ url("/chapter/reregistration") }}';
     if ($("#showAll").prop("checked") == true) {
-        window.location.href = base_url + '?check=yes';
+        window.location.href = base_url + '?check3=yes';
     } else {
         window.location.href = base_url;
-    }
-}
-
-function ConfirmSend(){
-    var result=confirm("Re-registration reminders will be sent to all unpaid chapters in your conference with renewal dates this month.  Do you wish to continue?");
-    if(result){
-        return true;
-    }
-    else{
-        return false;
     }
 }
 

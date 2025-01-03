@@ -30,6 +30,7 @@ use App\Models\FinancialReport;
 use App\Models\FinancialReportAwards;
 use App\Models\User;
 use App\Models\Status;
+use App\Models\Month;
 use App\Models\Website;
 use Barryvdh\DomPDF\Facade\Pdf;
 use GuzzleHttp\Client;
@@ -67,7 +68,8 @@ class ChapterController extends Controller
             $inQryArr = $coordinatorData['inQryArr'];
         }
 
-        $baseQuery = Chapters::with(['state', 'conference', 'region', 'webLink', 'president', 'avp', 'mvp', 'treasurer', 'secretary', 'primaryCoordinator'])
+        $baseQuery = Chapters::with(['state', 'conference', 'region', 'webLink', 'president', 'avp', 'mvp', 'treasurer', 'secretary', 'startMonth',
+            'state', 'primaryCoordinator'])
             ->where('is_active', 1);
 
         if ($conditions['founderCondition']) {
@@ -86,11 +88,21 @@ class ChapterController extends Controller
             $checkBoxStatus = '';
         }
 
+        if (isset($_GET['check3']) && $_GET['check3'] == 'yes') {
+            $checkBox3Status = 'checked';
+            $baseQuery;
+        } else {
+            $checkBox3Status = '';
+            $baseQuery
+                ->orderByDesc('next_renewal_year')
+                ->orderByDesc('start_month_id');
+        }
+
         $baseQuery->orderBy(State::select('state_short_name')
             ->whereColumn('state.id', 'chapters.state_id'), 'asc')
             ->orderBy('chapters.name', 'asc');
 
-        return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus];
+        return ['query' => $baseQuery, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status];
 
     }
 
@@ -2155,8 +2167,6 @@ class ChapterController extends Controller
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
         $cdConfId = $cdDetails->conference_id;
-        $cdRegId = $cdDetails->region_id;
-        $cdPositionid = $cdDetails->position_id;
 
         $baseQuery = $this->getChapterDetails($id);
         $chDetails = $baseQuery['chDetails'];
@@ -2168,70 +2178,6 @@ class ChapterController extends Controller
         $chConfId = $baseQuery['chConfId'];
         $chPcId = $baseQuery['chPcId'];
         $chDocuments = $baseQuery['chDocuments'];
-
-        // $user = User::find($request->user()->id);
-        // $userId = $user->id;
-
-        // // $corDetails = User::find($request->user()->id)->coordinator;
-        // $corDetails = DB::table('coordinators as cd')
-        //     ->select('cd.id', 'cd.conference_id', 'cd.region_id', 'cd.position_id')
-        //     ->where('cd.user_id', '=', $userId)
-        //     ->get();
-
-        // $coordId = $corDetails[0]->id;
-        // $corConfId = $corDetails[0]->conference_id;
-        // $corRegId = $corDetails[0]->region_id;
-        // $positionid = $corDetails[0]->position_id;
-
-        // $financial_report_array = FinancialReport::find($id);
-
-        // $chapterList = DB::table('chapters as ch')
-        //     ->select('ch.*', 'bd.first_name', 'bd.last_name', 'bd.email as bd_email', 'bd.board_position_id', 'bd.street_address', 'bd.city', 'bd.zip', 'bd.phone', 'bd.state as bd_state', 'bd.user_id as user_id',
-        //         'ct.name as countryname', 'st.state_short_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname', 'mo.month_long_name as startmonth')
-        //     ->join('country as ct', 'ch.country_short_name', '=', 'ct.short_name')
-        //     ->join('state as st', 'ch.state_id', '=', 'st.id')
-        //     ->join('conference as cf', 'ch.conference_id', '=', 'cf.id')
-        //     ->join('region as rg', 'ch.region_id', '=', 'rg.id')
-        //     ->leftJoin('month as mo', 'ch.start_month_id', '=', 'mo.id')
-        //     ->leftJoin('boards as bd', 'ch.id', '=', 'bd.chapter_id')
-        //     // ->where('ch.is_active', '=', '1')
-        //     ->where('ch.id', '=', $id)
-        //     ->where('bd.board_position_id', '=', '1')
-        //     ->get();
-
-        // $chConfId = $chapterList[0]->conference_id;
-        // $chRegId = $chapterList[0]->region_id;
-        // $chPCid = $chapterList[0]->primary_coordinator_id;
-
-        // // Load Active Status for Active/Zapped Visibility
-        // $chIsActive = $chapterList[0]->is_active;
-
-        // $primaryCoordinatorList = DB::table('chapters as ch')
-        //     ->select('cd.id as cid', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'cp.short_title as pos', 'pos2.short_title as sec_pos')
-        //     ->join('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
-        //     ->join('coordinator_position as cp', 'cd.display_position_id', '=', 'cp.id')
-        //     ->leftJoin('coordinator_position as pos2', 'pos2.id', '=', 'cd.sec_position_id')
-        //     ->where(function ($query) use ($chRegId, $chConfId) {
-        //         $query->where('cd.region_id', '=', $chRegId)
-        //             ->orWhere(function ($subQuery) use ($chConfId) {
-        //                 $subQuery->where('cd.region_id', '=', 0)
-        //                     ->where('cd.conference_id', $chConfId);
-        //             });
-        //     })
-        //     ->where('cd.position_id', '<=', '7')
-        //     ->where('cd.position_id', '>=', '1')
-        //     ->where('cd.is_active', '=', '1')
-        //     ->groupBy('cd.id', 'cd.first_name', 'cd.last_name', 'cp.short_title', 'pos2.short_title')
-        //     ->orderBy('cd.position_id')
-        //     ->orderBy('cd.first_name')
-        //     ->get();
-
-        // $chConfId = $chapterList[0]->conference_id;
-        // $chRegId = $chapterList[0]->region_id;
-        // $chPCid = $chapterList[0]->primary_coordinator_id;
-
-        // $webStatusArr = ['0' => 'Website Not Linked', '1' => 'Website Linked', '2' => 'Add Link Requested', '3' => 'Do Not Link'];
-        // $chapterStatusArr = ['1' => 'Operating OK', '4' => 'On Hold Do not Refer', '5' => 'Probation', '6' => 'Probation Do Not Refer'];
 
         $data = ['id' => $id, 'chIsActive' => $chIsActive, 'cdId' => $cdId, 'conferenceDescription' => $conferenceDescription,
             'chDetails' => $chDetails, 'stateShortName' => $stateShortName, 'regionLongName' => $regionLongName, 'startMonthName' => $startMonthName,
@@ -2248,7 +2194,6 @@ class ChapterController extends Controller
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
-        $userName =  $user->first_name.' '.$user->last_name;
 
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
@@ -2367,7 +2312,6 @@ class ChapterController extends Controller
     {
         $user = User::find($request->user()->id);
         $userId = $user->id;
-        $userName =  $user->first_name.' '.$user->last_name;
 
         $cdDetails = $user->coordinator;
         $cdId = $cdDetails->id;
@@ -2407,7 +2351,6 @@ class ChapterController extends Controller
             $baseQueryUpd = $this->getChapterDetails($id);
             $chDetailsUpd = $baseQueryUpd['chDetails'];
             $stateShortName = $baseQueryUpd['stateShortName'];
-            $chConfId = $baseQueryUpd['chConfId'];
             $chPcId = $baseQueryUpd['chPcId'];
             $emailListChap = $baseQueryUpd['emailListChap'];  // Full Board
             $emailListCoord = $baseQueryUpd['emailListCoord']; // Full Coord List
@@ -2491,87 +2434,41 @@ class ChapterController extends Controller
      */
     public function showChapterReRegistration(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
+
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
+        $cdSecPositionid = $cdDetails->sec_position_id;
+
         $currentYear = date('Y');
         $currentMonth = date('m');
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-        $request->session()->put('positionid', $positionId);
-        $request->session()->put('secpositionid', $secPositionId);
-        $request->session()->put('corconfid', $corConfId);
-        $request->session()->put('corregid', $corRegId);
 
-        // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $baseQuery = $this->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $checkBox3Status = $baseQuery['checkBox3Status'];
 
-        if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
-
-        $baseQuery = DB::table('chapters as ch')
-            ->select(
-                'ch.id', 'ch.members_paid_for', 'ch.notes', 'ch.name', 'ch.state_id', 'ch.reg_notes', 'ch.next_renewal_year', 'ch.dues_last_paid', 'ch.start_month_id',
-                'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name', 'db.month_short_name', 'cf.short_name as conf', 'rg.short_name as reg',
-                'ct.name as countryname', 'st.state_long_name as statename', 'cf.conference_description as confname', 'rg.long_name as regname')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'ch.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'ch.id')
-            ->join('country as ct', 'ch.country_short_name', '=', 'ct.short_name')
-            ->join('state as st', 'ch.state_id', '=', 'st.id')
-            ->join('conference as cf', 'ch.conference_id', '=', 'cf.id')
-            ->join('region as rg', 'ch.region_id', '=', 'rg.id')
-            ->leftJoin('month as db', 'ch.start_month_id', '=', 'db.id')
-            ->where('ch.is_active', '=', '1')
-            ->where('bd.board_position_id', '=', '1');
-
-        if ($conditions['founderCondition']) {
-
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('ch.conference_id', '=', $corConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('ch.region_id', '=', $corRegId);
+        if ($checkBox3Status) {
+            $reChapterList = $baseQuery['query']
+                ->get();
         } else {
-            $baseQuery->whereIn('ch.primary_coordinator_id', $inQryArr);
+            $reChapterList = $baseQuery['query']
+                ->where(function ($query) use ($currentYear, $currentMonth) {
+                    $query->where('next_renewal_year', '<', $currentYear)
+                        ->orWhere(function ($query) use ($currentYear, $currentMonth) {
+                            $query->where('next_renewal_year', '=', $currentYear)
+                                ->where('start_month_id', '<=', $currentMonth);
+                        });
+                })
+                ->orderBy('start_month_id', 'desc')
+                ->orderBy('next_renewal_year', 'desc')
+                ->get();
         }
-
-        // If checkbox is not checked, apply the additional year and month filtering
-        if (! isset($_GET['check']) || $_GET['check'] !== 'yes') {
-            $baseQuery->where(function ($query) use ($currentYear, $currentMonth) {
-                $query->where('ch.next_renewal_year', '<', $currentYear)
-                    ->orWhere(function ($query) use ($currentYear, $currentMonth) {
-                        $query->where('ch.next_renewal_year', '=', $currentYear)
-                            ->where('ch.start_month_id', '<=', $currentMonth);
-                    });
-            });
-        }
-
-        // Apply sorting based on checkbox status -- show All Chapters
-        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-            $checkBoxStatus = 'checked';
-            $baseQuery
-                ->orderBy('ch.conference_id')
-                ->orderBy('st.state_short_name')
-                ->orderBy('ch.name');
-        } else {
-            $checkBoxStatus = '';
-            $baseQuery
-                ->orderByDesc('ch.next_renewal_year')
-                ->orderByDesc('ch.start_month_id')
-                ->orderBy('ch.conference_id')
-                ->orderBy('st.state_short_name')
-                ->orderBy('ch.name');
-        }
-
-        $reChapterList = $baseQuery->get();
 
         $countList = count($reChapterList);
-
-        $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $corId];
+        $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBox3Status' => $checkBox3Status, 'corId' => $cdId];
 
         return view('chapters.chapreregistration')->with($data);
     }
