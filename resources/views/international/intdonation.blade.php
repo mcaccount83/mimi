@@ -43,14 +43,14 @@
                 @foreach($chapterList as $list)
                 <tr>
                             <td>
-                                @if ($list->reg != "None")
-                                    {{ $list->conf }} / {{ $list->reg }}
-                                @else
-                                    {{ $list->conf }}
-                                @endif
+                                @if ($list->region->short_name != "None")
+                                {{ $list->conference->short_name }} / {{ $list->region->short_name }}
+                            @else
+                                {{ $list->conference->short_name }}
+                            @endif
                             </td>
-                            <td>{{ $list->state }}</td>
-                    <td>{{ $list->name }}</td>
+                            <td>{{ $list->state->state_short_name }}</td>
+                            <td>{{ $list->name }}</td>
                     <td>${{ $list->m2m_payment }}</td>
                     <td><span class="date-mask">{{ $list->m2m_date }}</span></td>
                     <td>${{ $list->sustaining_donation }}</td>

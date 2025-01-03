@@ -2448,6 +2448,7 @@ class ChapterController extends Controller
         $currentMonth = date('m');
 
         $baseQuery = $this->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $checkBoxStatus = $baseQuery['checkBoxStatus'];
         $checkBox3Status = $baseQuery['checkBox3Status'];
 
         if ($checkBox3Status) {
@@ -2468,7 +2469,7 @@ class ChapterController extends Controller
         }
 
         $countList = count($reChapterList);
-        $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBox3Status' => $checkBox3Status, 'corId' => $cdId];
+        $data = ['countList' => $countList, 'reChapterList' => $reChapterList, 'checkBoxStatus' => $checkBoxStatus, 'checkBox3Status' => $checkBox3Status, 'corId' => $cdId];
 
         return view('chapters.chapreregistration')->with($data);
     }
@@ -2710,61 +2711,23 @@ class ChapterController extends Controller
      */
     public function showRptDonations(Request $request): View
     {
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $corConfId = $corDetails['conference_id'];
-        $corRegId = $corDetails['region_id'];
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-        $request->session()->put('positionid', $positionId);
-        $request->session()->put('secpositionid', $secPositionId);
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        // Get the conditions
-        $conditions = getPositionConditions($positionId, $secPositionId);
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+        $cdConfId = $cdDetails->conference_id;
+        $cdRegId = $cdDetails->region_id;
+        $cdPositionid = $cdDetails->position_id;
+        $cdSecPositionid = $cdDetails->sec_position_id;
 
-        if ($conditions['coordinatorCondition']) {
-            // Load Reporting Tree
-            $coordinatorData = $this->userController->loadReportingTree($corId);
-            $inQryArr = $coordinatorData['inQryArr'];
-        }
+        $baseQuery = $this->getActiveBaseQuery($cdConfId, $cdRegId, $cdId, $cdPositionid, $cdSecPositionid);
+        $chapterList = $baseQuery['query']->get();
+        $checkBoxStatus = $baseQuery['checkBoxStatus'];
 
-        $baseQuery = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
-            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id')
-            ->where('chapters.is_active', '=', '1')
-            ->where('bd.board_position_id', '=', '1');
+        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $cdId];
 
-        if ($conditions['founderCondition']) {
-
-        } elseif ($conditions['assistConferenceCoordinatorCondition']) {
-            $baseQuery->where('chapters.conference_id', '=', $corConfId);
-        } elseif ($conditions['regionalCoordinatorCondition']) {
-            $baseQuery->where('chapters.region_id', '=', $corRegId);
-        } else {
-            $baseQuery->whereIn('chapters.primary_coordinator_id', $inQryArr);
-        }
-
-        if (isset($_GET['check']) && $_GET['check'] == 'yes') {
-            $checkBoxStatus = 'checked';
-            $baseQuery->where('chapters.primary_coordinator_id', '=', $corId)
-                ->orderBy('st.state_short_name')
-                ->orderBy('chapters.name');
-        } else {
-            $checkBoxStatus = '';
-            $baseQuery->orderBy('st.state_short_name')
-                ->orderBy('chapters.name');
-        }
-
-        $chapterList = $baseQuery->get();
-
-        $data = ['chapterList' => $chapterList, 'checkBoxStatus' => $checkBoxStatus, 'corId' => $corId];
-
-        return view('chapreports.chaprptdonations')->with($data);
+        return view('chapters.chapdonations')->with($data);
     }
 
     /**
@@ -2772,28 +2735,43 @@ class ChapterController extends Controller
      */
     public function showIntdonation(Request $request): View
     {
-        //Get Coordinators Details
-        $corDetails = User::find($request->user()->id)->coordinator;
-        $corId = $corDetails['id'];
-        $positionId = $corDetails['position_id'];
-        $secPositionId = $corDetails['sec_position_id'];
-        $request->session()->put('positionid', $positionId);
-        $request->session()->put('secpositionid', $secPositionId);
+        $user = User::find($request->user()->id);
+        $userId = $user->id;
 
-        //Get Chapter List mapped with login coordinator
-        $chapterList = DB::table('chapters')
-            ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
-                'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
-            ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
-            ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
-            ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
-            ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
-            ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id')
-            ->where('chapters.is_active', '=', '1')
-            ->where('bd.board_position_id', '=', '1')
-            ->orderBy('st.state_short_name')
-            ->orderBy('chapters.name')
+        $cdDetails = $user->coordinator;
+        $cdId = $cdDetails->id;
+
+        $chapterList = Chapters::with(['state', 'conference', 'region', 'webLink', 'president', 'avp', 'mvp', 'treasurer', 'secretary', 'startMonth',
+        'state', 'primaryCoordinator'])
+        ->where('is_active', 1)
+        ->orderBy(State::select('state_short_name')
+            ->whereColumn('state.id', 'chapters.state_id'), 'asc')
+            ->orderBy('chapters.name', 'asc')
             ->get();
+
+
+        // //Get Coordinators Details
+        // $corDetails = User::find($request->user()->id)->coordinator;
+        // $corId = $corDetails['id'];
+        // $positionId = $corDetails['position_id'];
+        // $secPositionId = $corDetails['sec_position_id'];
+        // $request->session()->put('positionid', $positionId);
+        // $request->session()->put('secpositionid', $secPositionId);
+
+        // //Get Chapter List mapped with login coordinator
+        // $chapterList = DB::table('chapters')
+        //     ->select('chapters.*', 'cd.first_name as cor_f_name', 'cd.last_name as cor_l_name', 'bd.first_name as bor_f_name', 'bd.last_name as bor_l_name',
+        //         'bd.email as bor_email', 'bd.phone as phone', 'st.state_short_name as state', 'rg.short_name as reg', 'cf.short_name as conf')
+        //     ->leftJoin('coordinators as cd', 'cd.id', '=', 'chapters.primary_coordinator_id')
+        //     ->leftJoin('boards as bd', 'bd.chapter_id', '=', 'chapters.id')
+        //     ->leftJoin('state as st', 'chapters.state_id', '=', 'st.id')
+        //     ->leftJoin('conference as cf', 'chapters.conference_id', '=', 'cf.id')
+        //     ->leftJoin('region as rg', 'chapters.region_id', '=', 'rg.id')
+        //     ->where('chapters.is_active', '=', '1')
+        //     ->where('bd.board_position_id', '=', '1')
+        //     ->orderBy('st.state_short_name')
+        //     ->orderBy('chapters.name')
+        //     ->get();
 
         $data = ['chapterList' => $chapterList];
 

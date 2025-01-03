@@ -50,14 +50,14 @@
                                 @endif
                             </td>
                                 <td>
-                                    @if ($list->reg != "None")
-                                        {{ $list->conf }} / {{ $list->reg }}
-                                    @else
-                                        {{ $list->conf }}
-                                    @endif
+                                    @if ($list->region->short_name != "None")
+                                    {{ $list->conference->short_name }} / {{ $list->region->short_name }}
+                                @else
+                                    {{ $list->conference->short_name }}
+                                @endif
                                 </td>
-                                <td>{{ $list->state }}</td>
-                        <td>{{ $list->name }}</td>
+                                <td>{{ $list->state->state_short_name }}</td>
+                                <td>{{ $list->name }}</td>
 						<td>${{ $list->m2m_payment }}</td>
 						<td><span class="date-mask">{{ $list->m2m_date }}</span></td>
 						<td>${{ $list->sustaining_donation }}</td>
@@ -66,6 +66,12 @@
                   @endforeach
                   </tbody>
                 </table>
+            </div>
+            <div class="col-sm-12">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
+                    <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
+                </div>
             </div>
             <div class="card-body text-center">&nbsp;</div>
             </div>
@@ -90,6 +96,17 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
+function showPrimary() {
+var base_url = '{{ url("/chapter/donations") }}';
+
+    if ($("#showPrimary").prop("checked") == true) {
+        window.location.href = base_url + '?check=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
+
 
 </script>
 @endsection

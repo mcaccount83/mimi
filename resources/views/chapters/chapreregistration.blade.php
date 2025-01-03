@@ -79,7 +79,7 @@
                                     {{ $list->conference->short_name }}
                                 @endif
                             </td>
-                            <td>{{ $list->state_short_name }}</td>
+                            <td>{{ $list->state->state_short_name }}</td>
                             <td>{{ $list->name }}</td>
                             <td>{{ $list->reg_notes }}</td>
                             <td style="
@@ -105,13 +105,19 @@
           <!-- /.card-body -->
           <div class="col-sm-12">
             <div class="custom-control custom-switch">
+                <input type="checkbox" name="showPrimary" id="showPrimary" class="custom-control-input" {{$checkBoxStatus}} onchange="showPrimary()" />
+                <label class="custom-control-label" for="showPrimary">Only show chapters I am primary for</label>
+            </div>
+        </div>
+          <div class="col-sm-12">
+            <div class="custom-control custom-switch">
                         <input type="checkbox" name="showAll" id="showAll" class="custom-control-input" {{$checkBox3Status}} onchange="showAll()" />
                         <label class="custom-control-label" for="showAll">Show All Chapters</label>
                     </div>
                 </div>
                 <div class="card-body text-center">
                     @if($conferenceCoordinatorCondition)
-                    @if($checkBox3Status == null)
+                    @if($checkBoxStatus == null && $checkBox3Status == null)
                         <a class="btn bg-gradient-primary" href="{{ route('chapters.chapreregreminder') }}"><i class="fas fa-envelope mr-2" ></i>Send Current Month Reminders</a>
                         <a class="btn bg-gradient-primary" href="{{ route('chapters.chaprereglatereminder') }}"><i class="fas fa-envelope mr-2" ></i>Send One Month Late Notices</a>
                     @else
@@ -150,6 +156,17 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
+function showPrimary() {
+var base_url = '{{ url("/chapter/reregistration") }}';
+
+    if ($("#showPrimary").prop("checked") == true) {
+        window.location.href = base_url + '?check=yes';
+    } else {
+        window.location.href = base_url;
+    }
+}
+
 
 function showAll() {
     var base_url = '{{ url("/chapter/reregistration") }}';
