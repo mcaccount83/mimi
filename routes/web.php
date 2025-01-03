@@ -174,7 +174,7 @@ Route::get('/chapters/checkein', [ChapterController::class, 'checkEIN'])->name('
 Route::post('/chapterdetails/updateein', [ChapterController::class, 'updateEIN'])->name('chapters.updateein');
 Route::post('/chapter/updatedisband', [ChapterController::class, 'updateChapterDisband'])->name('chapters.updatechapdisband');
 Route::post('/chapter/unzap', [ChapterController::class, 'updateChapterUnZap'])->name('chapters.updatechapterunzap');
-Route::get('/chapternew', [ChapterController::class, 'editChapterNew'])->name('chapters.editnew');
+Route::get('/chapternew', [ChapterController::class, 'addChapterNew'])->name('chapters.addnew');
 Route::post('/chapternewupdate', [ChapterController::class, 'updateChapterNew'])->name('chapters.updatenew');
 Route::get('/chapterdetailsedit/{id}', [ChapterController::class, 'editChapterDetails'])->name('chapters.edit');
 Route::post('/chapterdetailsupdate/{id}', [ChapterController::class, 'updateChapterDetails'])->name('chapters.update');

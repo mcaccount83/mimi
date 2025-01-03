@@ -19,4 +19,11 @@ class Region extends Model
     protected $fillable = [
 
     ];
+
+    public function conference(): BelongsTo
+    {
+        return $this->belongsTo(Conference::class, 'conference_id', 'id');  // 'conference_id' in region BelongsTo 'id' in conference
+    }
+
+
 }

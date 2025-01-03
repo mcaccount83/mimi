@@ -18,4 +18,5 @@ class Conference extends Model
 
     ];
 
+
 }

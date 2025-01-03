@@ -592,6 +592,11 @@
           <div class="col-md-12">
             <div class="card-body text-center">
                 @if ($coordinatorCondition)
+                @php
+                    $emailData = app('App\Http\Controllers\UserController')->loadEmailDetails($chDetails->id);
+                    $emailListChap = implode(',', $emailData['emailListChap']); // Convert array to comma-separated string
+                    $emailListCoord = implode(',', $emailData['emailListCoord']); // Convert array to comma-separated string
+                @endphp
                         <button type="button" class="btn bg-gradient-primary mb-3"
                             onclick="window.location.href='mailto:{{ rawurlencode($emailListChap) }}?cc={{ rawurlencode($emailListCoord) }}&subject={{ rawurlencode('MOMS Club of ' . $chDetails->name . ', ' . $stateShortName) }}'">
                             <i class="fas fa-envelope mr-2"></i>Email Board</button>
@@ -632,7 +637,7 @@
                                 <button type="button" id="back-zapped" class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('chapters.chapzapped') }}'"><i class="fas fa-reply mr-2"></i>Back to Zapped Chapter List</button>
                             @endif
                         @endif
-                    @elseif ($einCondition && ($cdConfId != $chConfId) || $inquiriesCondition  && ($corConfId != $chConfId) || $adminReportCondition  && ($corConfId != $chConfId))
+                    @elseif ($einCondition && ($cdConfId != $chConfId) || $inquiriesCondition  && ($cdConfId != $chConfId) || $adminReportCondition  && ($cdConfId != $chConfId))
                         @if ($chIsActive == 1)
                             <button type="button" id="back-international"class="btn bg-gradient-primary mb-3" onclick="window.location.href='{{ route('international.intchapter') }}'"><i class="fas fa-reply mr-2"></i>Back to International Chapter List</button>
                         @else

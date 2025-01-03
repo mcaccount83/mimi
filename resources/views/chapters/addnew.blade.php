@@ -36,9 +36,14 @@
                     <div class="col-sm-8">
                         <select id="ch_state" name="ch_state" class="form-control" required>
                             <option value="">Select State</option>
-                            @foreach($stateArr as $state)
-                                <option value="{{$state->id}}">{{$state->state_long_name}}</option>
+                            @foreach($allStates as $state)
+                                <option value="{{$state->id}}">
+                                    {{$state->state_long_name}}
+                                </option>
                             @endforeach
+                            {{-- @foreach($stateArr as $state)
+                                <option value="{{$state->id}}">{{$state->state_long_name}}</option>
+                            @endforeach --}}
                         </select>
                     </div>
                 </div>
@@ -48,9 +53,14 @@
                     <div class="col-sm-8">
                         <select id="ch_region" name="ch_region" class="form-control" required>
                             <option value="">Select Region</option>
-                            @foreach($regionList as $rl)
-                                <option value="{{$rl->id}}">{{$rl->long_name}}</option>
+                            @foreach($allRegions as $region)
+                                <option value="{{$region->id}}">
+                                    {{$region->long_name}}
+                                </option>
                             @endforeach
+                            {{-- @foreach($regionList as $rl)
+                                <option value="{{$rl->id}}">{{$rl->long_name}}</option>
+                            @endforeach --}}
                         </select>
                     </div>
                 </div>
@@ -74,9 +84,14 @@
                     <div class="col-sm-8">
                         <select id="ch_status" name="ch_status" class="form-control" required>
                             <option value="">Select Status</option>
-                            @foreach($chapterStatusArr as $statusKey => $statusText)
-                                <option value="{{ $statusKey }}">{{ $statusText }}</option>
+                            @foreach($allStatuses as $status)
+                                <option value="{{$status->id}}">
+                                    {{$status->chapter_status}}
+                                </option>
                             @endforeach
+                            {{-- @foreach($chapterStatusArr as $statusKey => $statusText)
+                                <option value="{{ $statusKey }}">{{ $statusText }}</option>
+                            @endforeach --}}
                         </select>
                     </div>
                 </div>
@@ -93,9 +108,15 @@
                     <div class="col-sm-8">
                         <select name="ch_primarycor" id="ch_primarycor" class="form-control select2-bs4" style="width: 100%;" required>
                             <option value="">Select Primary Coordinator</option>
-                            @foreach($primaryCoordinatorList as $pcl)
-                                <option value="{{$pcl->cid}}">{{$pcl->cor_f_name}} {{$pcl->cor_l_name}} ({{$pcl->pos}})</option>
+                            @foreach($pcDetails as $coordinator)
+                                <option value="{{ $coordinator['cid'] }}">
+                                    {{ $coordinator['cname'] }} ({{ $coordinator['cpos'] }})
+                                </option>
                             @endforeach
+
+                            {{-- @foreach($primaryCoordinatorList as $pcl)
+                                <option value="{{$pcl->cid}}">{{$pcl->cor_f_name}} {{$pcl->cor_l_name}} ({{$pcl->pos}})</option>
+                            @endforeach --}}
                         </select>
                     </div>
                   </div>
@@ -142,9 +163,11 @@
                                 <div class="col-sm-3 mb-1">
                                     <select name="ch_pre_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
-                                            @foreach($stateArr as $state)
-                                                <option value="{{$state->state_short_name}}"></option>
-                                            @endforeach
+                                        @foreach($allStates as $state)
+                                        <option value="{{$state->id}}">
+                                            {{$state->state_long_name}}
+                                        </option>
+                                    @endforeach
                                     </select>
                                 </div>
                                 <div class="col-sm-2 mb-1">
@@ -186,9 +209,11 @@
                                 <div class="avp-field col-sm-3 mb-1">
                                     <select name="ch_avp_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
-                                            @foreach($stateArr as $state)
-                                                <option value="{{$state->state_short_name}}"></option>
-                                            @endforeach
+                                        @foreach($allStates as $state)
+                                        <option value="{{$state->id}}">
+                                            {{$state->state_long_name}}
+                                        </option>
+                                    @endforeach
                                     </select>
                                 </div>
                                 <div class="avp-field col-sm-2 mb-1">
@@ -229,9 +254,11 @@
                                 <div class="mvp-field col-sm-3 mb-1">
                                     <select name="ch_mvp_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
-                                            @foreach($stateArr as $state)
-                                                <option value="{{$state->state_short_name}}" ></option>
-                                            @endforeach
+                                        @foreach($allStates as $state)
+                                        <option value="{{$state->id}}">
+                                            {{$state->state_long_name}}
+                                        </option>
+                                    @endforeach
                                     </select>
                                 </div>
                                 <div class="mvp-field col-sm-2 mb-1">
@@ -272,9 +299,11 @@
                                 <div class="treas-field col-sm-3 mb-1">
                                     <select name="ch_trs_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
-                                            @foreach($stateArr as $state)
-                                                <option value="{{$state->state_short_name}}"></option>
-                                            @endforeach
+                                        @foreach($allStates as $state)
+                                        <option value="{{$state->id}}">
+                                            {{$state->state_long_name}}
+                                        </option>
+                                    @endforeach
                                     </select>
                                 </div>
                                 <div class="treas-field col-sm-2 mb-1">
@@ -315,9 +344,11 @@
                                 <div class="sec-field col-sm-3 mb-1">
                                     <select name="ch_sec_state" class="form-control" style="width: 100%;" required>
                                         <option value="">Select State</option>
-                                            @foreach($stateArr as $state)
-                                                <option value="{{$state->state_short_name}}"></option>
-                                            @endforeach
+                                        @foreach($allStates as $state)
+                                        <option value="{{$state->id}}">
+                                            {{$state->state_long_name}}
+                                        </option>
+                                    @endforeach
                                     </select>
                                 </div>
                                 <div class="sec-field col-sm-2 mb-1">
@@ -375,16 +406,16 @@ handleVacantCheckbox("TreasVacant", "treas-field");
 
 $(document).ready(function() {
     // Function to load the coordinator list based on the selected value
-    function loadCoordinatorList(corId) {
-        if (corId != "") {
+    function loadCoordinatorList(id) {
+        if(id != "") {
             $.ajax({
-                url: '{{ url("/load-coordinator-list") }}' + '/' + corId,
+                url: '{{ url("/load-coordinator-list") }}' + '/' + id,
                 type: "GET",
                 success: function(result) {
-                    $("#display_corlist").html(result);
+                $("#display_corlist").html(result);
                 },
                 error: function (jqXHR, exception) {
-                    console.log("Error: ", jqXHR, exception);
+                console.log("Error: ", jqXHR, exception);
                 }
             });
         }
@@ -392,14 +423,15 @@ $(document).ready(function() {
 
     // Get the selected coordinator ID on page load
     var selectedCorId = $("#ch_primarycor").val();
-    loadCoordinatorList(selectedCorId);
+        loadCoordinatorList(selectedCorId);
 
-    // Update the coordinator list when the dropdown changes
-    $("#ch_primarycor").change(function() {
-        var selectedValue = $(this).val();
-        loadCoordinatorList(selectedValue);
+        // Update the coordinator list when the dropdown changes
+        $("#ch_primarycor").change(function() {
+            var selectedValue = $(this).val();
+            loadCoordinatorList(selectedValue);
     });
 });
+
 
 function checkDuplicateEmail(email, id) {
         $.ajax({
