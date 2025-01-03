@@ -17,7 +17,7 @@ class Documents extends Model
     protected $table = 'documents';
 
     protected $fillable = [
-
+        'chapter_id',
         'ein_letter_path',
         'disband_letter_path',
         'financial_pdf_path',

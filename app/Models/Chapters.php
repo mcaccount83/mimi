@@ -19,14 +19,9 @@ class Chapters extends Model
     protected $table = 'chapters';
 
     protected $fillable = [
-        'name', 'state', 'country', 'conference', 'region',
-        'ein', 'status', 'territory', 'inquiries_contact',
-        'start_month_id', 'start_year', 'next_renewal_year',
-        'primary_coordinator_id', 'founders_name', 'last_updated_by',
-        'last_updated_date', 'created_at', 'is_active',
-
-        'ein_letter_path',
-        'ein_letter',
+        'name', 'state_id', 'country_short_name', 'conference_id', 'region_id', 'ein', 'status_id', 'territory', 'inquiries_contact',
+        'start_month_id', 'start_year', 'next_renewal_year', 'primary_coordinator_id', 'founders_name', 'last_updated_by', 'last_updated_date',
+        'created_at', 'is_active',
     ];
 
     public function boards()

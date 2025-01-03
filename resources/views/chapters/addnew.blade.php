@@ -58,9 +58,6 @@
                                     {{$region->long_name}}
                                 </option>
                             @endforeach
-                            {{-- @foreach($regionList as $rl)
-                                <option value="{{$rl->id}}">{{$rl->long_name}}</option>
-                            @endforeach --}}
                         </select>
                     </div>
                 </div>
@@ -89,9 +86,6 @@
                                     {{$status->chapter_status}}
                                 </option>
                             @endforeach
-                            {{-- @foreach($chapterStatusArr as $statusKey => $statusText)
-                                <option value="{{ $statusKey }}">{{ $statusText }}</option>
-                            @endforeach --}}
                         </select>
                     </div>
                 </div>
@@ -109,14 +103,10 @@
                         <select name="ch_primarycor" id="ch_primarycor" class="form-control select2-bs4" style="width: 100%;" required>
                             <option value="">Select Primary Coordinator</option>
                             @foreach($pcDetails as $coordinator)
-                                <option value="{{ $coordinator['cid'] }}">
-                                    {{ $coordinator['cname'] }} ({{ $coordinator['cpos'] }})
+                            <option value="{{ $coordinator['cid'] }}" data-region-id="{{ $coordinator['regid'] }}">
+                                {{ $coordinator['cname'] }} ({{ $coordinator['cpos'] }})
                                 </option>
                             @endforeach
-
-                            {{-- @foreach($primaryCoordinatorList as $pcl)
-                                <option value="{{$pcl->cid}}">{{$pcl->cor_f_name}} {{$pcl->cor_l_name}} ({{$pcl->pos}})</option>
-                            @endforeach --}}
                         </select>
                     </div>
                   </div>
@@ -404,6 +394,39 @@ handleVacantCheckbox("AVPVacant", "avp-field");
 handleVacantCheckbox("SecVacant", "sec-field");
 handleVacantCheckbox("TreasVacant", "treas-field");
 
+// Function to filter the coordinator dropdown
+function filterCoordinators() {
+    const regionDropdown = document.getElementById('ch_region');
+    const selectedRegion = regionDropdown.value; // Get the selected region ID
+    const primaryCorDropdown = document.getElementById('ch_primarycor'); // Coordinator dropdown
+
+    // Filter options based on the selected region
+    Array.from(primaryCorDropdown.options).forEach(option => {
+        if (
+            option.value === "" || // Always show the default empty option
+            option.dataset.regionId === selectedRegion || // Match the selected region
+            option.dataset.regionId === "0" // Always include region_id = 0
+        ) {
+            option.style.display = "block";
+        } else {
+            option.style.display = "none";
+        }
+    });
+
+    // Reset the selected value if it's no longer valid
+    if (primaryCorDropdown.value !== "" &&
+        primaryCorDropdown.querySelector(`option[value="${primaryCorDropdown.value}"]`).style.display === "none") {
+        primaryCorDropdown.value = "";
+    }
+}
+
+// Attach the event listener to the region dropdown
+document.getElementById('ch_region').addEventListener('change', filterCoordinators);
+
+// Run the filtering logic on page load
+document.addEventListener('DOMContentLoaded', filterCoordinators);
+
+
 $(document).ready(function() {
     // Function to load the coordinator list based on the selected value
     function loadCoordinatorList(id) {
@@ -431,7 +454,6 @@ $(document).ready(function() {
             loadCoordinatorList(selectedValue);
     });
 });
-
 
 function checkDuplicateEmail(email, id) {
         $.ajax({
